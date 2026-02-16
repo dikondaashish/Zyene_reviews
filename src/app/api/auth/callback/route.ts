@@ -167,14 +167,21 @@ export async function GET(request: Request) {
                     if (platformData) {
                         console.log("DEBUG: Updating Platform Tokens...");
                         // Update existing platform credentials
+                        // Prepare update payload
+                        const updatePayload: any = {
+                            access_token: data.session?.provider_token,
+                            sync_status: "active",
+                            updated_at: new Date().toISOString(),
+                        };
+
+                        // Only overwrite refresh token if a new one is provided
+                        if (data.session?.provider_refresh_token) {
+                            updatePayload.refresh_token = data.session.provider_refresh_token;
+                        }
+
                         const { error: updateError } = await admin
                             .from("review_platforms")
-                            .update({
-                                access_token: data.session?.provider_token,
-                                refresh_token: data.session?.provider_refresh_token,
-                                sync_status: "active",
-                                updated_at: new Date().toISOString(),
-                            })
+                            .update(updatePayload)
                             .eq("id", platformData.id);
 
                         if (updateError) console.error("DEBUG: Update Error:", updateError);
