@@ -26,7 +26,7 @@ export function UserNav({ user }: { user: any }) {
         await supabase.auth.signOut()
         // Redirect to login subdomain
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
-        window.location.href = `http://login.${rootDomain}`
+        window.location.href = `http://auth.${rootDomain}`
     }
 
     return (

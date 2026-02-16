@@ -30,7 +30,7 @@ export default async function OnboardingLayout({
 
     if (!user) {
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-        redirect(`http://login.${rootDomain}`);
+        redirect(`http://auth.${rootDomain}`);
     }
 
     return (

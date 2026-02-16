@@ -107,7 +107,10 @@ export async function GET(request: Request) {
                 const { sendEmail } = await import("@/lib/resend/send-email");
                 const { welcomeEmail } = await import("@/lib/resend/templates/welcome-email");
 
-                const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/login`;
+                const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                const loginUrl = rootDomain.includes("localhost")
+                    ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
+                    : `http://auth.${rootDomain}/login`;
 
                 // We don't await this to prevent blocking the auth flow
                 sendEmail({

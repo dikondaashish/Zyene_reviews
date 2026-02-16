@@ -62,14 +62,17 @@ export async function POST(request: Request) {
         }
 
         // Create checkout session
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+        const dashboardUrl = rootDomain.includes("localhost")
+            ? `http://${rootDomain}`
+            : `http://dashboard.${rootDomain}`;
 
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomerId,
             mode: "subscription",
             line_items: [{ price: priceId, quantity: 1 }],
-            success_url: `${appUrl}/settings/billing?success=true`,
-            cancel_url: `${appUrl}/settings/billing?canceled=true`,
+            success_url: `${dashboardUrl}/settings/billing?success=true`,
+            cancel_url: `${dashboardUrl}/settings/billing?canceled=true`,
             allow_promotion_codes: true,
             metadata: {
                 organization_id: member.organization_id,

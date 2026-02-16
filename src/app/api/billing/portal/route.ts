@@ -39,11 +39,14 @@ export async function POST() {
             );
         }
 
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+        const dashboardUrl = rootDomain.includes("localhost")
+            ? `http://${rootDomain}`
+            : `http://dashboard.${rootDomain}`;
 
         const session = await stripe.billingPortal.sessions.create({
             customer: org.stripe_customer_id,
-            return_url: `${appUrl}/settings/billing`,
+            return_url: `${dashboardUrl}/settings/billing`,
         });
 
         return NextResponse.json({ url: session.url });

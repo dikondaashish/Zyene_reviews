@@ -39,7 +39,7 @@ export default function OnboardingPage() {
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
         const loginUrl = rootDomain.includes("localhost")
             ? `http://${rootDomain}/login`
-            : `http://login.${rootDomain}/login`;
+            : `http://auth.${rootDomain}/login`;
 
         // Redirect to login with error param
         window.location.href = `${loginUrl}?error=account_not_created`

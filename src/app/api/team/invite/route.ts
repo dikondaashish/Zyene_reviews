@@ -59,8 +59,10 @@ export async function POST(request: Request) {
     // Link format: dashboard.zyeneratings.com/signup?invite=TOKEN
     // Or login page if they have account?
     // For now: signup
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const inviteLink = `${baseUrl}/signup?invite=${invite.token}`;
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const inviteLink = rootDomain.includes("localhost")
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}`
+        : `http://auth.${rootDomain}/signup?invite=${invite.token}`;
 
     // @ts-ignore
     const inviterName = membership.users?.full_name || "A team member";

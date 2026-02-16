@@ -63,8 +63,8 @@ export async function middleware(request: NextRequest) {
         return supabaseResponse;
     }
 
-    // --- LOGIN SUBDOMAIN (login.domain) ---
-    if (hostname === `login.${rootDomain}`) {
+    // --- AUTH SUBDOMAIN (auth.domain) ---
+    if (hostname === `auth.${rootDomain}`) {
         if (user && pathname === "/") {
             return createResponse(
                 NextResponse.redirect(
@@ -87,7 +87,7 @@ export async function middleware(request: NextRequest) {
         if (!user) {
             return createResponse(
                 NextResponse.redirect(
-                    new URL(`http://login.${rootDomain}`, request.url)
+                    new URL(`http://auth.${rootDomain}`, request.url)
                 )
             );
         }

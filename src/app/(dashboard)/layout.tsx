@@ -38,7 +38,7 @@ export default async function DashboardLayout({
         if (rootDomain.includes("localhost")) {
             redirect("/login");
         } else {
-            redirect(`http://login.${rootDomain}`);
+            redirect(`http://auth.${rootDomain}`);
         }
     }
 
