@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
 import { analyzeReview } from "@/lib/ai/analysis";
+import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
@@ -122,7 +123,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string) {
                 // 4. Trigger AI Analysis if not analyzed
                 if (upserted && !upserted.sentiment && upserted.content) {
                     console.log(`[AI] Analyzing review ${upserted.id}...`);
-                    await analyzeReview(upserted);
+                    const result = await analyzeReview(upserted);
+
+                    // 5. Send Alert if Urgent
+                    if (result) {
+                        await sendReviewAlert({ ...upserted, ...result });
+                    }
                 }
             }
         }
