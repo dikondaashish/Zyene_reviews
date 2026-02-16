@@ -9,6 +9,7 @@ import { Loader2, CheckCircle2, AlertCircle, RefreshCw, Trash2, ExternalLink } f
 import { disconnectGoogle } from "@/app/(dashboard)/integrations/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 interface GoogleCardProps {
     platform?: {
@@ -28,9 +29,30 @@ export function GoogleIntegrationCard({ platform }: GoogleCardProps) {
     const isConnected = !!platform;
     const isError = platform?.sync_status?.startsWith("error");
 
-    const handleConnect = () => {
-        // Redirect to Google OAuth
-        window.location.href = "/api/integrations/google/auth";
+    const supabase = createClient();
+
+    const handleConnect = async () => {
+        try {
+            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            const redirectTo = rootDomain.includes("localhost")
+                ? `http://${rootDomain}/api/auth/callback?next=/dashboard/integrations`
+                : `http://auth.${rootDomain}/api/auth/callback?next=/dashboard/integrations`;
+
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                    scopes: "openid email profile https://www.googleapis.com/auth/business.manage",
+                    redirectTo,
+                    queryParams: {
+                        access_type: "offline",
+                        prompt: "consent",
+                    },
+                },
+            });
+            if (error) throw error;
+        } catch (error: any) {
+            toast.error("Failed to initiate Google connection");
+        }
     };
 
     const handleSync = async () => {

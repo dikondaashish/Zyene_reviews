@@ -135,8 +135,14 @@ export async function GET(request: Request) {
 
             if (isGoogle) {
                 console.log("DEBUG: Google Provider Detected");
+                console.log("DEBUG: Session Keys:", Object.keys(data.session || {}));
                 console.log("DEBUG: Provider Token Present?", !!data.session?.provider_token);
                 console.log("DEBUG: Refresh Token Present?", !!data.session?.provider_refresh_token);
+                if (data.session?.provider_refresh_token) {
+                    console.log("DEBUG: Provider Refresh Token Length:", data.session.provider_refresh_token.length);
+                } else {
+                    console.log("DEBUG: Provider Refresh Token is MISSING/UNDEFINED");
+                }
 
                 // Find user's business
                 const { data: memberData } = await admin

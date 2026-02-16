@@ -17,11 +17,11 @@ export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    scopes: 'https://www.googleapis.com/auth/business.manage',
+                    scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
                     redirectTo,
                     queryParams: {
-                        access_type: 'offline', // Ensure we get refresh token
-                        prompt: 'consent', // Force consent to get refresh token
+                        access_type: 'offline',
+                        prompt: 'consent',
                     }
                 },
             })
