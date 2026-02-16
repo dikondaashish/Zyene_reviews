@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { createClient } from "@/lib/supabase/client"
 import { Loader2 } from "lucide-react"
 
-export default function LoginPage() {
+function LoginForm() {
     const searchParams = useSearchParams()
     const error = searchParams.get("error")
     const [isLoading, setIsLoading] = useState(false)
@@ -105,5 +105,13 @@ export default function LoginPage() {
                 </Link>
             </div>
         </div>
+    )
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>}>
+            <LoginForm />
+        </Suspense>
     )
 }
