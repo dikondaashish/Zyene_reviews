@@ -26,10 +26,10 @@ export default function MarketingLayout({
                         <Link href="#pricing" className="hover:text-blue-600 transition-colors">
                             Pricing
                         </Link>
-                        <Link href="/login" className="hover:text-blue-600 transition-colors">
+                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-blue-600 transition-colors">
                             Log In
                         </Link>
-                        <Link href="/signup">
+                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                             <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6">
                                 Start Free <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
@@ -82,7 +82,7 @@ export default function MarketingLayout({
                             <ul className="space-y-2 text-sm text-slate-600">
                                 <li><Link href="#features" className="hover:text-blue-600">Features</Link></li>
                                 <li><Link href="#pricing" className="hover:text-blue-600">Pricing</Link></li>
-                                <li><Link href="/login" className="hover:text-blue-600">Log In</Link></li>
+                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-blue-600">Log In</Link></li>
                             </ul>
                         </div>
                         <div>

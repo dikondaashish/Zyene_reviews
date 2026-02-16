@@ -27,7 +27,7 @@ export default function MarketingPage() {
             Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for restaurant owners at $39/mo, not $300/mo.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link href="/signup">
+            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 h-12 text-base shadow-lg shadow-blue-600/20 w-full sm:w-auto">
                 Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -226,7 +226,7 @@ export default function MarketingPage() {
                   <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Email Alerts
                 </li>
               </ul>
-              <Link href="/signup">
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button className="w-full" variant="outline">Start Free</Button>
               </Link>
             </div>
@@ -257,7 +257,7 @@ export default function MarketingPage() {
                   <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 30 AI Replies/mo
                 </li>
               </ul>
-              <Link href="/signup">
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11">Get Started</Button>
               </Link>
             </div>
@@ -285,7 +285,7 @@ export default function MarketingPage() {
                   <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Priority Support
                 </li>
               </ul>
-              <Link href="/signup">
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button className="w-full" variant="outline">Get Started</Button>
               </Link>
             </div>
@@ -303,7 +303,7 @@ export default function MarketingPage() {
             Join hundreds of restaurant owners who save time and grow their business with Zyene.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/signup">
+            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-10 h-14 rounded-full font-bold shadow-xl">
                 Start Free Trial
               </Button>

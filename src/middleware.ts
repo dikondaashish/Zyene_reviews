@@ -103,7 +103,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // --- ROOT DOMAIN (domain) ---
-    if (hostname === rootDomain) {
+    if (hostname === rootDomain || hostname === `www.${rootDomain}`) {
         // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
         if (rootDomain.includes("localhost")) {
             // Allow public review requests route
