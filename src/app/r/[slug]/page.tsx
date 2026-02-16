@@ -13,17 +13,18 @@ export default async function RequestPage({
     params,
     searchParams,
 }: {
-    params: { slug: string };
-    searchParams: { ref?: string };
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ ref?: string }>;
 }) {
     const supabase = await createClient();
-    const requestId = searchParams.ref;
+    const { ref: requestId } = await searchParams;
+    const { slug } = await params;
 
     // 1. Look up business by slug
     const { data: business } = await supabase
         .from("businesses")
         .select("id, name, slug")
-        .eq("slug", params.slug)
+        .eq("slug", slug)
         .single();
 
     if (!business) {
