@@ -1,0 +1,145 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { ReviewCard } from "@/components/reviews/review-card";
+import { ReviewsFilters } from "@/components/reviews/reviews-filters";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Filter } from "lucide-react";
+import { SyncButton } from "@/components/dashboard/sync-button";
+
+export default async function ReviewsPage({
+    searchParams,
+}: {
+    searchParams: { status?: string; rating?: string; sort?: string; page?: string };
+}) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/login");
+
+    // 1. Get Business ID
+    const { data: memberData } = await supabase
+        .from("organization_members")
+        .select(`organizations(businesses(id))`)
+        .eq("user_id", user.id)
+        .single();
+
+    // @ts-ignore
+    const businessId = memberData?.organizations?.businesses?.[0]?.id;
+
+    if (!businessId) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <h2 className="text-xl font-semibold">No Business Found</h2>
+                <p className="text-muted-foreground">Please complete onboarding.</p>
+            </div>
+        );
+    }
+
+    // 2. Build Query
+    let query = supabase
+        .from("reviews")
+        .select("*", { count: "exact" })
+        .eq("business_id", businessId);
+
+    // Filters
+    const statusRaw = searchParams.status || "all";
+    const statusMap: Record<string, string> = {
+        "needs_response": "pending",
+        "responded": "responded",
+        "ignored": "ignored"
+    };
+
+    if (statusRaw !== "all" && statusMap[statusRaw]) {
+        query = query.eq("response_status", statusMap[statusRaw]);
+    }
+
+    const rating = searchParams.rating;
+    if (rating && rating !== "all") {
+        query = query.eq("rating", parseInt(rating));
+    }
+
+    // Sort
+    const sort = searchParams.sort || "newest";
+    if (sort === "newest") query = query.order("published_at", { ascending: false });
+    else if (sort === "oldest") query = query.order("published_at", { ascending: true });
+    else if (sort === "lowest") query = query.order("rating", { ascending: true });
+    else if (sort === "highest") query = query.order("rating", { ascending: false });
+
+    // Pagination
+    const page = parseInt(searchParams.page || "1");
+    const pageSize = 20;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    query = query.range(from, to);
+
+    const { data: reviews, count } = await query;
+    const totalPages = count ? Math.ceil(count / pageSize) : 0;
+
+    // Helper URLs for Pagination
+    const getPageUrl = (newPage: number) => {
+        const params = new URLSearchParams(searchParams as any);
+        params.set("page", newPage.toString());
+        return `/reviews?${params.toString()}`;
+    };
+
+    return (
+        <div className="flex flex-col gap-6 h-full">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                        Reviews
+                        <span className="text-sm font-normal text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
+                            {count || 0}
+                        </span>
+                    </h1>
+                    <p className="text-muted-foreground text-sm mt-1">Manage and respond to your customer reviews.</p>
+                </div>
+                <div className="flex gap-2">
+                    <SyncButton />
+                </div>
+            </div>
+
+            {/* Filters */}
+            <ReviewsFilters />
+
+            {/* Content List */}
+            <div className="grid gap-4">
+                {reviews && reviews.length > 0 ? (
+                    reviews.map((review: any) => (
+                        <ReviewCard key={review.id} review={review} />
+                    ))
+                ) : (
+                    <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
+                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <Filter className="h-6 w-6 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">No reviews found</h3>
+                        <p className="text-muted-foreground max-w-sm mt-1 mb-6">
+                            {(statusRaw !== 'all' || rating)
+                                ? "Try adjusting your filters to see more reviews."
+                                : "Sync your reviews to get started."}
+                        </p>
+                        <SyncButton />
+                    </div>
+                )}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="flex justify-center gap-2 mt-4 pb-8">
+                    <Button variant="outline" size="sm" disabled={page <= 1} asChild>
+                        {page > 1 ? <Link href={getPageUrl(page - 1)}>Previous</Link> : <span>Previous</span>}
+                    </Button>
+                    <div className="text-sm flex items-center text-muted-foreground">
+                        Page {page} of {totalPages}
+                    </div>
+                    <Button variant="outline" size="sm" disabled={page >= totalPages} asChild>
+                        {page < totalPages ? <Link href={getPageUrl(page + 1)}>Next</Link> : <span>Next</span>}
+                    </Button>
+                </div>
+            )}
+        </div>
+    );
+}
