@@ -15,15 +15,15 @@ export default function OnboardingPage() {
         try {
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/dashboard`
-                : `http://dashboard.${rootDomain}/dashboard`;
+                ? `http://${rootDomain}/api/auth/callback?next=/dashboard`
+                : `http://auth.${rootDomain}/api/auth/callback?next=/dashboard`;
 
             // In production, user must configure Google Provider in Supabase
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     scopes: 'https://www.googleapis.com/auth/business.manage',
-                    redirectTo, // Redirect back to dashboard to trigger GBP check
+                    redirectTo, // Redirect back to callback to handle linking
                 },
             })
             if (error) throw error

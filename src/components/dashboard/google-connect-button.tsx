@@ -11,8 +11,8 @@ export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {
         try {
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/dashboard`
-                : `http://dashboard.${rootDomain}/dashboard`;
+                ? `http://${rootDomain}/api/auth/callback?next=/dashboard`
+                : `http://auth.${rootDomain}/api/auth/callback?next=/dashboard`;
 
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
