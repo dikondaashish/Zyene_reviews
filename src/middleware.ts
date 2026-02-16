@@ -106,6 +106,11 @@ export async function middleware(request: NextRequest) {
     if (hostname === rootDomain) {
         // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
         if (rootDomain.includes("localhost")) {
+            // Allow public review requests route
+            if (pathname.startsWith("/r/")) {
+                return supabaseResponse;
+            }
+
             // If accessing /dashboard and not logged in -> redirect /login
             if (pathname.startsWith("/dashboard") && !user) {
                 return createResponse(NextResponse.redirect(new URL("/login", request.url)));

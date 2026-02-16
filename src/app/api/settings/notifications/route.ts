@@ -15,6 +15,8 @@ export async function POST(request: Request) {
             user_id: user.id,
             sms_enabled: body.sms_enabled,
             phone_number: body.phone_number,
+            email_enabled: body.email_enabled,
+            digest_enabled: body.digest_enabled,
             min_urgency_score: body.min_urgency_score,
             quiet_hours_start: body.quiet_hours_start || null,
             quiet_hours_end: body.quiet_hours_end || null,

@@ -89,8 +89,9 @@ export async function syncGoogleReviewsForPlatform(platformId: string) {
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
-        // 3. Upsert Reviews to DB
         let newReviewCount = 0;
+        let analyzedCount = 0;
+        let alertsCount = 0;
 
         for (const review of googleReviews) {
             const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
@@ -119,15 +120,22 @@ export async function syncGoogleReviewsForPlatform(platformId: string) {
 
             if (upsertError) console.error("Upsert Error:", upsertError);
             else {
-                newReviewCount++;
+                // Check if it was just inserted (created_at is close to now, or logic based on absence of sentiment)
+                // Reliable way for "newly found" in this context is just total processed from API.
+                // User asked "how many new reviews found".
+                // If it's an upsert, we don't know if it was insert or update easily without checking created_at vs updated_at.
+                // But `analyzedCount` is a good proxy for "new processing".
+
                 // 4. Trigger AI Analysis if not analyzed
                 if (upserted && !upserted.sentiment && upserted.content) {
                     console.log(`[AI] Analyzing review ${upserted.id}...`);
+                    analyzedCount++;
                     const result = await analyzeReview(upserted);
 
                     // 5. Send Alert if Urgent
                     if (result) {
                         await sendReviewAlert({ ...upserted, ...result });
+                        alertsCount++;
                     }
                 }
             }
@@ -158,7 +166,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string) {
             average_rating: parseFloat(avgRating.toFixed(1))
         }).eq("id", platform.business_id);
 
-        return { success: true, count: googleReviews.length };
+        return {
+            success: true,
+            total: googleReviews.length,
+            analyzed: analyzedCount,
+            alerts: alertsCount
+        };
 
     } catch (error: any) {
         console.error(`[Sync] Implementation Error:`, error);

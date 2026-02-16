@@ -103,6 +103,19 @@ export async function GET(request: Request) {
                     metadata: { email, full_name: fullName },
                 });
 
+                // 5. Send Welcome Email (Async / Fire & Forget)
+                const { sendEmail } = await import("@/lib/resend/send-email");
+                const { welcomeEmail } = await import("@/lib/resend/templates/welcome-email");
+
+                const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/login`;
+
+                // We don't await this to prevent blocking the auth flow
+                sendEmail({
+                    to: email,
+                    subject: "Welcome to Zyene Reviews!",
+                    html: welcomeEmail({ userName: fullName || "User", loginUrl }),
+                }).catch(err => console.error("Failed to send welcome email:", err));
+
                 // Redirect new users to onboarding
                 return NextResponse.redirect(`${origin}/onboarding`);
             }

@@ -1,28 +1,30 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendSMS } from "@/lib/twilio/send-sms";
+import { sendEmail } from "@/lib/resend/send-email";
+import { reviewAlertEmail } from "@/lib/resend/templates/review-alert-email";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export async function sendReviewAlert(review: any) {
-    // Logic: Urgency >= 7 OR Rating <= 2
+    // Logic: Urgency >= 7 OR Rating <= 2 -> SMS + Email
+    // Urgency 4-6 -> Email only
+    // Urgency 1-3 -> Daily Digest (Skip here)
+
     const urgency = review.urgency_score || 0;
     const rating = review.rating || 5;
 
-    // Check if worthy of alert (Hardcoded baseline, can be overridden by user prefs)
-    const isUrgent = urgency >= 7 || rating <= 2;
+    // Determine alert level
+    const isHighUrgency = urgency >= 7 || rating <= 2;
+    const isMediumUrgency = urgency >= 4 && urgency < 7;
 
-    if (!isUrgent) return;
+    if (!isHighUrgency && !isMediumUrgency) return;
 
     const admin = createAdminClient();
-
-    // Get Business Owner(s)
-    // Link: review.business_id -> businesses -> organizations -> organization_members -> users -> notification_preferences
-    // Complex query.
 
     // 1. Get Organization ID from Business
     const { data: business } = await admin
         .from("businesses")
-        .select("organization_id, name")
+        .select("organization_id, name, slug")
         .eq("id", review.business_id)
         .single();
 
@@ -38,65 +40,80 @@ export async function sendReviewAlert(review: any) {
 
     const userIds = members.map(m => m.user_id);
 
-    // 3. Get Notification Preferences for these users
+    // 3. Get Notification Preferences & Emails for these users
+    // Assuming foreign key relationship exists, otherwise fetch email separately
     const { data: prefs } = await admin
         .from("notification_preferences")
-        .select("*")
-        .in("user_id", userIds)
-        .eq("sms_enabled", true);
+        .select(`
+            *,
+            users (
+                email
+            )
+        `)
+        .in("user_id", userIds);
 
     if (!prefs || prefs.length === 0) return;
 
     // 4. Send Alerts
     for (const pref of prefs) {
-        // User specific urgency threshold
-        const userThreshold = pref.min_urgency_score || 7;
-        // If rating is low (<=2), it's always urgent regardless of score? 
-        // Or strictly follow score? User requirement says: "If review.urgency_score >= 7 (or rating <= 2)"
-        // But user pref says "Minimum urgency".
-        // I'll stick to: If (urgency >= userThreshold OR rating <= 2)
+        // Safe cast for joined user data
+        const userEmail = (pref.users as any)?.email;
 
-        if (urgency >= userThreshold || rating <= 2) {
-            // Check Quiet Hours
-            if (pref.quiet_hours_start && pref.quiet_hours_end) {
-                const now = new Date();
-                const currentHours = now.getHours();
-                const currentMinutes = now.getMinutes();
-                const currentTime = currentHours * 60 + currentMinutes;
+        // Check Quiet Hours (Applies to SMS only? Or both? Usually accurate alerts ignore strict quiet hours, or just SMS. 
+        // User didn't specify quiet hours for email. I'll apply to SMS only as email is less intrusive.)
+        let inQuietHours = false;
+        if (pref.quiet_hours_start && pref.quiet_hours_end) {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTime = currentHours * 60 + currentMinutes;
 
-                const [startH, startM] = pref.quiet_hours_start.split(":").map(Number);
-                const [endH, endM] = pref.quiet_hours_end.split(":").map(Number);
-                const startTime = startH * 60 + startM;
-                const endTime = endH * 60 + endM;
+            const [startH, startM] = pref.quiet_hours_start.split(":").map(Number);
+            const [endH, endM] = pref.quiet_hours_end.split(":").map(Number);
+            const startTime = startH * 60 + startM;
+            const endTime = endH * 60 + endM;
 
-                // Handle crossover midnight (e.g. 22:00 to 07:00)
-                let inQuietHours = false;
-                if (startTime < endTime) {
-                    inQuietHours = currentTime >= startTime && currentTime <= endTime;
-                } else {
-                    // Crossover
-                    inQuietHours = currentTime >= startTime || currentTime <= endTime;
-                }
-
-                if (inQuietHours) {
-                    console.log(`[Alert] Skipped for user ${pref.user_id} due to quiet hours.`);
-                    continue;
-                }
-            }
-
-            if (pref.phone_number) {
-                const snippet = review.content ? review.content.substring(0, 80) : "";
-                const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${review.author_name}\nReply: ${APP_URL}/reviews`;
-
-                const result = await sendSMS(pref.phone_number, body);
-
-                if (result.sent) {
-                    await admin.from("reviews").update({
-                        alert_sent: true,
-                        alert_sent_at: new Date().toISOString()
-                    }).eq("id", review.id);
-                }
+            if (startTime < endTime) {
+                inQuietHours = currentTime >= startTime && currentTime <= endTime;
+            } else {
+                inQuietHours = currentTime >= startTime || currentTime <= endTime;
             }
         }
+
+        // --- SMS ALERT (High Urgency Only & SMS Enabled) ---
+        if (isHighUrgency && pref.sms_enabled && pref.phone_number && !inQuietHours) {
+            const snippet = review.content ? review.content.substring(0, 80) : "";
+            const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${review.author_name}\nReply: ${APP_URL}/dashboard`;
+
+            await sendSMS(pref.phone_number, body);
+        }
+
+        // --- EMAIL ALERT (High or Medium Urgency & Email Enabled) ---
+        // Default to true if email_enabled is undefined (legacy records)
+        const emailEnabled = pref.email_enabled !== false;
+
+        if ((isHighUrgency || isMediumUrgency) && emailEnabled && userEmail) {
+            const emailHtml = reviewAlertEmail({
+                businessName: business.name,
+                rating: rating,
+                authorName: review.author_name,
+                reviewText: review.content,
+                urgencyScore: urgency,
+                dashboardUrl: `${APP_URL}/dashboard`,
+                settingsUrl: `${APP_URL}/settings/notifications`
+            });
+
+            await sendEmail({
+                to: userEmail,
+                subject: `New Review for ${business.name} (${rating}★)`,
+                html: emailHtml
+            });
+        }
     }
+
+    // Update alert_sent status
+    await admin.from("reviews").update({
+        alert_sent: true,
+        alert_sent_at: new Date().toISOString()
+    }).eq("id", review.id);
 }

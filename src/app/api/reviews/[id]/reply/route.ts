@@ -4,7 +4,8 @@ import { replyToReview, listAccounts } from "@/lib/google/business-profile";
 import { getValidGoogleToken } from "@/lib/google/sync-service";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const supabase = await createClient();
 
     // 1. Auth Check
@@ -28,7 +29,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
                     organization_members!inner(user_id)
                 )
             `)
-            .eq("id", params.id)
+            .eq("id", id)
             .eq("businesses.organization_members.user_id", user.id)
             .single();
 

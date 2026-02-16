@@ -24,6 +24,8 @@ import { useRouter } from "next/navigation";
 const formSchema = z.object({
     sms_enabled: z.boolean(),
     phone_number: z.string().optional(),
+    email_enabled: z.boolean(),
+    digest_enabled: z.boolean(),
     min_urgency_score: z.string(), // Kept as string for Select compatibility
     quiet_hours_start: z.string().optional(),
     quiet_hours_end: z.string().optional(),
@@ -31,7 +33,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function NotificationForm({ initialPrefs, userId }: { initialPrefs: any; userId: string }) {
+export function NotificationForm({ initialPrefs }: { initialPrefs: any; userId?: string }) {
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
 
@@ -40,6 +42,8 @@ export function NotificationForm({ initialPrefs, userId }: { initialPrefs: any; 
         defaultValues: {
             sms_enabled: initialPrefs?.sms_enabled || false,
             phone_number: initialPrefs?.phone_number || "",
+            email_enabled: initialPrefs?.email_enabled ?? true, // Default true
+            digest_enabled: initialPrefs?.digest_enabled ?? true, // Default true
             min_urgency_score: (initialPrefs?.min_urgency_score || 7).toString(),
             quiet_hours_start: initialPrefs?.quiet_hours_start || "",
             quiet_hours_end: initialPrefs?.quiet_hours_end || "",
@@ -74,6 +78,52 @@ export function NotificationForm({ initialPrefs, userId }: { initialPrefs: any; 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-lg">
+
+                {/* Email Alerts */}
+                <FormField
+                    control={form.control}
+                    name="email_enabled"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-base">Email Alerts</FormLabel>
+                                <FormDescription>
+                                    Receive emails for new reviews.
+                                </FormDescription>
+                            </div>
+                            <FormControl>
+                                <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                {/* Daily Digest */}
+                <FormField
+                    control={form.control}
+                    name="digest_enabled"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-base">Daily Digest</FormLabel>
+                                <FormDescription>
+                                    Get a daily summary of all new reviews.
+                                </FormDescription>
+                            </div>
+                            <FormControl>
+                                <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                {/* SMS Alerts */}
                 <FormField
                     control={form.control}
                     name="sms_enabled"

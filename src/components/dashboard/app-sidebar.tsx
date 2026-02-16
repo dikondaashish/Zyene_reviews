@@ -3,11 +3,15 @@
 import * as React from "react"
 import {
     BarChart3,
+    Bell,
+    ChevronDown,
+    CreditCard,
     Home,
     MessageSquare,
     Plug,
     Send,
     Settings,
+    User,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -20,8 +24,16 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 // Menu items.
 const items = [
@@ -52,8 +64,27 @@ const items = [
     },
 ]
 
+const settingsItems = [
+    {
+        title: "General",
+        url: "/settings",
+        icon: User,
+    },
+    {
+        title: "Notifications",
+        url: "/settings/notifications",
+        icon: Bell,
+    },
+    {
+        title: "Billing",
+        url: "/settings/billing",
+        icon: CreditCard,
+    },
+]
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname()
+    const isSettingsActive = pathname.startsWith("/settings")
 
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -94,21 +125,41 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            asChild
-                            isActive={pathname === "/settings"}
-                            tooltip="Settings"
-                        >
-                            <Link href="/settings">
-                                <Settings />
-                                <span>Settings</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <Collapsible defaultOpen={isSettingsActive} className="group/collapsible">
+                        <SidebarMenuItem>
+                            <CollapsibleTrigger asChild>
+                                <SidebarMenuButton
+                                    isActive={isSettingsActive}
+                                    tooltip="Settings"
+                                >
+                                    <Settings />
+                                    <span>Settings</span>
+                                    <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                                <SidebarMenuSub>
+                                    {settingsItems.map((item) => (
+                                        <SidebarMenuSubItem key={item.title}>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={pathname === item.url}
+                                            >
+                                                <Link href={item.url}>
+                                                    <item.icon className="h-4 w-4" />
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    ))}
+                                </SidebarMenuSub>
+                            </CollapsibleContent>
+                        </SidebarMenuItem>
+                    </Collapsible>
                 </SidebarMenu>
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     )
 }
+
