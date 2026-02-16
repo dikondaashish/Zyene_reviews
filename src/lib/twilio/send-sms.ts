@@ -28,8 +28,8 @@ export async function sendSMS(to: string, body: string) {
         });
 
         return { sent: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Twilio Send Error:", error);
-        return { sent: false, error: error.message };
+        return { sent: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }

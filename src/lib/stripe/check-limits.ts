@@ -71,7 +71,7 @@ export async function checkLimit(
             .select("id")
             .eq("organization_id", organizationId);
 
-        const businessIds = businesses?.map((b: any) => b.id) || [];
+        const businessIds = businesses?.map((b: { id: string }) => b.id) || [];
 
         if (businessIds.length === 0) {
             return { allowed: max > 0, current: 0, max };

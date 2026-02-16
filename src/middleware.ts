@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     const hostname = request.headers.get("host")!;
-    const { pathname, search } = request.nextUrl;
+    const { pathname } = request.nextUrl;
 
     const createResponse = (response: NextResponse) => {
         supabaseResponse.cookies.getAll().forEach((cookie) => {

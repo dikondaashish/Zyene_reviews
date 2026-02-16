@@ -27,17 +27,18 @@ export async function POST(request: Request) {
         }
 
         // 1. Verify ownership & Get Business Config
-        // We need organization_id to check limits, and business settings for constraints
         const { data: business, error: businessError } = await supabase
             .from("businesses")
             .select(`
                 *,
                 organizations (
                     id,
-                    plan
+                    plan,
+                    organization_members!inner(user_id)
                 )
             `)
             .eq("id", businessId)
+            .eq("organizations.organization_members.user_id", user.id) // Explicit ownership check
             .single();
 
         if (businessError || !business) {
@@ -45,9 +46,6 @@ export async function POST(request: Request) {
             return new NextResponse("Business not found or access denied", { status: 403 });
         }
 
-        // Verify the user is a member of this organization? 
-        // The RLS on `businesses` should handle this if `supabase` client is used.
-        // But `checkLimit` needs org ID.
         const orgId = business.organizations?.id;
 
         // 2. Check Plan Limit

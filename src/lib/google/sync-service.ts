@@ -58,7 +58,14 @@ export async function getValidGoogleToken(platformId: string) {
     return { accessToken, platform };
 }
 
-export async function syncGoogleReviewsForPlatform(platformId: string) {
+export interface SyncResult {
+    success: boolean;
+    total: number;
+    analyzed: number;
+    alerts: number;
+}
+
+export async function syncGoogleReviewsForPlatform(platformId: string): Promise<SyncResult> {
     const admin = createAdminClient();
 
     // 1. Get Valid Token

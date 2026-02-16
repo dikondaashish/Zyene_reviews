@@ -16,9 +16,15 @@ export async function POST(request: Request) {
         .from("reviews")
         .select(`
             *,
-            businesses!inner(name)
+            businesses!inner(
+                name,
+                organizations!inner(
+                    organization_members!inner(user_id)
+                )
+            )
         `)
         .eq("id", reviewId)
+        .eq("businesses.organizations.organization_members.user_id", user.id)
         .single();
 
     if (error || !review) return NextResponse.json({ error: "Review not found" }, { status: 404 });

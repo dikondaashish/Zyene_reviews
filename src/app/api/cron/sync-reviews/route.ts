@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
+import { syncGoogleReviewsForPlatform, SyncResult } from "@/lib/google/sync-service";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -33,10 +33,8 @@ export async function GET(request: Request) {
     // Process sequentially to limit concurrency/rate-limits
     for (const platform of platforms || []) {
         try {
-            const stats = await syncGoogleReviewsForPlatform(platform.id);
-            // @ts-ignore
+            const stats: SyncResult = await syncGoogleReviewsForPlatform(platform.id);
             totalAnalyzed += stats.analyzed || 0;
-            // @ts-ignore
             totalAlerts += stats.alerts || 0;
             results.push({ id: platform.id, status: "success", ...stats });
         } catch (error: any) {

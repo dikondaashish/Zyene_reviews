@@ -49,14 +49,30 @@ export async function GET(request: Request) {
     }
 
     // Group reviews by business
-    const businessMap = new Map<string, any[]>();
-    recentReviews.forEach((review: any) => {
+    type Review = {
+        id: string;
+        rating: number;
+        content: string | null;
+        author_name: string | null;
+        sentiment: string | null;
+        created_at: string;
+        business_id: string;
+        businesses: {
+            id: string;
+            name: string;
+            organization_id: string;
+            slug: string;
+        };
+    };
+
+    const businessMap = new Map<string, Review[]>();
+    (recentReviews as unknown as Review[]).forEach((review) => {
         if (!review.businesses) return;
         const bid = review.business_id;
         if (!businessMap.has(bid)) {
             businessMap.set(bid, []);
         }
-        businessMap.get(bid).push(review);
+        businessMap.get(bid)!.push(review);
     });
 
     let emailsSent = 0;
@@ -73,12 +89,12 @@ export async function GET(request: Request) {
 
         // 3. Stats for Digest
         const totalNew = reviews.length;
-        const avgRating = reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / totalNew;
-        const digestItems = reviews.slice(0, 5).map((r: any) => ({
+        const avgRating = reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / totalNew;
+        const digestItems = reviews.slice(0, 5).map((r) => ({
             rating: r.rating,
-            authorName: r.author_name,
+            authorName: r.author_name || "Anonymous",
             text: r.content || "",
-            sentiment: r.sentiment
+            sentiment: r.sentiment as "positive" | "negative" | "neutral"
         }));
 
         // 4. Get Recruitpients (Org Members with Digest Enabled)
@@ -96,7 +112,7 @@ export async function GET(request: Request) {
                 .in("user_id", userIds);
 
             const recipients = prefs?.filter(p => {
-                const digestEnabled = p.digest_enabled !== false; // Default true
+                const digestEnabled = (p as any).digest_enabled !== false; // Default true
                 const hasEmail = (p.users as any)?.email;
                 return digestEnabled && hasEmail;
             }) || [];

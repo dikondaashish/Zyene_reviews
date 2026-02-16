@@ -54,10 +54,19 @@ export async function sendReviewAlert(review: any) {
 
     if (!prefs || prefs.length === 0) return;
 
+    interface NotificationPreference {
+        users: { email: string } | null;
+        quiet_hours_start?: string | null;
+        quiet_hours_end?: string | null;
+        sms_enabled?: boolean;
+        phone_number?: string | null;
+        email_enabled?: boolean;
+    }
+
     // 4. Send Alerts
-    for (const pref of prefs) {
-        // Safe cast for joined user data
-        const userEmail = (pref.users as any)?.email;
+    for (const rawPref of prefs) {
+        const pref = rawPref as unknown as NotificationPreference;
+        const userEmail = pref.users?.email;
 
         // Check Quiet Hours (Applies to SMS only? Or both? Usually accurate alerts ignore strict quiet hours, or just SMS. 
         // User didn't specify quiet hours for email. I'll apply to SMS only as email is less intrusive.)

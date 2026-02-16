@@ -5,13 +5,13 @@ import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 interface PublicReviewFlowProps {
     businessId: string;
     requestId?: string;
-    googleUrl?: string;
+    googleUrl?: string; // or null if not found
 }
 
 export function PublicReviewFlow({
@@ -25,7 +25,6 @@ export function PublicReviewFlow({
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const supabase = createClient();
-    const { toast } = useToast();
 
     // Handle Star Click
     const handleRate = (stars: number) => {
@@ -34,6 +33,9 @@ export function PublicReviewFlow({
         if (stars >= 4) {
             // Happy Path
             if (googleUrl) {
+                toast.success("Redirecting...", {
+                    description: "Taking you to Google Reviews...",
+                });
                 setTimeout(() => {
                     window.location.href = googleUrl;
                 }, 1500);
@@ -44,6 +46,8 @@ export function PublicReviewFlow({
     };
 
     const handleSubmitFeedback = async () => {
+        if (!rating) return;
+
         setIsSubmitting(true);
         try {
             const { error } = await supabase.from("private_feedback").insert({
@@ -64,12 +68,13 @@ export function PublicReviewFlow({
             }
 
             setSubmitted(true);
+            toast.success("Thank you!", {
+                description: "Your feedback has been received.",
+            });
         } catch (error) {
             console.error("Feedback error:", error);
-            toast({
-                title: "Error",
+            toast.error("Error", {
                 description: "Failed to submit feedback. Please try again.",
-                variant: "destructive"
             });
         } finally {
             setIsSubmitting(false);
@@ -92,7 +97,7 @@ export function PublicReviewFlow({
         );
     }
 
-    // HAPPY PATH REDIRECT MESSAGE
+    // HAPPY PATH REDIRECT MESSAGE (If redirected but user comes back or blocked)
     if (rating && rating >= 4 && googleUrl) {
         return (
             <div className="space-y-6 animate-in fade-in zoom-in duration-500 py-10">
@@ -167,7 +172,7 @@ export function PublicReviewFlow({
                         <Star
                             className={cn(
                                 "h-12 w-12 sm:h-16 sm:w-16 transition-all duration-200",
-                                (hoverRating !== null ? star <= hoverRating : false)
+                                (hoverRating !== null ? star <= hoverRating : (rating !== null && star <= rating))
                                     ? "fill-yellow-400 text-yellow-400"
                                     : "text-slate-200 fill-slate-50"
                             )}

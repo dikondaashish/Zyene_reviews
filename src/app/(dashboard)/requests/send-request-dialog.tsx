@@ -31,7 +31,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
@@ -49,10 +49,9 @@ interface SendRequestDialogProps {
 export function SendRequestDialog({ businessId }: SendRequestDialogProps) {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             customerName: "",
             customerPhone: "",
@@ -86,8 +85,7 @@ export function SendRequestDialog({ businessId }: SendRequestDialogProps) {
                 throw new Error(text);
             }
 
-            toast({
-                title: "Request Sent!",
+            toast.success("Request Sent!", {
                 description: "The review request has been sent successfully.",
             });
             setOpen(false);
@@ -98,9 +96,7 @@ export function SendRequestDialog({ businessId }: SendRequestDialogProps) {
             // Actually let's do router.refresh() using useRouter
             window.location.reload(); // Brute force refresh for now to see list
         } catch (error: any) {
-            toast({
-                variant: "destructive",
-                title: "Failed to send",
+            toast.error("Failed to send", {
                 description: error.message || "Something went wrong.",
             });
         } finally {
