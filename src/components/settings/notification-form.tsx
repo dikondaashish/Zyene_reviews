@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 
 // Schema for Form Interface (what the inputs use)
 const formSchema = z.object({
-    sms_enabled: z.boolean().default(false),
+    sms_enabled: z.boolean(),
     phone_number: z.string().optional(),
     min_urgency_score: z.string(), // Kept as string for Select compatibility
     quiet_hours_start: z.string().optional(),
