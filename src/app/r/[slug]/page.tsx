@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     description: "We'd love to hear about your experience. Your feedback helps us improve.",
 };
 
+import { AccessError } from "@/components/public/access-error";
+
 export default async function RequestPage({
     params,
     searchParams,
@@ -20,31 +22,47 @@ export default async function RequestPage({
     const { ref: requestId } = await searchParams;
     const { slug } = await params;
 
-    console.log(`[RequestPage] Lookup slug: ${slug}`);
-
-    // 1. Look up business by slug (include category for tag selection)
+    // 1. Look up business by slug + check subscription
     const { data: business, error } = await supabase
         .from("businesses")
-        .select("id, name, slug, category")
+        .select(`
+            id, 
+            name, 
+            slug, 
+            category,
+            organization:organizations (
+                plan,
+                plan_status
+            )
+        `)
         .eq("slug", slug)
         .single();
 
-    if (error) {
-        console.error(`[RequestPage] Error looking up business: ${error.message}`);
-    }
-
-    if (!business) {
-        console.warn(`[RequestPage] Business not found for slug: ${slug}`);
+    if (error || !business) {
         return notFound();
     }
 
-    // 2. Look up Google Review URL
-    const { data: platform } = await supabase
+    // Access Control 1: Subscription Check
+    // If plan is 'free' OR status is not 'active'
+    const org = business.organization as any;
+    const hasActiveSubscription = org?.plan && org.plan !== "free" && org.plan_status === "active";
+
+    if (!hasActiveSubscription) {
+        return <AccessError type="subscription" businessName={business.name} />;
+    }
+
+    // 2. Look up Google Review Platform
+    const { data: platform, error: platformError } = await supabase
         .from("review_platforms")
         .select("external_url")
         .eq("business_id", business.id)
         .eq("platform", "google")
-        .single();
+        .maybeSingle(); // Don't throw if not found
+
+    // Access Control 2: Google Profile Connected
+    if (!platform || platformError) {
+        return <AccessError type="platform" businessName={business.name} />;
+    }
 
     // 3. Look up Request (if ref provided) & Log Click
     if (requestId) {
