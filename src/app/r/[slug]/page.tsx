@@ -30,6 +30,11 @@ export default async function RequestPage({
             name, 
             slug, 
             category,
+            logo_url,
+            brand_color,
+            min_stars_for_google,
+            welcome_message,
+            apology_message,
             organization:organizations (
                 plan,
                 plan_status
@@ -92,6 +97,11 @@ export default async function RequestPage({
                 businessCategory={business.category || "other"}
                 requestId={requestId}
                 googleUrl={platform?.external_url}
+                logoUrl={business.logo_url}
+                brandColor={business.brand_color}
+                minStars={business.min_stars_for_google}
+                welcomeMsg={business.welcome_message}
+                apologyMsg={business.apology_message}
             />
         </div>
     );

@@ -1,9 +1,13 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
 import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 import { ProfileForm } from "@/components/settings/profile-form";
+import { SlugEditor } from "@/components/settings/slug-editor";
+import { BrandingForm } from "@/components/settings/branding-form";
+import { ReviewGatingForm } from "@/components/settings/review-gating-form";
 import { Separator } from "@/components/ui/separator";
 
 export default async function GeneralSettingsPage() {
@@ -51,9 +55,21 @@ export default async function GeneralSettingsPage() {
             </div>
             <Separator />
 
+
             <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Business Information</h4>
                 <BusinessInfoForm business={business} />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Public Profile</h4>
+                <div className="grid gap-6">
+                    <SlugEditor businessId={business.id} initialSlug={business.slug} />
+                    <BrandingForm business={business} />
+                    <ReviewGatingForm business={business} />
+                </div>
             </div>
 
             <Separator />

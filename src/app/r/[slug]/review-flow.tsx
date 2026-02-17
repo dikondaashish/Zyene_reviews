@@ -41,6 +41,11 @@ interface PublicReviewFlowProps {
     businessCategory: string;
     requestId?: string;
     googleUrl?: string;
+    brandColor?: string;
+    logoUrl?: string;
+    minStars?: number;
+    welcomeMsg?: string;
+    apologyMsg?: string;
 }
 
 // ─── Step type ──────────────────────────────────────────────────────────
@@ -53,6 +58,11 @@ export function PublicReviewFlow({
     businessCategory,
     requestId,
     googleUrl,
+    brandColor = "#2563EB", // Default Blue
+    logoUrl,
+    minStars = 4,
+    welcomeMsg,
+    apologyMsg,
 }: PublicReviewFlowProps) {
     const [step, setStep] = useState<FlowStep>("rating");
     const [rating, setRating] = useState<number | null>(null);
@@ -84,7 +94,7 @@ export function PublicReviewFlow({
 
     const handleRate = (stars: number) => {
         setRating(stars);
-        if (stars >= 4) {
+        if (stars >= minStars) {
             setStep("tags");
         } else {
             setStep("negative");
@@ -286,7 +296,9 @@ export function PublicReviewFlow({
                             <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
                         </div>
                         <div className="text-left">
-                            <h2 className="text-xl font-bold text-slate-900">Sorry about that</h2>
+                            <h2 className="text-xl font-bold text-slate-900">
+                                {apologyMsg || "Sorry about that"}
+                            </h2>
                             <p className="text-slate-500 text-sm leading-snug">
                                 Share your feedback directly with the owner.
                             </p>
@@ -377,9 +389,19 @@ export function PublicReviewFlow({
                 <div className="px-8 py-10 space-y-8">
                     {/* Business avatar */}
                     <div className="flex flex-col items-center gap-4">
-                        <div className="h-20 w-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-                            <span className="text-2xl font-bold text-white">{initials}</span>
-                        </div>
+                        {logoUrl ? (
+                            <div className="h-24 w-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={logoUrl} alt={businessName} className="h-full w-full object-cover" />
+                            </div>
+                        ) : (
+                            <div
+                                className="h-20 w-20 rounded-2xl flex items-center justify-center shadow-lg text-white"
+                                style={{ backgroundColor: brandColor }}
+                            >
+                                <span className="text-2xl font-bold">{initials}</span>
+                            </div>
+                        )}
                         <div className="text-center">
                             <h1 className="text-xl font-bold text-slate-900 mb-1">{businessName}</h1>
                             <p className="text-slate-500 text-sm">Your feedback means a lot to us!</p>
@@ -388,8 +410,8 @@ export function PublicReviewFlow({
 
                     {/* Question */}
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900 leading-tight">
-                            How was your experience?
+                        <h2 className="text-2xl font-bold text-slate-900 leading-tight px-4">
+                            {welcomeMsg || "How was your experience?"}
                         </h2>
                     </div>
 
@@ -442,8 +464,8 @@ export function PublicReviewFlow({
                 <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
                         <div className="h-1.5 flex-1 bg-slate-200 rounded-full" />
                     </div>
 
@@ -462,9 +484,13 @@ export function PublicReviewFlow({
                                     "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
-                                        ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20 scale-105"
-                                        : "bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
+                                        ? "text-white scale-105 shadow-md"
+                                        : "bg-white text-slate-600 border-slate-200 hover:bg-gray-50"
                                 )}
+                                style={{
+                                    backgroundColor: selectedTags.includes(tag) ? brandColor : undefined,
+                                    borderColor: selectedTags.includes(tag) ? brandColor : undefined
+                                }}
                             >
                                 {tag}
                             </button>
@@ -478,9 +504,13 @@ export function PublicReviewFlow({
                             "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
                             "border-2 active:scale-[0.98]",
                             selectedTags.includes("👍 Everything")
-                                ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20"
-                                : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                                ? "text-white shadow-md"
+                                : "text-slate-700 border-slate-200 hover:bg-gray-50"
                         )}
+                        style={{
+                            backgroundColor: selectedTags.includes("👍 Everything") ? brandColor : undefined,
+                            borderColor: selectedTags.includes("👍 Everything") ? brandColor : undefined
+                        }}
                     >
                         👍 Everything!
                     </button>
@@ -591,11 +621,11 @@ export function PublicReviewFlow({
                     <button
                         className={cn(
                             "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-                            "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                            "shadow-lg hover:shadow-xl",
                             "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                             "flex items-center justify-center gap-2"
                         )}
+                        style={{ backgroundColor: brandColor }}
                         onClick={handlePostToGoogle}
                         disabled={isSubmitting || !reviewText.trim()}
                     >
@@ -618,7 +648,7 @@ export function PublicReviewFlow({
                         Back
                     </button>
                 </div>
-            </CardWrapper>
+            </CardWrapper >
         );
     }
 
