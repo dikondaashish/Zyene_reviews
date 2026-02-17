@@ -7,6 +7,7 @@ import {
     ChevronDown,
     CreditCard,
     Home,
+    Megaphone,
     MessageSquare,
     Plug,
     Send,
@@ -51,6 +52,11 @@ const items = [
         title: "Review Requests",
         url: "/requests",
         icon: Send,
+    },
+    {
+        title: "Campaigns",
+        url: "/campaigns",
+        icon: Megaphone,
     },
     {
         title: "Analytics",

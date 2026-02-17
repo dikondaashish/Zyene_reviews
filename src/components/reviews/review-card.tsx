@@ -191,29 +191,48 @@ export function ReviewCard({ review }: { review: Review }) {
             <div className="flex items-center gap-2 pt-2 border-t border-slate-50 mt-1">
                 {review.response_status !== 'responded' && (
                     <>
-                        <Button
-                            size="sm"
-                            variant={isReplying ? "secondary" : "default"}
-                            className={cn("h-8 text-xs font-medium px-4", !isReplying && "bg-blue-600 hover:bg-blue-700 text-white shadow-sm")}
-                            onClick={() => setIsReplying(!isReplying)}
-                        >
-                            <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                            {isReplying ? "Cancel Reply" : "Reply"}
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8 text-xs font-medium px-3 text-violet-600 border-violet-100 bg-violet-50 hover:bg-violet-100 hover:text-violet-700"
-                            onClick={handleSuggestReply}
-                            disabled={isSuggesting}
-                        >
-                            {isSuggesting ? (
-                                <Sparkles className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                            ) : (
-                                <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                            )}
-                            AI Suggest Reply
-                        </Button>
+                        {review.platform === 'yelp' ? (
+                            <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-1.5">
+                                <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
+                                <span>
+                                    Replies to Yelp reviews must be made on{" "}
+                                    <a
+                                        href="https://biz.yelp.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-medium underline hover:text-amber-900"
+                                    >
+                                        yelp.com
+                                    </a>
+                                </span>
+                            </div>
+                        ) : (
+                            <>
+                                <Button
+                                    size="sm"
+                                    variant={isReplying ? "secondary" : "default"}
+                                    className={cn("h-8 text-xs font-medium px-4", !isReplying && "bg-blue-600 hover:bg-blue-700 text-white shadow-sm")}
+                                    onClick={() => setIsReplying(!isReplying)}
+                                >
+                                    <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
+                                    {isReplying ? "Cancel Reply" : "Reply"}
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 text-xs font-medium px-3 text-violet-600 border-violet-100 bg-violet-50 hover:bg-violet-100 hover:text-violet-700"
+                                    onClick={handleSuggestReply}
+                                    disabled={isSuggesting}
+                                >
+                                    {isSuggesting ? (
+                                        <Sparkles className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                                    ) : (
+                                        <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                                    )}
+                                    AI Suggest Reply
+                                </Button>
+                            </>
+                        )}
                     </>
                 )}
 

@@ -15,7 +15,12 @@ import {
     ArrowRight,
     TrendingUp,
     CheckCircle,
+    ThumbsUp,
+    Target,
+    Send,
+    Calendar,
 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { GoogleConnectButton } from "@/components/dashboard/google-connect-button";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +30,7 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
+import { QRCodeCard } from "@/components/dashboard/qr-code-card";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -79,6 +85,7 @@ export default async function DashboardPage() {
         .select(
             `
             organizations (
+                *,
                 businesses (
                     *,
                     review_platforms (*)
@@ -88,6 +95,11 @@ export default async function DashboardPage() {
         )
         .eq("user_id", user.id)
         .single();
+
+    // @ts-ignore - Supabase types inference
+    const organization = memberData?.organizations || {};
+    // @ts-ignore - Supabase types inference
+    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 10;
 
     // @ts-ignore - Supabase types inference
     const business = memberData?.organizations?.businesses?.[0] || {
@@ -117,6 +129,15 @@ export default async function DashboardPage() {
     // Trend stats
     let totalReviewsTrend = 0;
     let averageRatingTrend = 0;
+
+    // New stats
+    let positivePercent = 0;
+    let negativePercent = 0;
+    let hasSentimentData = false;
+    let engagementRate = 0;
+    let hasEngagementData = false;
+    let requestsThisMonth = 0;
+    let newReviews30d = 0;
 
     if (business.id) {
         // 1. Response Rate
@@ -240,6 +261,72 @@ export default async function DashboardPage() {
                 count,
             }));
         }
+
+        // 8. Positive / Negative Experience %
+        const { count: positiveCount } = await supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .eq("sentiment", "positive");
+
+        const { count: negMixedCount } = await supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .in("sentiment", ["negative", "mixed"]);
+
+        const { count: sentimentTotalCount } = await supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .not("sentiment", "is", null);
+
+        const totalSentiment = sentimentTotalCount || 0;
+        if (totalSentiment > 0) {
+            hasSentimentData = true;
+            positivePercent = ((positiveCount || 0) / totalSentiment) * 100;
+            negativePercent = ((negMixedCount || 0) / totalSentiment) * 100;
+        }
+
+        // 9. Engagement Rate
+        const { count: completedRequests } = await supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .in("status", ["completed", "feedback_left"]);
+
+        const { count: sentRequests } = await supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .not("status", "eq", "queued");
+
+        if ((sentRequests || 0) > 0) {
+            hasEngagementData = true;
+            engagementRate = ((completedRequests || 0) / (sentRequests || 1)) * 100;
+        }
+
+        // 10. Request Usage This Month
+        const now2 = new Date();
+        const firstOfMonth = new Date(now2.getFullYear(), now2.getMonth(), 1);
+        const { count: monthlyRequests } = await supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .gte("created_at", firstOfMonth.toISOString());
+
+        requestsThisMonth = monthlyRequests || 0;
+
+        // 11. New Reviews (30 days)
+        const thirtyDaysAgo2 = new Date();
+        thirtyDaysAgo2.setDate(thirtyDaysAgo2.getDate() - 30);
+        const { count: newReviewCount } = await supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .gte("review_date", thirtyDaysAgo2.toISOString());
+
+        newReviews30d = newReviewCount || 0;
     }
 
     // ── Computed Stats ──────────────────────────────────────────
@@ -357,6 +444,96 @@ export default async function DashboardPage() {
                 </Card>
             </div>
 
+            {/* Extended Stats Row */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {/* Positive Experience % */}
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Positive Experience
+                        </CardTitle>
+                        <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className={`text-2xl font-bold ${!hasSentimentData ? "text-muted-foreground" :
+                            positivePercent > 60 ? "text-green-600" :
+                                positivePercent >= 40 ? "text-yellow-600" :
+                                    "text-red-600"
+                            }`}>
+                            {hasSentimentData ? `${positivePercent.toFixed(0)}%` : "—"}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            {hasSentimentData
+                                ? `${negativePercent.toFixed(0)}% negative/mixed`
+                                : "No sentiment data yet"}
+                        </p>
+                    </CardContent>
+                </Card>
+
+                {/* Engagement Rate */}
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Engagement Rate
+                        </CardTitle>
+                        <Target className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className={`text-2xl font-bold ${!hasEngagementData ? "text-muted-foreground" : ""
+                            }`}>
+                            {hasEngagementData ? `${engagementRate.toFixed(1)}%` : "—"}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            {hasEngagementData
+                                ? "Completed the review flow"
+                                : "No requests sent yet"}
+                        </p>
+                    </CardContent>
+                </Card>
+
+                {/* Request Usage */}
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Request Usage
+                        </CardTitle>
+                        <Send className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className={`text-2xl font-bold ${(requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-red-600" :
+                            (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-yellow-600" : ""
+                            }`}>
+                            {requestsThisMonth} / {maxRequestsPerMonth}
+                        </div>
+                        <Progress
+                            value={Math.min((requestsThisMonth / maxRequestsPerMonth) * 100, 100)}
+                            className="mt-2 h-2"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            This month&apos;s plan usage
+                        </p>
+                    </CardContent>
+                </Card>
+
+                {/* New Reviews (30 days) */}
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            New Reviews (30d)
+                        </CardTitle>
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {newReviews30d}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Reviews in last 30 days
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+
             {/* Charts Row */}
             <div className="grid gap-4 md:grid-cols-2">
                 <Card>
@@ -389,6 +566,15 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* QR Code Card */}
+            {business.slug && (
+                <QRCodeCard
+                    businessId={business.id}
+                    businessSlug={business.slug}
+                    businessName={business.name || "Business"}
+                />
+            )}
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">

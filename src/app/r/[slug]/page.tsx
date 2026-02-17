@@ -20,10 +20,10 @@ export default async function RequestPage({
     const { ref: requestId } = await searchParams;
     const { slug } = await params;
 
-    // 1. Look up business by slug
+    // 1. Look up business by slug (include category for tag selection)
     const { data: business } = await supabase
         .from("businesses")
-        .select("id, name, slug")
+        .select("id, name, slug, category")
         .eq("slug", slug)
         .single();
 
@@ -39,24 +39,16 @@ export default async function RequestPage({
         .eq("platform_name", "google")
         .single();
 
-    // If no google URL, we can't redirect happy customers.
-    // We should probably show a generic "Thanks" or just fallback to generic logic.
-    // Assuming it exists for this feature to make sense.
-
     // 3. Look up Request (if ref provided) & Log Click
     if (requestId) {
-        // Verify it belongs to business?
-        // Check if already clicked? - "Update status to clicked" implies we update it.
         const { data: request } = await supabase
             .from("review_requests")
             .select("status")
             .eq("id", requestId)
-            .eq("business_id", business.id) // Security check
+            .eq("business_id", business.id)
             .single();
 
-        if (request && request.status !== "review_left") {
-            // Update to 'clicked' if not already review_left. 
-            // We can overwrite 'sent' or 'delivered'.
+        if (request && request.status !== "review_left" && request.status !== "completed") {
             await supabase
                 .from("review_requests")
                 .update({
@@ -77,6 +69,8 @@ export default async function RequestPage({
 
                 <PublicReviewFlow
                     businessId={business.id}
+                    businessName={business.name}
+                    businessCategory={business.category || "other"}
                     requestId={requestId}
                     googleUrl={platform?.external_url}
                 />

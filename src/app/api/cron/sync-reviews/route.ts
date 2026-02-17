@@ -1,5 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { syncGoogleReviewsForPlatform, SyncResult } from "@/lib/google/sync-service";
+import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/lib/yelp/sync-service";
+import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/lib/facebook/sync-service";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -13,11 +15,12 @@ export async function GET(request: Request) {
 
     const admin = createAdminClient();
 
-    // Fetch all active platforms
+    // Fetch all active review platforms (Google, Yelp, Facebook)
     const { data: platforms, error } = await admin
         .from("review_platforms")
-        .select("id")
-        .eq("sync_status", "active");
+        .select("id, platform")
+        .eq("sync_status", "active")
+        .in("platform", ["google", "yelp", "facebook"]);
 
     if (error) {
         console.error("Cron: Failed to fetch platforms", error);
@@ -30,16 +33,28 @@ export async function GET(request: Request) {
     let totalAnalyzed = 0;
     let totalAlerts = 0;
 
-    // Process sequentially to limit concurrency/rate-limits
+    // Process sequentially to respect rate limits
     for (const platform of platforms || []) {
         try {
-            const stats: SyncResult = await syncGoogleReviewsForPlatform(platform.id);
+            let stats: SyncResult | YelpSyncResult | FacebookSyncResult;
+
+            if (platform.platform === "google") {
+                stats = await syncGoogleReviewsForPlatform(platform.id);
+            } else if (platform.platform === "yelp") {
+                stats = await syncYelpReviewsForPlatform(platform.id);
+            } else if (platform.platform === "facebook") {
+                stats = await syncFacebookReviewsForPlatform(platform.id);
+            } else {
+                console.warn(`[Cron] Unknown platform type: ${platform.platform}`);
+                continue;
+            }
+
             totalAnalyzed += stats.analyzed || 0;
             totalAlerts += stats.alerts || 0;
-            results.push({ id: platform.id, status: "success", ...stats });
+            results.push({ id: platform.id, platform: platform.platform, status: "success", ...stats });
         } catch (error: any) {
-            console.error(`[Cron] Sync Failed for platform ${platform.id}:`, error);
-            results.push({ id: platform.id, status: "error", error: error.message });
+            console.error(`[Cron] Sync Failed for ${platform.platform} platform ${platform.id}:`, error);
+            results.push({ id: platform.id, platform: platform.platform, status: "error", error: error.message });
         }
     }
 
