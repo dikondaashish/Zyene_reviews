@@ -90,7 +90,7 @@ export default function NewCampaignPage() {
     const previewSMS = form.sms_template
         .replace(/\{customer_name\}/g, "Sarah")
         .replace(/\{business_name\}/g, "Sunrise Café")
-        .replace(/\{review_link\}/g, "https://zyene.co/r/sunrise-cafe");
+        .replace(/\{review_link\}/g, `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/sunrise-cafe`);
 
     const canProceed = () => {
         switch (step) {

@@ -161,9 +161,10 @@ export async function POST(
                 results.reasons.push(`${contactIdentifier}: Failed to create request record`);
                 continue;
             }
-
             const requestId = requestRecord.id;
-            const reviewLink = `${appUrl}/r/${business.slug}?ref=${requestId}&campaign=${campaignId}`;
+            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            const protocol = rootDomain.includes("localhost") ? "http" : "https";
+            const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestId}&campaign=${campaignId}`;
 
             // e. Replace template placeholders
             const customerName = contact.name || "there";

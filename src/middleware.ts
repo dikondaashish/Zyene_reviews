@@ -128,7 +128,35 @@ export async function middleware(request: NextRequest) {
             if ((pathname === "/login" || pathname === "/") && user) {
                 return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
             }
+            return supabaseResponse;
         }
+
+        // Production Root Domain Logic
+
+        // 1. Landing page -> pass
+        if (pathname === "/") return supabaseResponse;
+
+        // 2. Reserved prefixes that should NOT be rewritten
+        const reservedPrefixes = [
+            "/api",
+            "/_next",
+            "/static",
+            "/favicon.ico",
+            "/login",
+            "/signup",
+            "/forgot-password",
+            "/r/" // Keep legacy paths working
+        ];
+
+        const isReserved = reservedPrefixes.some(prefix => pathname.startsWith(prefix));
+
+        // 3. Rewrite business slugs to /r/[slug]
+        if (!isReserved && !pathname.includes(".")) {
+            return createResponse(
+                NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
+            );
+        }
+
         return supabaseResponse;
     }
 

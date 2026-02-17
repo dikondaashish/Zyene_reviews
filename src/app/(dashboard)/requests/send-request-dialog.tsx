@@ -116,13 +116,13 @@ export function SendRequestDialog({ businessId, businessSlug, businessName }: Se
         }
     }
 
-    const reviewUrl = businessSlug
-        ? `${window.location.origin}/r/${businessSlug}`
+    const reviewLink = businessSlug
+        ? `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${businessSlug}`
         : "";
 
     const handleCopyLink = async () => {
         try {
-            await navigator.clipboard.writeText(reviewUrl);
+            await navigator.clipboard.writeText(reviewLink);
             setLinkCopied(true);
             toast.success("Link copied!");
             setTimeout(() => setLinkCopied(false), 2000);
@@ -278,8 +278,8 @@ export function SendRequestDialog({ businessId, businessSlug, businessName }: Se
                         {businessSlug ? (
                             <>
                                 <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border">
-                                    <span className="font-mono text-sm truncate flex-1">
-                                        zyene.in/r/{businessSlug}
+                                    <span className="font-mono text-xs bg-muted px-2 py-1 rounded">
+                                        {process.env.NEXT_PUBLIC_ROOT_DOMAIN}/{businessSlug}
                                     </span>
                                     <button
                                         onClick={handleCopyLink}

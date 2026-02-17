@@ -112,8 +112,9 @@ export async function POST(request: Request) {
         }
 
         const requestId = requestRecord.id;
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-        const reviewLink = `${appUrl}/r/${business.slug}?ref=${requestId}`;
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+        const protocol = rootDomain.includes("localhost") ? "http" : "https";
+        const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestId}`;
 
         // 6. Send SMS
         let sendStatus = "sent";

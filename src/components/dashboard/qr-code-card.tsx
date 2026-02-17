@@ -75,39 +75,52 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
             toast.error("Please allow popups to print.");
             return;
         }
-        printWindow.document.write(`
-            <!DOCTYPE html>
+        printWindow.document.write(
+            `
             <html>
-            <head>
-                <title>QR Code — ${businessName}</title>
-                <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    body {
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh;
-                        padding: 40px;
-                        text-align: center;
-                    }
-                    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-                    p.tagline { font-size: 18px; color: #475569; margin-bottom: 32px; }
-                    img { width: 280px; height: 280px; margin-bottom: 16px; }
-                    p.url { font-size: 14px; color: #64748b; margin-bottom: 40px; }
-                    p.footer { font-size: 11px; color: #94a3b8; }
-                </style>
-            </head>
-            <body>
-                <h1>${businessName}</h1>
-                <p class="tagline">Scan to leave us a review!</p>
-                <img src="${qrDataUrl}" alt="QR Code" />
-                <p class="url">zyene.in/r/${businessSlug}</p>
-                <p class="footer">Powered by Zyene</p>
-            </body>
+                <head>
+                    <style>
+                        body {
+                            font-family: sans-serif;
+                            text-align: center;
+                            padding: 40px;
+                        }
+                        .container {
+                            border: 2px solid #000;
+                            padding: 40px;
+                            display: inline-block;
+                            border-radius: 16px;
+                        }
+                        h1 { margin-bottom: 20px; }
+                        img {
+                            width: 300px;
+                            height: 300px;
+                            image-rendering: pixelated;
+                        }
+                        .url {
+                            margin-top: 20px;
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        .logo {
+                            font-weight: bold;
+                            margin-top: 30px;
+                            font-size: 12px;
+                            color: #999;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1>Review Us on Google</h1>
+                        <img src="${qrDataUrl}" />
+                        <p class="url">${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${businessSlug}</p>
+                        <p class="logo">Powered by Zyene</p>
+                    </div>
+                </body>
             </html>
-        `);
+            `
+        );
         printWindow.document.close();
         printWindow.focus();
         setTimeout(() => {
@@ -138,7 +151,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                     <CardTitle className="text-base">Your Review Page</CardTitle>
                 </div>
                 <CardDescription className="flex items-center gap-2">
-                    <span className="font-mono text-xs truncate">zyene.in/r/{businessSlug}</span>
+                    <span className="font-mono text-xs truncate">{process.env.NEXT_PUBLIC_ROOT_DOMAIN}/{businessSlug}</span>
                     <button
                         onClick={handleCopyLink}
                         className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"

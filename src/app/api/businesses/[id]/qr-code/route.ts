@@ -51,9 +51,9 @@ export async function GET(
     }
 
     // Build review URL
-    const baseUrl =
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const reviewUrl = `${baseUrl}/r/${business.slug}`;
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const protocol = rootDomain.includes("localhost") ? "http" : "https";
+    const reviewUrl = `${protocol}://${rootDomain}/${business.slug}`;
 
     try {
         const qrCodeDataUrl = await generateQRCodeDataURL(reviewUrl);
