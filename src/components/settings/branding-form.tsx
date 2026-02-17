@@ -118,54 +118,54 @@ export function BrandingForm({ business }: BrandingFormProps) {
 
     return (
         <div className="space-y-6 rounded-lg border p-4 bg-muted/10">
-            <div>
-                <h3 className="text-lg font-medium">Brand Identity</h3>
-                <p className="text-sm text-muted-foreground">
-                    Ensure your review page matches your brand.
-                </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Logo Section */}
-                <div className="space-y-4">
-                    <FormLabel>Logo</FormLabel>
-                    <div className="flex items-center gap-4">
-                        <div className="relative h-24 w-24 rounded-full border bg-background overflow-hidden flex items-center justify-center">
-                            {uploadingLogo ? (
-                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                            ) : logoUrl ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={logoUrl} alt="Business Logo" className="object-cover h-full w-full" />
-                            ) : (
-                                <span className="text-xs text-muted-foreground text-center px-2">No Logo</span>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm" className="relative" disabled={uploadingLogo}>
-                                    <Upload className="mr-2 h-4 w-4" />
-                                    Upload
-                                    <input
-                                        type="file"
-                                        className="absolute inset-0 opacity-0 cursor-pointer"
-                                        accept="image/png, image/jpeg, image/webp"
-                                        onChange={handleLogoUpload}
-                                        disabled={uploadingLogo}
-                                    />
-                                </Button>
-                                {logoUrl && (
-                                    <Button variant="ghost" size="icon" onClick={removeLogo} disabled={uploadingLogo}>
-                                        <Trash className="h-4 w-4 text-destructive" />
-                                    </Button>
-                                )}
-                            </div>
-                            <p className="text-xs text-muted-foreground">Max 2MB. PNG, JPG, WebP.</p>
-                        </div>
-                    </div>
+            <Form {...form}>
+                <div>
+                    <h3 className="text-lg font-medium">Brand Identity</h3>
+                    <p className="text-sm text-muted-foreground">
+                        Ensure your review page matches your brand.
+                    </p>
                 </div>
 
-                {/* Color Section */}
-                <Form {...form}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Logo Section */}
+                    <div className="space-y-4">
+                        <FormLabel>Logo</FormLabel>
+                        <div className="flex items-center gap-4">
+                            <div className="relative h-24 w-24 rounded-full border bg-background overflow-hidden flex items-center justify-center">
+                                {uploadingLogo ? (
+                                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                                ) : logoUrl ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={logoUrl} alt="Business Logo" className="object-cover h-full w-full" />
+                                ) : (
+                                    <span className="text-xs text-muted-foreground text-center px-2">No Logo</span>
+                                )}
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="sm" className="relative" disabled={uploadingLogo}>
+                                        <Upload className="mr-2 h-4 w-4" />
+                                        Upload
+                                        <input
+                                            type="file"
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            accept="image/png, image/jpeg, image/webp"
+                                            onChange={handleLogoUpload}
+                                            disabled={uploadingLogo}
+                                        />
+                                    </Button>
+                                    {logoUrl && (
+                                        <Button variant="ghost" size="icon" onClick={removeLogo} disabled={uploadingLogo}>
+                                            <Trash className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                    )}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Max 2MB. PNG, JPG, WebP.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Color Section */}
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
@@ -193,8 +193,8 @@ export function BrandingForm({ business }: BrandingFormProps) {
                             Save Color
                         </Button>
                     </form>
-                </Form>
-            </div>
+                </div>
+            </Form>
         </div>
     );
 }
