@@ -5,8 +5,8 @@ import { PublicReviewFlow } from "./review-flow";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Review Your Experience",
-    description: "Please rate your recent experience.",
+    title: "Share Your Experience",
+    description: "We'd love to hear about your experience. Your feedback helps us improve.",
 };
 
 export default async function RequestPage({
@@ -67,21 +67,14 @@ export default async function RequestPage({
     }
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-            <main className="w-full max-w-md text-center space-y-8">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 mb-2">{business.name}</h1>
-                    <p className="text-slate-600">We value your feedback.</p>
-                </div>
-
-                <PublicReviewFlow
-                    businessId={business.id}
-                    businessName={business.name}
-                    businessCategory={business.category || "other"}
-                    requestId={requestId}
-                    googleUrl={platform?.external_url}
-                />
-            </main>
+        <div className="review-page-wrapper">
+            <PublicReviewFlow
+                businessId={business.id}
+                businessName={business.name}
+                businessCategory={business.category || "other"}
+                requestId={requestId}
+                googleUrl={platform?.external_url}
+            />
         </div>
     );
 }

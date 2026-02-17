@@ -1,30 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { Star, Loader2, Copy, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
+import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 // ─── Category → Tag mapping ────────────────────────────────────────────
 const CATEGORY_TAGS: Record<string, string[]> = {
-    restaurant: ["Food", "Service", "Ambiance", "Prices", "Portions", "Speed", "Cleanliness", "Menu Variety"],
-    cafe: ["Coffee", "Food", "Ambiance", "Service", "Prices", "Wi-Fi", "Seating"],
-    bar: ["Drinks", "Atmosphere", "Service", "Music", "Prices", "Food", "Crowd"],
-    salon: ["Service", "Skill", "Cleanliness", "Ambiance", "Prices", "Products", "Relaxation"],
-    spa: ["Service", "Relaxation", "Cleanliness", "Ambiance", "Treatments", "Staff", "Value"],
-    gym: ["Equipment", "Trainers", "Cleanliness", "Prices", "Classes", "Atmosphere", "Hours"],
-    fitness: ["Trainers", "Equipment", "Classes", "Atmosphere", "Cleanliness", "Results", "Community"],
-    medical: ["Staff", "Professionalism", "Wait Time", "Cleanliness", "Communication", "Care"],
-    dental: ["Staff", "Professionalism", "Comfort", "Cleanliness", "Communication", "Pain-Free"],
-    retail: ["Selection", "Prices", "Staff", "Quality", "Store Layout", "Returns"],
-    auto: ["Honesty", "Speed", "Prices", "Quality", "Communication", "Professionalism"],
-    hotel: ["Room", "Cleanliness", "Staff", "Location", "Amenities", "Value"],
-    service: ["Quality", "Professionalism", "Communication", "Timeliness", "Value", "Expertise"],
-    other: ["Quality", "Service", "Value", "Atmosphere", "Staff", "Experience"],
+    restaurant: ["🍽️ Food", "👨‍🍳 Service", "✨ Ambiance", "💰 Prices", "🍕 Portions", "⚡ Speed", "🧹 Cleanliness", "📋 Menu Variety"],
+    cafe: ["☕ Coffee", "🍰 Food", "✨ Ambiance", "👨‍🍳 Service", "💰 Prices", "📶 Wi-Fi", "💺 Seating"],
+    bar: ["🍸 Drinks", "🎵 Atmosphere", "👨‍🍳 Service", "🎶 Music", "💰 Prices", "🍕 Food", "👥 Crowd"],
+    salon: ["💇 Service", "✨ Skill", "🧹 Cleanliness", "💆 Ambiance", "💰 Prices", "🧴 Products", "😌 Relaxation"],
+    spa: ["💆 Service", "😌 Relaxation", "🧹 Cleanliness", "✨ Ambiance", "🧖 Treatments", "👨‍⚕️ Staff", "💰 Value"],
+    gym: ["🏋️ Equipment", "👨‍🏫 Trainers", "🧹 Cleanliness", "💰 Prices", "🎯 Classes", "💪 Atmosphere", "⏰ Hours"],
+    fitness: ["👨‍🏫 Trainers", "🏋️ Equipment", "🎯 Classes", "💪 Atmosphere", "🧹 Cleanliness", "📈 Results", "👥 Community"],
+    medical: ["👨‍⚕️ Staff", "🏥 Professionalism", "⏰ Wait Time", "🧹 Cleanliness", "💬 Communication", "❤️ Care"],
+    dental: ["👨‍⚕️ Staff", "🏥 Professionalism", "😌 Comfort", "🧹 Cleanliness", "💬 Communication", "✨ Pain-Free"],
+    retail: ["🛍️ Selection", "💰 Prices", "👨‍💼 Staff", "⭐ Quality", "🏪 Store Layout", "↩️ Returns"],
+    auto: ["🤝 Honesty", "⚡ Speed", "💰 Prices", "⭐ Quality", "💬 Communication", "🏥 Professionalism"],
+    hotel: ["🛏️ Room", "🧹 Cleanliness", "👨‍💼 Staff", "📍 Location", "🏊 Amenities", "💰 Value"],
+    service: ["⭐ Quality", "🏥 Professionalism", "💬 Communication", "⏰ Timeliness", "💰 Value", "🧠 Expertise"],
+    smoke: ["🌿 Products", "👨‍💼 Service", "⭐ Quality", "💰 Prices", "🏪 Selection", "✨ Atmosphere"],
+    other: ["⭐ Quality", "👨‍💼 Service", "💰 Value", "✨ Atmosphere", "👥 Staff", "🎯 Experience"],
 };
+
+// ─── Emoji ratings ─────────────────────────────────────────────────────
+const RATINGS = [
+    { emoji: "😍", label: "Excellent", value: 5, color: "from-emerald-400 to-emerald-500" },
+    { emoji: "😊", label: "Good", value: 4, color: "from-green-400 to-green-500" },
+    { emoji: "😐", label: "OK", value: 3, color: "from-amber-400 to-amber-500" },
+    { emoji: "😕", label: "Bad", value: 2, color: "from-orange-400 to-orange-500" },
+    { emoji: "😞", label: "Awful", value: 1, color: "from-red-400 to-red-500" },
+];
 
 // ─── Props ──────────────────────────────────────────────────────────────
 interface PublicReviewFlowProps {
@@ -37,23 +45,6 @@ interface PublicReviewFlowProps {
 
 // ─── Step type ──────────────────────────────────────────────────────────
 type FlowStep = "rating" | "tags" | "generating" | "review" | "thankyou" | "negative";
-
-// ─── Progress dots ──────────────────────────────────────────────────────
-function ProgressDots({ current, total }: { current: number; total: number }) {
-    return (
-        <div className="flex justify-center gap-2 mb-6">
-            {Array.from({ length: total }, (_, i) => (
-                <div
-                    key={i}
-                    className={cn(
-                        "h-2 w-2 rounded-full transition-all duration-300",
-                        i < current ? "bg-blue-600 w-6" : "bg-slate-200"
-                    )}
-                />
-            ))}
-        </div>
-    );
-}
 
 // ─── Main component ─────────────────────────────────────────────────────
 export function PublicReviewFlow({
@@ -69,13 +60,25 @@ export function PublicReviewFlow({
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [reviewText, setReviewText] = useState("");
     const [feedback, setFeedback] = useState("");
+    const [customerEmail, setCustomerEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
 
     const supabase = createClient();
 
     // Resolve tags for this business category
     const categoryKey = businessCategory.toLowerCase();
-    const tags = [...(CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other), "Everything"];
+    const tags = CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other;
+
+    // Get initials for avatar
+    const initials = businessName
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
 
     // ─── Handlers ───────────────────────────────────────────────────────
 
@@ -105,20 +108,18 @@ export function PublicReviewFlow({
                     businessName,
                     businessCategory: categoryKey,
                     rating,
-                    selectedTags,
+                    selectedTags: selectedTags.map((t) => t.replace(/^[^\s]+\s/, "")), // Strip emojis for AI
                 }),
             });
 
             const data = await res.json();
-
             if (!res.ok) throw new Error(data.error || "Failed to generate");
 
             setReviewText(data.reviewText);
             setStep("review");
         } catch (error) {
             console.error("Generation error:", error);
-            // Fallback
-            const firstTag = selectedTags[0] || "experience";
+            const firstTag = selectedTags[0]?.replace(/^[^\s]+\s/, "") || "experience";
             setReviewText(
                 `Great experience at ${businessName}! Really loved the ${firstTag.toLowerCase()}. Would definitely come back.`
             );
@@ -130,13 +131,11 @@ export function PublicReviewFlow({
         setIsSubmitting(true);
 
         try {
-            // Copy to clipboard
             await navigator.clipboard.writeText(reviewText);
             toast.success("Review copied to clipboard!", {
                 description: "Paste it on Google Reviews.",
             });
         } catch {
-            // Clipboard API might fail on some browsers
             toast.info("Tap and hold the review text to copy it.");
         }
 
@@ -154,7 +153,6 @@ export function PublicReviewFlow({
                     })
                     .eq("id", requestId);
             } else {
-                // Organic visit — create a tracking record
                 await supabase.from("review_requests").insert({
                     business_id: businessId,
                     channel: "sms",
@@ -170,7 +168,6 @@ export function PublicReviewFlow({
             console.error("Tracking error:", err);
         }
 
-        // Redirect after brief delay
         setTimeout(() => {
             if (googleUrl) {
                 window.location.href = googleUrl;
@@ -190,6 +187,7 @@ export function PublicReviewFlow({
                 review_request_id: requestId,
                 rating: rating,
                 content: feedback,
+                customer_email: customerEmail || null,
                 created_at: new Date().toISOString(),
             });
             if (error) throw error;
@@ -217,66 +215,157 @@ export function PublicReviewFlow({
         }
     };
 
+    // ─── Shared card wrapper ────────────────────────────────────────────
+
+    const CardWrapper = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+        <div className={cn(
+            "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 transition-all duration-500",
+            !mounted && "opacity-0",
+            mounted && "opacity-100"
+        )}>
+            {/* Subtle animated gradient orbs */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+            </div>
+
+            <div className={cn(
+                "relative w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden",
+                "transform transition-all duration-500",
+                mounted ? "translate-y-0 scale-100" : "translate-y-4 scale-95",
+                className
+            )}>
+                {children}
+
+                {/* Powered by footer */}
+                <div className="py-4 text-center border-t border-slate-100">
+                    <p className="text-xs text-slate-400 font-medium tracking-wide">
+                        Powered by <span className="text-blue-600 font-semibold">Zyene</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+
     // ─── Render: Thank You (final) ──────────────────────────────────────
 
     if (step === "thankyou") {
         return (
-            <div className="space-y-6 animate-in fade-in zoom-in duration-500 py-10">
-                <div className="flex justify-center">
-                    <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center animate-bounce">
-                        <span className="text-5xl">🎉</span>
+            <CardWrapper>
+                <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
+                    <div className="relative inline-flex">
+                        <div className="h-28 w-28 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                            <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
+                        </div>
+                        <div className="absolute -top-1 -right-1 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-md">
+                            ✨
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Thank You!</h2>
+                        <p className="text-slate-500 text-lg leading-relaxed">
+                            Your feedback means the world to us.<br />
+                            We appreciate you taking the time.
+                        </p>
                     </div>
                 </div>
-                <div>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-2">Thank You!</h2>
-                    <p className="text-slate-600 text-lg">We appreciate your feedback.</p>
-                </div>
-                <p className="text-xs text-slate-400 pt-4">Powered by Zyene</p>
-            </div>
+            </CardWrapper>
         );
     }
 
     // ─── Render: Negative feedback (1-3 stars) ──────────────────────────
 
     if (step === "negative") {
+        const selectedRating = RATINGS.find((r) => r.value === rating);
         return (
-            <div className="space-y-6 text-left animate-in slide-in-from-right duration-300 w-full">
-                <ProgressDots current={2} total={3} />
-                <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">We&apos;re sorry to hear that.</h2>
-                    <p className="text-slate-600 text-lg">What can we do better?</p>
+            <CardWrapper>
+                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+                    {/* Header with emoji */}
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
+                            <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
+                        </div>
+                        <div className="text-left">
+                            <h2 className="text-xl font-bold text-slate-900">Sorry about that</h2>
+                            <p className="text-slate-500 text-sm leading-snug">
+                                Share your feedback directly with the owner.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Feedback textarea */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">Your feedback</label>
+                        <textarea
+                            placeholder="Tell us what happened..."
+                            className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
+                            value={feedback}
+                            onChange={(e) => setFeedback(e.target.value)}
+                            autoFocus
+                        />
+                    </div>
+
+                    {/* Email input */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">Your email <span className="text-slate-400 font-normal">(optional)</span></label>
+                        <div className="relative">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <input
+                                type="email"
+                                placeholder="you@example.com"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                value={customerEmail}
+                                onChange={(e) => setCustomerEmail(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="space-y-3 pt-2">
+                        <button
+                            className={cn(
+                                "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
+                                "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                                "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
+                                "flex items-center justify-center gap-2"
+                            )}
+                            onClick={handleSubmitFeedback}
+                            disabled={isSubmitting || !feedback.trim()}
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                                <Send className="h-4 w-4" />
+                            )}
+                            {isSubmitting ? "Sending..." : "Send Feedback"}
+                        </button>
+
+                        <div className="flex items-center justify-between px-1">
+                            <button
+                                className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                                onClick={() => {
+                                    setRating(null);
+                                    setStep("rating");
+                                }}
+                            >
+                                <ArrowLeft className="h-3.5 w-3.5" />
+                                Back
+                            </button>
+                            {googleUrl && (
+                                <a
+                                    href={googleUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                                >
+                                    Go to Google
+                                </a>
+                            )}
+                        </div>
+                    </div>
                 </div>
-
-                <Textarea
-                    placeholder="Tell us about your experience..."
-                    className="min-h-[150px] text-lg p-4 resize-none"
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    autoFocus
-                />
-
-                <Button
-                    size="lg"
-                    className="w-full h-14 text-lg font-semibold bg-slate-900 hover:bg-slate-800"
-                    onClick={handleSubmitFeedback}
-                    disabled={isSubmitting || !feedback.trim()}
-                >
-                    {isSubmitting ? "Submitting..." : "Submit Feedback"}
-                </Button>
-
-                <div className="text-center pt-2">
-                    <button
-                        className="text-slate-400 text-sm hover:text-slate-600 underline-offset-4 hover:underline"
-                        onClick={() => {
-                            setRating(null);
-                            setStep("rating");
-                        }}
-                    >
-                        Cancel
-                    </button>
-                </div>
-                <p className="text-xs text-slate-400 text-center pt-2">Powered by Zyene</p>
-            </div>
+            </CardWrapper>
         );
     }
 
@@ -284,37 +373,64 @@ export function PublicReviewFlow({
 
     if (step === "rating") {
         return (
-            <div className="space-y-10 py-8 animate-in fade-in duration-300">
-                <ProgressDots current={1} total={4} />
-                <h2 className="text-3xl font-bold text-slate-900 leading-tight">
-                    How was your <br className="hidden sm:block" /> experience?
-                </h2>
+            <CardWrapper>
+                <div className="px-8 py-10 space-y-8">
+                    {/* Business avatar */}
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="h-20 w-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                            <span className="text-2xl font-bold text-white">{initials}</span>
+                        </div>
+                        <div className="text-center">
+                            <h1 className="text-xl font-bold text-slate-900 mb-1">{businessName}</h1>
+                            <p className="text-slate-500 text-sm">Your feedback means a lot to us!</p>
+                        </div>
+                    </div>
 
-                <div className="flex justify-center gap-2 sm:gap-4 touch-none">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                            key={star}
-                            onClick={() => handleRate(star)}
-                            onMouseEnter={() => setHoverRating(star)}
-                            onMouseLeave={() => setHoverRating(null)}
-                            className="p-1 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                            aria-label={`Rate ${star} stars`}
-                        >
-                            <Star
+                    {/* Question */}
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-slate-900 leading-tight">
+                            How was your experience?
+                        </h2>
+                    </div>
+
+                    {/* Emoji ratings */}
+                    <div className="grid grid-cols-5 gap-2">
+                        {RATINGS.map((r) => (
+                            <button
+                                key={r.value}
+                                onClick={() => handleRate(r.value)}
+                                onMouseEnter={() => setHoverRating(r.value)}
+                                onMouseLeave={() => setHoverRating(null)}
                                 className={cn(
-                                    "h-12 w-12 sm:h-16 sm:w-16 transition-all duration-200",
-                                    (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
-                                        ? "fill-yellow-400 text-yellow-400"
-                                        : "text-slate-200 fill-slate-50"
+                                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200",
+                                    "border-2 hover:border-blue-300 hover:bg-blue-50/50",
+                                    "active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                    hoverRating === r.value
+                                        ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
+                                        : rating === r.value
+                                            ? "border-blue-500 bg-blue-50 shadow-sm"
+                                            : "border-slate-200 bg-white"
                                 )}
-                                strokeWidth={1.5}
-                            />
-                        </button>
-                    ))}
+                            >
+                                <span className={cn(
+                                    "text-3xl sm:text-4xl transition-transform duration-200",
+                                    hoverRating === r.value && "scale-110"
+                                )}>
+                                    {r.emoji}
+                                </span>
+                                <span className={cn(
+                                    "text-[10px] sm:text-xs font-semibold tracking-tight transition-colors",
+                                    hoverRating === r.value || rating === r.value
+                                        ? "text-blue-700"
+                                        : "text-slate-500"
+                                )}>
+                                    {r.label}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
-                <p className="text-sm text-slate-400">Tap a star to rate</p>
-                <p className="text-xs text-slate-400 pt-4">Powered by Zyene</p>
-            </div>
+            </CardWrapper>
         );
     }
 
@@ -322,59 +438,87 @@ export function PublicReviewFlow({
 
     if (step === "tags") {
         return (
-            <div className="space-y-6 animate-in slide-in-from-right duration-300 w-full">
-                <ProgressDots current={2} total={4} />
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-1">What did you like the most?</h2>
-                    <p className="text-sm text-slate-400">TAP ON AN OPTION</p>
-                </div>
+            <CardWrapper>
+                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+                    {/* Step indicator */}
+                    <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-slate-200 rounded-full" />
+                    </div>
 
-                <div className="flex flex-wrap justify-center gap-2">
-                    {tags.map((tag) => (
-                        <button
-                            key={tag}
-                            onClick={() => toggleTag(tag)}
-                            className={cn(
-                                "px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200",
-                                selectedTags.includes(tag)
-                                    ? "bg-[#2563EB] text-white border-[#2563EB] scale-105"
-                                    : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
-                            )}
-                        >
-                            {tag}
-                        </button>
-                    ))}
-                </div>
+                    <div className="text-center space-y-1">
+                        <h2 className="text-2xl font-bold text-slate-900">What did you like most?</h2>
+                        <p className="text-slate-500 text-sm">Tap to select what stood out</p>
+                    </div>
 
-                <div
-                    className={cn(
+                    {/* Tags */}
+                    <div className="flex flex-wrap justify-center gap-2.5">
+                        {tags.map((tag) => (
+                            <button
+                                key={tag}
+                                onClick={() => toggleTag(tag)}
+                                className={cn(
+                                    "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                                    "border-2 active:scale-95",
+                                    selectedTags.includes(tag)
+                                        ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20 scale-105"
+                                        : "bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
+                                )}
+                            >
+                                {tag}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Everything button */}
+                    <button
+                        onClick={() => toggleTag("👍 Everything")}
+                        className={cn(
+                            "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
+                            "border-2 active:scale-[0.98]",
+                            selectedTags.includes("👍 Everything")
+                                ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20"
+                                : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                        )}
+                    >
+                        👍 Everything!
+                    </button>
+
+                    {/* Continue button */}
+                    <div className={cn(
                         "transition-all duration-300",
                         selectedTags.length > 0
                             ? "opacity-100 translate-y-0"
-                            : "opacity-0 translate-y-4 pointer-events-none"
-                    )}
-                >
-                    <Button
-                        size="lg"
-                        className="w-full h-14 text-lg font-semibold bg-[#2563EB] hover:bg-blue-700"
-                        onClick={handleGenerateReview}
-                    >
-                        Continue →
-                    </Button>
-                </div>
+                            : "opacity-0 translate-y-4 pointer-events-none h-0 overflow-hidden"
+                    )}>
+                        <button
+                            className={cn(
+                                "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
+                                "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                                "active:scale-[0.98] flex items-center justify-center gap-2"
+                            )}
+                            onClick={handleGenerateReview}
+                        >
+                            Continue
+                            <ChevronRight className="h-5 w-5" />
+                        </button>
+                    </div>
 
-                <button
-                    className="text-slate-400 text-sm hover:text-slate-600 underline-offset-4 hover:underline"
-                    onClick={() => {
-                        setRating(null);
-                        setSelectedTags([]);
-                        setStep("rating");
-                    }}
-                >
-                    ← Back
-                </button>
-                <p className="text-xs text-slate-400 pt-2">Powered by Zyene</p>
-            </div>
+                    <button
+                        className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
+                        onClick={() => {
+                            setRating(null);
+                            setSelectedTags([]);
+                            setStep("rating");
+                        }}
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        Back
+                    </button>
+                </div>
+            </CardWrapper>
         );
     }
 
@@ -382,17 +526,29 @@ export function PublicReviewFlow({
 
     if (step === "generating") {
         return (
-            <div className="space-y-6 py-16 animate-in fade-in duration-300">
-                <ProgressDots current={3} total={4} />
-                <div className="flex justify-center">
-                    <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
+            <CardWrapper>
+                <div className="px-8 py-20 text-center space-y-6">
+                    {/* Step indicator */}
+                    <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-blue-400 rounded-full animate-pulse" />
+                    </div>
+
+                    <div className="flex justify-center">
+                        <div className="relative">
+                            <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse">
+                                <Sparkles className="h-8 w-8 text-white" />
+                            </div>
+                            <div className="absolute -top-1 -right-1 h-4 w-4 bg-yellow-400 rounded-full animate-ping" />
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-900">Crafting your review...</h2>
+                        <p className="text-sm text-slate-500 mt-1">Just a moment ✨</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 className="text-xl font-semibold text-slate-900">Writing your review...</h2>
-                    <p className="text-sm text-slate-400 mt-1">Just a moment</p>
-                </div>
-                <p className="text-xs text-slate-400 pt-4">Powered by Zyene</p>
-            </div>
+            </CardWrapper>
         );
     }
 
@@ -400,51 +556,69 @@ export function PublicReviewFlow({
 
     if (step === "review") {
         return (
-            <div className="space-y-5 animate-in slide-in-from-right duration-300 w-full">
-                <ProgressDots current={3} total={4} />
-                <div>
-                    <h2 className="text-xl font-bold text-slate-900 mb-1">
-                        Would you be willing to leave a review on Google?
-                    </h2>
+            <CardWrapper>
+                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+                    {/* Step indicator */}
+                    <div className="flex items-center gap-2">
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                    </div>
+
+                    <div className="text-center space-y-1">
+                        <h2 className="text-xl font-bold text-slate-900">
+                            Would you post this on Google?
+                        </h2>
+                        <p className="text-slate-500 text-sm">Tap to edit, or post as-is</p>
+                    </div>
+
+                    {/* AI Generated Review */}
+                    <div className="relative">
+                        <div className="absolute -top-3 left-4 bg-white px-2">
+                            <div className="flex items-center gap-1 text-xs font-semibold text-blue-600">
+                                <Sparkles className="h-3.5 w-3.5" />
+                                AI Generated
+                            </div>
+                        </div>
+                        <textarea
+                            value={reviewText}
+                            onChange={(e) => setReviewText(e.target.value)}
+                            className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-blue-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-blue-50/30 leading-relaxed"
+                        />
+                    </div>
+
+                    {/* Post to Google CTA */}
+                    <button
+                        className={cn(
+                            "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
+                            "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                            "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
+                            "flex items-center justify-center gap-2"
+                        )}
+                        onClick={handlePostToGoogle}
+                        disabled={isSubmitting || !reviewText.trim()}
+                    >
+                        {isSubmitting ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                            <>
+                                <Copy className="h-4 w-4" />
+                                <span>Copy & Go to Google</span>
+                                <ExternalLink className="h-4 w-4 ml-1" />
+                            </>
+                        )}
+                    </button>
+
+                    <button
+                        className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
+                        onClick={() => setStep("tags")}
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        Back
+                    </button>
                 </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left">
-                    <Textarea
-                        value={reviewText}
-                        onChange={(e) => setReviewText(e.target.value)}
-                        className="min-h-[120px] text-base p-0 border-0 bg-transparent resize-none focus-visible:ring-0 shadow-none"
-                    />
-                    <p className="text-xs text-slate-400 mt-2">Tap to make edits if you&apos;d like.</p>
-                </div>
-
-                <Button
-                    size="lg"
-                    className="w-full h-14 text-lg font-semibold bg-[#4285F4] hover:bg-[#3367D6] text-white"
-                    onClick={handlePostToGoogle}
-                    disabled={isSubmitting || !reviewText.trim()}
-                >
-                    {isSubmitting ? (
-                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                    ) : (
-                        <Copy className="h-5 w-5 mr-2" />
-                    )}
-                    {isSubmitting ? "Redirecting..." : "Post to Google"}
-                </Button>
-
-                {!googleUrl && (
-                    <p className="text-xs text-slate-500">
-                        We&apos;ll copy your review and open Google Maps so you can paste it.
-                    </p>
-                )}
-
-                <button
-                    className="text-slate-400 text-sm hover:text-slate-600 underline-offset-4 hover:underline"
-                    onClick={() => setStep("tags")}
-                >
-                    ← Back
-                </button>
-                <p className="text-xs text-slate-400 pt-2">Powered by Zyene</p>
-            </div>
+            </CardWrapper>
         );
     }
 
