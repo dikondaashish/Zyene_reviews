@@ -25,8 +25,9 @@ export async function getValidGoogleToken(platformId: string) {
         console.log(`[Token] Expired for platform ${platformId}. Refreshing...`);
 
         if (!refreshToken) {
+            console.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
             await admin.from("review_platforms").update({ sync_status: 'error_no_refresh_token' }).eq("id", platformId);
-            throw new Error("No refresh token available");
+            throw new Error("No refresh token available - Please reconnect Google Account");
         }
 
         try {

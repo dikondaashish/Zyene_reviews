@@ -170,19 +170,40 @@ export async function GET(request: Request) {
 
                     console.log("DEBUG: Platform Data Found?", !!platformData);
 
+                    // Robust Token Extraction
+                    const sessionToken = data.session?.provider_token;
+                    const sessionRefreshToken = data.session?.provider_refresh_token;
+
+                    // Fallback: Check identities if session is missing tokens
+                    const googleIdentity = data.user.identities?.find(id => id.provider === 'google');
+                    // @ts-ignore
+                    const identityToken = googleIdentity?.identity_data?.provider_token;
+                    // @ts-ignore
+                    const identityRefreshToken = googleIdentity?.identity_data?.provider_refresh_token;
+
+                    const finalAccessToken = sessionToken || identityToken;
+                    const finalRefreshToken = sessionRefreshToken || identityRefreshToken;
+
+                    console.log("DEBUG: Token Extraction Result:");
+                    console.log("- Session RT:", !!sessionRefreshToken);
+                    console.log("- Identity RT:", !!identityRefreshToken);
+                    console.log("- Final RT:", !!finalRefreshToken);
+
                     if (platformData) {
                         console.log("DEBUG: Updating Platform Tokens...");
                         // Update existing platform credentials
-                        // Prepare update payload
+
                         const updatePayload: any = {
-                            access_token: data.session?.provider_token,
+                            access_token: finalAccessToken,
                             sync_status: "active",
                             updated_at: new Date().toISOString(),
                         };
 
-                        // Only overwrite refresh token if a new one is provided
-                        if (data.session?.provider_refresh_token) {
-                            updatePayload.refresh_token = data.session.provider_refresh_token;
+                        // Update refresh token if found
+                        if (finalRefreshToken) {
+                            updatePayload.refresh_token = finalRefreshToken;
+                        } else {
+                            console.warn("WARNING: No Refresh Token found in Session or Identities!");
                         }
 
                         const { error: updateError } = await admin
@@ -199,9 +220,9 @@ export async function GET(request: Request) {
                             business_id: businessId,
                             platform: "google",
                             sync_status: "active", // Assume active on connect
-                            // Store tokens if we can access them from session
-                            access_token: data.session?.provider_token,
-                            refresh_token: data.session?.provider_refresh_token,
+                            // Store tokens using the robust extraction from above
+                            access_token: finalAccessToken,
+                            refresh_token: finalRefreshToken,
                         });
                     }
                 } else {
