@@ -43,7 +43,7 @@ export default async function RequestPage({
         .from("review_platforms")
         .select("external_url")
         .eq("business_id", business.id)
-        .eq("platform_name", "google")
+        .eq("platform", "google")
         .single();
 
     // 3. Look up Request (if ref provided) & Log Click
