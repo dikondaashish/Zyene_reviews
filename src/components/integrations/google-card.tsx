@@ -76,6 +76,7 @@ export function GoogleIntegrationCard({ platform }: GoogleCardProps) {
         try {
             await disconnectGoogle(platform.id);
             toast.success("Disconnected Google Business Profile");
+            router.refresh();
         } catch (error) {
             toast.error("Failed to disconnect");
         } finally {
