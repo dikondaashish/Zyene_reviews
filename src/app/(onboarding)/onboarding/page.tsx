@@ -22,8 +22,12 @@ export default function OnboardingPage() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    scopes: 'https://www.googleapis.com/auth/business.manage',
-                    redirectTo, // Redirect back to callback to handle linking
+                    scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
+                    redirectTo,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
                 },
             })
             if (error) throw error
