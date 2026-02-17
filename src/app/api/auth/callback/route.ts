@@ -215,15 +215,22 @@ export async function GET(request: Request) {
                         else console.log("DEBUG: Update Success");
                     } else {
                         console.log("DEBUG: Inserting New Platform...");
+                        console.log("DEBUG: Insert payload - business_id:", businessId, "access_token present:", !!finalAccessToken, "refresh_token present:", !!finalRefreshToken);
                         // Insert 'google' platform
-                        await admin.from("review_platforms").insert({
+                        const { data: insertData, error: insertError } = await admin.from("review_platforms").insert({
                             business_id: businessId,
                             platform: "google",
                             sync_status: "active", // Assume active on connect
                             // Store tokens using the robust extraction from above
-                            access_token: finalAccessToken,
-                            refresh_token: finalRefreshToken,
-                        });
+                            access_token: finalAccessToken || "",
+                            refresh_token: finalRefreshToken || "",
+                        }).select().single();
+
+                        if (insertError) {
+                            console.error("DEBUG: Insert Error:", JSON.stringify(insertError));
+                        } else {
+                            console.log("DEBUG: Insert Success - Platform ID:", insertData?.id);
+                        }
                     }
                 } else {
                     console.log("DEBUG: No Business Found for User", data.user.id);
