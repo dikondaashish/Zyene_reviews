@@ -3,6 +3,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function disconnectGoogle(platformId: string) {
     const supabase = await createClient();
@@ -14,14 +15,10 @@ export async function disconnectGoogle(platformId: string) {
         throw new Error("Unauthorized");
     }
 
-    // Verify ownership (optional but recommended, RLS should handle it if set up correctly)
-    // We'll trust RLS for now or add a check if needed. 
-    // delete match by ID and ensuring it belongs to a business the user owns is safer.
-
-    // Simplest: Delete by ID. RLS must enforce user access.
-    const { error } = await supabase
+    // Delete the platform row. RLS policy enforces ownership via business → org membership.
+    const { error, count } = await supabase
         .from("review_platforms")
-        .delete()
+        .delete({ count: "exact" })
         .eq("id", platformId);
 
     if (error) {
@@ -29,5 +26,14 @@ export async function disconnectGoogle(platformId: string) {
         throw new Error("Failed to disconnect");
     }
 
-    revalidatePath("/integrations");
+    if (count === 0) {
+        console.error("No rows deleted — RLS may have blocked the operation");
+        throw new Error("Failed to disconnect: permission denied");
+    }
+
+    // Revalidate the integrations page cache
+    revalidatePath("/(dashboard)/integrations", "page");
+
+    // Redirect to onboarding since GBP is no longer connected
+    redirect("/onboarding");
 }

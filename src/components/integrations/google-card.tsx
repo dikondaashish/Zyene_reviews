@@ -134,11 +134,13 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
         setIsDisconnecting(true);
         try {
             await disconnectGoogle(platform.id);
-            toast.success("Disconnected Google Business Profile");
-            router.refresh();
-        } catch {
+            // Server action redirects to /onboarding on success
+        } catch (err) {
+            // redirect() from server actions throws NEXT_REDIRECT — don't catch it
+            if (typeof err === "string" || (err && typeof err === "object" && "digest" in err)) {
+                throw err;
+            }
             toast.error("Failed to disconnect");
-        } finally {
             setIsDisconnecting(false);
         }
     };
