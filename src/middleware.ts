@@ -152,11 +152,13 @@ export async function middleware(request: NextRequest) {
 
         // 3. Rewrite business slugs to /r/[slug]
         if (!isReserved && !pathname.includes(".")) {
+            console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
             return createResponse(
                 NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
             );
         }
 
+        console.log(`[Middleware] Passing ${hostname}${pathname} (No rewrite)`);
         return supabaseResponse;
     }
 

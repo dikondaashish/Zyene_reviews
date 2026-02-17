@@ -20,14 +20,21 @@ export default async function RequestPage({
     const { ref: requestId } = await searchParams;
     const { slug } = await params;
 
+    console.log(`[RequestPage] Lookup slug: ${slug}`);
+
     // 1. Look up business by slug (include category for tag selection)
-    const { data: business } = await supabase
+    const { data: business, error } = await supabase
         .from("businesses")
         .select("id, name, slug, category")
         .eq("slug", slug)
         .single();
 
+    if (error) {
+        console.error(`[RequestPage] Error looking up business: ${error.message}`);
+    }
+
     if (!business) {
+        console.warn(`[RequestPage] Business not found for slug: ${slug}`);
         return notFound();
     }
 
