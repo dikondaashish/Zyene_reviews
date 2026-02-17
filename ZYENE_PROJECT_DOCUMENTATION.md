@@ -84,6 +84,8 @@
 | **Twilio** (`twilio`) | ^5.12.1 | SMS notifications & review requests |
 | **Stripe** (`stripe` + `@stripe/stripe-js`) | ^20.3.1 / ^8.7.0 | Subscription billing & payment processing |
 | **Resend** (`resend`) | latest | Transactional email (alerts, digests, invites, welcome) |
+| **BullMQ** (`bullmq`) | latest | Job queue for background processing |
+| **ioredis** | latest | Redis client (BullMQ backing store) |
 
 ### UI & State
 
@@ -91,17 +93,20 @@
 |---|---|---|
 | **shadcn/ui** (`shadcn`) | ^3.8.5 | Pre-built accessible UI components |
 | **Radix UI** (`radix-ui`) | ^1.4.3 | Headless UI primitives underlying shadcn |
+| **@radix-ui/react-checkbox** | latest | Standalone checkbox primitive |
 | **Lucide React** | ^0.564.0 | Icon library |
 | **React Hook Form** | ^7.71.1 | Form state management |
 | **Zod** | ^4.3.6 | Schema validation |
 | **@hookform/resolvers** | ^5.2.2 | Connects Zod schemas to React Hook Form |
 | **Sonner** | ^2.0.7 | Toast notifications |
 | **date-fns** | ^4.1.0 | Date formatting utilities |
-| **Recharts** | ^3.7.0 | Chart library (prepared for Analytics) |
+| **Recharts** | ^3.7.0 | Chart library for Analytics dashboard |
 | **TanStack React Query** | ^5.90.21 | Server-state management |
 | **Zustand** | ^5.0.11 | Client-state management |
 | **cmdk** | ^1.1.1 | Command palette component |
 | **nanoid** | ^5.1.6 | Unique ID generation |
+| **next-themes** | latest | Theme switching (light/dark mode) |
+| **@react-email/components** | latest | React Email template components |
 
 ### Dev Dependencies
 
@@ -262,6 +267,7 @@ zyene-ratings/
     │   │   └── check-limits.ts        # checkLimit() — usage enforcement per plan
     │   │
     │   ├── resend/
+    │   │   ├── client.ts              # Resend SDK client initialization
     │   │   ├── send-email.ts          # sendEmail() — Resend SDK wrapper
     │   │   └── templates/
     │   │       ├── review-alert-email.ts  # Urgent review alert email template
@@ -273,7 +279,7 @@ zyene-ratings/
     │       └── review-alert.ts        # sendReviewAlert() — tiered SMS + Email alert logic
     │
     └── hooks/
-        └── (custom hooks directory)
+        └── use-mobile.ts              # useIsMobile() — responsive breakpoint hook (768px)
 ```
 
 ---
@@ -388,6 +394,9 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `stripe_customer_id` | TEXT | Stripe customer ID for billing |
 | `stripe_subscription_id` | TEXT | Active Stripe subscription ID |
 | `plan_id` | TEXT | Current plan: "free", "starter", "growth" |
+| `max_businesses` | INTEGER | Plan limit: max businesses allowed (-1 = unlimited) |
+| `max_review_requests_per_month` | INTEGER | Plan limit: monthly review requests (-1 = unlimited) |
+| `max_ai_replies_per_month` | INTEGER | Plan limit: monthly AI replies (-1 = unlimited) |
 | `created_at` | TIMESTAMPTZ | Creation timestamp |
 
 #### `users`
@@ -414,10 +423,21 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `organization_id` | UUID (FK → organizations) | Parent organization |
 | `name` | TEXT | Business name |
 | `slug` | TEXT | URL-safe slug |
+| `phone` | TEXT | Business phone number |
+| `email` | TEXT | Business contact email |
+| `address_line1` | TEXT | Street address |
+| `city` | TEXT | City |
+| `state` | TEXT | State |
+| `zip` | TEXT | ZIP/Postal code |
 | `country` | TEXT | Country code |
-| `timezone` | TEXT | Timezone |
-| `category` | TEXT | Business category |
+| `timezone` | TEXT | Timezone (e.g., "America/New_York") |
+| `category` | TEXT | Business category (Restaurant, Cafe, Bar, Retail, Service, Other) |
 | `status` | TEXT | Status: "active", "inactive" |
+| `review_request_delay_minutes` | INTEGER | Minutes after visit before sending request (default: 120) |
+| `review_request_min_amount_cents` | INTEGER | Minimum transaction amount to trigger request (default: 1500 = $15) |
+| `review_request_frequency_cap_days` | INTEGER | Days between requests to same customer (default: 30) |
+| `review_request_sms_enabled` | BOOLEAN | Whether SMS review requests are enabled |
+| `review_request_email_enabled` | BOOLEAN | Whether email review requests are enabled |
 | `total_reviews` | INTEGER | Aggregated review count |
 | `average_rating` | DECIMAL | Aggregated average rating |
 
@@ -698,11 +718,17 @@ export const config = {
 
 **File**: `src/app/(marketing)/page.tsx`
 
-A simple landing page served at the root domain (`localhost:3000`):
-- Displays "Zyene Ratings" heading
-- Tagline: "Automate your customer reviews and grow your business."
-- Two CTA buttons: "Log In" and "Sign Up"
-- Both link to the login subdomain
+A 322-line marketing page served at the root domain (`localhost:3000`) with 6 sections:
+
+1. **Hero Section**: Large heading ("Transform Your Restaurant's Online Reputation"), tagline, two CTAs ("Start Free Trial", "Watch Demo")
+2. **Problem Section**: 3-column grid highlighting pain points restaurants face with reviews
+3. **Features Section**: 6-card grid showcasing core features (AI Analysis, Smart Replies, Review Requests, SMS Alerts, Analytics, Team Management) with Lucide icons
+4. **How It Works Section**: 3-step visual flow (Connect Google → AI Analyzes → Stay On Top)
+5. **Pricing Section**: 3 pricing cards:
+   - **Free** ($0/mo) — 1 location, 10 requests/mo, email alerts only
+   - **Starter** ($39/mo) — 1 location, 100 requests/mo, 30 AI replies/mo, SMS + email
+   - **Growth** ($79/mo) — 3 locations, unlimited requests, unlimited AI replies, SMS + email, priority support
+6. **CTA Footer**: Final call-to-action with signup button
 
 ---
 
@@ -930,7 +956,11 @@ This feature enables businesses to proactively request reviews from customers vi
 **Type**: Client Component
 
 - **Form Library**: React Hook Form + Zod validation
-- **Fields**: Customer name, phone number (with country code validation)
+- **Fields**:
+  - Customer name (optional)
+  - Phone number (required, with country code validation)
+  - Channel selector: SMS (active) | Email (disabled with "Coming soon" tooltip)
+  - Schedule for Later toggle (disabled for MVP — always sends immediately)
 - **Submit**: POSTs to `/api/requests/send`
 - **Plan Limit Display**: Shows current usage vs. plan limit
 
@@ -1205,14 +1235,19 @@ The Settings area is organized with a sidebar navigation layout.
 **Type**: Server Component (async)
 
 **Sub-sections** (3 cards):
-1. **Business Information** (`BusinessInfoForm`):
-   - Edit business name, slug, category
+1. **Business Information** (`BusinessInfoForm` — 251 lines):
+   - 9 editable fields: name, phone, email, address_line1, city, state, zip, timezone (Select with 5 US timezones), category (Select: Restaurant/Cafe/Bar/Retail/Service/Other)
    - PATCHes to `/api/businesses/[id]`
-2. **Review Settings** (`ReviewSettingsForm`):
-   - Configure review request frequency cap (days between requests to same customer)
-   - Configure Google review redirect URL
+2. **Review Settings** (`ReviewSettingsForm` — 203 lines):
+   - `review_request_delay_minutes` — Minutes after visit before sending request (default: 120)
+   - `review_request_min_amount_cents` — Minimum transaction amount (default: $15.00)
+   - `review_request_frequency_cap_days` — Days between requests to same customer (default: 30)
+   - `review_request_sms_enabled` — Toggle SMS review requests
+   - `review_request_email_enabled` — Toggle email review requests
 3. **Profile** (`ProfileForm`):
    - Edit user display name (`full_name`)
+   - Disabled email display (read-only)
+   - **Delete Account** button (stub — shows confirmation but not yet implemented)
    - PATCHes to `/api/users/me`
 
 ### Businesses API — `PATCH /api/businesses/[id]`
@@ -1296,6 +1331,8 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
       min_urgency_score: z.string(),  // String for Select compatibility
       quiet_hours_start: z.string().optional(),
       quiet_hours_end: z.string().optional(),
+      email_enabled: z.boolean(),
+      digest_enabled: z.boolean(),
   });
   ```
 - **Fields**:
@@ -1303,6 +1340,8 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
   - Phone number (shown conditionally when SMS enabled)
   - Minimum urgency score (Select: 5-10 with labels: Moderate/Urgent/Critical)
   - Quiet hours start/end (time inputs, shown conditionally)
+  - Email alerts toggle (Switch component)
+  - Daily digest toggle (Switch component)
 - **On Submit**: Converts `min_urgency_score` to integer, POSTs to `/api/settings/notifications`
 
 #### Save API — `POST /api/settings/notifications`
@@ -1350,7 +1389,7 @@ Located at `/analytics`, built with **Recharts**.
 
 ## 22. UI Components (shadcn/ui)
 
-The project uses **22 shadcn/ui components**, all located in `src/components/ui/`:
+The project uses **25 shadcn/ui components**, all located in `src/components/ui/`:
 
 | Component | File | Usage |
 |---|---|---|
@@ -1359,6 +1398,8 @@ The project uses **22 shadcn/ui components**, all located in `src/components/ui/
 | Badge | `badge.tsx` | Status, sentiment, theme labels |
 | Button | `button.tsx` | All interactive buttons (variants: default, outline, ghost, destructive) |
 | Card | `card.tsx` | Dashboard stats, review cards, onboarding card |
+| Checkbox | `checkbox.tsx` | Form checkboxes (review settings, filters) |
+| Collapsible | `collapsible.tsx` | Collapsible sidebar sections |
 | Command | `command.tsx` | Command palette (for business switcher search) |
 | Dialog | `dialog.tsx` | Modal dialogs |
 | Dropdown Menu | `dropdown-menu.tsx` | UserNav menu, review card actions |
@@ -1471,7 +1512,7 @@ Key settings:
 - **Module Resolution**: Bundler
 - **Path Aliases**: `@/*` → `./src/*`
 - **Strict Mode**: Enabled
-- **JSX**: preserve
+- **JSX**: react-jsx
 - **React Compiler**: babel-plugin-react-compiler enabled
 
 ---
