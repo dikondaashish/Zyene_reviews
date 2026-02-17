@@ -1,16 +1,18 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ReviewCard } from "@/components/reviews/review-card";
+import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card";
 import { ReviewsFilters } from "@/components/reviews/reviews-filters";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { Filter } from "lucide-react";
+import { Filter, MessageSquare, Lock } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 
 export default async function ReviewsPage({
     searchParams,
 }: {
-    searchParams: { status?: string; rating?: string; sort?: string; page?: string };
+    searchParams: { status?: string; rating?: string; sort?: string; page?: string; type?: string };
 }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -35,46 +37,73 @@ export default async function ReviewsPage({
         );
     }
 
-    // 2. Build Query
-    let query = supabase
-        .from("reviews")
-        .select("*", { count: "exact" })
-        .eq("business_id", businessId);
-
-    // Filters
-    const statusRaw = searchParams.status || "all";
-    const statusMap: Record<string, string> = {
-        "needs_response": "pending",
-        "responded": "responded",
-        "ignored": "ignored"
-    };
-
-    if (statusRaw !== "all" && statusMap[statusRaw]) {
-        query = query.eq("response_status", statusMap[statusRaw]);
-    }
-
-    const rating = searchParams.rating;
-    if (rating && rating !== "all") {
-        query = query.eq("rating", parseInt(rating));
-    }
-
-    // Sort
-    const sort = searchParams.sort || "newest";
-    if (sort === "newest") query = query.order("published_at", { ascending: false });
-    else if (sort === "oldest") query = query.order("published_at", { ascending: true });
-    else if (sort === "lowest") query = query.order("rating", { ascending: true });
-    else if (sort === "highest") query = query.order("rating", { ascending: false });
-
-    // Pagination
+    const type = searchParams.type || "public";
     const page = parseInt(searchParams.page || "1");
     const pageSize = 20;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    query = query.range(from, to);
+    let reviews = [], count = 0;
+    let totalPages = 0;
 
-    const { data: reviews, count } = await query;
-    const totalPages = count ? Math.ceil(count / pageSize) : 0;
+    if (type === "private") {
+        // Fetch Private Feedback
+        const { data, count: totalCount } = await supabase
+            .from("private_feedback")
+            .select(`
+                *,
+                review_requests (
+                    customer_name,
+                    customer_email,
+                    customer_phone
+                )
+            `, { count: "exact" })
+            .eq("business_id", businessId)
+            .order("created_at", { ascending: false })
+            .range(from, to);
+
+        // @ts-ignore
+        reviews = data || [];
+        count = totalCount || 0;
+    } else {
+        // Fetch Public Reviews
+        let query = supabase
+            .from("reviews")
+            .select("*", { count: "exact" })
+            .eq("business_id", businessId);
+
+        // Filters
+        const statusRaw = searchParams.status || "all";
+        const statusMap: Record<string, string> = {
+            "needs_response": "pending",
+            "responded": "responded",
+            "ignored": "ignored"
+        };
+
+        if (statusRaw !== "all" && statusMap[statusRaw]) {
+            query = query.eq("response_status", statusMap[statusRaw]);
+        }
+
+        const rating = searchParams.rating;
+        if (rating && rating !== "all") {
+            query = query.eq("rating", parseInt(rating));
+        }
+
+        // Sort
+        const sort = searchParams.sort || "newest";
+        if (sort === "newest") query = query.order("published_at", { ascending: false });
+        else if (sort === "oldest") query = query.order("published_at", { ascending: true });
+        else if (sort === "lowest") query = query.order("rating", { ascending: true });
+        else if (sort === "highest") query = query.order("rating", { ascending: false });
+
+        query = query.range(from, to);
+
+        const { data, count: totalCount } = await query;
+        reviews = data || [];
+        count = totalCount || 0;
+    }
+
+    totalPages = count ? Math.ceil(count / pageSize) : 0;
 
     // Helper URLs for Pagination
     const getPageUrl = (newPage: number) => {
@@ -101,30 +130,66 @@ export default async function ReviewsPage({
                 </div>
             </div>
 
-            {/* Filters */}
-            <ReviewsFilters />
-
-            {/* Content List */}
-            <div className="grid gap-4">
-                {reviews && reviews.length > 0 ? (
-                    reviews.map((review: any) => (
-                        <ReviewCard key={review.id} review={review} />
-                    ))
-                ) : (
-                    <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
-                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <Filter className="h-6 w-6 text-gray-400" />
+            {/* Tab Switcher */}
+            <div className="flex items-center">
+                <div className="bg-slate-100 p-1 rounded-lg inline-flex">
+                    <Link href="/reviews?type=public">
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${type === 'public' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
+                            Public Reviews
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900">No reviews found</h3>
-                        <p className="text-muted-foreground max-w-sm mt-1 mb-6">
-                            {(statusRaw !== 'all' || rating)
-                                ? "Try adjusting your filters to see more reviews."
-                                : "Sync your reviews to get started."}
-                        </p>
-                        <SyncButton />
-                    </div>
-                )}
+                    </Link>
+                    <Link href="/reviews?type=private">
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${type === 'private' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
+                            Private Feedback
+                            <Lock className="w-3 h-3" />
+                        </div>
+                    </Link>
+                </div>
             </div>
+
+            {/* Content */}
+            {type === "public" ? (
+                <>
+                    <ReviewsFilters />
+                    <div className="grid gap-4">
+                        {reviews && reviews.length > 0 ? (
+                            reviews.map((review: any) => (
+                                <ReviewCard key={review.id} review={review} />
+                            ))
+                        ) : (
+                            <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
+                                <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                    <MessageSquare className="h-6 w-6 text-gray-400" />
+                                </div>
+                                <h3 className="text-lg font-medium text-gray-900">No reviews found</h3>
+                                <p className="text-muted-foreground max-w-sm mt-1 mb-6">
+                                    Try adjusting your filters or sync your reviews.
+                                </p>
+                                <SyncButton />
+                            </div>
+                        )}
+                    </div>
+                </>
+            ) : (
+                // Private Feedback List
+                <div className="grid gap-4">
+                    {reviews && reviews.length > 0 ? (
+                        reviews.map((feedback: any) => (
+                            <PrivateFeedbackCard key={feedback.id} feedback={feedback} />
+                        ))
+                    ) : (
+                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
+                            <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
+                                <Lock className="h-6 w-6 text-red-200" />
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900">No private feedback yet</h3>
+                            <p className="text-muted-foreground max-w-sm mt-1">
+                                Negative feedback (1-3 stars) from your review flow will appear here privately.
+                            </p>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Pagination */}
             {totalPages > 1 && (
