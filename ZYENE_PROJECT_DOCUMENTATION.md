@@ -1,7 +1,7 @@
 # Zyene Ratings — Complete Project Documentation
 
-> **Version**: 1.0.0  
-> **Last Updated**: February 16, 2026  
+> **Version**: 2.0.0  
+> **Last Updated**: February 17, 2026  
 > **Repository**: [https://github.com/dikondaashish/Zyene_reviews.git](https://github.com/dikondaashish/Zyene_reviews.git)  
 > **Branch**: `main`
 
@@ -21,20 +21,26 @@
 10. [Onboarding Flow](#10-onboarding-flow)
 11. [Dashboard](#11-dashboard)
 12. [Reviews Inbox](#12-reviews-inbox)
-13. [Google Business Profile Integration](#13-google-business-profile-integration)
-14. [AI Features (Anthropic Claude)](#14-ai-features-anthropic-claude)
-15. [SMS Notifications (Twilio)](#15-sms-notifications-twilio)
-16. [UI Components (shadcn/ui)](#16-ui-components-shadcnui)
-17. [Styling & Theming](#17-styling--theming)
-18. [API Routes Reference](#18-api-routes-reference)
-19. [Deployment & Git](#19-deployment--git)
-20. [Development Setup](#20-development-setup)
+13. [Review Requests & Public Review Flow](#13-review-requests--public-review-flow)
+14. [Google Business Profile Integration](#14-google-business-profile-integration)
+15. [AI Features (Anthropic Claude)](#15-ai-features-anthropic-claude)
+16. [Stripe Billing & Subscriptions](#16-stripe-billing--subscriptions)
+17. [Team Management](#17-team-management)
+18. [Settings Hub](#18-settings-hub)
+19. [Notifications System (SMS & Email)](#19-notifications-system-sms--email)
+20. [Analytics Dashboard](#20-analytics-dashboard)
+21. [Integrations & Webhooks](#21-integrations--webhooks)
+22. [UI Components (shadcn/ui)](#22-ui-components-shadcnui)
+23. [Styling & Theming](#23-styling--theming)
+24. [API Routes Reference](#24-api-routes-reference)
+25. [Deployment & Git](#25-deployment--git)
+26. [Development Setup](#26-development-setup)
 
 ---
 
 ## 1. Project Overview
 
-**Zyene Ratings** is a SaaS application designed specifically for restaurant owners to **automate customer review management**. It connects to a business's Google Business Profile, syncs all customer reviews, performs AI-powered sentiment analysis, generates smart reply suggestions, and sends SMS alerts for urgent reviews — all from a single unified dashboard.
+**Zyene Ratings** is a SaaS application designed specifically for restaurant owners to **automate customer review management**. It connects to a business's Google Business Profile, syncs all customer reviews, performs AI-powered sentiment analysis, generates smart reply suggestions, sends multi-channel alerts (SMS + Email) for urgent reviews, handles subscription billing via Stripe, and supports team-based access — all from a single unified dashboard.
 
 ### Core Features
 
@@ -44,10 +50,15 @@
 | **AI Sentiment Analysis** | Uses Anthropic Claude to analyze sentiment, urgency, themes, and generate summaries |
 | **AI Smart Replies** | Generates context-aware reply suggestions in two tones (professional & warm/friendly) |
 | **Reviews Inbox** | Filterable, sortable, paginated inbox to manage and reply to reviews |
-| **SMS Alerts** | Sends Twilio SMS notifications for urgent reviews (high urgency score or low ratings) |
-| **Notification Settings** | User-configurable SMS preferences: phone number, urgency threshold, quiet hours |
+| **Review Requests** | Send SMS review invitations to customers with smart rating-gated flow (4-5★ → Google, 1-3★ → private feedback) |
+| **Stripe Billing** | Subscription management with Free, Starter ($39/mo), and Growth ($79/mo) plans with usage limits |
+| **Team Management** | Invite/manage team members with role-based access (Owner, Admin, Member) |
+| **SMS & Email Alerts** | Multi-channel notifications: Twilio SMS + Resend email with urgency-tiered routing and quiet hours |
+| **Notification Settings** | User-configurable SMS/email preferences: phone number, urgency threshold, quiet hours, digest toggle |
+| **Analytics Dashboard** | Charts for review volume, sentiment distribution, theme breakdown, and rating trends (Recharts) |
 | **Subdomain Routing** | Separate subdomains for marketing, login, and dashboard |
 | **GBP Onboarding** | Guided flow requiring Google Business Profile connection before dashboard access |
+| **Settings Hub** | General (business info, review settings, profile), Notifications, Team, and Billing pages |
 
 ---
 
@@ -70,8 +81,9 @@
 | **Supabase** (`@supabase/supabase-js`) | ^2.95.3 | Database (PostgreSQL), Auth, Realtime |
 | **Supabase SSR** (`@supabase/ssr`) | ^0.8.0 | Server-side Supabase client for Next.js |
 | **Anthropic SDK** (`@anthropic-ai/sdk`) | ^0.74.0 | AI sentiment analysis & smart replies |
-| **Twilio** (`twilio`) | ^5.12.1 | SMS notifications |
-| **Stripe** (`stripe` + `@stripe/stripe-js`) | ^20.3.1 / ^8.7.0 | Payment processing (prepared) |
+| **Twilio** (`twilio`) | ^5.12.1 | SMS notifications & review requests |
+| **Stripe** (`stripe` + `@stripe/stripe-js`) | ^20.3.1 / ^8.7.0 | Subscription billing & payment processing |
+| **Resend** (`resend`) | latest | Transactional email (alerts, digests, invites, welcome) |
 
 ### UI & State
 
@@ -132,6 +144,7 @@ zyene-ratings/
     │   ├── favicon.ico
     │   │
     │   ├── (marketing)/
+    │   │   ├── layout.tsx              # Marketing layout
     │   │   └── page.tsx                # Landing page (localhost:3000)
     │   │
     │   ├── (auth)/
@@ -148,21 +161,44 @@ zyene-ratings/
     │   │   ├── layout.tsx              # Sidebar + header layout with auth guard
     │   │   ├── dashboard/page.tsx      # Home — stats cards & quick actions
     │   │   ├── reviews/page.tsx        # Reviews inbox with filters & pagination
-    │   │   ├── requests/page.tsx       # Review Requests (placeholder)
-    │   │   ├── analytics/page.tsx      # Analytics (placeholder)
-    │   │   ├── integrations/page.tsx   # Integrations (placeholder)
-    │   │   ├── settings/page.tsx       # Settings hub
-    │   │   └── settings/notifications/page.tsx # SMS notification settings
+    │   │   ├── requests/
+    │   │   │   ├── page.tsx            # Review Requests dashboard (stats + table)
+    │   │   │   └── send-request-dialog.tsx  # Send Request modal (Zod form)
+    │   │   ├── analytics/page.tsx      # Analytics Dashboard (Charts & Trends)
+    │   │   ├── integrations/
+    │   │   │   ├── page.tsx            # Integrations Hub (Google, Webhooks, POS)
+    │   │   │   └── actions.ts          # Server Actions for integrations
+    │   │   └── settings/
+    │   │       ├── layout.tsx          # Settings sidebar (General, Notifications, Team)
+    │   │       ├── page.tsx            # Settings index (redirects)
+    │   │       ├── general/page.tsx    # General Settings (Business Info, Review Settings, Profile)
+    │   │       ├── notifications/page.tsx # Notification Preferences (SMS & Email)
+    │   │       ├── team/page.tsx       # Team Management (Members + Invites)
+    │   │       └── billing/page.tsx    # Billing & Subscription Management
+    │   │
+    │   ├── r/
+    │   │   └── [slug]/
+    │   │       ├── page.tsx            # Public review page (business lookup, click tracking)
+    │   │       └── review-flow.tsx     # Star rating → Google redirect or private feedback
     │   │
     │   └── api/
     │       ├── auth/callback/route.ts             # OAuth callback & user provisioning
     │       ├── sync/google/route.ts                # Manual Google review sync trigger
     │       ├── cron/sync-reviews/route.ts          # Scheduled review sync (cron)
+    │       ├── cron/daily-digest/route.ts          # Daily digest email (cron, 13:00 UTC)
     │       ├── reviews/[id]/reply/route.ts         # Reply to a review via Google API
     │       ├── ai/analyze/route.ts                 # AI sentiment analysis endpoint
     │       ├── ai/suggest-reply/route.ts           # AI reply suggestion endpoint
+    │       ├── requests/send/route.ts              # Send review request SMS to customer
+    │       ├── businesses/[id]/route.ts            # Update business details (PATCH)
+    │       ├── users/me/route.ts                   # Update user profile (PATCH) / Delete (DELETE)
+    │       ├── billing/checkout/route.ts           # Create Stripe checkout session
+    │       ├── billing/portal/route.ts             # Create Stripe billing portal session
+    │       ├── team/invite/route.ts                # Send team invitation email
+    │       ├── team/[id]/route.ts                  # Update member role (PATCH) / Remove (DELETE)
     │       ├── settings/notifications/route.ts     # Save notification preferences
-    │       └── webhooks/twilio/route.ts            # Twilio SMS opt-out/in webhook
+    │       ├── webhooks/twilio/route.ts            # Twilio SMS opt-out/in webhook
+    │       └── webhooks/stripe/route.ts            # Stripe subscription webhook
     │
     ├── components/
     │   ├── dashboard/
@@ -177,35 +213,27 @@ zyene-ratings/
     │   │   └── reviews-filters.tsx     # Filter bar (status, rating, sort)
     │   │
     │   ├── settings/
-    │   │   └── notification-form.tsx   # SMS notification preferences form
+    │   │   ├── notification-form.tsx   # SMS/Email notification preferences form
+    │   │   ├── billing-client.tsx      # Billing page (plan cards, usage bars, checkout)
+    │   │   ├── team-table.tsx          # Team members + invites table
+    │   │   ├── invite-member-dialog.tsx # Invite new member modal
+    │   │   ├── business-info-form.tsx  # Edit business name, slug, category
+    │   │   ├── review-settings-form.tsx # Review request frequency cap settings
+    │   │   └── profile-form.tsx        # Edit user profile (full_name)
+    │   │
+    │   ├── analytics/
+    │   │   ├── analytics-filters.tsx   # Date range filter (7d, 30d, 90d, 1y)
+    │   │   ├── volume-chart.tsx        # Review volume over time (BarChart)
+    │   │   ├── sentiment-chart.tsx     # Sentiment distribution (PieChart)
+    │   │   ├── theme-chart.tsx         # Theme breakdown (BarChart)
+    │   │   ├── ratings-chart.tsx       # Rating trends over time (LineChart)
+    │   │   └── platform-table.tsx      # Platform-level review stats table
     │   │
     │   ├── providers/
     │   │   └── query-provider.tsx      # TanStack React Query provider
     │   │
-    │   └── ui/                         # shadcn/ui components (22 components)
-    │       ├── alert.tsx
-    │       ├── avatar.tsx
-    │       ├── badge.tsx
-    │       ├── button.tsx
-    │       ├── card.tsx
-    │       ├── command.tsx
-    │       ├── dialog.tsx
-    │       ├── dropdown-menu.tsx
-    │       ├── form.tsx
-    │       ├── input.tsx
-    │       ├── label.tsx
-    │       ├── popover.tsx
-    │       ├── select.tsx
-    │       ├── separator.tsx
-    │       ├── sheet.tsx
-    │       ├── sidebar.tsx
-    │       ├── skeleton.tsx
-    │       ├── sonner.tsx
-    │       ├── switch.tsx
-    │       ├── table.tsx
-    │       ├── tabs.tsx
-    │       ├── textarea.tsx
-    │       └── tooltip.tsx
+    │   └── ui/                         # shadcn/ui components (22+ components)
+    │       ├── alert.tsx               # and more...
     │
     ├── lib/
     │   ├── utils.ts                    # Utility: cn() for Tailwind class merging
@@ -228,8 +256,21 @@ zyene-ratings/
     │   │   ├── client.ts              # Twilio SDK client initialization
     │   │   └── send-sms.ts            # sendSMS() — sends SMS with opt-out check
     │   │
+    │   ├── stripe/
+    │   │   ├── client.ts              # Stripe SDK client initialization
+    │   │   ├── plans.ts               # Plan definitions (Free, Starter, Growth) with limits
+    │   │   └── check-limits.ts        # checkLimit() — usage enforcement per plan
+    │   │
+    │   ├── resend/
+    │   │   ├── send-email.ts          # sendEmail() — Resend SDK wrapper
+    │   │   └── templates/
+    │   │       ├── review-alert-email.ts  # Urgent review alert email template
+    │   │       ├── daily-digest-email.ts  # Daily digest summary email template
+    │   │       ├── welcome-email.ts       # Welcome email on signup template
+    │   │       └── team-invite-email.ts   # Team invitation email template
+    │   │
     │   └── notifications/
-    │       └── review-alert.ts        # sendReviewAlert() — urgent review SMS alert logic
+    │       └── review-alert.ts        # sendReviewAlert() — tiered SMS + Email alert logic
     │
     └── hooks/
         └── (custom hooks directory)
@@ -258,6 +299,18 @@ ANTHROPIC_API_KEY=<your-anthropic-api-key>
 TWILIO_ACCOUNT_SID=<your-twilio-account-sid>
 TWILIO_AUTH_TOKEN=<your-twilio-auth-token>
 TWILIO_PHONE_NUMBER=<your-twilio-phone-number>
+
+# ── Stripe (Billing) ──
+STRIPE_SECRET_KEY=<your-stripe-secret-key>
+STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-signing-secret>
+STRIPE_STARTER_PRICE_ID=<stripe-price-id-for-starter-plan>
+STRIPE_GROWTH_PRICE_ID=<stripe-price-id-for-growth-plan>
+
+# ── Resend (Email) ──
+RESEND_API_KEY=<your-resend-api-key>
+
+# ── Cron Security ──
+CRON_SECRET=<random-secret-for-cron-endpoints>
 
 # ── Application ──
 NEXT_PUBLIC_ROOT_DOMAIN=localhost:3000
@@ -299,6 +352,7 @@ User → Middleware (Auth + Routing)
          ├── Marketing Site (unauthenticated)
          ├── Auth Pages (login, signup, forgot-password)
          ├── Onboarding (requires auth, no GBP)
+         ├── Public Review Page (/r/[slug] — rating-gated, no auth required)
          └── Dashboard (requires auth + GBP)
                 ├── Dashboard Home (stats)
                 ├── Reviews Inbox
@@ -306,11 +360,14 @@ User → Middleware (Auth + Routing)
                 │     ├── View Review Card (sentiment, urgency, themes)
                 │     ├── Reply to Review → Google API
                 │     └── AI Suggest Reply → Anthropic API
-                ├── Review Requests (placeholder)
-                ├── Analytics (placeholder)
-                ├── Integrations (placeholder)
+                ├── Review Requests (send SMS to customer → rating flow)
+                ├── Analytics (Charts: Trends, Volume, Sentiment, Themes)
+                ├── Integrations (Google Sync, Webhooks)
                 └── Settings
-                      └── Notification Preferences (SMS)
+                      ├── General (Business Info, Review Settings, Profile)
+                      ├── Notifications (SMS, Email, Quiet Hours, Digest)
+                      ├── Team (Members, Invites, Roles)
+                      └── Billing (Plans, Usage, Stripe Checkout/Portal)
 ```
 
 ---
@@ -328,6 +385,9 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `name` | TEXT | Organization display name |
 | `slug` | TEXT (UNIQUE) | URL-safe slug |
 | `type` | TEXT | Organization type (e.g., "business") |
+| `stripe_customer_id` | TEXT | Stripe customer ID for billing |
+| `stripe_subscription_id` | TEXT | Active Stripe subscription ID |
+| `plan_id` | TEXT | Current plan: "free", "starter", "growth" |
 | `created_at` | TIMESTAMPTZ | Creation timestamp |
 
 #### `users`
@@ -413,6 +473,8 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `min_urgency_score` | INTEGER | Minimum urgency score to trigger alert (5-10) |
 | `quiet_hours_start` | TEXT | Start of quiet hours (HH:MM format) |
 | `quiet_hours_end` | TEXT | End of quiet hours (HH:MM format) |
+| `email_enabled` | BOOLEAN | Whether email alerts are enabled |
+| `digest_enabled` | BOOLEAN | Whether daily digest emails are enabled |
 
 #### `sms_opt_outs`
 | Column | Type | Description |
@@ -437,7 +499,64 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `campaigns`
 | Column | Type | Description |
 |---|---|---|
-| *(Prepared table for future review request campaigns)* | | |
+| `id` | UUID (PK) | Campaign ID |
+| `business_id` | UUID (FK → businesses) | Parent business |
+| `name` | TEXT | Campaign name |
+| `type` | TEXT | Campaign type |
+| `status` | TEXT | Campaign status |
+| `created_at` | TIMESTAMPTZ | Creation timestamp |
+
+### Billing & Team Tables
+
+#### `invitations`
+| Column | Type | Description |
+|---|---|---|
+| `id` | UUID (PK) | Invitation ID |
+| `organization_id` | UUID (FK → organizations) | Organization invited to |
+| `email` | TEXT | Invited email address |
+| `role` | TEXT | Assigned role: "admin", "member" |
+| `invited_by` | UUID (FK → users) | User who sent the invitation |
+| `status` | TEXT | "pending", "accepted", "expired" |
+| `created_at` | TIMESTAMPTZ | When invitation was created |
+| `expires_at` | TIMESTAMPTZ | Expiration time |
+
+### Review Request Tables
+
+#### `customer_contacts`
+| Column | Type | Description |
+|---|---|---|
+| `id` | UUID (PK) | Contact ID |
+| `business_id` | UUID (FK → businesses) | Parent business |
+| `name` | TEXT | Customer name |
+| `phone` | TEXT | Customer phone number |
+| `email` | TEXT | Customer email (optional) |
+| `last_request_sent_at` | TIMESTAMPTZ | When last review request was sent |
+| `created_at` | TIMESTAMPTZ | Creation timestamp |
+
+**Unique Constraint**: `(business_id, phone)` — one contact per phone per business.
+
+#### `review_requests`
+| Column | Type | Description |
+|---|---|---|
+| `id` | UUID (PK) | Request ID |
+| `business_id` | UUID (FK → businesses) | Parent business |
+| `contact_id` | UUID (FK → customer_contacts) | Customer contact |
+| `sent_by` | UUID (FK → users) | User who sent the request |
+| `phone` | TEXT | Phone number SMS was sent to |
+| `status` | TEXT | "sent", "delivered", "clicked", "reviewed" |
+| `sms_sid` | TEXT | Twilio message SID |
+| `clicked_at` | TIMESTAMPTZ | When customer clicked the link |
+| `created_at` | TIMESTAMPTZ | When request was sent |
+
+#### `private_feedback`
+| Column | Type | Description |
+|---|---|---|
+| `id` | UUID (PK) | Feedback ID |
+| `business_id` | UUID (FK → businesses) | Parent business |
+| `request_id` | UUID (FK → review_requests) | Associated review request (optional) |
+| `rating` | INTEGER | Star rating (1-3, since 4-5 go to Google) |
+| `feedback` | TEXT | Customer's private feedback text |
+| `created_at` | TIMESTAMPTZ | When feedback was submitted |
 
 ---
 
@@ -517,11 +636,15 @@ This is the **most complex API route** in the application. It handles the OAuth 
 7. Redirect to `/onboarding`
 
 **For EXISTING users signing in via Google:**
-1. Check if Google provider tokens are present
+1. **Robust Token Extraction**: Checks both standard session AND `identities` array for tokens (fixes "No refresh token" bugs).
 2. Find user's business via `organization_members → organizations → businesses`
-3. If `review_platforms` record exists for Google → update tokens
+3. If `review_platforms` record exists for Google → update tokens (preserving refresh token if not provided)
 4. If no platform record → insert new Google platform
 5. Redirect to dashboard
+
+**Critical Fixes Implemented:**
+- **Wildcard Cookies**: Auth cookies are set with `domain: .zyene.in` to allow sharing between `auth.` and `dashboard.` subdomains.
+- **Offline Access**: Google OAuth requests include `access_type: offline` and `prompt: consent` to guarantee a Refresh Token.
 
 ---
 
@@ -659,6 +782,7 @@ if (!hasGoogleBusinessProfile) {
 | Send | Review Requests | `/requests` |
 | BarChart3 | Analytics | `/analytics` |
 | Plug | Integrations | `/integrations` |
+| Settings | Settings | `/settings` |
 
 **Footer**: Settings link (`/settings`)
 
@@ -752,7 +876,67 @@ interface Review {
 
 ---
 
-## 13. Google Business Profile Integration
+## 13. Review Requests & Public Review Flow
+
+This feature enables businesses to proactively request reviews from customers via SMS. The flow implements a **rating-gated strategy**: customers who rate 4-5★ are redirected to Google to leave a public review, while 1-3★ ratings capture private feedback that stays internal.
+
+### Send Review Request — `POST /api/requests/send`
+
+**Pipeline**:
+1. **Plan Limit Check**: Calls `checkLimit("review_requests")` → returns `{ allowed, current, limit }` based on plan
+2. **Frequency Cap**: Checks `customer_contacts.last_request_sent_at` — prevents sending if customer was contacted within the configured frequency period
+3. **Customer Contact Upsert**: Creates/updates `customer_contacts` record with name, phone, business_id
+4. **SMS Delivery**: Sends SMS via Twilio with a link to `/r/{business_slug}?ref={request_id}`
+5. **Request Tracking**: Inserts `review_requests` record with `status: "sent"`, Twilio SID
+
+### Public Review Page — `src/app/r/[slug]/`
+
+#### Server Page (`page.tsx`)
+- **Type**: Server Component
+- Looks up business by `slug` from URL
+- Tracks click event: updates `review_requests.clicked_at` and `status: "clicked"` when `?ref` is present
+- Fetches the business's Google `new_review_url` from `review_platforms` if available
+- Passes `businessId`, `requestId`, and `googleUrl` to the client `PublicReviewFlow` component
+- **No auth required** — this page is publicly accessible
+
+#### Review Flow (`review-flow.tsx`)
+- **Type**: Client Component
+- **Step 1**: Customer selects a star rating (1-5 interactive stars)
+- **Step 2** (conditional):
+  - **4-5 Stars**: Shows "Thank you!" message and redirects to the business's Google review URL
+  - **1-3 Stars**: Shows a feedback textarea for private feedback
+- **On Private Feedback Submit**:
+  - Inserts into `private_feedback` table (rating + feedback text)
+  - Updates `review_requests.status` to `"reviewed"` if associated with a request
+  - Shows a thank-you confirmation
+
+### Requests Dashboard — `src/app/(dashboard)/requests/page.tsx`
+
+**Type**: Server Component (async)
+
+**Sections**:
+1. **Stats Cards** (4-column grid):
+   - Total Sent (count of `review_requests`)
+   - Delivery Rate (`delivered / sent * 100`)
+   - Click Rate (`clicked / delivered * 100`)
+   - Review Rate (`reviewed / clicked * 100`)
+2. **Send Request Button**: Opens `SendRequestDialog`
+3. **Requests Table**: Paginated table showing all sent requests with:
+   - Contact name, phone, status badge, sent date, click tracking
+   - Status color coding: sent=blue, delivered=green, clicked=yellow, reviewed=purple
+
+### Send Request Dialog — `src/app/(dashboard)/requests/send-request-dialog.tsx`
+
+**Type**: Client Component
+
+- **Form Library**: React Hook Form + Zod validation
+- **Fields**: Customer name, phone number (with country code validation)
+- **Submit**: POSTs to `/api/requests/send`
+- **Plan Limit Display**: Shows current usage vs. plan limit
+
+---
+
+## 14. Google Business Profile Integration
 
 ### API Wrapper — `src/lib/google/business-profile.ts`
 
@@ -816,7 +1000,7 @@ Complete sync pipeline:
 
 ---
 
-## 14. AI Features (Anthropic Claude)
+## 15. AI Features (Anthropic Claude)
 
 ### Client — `src/lib/ai/client.ts`
 ```typescript
@@ -880,16 +1064,188 @@ Rules: genuine (not corporate), reference specifics, apologize for negatives, th
 
 ---
 
-## 15. SMS Notifications (Twilio)
+## 16. Stripe Billing & Subscriptions
 
-### Twilio Client — `src/lib/twilio/client.ts`
-```typescript
-import twilio from 'twilio';
-export const twilioClient = twilio(
-    process.env.TWILIO_ACCOUNT_SID!,
-    process.env.TWILIO_AUTH_TOKEN!
-);
-```
+The application uses **Stripe** for subscription billing with three tiers.
+
+### Plan Definitions — `src/lib/stripe/plans.ts`
+
+| Plan | Price | Review Requests | Team Members | AI Replies | Analytics |
+|---|---|---|---|---|---|
+| **Free** | $0/mo | 10/month | 1 | 5/month | Basic |
+| **Starter** | $39/mo | 100/month | 3 | 50/month | Advanced |
+| **Growth** | $79/mo | Unlimited | 10 | Unlimited | Full |
+
+Each plan has a `stripe_price_id` that maps to a Stripe Price object. The `PLANS` export is a typed array of `Plan` objects used throughout the UI.
+
+### Usage Enforcement — `src/lib/stripe/check-limits.ts`
+
+`checkLimit(limitType: string, organizationId: string)`:
+1. Fetches the organization's `plan_id` from the database
+2. Looks up the plan's limits from `PLANS` configuration
+3. Counts current month's usage from the relevant table (e.g., `review_requests`, `organization_members`)
+4. Returns `{ allowed: boolean, current: number, limit: number }`
+5. Used by `api/requests/send`, `api/team/invite`, and `api/ai/suggest-reply`
+
+### Stripe Client — `src/lib/stripe/client.ts`
+Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
+
+### API Routes
+
+#### `POST /api/billing/checkout`
+- Creates a Stripe Checkout Session for plan upgrade
+- Links to organization's `stripe_customer_id` (creates one if not exists)
+- Sets `success_url` and `cancel_url` back to billing page
+- Returns the session URL for client redirect
+
+#### `POST /api/billing/portal`
+- Creates a Stripe Customer Portal session
+- Allows users to manage their subscription, update payment methods, view invoices
+- Returns the portal URL for client redirect
+
+#### `POST /api/webhooks/stripe`
+- **Signature Verification**: Uses `stripe.webhooks.constructEvent()` with `STRIPE_WEBHOOK_SECRET`
+- **Handled Events**:
+  - `checkout.session.completed` — Updates `organizations.plan_id`, `stripe_subscription_id`, `stripe_customer_id`
+  - `customer.subscription.updated` — Syncs plan changes (upgrades/downgrades)
+  - `customer.subscription.deleted` — Resets organization to `"free"` plan
+  - `invoice.payment_failed` — Logs payment failure (future: notify user)
+
+### Billing UI — `src/components/settings/billing-client.tsx`
+
+**Type**: Client Component (370 lines)
+
+**Sections**:
+1. **Current Plan Card**: Displays active plan name, price, and status badge
+2. **Usage Stats**: Progress bars showing current usage vs. plan limits for:
+   - Review Requests (x / limit)
+   - Team Members (x / limit)
+   - AI Replies (x / limit)
+3. **Plan Cards Grid**: All three plans displayed with feature checklists, price, and:
+   - Current plan → "Current Plan" badge
+   - Upgrade options → "Upgrade" button → calls `POST /api/billing/checkout`
+4. **Manage Subscription Button**: Opens Stripe Customer Portal via `POST /api/billing/portal`
+
+---
+
+## 17. Team Management
+
+Team management allows organization owners and admins to invite new members and manage roles.
+
+### Team Page — `src/app/(dashboard)/settings/team/page.tsx`
+
+**Type**: Server Component (async)
+- Fetches `organization_members` with joined user details
+- Fetches pending `invitations` for the organization
+- Passes both to `TeamTable` component
+- Shows `InviteMemberDialog` for sending invites
+
+### Team Table — `src/components/settings/team-table.tsx`
+
+**Type**: Client Component
+
+**Features**:
+1. **Members Section**: Table showing:
+   - User name, email, role (with badge color), joined date
+   - Role change dropdown (Owner can change Admin/Member roles)
+   - Remove member action (with confirmation)
+2. **Pending Invites Section**: Table showing:
+   - Email, invited role, sent date, expiry status
+   - Resend invitation action
+   - Cancel invitation action
+3. **Role-Based Actions**: Only owners and admins see management controls
+
+### Invite Member Dialog — `src/components/settings/invite-member-dialog.tsx`
+
+**Type**: Client Component
+- **Form**: Email + Role (Admin or Member) selector
+- **Plan Limit Check**: Checks team member limit before allowing invite
+- **Submit**: POSTs to `/api/team/invite`
+
+### API Routes
+
+#### `POST /api/team/invite`
+1. Validates that inviter is owner or admin
+2. Checks plan limit for team members
+3. Creates `invitations` record with `status: "pending"`, `expires_at: 7 days`
+4. Sends invitation email via Resend using `TeamInviteEmail` template
+5. Invitation link: `{APP_URL}/signup?invitation={id}`
+
+#### `PATCH /api/team/[id]`
+- Updates `organization_members.role` for the specified member
+- Only owners can change roles
+
+#### `DELETE /api/team/[id]`
+- Removes an `organization_members` record (active member) or deletes an `invitations` record (pending invite)
+- Owners cannot remove themselves
+
+### Team Invite Email — `src/lib/resend/templates/team-invite-email.ts`
+- HTML email template with branded styling
+- Shows inviter name, organization name, and a CTA button to accept
+
+---
+
+## 18. Settings Hub
+
+The Settings area is organized with a sidebar navigation layout.
+
+### Settings Layout — `src/app/(dashboard)/settings/layout.tsx`
+
+**Type**: Client Component
+
+**Sidebar Navigation Items**:
+| Tab | Href |
+|---|---|
+| General | `/settings/general` |
+| Notifications | `/settings/notifications` |
+| Team | `/settings/team` |
+
+### General Settings — `src/app/(dashboard)/settings/general/page.tsx`
+
+**Type**: Server Component (async)
+
+**Sub-sections** (3 cards):
+1. **Business Information** (`BusinessInfoForm`):
+   - Edit business name, slug, category
+   - PATCHes to `/api/businesses/[id]`
+2. **Review Settings** (`ReviewSettingsForm`):
+   - Configure review request frequency cap (days between requests to same customer)
+   - Configure Google review redirect URL
+3. **Profile** (`ProfileForm`):
+   - Edit user display name (`full_name`)
+   - PATCHes to `/api/users/me`
+
+### Businesses API — `PATCH /api/businesses/[id]`
+- Updates business record fields (name, slug, category, etc.)
+- Ownership verification: ensures user is a member of the business's organization
+
+### Users API — `PATCH /api/users/me`
+- Updates `auth.users` metadata (`full_name`)
+- Also updates `users` table record
+
+---
+
+## 19. Notifications System (SMS & Email)
+
+The system provides multi-channel notifications powered by **Twilio** (SMS) and **Resend** (Email).
+
+### SMS Integration (Twilio)
+- **Library**: `twilio` SDK
+- **Function**: `src/lib/twilio/send-sms.ts` handles opted-out checks
+- **Triggers**: High urgency reviews (score ≥ 7) or very negative ratings (1-2 stars)
+- **Opt-Out**: Webhook at `/api/webhooks/twilio` handles "STOP" replies
+
+### Email Integration (Resend)
+- **Library**: `resend` SDK
+- **Templates**: React Email components in `src/lib/resend/templates/`
+  - `ReviewAlertEmail`: Immediate alert for high/medium urgency reviews
+  - `DailyDigestEmail`: Summary of previous day's activity
+  - `WelcomeEmail`: Sent on signup
+- **Daily Digest**: A Vercel Cron job (`/api/cron/daily-digest`) runs daily (13:00 UTC) to aggregate low-urgency reviews.
+- **Urgency Tiers**:
+  - **High (7-10) / 1-2 Stars**: SMS + Email Alert
+  - **Medium (4-6)**: Email Alert
+  - **Low (1-3) / Neutral**: Daily Digest Only
 
 ### Send SMS — `src/lib/twilio/send-sms.ts`
 
@@ -961,7 +1317,38 @@ export const twilioClient = twilio(
 
 ---
 
-## 16. UI Components (shadcn/ui)
+## 20. Analytics Dashboard
+
+Located at `/analytics`, built with **Recharts**.
+
+### Metrics Tracked
+- **Volume**: Reviews per day/week/month
+- **Sentiment**: Distribution of Positive/Neutral/Negative
+- **Themes**: Top AI-identified themes (e.g., "Service", "Cleanliness")
+- **Ratings**: Average rating trends over time
+
+### Implementation
+- **Server Actions**: Data aggregation happens on the server to reduce client payload.
+- **Filtering**: URL-based date range selector (7d, 30d, 90d, 1y).
+
+---
+
+## 21. Integrations & Webhooks
+
+### Google Business Profile
+- **Status**: Fully implemented (Auth, Sync, Reply).
+- **Offline Access**: Critical `access_type: offline` parameter ensures long-lived Refresh Tokens.
+
+### Webhooks
+- **Users**: Can generate a generic webhook URL to receive JSON payloads of new reviews.
+- **Route**: `/api/webhooks/generic`
+
+### Future Integrations
+- Placeholder UI exists for POS systems (Square, Toast, Clover).
+
+---
+
+## 22. UI Components (shadcn/ui)
 
 The project uses **22 shadcn/ui components**, all located in `src/components/ui/`:
 
@@ -993,7 +1380,7 @@ The project uses **22 shadcn/ui components**, all located in `src/components/ui/
 
 ---
 
-## 17. Styling & Theming
+## 23. Styling & Theming
 
 ### CSS Architecture — `src/app/globals.css`
 
@@ -1030,36 +1417,55 @@ The project uses **22 shadcn/ui components**, all located in `src/components/ui/
 
 ---
 
-## 18. API Routes Reference
+## 24. API Routes Reference
 
 | Method | Endpoint | Auth | Purpose |
 |---|---|---|---|
 | `GET` | `/api/auth/callback` | Supabase | OAuth callback, user provisioning, GBP linking |
 | `POST` | `/api/sync/google` | User | Trigger manual Google review sync |
 | `GET` | `/api/cron/sync-reviews` | Cron | Scheduled sync for all platforms |
+| `GET` | `/api/cron/daily-digest` | Cron | Daily digest email (13:00 UTC) |
 | `POST` | `/api/reviews/[id]/reply` | User | Submit reply to Google review |
 | `POST` | `/api/ai/analyze` | User | Run AI sentiment analysis on a review |
 | `POST` | `/api/ai/suggest-reply` | User | Generate AI reply suggestions |
-| `POST` | `/api/settings/notifications` | User | Save SMS notification preferences |
+| `POST` | `/api/requests/send` | User | Send review request SMS to customer |
+| `PATCH` | `/api/businesses/[id]` | User | Update business details |
+| `PATCH` | `/api/users/me` | User | Update user profile |
+| `DELETE` | `/api/users/me` | User | Delete user account (stub) |
+| `POST` | `/api/billing/checkout` | User | Create Stripe checkout session |
+| `POST` | `/api/billing/portal` | User | Create Stripe billing portal session |
+| `POST` | `/api/team/invite` | User (Owner/Admin) | Send team invitation email |
+| `PATCH` | `/api/team/[id]` | User (Owner) | Change team member role |
+| `DELETE` | `/api/team/[id]` | User (Owner/Admin) | Remove member or cancel invite |
+| `POST` | `/api/settings/notifications` | User | Save SMS/email notification preferences |
 | `POST` | `/api/webhooks/twilio` | Twilio | Handle incoming SMS (opt-out/in) |
+| `POST` | `/api/webhooks/stripe` | Stripe | Handle subscription lifecycle events |
 
 ---
 
-## 19. Deployment & Git
+## 25. Deployment & Git
 
-### Repository
-- **URL**: [https://github.com/dikondaashish/Zyene_reviews.git](https://github.com/dikondaashish/Zyene_reviews.git)
-- **Branch**: `main`
-- **Package Manager**: pnpm 10.18.2
+### Production Deployment (Vercel)
 
-### Vercel Configuration — `vercel.json`
-```json
-{
-    // Vercel-specific deployment settings
-}
-```
+1. **Connect Repository**: Link GitHub repo to Vercel.
+2. **Environment Variables**: Copy all variables from `.env.local` to Vercel Project Settings.
+3. **Domain Configuration**:
+   - Add `zyene.in` (Production Root)
+   - Add `www.zyene.in` -> Redirect to `zyene.in`
+   - **Critical Subdomains**:
+     - `auth.zyene.in` (CNAME to `cname.vercel-dns.com`)
+     - `dashboard.zyene.in` (CNAME to `cname.vercel-dns.com`)
+4. **Deploy**: Trigger deployment.
 
-### TypeScript Configuration — `tsconfig.json`
+### DNS Verification
+Ensure your DNS provider (e.g., GoDaddy, Cloudflare) has:
+- **A Record**: `@` points to Vercel IP (`76.76.21.21`)
+- **CNAME Record**: `www` points to `cname.vercel-dns.com`
+- **CNAME Record**: `auth` points to `cname.vercel-dns.com`
+- **CNAME Record**: `dashboard` points to `cname.vercel-dns.com`
+
+### Git Workflow
+
 Key settings:
 - **Target**: ES2017
 - **Module Resolution**: Bundler
@@ -1070,7 +1476,7 @@ Key settings:
 
 ---
 
-## 20. Development Setup
+## 26. Development Setup
 
 ### Prerequisites
 - Node.js (LTS)
@@ -1116,7 +1522,7 @@ pnpm dev
 
 ## Summary
 
-Zyene Ratings is a **full-stack, production-ready SaaS application** built over 8 development phases:
+Zyene Ratings is a **full-stack, production-ready SaaS application** built over 12 development phases:
 
 | Phase | What Was Built |
 |---|---|
@@ -1128,5 +1534,9 @@ Zyene Ratings is a **full-stack, production-ready SaaS application** built over 
 | **Phase 6** | Reviews inbox with filters, pagination, inline reply to Google |
 | **Phase 7** | AI sentiment analysis and AI smart reply suggestions (Anthropic Claude) |
 | **Phase 8** | SMS notifications for urgent reviews (Twilio) with user-configurable settings |
+| **Phase 9** | Resend email integration: review alerts, daily digest, welcome email |
+| **Phase 10** | Stripe billing with Free/Starter/Growth plans, usage limits, Checkout & Portal |
+| **Phase 11** | Team management with invitations, role-based access, and email invites |
+| **Phase 12** | Review requests via SMS with rating-gated public flow and private feedback |
 
-The application contains **26 pages/routes**, **32 components**, **12 library modules**, and integrates with **4 external services** (Supabase, Google Business Profile API, Anthropic Claude, Twilio).
+The application contains **30+ pages/routes**, **40+ components**, **18 library modules**, and integrates with **6 external services** (Supabase, Google Business Profile API, Anthropic Claude, Twilio, Stripe, Resend).
