@@ -190,11 +190,11 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 {/* Action Buttons */}
                 {!loading && !error && (
                     <div className="grid grid-cols-3 gap-2">
-                        <Button variant="outline" size="sm" onClick={handleDownload} className="text-xs">
+                        <Button variant="outline" size="sm" onClick={handleDownload} className="text-xs" disabled={!qrDataUrl}>
                             <Download className="h-3.5 w-3.5 mr-1" />
                             Download
                         </Button>
-                        <Button variant="outline" size="sm" onClick={handlePrint} className="text-xs">
+                        <Button variant="outline" size="sm" onClick={handlePrint} className="text-xs" disabled={!qrDataUrl}>
                             <Printer className="h-3.5 w-3.5 mr-1" />
                             Print
                         </Button>
