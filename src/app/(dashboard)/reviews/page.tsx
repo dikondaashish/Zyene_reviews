@@ -9,11 +9,11 @@ import Link from "next/link";
 import { Filter, MessageSquare, Lock } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 
-export default async function ReviewsPage({
-    searchParams,
-}: {
-    searchParams: { status?: string; rating?: string; sort?: string; page?: string; type?: string };
+export default async function ReviewsPage(props: {
+    searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
 }) {
+    const searchParams = await props.searchParams;
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
