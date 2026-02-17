@@ -91,12 +91,21 @@ export async function middleware(request: NextRequest) {
                 )
             );
         }
+
+        // Redirect /dashboard to / for clean URL
+        if (pathname === "/dashboard") {
+            return createResponse(
+                NextResponse.redirect(new URL("/", request.url))
+            );
+        }
+
         // Rewrite root to /dashboard
         if (pathname === "/") {
             return createResponse(
                 NextResponse.rewrite(new URL("/dashboard", request.url))
             );
         }
+
         // Pass strictly dashboard paths? Or allow all?
         // For now allow all, but redirect logic handles unauth.
         return supabaseResponse;
