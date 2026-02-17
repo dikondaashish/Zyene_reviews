@@ -1,5 +1,5 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { PublicReviewFlow } from "./review-flow";
 import { Metadata } from "next";
@@ -18,7 +18,7 @@ export default async function RequestPage({
     params: Promise<{ slug: string }>;
     searchParams: Promise<{ ref?: string }>;
 }) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { ref: requestId } = await searchParams;
     const { slug } = await params;
 
