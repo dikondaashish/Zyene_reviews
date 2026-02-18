@@ -80,7 +80,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
             footer_text: "",
             footer_company_name: "Zyene",
             footer_link: "https://zyene.com",
-            footer_logo_url: "https://snielpllhrppdqzkzjwf.supabase.co/storage/v1/object/public/business-logos/footer-70267922-4c2c-4083-97f5-29e95dadfac5-1771443334179-Untitled%20design%20(4).png",
+            footer_logo_url: "/zyene-footer.png",
             hide_branding: false,
             welcome_message: "",
             apology_message: "",
