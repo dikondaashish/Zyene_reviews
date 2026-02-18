@@ -30,7 +30,6 @@ import { createClient } from "@/lib/supabase/client";
 
 const gatingSchema = z.object({
     min_stars_for_google: z.number().min(1).max(5),
-    review_gating_enabled: z.boolean().default(true),
     welcome_message: z.string().optional(),
     apology_message: z.string().optional(),
 });
@@ -41,7 +40,6 @@ interface ReviewGatingFormProps {
     business: {
         id: string;
         min_stars_for_google?: number;
-        review_gating_enabled?: boolean;
         welcome_message?: string;
         apology_message?: string;
     };
@@ -58,7 +56,6 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
         resolver: zodResolver(gatingSchema),
         defaultValues: {
             min_stars_for_google: business.min_stars_for_google || 4,
-            review_gating_enabled: business.review_gating_enabled ?? true,
             welcome_message: business.welcome_message || "",
             apology_message: business.apology_message || "",
         },
@@ -68,7 +65,6 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
         if (business) {
             form.reset({
                 min_stars_for_google: business.min_stars_for_google || 4,
-                review_gating_enabled: business.review_gating_enabled ?? true,
                 welcome_message: business.welcome_message || "",
                 apology_message: business.apology_message || "",
             });
