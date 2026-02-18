@@ -55,24 +55,22 @@ export default async function GeneralSettingsPage() {
 
 
             <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Profile</h4>
+                <ProfileForm user={user} />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Business Information</h4>
                 <BusinessInfoForm business={business} />
             </div>
-
-
 
             <Separator />
 
             <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Review Request Settings</h4>
                 <ReviewSettingsForm business={business} />
-            </div>
-
-            <Separator />
-
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Profile</h4>
-                <ProfileForm user={user} />
             </div>
         </div>
     );
