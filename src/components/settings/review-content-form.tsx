@@ -88,6 +88,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
     });
 
     const [uploadingFooterLogo, setUploadingFooterLogo] = useState(false);
+    const [filesToDelete, setFilesToDelete] = useState<string[]>([]);
 
     const handleFooterLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -95,6 +96,12 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
         if (file.size > 2 * 1024 * 1024) {
             toast.error("File size too large (max 2MB)");
             return;
+        }
+
+        // Mark existing logo for deletion if it's a hosted file and not the default local asset
+        const currentLogo = form.getValues("footer_logo_url");
+        if (currentLogo && currentLogo.includes("supabase.co") && !currentLogo.includes("/zyene-footer.png")) {
+            setFilesToDelete(prev => [...prev, currentLogo]);
         }
 
         setUploadingFooterLogo(true);
@@ -115,6 +122,10 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
     };
 
     const removeFooterLogo = () => {
+        const currentLogo = form.getValues("footer_logo_url");
+        if (currentLogo && currentLogo.includes("supabase.co") && !currentLogo.includes("/zyene-footer.png")) {
+            setFilesToDelete(prev => [...prev, currentLogo]);
+        }
         form.setValue("footer_logo_url", "", { shouldDirty: true, shouldTouch: true });
         toast.success("Footer logo removed");
     };
@@ -205,6 +216,24 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                 .eq("id", businessId);
 
             if (error) throw error;
+
+            // Delete marked files from storage
+            if (filesToDelete.length > 0) {
+                const pathsToDelete = filesToDelete.map(url => {
+                    try {
+                        const urlObj = new URL(url);
+                        const parts = urlObj.pathname.split('/');
+                        return parts[parts.length - 1]; // Last part is filename
+                    } catch (e) {
+                        return null;
+                    }
+                }).filter(p => p !== null) as string[];
+
+                if (pathsToDelete.length > 0) {
+                    await supabase.storage.from("business-logos").remove(pathsToDelete);
+                }
+                setFilesToDelete([]);
+            }
 
             toast.success("Content settings updated successfully");
         } catch (error) {

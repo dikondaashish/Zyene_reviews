@@ -57,6 +57,18 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         onValuesChange?.(watchedValues);
     }, [JSON.stringify(watchedValues), onValuesChange]);
 
+    const deleteOldLogo = async (url: string) => {
+        if (!url || !url.includes("supabase.co")) return;
+        try {
+            const urlObj = new URL(url);
+            const parts = urlObj.pathname.split('/');
+            const fileName = parts[parts.length - 1];
+            await supabase.storage.from("business-logos").remove([fileName]);
+        } catch (e) {
+            console.error("Error deleting old logo:", e);
+        }
+    };
+
     const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
 
@@ -69,7 +81,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         setUploadingLogo(true);
         try {
             const fileName = `${business.id}-${Date.now()}-${file.name}`;
-            const { data, error } = await supabase.storage
+            const { error } = await supabase.storage
                 .from("business-logos")
                 .upload(fileName, file);
 
@@ -79,11 +91,16 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                 .from("business-logos")
                 .getPublicUrl(fileName);
 
+            // Save to DB first
+            await updateBusiness({ logo_url: publicUrl });
+
+            // If successful, delete old logo
+            if (logoUrl) {
+                await deleteOldLogo(logoUrl);
+            }
+
             setLogoUrl(publicUrl);
             onLogoChange?.(publicUrl);
-
-            // Save immediately to DB
-            await updateBusiness({ logo_url: publicUrl });
             toast.success("Logo uploaded!");
         } catch (error: any) {
             console.error(error);
@@ -94,9 +111,18 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     };
 
     const removeLogo = async () => {
-        setLogoUrl(undefined);
-        await updateBusiness({ logo_url: null });
-        toast.success("Logo removed");
+        const oldLogoUrl = logoUrl;
+        try {
+            await updateBusiness({ logo_url: null });
+            setLogoUrl(undefined);
+
+            if (oldLogoUrl) {
+                await deleteOldLogo(oldLogoUrl);
+            }
+            toast.success("Logo removed");
+        } catch (error) {
+            // Error handled in updateBusiness toast
+        }
     };
 
     const updateBusiness = async (updates: any) => {
