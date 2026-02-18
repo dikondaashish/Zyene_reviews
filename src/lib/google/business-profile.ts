@@ -46,14 +46,16 @@ const BASE_URL_ACCOUNT = "https://mybusinessaccountmanagement.googleapis.com/v1"
 const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
 const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 5, backoff = 2000): Promise<Response> {
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
         const response = await fetch(url, options);
 
         if (response.status === 429) {
             if (retries > 0) {
-                console.warn(`[Google API] Rate limit hit (429). Retrying in ${backoff}ms... (Attempts left: ${retries})`);
-                await new Promise(resolve => setTimeout(resolve, backoff));
+                // Add jitter: delay = random(0, backoff)
+                const jitter = Math.random() * backoff;
+                console.warn(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
+                await new Promise(resolve => setTimeout(resolve, jitter));
                 return fetchWithRetry(url, options, retries - 1, backoff * 2);
             } else {
                 console.error("[Google API] Rate limit exceeded after multiple retries.");
@@ -63,8 +65,9 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 5, ba
         return response;
     } catch (error) {
         if (retries > 0) {
-            console.warn(`[Google API] Fetch failed. Retrying in ${backoff}ms... (Attempts left: ${retries})`, error);
-            await new Promise(resolve => setTimeout(resolve, backoff));
+            const jitter = Math.random() * backoff;
+            console.warn(`[Google API] Fetch failed. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`, error);
+            await new Promise(resolve => setTimeout(resolve, jitter));
             return fetchWithRetry(url, options, retries - 1, backoff * 2);
         }
         throw error;

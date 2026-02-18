@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
+import { listAccounts, listLocations } from "@/lib/google/business-profile";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -189,21 +190,54 @@ export async function GET(request: Request) {
                     console.log("- Identity RT:", !!identityRefreshToken);
                     console.log("- Final RT:", !!finalRefreshToken);
 
-                    if (platformData) {
-                        console.log("DEBUG: Updating Platform Tokens...");
-                        // Update existing platform credentials
+                    // Fetch Google Hierarchy IDs
+                    let googleAccountId: string | null = null;
+                    let googleLocationId: string | null = null;
+                    let externalId: string | null = null;
+                    let googleReviewUrl: string | null = null;
 
+                    try {
+                        if (finalAccessToken) {
+                            console.log("DEBUG: Fetching Google Hierarchy...");
+                            const accounts = await listAccounts(finalAccessToken);
+                            if (accounts.length > 0) {
+                                const account = accounts[0]; // Default to first account
+                                googleAccountId = account.name.split("/")[1];
+
+                                const locations = await listLocations(finalAccessToken, account.name);
+                                if (locations.length > 0) {
+                                    const location = locations[0]; // Default to first location
+                                    googleLocationId = location.name.split("/").pop() || null;
+                                    externalId = googleLocationId; // This is what we used before as external_id
+
+                                    // Extract URL
+                                    googleReviewUrl = location.metadata?.newReviewUri || location.metadata?.mapsUri || null;
+                                    if (location.metadata?.placeId) {
+                                        googleReviewUrl = `https://search.google.com/local/writereview?placeid=${location.metadata.placeId}`;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (hierarchyError) {
+                        console.error("DEBUG: Failed to fetch hierarchy in callback:", hierarchyError);
+                        // Ensure we don't block auth, backfill will handle it later
+                    }
+
+                    if (platformData) {
+                        console.log("DEBUG: Updating Platform Tokens & IDs...");
                         const updatePayload: any = {
                             access_token: finalAccessToken,
                             sync_status: "active",
                             updated_at: new Date().toISOString(),
                         };
 
-                        // Update refresh token if found
+                        if (googleAccountId) updatePayload.google_account_id = googleAccountId;
+                        if (googleLocationId) updatePayload.google_location_id = googleLocationId;
+                        if (externalId) updatePayload.external_id = externalId; // Ensure external_id is set
+                        if (googleReviewUrl) updatePayload.external_url = googleReviewUrl;
+
                         if (finalRefreshToken) {
                             updatePayload.refresh_token = finalRefreshToken;
-                        } else {
-                            console.warn("WARNING: No Refresh Token found in Session or Identities!");
                         }
 
                         const { error: updateError } = await admin
@@ -215,15 +249,16 @@ export async function GET(request: Request) {
                         else console.log("DEBUG: Update Success");
                     } else {
                         console.log("DEBUG: Inserting New Platform...");
-                        console.log("DEBUG: Insert payload - business_id:", businessId, "access_token present:", !!finalAccessToken, "refresh_token present:", !!finalRefreshToken);
-                        // Insert 'google' platform
                         const { data: insertData, error: insertError } = await admin.from("review_platforms").insert({
                             business_id: businessId,
                             platform: "google",
-                            sync_status: "active", // Assume active on connect
-                            // Store tokens using the robust extraction from above
+                            sync_status: "active",
                             access_token: finalAccessToken || "",
                             refresh_token: finalRefreshToken || "",
+                            google_account_id: googleAccountId,
+                            google_location_id: googleLocationId,
+                            external_id: externalId,
+                            external_url: googleReviewUrl
                         }).select().single();
 
                         if (insertError) {
@@ -231,6 +266,14 @@ export async function GET(request: Request) {
                         } else {
                             console.log("DEBUG: Insert Success - Platform ID:", insertData?.id);
                         }
+                    }
+
+                    // If we got the URL, try to update business table too
+                    if (googleReviewUrl) {
+                        await admin.from("businesses")
+                            .update({ google_review_url: googleReviewUrl })
+                            .eq("id", businessId)
+                            .is("google_review_url", null); // Only if empty
                     }
                 } else {
                     console.log("DEBUG: No Business Found for User", data.user.id);
