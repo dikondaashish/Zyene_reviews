@@ -44,16 +44,37 @@ export async function POST(request: Request) {
         return NextResponse.json(result);
 
     } catch (error: any) {
-        console.error("Sync Route Error:", error);
+        console.error("Sync Error:", error);
 
-        // Handle Token Errors gracefully
-        if (error.message.includes("Failed to refresh token") || error.message.includes("No refresh token available")) {
-            return NextResponse.json({
-                error: "Authentication failed. Please reconnect your Google account.",
-                code: "AUTH_ERROR"
-            }, { status: 401 });
+        if (error.code === 'CONFLICT') {
+            return new Response(JSON.stringify({ message: "Sync already in progress." }), {
+                status: 409,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error.code === 'RATE_LIMIT') {
+            return new Response(JSON.stringify({ message: "Rate limit reached. Please try again later." }), {
+                status: 429,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        let status = 500;
+        let message = "Failed to sync reviews";
+
+        // Check for specific Google implementation errors
+        if (error.message.includes("No Google Accounts")) {
+            status = 400;
+            message = "No Google Business Profile found.";
+        } else if (error.message.includes("reconnect")) {
+            status = 401;
+            message = "Authentication expired. Please reconnect Google.";
+        }
+
+        return new Response(JSON.stringify({ error: message, details: error.message }), {
+            status,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

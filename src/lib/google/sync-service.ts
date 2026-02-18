@@ -78,23 +78,42 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     if (platformError || !platform) throw new Error("Platform not found");
 
-    // Check Lock
-    if (platform.sync_status === 'running') {
-        throw new Error("Sync already in progress.");
-    }
-
-    // Check Cooldown
+    // Check Cooldown FIRST (cheap check)
     if (platform.last_synced_at) {
         const lastSync = new Date(platform.last_synced_at);
         const now = new Date();
         const diff = now.getTime() - lastSync.getTime();
         if (diff < 2 * 60 * 1000) { // 2 minutes
-            throw new Error("Please wait before syncing again.");
+            // Throw specific error object that API route can parse
+            const error: any = new Error("Please wait before syncing again.");
+            error.code = "RATE_LIMIT";
+            throw error;
         }
     }
 
-    // LOCK
-    await admin.from("review_platforms").update({ sync_status: 'running' }).eq("id", platformId);
+    // ATOMIC LOCK ACQUISITION
+    // Attempt to set sync_status='running' for this ID
+    // Condition: sync_status is 'idle' OR 'error' OR 'active' (anything but running)
+    // OR sync_status is 'running' but stale (> 10 mins)
+
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+
+    const { data: lockData, error: lockError } = await admin
+        .from("review_platforms")
+        .update({ sync_status: 'running', updated_at: new Date().toISOString() })
+        .eq("id", platformId)
+        .or(`sync_status.neq.running,updated_at.lt.${tenMinutesAgo}`)
+        .select()
+        .single();
+
+    if (lockError || !lockData) {
+        console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
+        const error: any = new Error("Sync already in progress.");
+        error.code = "CONFLICT";
+        throw error;
+    }
+
+    console.log(`[Sync] Lock Acquired for platform ${platformId}`);
 
     try {
         // 1. Get Valid Token (this refreshes if needed)
@@ -247,13 +266,14 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     } catch (error: any) {
         console.error(`[Sync] Implementation Error:`, error);
-        // Error status will be cleared to 'idle' in finally block, but we might want to log/notify.
+        // Error status will be handled by finally block (reset to idle)
         throw error;
     } finally {
         // UNLOCK and UPDATE TIMESTAMP
-        // Only update timestamp if success? User said "update last_synced_at" then release lock.
-        // If I update it here, it updates for failure too.
-        // Let's stick to updating it here to enforce cooldown even after errors (prevent spam loop of errors).
+        // Only unlock if we actually acquired the lock (which we did if we passed the lock check)
+        // But to be safe and atomic, we just set it to idle where id=platformId
+        console.log(`[Sync] Lock Released for platform ${platformId}`);
+
         await admin.from("review_platforms").update({
             sync_status: 'idle',
             last_synced_at: new Date().toISOString()
