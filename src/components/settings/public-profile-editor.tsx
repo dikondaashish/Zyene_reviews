@@ -7,8 +7,11 @@ import { BrandingForm } from "./branding-form";
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils";
-import { Link as LinkIcon, HelpCircle, Share2, ExternalLink } from "lucide-react";
+import { Link as LinkIcon, HelpCircle, Share2, ExternalLink, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { QRCodeCard } from "../dashboard/qr-code-card";
+import { toast } from "sonner";
 
 interface PublicProfileEditorProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,25 +124,52 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     </div>
                 </div>
 
-                {/* Shareable Link Section */}
-                <div className="bg-white dark:bg-slate-950 rounded-xl shadow-sm border p-4 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <LinkIcon className="h-5 w-5" />
-                        </div>
-                        <div className="min-w-0 flex flex-col">
-                            <div className="flex items-center gap-1.5">
-                                <span className="font-semibold text-sm truncate">Shareable Link</span>
-                                <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                {/* Shareable Link & QR Section */}
+                <div className="flex items-stretch gap-2">
+                    <div className="flex-1 bg-white dark:bg-slate-950 rounded-xl shadow-sm border p-4 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <LinkIcon className="h-5 w-5" />
                             </div>
-                            <p className="text-xs text-muted-foreground truncate font-mono">
-                                {previewUrl}
-                            </p>
+                            <div className="min-w-0 flex flex-col text-left">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-sm truncate">Shareable Link</span>
+                                    <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                                </div>
+                                <p className="text-xs text-muted-foreground truncate font-mono">
+                                    {previewUrl}
+                                </p>
+                            </div>
                         </div>
+                        <Button
+                            size="sm"
+                            className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 font-semibold px-6"
+                            onClick={() => {
+                                navigator.clipboard.writeText(`https://${previewUrl}`);
+                                toast.success("Link copied to clipboard!");
+                            }}
+                        >
+                            SHARE
+                        </Button>
                     </div>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shrink-0 font-semibold px-6">
-                        SHARE
-                    </Button>
+
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="aspect-square h-auto flex items-center justify-center border bg-white dark:bg-slate-950 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors shrink-0 p-0 w-[72px]"
+                            >
+                                <QrCode className="h-6 w-6 text-slate-700 dark:text-slate-300" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none bg-transparent shadow-none">
+                            <QRCodeCard
+                                businessId={business.id}
+                                businessSlug={previewState.slug}
+                                businessName={business.name}
+                            />
+                        </DialogContent>
+                    </Dialog>
                 </div>
 
                 {/* Footer */}
