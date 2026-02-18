@@ -7,7 +7,7 @@ import { BrandingForm } from "./branding-form";
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils";
-import { Link as LinkIcon, HelpCircle, QrCode, Check, Copy, Download, Printer, Share2, Loader2 } from "lucide-react";
+import { Link as LinkIcon, HelpCircle, QrCode, Check, Download, Printer, Share2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -52,9 +52,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         hide_branding: business.hide_branding,
     });
 
-    const handleValuesChange = useCallback((values: any) => {
+    const handleValuesChange = (values: any) => {
         setPreviewState(prev => ({ ...prev, ...values }));
-    }, []);
+    };
 
     const previewUrl = `zyene.in/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
