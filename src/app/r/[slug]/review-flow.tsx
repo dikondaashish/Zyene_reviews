@@ -77,7 +77,7 @@ export function PublicReviewFlow({
     googleUrl,
     brandColor = "#2563EB", // Default Blue
     logoUrl,
-    minStars = 4,
+    minStars: minStarsVal,
     welcomeMsg,
     apologyMsg,
     ratingSubtitle,
@@ -97,6 +97,7 @@ export function PublicReviewFlow({
     isPreview = false,
     className,
 }: PublicReviewFlowProps) {
+    const minStars = minStarsVal ?? 4;
     const [step, setStep] = useState<FlowStep>("rating");
     const [rating, setRating] = useState<number | null>(null);
     const [hoverRating, setHoverRating] = useState<number | null>(null);

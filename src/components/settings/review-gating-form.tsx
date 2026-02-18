@@ -64,6 +64,17 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
         },
     });
 
+    useEffect(() => {
+        if (business) {
+            form.reset({
+                min_stars_for_google: business.min_stars_for_google || 4,
+                review_gating_enabled: business.review_gating_enabled ?? true,
+                welcome_message: business.welcome_message || "",
+                apology_message: business.apology_message || "",
+            });
+        }
+    }, [business, form]);
+
     const watchedValues = form.watch(); // Added
 
     useEffect(() => { // Added useEffect
@@ -111,7 +122,7 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
                                 <FormLabel>Minimum Stars for Public Review</FormLabel>
                                 <Select
                                     onValueChange={(val) => field.onChange(Number(val))}
-                                    defaultValue={String(field.value)}
+                                    value={String(field.value)}
                                 >
                                     <FormControl>
                                         <SelectTrigger>
@@ -127,7 +138,9 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
                                     </SelectContent>
                                 </Select>
                                 <FormDescription>
-                                    Customers rating below this threshold will be asked for private feedback instead.
+                                    {form.watch("min_stars_for_google") === 1
+                                        ? "All ratings will be directed to public review flow."
+                                        : "Customers rating below this threshold will be asked for private feedback instead."}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
