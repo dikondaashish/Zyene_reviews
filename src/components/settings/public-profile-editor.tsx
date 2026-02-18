@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SlugEditor } from "./slug-editor";
 import { BrandingForm } from "./branding-form";
 import { ReviewGatingForm } from "./review-gating-form";
+import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils";
 import { Link as LinkIcon, HelpCircle, Share2, ExternalLink } from "lucide-react";
@@ -24,6 +25,20 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         review_gating_enabled: business.review_gating_enabled ?? true,
         welcome_message: business.welcome_message,
         apology_message: business.apology_message,
+        rating_subtitle: business.rating_subtitle,
+        tags_heading: business.tags_heading,
+        tags_subheading: business.tags_subheading,
+        custom_tags: business.custom_tags,
+        google_heading: business.google_heading,
+        google_subheading: business.google_subheading,
+        google_button_text: business.google_button_text,
+        negative_subheading: business.negative_subheading,
+        negative_textarea_placeholder: business.negative_textarea_placeholder,
+        negative_button_text: business.negative_button_text,
+        thank_you_heading: business.thank_you_heading,
+        thank_you_message: business.thank_you_message,
+        footer_text: business.footer_text,
+        hide_branding: business.hide_branding,
     });
 
     const handleValuesChange = (values: any) => {
@@ -52,6 +67,11 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     business={business}
                     onValuesChange={handleValuesChange}
                 />
+
+                <ReviewContentForm
+                    businessId={business.id}
+                    onValuesChange={handleValuesChange}
+                />
             </div>
 
             {/* Right Column: Preview (Simplified Model) */}
@@ -78,6 +98,20 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 minStars={previewState.review_gating_enabled ? previewState.min_stars_for_google : 1}
                                 welcomeMsg={previewState.welcome_message}
                                 apologyMsg={previewState.apology_message}
+                                ratingSubtitle={previewState.rating_subtitle}
+                                tagsHeading={previewState.tags_heading}
+                                tagsSubheading={previewState.tags_subheading}
+                                customTags={previewState.custom_tags}
+                                googleHeading={previewState.google_heading}
+                                googleSubheading={previewState.google_subheading}
+                                googleButtonText={previewState.google_button_text}
+                                negativeSubheading={previewState.negative_subheading}
+                                negativeTextareaPlaceholder={previewState.negative_textarea_placeholder}
+                                negativeButtonText={previewState.negative_button_text}
+                                thankYouHeading={previewState.thank_you_heading}
+                                thankYouMessage={previewState.thank_you_message}
+                                footerText={previewState.footer_text}
+                                hideBranding={previewState.hide_branding}
                                 isPreview={true}
                                 className="min-h-full w-full rounded-[2rem]"
                             />

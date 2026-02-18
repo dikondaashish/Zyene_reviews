@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -126,106 +125,120 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     };
 
     return (
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border bg-white p-6 shadow-sm space-y-8">
             <Form {...form}>
-                <div className="mb-6">
+                <div className="space-y-1">
                     <h3 className="text-xl font-semibold text-slate-900">Brand Identity</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Ensure your review page matches your brand.
+                    <p className="text-sm text-slate-500">
+                        Customize your review page to match your brand's look and feel.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 gap-8">
                     {/* Logo Section */}
                     <div className="space-y-4">
-                        <FormLabel className="text-base font-medium">Logo</FormLabel>
-                        <div className="flex items-start gap-5">
-                            <div className="relative h-28 w-28 rounded-2xl border-2 border-slate-100 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
+                        <FormLabel className="text-base font-medium text-slate-900">Logo</FormLabel>
+                        <div className="flex flex-col sm:flex-row gap-6 items-start">
+                            <div className="relative h-28 w-28 rounded-2xl border-2 border-slate-100 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
                                 {uploadingLogo ? (
-                                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                                    <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
                                 ) : logoUrl ? (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={logoUrl} alt="Business Logo" className="object-cover h-full w-full" />
                                 ) : (
-                                    <span className="text-xs text-muted-foreground text-center px-2 font-medium">No Logo</span>
+                                    <div className="text-center p-2">
+                                        <Upload className="h-6 w-6 text-slate-300 mx-auto mb-1" />
+                                        <span className="text-xs text-slate-400 font-medium">No Logo</span>
+                                    </div>
                                 )}
                             </div>
-                            <div className="flex flex-col gap-3 pt-1">
-                                <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="sm" className="relative h-9 px-4 border-slate-200 hover:bg-slate-50 hover:text-slate-900 font-medium bg-white shadow-sm" disabled={uploadingLogo}>
-                                        <Upload className="mr-2 h-3.5 w-3.5" />
-                                        Upload
-                                        <input
-                                            type="file"
-                                            className="absolute inset-0 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/webp"
-                                            onChange={handleLogoUpload}
-                                            disabled={uploadingLogo}
-                                        />
-                                    </Button>
+
+                            <div className="flex-1 space-y-3 pt-1">
+                                <div className="flex flex-wrap gap-3">
+                                    <div className="relative">
+                                        <Button variant="outline" size="sm" type="button" className="relative h-9 px-4 border-slate-200 hover:bg-slate-50 hover:text-slate-900 font-medium bg-white shadow-sm" disabled={uploadingLogo}>
+                                            <Upload className="mr-2 h-3.5 w-3.5" />
+                                            Upload Logo
+                                            <input
+                                                type="file"
+                                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                                accept="image/png, image/jpeg, image/webp"
+                                                onChange={handleLogoUpload}
+                                                disabled={uploadingLogo}
+                                            />
+                                        </Button>
+                                    </div>
                                     {logoUrl && (
                                         <Button
                                             variant="ghost"
-                                            size="icon"
-                                            className="h-9 w-9 text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                            size="sm"
+                                            type="button"
+                                            className="h-9 px-3 text-slate-500 hover:text-red-600 hover:bg-red-50"
                                             onClick={removeLogo}
                                             disabled={uploadingLogo}
                                         >
-                                            <Trash className="h-4 w-4" />
+                                            <Trash className="mr-2 h-3.5 w-3.5" />
+                                            Remove
                                         </Button>
                                     )}
                                 </div>
-                                <p className="text-xs text-muted-foreground leading-relaxed max-w-[140px]">
-                                    Max 2MB. PNG, JPG, WebP. Recommended 512x512.
+                                <p className="text-xs text-slate-500 leading-relaxed">
+                                    Upload your business logo. Recommended size: 512x512px.<br />
+                                    Supported formats: PNG, JPG, WebP. Max 2MB.
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Color Section - Wrapped in form here to isolate submit if needed, or just part of larger layout */}
-                    <div className="space-y-4">
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Color Section */}
+                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="brand_color"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-base font-medium">Brand Color</FormLabel>
-                                        <div className="flex gap-3 items-center">
-                                            <div className="relative h-11 w-11 rounded-lg border border-slate-200 shadow-sm overflow-hidden shrink-0">
-                                                <div
-                                                    className="absolute inset-0"
-                                                    style={{ backgroundColor: field.value }}
-                                                />
-                                                <input
-                                                    type="color"
-                                                    {...field}
-                                                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full p-0 border-0"
-                                                />
+                                    <FormItem className="space-y-3">
+                                        <FormLabel className="text-base font-medium text-slate-900">Brand Color</FormLabel>
+                                        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                            <div className="flex gap-3 items-center w-full sm:w-auto">
+                                                <div className="relative h-11 w-11 rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-blue-500">
+                                                    <div
+                                                        className="absolute inset-0"
+                                                        style={{ backgroundColor: field.value }}
+                                                    />
+                                                    <input
+                                                        type="color"
+                                                        {...field}
+                                                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full p-0 border-0"
+                                                    />
+                                                </div>
+                                                <div className="flex-1 sm:w-32">
+                                                    <Input
+                                                        {...field}
+                                                        placeholder="#0f172a"
+                                                        className="font-mono h-11 border-slate-200 bg-slate-50 focus:bg-white transition-all"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="flex-1">
-                                                <Input
-                                                    {...field}
-                                                    placeholder="#0f172a"
-                                                    className="font-mono h-11 border-slate-200 bg-slate-50 focus:bg-white transition-colors"
-                                                />
-                                            </div>
+                                            <p className="text-xs text-slate-500 flex-1">
+                                                This color will be used for buttons, links, and accents throughout your public review page.
+                                            </p>
                                         </div>
-                                        <FormDescription className="text-xs mt-2">
-                                            Used for buttons and accents on your public page.
-                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <Button
-                                type="submit"
-                                disabled={isLoading}
-                                className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 h-10 w-full md:w-auto"
-                            >
-                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Save Color
-                            </Button>
+
+                            <div className="flex justify-end pt-2">
+                                <Button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95"
+                                >
+                                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Save Brand Settings
+                                </Button>
+                            </div>
                         </form>
                     </div>
                 </div>

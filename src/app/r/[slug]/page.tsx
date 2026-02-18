@@ -35,6 +35,20 @@ export default async function RequestPage({
             min_stars_for_google,
             welcome_message,
             apology_message,
+            rating_subtitle,
+            tags_heading,
+            tags_subheading,
+            custom_tags,
+            google_heading,
+            google_subheading,
+            google_button_text,
+            negative_subheading,
+            negative_textarea_placeholder,
+            negative_button_text,
+            thank_you_heading,
+            thank_you_message,
+            footer_text,
+            hide_branding,
             organization:organizations (
                 plan,
                 plan_status
@@ -102,6 +116,20 @@ export default async function RequestPage({
                 minStars={business.min_stars_for_google}
                 welcomeMsg={business.welcome_message}
                 apologyMsg={business.apology_message}
+                ratingSubtitle={business.rating_subtitle}
+                tagsHeading={business.tags_heading}
+                tagsSubheading={business.tags_subheading}
+                customTags={business.custom_tags}
+                googleHeading={business.google_heading}
+                googleSubheading={business.google_subheading}
+                googleButtonText={business.google_button_text}
+                negativeSubheading={business.negative_subheading}
+                negativeTextareaPlaceholder={business.negative_textarea_placeholder}
+                negativeButtonText={business.negative_button_text}
+                thankYouHeading={business.thank_you_heading}
+                thankYouMessage={business.thank_you_message}
+                footerText={business.footer_text}
+                hideBranding={business.hide_branding}
             />
         </div>
     );

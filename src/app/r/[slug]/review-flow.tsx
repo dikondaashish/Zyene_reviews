@@ -35,6 +35,7 @@ const RATINGS = [
 ];
 
 // ─── Props ──────────────────────────────────────────────────────────────
+// ─── Props ──────────────────────────────────────────────────────────────
 export interface PublicReviewFlowProps {
     businessId: string;
     businessName: string;
@@ -44,8 +45,22 @@ export interface PublicReviewFlowProps {
     brandColor?: string;
     logoUrl?: string;
     minStars?: number;
-    welcomeMsg?: string;
-    apologyMsg?: string;
+    welcomeMsg?: string; // Main Rating Heading
+    apologyMsg?: string; // Main Negative Heading
+    ratingSubtitle?: string;
+    tagsHeading?: string;
+    tagsSubheading?: string;
+    customTags?: string[];
+    googleHeading?: string;
+    googleSubheading?: string;
+    googleButtonText?: string;
+    negativeSubheading?: string; // "Share your feedback directly..."
+    negativeTextareaPlaceholder?: string;
+    negativeButtonText?: string;
+    thankYouHeading?: string;
+    thankYouMessage?: string;
+    footerText?: string;
+    hideBranding?: boolean;
     isPreview?: boolean;
     className?: string;
 }
@@ -65,6 +80,20 @@ export function PublicReviewFlow({
     minStars = 4,
     welcomeMsg,
     apologyMsg,
+    ratingSubtitle,
+    tagsHeading,
+    tagsSubheading,
+    customTags,
+    googleHeading,
+    googleSubheading,
+    googleButtonText,
+    negativeSubheading,
+    negativeTextareaPlaceholder,
+    negativeButtonText,
+    thankYouHeading,
+    thankYouMessage,
+    footerText,
+    hideBranding = false,
     isPreview = false,
     className,
 }: PublicReviewFlowProps) {
@@ -82,9 +111,10 @@ export function PublicReviewFlow({
 
     const supabase = createClient();
 
-    // Resolve tags for this business category
+    // Resolve tags: Use custom tags if provided, otherwise category defaults
     const categoryKey = businessCategory.toLowerCase();
-    const tags = CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other;
+    const defaultTags = CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other;
+    const tags = (customTags && customTags.length > 0) ? customTags : defaultTags;
 
     // Get initials for avatar
     const initials = businessName
@@ -251,8 +281,6 @@ export function PublicReviewFlow({
 
     // ─── Shared card wrapper ────────────────────────────────────────────
 
-    // ─── Shared card wrapper ────────────────────────────────────────────
-
     const CardWrapper = ({ children, contentClassName }: { children: React.ReactNode; contentClassName?: string }) => (
         <div className={cn(
             "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 transition-all duration-500",
@@ -275,11 +303,17 @@ export function PublicReviewFlow({
                 {children}
 
                 {/* Powered by footer */}
-                <div className="py-4 text-center border-t border-slate-100">
-                    <p className="text-xs text-slate-400 font-medium tracking-wide">
-                        Powered by <span className="text-blue-600 font-semibold">Zyene</span>
-                    </p>
-                </div>
+                {!hideBranding && (
+                    <div className="py-4 text-center border-t border-slate-100">
+                        <p className="text-xs text-slate-400 font-medium tracking-wide">
+                            {footerText ? (
+                                footerText
+                            ) : (
+                                <>Powered by <span className="text-blue-600 font-semibold">Zyene</span></>
+                            )}
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -299,10 +333,9 @@ export function PublicReviewFlow({
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Thank You!</h2>
-                        <p className="text-slate-500 text-lg leading-relaxed">
-                            Your feedback means the world to us.<br />
-                            We appreciate you taking the time.
+                        <h2 className="text-3xl font-bold text-slate-900 mb-2">{thankYouHeading || "Thank You!"}</h2>
+                        <p className="text-slate-500 text-lg leading-relaxed whitespace-pre-line">
+                            {thankYouMessage || "Your feedback means the world to us.\nWe appreciate you taking the time."}
                         </p>
                     </div>
                 </div>
@@ -327,7 +360,7 @@ export function PublicReviewFlow({
                                 {apologyMsg || "Sorry about that"}
                             </h2>
                             <p className="text-slate-500 text-sm leading-snug">
-                                Share your feedback directly with the owner.
+                                {negativeSubheading || "Share your feedback directly with the owner."}
                             </p>
                         </div>
                     </div>
@@ -336,7 +369,7 @@ export function PublicReviewFlow({
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">Your feedback</label>
                         <textarea
-                            placeholder="Tell us what happened..."
+                            placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
                             className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
@@ -377,7 +410,7 @@ export function PublicReviewFlow({
                             ) : (
                                 <Send className="h-4 w-4" />
                             )}
-                            {isSubmitting ? "Sending..." : "Send Feedback"}
+                            {isSubmitting ? "Sending..." : (negativeButtonText || "Send Feedback")}
                         </button>
 
                         <div className="flex items-center justify-between px-1">
@@ -431,13 +464,13 @@ export function PublicReviewFlow({
                         )}
                         <div className="text-center">
                             <h1 className="text-xl font-bold text-slate-900 mb-1">{businessName}</h1>
-                            <p className="text-slate-500 text-sm">Your feedback means a lot to us!</p>
+                            <p className="text-slate-500 text-sm">{ratingSubtitle || "Your feedback means a lot to us!"}</p>
                         </div>
                     </div>
 
                     {/* Question */}
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900 leading-tight px-4">
+                        <h2 className="text-2xl font-bold text-slate-900 leading-tight px-4 whitespace-pre-line">
                             {welcomeMsg || "How was your experience?"}
                         </h2>
                     </div>
@@ -497,8 +530,8 @@ export function PublicReviewFlow({
                     </div>
 
                     <div className="text-center space-y-1">
-                        <h2 className="text-2xl font-bold text-slate-900">What did you like most?</h2>
-                        <p className="text-slate-500 text-sm">Tap to select what stood out</p>
+                        <h2 className="text-2xl font-bold text-slate-900">{tagsHeading || "What did you like most?"}</h2>
+                        <p className="text-slate-500 text-sm">{tagsSubheading || "Tap to select what stood out"}</p>
                     </div>
 
                     {/* Tags */}
@@ -580,7 +613,6 @@ export function PublicReviewFlow({
     }
 
     // ─── Render: Generating (loading) ───────────────────────────────────
-
     if (step === "generating") {
         return (
             <CardWrapper>
@@ -610,7 +642,6 @@ export function PublicReviewFlow({
     }
 
     // ─── Render: AI Review (step 3) ─────────────────────────────────────
-
     if (step === "review") {
         return (
             <CardWrapper>
@@ -624,9 +655,9 @@ export function PublicReviewFlow({
 
                     <div className="text-center space-y-1">
                         <h2 className="text-xl font-bold text-slate-900">
-                            Would you post this on Google?
+                            {googleHeading || "Would you post this on Google?"}
                         </h2>
-                        <p className="text-slate-500 text-sm">Tap to edit, or post as-is</p>
+                        <p className="text-slate-500 text-sm">{googleSubheading || "Tap to edit, or post as-is"}</p>
                     </div>
 
                     {/* AI Generated Review */}
@@ -661,7 +692,7 @@ export function PublicReviewFlow({
                         ) : (
                             <>
                                 <Copy className="h-4 w-4" />
-                                <span>Copy & Go to Google</span>
+                                <span>{googleButtonText || "Copy & Go to Google"}</span>
                                 <ExternalLink className="h-4 w-4 ml-1" />
                             </>
                         )}
@@ -678,6 +709,5 @@ export function PublicReviewFlow({
             </CardWrapper >
         );
     }
-
     return null;
 }
