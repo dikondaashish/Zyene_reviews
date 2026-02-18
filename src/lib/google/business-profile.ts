@@ -21,6 +21,7 @@ export interface GoogleLocation {
     metadata?: {
         mapsUri?: string;
         newReviewUri?: string;
+        placeId?: string;
     };
 }
 

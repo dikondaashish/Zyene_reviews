@@ -98,7 +98,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         }
 
         // Extract Review URL
-        const googleReviewUrl = locationDetails?.metadata?.newReviewUri || locationDetails?.metadata?.mapsUri;
+        let googleReviewUrl = locationDetails?.metadata?.newReviewUri || locationDetails?.metadata?.mapsUri;
+
+        // Priority: Use Place ID format if available (requested by user)
+        if (locationDetails?.metadata?.placeId) {
+            googleReviewUrl = `https://search.google.com/local/writereview?placeid=${locationDetails.metadata.placeId}`;
+        }
 
         // ... (C. List Reviews logic remains same)
 
