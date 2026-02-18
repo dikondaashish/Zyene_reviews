@@ -46,6 +46,31 @@ const BASE_URL_ACCOUNT = "https://mybusinessaccountmanagement.googleapis.com/v1"
 const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
 const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
 
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 1000): Promise<Response> {
+    try {
+        const response = await fetch(url, options);
+
+        if (response.status === 429) {
+            if (retries > 0) {
+                console.warn(`[Google API] Rate limit hit (429). Retrying in ${backoff}ms...`);
+                await new Promise(resolve => setTimeout(resolve, backoff));
+                return fetchWithRetry(url, options, retries - 1, backoff * 2);
+            } else {
+                console.error("[Google API] Rate limit exceeded after retries.");
+            }
+        }
+
+        return response;
+    } catch (error) {
+        if (retries > 0) {
+            console.warn(`[Google API] Fetch failed. Retrying in ${backoff}ms...`, error);
+            await new Promise(resolve => setTimeout(resolve, backoff));
+            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+        }
+        throw error;
+    }
+}
+
 export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTokenResponse> {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -75,7 +100,7 @@ export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTo
 }
 
 export async function listAccounts(accessToken: string): Promise<GoogleAccount[]> {
-    const response = await fetch(`${BASE_URL_ACCOUNT}/accounts`, {
+    const response = await fetchWithRetry(`${BASE_URL_ACCOUNT}/accounts`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     });
 
@@ -93,7 +118,7 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
 
 export async function listLocations(accessToken: string, accountName: string): Promise<GoogleLocation[]> {
     // accountName format: accounts/{accountId}
-    const response = await fetch(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode,metadata`, {
+    const response = await fetchWithRetry(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode,metadata`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     });
 
@@ -115,7 +140,7 @@ export async function listReviews(accessToken: string, accountId: string, locati
 
     const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
     });
 
@@ -136,7 +161,7 @@ export async function replyToReview(
 ): Promise<void> {
     const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews/${reviewId}/reply`;
 
-    const response = await fetch(url, {
+    const response = await fetchWithRetry(url, {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${accessToken}`,
