@@ -52,9 +52,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         hide_branding: business.hide_branding,
     });
 
-    const handleValuesChange = (values: any) => {
+    const handleValuesChange = useCallback((values: any) => {
         setPreviewState(prev => ({ ...prev, ...values }));
-    };
+    }, []);
 
     const previewUrl = `zyene.in/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
