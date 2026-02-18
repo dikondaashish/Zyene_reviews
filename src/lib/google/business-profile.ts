@@ -18,7 +18,12 @@ export interface GoogleLocation {
     name: string; // locations/{locationId} or accounts/{accountId}/locations/{locationId}
     title: string;
     storeCode?: string;
+    metadata?: {
+        mapsUri?: string;
+        newReviewUri?: string;
+    };
 }
+
 
 export interface GoogleReview {
     reviewId: string;
@@ -75,9 +80,10 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
     return data.accounts || [];
 }
 
+
 export async function listLocations(accessToken: string, accountName: string): Promise<GoogleLocation[]> {
     // accountName format: accounts/{accountId}
-    const response = await fetch(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode`, {
+    const response = await fetch(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode,metadata`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     });
 

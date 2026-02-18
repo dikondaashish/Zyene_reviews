@@ -81,13 +81,26 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         // B. List Locations
         let locationId = platform.external_id;
+        let locationDetails = null;
 
-        // If we don't have a location ID yet, try to find it
-        if (!locationId) {
-            const locations = await listLocations(accessToken, account.name);
-            if (locations.length === 0) throw new Error("No Locations found for this account");
-            locationId = locations[0].name.split("/").pop();
+        // always fetch locations to get metadata
+        const locations = await listLocations(accessToken, account.name);
+
+        if (platform.external_id) {
+            locationDetails = locations.find(l => l.name.endsWith(platform.external_id));
         }
+
+        // If we don't have a location ID yet, use the first one
+        if (!locationId) {
+            if (locations.length === 0) throw new Error("No Locations found for this account");
+            locationDetails = locations[0];
+            locationId = locationDetails.name.split("/").pop();
+        }
+
+        // Extract Review URL
+        const googleReviewUrl = locationDetails?.metadata?.newReviewUri || locationDetails?.metadata?.mapsUri;
+
+        // ... (C. List Reviews logic remains same)
 
         // C. List Reviews
         const accountId = account.name.split("/")[1];
@@ -169,10 +182,25 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             external_id: locationId, // Save the finalized Location ID
         }).eq("id", platformId);
 
-        await admin.from("businesses").update({
+        // Fetch current business to check if URL is already set
+        const { data: currentBusiness } = await admin
+            .from("businesses")
+            .select("google_review_url")
+            .eq("id", platform.business_id)
+            .single();
+
+        const updateData: any = {
             total_reviews: totalReviews,
             average_rating: parseFloat(avgRating.toFixed(1))
-        }).eq("id", platform.business_id);
+        };
+
+        // Only auto-fill if currently empty
+        if (googleReviewUrl && !currentBusiness?.google_review_url) {
+            updateData.google_review_url = googleReviewUrl;
+            console.log(`[Sync] Auto-filled Google Review URL: ${googleReviewUrl}`);
+        }
+
+        await admin.from("businesses").update(updateData).eq("id", platform.business_id);
 
         return {
             success: true,
