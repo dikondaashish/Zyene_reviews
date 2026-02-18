@@ -52,9 +52,17 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         hide_branding: business.hide_branding,
     });
 
-    const handleValuesChange = (values: any) => {
+    const handleValuesChange = useCallback((values: any) => {
         setPreviewState(prev => ({ ...prev, ...values }));
-    };
+    }, []);
+
+    const handleSlugChange = useCallback((slug: string) => {
+        handleValuesChange({ slug });
+    }, [handleValuesChange]);
+
+    const handleLogoChange = useCallback((url: string | null) => {
+        handleValuesChange({ logo_url: url });
+    }, [handleValuesChange]);
 
     const previewUrl = `zyene.in/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
@@ -62,6 +70,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     // Share & QR state
     const [copied, setCopied] = useState(false);
     const [qrDialogOpen, setQrDialogOpen] = useState(false);
+    // ... rest of state matches existing ... 
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
 
@@ -128,13 +137,13 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 <SlugEditor
                     businessId={business.id}
                     initialSlug={initialSlug}
-                    onSlugChange={(slug) => handleValuesChange({ slug })}
+                    onSlugChange={handleSlugChange}
                 />
 
                 <BrandingForm
                     business={business}
                     onValuesChange={handleValuesChange}
-                    onLogoChange={(url) => handleValuesChange({ logo_url: url })}
+                    onLogoChange={handleLogoChange}
                 />
 
                 <ReviewContentForm
