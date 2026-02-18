@@ -188,7 +188,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                     <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto">
                         <TabsTrigger value="rating" className="py-2">Rating</TabsTrigger>
                         <TabsTrigger value="tags" className="py-2">Tags</TabsTrigger>
-                        <TabsTrigger value="google" className="py-2">Google</TabsTrigger>
+                        <TabsTrigger value="google" className="py-2">Review Site</TabsTrigger>
                         <TabsTrigger value="feedback" className="py-2">Feedback</TabsTrigger>
                         <TabsTrigger value="success" className="py-2">Success</TabsTrigger>
                         <TabsTrigger value="branding" className="py-2">Branding</TabsTrigger>
@@ -319,8 +319,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         {/* Google Screen Tab */}
                         <TabsContent value="google" className="space-y-4 mt-0">
                             <div className="space-y-1 mb-4">
-                                <h3 className="font-semibold text-slate-900">Google Review Prompt</h3>
-                                <p className="text-sm text-slate-500">Screen encouraging users to post their AI-generated review.</p>
+                                <h3 className="font-semibold text-slate-900">Public Review Request</h3>
+                                <p className="text-sm text-slate-500">Screen encouraging users to post their review on your chosen platform.</p>
                             </div>
                             <FormField
                                 control={form.control}
@@ -329,7 +329,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                     <FormItem>
                                         <FormLabel>Heading</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Would you post this on Google?" {...field} />
+                                            <Input placeholder="Would you post this review?" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -355,7 +355,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                     <FormItem>
                                         <FormLabel>Button Text</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Copy & Go to Google" {...field} />
+                                            <Input placeholder="Copy & Go to Review Site" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -366,12 +366,12 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                 name="google_review_url"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Custom Google Review Link</FormLabel>
+                                        <FormLabel>Review Site Link</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://g.page/r/..." {...field} />
+                                            <Input placeholder="https://..." {...field} />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: Override the default Google Business Profile link.
+                                            Direct link to your review page (Google, Facebook, Yelp, etc.).
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
