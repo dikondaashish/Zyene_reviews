@@ -23,6 +23,14 @@ const sidebarNavItems = [
         title: "Team",
         href: "/settings/team",
     },
+    {
+        title: "Billing",
+        href: "/settings/billing",
+    },
+    {
+        title: "Public Profile",
+        href: "/settings/public-profile",
+    },
 ];
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
