@@ -47,19 +47,28 @@ const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
 const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
 
 export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTokenResponse> {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+        throw new Error("Missing Google Client ID or Secret in environment variables");
+    }
+
     const response = await fetch("https://oauth2.googleapis.com/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
-            client_id: process.env.GOOGLE_CLIENT_ID!,
-            client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+            client_id: clientId,
+            client_secret: clientSecret,
             refresh_token: refreshToken,
             grant_type: "refresh_token",
         }),
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to refresh token: ${response.statusText}`);
+        const errorBody = await response.text();
+        console.error(`[Token] Google Refresh Error (${response.status}): ${errorBody}`);
+        throw new Error(`Failed to refresh token: ${response.status} ${response.statusText} - ${errorBody}`);
     }
 
     return response.json();

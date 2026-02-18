@@ -45,6 +45,15 @@ export async function POST(request: Request) {
 
     } catch (error: any) {
         console.error("Sync Route Error:", error);
+
+        // Handle Token Errors gracefully
+        if (error.message.includes("Failed to refresh token") || error.message.includes("No refresh token available")) {
+            return NextResponse.json({
+                error: "Authentication failed. Please reconnect your Google account.",
+                code: "AUTH_ERROR"
+            }, { status: 401 });
+        }
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
