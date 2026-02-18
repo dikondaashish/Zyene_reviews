@@ -315,26 +315,38 @@ export function PublicReviewFlow({
                     <div className="py-4 text-center border-t border-slate-100">
                         <div className="text-xs text-slate-400 font-medium tracking-wide flex items-center justify-center gap-1.5">
                             <span>Powered by</span>
-                            {footerLogoUrl && (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                    src={footerLogoUrl}
-                                    alt="Footer Logo"
-                                    className="h-4 w-4 object-contain"
-                                />
-                            )}
                             {footerLink ? (
                                 <a
                                     href={footerLink.startsWith("http") ? footerLink : `https://${footerLink}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 font-semibold hover:underline"
+                                    className="inline-flex items-center gap-1.5 no-underline"
                                 >
-                                    {footerCompanyName || "Zyene"}
+                                    {footerLogoUrl && (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={footerLogoUrl}
+                                            alt="Footer Logo"
+                                            className="h-4 w-4 object-contain"
+                                        />
+                                    )}
+                                    <span className="text-slate-700 font-bold tracking-tight hover:text-slate-900 transition-colors">
+                                        {footerCompanyName || "Zyene"}
+                                    </span>
                                 </a>
                             ) : (
-                                <span className="text-blue-600 font-semibold">
-                                    {footerCompanyName || "Zyene"}
+                                <span className="inline-flex items-center gap-1.5">
+                                    {footerLogoUrl && (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={footerLogoUrl}
+                                            alt="Footer Logo"
+                                            className="h-4 w-4 object-contain"
+                                        />
+                                    )}
+                                    <span className="text-slate-700 font-bold tracking-tight">
+                                        {footerCompanyName || "Zyene"}
+                                    </span>
                                 </span>
                             )}
                         </div>
