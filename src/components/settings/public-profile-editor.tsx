@@ -109,7 +109,6 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 negativeButtonText={previewState.negative_button_text}
                                 thankYouHeading={previewState.thank_you_heading}
                                 thankYouMessage={previewState.thank_you_message}
-                                thankYouMessage={previewState.thank_you_message}
                                 footerText={previewState.footer_text}
                                 footerCompanyName={previewState.footer_company_name}
                                 footerLink={previewState.footer_link}

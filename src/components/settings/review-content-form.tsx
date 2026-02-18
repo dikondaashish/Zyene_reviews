@@ -165,7 +165,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         negative_button_text: data.negative_button_text || "Send Feedback",
                         thank_you_heading: data.thank_you_heading || "Thank You!",
                         thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
-                        thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
+
                         footer_text: data.footer_text || "Powered by Zyene",
                         footer_company_name: data.footer_company_name || "Zyene",
                         footer_link: data.footer_link || "",
