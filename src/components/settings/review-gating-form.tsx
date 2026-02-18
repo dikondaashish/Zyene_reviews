@@ -93,10 +93,10 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
     };
 
     return (
-        <div className="space-y-6 rounded-lg border p-4 bg-muted/10">
+        <div className="rounded-xl border bg-white p-6 shadow-sm space-y-6">
             <div>
-                <h3 className="text-lg font-medium">Review Gates & Messaging</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold text-slate-900">Review Gates & Messaging</h3>
+                <p className="text-sm text-muted-foreground mt-1">
                     Control who sees public review links and what they see.
                 </p>
             </div>
@@ -174,7 +174,11 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
                         )}
                     />
 
-                    <Button type="submit" disabled={isLoading}>
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 h-10 w-full md:w-auto"
+                    >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Save Settings
                     </Button>

@@ -138,10 +138,10 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
     };
 
     return (
-        <div className="space-y-4 rounded-lg border p-4 bg-muted/10">
+        <div className="rounded-xl border bg-white p-6 shadow-sm space-y-6">
             <div>
-                <h3 className="text-lg font-medium">Public Link</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold text-slate-900">Public Link</h3>
+                <p className="text-sm text-muted-foreground mt-1">
                     Customize your unique review page link.
                 </p>
             </div>
@@ -174,6 +174,7 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                     <Button
                                         type="submit"
                                         disabled={!form.formState.isValid || isChecking || isAvailable === false || watchedSlug === initialSlug || isSaving}
+                                        className="bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-sm"
                                     >
                                         Save
                                     </Button>
