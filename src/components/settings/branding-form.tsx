@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -52,10 +52,13 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     });
 
     const watchedValues = form.watch();
+    const onValuesChangeRef = useRef(onValuesChange);
+    onValuesChangeRef.current = onValuesChange;
 
     useEffect(() => {
-        onValuesChange?.(watchedValues);
-    }, [JSON.stringify(watchedValues), onValuesChange]);
+        onValuesChangeRef.current?.(watchedValues);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(watchedValues)]);
 
     const deleteOldLogo = async (url: string) => {
         if (!url || !url.includes("supabase.co")) return;

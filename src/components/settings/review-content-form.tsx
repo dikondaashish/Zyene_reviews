@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Loader2, Save, Upload, Trash } from "lucide-react";
 
 const contentSchema = z.object({
@@ -131,22 +131,26 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
     };
 
     // Watch for changes and notify parent for preview
+    const onValuesChangeRef = useRef(onValuesChange);
+    onValuesChangeRef.current = onValuesChange;
+
     useEffect(() => {
         const subscription = form.watch((value) => {
-            if (onValuesChange) {
+            if (onValuesChangeRef.current) {
                 // Parse custom tags for preview
                 const customTagsArray = value.custom_tags
                     ? value.custom_tags.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
                     : [];
 
-                onValuesChange({
+                onValuesChangeRef.current({
                     ...value,
                     custom_tags: customTagsArray
                 });
             }
         });
         return () => subscription.unsubscribe();
-    }, [form.watch, onValuesChange]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [form]);
 
     useEffect(() => {
         async function loadData() {
