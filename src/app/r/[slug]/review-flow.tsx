@@ -47,6 +47,7 @@ export interface PublicReviewFlowProps {
     welcomeMsg?: string;
     apologyMsg?: string;
     isPreview?: boolean;
+    className?: string;
 }
 
 // ─── Step type ──────────────────────────────────────────────────────────
@@ -65,6 +66,7 @@ export function PublicReviewFlow({
     welcomeMsg,
     apologyMsg,
     isPreview = false,
+    className,
 }: PublicReviewFlowProps) {
     const [step, setStep] = useState<FlowStep>("rating");
     const [rating, setRating] = useState<number | null>(null);
@@ -249,32 +251,34 @@ export function PublicReviewFlow({
 
     // ─── Shared card wrapper ────────────────────────────────────────────
 
-    const CardWrapper = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-        <div
-            className={cn(
-                "min-h-screen w-full flex flex-col items-center justify-center p-6 transition-all duration-500",
-                !mounted && "opacity-0",
-                mounted && "opacity-100"
-            )}
-            style={{ backgroundColor: brandColor }}
-        >
-            <div className={cn(
-                "relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl shadow-black/10 overflow-hidden",
-                "transform transition-all duration-500",
-                mounted ? "translate-y-0 scale-100" : "translate-y-4 scale-95",
-                className
-            )}>
-                {children}
+    // ─── Shared card wrapper ────────────────────────────────────────────
+
+    const CardWrapper = ({ children, contentClassName }: { children: React.ReactNode; contentClassName?: string }) => (
+        <div className={cn(
+            "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 transition-all duration-500",
+            !mounted && "opacity-0",
+            mounted && "opacity-100",
+            className // Apply parent PublicReviewFlow className (outer container)
+        )}>
+            {/* Subtle animated gradient orbs */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
             </div>
 
-            {/* Powered by footer - Outside card */}
-            <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                <div className="bg-black/20 backdrop-blur-sm px-4 py-1.5 rounded-full flex items-center gap-1.5">
-                    <span className="text-[10px] uppercase tracking-widest text-white/80 font-medium">Powered by</span>
-                    <span className="text-white font-bold text-xs flex items-center gap-1">
-                        <Sparkles className="h-3 w-3 fill-white" />
-                        Zyene
-                    </span>
+            <div className={cn(
+                "relative w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden",
+                "transform transition-all duration-500",
+                mounted ? "translate-y-0 scale-100" : "translate-y-4 scale-95",
+                contentClassName
+            )}>
+                {children}
+
+                {/* Powered by footer */}
+                <div className="py-4 text-center border-t border-slate-100">
+                    <p className="text-xs text-slate-400 font-medium tracking-wide">
+                        Powered by <span className="text-blue-600 font-semibold">Zyene</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -287,14 +291,18 @@ export function PublicReviewFlow({
             <CardWrapper>
                 <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
                     <div className="relative inline-flex">
-                        <div className="h-24 w-24 bg-emerald-100 rounded-full flex items-center justify-center shadow-sm">
-                            <span className="text-5xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
+                        <div className="h-28 w-28 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                            <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
+                        </div>
+                        <div className="absolute -top-1 -right-1 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-md">
+                            ✨
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Thank You!</h2>
-                        <p className="text-slate-500 font-medium">
-                            Your feedback means the world to us.
+                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Thank You!</h2>
+                        <p className="text-slate-500 text-lg leading-relaxed">
+                            Your feedback means the world to us.<br />
+                            We appreciate you taking the time.
                         </p>
                     </div>
                 </div>
@@ -308,36 +316,43 @@ export function PublicReviewFlow({
         const selectedRating = RATINGS.find((r) => r.value === rating);
         return (
             <CardWrapper>
-                <div className="px-6 py-8 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Header with emoji */}
-                    <div className="text-center space-y-2">
-                        <div className="h-16 w-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto border border-slate-100">
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
                             <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
                         </div>
-                        <h2 className="text-xl font-bold text-slate-900">
-                            {apologyMsg || "Sorry about that"}
-                        </h2>
-                        <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">
-                            How can we do better?
-                        </p>
+                        <div className="text-left">
+                            <h2 className="text-xl font-bold text-slate-900">
+                                {apologyMsg || "Sorry about that"}
+                            </h2>
+                            <p className="text-slate-500 text-sm leading-snug">
+                                Share your feedback directly with the owner.
+                            </p>
+                        </div>
                     </div>
 
                     {/* Feedback textarea */}
-                    <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">Your feedback</label>
                         <textarea
                             placeholder="Tell us what happened..."
-                            className="w-full min-h-[120px] text-base p-4 rounded-xl border-2 border-slate-100 focus:border-slate-300 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
+                            className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
                             autoFocus
                         />
+                    </div>
 
+                    {/* Email input */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">Your email <span className="text-slate-400 font-normal">(optional)</span></label>
                         <div className="relative">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                             <input
                                 type="email"
-                                placeholder="Email (optional)"
-                                className="w-full h-12 pl-11 pr-4 rounded-xl border-2 border-slate-100 focus:border-slate-300 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                placeholder="you@example.com"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
                             />
@@ -348,11 +363,12 @@ export function PublicReviewFlow({
                     <div className="space-y-3 pt-2">
                         <button
                             className={cn(
-                                "w-full h-12 rounded-xl text-base font-bold text-white transition-all duration-300",
-                                "shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
+                                "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
+                                "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                                "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                                 "flex items-center justify-center gap-2"
                             )}
-                            style={{ backgroundColor: brandColor }}
                             onClick={handleSubmitFeedback}
                             disabled={isSubmitting || !feedback.trim()}
                         >
@@ -364,16 +380,28 @@ export function PublicReviewFlow({
                             {isSubmitting ? "Sending..." : "Send Feedback"}
                         </button>
 
-                        <button
-                            className="w-full h-10 flex items-center justify-center gap-1 text-slate-400 text-sm font-medium hover:text-slate-600 transition-colors"
-                            onClick={() => {
-                                setRating(null);
-                                setStep("rating");
-                            }}
-                        >
-                            <ArrowLeft className="h-3.5 w-3.5" />
-                            Back
-                        </button>
+                        <div className="flex items-center justify-between px-1">
+                            <button
+                                className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                                onClick={() => {
+                                    setRating(null);
+                                    setStep("rating");
+                                }}
+                            >
+                                <ArrowLeft className="h-3.5 w-3.5" />
+                                Back
+                            </button>
+                            {googleUrl && (
+                                <a
+                                    href={googleUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                                >
+                                    Go to Google
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
             </CardWrapper>
@@ -385,41 +413,70 @@ export function PublicReviewFlow({
     if (step === "rating") {
         return (
             <CardWrapper>
-                <div className="px-6 py-12 flex flex-col items-center text-center space-y-8">
-                    {/* Business Name */}
-                    <div className="space-y-2">
-                        <h1 className="text-xl font-bold text-slate-900">{businessName}</h1>
+                <div className="px-8 py-10 space-y-8">
+                    {/* Business avatar */}
+                    <div className="flex flex-col items-center gap-4">
+                        {logoUrl ? (
+                            <div className="h-24 w-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={logoUrl} alt={businessName} className="h-full w-full object-cover" />
+                            </div>
+                        ) : (
+                            <div
+                                className="h-20 w-20 rounded-2xl flex items-center justify-center shadow-lg text-white"
+                                style={{ backgroundColor: brandColor }}
+                            >
+                                <span className="text-2xl font-bold">{initials}</span>
+                            </div>
+                        )}
+                        <div className="text-center">
+                            <h1 className="text-xl font-bold text-slate-900 mb-1">{businessName}</h1>
+                            <p className="text-slate-500 text-sm">Your feedback means a lot to us!</p>
+                        </div>
                     </div>
 
-                    {/* Question wrapper with border like in design */}
-                    <div className="w-full border-2 border-slate-100 rounded-2xl p-6 space-y-6">
-                        <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                    {/* Question */}
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-slate-900 leading-tight px-4">
                             {welcomeMsg || "How was your experience?"}
                         </h2>
+                    </div>
 
-                        {/* Emoji ratings */}
-                        <div className="flex justify-center gap-3">
-                            {RATINGS.map((r) => (
-                                <button
-                                    key={r.value}
-                                    onClick={() => handleRate(r.value)}
-                                    onMouseEnter={() => setHoverRating(r.value)}
-                                    onMouseLeave={() => setHoverRating(null)}
-                                    className="group relative transition-transform hover:scale-110 active:scale-95 focus:outline-none"
-                                >
-                                    <span className={cn(
-                                        "text-4xl filter transition-all duration-200",
-                                        hoverRating === r.value ? "grayscale-0 drop-shadow-md" : "grayscale opacity-70 hover:grayscale-0 hover:opacity-100"
-                                    )}>
-                                        {r.emoji}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
-
-                        <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">
-                            Tap on an option
-                        </p>
+                    {/* Emoji ratings */}
+                    <div className="grid grid-cols-5 gap-2">
+                        {RATINGS.map((r) => (
+                            <button
+                                key={r.value}
+                                onClick={() => handleRate(r.value)}
+                                onMouseEnter={() => setHoverRating(r.value)}
+                                onMouseLeave={() => setHoverRating(null)}
+                                className={cn(
+                                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200",
+                                    "border-2 hover:border-blue-300 hover:bg-blue-50/50",
+                                    "active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                    hoverRating === r.value
+                                        ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
+                                        : rating === r.value
+                                            ? "border-blue-500 bg-blue-50 shadow-sm"
+                                            : "border-slate-200 bg-white"
+                                )}
+                            >
+                                <span className={cn(
+                                    "text-3xl sm:text-4xl transition-transform duration-200",
+                                    hoverRating === r.value && "scale-110"
+                                )}>
+                                    {r.emoji}
+                                </span>
+                                <span className={cn(
+                                    "text-[10px] sm:text-xs font-semibold tracking-tight transition-colors",
+                                    hoverRating === r.value || rating === r.value
+                                        ? "text-blue-700"
+                                        : "text-slate-500"
+                                )}>
+                                    {r.label}
+                                </span>
+                            </button>
+                        ))}
                     </div>
                 </div>
             </CardWrapper>
