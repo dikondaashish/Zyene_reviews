@@ -67,7 +67,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     {/* Screen Content */}
                     <div className="rounded-[2.2rem] overflow-hidden w-full h-full bg-white relative">
                         {/* Status Bar Mock */}
-                        <div className="absolute top-0 w-full h-12 bg-transparent z-10 flex justify-between items-center px-6 pt-2 font-medium text-black/80 text-[15px]">
+                        <div className="absolute top-0 w-full h-12 bg-transparent z-10 flex justify-between items-center px-6 pt-2 font-medium text-white text-[15px] drop-shadow-md">
                             <span>9:41</span>
                             <div className="flex items-center gap-1.5">
                                 <span className="h-3 w-3">📶</span>
@@ -76,7 +76,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         </div>
 
                         {/* App Content */}
-                        <div className="absolute inset-0 overflow-y-auto no-scrollbar bg-slate-50">
+                        <div className="absolute inset-0 overflow-y-auto no-scrollbar bg-black">
                             {/* Scale down slightly to fit content nicely */}
                             <div className="origin-top scale-[0.95] h-full">
                                 <PublicReviewFlow
