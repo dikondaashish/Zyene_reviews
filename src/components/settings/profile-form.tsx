@@ -63,11 +63,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         }
     }
 
-    const handleDeleteAccount = () => {
-        if (!confirm("Are you sure? This action cannot be undone.")) return;
-        toast.error("Account deletion is not yet available, please contact support.");
-        // Call API to delete if implemented
-    };
+
 
     return (
         <div className="space-y-6">
@@ -99,10 +95,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 </form>
             </Form>
 
-            <div className="pt-4 border-t">
-                <h3 className="text-sm font-medium text-destructive mb-2">Danger Zone</h3>
-                <Button variant="destructive" size="sm" onClick={handleDeleteAccount}>Delete Account</Button>
-            </div>
         </div>
     );
 }
