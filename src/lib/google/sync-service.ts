@@ -78,12 +78,22 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     if (platformError || !platform) throw new Error("Platform not found");
 
+    // DEBUG LOG BEFORE LOCK ATTEMPT
+    console.log(`[Sync] Debug Platform ${platformId}: status=${platform.sync_status}, updated_at=${platform.updated_at}, last_synced_at=${platform.last_synced_at}`);
+
     // Check Cooldown FIRST (cheap check)
     if (platform.last_synced_at) {
         const lastSync = new Date(platform.last_synced_at);
         const now = new Date();
         const diff = now.getTime() - lastSync.getTime();
-        if (diff < 2 * 60 * 1000) { // 2 minutes
+        // Only enforce cooldown if status is NOT running (if running, we might be overriding stale lock)
+        // Wait, if status is running, we want to allow override if stale.
+        // If status is idle, we check cooldown.
+        // The user requirements didn't explicitly change cooldown logic, but standard behavior is: 
+        // Cooldown applies to preventing frequent SUCCESSFUL syncs.
+        // Stale lock override applies to stuck RUNNING syncs.
+
+        if (platform.sync_status !== 'running' && diff < 2 * 60 * 1000) { // 2 minutes
             // Throw specific error object that API route can parse
             const error: any = new Error("Please wait before syncing again.");
             error.code = "RATE_LIMIT";
@@ -93,8 +103,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     // ATOMIC LOCK ACQUISITION
     // Attempt to set sync_status='running' for this ID
-    // Condition: sync_status is 'idle' OR 'error' OR 'active' (anything but running)
-    // OR sync_status is 'running' but stale (> 10 mins)
+    // Condition: 
+    // 1. sync_status != 'running' (Idle/Error/Active)
+    // 2. OR updated_at IS NULL (First run after migration)
+    // 3. OR sync_status = 'running' but stale (> 10 mins)
 
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
@@ -102,7 +114,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         .from("review_platforms")
         .update({ sync_status: 'running', updated_at: new Date().toISOString() })
         .eq("id", platformId)
-        .or(`sync_status.neq.running,updated_at.lt.${tenMinutesAgo}`)
+        .or(`sync_status.neq.running,updated_at.is.null,updated_at.lt.${tenMinutesAgo}`)
         .select()
         .single();
 
@@ -269,14 +281,13 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         // Error status will be handled by finally block (reset to idle)
         throw error;
     } finally {
-        // UNLOCK and UPDATE TIMESTAMP
-        // Only unlock if we actually acquired the lock (which we did if we passed the lock check)
-        // But to be safe and atomic, we just set it to idle where id=platformId
-        console.log(`[Sync] Lock Released for platform ${platformId}`);
+        // UNLOCK ONLY
+        // Do NOT touch updated_at (it tracks lock acquisition time)
+        console.log(`[Sync] Releasing Lock for platform ${platformId}`);
 
         await admin.from("review_platforms").update({
             sync_status: 'idle',
-            last_synced_at: new Date().toISOString()
+            last_synced_at: new Date().toISOString() // We update last_synced_at on finish (success or fail)
         }).eq("id", platformId);
     }
 }
