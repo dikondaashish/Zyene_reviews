@@ -91,7 +91,7 @@ export async function sendReviewAlert(review: any) {
 
         // --- SMS ALERT (High Urgency Only & SMS Enabled) ---
         if (isHighUrgency && pref.sms_enabled && pref.phone_number && !inQuietHours) {
-            const snippet = review.content ? review.content.substring(0, 80) : "";
+            const snippet = review.text ? review.text.substring(0, 80) : "";
             const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${review.author_name}\nReply: ${APP_URL}/dashboard`;
 
             await sendSMS(pref.phone_number, body);
@@ -106,7 +106,7 @@ export async function sendReviewAlert(review: any) {
                 businessName: business.name,
                 rating: rating,
                 authorName: review.author_name,
-                reviewText: review.content,
+                reviewText: review.text,
                 urgencyScore: urgency,
                 dashboardUrl: `${APP_URL}/dashboard`,
                 settingsUrl: `${APP_URL}/settings/notifications`

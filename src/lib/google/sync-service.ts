@@ -129,9 +129,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
                 platform_id: platform.id,
                 external_id: review.reviewId,
                 author_name: review.reviewer.displayName,
+                author_avatar_url: review.reviewer.profilePhotoUrl || null,
                 rating: numericRating,
-                content: review.comment || "",
-                published_at: review.createTime, // ISO string
+                text: review.comment || "",
+                review_date: review.createTime, // ISO string mapped to review_date
                 response_status: review.reviewReply ? "responded" : "pending",
                 response_text: review.reviewReply?.comment || null,
                 responded_at: review.reviewReply?.updateTime || null,
@@ -153,7 +154,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
                 // But `analyzedCount` is a good proxy for "new processing".
 
                 // 4. Trigger AI Analysis if not analyzed
-                if (upserted && !upserted.sentiment && upserted.content) {
+                if (upserted && !upserted.sentiment && upserted.text) {
                     console.log(`[AI] Analyzing review ${upserted.id}...`);
                     analyzedCount++;
                     const result = await analyzeReview(upserted);
