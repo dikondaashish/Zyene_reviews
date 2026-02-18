@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SlugEditor } from "./slug-editor";
 import { BrandingForm } from "./branding-form";
-import { ReviewGatingForm } from "./review-gating-form";
+
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils";
@@ -60,11 +60,6 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     business={business}
                     onValuesChange={handleValuesChange}
                     onLogoChange={(url) => handleValuesChange({ logo_url: url })}
-                />
-
-                <ReviewGatingForm
-                    business={business}
-                    onValuesChange={handleValuesChange}
                 />
 
                 <ReviewContentForm

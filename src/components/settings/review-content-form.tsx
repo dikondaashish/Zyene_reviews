@@ -17,6 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
@@ -39,6 +46,7 @@ const contentSchema = z.object({
     hide_branding: z.boolean().optional(),
     welcome_message: z.string().optional(),
     apology_message: z.string().optional(),
+    min_stars_for_google: z.number().min(1).max(5).optional(),
 });
 
 type ContentFormValues = z.infer<typeof contentSchema>;
@@ -51,6 +59,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
     const form = useForm<ContentFormValues>({
         resolver: zodResolver(contentSchema),
         defaultValues: {
+            min_stars_for_google: 4,
             rating_subtitle: "",
             tags_heading: "",
             tags_subheading: "",
@@ -211,6 +220,39 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                         <FormControl>
                                             <Input placeholder="Your feedback means a lot to us!" {...field} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="min_stars_for_google"
+                                render={({ field }) => (
+                                    <FormItem className="pt-2 border-t mt-4">
+                                        <FormLabel>Minimum Stars for Public Review</FormLabel>
+                                        <Select
+                                            onValueChange={(val) => field.onChange(Number(val))}
+                                            value={String(field.value)}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select stars" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="1">1 Star & Up</SelectItem>
+                                                <SelectItem value="2">2 Stars & Up</SelectItem>
+                                                <SelectItem value="3">3 Stars & Up</SelectItem>
+                                                <SelectItem value="4">4 Stars & Up (Recommended)</SelectItem>
+                                                <SelectItem value="5">5 Stars Only</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>
+                                            {form.watch("min_stars_for_google") === 1
+                                                ? "All ratings will be directed to public review flow."
+                                                : "Customers rating below this threshold will be asked for private feedback instead."}
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
