@@ -185,6 +185,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             average_rating: parseFloat(avgRating.toFixed(1)),
             sync_status: "active",
             external_id: locationId, // Save the finalized Location ID
+            external_url: googleReviewUrl, // Save the Review URL (Place ID format if available)
         }).eq("id", platformId);
 
         // Fetch current business to check if URL is already set

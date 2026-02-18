@@ -38,6 +38,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         thank_you_heading: business.thank_you_heading,
         thank_you_message: business.thank_you_message,
         footer_text: business.footer_text,
+        footer_company_name: business.footer_company_name,
+        footer_link: business.footer_link,
+        footer_logo_url: business.footer_logo_url,
         hide_branding: business.hide_branding,
     });
 
@@ -106,7 +109,11 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 negativeButtonText={previewState.negative_button_text}
                                 thankYouHeading={previewState.thank_you_heading}
                                 thankYouMessage={previewState.thank_you_message}
+                                thankYouMessage={previewState.thank_you_message}
                                 footerText={previewState.footer_text}
+                                footerCompanyName={previewState.footer_company_name}
+                                footerLink={previewState.footer_link}
+                                footerLogoUrl={previewState.footer_logo_url}
                                 hideBranding={previewState.hide_branding}
                                 isPreview={true}
                                 className="min-h-full w-full rounded-[2rem]"

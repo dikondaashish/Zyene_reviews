@@ -48,7 +48,11 @@ export default async function RequestPage({
             negative_button_text,
             thank_you_heading,
             thank_you_message,
+            thank_you_message,
             footer_text,
+            footer_company_name,
+            footer_link,
+            footer_logo_url,
             hide_branding,
             organization:organizations (
                 plan,
@@ -130,6 +134,9 @@ export default async function RequestPage({
                 thankYouHeading={business.thank_you_heading}
                 thankYouMessage={business.thank_you_message}
                 footerText={business.footer_text}
+                footerCompanyName={business.footer_company_name}
+                footerLink={business.footer_link}
+                footerLogoUrl={business.footer_logo_url}
                 hideBranding={business.hide_branding}
             />
         </div>

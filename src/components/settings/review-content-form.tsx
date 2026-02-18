@@ -27,7 +27,7 @@ import {
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Upload, Trash } from "lucide-react";
 
 const contentSchema = z.object({
     rating_subtitle: z.string().optional(),
@@ -42,7 +42,10 @@ const contentSchema = z.object({
     negative_button_text: z.string().optional(),
     thank_you_heading: z.string().optional(),
     thank_you_message: z.string().optional(),
-    footer_text: z.string().optional(),
+    footer_text: z.string().optional(), // Deprecated but kept for backward compatibility if needed, though we will hide it
+    footer_company_name: z.string().optional(),
+    footer_link: z.string().optional(),
+    footer_logo_url: z.string().optional(),
     hide_branding: z.boolean().optional(),
     welcome_message: z.string().optional(),
     apology_message: z.string().optional(),
@@ -75,11 +78,46 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
             thank_you_heading: "",
             thank_you_message: "",
             footer_text: "",
+            footer_company_name: "Zyene",
+            footer_link: "",
+            footer_logo_url: "",
             hide_branding: false,
             welcome_message: "",
             apology_message: "",
         },
     });
+
+    const [uploadingFooterLogo, setUploadingFooterLogo] = useState(false);
+
+    const handleFooterLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) return;
+        const file = e.target.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("File size too large (max 2MB)");
+            return;
+        }
+
+        setUploadingFooterLogo(true);
+        try {
+            const fileName = `footer-${businessId}-${Date.now()}-${file.name}`;
+            const { error } = await supabase.storage.from("business-logos").upload(fileName, file);
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabase.storage.from("business-logos").getPublicUrl(fileName);
+            form.setValue("footer_logo_url", publicUrl, { shouldDirty: true, shouldTouch: true });
+            toast.success("Footer logo uploaded!");
+        } catch (error) {
+            console.error("Upload error:", error);
+            toast.error("Failed to upload logo");
+        } finally {
+            setUploadingFooterLogo(false);
+        }
+    };
+
+    const removeFooterLogo = () => {
+        form.setValue("footer_logo_url", "", { shouldDirty: true, shouldTouch: true });
+        toast.success("Footer logo removed");
+    };
 
     // Watch for changes and notify parent for preview
     useEffect(() => {
@@ -127,7 +165,11 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         negative_button_text: data.negative_button_text || "Send Feedback",
                         thank_you_heading: data.thank_you_heading || "Thank You!",
                         thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
+                        thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
                         footer_text: data.footer_text || "Powered by Zyene",
+                        footer_company_name: data.footer_company_name || "Zyene",
+                        footer_link: data.footer_link || "",
+                        footer_logo_url: data.footer_logo_url || "",
                         hide_branding: data.hide_branding || false,
                         welcome_message: data.welcome_message || "How was your experience?",
                         apology_message: data.apology_message || "Sorry about that",
@@ -329,7 +371,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                     <FormItem>
                                         <FormLabel>Heading</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Would you post this review?" {...field} />
+                                            <Input placeholder="Would you post this on Google?" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -355,7 +397,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                     <FormItem>
                                         <FormLabel>Button Text</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Copy & Go to Review Site" {...field} />
+                                            <Input placeholder="Copy & Go to Google" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -366,12 +408,12 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                 name="google_review_url"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Review Site Link</FormLabel>
+                                        <FormLabel>Custom Review Site Link</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://..." {...field} />
+                                            <Input placeholder="https://g.page/r/..." {...field} />
                                         </FormControl>
                                         <FormDescription>
-                                            Direct link to your review page (Google, Facebook, Yelp, etc.).
+                                            Optional: Override the default Review Site link.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -485,20 +527,81 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             </div>
                             <FormField
                                 control={form.control}
-                                name="footer_text"
+                                name="footer_company_name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Footer Text</FormLabel>
+                                        <FormLabel>Company Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Powered by Zyene" {...field} />
+                                            <Input placeholder="Zyene" {...field} />
                                         </FormControl>
                                         <FormDescription>
-                                            Defaults to "Powered by Zyene".
+                                            Appears after "Powered by...".
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="footer_link"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Link URL</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="https://zyene.com" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Where should the footer link to?
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="space-y-4">
+                                <FormLabel className="text-base font-medium text-slate-900">Footer Logo (Small)</FormLabel>
+                                <div className="flex items-center gap-4">
+                                    <div className="relative h-12 w-12 rounded-lg border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
+                                        {uploadingFooterLogo ? (
+                                            <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                                        ) : form.watch("footer_logo_url") ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src={form.watch("footer_logo_url")!} alt="Footer Logo" className="object-contain h-full w-full p-1" />
+                                        ) : (
+                                            <Upload className="h-4 w-4 text-slate-300" />
+                                        )}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <div className="relative">
+                                            <Button variant="outline" size="sm" type="button" className="relative h-9 px-3 border-slate-200 bg-white" disabled={uploadingFooterLogo}>
+                                                <Upload className="mr-2 h-3.5 w-3.5" />
+                                                Upload
+                                                <input
+                                                    type="file"
+                                                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                                    accept="image/png, image/jpeg, image/webp"
+                                                    onChange={handleFooterLogoUpload}
+                                                    disabled={uploadingFooterLogo}
+                                                />
+                                            </Button>
+                                        </div>
+                                        {form.watch("footer_logo_url") && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                type="button"
+                                                className="h-9 px-3 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                                                onClick={removeFooterLogo}
+                                                disabled={uploadingFooterLogo}
+                                            >
+                                                <Trash className="h-3.5 w-3.5" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="text-xs text-slate-500">
+                                    Shows between "Powered by" and Company Name. Best size: 64x64px.
+                                </p>
+                            </div>
                             <FormField
                                 control={form.control}
                                 name="hide_branding"

@@ -60,6 +60,9 @@ export interface PublicReviewFlowProps {
     thankYouHeading?: string;
     thankYouMessage?: string;
     footerText?: string;
+    footerCompanyName?: string;
+    footerLink?: string;
+    footerLogoUrl?: string;
     hideBranding?: boolean;
     isPreview?: boolean;
     className?: string;
@@ -93,6 +96,9 @@ export function PublicReviewFlow({
     thankYouHeading,
     thankYouMessage,
     footerText,
+    footerCompanyName,
+    footerLink,
+    footerLogoUrl,
     hideBranding = false,
     isPreview = false,
     className,
@@ -307,13 +313,31 @@ export function PublicReviewFlow({
                 {/* Powered by footer */}
                 {!hideBranding && (
                     <div className="py-4 text-center border-t border-slate-100">
-                        <p className="text-xs text-slate-400 font-medium tracking-wide">
-                            {footerText ? (
-                                footerText
-                            ) : (
-                                <>Powered by <span className="text-blue-600 font-semibold">Zyene</span></>
+                        <div className="text-xs text-slate-400 font-medium tracking-wide flex items-center justify-center gap-1.5">
+                            <span>Powered by</span>
+                            {footerLogoUrl && (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                    src={footerLogoUrl}
+                                    alt="Footer Logo"
+                                    className="h-4 w-4 object-contain"
+                                />
                             )}
-                        </p>
+                            {footerLink ? (
+                                <a
+                                    href={footerLink.startsWith("http") ? footerLink : `https://${footerLink}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 font-semibold hover:underline"
+                                >
+                                    {footerCompanyName || "Zyene"}
+                                </a>
+                            ) : (
+                                <span className="text-blue-600 font-semibold">
+                                    {footerCompanyName || "Zyene"}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
