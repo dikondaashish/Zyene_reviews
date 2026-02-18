@@ -42,9 +42,10 @@ type SlugFormValues = z.infer<typeof slugSchema>;
 interface SlugEditorProps {
     businessId: string;
     initialSlug: string;
+    onSlugChange?: (slug: string) => void;
 }
 
-export function SlugEditor({ businessId, initialSlug }: SlugEditorProps) {
+export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditorProps) {
     const router = useRouter();
     const [isChecking, setIsChecking] = useState(false);
     const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
@@ -59,6 +60,10 @@ export function SlugEditor({ businessId, initialSlug }: SlugEditorProps) {
     });
 
     const watchedSlug = form.watch("slug");
+
+    useEffect(() => {
+        onSlugChange?.(watchedSlug);
+    }, [watchedSlug, onSlugChange]);
 
     // Debounced check
     useEffect(() => {

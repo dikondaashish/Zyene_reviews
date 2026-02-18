@@ -1,9 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { SlugEditor } from "@/components/settings/slug-editor";
-import { BrandingForm } from "@/components/settings/branding-form";
-import { ReviewGatingForm } from "@/components/settings/review-gating-form";
+import { PublicProfileEditor } from "@/components/settings/public-profile-editor";
 
 export default async function PublicProfilePage() {
     const supabase = await createClient();
@@ -46,11 +44,7 @@ export default async function PublicProfilePage() {
             </div>
             <Separator />
 
-            <div className="grid gap-6">
-                <SlugEditor businessId={business.id} initialSlug={business.slug} />
-                <BrandingForm business={business} />
-                <ReviewGatingForm business={business} />
-            </div>
+            <PublicProfileEditor business={business} initialSlug={business.slug} />
         </div>
     );
 }

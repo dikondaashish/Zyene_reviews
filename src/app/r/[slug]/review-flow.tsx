@@ -35,7 +35,7 @@ const RATINGS = [
 ];
 
 // ─── Props ──────────────────────────────────────────────────────────────
-interface PublicReviewFlowProps {
+export interface PublicReviewFlowProps {
     businessId: string;
     businessName: string;
     businessCategory: string;
@@ -46,6 +46,7 @@ interface PublicReviewFlowProps {
     minStars?: number;
     welcomeMsg?: string;
     apologyMsg?: string;
+    isPreview?: boolean;
 }
 
 // ─── Step type ──────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ export function PublicReviewFlow({
     minStars = 4,
     welcomeMsg,
     apologyMsg,
+    isPreview = false,
 }: PublicReviewFlowProps) {
     const [step, setStep] = useState<FlowStep>("rating");
     const [rating, setRating] = useState<number | null>(null);
@@ -110,6 +112,14 @@ export function PublicReviewFlow({
     const handleGenerateReview = async () => {
         setStep("generating");
 
+        if (isPreview) {
+            setTimeout(() => {
+                setReviewText(`[PREVIEW] Great experience at ${businessName}! Really loved the ${selectedTags[0] || "service"}.`);
+                setStep("review");
+            }, 1500);
+            return;
+        }
+
         try {
             const res = await fetch("/api/review-flow/generate", {
                 method: "POST",
@@ -138,6 +148,11 @@ export function PublicReviewFlow({
     };
 
     const handlePostToGoogle = async () => {
+        if (isPreview) {
+            toast.info("Preview Mode: This would open Google Maps.");
+            setStep("thankyou");
+            return;
+        }
         setIsSubmitting(true);
 
         try {
@@ -189,6 +204,13 @@ export function PublicReviewFlow({
 
     const handleSubmitFeedback = async () => {
         if (!rating) return;
+
+        if (isPreview) {
+            toast.info("Preview Mode: Feedback submitted.");
+            setStep("thankyou");
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {

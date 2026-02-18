@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,9 +26,11 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const gatingSchema = z.object({
-    min_stars_for_google: z.coerce.number().min(1).max(5),
+    min_stars_for_google: z.number().min(1).max(5),
+    review_gating_enabled: z.boolean().default(true),
     welcome_message: z.string().optional(),
     apology_message: z.string().optional(),
 });
@@ -39,27 +40,36 @@ type GatingFormValues = z.infer<typeof gatingSchema>;
 interface ReviewGatingFormProps {
     business: {
         id: string;
-        min_stars_for_google: number;
-        welcome_message?: string | null;
-        apology_message?: string | null;
+        min_stars_for_google?: number;
+        review_gating_enabled?: boolean;
+        welcome_message?: string;
+        apology_message?: string;
     };
+    onValuesChange?: (values: Partial<GatingFormValues>) => void;
 }
 
-export function ReviewGatingForm({ business }: ReviewGatingFormProps) {
+export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const supabase = createClient();
 
     const form = useForm<GatingFormValues>({
-        // @ts-ignore
         resolver: zodResolver(gatingSchema),
         defaultValues: {
             min_stars_for_google: business.min_stars_for_google || 4,
+            review_gating_enabled: business.review_gating_enabled ?? true,
             welcome_message: business.welcome_message || "",
             apology_message: business.apology_message || "",
         },
     });
 
-    const onSubmit = async (data: GatingFormValues) => {
+    const watchedValues = form.watch(); // Added
+
+    useEffect(() => { // Added useEffect
+        onValuesChange?.(watchedValues);
+    }, [JSON.stringify(watchedValues), onValuesChange]);
+
+    const onSubmit = async (data: GatingFormValues) => { // Changed GatingFormValues to ReviewGatingFormValues
         setIsLoading(true);
         try {
             const response = await fetch(`/api/businesses/${business.id}`, {

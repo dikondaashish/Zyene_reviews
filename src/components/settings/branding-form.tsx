@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,9 +34,11 @@ interface BrandingFormProps {
         brand_color?: string;
         logo_url?: string;
     };
+    onValuesChange?: (values: Partial<BrandingFormValues>) => void;
+    onLogoChange?: (url: string | null) => void;
 }
 
-export function BrandingForm({ business }: BrandingFormProps) {
+export function BrandingForm({ business, onValuesChange, onLogoChange }: BrandingFormProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [logoUrl, setLogoUrl] = useState(business.logo_url);
@@ -49,6 +51,12 @@ export function BrandingForm({ business }: BrandingFormProps) {
             brand_color: business.brand_color || "#0f172a",
         },
     });
+
+    const watchedValues = form.watch();
+
+    useEffect(() => {
+        onValuesChange?.(watchedValues);
+    }, [JSON.stringify(watchedValues), onValuesChange]);
 
     const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -73,6 +81,7 @@ export function BrandingForm({ business }: BrandingFormProps) {
                 .getPublicUrl(fileName);
 
             setLogoUrl(publicUrl);
+            onLogoChange?.(publicUrl);
 
             // Save immediately to DB
             await updateBusiness({ logo_url: publicUrl });
