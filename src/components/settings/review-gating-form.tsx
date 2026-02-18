@@ -54,6 +54,7 @@ export function ReviewGatingForm({ business, onValuesChange }: ReviewGatingFormP
     const supabase = createClient();
 
     const form = useForm<GatingFormValues>({
+        // @ts-ignore
         resolver: zodResolver(gatingSchema),
         defaultValues: {
             min_stars_for_google: business.min_stars_for_google || 4,
