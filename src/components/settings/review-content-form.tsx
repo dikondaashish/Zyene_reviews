@@ -47,6 +47,7 @@ const contentSchema = z.object({
     welcome_message: z.string().optional(),
     apology_message: z.string().optional(),
     min_stars_for_google: z.number().min(1).max(5).optional(),
+    google_review_url: z.string().optional(),
 });
 
 type ContentFormValues = z.infer<typeof contentSchema>;
@@ -60,6 +61,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
         resolver: zodResolver(contentSchema),
         defaultValues: {
             min_stars_for_google: 4,
+            google_review_url: "",
             rating_subtitle: "",
             tags_heading: "",
             tags_subheading: "",
@@ -119,6 +121,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         google_heading: data.google_heading || "Would you post this on Google?",
                         google_subheading: data.google_subheading || "Tap to edit, or post as-is",
                         google_button_text: data.google_button_text || "Copy & Go to Google",
+                        google_review_url: data.google_review_url || "",
                         negative_subheading: data.negative_subheading || "Share your feedback directly with the owner.",
                         negative_textarea_placeholder: data.negative_textarea_placeholder || "Tell us what happened...",
                         negative_button_text: data.negative_button_text || "Send Feedback",
@@ -354,6 +357,22 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                         <FormControl>
                                             <Input placeholder="Copy & Go to Google" {...field} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="google_review_url"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Custom Google Review Link</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="https://g.page/r/..." {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Optional: Override the default Google Business Profile link.
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}

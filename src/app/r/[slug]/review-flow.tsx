@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -106,6 +106,8 @@ export function PublicReviewFlow({
     const [feedback, setFeedback] = useState("");
     const [customerEmail, setCustomerEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
+    const [progress, setProgress] = useState(0);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => setMounted(true), []);
@@ -186,53 +188,52 @@ export function PublicReviewFlow({
             setStep("thankyou");
             return;
         }
-        setIsSubmitting(true);
 
+        // 1. Copy to clipboard
         try {
             await navigator.clipboard.writeText(reviewText);
-            toast.success("Review copied to clipboard!", {
-                description: "Paste it on Google Reviews.",
-            });
+            toast.success("Review copied!", { duration: 2000 });
         } catch {
             toast.info("Tap and hold the review text to copy it.");
         }
 
+        // 2. Start Animation
+        setIsRedirecting(true);
+        // Small delay to ensure render before starting width transition
+        setTimeout(() => setProgress(100), 50);
+
         // Track completion
         try {
+            const trackData = {
+                status: "completed",
+                rating_given: rating,
+                tags_selected: selectedTags,
+                ai_review_text: reviewText,
+                completed_at: new Date().toISOString(),
+            };
+
             if (requestId) {
-                await supabase
-                    .from("review_requests")
-                    .update({
-                        status: "completed",
-                        rating_given: rating,
-                        tags_selected: selectedTags,
-                        ai_review_text: reviewText,
-                        completed_at: new Date().toISOString(),
-                    })
-                    .eq("id", requestId);
+                await supabase.from("review_requests").update(trackData).eq("id", requestId);
             } else {
                 await supabase.from("review_requests").insert({
                     business_id: businessId,
                     channel: "sms",
                     trigger_source: "manual",
-                    status: "completed",
-                    rating_given: rating,
-                    tags_selected: selectedTags,
-                    ai_review_text: reviewText,
-                    completed_at: new Date().toISOString(),
+                    ...trackData
                 });
             }
         } catch (err) {
             console.error("Tracking error:", err);
         }
 
+        // 3. Wait for animation then redirect
         setTimeout(() => {
             if (googleUrl) {
                 window.location.href = googleUrl;
             } else {
                 setStep("thankyou");
             }
-        }, 600);
+        }, 2050); // Slightly longer than transition
     };
 
     const handleSubmitFeedback = async () => {
@@ -679,23 +680,44 @@ export function PublicReviewFlow({
                     {/* Post to Google CTA */}
                     <button
                         className={cn(
-                            "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                            "shadow-lg hover:shadow-xl",
-                            "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
-                            "flex items-center justify-center gap-2"
+                            "w-full h-14 rounded-2xl text-base font-semibold transition-all duration-300 relative overflow-hidden",
+                            isRedirecting
+                                ? "bg-slate-100 cursor-wait ring-0"
+                                : "text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+                            !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                         )}
-                        style={{ backgroundColor: brandColor }}
+                        style={{ backgroundColor: isRedirecting ? "#f1f5f9" : brandColor }} // slate-100 hex
                         onClick={handlePostToGoogle}
-                        disabled={isSubmitting || !reviewText.trim()}
+                        disabled={isSubmitting || isRedirecting || !reviewText.trim()}
                     >
-                        {isSubmitting ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
+                        {isRedirecting ? (
                             <>
-                                <Copy className="h-4 w-4" />
-                                <span>{googleButtonText || "Copy & Go to Google"}</span>
-                                <ExternalLink className="h-4 w-4 ml-1" />
+                                {/* Progress Bar Animation */}
+                                <div
+                                    className="absolute top-0 left-0 h-full bg-blue-200/50 z-0 ease-linear"
+                                    style={{
+                                        width: `${progress}%`,
+                                        transition: "width 2s linear"
+                                    }}
+                                />
+
+                                <div className="relative z-10 flex items-center justify-center gap-2 text-slate-700 animate-in fade-in duration-300">
+                                    <div className="bg-green-100 text-green-600 rounded-full p-0.5">
+                                        <Check className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-sm font-medium">Review copied! Redirecting...</span>
+                                </div>
                             </>
+                        ) : (
+                            isSubmitting ? (
+                                <Loader2 className="h-5 w-5 animate-spin text-white" />
+                            ) : (
+                                <div className="flex items-center justify-center gap-2">
+                                    <Copy className="h-4 w-4" />
+                                    <span>{googleButtonText || "Copy & Go to Google"}</span>
+                                    <ExternalLink className="h-4 w-4 ml-1" />
+                                </div>
+                            )
                         )}
                     </button>
 

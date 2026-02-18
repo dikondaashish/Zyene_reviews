@@ -42,6 +42,7 @@ export default async function RequestPage({
             google_heading,
             google_subheading,
             google_button_text,
+            google_review_url,
             negative_subheading,
             negative_textarea_placeholder,
             negative_button_text,
@@ -110,7 +111,7 @@ export default async function RequestPage({
                 businessName={business.name}
                 businessCategory={business.category || "other"}
                 requestId={requestId}
-                googleUrl={platform?.external_url}
+                googleUrl={business.google_review_url || platform?.external_url}
                 logoUrl={business.logo_url}
                 brandColor={business.brand_color}
                 minStars={business.min_stars_for_google}

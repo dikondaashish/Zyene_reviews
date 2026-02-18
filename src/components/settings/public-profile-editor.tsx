@@ -31,6 +31,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         google_heading: business.google_heading,
         google_subheading: business.google_subheading,
         google_button_text: business.google_button_text,
+        google_review_url: business.google_review_url,
         negative_subheading: business.negative_subheading,
         negative_textarea_placeholder: business.negative_textarea_placeholder,
         negative_button_text: business.negative_button_text,
@@ -99,6 +100,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 googleHeading={previewState.google_heading}
                                 googleSubheading={previewState.google_subheading}
                                 googleButtonText={previewState.google_button_text}
+                                googleUrl={previewState.google_review_url}
                                 negativeSubheading={previewState.negative_subheading}
                                 negativeTextareaPlaceholder={previewState.negative_textarea_placeholder}
                                 negativeButtonText={previewState.negative_button_text}
@@ -137,7 +139,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 {/* Footer */}
                 <div className="text-center px-4">
                     <p className="text-xs text-muted-foreground items-center justify-center flex gap-1">
-                        Want to remove Powered by <span className="font-semibold">Zyene</span> branding?
+                        Want to customize more?
                     </p>
                     <a href="#" className="text-xs text-blue-600 hover:underline font-medium mt-1 block">
                         Contact sales
