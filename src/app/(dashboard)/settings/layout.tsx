@@ -16,20 +16,20 @@ const sidebarNavItems = [
         href: "/settings/general",
     },
     {
-        title: "Notifications",
-        href: "/settings/notifications",
+        title: "Public Profile",
+        href: "/settings/public-profile",
     },
     {
-        title: "Team",
-        href: "/settings/team",
+        title: "Notifications",
+        href: "/settings/notifications",
     },
     {
         title: "Billing",
         href: "/settings/billing",
     },
     {
-        title: "Public Profile",
-        href: "/settings/public-profile",
+        title: "Team",
+        href: "/settings/team",
     },
 ];
 
