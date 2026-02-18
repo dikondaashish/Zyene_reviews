@@ -206,7 +206,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             console.log(`[Sync] Auto-filled Google Review URL: ${googleReviewUrl}`);
         }
 
-        await admin.from("businesses").update(updateData).eq("id", platform.business_id);
+        try {
+            await admin.from("businesses").update(updateData).eq("id", platform.business_id);
+        } catch (busError) {
+            console.error("[Sync] Failed to update business stats:", busError);
+            // Don't fail the sync request just because business stats update failed
+        }
 
         return {
             success: true,
