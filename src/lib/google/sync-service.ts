@@ -109,6 +109,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     // 3. OR sync_status = 'running' but stale (> 10 mins)
 
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    console.log(`[Sync] Attempting Lock for ${platformId}. tenMinutesAgo=${tenMinutesAgo}`);
 
     const { data: lockData, error: lockError } = await admin
         .from("review_platforms")
@@ -120,6 +121,9 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     if (lockError || !lockData) {
         console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
+        if (lockError) console.warn(`[Sync] Lock Error Detail:`, lockError);
+        if (!lockData) console.warn(`[Sync] Lock Data was null (No rows matched criteria)`);
+
         const error: any = new Error("Sync already in progress.");
         error.code = "CONFLICT";
         throw error;

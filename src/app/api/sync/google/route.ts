@@ -44,37 +44,37 @@ export async function POST(request: Request) {
         return NextResponse.json(result);
 
     } catch (error: any) {
-        console.error("Sync Error:", error);
-
+        // 1. Conflict (Already Running)
         if (error.code === 'CONFLICT') {
-            return new Response(JSON.stringify({ message: "Sync already in progress." }), {
-                status: 409,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            console.warn(`[Sync API] 409 Conflict: ${error.message}`);
+            return NextResponse.json({ message: error.message }, { status: 409 });
         }
 
+        // 2. Rate Limit (Cooldown)
         if (error.code === 'RATE_LIMIT') {
-            return new Response(JSON.stringify({ message: "Rate limit reached. Please try again later." }), {
-                status: 429,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            console.warn(`[Sync API] 429 Rate Limit: ${error.message}`);
+            return NextResponse.json({ message: error.message }, { status: 429 });
         }
 
+        // 3. Auth / Business Logic Errors
         let status = 500;
         let message = "Failed to sync reviews";
 
-        // Check for specific Google implementation errors
         if (error.message.includes("No Google Accounts")) {
             status = 400;
             message = "No Google Business Profile found.";
-        } else if (error.message.includes("reconnect")) {
+        } else if (error.message.includes("reconnect") || error.message.includes("refresh token")) {
             status = 401;
             message = "Authentication expired. Please reconnect Google.";
+        } else if (error.message === "Business not found" || error.message === "Google platform not connected") {
+            status = 404;
+            message = error.message;
         }
 
-        return new Response(JSON.stringify({ error: message, details: error.message }), {
-            status,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        console.error("Sync Error:", error);
+        return NextResponse.json(
+            { error: message, details: error.message },
+            { status }
+        );
     }
 }
