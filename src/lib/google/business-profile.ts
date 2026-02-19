@@ -108,9 +108,11 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
     });
 
     if (!response.ok) {
-        // Handle edge case where user has NO accounts but API returns 200 with empty list?
-        // Or 404?
-        // Just throw for now to debug.
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
         throw new Error(`Failed to list accounts: ${response.status} ${response.statusText}`);
     }
 
@@ -126,6 +128,11 @@ export async function listLocations(accessToken: string, accountName: string): P
     });
 
     if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
         throw new Error(`Failed to list locations: ${response.status} ${response.statusText}`);
     }
 
@@ -148,6 +155,11 @@ export async function listReviews(accessToken: string, accountId: string, locati
     });
 
     if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
         throw new Error(`Failed to list reviews: ${response.status} ${response.statusText}`);
     }
 
