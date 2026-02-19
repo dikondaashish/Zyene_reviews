@@ -102,27 +102,23 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     }
 
     // ATOMIC LOCK ACQUISITION
-    // Attempt to set sync_status='running' for this ID
     // Condition: 
     // 1. sync_status != 'running' (Idle/Error/Active)
     // 2. OR updated_at IS NULL (First run after migration)
     // 3. OR sync_status = 'running' but stale (> 10 mins)
 
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-    console.log(`[Sync] Attempting Lock for ${platformId}. tenMinutesAgo=${tenMinutesAgo}`);
+    // ATOMIC LOCK ACQUISITION (VIA RPC)
+    // We use a Postgres Function to guarantee atomic logic execution without client-side query building issues.
+    console.log(`[Sync] Attempting Lock RPC for ${platformId}`);
 
-    const { data: lockData, error: lockError } = await admin
-        .from("review_platforms")
-        .update({ sync_status: 'running', updated_at: new Date().toISOString() })
-        .eq("id", platformId)
-        .or(`sync_status.neq.running,updated_at.is.null,updated_at.lt.${tenMinutesAgo}`)
-        .select()
-        .single();
+    const { data: lockAcquired, error: lockError } = await admin.rpc('acquire_platform_lock', {
+        p_id: platformId
+    });
 
-    if (lockError || !lockData) {
+    if (lockError || !lockAcquired) {
         console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
-        if (lockError) console.warn(`[Sync] Lock Error Detail:`, lockError);
-        if (!lockData) console.warn(`[Sync] Lock Data was null (No rows matched criteria)`);
+        if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
+        if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
 
         const error: any = new Error("Sync already in progress.");
         error.code = "CONFLICT";
