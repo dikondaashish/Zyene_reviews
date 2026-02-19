@@ -286,7 +286,7 @@ zyene-ratings/
 
 ## 4. Environment Variables
 
-The application requires the following environment variables in `.env.local`:
+The application requires the following environment variables in [.env.local](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/.env.local):
 
 ```env
 # ── Supabase ──
@@ -345,10 +345,10 @@ The app uses Next.js **route groups** to organize code:
 
 | Route Group | Layout | Purpose |
 |---|---|---|
-| `(marketing)` | None (root layout only) | Landing page |
-| `(auth)` | Centered card layout | Login, Signup, Forgot Password |
-| `(onboarding)` | Centered flex layout | GBP connection flow |
-| `(dashboard)` | Sidebar + header layout | All authenticated app pages |
+| [(marketing)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) | None (root layout only) | Landing page |
+| [(auth)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) | Centered card layout | Login, Signup, Forgot Password |
+| [(onboarding)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) | Centered flex layout | GBP connection flow |
+| [(dashboard)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) | Sidebar + header layout | All authenticated app pages |
 | `api/` | N/A | API routes |
 
 ### Data Flow Diagram
@@ -387,7 +387,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `organizations`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Organization ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Organization ID |
 | `name` | TEXT | Organization display name |
 | `slug` | TEXT (UNIQUE) | URL-safe slug |
 | `type` | TEXT | Organization type (e.g., "business") |
@@ -402,7 +402,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `users`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Matches Supabase auth.users.id |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Matches Supabase auth.users.id |
 | `email` | TEXT | User email |
 | `full_name` | TEXT | Display name |
 | `created_at` | TIMESTAMPTZ | Creation timestamp |
@@ -410,7 +410,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `organization_members`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Membership ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Membership ID |
 | `organization_id` | UUID (FK → organizations) | Organization |
 | `user_id` | UUID (FK → users) | User |
 | `role` | TEXT | Role: "owner", "admin", "member" |
@@ -419,7 +419,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `businesses`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Business ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Business ID |
 | `organization_id` | UUID (FK → organizations) | Parent organization |
 | `name` | TEXT | Business name |
 | `slug` | TEXT | URL-safe slug |
@@ -444,7 +444,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `review_platforms`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Platform connection ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Platform connection ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `platform` | TEXT | Platform name: "google" |
 | `external_id` | TEXT | Google Location ID |
@@ -459,7 +459,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `reviews`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Review ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Review ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `platform` | TEXT | Source: "google" |
 | `platform_id` | UUID (FK → review_platforms) | Platform connection |
@@ -479,14 +479,14 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `alert_sent` | BOOLEAN | Whether SMS alert was sent |
 | `alert_sent_at` | TIMESTAMPTZ | When alert was sent |
 
-**Unique Constraint**: `(business_id, platform, external_id)` — prevents duplicate reviews.
+**Unique Constraint**: [(business_id, platform, external_id)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) — prevents duplicate reviews.
 
 ### Notification Tables
 
 #### `notification_preferences`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Preference ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Preference ID |
 | `user_id` | UUID (FK → users) | User |
 | `sms_enabled` | BOOLEAN | Whether SMS alerts are turned on |
 | `phone_number` | TEXT | User's phone number (with country code) |
@@ -499,7 +499,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `sms_opt_outs`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Opt-out record ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Opt-out record ID |
 | `phone_number` | TEXT (UNIQUE) | Phone number that opted out |
 | `opted_out_at` | TIMESTAMPTZ | When they opted out |
 
@@ -508,7 +508,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `events`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Event ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Event ID |
 | `organization_id` | UUID | Organization |
 | `user_id` | UUID | User who triggered the event |
 | `event_type` | TEXT | Event type: "user.signed_up", etc. |
@@ -519,7 +519,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `campaigns`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Campaign ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Campaign ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `name` | TEXT | Campaign name |
 | `type` | TEXT | Campaign type |
@@ -531,7 +531,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `invitations`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Invitation ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Invitation ID |
 | `organization_id` | UUID (FK → organizations) | Organization invited to |
 | `email` | TEXT | Invited email address |
 | `role` | TEXT | Assigned role: "admin", "member" |
@@ -545,7 +545,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `customer_contacts`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Contact ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Contact ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `name` | TEXT | Customer name |
 | `phone` | TEXT | Customer phone number |
@@ -553,12 +553,12 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 | `last_request_sent_at` | TIMESTAMPTZ | When last review request was sent |
 | `created_at` | TIMESTAMPTZ | Creation timestamp |
 
-**Unique Constraint**: `(business_id, phone)` — one contact per phone per business.
+**Unique Constraint**: [(business_id, phone)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300) — one contact per phone per business.
 
 #### `review_requests`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Request ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Request ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `contact_id` | UUID (FK → customer_contacts) | Customer contact |
 | `sent_by` | UUID (FK → users) | User who sent the request |
@@ -571,7 +571,7 @@ The database is hosted on **Supabase** (PostgreSQL) with the following tables:
 #### `private_feedback`
 | Column | Type | Description |
 |---|---|---|
-| `id` | UUID (PK) | Feedback ID |
+| [id](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/google/sync-service.ts#6-61) | UUID (PK) | Feedback ID |
 | `business_id` | UUID (FK → businesses) | Parent business |
 | `request_id` | UUID (FK → review_requests) | Associated review request (optional) |
 | `rating` | INTEGER | Star rating (1-3, since 4-5 go to Google) |
@@ -590,7 +590,7 @@ Authentication is handled by **Supabase Auth** with support for:
 
 ### Client Files
 
-#### `src/lib/supabase/client.ts` — Browser Client
+#### [src/lib/supabase/client.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/supabase/client.ts) — Browser Client
 ```typescript
 // Creates a Supabase client for use in Client Components ("use client")
 // Uses createBrowserClient from @supabase/ssr
@@ -602,14 +602,14 @@ export function createClient() {
 }
 ```
 
-#### `src/lib/supabase/server.ts` — Server Client
+#### [src/lib/supabase/server.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/supabase/server.ts) — Server Client
 ```typescript
 // Creates a Supabase client for use in Server Components & API routes
 // Uses createServerClient from @supabase/ssr with cookie handling
 export async function createClient() { ... }
 ```
 
-#### `src/lib/supabase/admin.ts` — Admin Client
+#### [src/lib/supabase/admin.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/supabase/admin.ts) — Admin Client
 ```typescript
 // Creates a Supabase admin client using the SERVICE_ROLE_KEY
 // Bypasses RLS policies — used for system operations
@@ -623,7 +623,7 @@ export function createAdminClient() {
 
 ### Auth Pages
 
-#### Login Page — `src/app/(auth)/login/page.tsx`
+#### Login Page — [src/app/(auth)/login/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28auth%29/login/page.tsx)
 - **Type**: Client Component (`"use client"`)
 - **Features**:
   - Email + Password form
@@ -634,15 +634,15 @@ export function createAdminClient() {
   - Handles `?error=account_not_created` param from onboarding cancel
   - On success: redirects to `dashboard.{rootDomain}`
 
-#### Signup Page — `src/app/(auth)/signup/page.tsx`
+#### Signup Page — [src/app/(auth)/signup/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28auth%29/signup/page.tsx)
 - **Type**: Client Component
 - **Features**: Email + Password + Name registration form
 
-#### Forgot Password — `src/app/(auth)/forgot-password/page.tsx`
+#### Forgot Password — [src/app/(auth)/forgot-password/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28auth%29/forgot-password/page.tsx)
 - **Type**: Client Component
 - **Features**: Email-based password reset flow via Supabase
 
-### Auth Callback — `src/app/api/auth/callback/route.ts`
+### Auth Callback — [src/app/api/auth/callback/route.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts)
 
 This is the **most complex API route** in the application. It handles the OAuth callback flow:
 
@@ -670,7 +670,7 @@ This is the **most complex API route** in the application. It handles the OAuth 
 
 ## 8. Middleware — Subdomain & Path Routing
 
-**File**: `src/middleware.ts` (129 lines)
+**File**: [src/middleware.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/middleware.ts) (129 lines)
 
 The middleware is the routing brain of the application. It runs on every request (except static files) and handles:
 
@@ -716,7 +716,7 @@ export const config = {
 
 ## 9. Marketing Site
 
-**File**: `src/app/(marketing)/page.tsx`
+**File**: [src/app/(marketing)/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28marketing%29/page.tsx)
 
 A 322-line marketing page served at the root domain (`localhost:3000`) with 6 sections:
 
@@ -736,7 +736,7 @@ A 322-line marketing page served at the root domain (`localhost:3000`) with 6 se
 
 **Purpose**: Ensures every user has a Google Business Profile connected before accessing the dashboard.
 
-### Onboarding Page — `src/app/(onboarding)/onboarding/page.tsx`
+### Onboarding Page — [src/app/(onboarding)/onboarding/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28onboarding%29/onboarding/page.tsx)
 - **Type**: Client Component
 - **UI**: Centered card with icon, title, description
 - **Actions**:
@@ -749,7 +749,7 @@ A 322-line marketing page served at the root domain (`localhost:3000`) with 6 se
     - Redirects to login with `?error=account_not_created`
 
 ### Enforcement
-The dashboard layout (`(dashboard)/layout.tsx`) checks for GBP connection on every dashboard page load:
+The dashboard layout ([(dashboard)/layout.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300)) checks for GBP connection on every dashboard page load:
 ```typescript
 const hasGoogleBusinessProfile = organizations.some(org =>
     org.businesses?.some(business =>
@@ -768,7 +768,7 @@ if (!hasGoogleBusinessProfile) {
 
 ## 11. Dashboard
 
-### Dashboard Layout — `src/app/(dashboard)/layout.tsx`
+### Dashboard Layout — [src/app/(dashboard)/layout.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/layout.tsx)
 
 **Type**: Server Component (async)
 
@@ -782,7 +782,7 @@ if (!hasGoogleBusinessProfile) {
    - Header with `<BusinessSwitcher>` and `<UserNav>`
    - `<main>` content area with light gray background
 
-### Dashboard Home — `src/app/(dashboard)/dashboard/page.tsx`
+### Dashboard Home — [src/app/(dashboard)/dashboard/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/dashboard/page.tsx)
 
 **Type**: Server Component (async)
 
@@ -796,7 +796,7 @@ if (!hasGoogleBusinessProfile) {
 3. **Recent Reviews Card**: Shows connection status and sync prompts
 4. **Needs Attention Card**: Placeholder for items needing action
 
-### Sidebar Navigation — `src/components/dashboard/app-sidebar.tsx`
+### Sidebar Navigation — [src/components/dashboard/app-sidebar.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/dashboard/app-sidebar.tsx)
 
 **Type**: Client Component
 
@@ -807,29 +807,29 @@ if (!hasGoogleBusinessProfile) {
 | MessageSquare | Reviews | `/reviews` |
 | Send | Review Requests | `/requests` |
 | BarChart3 | Analytics | `/analytics` |
-| Plug | Integrations | `/integrations` |
+| Plug | Integrations | [/integrations](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/integrations) |
 | Settings | Settings | `/settings` |
 
 **Footer**: Settings link (`/settings`)
 
 **Design**: Dark theme sidebar with collapsible behavior, "Z" logo badge, version number, active state highlighting.
 
-### Business Switcher — `src/components/dashboard/business-switcher.tsx`
+### Business Switcher — [src/components/dashboard/business-switcher.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/dashboard/business-switcher.tsx)
 - Popover-based dropdown to switch between businesses/organizations
 - Shows current business name
 - Lists all organizations and their businesses
 
-### User Nav — `src/components/dashboard/user-nav.tsx`
+### User Nav — [src/components/dashboard/user-nav.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/dashboard/user-nav.tsx)
 - User avatar dropdown menu
 - Shows user name and email
 - Sign out action (clears session, redirects to login)
 
-### Sync Button — `src/components/dashboard/sync-button.tsx`
-- Triggers `/api/sync/google` POST request
+### Sync Button — [src/components/dashboard/sync-button.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/dashboard/sync-button.tsx)
+- Triggers [/api/sync/google](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/sync/google) POST request
 - Loading state with spinner
 - Toast notifications for success/failure
 
-### Google Connect Button — `src/components/dashboard/google-connect-button.tsx`
+### Google Connect Button — [src/components/dashboard/google-connect-button.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/dashboard/google-connect-button.tsx)
 - Shows "Connected" (green) or "Connect Google" state
 - Triggers Google OAuth flow when not connected
 
@@ -837,7 +837,7 @@ if (!hasGoogleBusinessProfile) {
 
 ## 12. Reviews Inbox
 
-### Reviews Page — `src/app/(dashboard)/reviews/page.tsx`
+### Reviews Page — [src/app/(dashboard)/reviews/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/reviews/page.tsx)
 
 **Type**: Server Component (async)
 
@@ -851,7 +851,7 @@ if (!hasGoogleBusinessProfile) {
 4. **Empty State**: Shows contextual message based on filters
 5. **Layout**: Header with review count badge, filter bar, review cards grid, pagination controls
 
-### Reviews Filters — `src/components/reviews/reviews-filters.tsx`
+### Reviews Filters — [src/components/reviews/reviews-filters.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/reviews/reviews-filters.tsx)
 
 **Type**: Client Component
 
@@ -859,7 +859,7 @@ if (!hasGoogleBusinessProfile) {
 - Uses `useSearchParams` and `useRouter` for URL-based state
 - Resets to page 1 when filters change
 
-### Review Card — `src/components/reviews/review-card.tsx`
+### Review Card — [src/components/reviews/review-card.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/reviews/review-card.tsx)
 
 **Type**: Client Component (277 lines — the largest component)
 
@@ -1032,7 +1032,7 @@ Complete sync pipeline:
 
 ## 15. AI Features (Anthropic Claude)
 
-### Client — `src/lib/ai/client.ts`
+### Client — [src/lib/ai/client.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/client.ts)
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
 export const anthropic = new Anthropic({
@@ -1040,7 +1040,7 @@ export const anthropic = new Anthropic({
 });
 ```
 
-### Prompts — `src/lib/ai/prompts.ts`
+### Prompts — [src/lib/ai/prompts.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/prompts.ts)
 
 #### `SENTIMENT_PROMPT`
 Analyzes a review and returns JSON:
@@ -1068,9 +1068,9 @@ Generates 2 reply options as the business owner:
 ```
 Rules: genuine (not corporate), reference specifics, apologize for negatives, thank for positives, under 120 words, never argue.
 
-### Analysis Function — `src/lib/ai/analysis.ts`
+### Analysis Function — [src/lib/ai/analysis.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/analysis.ts)
 
-`analyzeReview(review)`:
+[analyzeReview(review)](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/analysis.ts#5-45):
 1. Calls Claude (`claude-3-haiku-20240307`) with the `SENTIMENT_PROMPT`
 2. Extracts JSON from response (handles markdown wrapping)
 3. Parses result and updates the review record in DB with:
@@ -1084,7 +1084,7 @@ Rules: genuine (not corporate), reference specifics, apologize for negatives, th
 
 #### `POST /api/ai/analyze` — On-Demand Analysis
 - Body: `{ reviewId: string }`
-- Fetches review from DB, runs `analyzeReview()`, returns result
+- Fetches review from DB, runs [analyzeReview()](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/analysis.ts#5-45), returns result
 
 #### `POST /api/ai/suggest-reply` — Reply Suggestions
 - Body: `{ reviewId: string }`
@@ -1098,7 +1098,7 @@ Rules: genuine (not corporate), reference specifics, apologize for negatives, th
 
 The application uses **Stripe** for subscription billing with three tiers.
 
-### Plan Definitions — `src/lib/stripe/plans.ts`
+### Plan Definitions — [src/lib/stripe/plans.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/stripe/plans.ts)
 
 | Plan | Price | Review Requests | Team Members | AI Replies | Analytics |
 |---|---|---|---|---|---|
@@ -1108,7 +1108,7 @@ The application uses **Stripe** for subscription billing with three tiers.
 
 Each plan has a `stripe_price_id` that maps to a Stripe Price object. The `PLANS` export is a typed array of `Plan` objects used throughout the UI.
 
-### Usage Enforcement — `src/lib/stripe/check-limits.ts`
+### Usage Enforcement — [src/lib/stripe/check-limits.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/stripe/check-limits.ts)
 
 `checkLimit(limitType: string, organizationId: string)`:
 1. Fetches the organization's `plan_id` from the database
@@ -1117,7 +1117,7 @@ Each plan has a `stripe_price_id` that maps to a Stripe Price object. The `PLANS
 4. Returns `{ allowed: boolean, current: number, limit: number }`
 5. Used by `api/requests/send`, `api/team/invite`, and `api/ai/suggest-reply`
 
-### Stripe Client — `src/lib/stripe/client.ts`
+### Stripe Client — [src/lib/stripe/client.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/stripe/client.ts)
 Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
 
 ### API Routes
@@ -1141,7 +1141,7 @@ Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
   - `customer.subscription.deleted` — Resets organization to `"free"` plan
   - `invoice.payment_failed` — Logs payment failure (future: notify user)
 
-### Billing UI — `src/components/settings/billing-client.tsx`
+### Billing UI — [src/components/settings/billing-client.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/settings/billing-client.tsx)
 
 **Type**: Client Component (370 lines)
 
@@ -1162,7 +1162,7 @@ Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
 
 Team management allows organization owners and admins to invite new members and manage roles.
 
-### Team Page — `src/app/(dashboard)/settings/team/page.tsx`
+### Team Page — [src/app/(dashboard)/settings/team/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/settings/team/page.tsx)
 
 **Type**: Server Component (async)
 - Fetches `organization_members` with joined user details
@@ -1170,7 +1170,7 @@ Team management allows organization owners and admins to invite new members and 
 - Passes both to `TeamTable` component
 - Shows `InviteMemberDialog` for sending invites
 
-### Team Table — `src/components/settings/team-table.tsx`
+### Team Table — [src/components/settings/team-table.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/settings/team-table.tsx)
 
 **Type**: Client Component
 
@@ -1185,7 +1185,7 @@ Team management allows organization owners and admins to invite new members and 
    - Cancel invitation action
 3. **Role-Based Actions**: Only owners and admins see management controls
 
-### Invite Member Dialog — `src/components/settings/invite-member-dialog.tsx`
+### Invite Member Dialog — [src/components/settings/invite-member-dialog.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/settings/invite-member-dialog.tsx)
 
 **Type**: Client Component
 - **Form**: Email + Role (Admin or Member) selector
@@ -1209,7 +1209,7 @@ Team management allows organization owners and admins to invite new members and 
 - Removes an `organization_members` record (active member) or deletes an `invitations` record (pending invite)
 - Owners cannot remove themselves
 
-### Team Invite Email — `src/lib/resend/templates/team-invite-email.ts`
+### Team Invite Email — [src/lib/resend/templates/team-invite-email.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/resend/templates/team-invite-email.ts)
 - HTML email template with branded styling
 - Shows inviter name, organization name, and a CTA button to accept
 
@@ -1219,7 +1219,7 @@ Team management allows organization owners and admins to invite new members and 
 
 The Settings area is organized with a sidebar navigation layout.
 
-### Settings Layout — `src/app/(dashboard)/settings/layout.tsx`
+### Settings Layout — [src/app/(dashboard)/settings/layout.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/settings/layout.tsx)
 
 **Type**: Client Component
 
@@ -1230,7 +1230,7 @@ The Settings area is organized with a sidebar navigation layout.
 | Notifications | `/settings/notifications` |
 | Team | `/settings/team` |
 
-### General Settings — `src/app/(dashboard)/settings/general/page.tsx`
+### General Settings — [src/app/(dashboard)/settings/general/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/settings/general/page.tsx)
 
 **Type**: Server Component (async)
 
@@ -1266,7 +1266,7 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
 
 ### SMS Integration (Twilio)
 - **Library**: `twilio` SDK
-- **Function**: `src/lib/twilio/send-sms.ts` handles opted-out checks
+- **Function**: [src/lib/twilio/send-sms.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/twilio/send-sms.ts) handles opted-out checks
 - **Triggers**: High urgency reviews (score ≥ 7) or very negative ratings (1-2 stars)
 - **Opt-Out**: Webhook at `/api/webhooks/twilio` handles "STOP" replies
 
@@ -1580,4 +1580,4 @@ Zyene Ratings is a **full-stack, production-ready SaaS application** built over 
 | **Phase 11** | Team management with invitations, role-based access, and email invites |
 | **Phase 12** | Review requests via SMS with rating-gated public flow and private feedback |
 
-The application contains **30+ pages/routes**, **40+ components**, **18 library modules**, and integrates with **6 external services** (Supabase, Google Business Profile API, Anthropic Claude, Twilio, Stripe, Resend).
+The application contains **30+ pages/routes**, **40+ components**, **18 library modules**, and integrates with **6 external services** (Supabase, Google Business Profile API, Anthropic Claude, Twilio, Stripe, Resend)."
