@@ -92,6 +92,7 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
         try {
             const rootDomain =
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            
             const redirectTo = rootDomain.includes("localhost")
                 ? `http://${rootDomain}/api/auth/callback?next=/dashboard/integrations`
                 : `http://auth.${rootDomain}/api/auth/callback?next=/dashboard/integrations`;

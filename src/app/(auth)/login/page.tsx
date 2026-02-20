@@ -45,9 +45,14 @@ function LoginForm() {
             return
         }
 
-        // Redirect to dashboard subdomain
+        // Redirect logic
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
-        window.location.href = `http://dashboard.${rootDomain}`
+        
+        if (rootDomain.includes("localhost")) {
+            window.location.href = `http://${rootDomain}/dashboard`
+        } else {
+            window.location.href = `http://dashboard.${rootDomain}`
+        }
     }
 
     return (

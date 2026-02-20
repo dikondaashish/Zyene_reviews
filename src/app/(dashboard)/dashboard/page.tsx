@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import {
     Card,
     CardContent,
@@ -28,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
+import { getBusinessContext } from "@/lib/business-context";
 import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
@@ -79,36 +81,14 @@ export default async function DashboardPage() {
         redirect("/login");
     }
 
-    // Fetch user's business and review platforms
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(
-            `
-            organizations (
-                *,
-                businesses (
-                    *,
-                    review_platforms (*)
-                )
-            )
-        `
-        )
-        .eq("user_id", user.id)
-        .single();
+    // Fetch user's business context using shared utility
+    const { 
+        organization, 
+        activeBusiness: business 
+    } = await getBusinessContext(user.id);
 
-    // @ts-ignore - Supabase types inference
-    const organization = memberData?.organizations || {};
     // @ts-ignore - Supabase types inference
     const maxRequestsPerMonth = organization?.max_review_requests_per_month || 10;
-
-    // @ts-ignore - Supabase types inference
-    const business = memberData?.organizations?.businesses?.[0] || {
-        id: null,
-        total_reviews: 0,
-        average_rating: 0,
-        review_request_frequency_cap_days: 0,
-        status: "inactive",
-    };
 
     // @ts-ignore
     const googlePlatform = business?.review_platforms?.find(

@@ -18,6 +18,7 @@ import {
     Loader2,
     Zap,
     AlertTriangle,
+    ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Plan } from "@/lib/stripe/plans";
@@ -28,6 +29,8 @@ interface UsageStat {
 }
 
 interface BillingClientProps {
+    orgName: string;
+    billingEmail: string;
     currentPlanKey: string;
     currentPlan: Plan;
     planStatus: string;
@@ -38,6 +41,7 @@ interface BillingClientProps {
         businesses: UsageStat;
     };
     plans: Record<string, Plan>;
+    isOwner: boolean;
 }
 
 function UsageBar({ label, stat }: { label: string; stat: UsageStat }) {
@@ -71,12 +75,15 @@ function UsageBar({ label, stat }: { label: string; stat: UsageStat }) {
 }
 
 export function BillingClient({
+    orgName,
+    billingEmail,
     currentPlanKey,
     currentPlan,
     planStatus,
     hasStripeCustomer,
     usage,
     plans,
+    isOwner,
 }: BillingClientProps) {
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
@@ -124,12 +131,29 @@ export function BillingClient({
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Billing</h1>
                 <p className="text-muted-foreground">
-                    Manage your subscription and billing
+                    Manage your subscription and billing for <strong>{orgName}</strong>
                 </p>
             </div>
 
+            {/* Organization Info Card */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">Billing Information</CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-4 md:grid-cols-2">
+                    <div className="flex flex-col gap-1">
+                        <span className="text-sm font-medium text-muted-foreground">Organization</span>
+                        <span className="text-base font-semibold">{orgName}</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-sm font-medium text-muted-foreground">Billing Contact (Owner)</span>
+                        <span className="text-base font-semibold">{billingEmail}</span>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Current Plan Status */}
-            {planStatus === "past_due" && (
+            {isOwner && planStatus === "past_due" && (
                 <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 flex items-center gap-3">
                     <AlertTriangle className="h-5 w-5 text-orange-600 shrink-0" />
                     <div>
@@ -201,7 +225,7 @@ export function BillingClient({
                         />
                     </div>
                 </CardContent>
-                {isPaidPlan && hasStripeCustomer && (
+                {isOwner && isPaidPlan && hasStripeCustomer && (
                     <CardFooter>
                         <Button
                             variant="outline"
@@ -221,8 +245,8 @@ export function BillingClient({
                 )}
             </Card>
 
-            {/* Upgrade Cards (show for free users OR for starter wanting to upgrade) */}
-            {(currentPlanKey === "free" || currentPlanKey === "starter") && (
+            {/* Upgrade Cards — only visible to owners */}
+            {isOwner && (currentPlanKey === "free" || currentPlanKey === "starter") && (
                 <div>
                     <h2 className="text-xl font-semibold mb-4">
                         {currentPlanKey === "free"
@@ -363,6 +387,21 @@ export function BillingClient({
                         </Card>
                     </div>
                 </div>
+            )}
+
+            {/* Non-owner notice */}
+            {!isOwner && (currentPlanKey === "free" || currentPlanKey === "starter") && (
+                <Card className="border-dashed">
+                    <CardContent className="flex items-center gap-3 py-6">
+                        <ShieldAlert className="h-5 w-5 text-muted-foreground shrink-0" />
+                        <div>
+                            <p className="font-medium">Plan upgrades are managed by the organization owner</p>
+                            <p className="text-sm text-muted-foreground">
+                                Contact <strong>{billingEmail}</strong> to request a plan change.
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
             )}
         </div>
     );

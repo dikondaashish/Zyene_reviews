@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
@@ -26,10 +27,11 @@ export default async function DashboardLayout({
         }
     }
 
-    // Fetch organizations with nested businesses and review platforms
+    // Fetch organizations with nested businesses and review platforms, plus user's role
     const { data: members } = await supabase
         .from("organization_members")
         .select(`
+            role,
             organizations (
                 *,
                 businesses (
@@ -41,8 +43,19 @@ export default async function DashboardLayout({
         .eq("user_id", user.id);
 
     const organizations = members?.map((m) => m.organizations).filter(Boolean) || [];
+    console.log("DashboardLayout organizations:", organizations.length);
 
-    // Check for Google Business Profile connection
+    // If user has no org at all, send to onboarding
+    if (organizations.length === 0) {
+        redirect("/onboarding");
+    }
+
+    // Only redirect to onboarding (Google connect) if user is an OWNER and no Google is connected
+    const userRoles = members?.map((m: any) => m.role) || [];
+    const isOwner = userRoles.some((role: string) => 
+        role === "ORG_OWNER" || role === "STORE_OWNER"
+    );
+
     const hasGoogleBusinessProfile = organizations.some((org: any) =>
         org.businesses?.some((business: any) =>
             business.review_platforms?.some((platform: any) =>
@@ -51,7 +64,7 @@ export default async function DashboardLayout({
         )
     );
 
-    if (!hasGoogleBusinessProfile) {
+    if (isOwner && !hasGoogleBusinessProfile) {
         redirect("/onboarding");
     }
 
@@ -64,10 +77,12 @@ export default async function DashboardLayout({
                     <Separator orientation="vertical" className="mr-2 h-4" />
                     <div className="flex-1 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <BusinessSwitcher organizations={organizations} />
+                            <BusinessSwitcher 
+                                organizations={organizations} 
+                                activeBusinessId={(await cookies()).get("active_business_id")?.value}
+                            />
                         </div>
-                        <UserNav user={user} />
-                    </div>
+                        <UserNav user={user} />                    </div>
                 </header>
                 <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 min-h-[calc(100vh-4rem)]">
                     {children}

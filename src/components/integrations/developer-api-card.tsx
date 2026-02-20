@@ -71,9 +71,9 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
         : null;
 
     const endpoints = [
-        { method: "POST", path: "/api/v1/requests/send", desc: "Send a review request" },
-        { method: "GET", path: "/api/v1/reviews", desc: "List reviews" },
-        { method: "GET", path: "/api/v1/analytics", desc: "Get analytics data" },
+        { method: "POST", path: "/api/requests/send", desc: "Send a review request" },
+        { method: "POST", path: "/api/ai/suggest-reply", desc: "AI-powered reply suggestion" },
+        { method: "POST", path: "/api/reviews/{id}/reply", desc: "Post a review reply" },
     ];
 
     return (

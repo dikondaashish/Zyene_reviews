@@ -19,13 +19,14 @@ export default async function BillingPage() {
     const { data: members } = await supabase
         .from("organization_members")
         .select(`
+            role,
             organizations (
                 id,
                 name,
                 plan,
                 stripe_customer_id,
                 stripe_subscription_id,
-                subscription_status
+                plan_status
             )
         `)
         .eq("user_id", user.id);
@@ -52,15 +53,39 @@ export default async function BillingPage() {
         checkLimit(org.id, "businesses"),
     ]);
 
+    // Get Organization Owner Details
+    const { data: ownerMember } = await supabase
+        .from("organization_members")
+        .select("user_id")
+        .eq("organization_id", org.id)
+        .eq("role", "ORG_OWNER")
+        .single();
+
+    let ownerEmail = "Unknown";
+    if (ownerMember) {
+        const { data: ownerUser } = await supabase
+            .from("users")
+            .select("email")
+            .eq("id", ownerMember.user_id)
+            .single();
+        if (ownerUser) ownerEmail = ownerUser.email;
+    }
+
     // Determine current plan details
     const currentPlanKey = org.plan || "free";
     const currentPlan = PLANS[currentPlanKey] || PLANS.free;
 
+    // Determine if current user is an owner (can manage billing)
+    const userRole = member?.role || "";
+    const isOwner = userRole === "ORG_OWNER" || userRole === "STORE_OWNER";
+
     return (
         <BillingClient
+            orgName={org.name}
+            billingEmail={ownerEmail}
             currentPlanKey={currentPlanKey}
             currentPlan={currentPlan}
-            planStatus={org.subscription_status || "active"}
+            planStatus={org.plan_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
             usage={{
                 reviewRequests: { used: reviewRequests.current, max: reviewRequests.max },
@@ -68,6 +93,7 @@ export default async function BillingPage() {
                 businesses: { used: businesses.current, max: businesses.max },
             }}
             plans={PLANS}
+            isOwner={isOwner}
         />
     );
 }

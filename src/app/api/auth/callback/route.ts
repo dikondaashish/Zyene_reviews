@@ -5,24 +5,43 @@ import { nanoid } from "nanoid";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
 
 export async function GET(request: Request) {
+    console.log("DEBUG: Auth Callback HIT - URL:", request.url);
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/dashboard";
 
     if (code) {
         const supabase = await createClient();
+        const admin = createAdminClient();
+        
+        await admin.from("debug_logs").insert({ message: "Auth Callback Started", data: { code: code.substring(0, 5) + "..." } });
 
+        console.log("DEBUG: Exchanging code for session...");
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+        
+        if (error) {
+             console.error("DEBUG: Session Exchange Error:", error);
+             await admin.from("debug_logs").insert({ message: "Session Exchange Error", data: error });
+        }
 
         if (!error && data.user) {
+            console.log("DEBUG: Session Exchanged. User ID:", data.user.id);
+            console.log("DEBUG: User Metadata:", JSON.stringify(data.user.user_metadata));
+            await admin.from("debug_logs").insert({ 
+                message: "Session Token Exchanged", 
+                data: { user_id: data.user.id, metadata: data.user.user_metadata } 
+            });
+            
             // Check if user record exists in our public.users table
-            const admin = createAdminClient();
 
             const { data: existingUser } = await admin
                 .from("users")
                 .select("id")
                 .eq("id", data.user.id)
                 .single();
+            
+            console.log("DEBUG: Existing user check:", existingUser ? "Found" : "Not Found");
+            let inviteProcessed = false;
 
             if (!existingUser) {
                 // New user — provision their account
@@ -30,6 +49,7 @@ export async function GET(request: Request) {
                     data.user.user_metadata?.full_name ||
                     data.user.email?.split("@")[0] ||
                     "User";
+                console.log("DEBUG: Provisioning new user:", fullName);
                 const email = data.user.email!;
                 const slug = `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
 
@@ -45,64 +65,140 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                // 2. Create default organization
-                const { data: org, error: orgError } = await admin
-                    .from("organizations")
-                    .insert({
-                        name: `${fullName}'s Restaurant`,
-                        slug: slug,
-                        type: "business",
-                    })
-                    .select() // Select all fields to access name and slug
-                    .single();
+                // CHECK FOR INVITE
+                const inviteToken = data.user.user_metadata?.invite;
+                let targetOrgId: string | null = null;
 
-                if (orgError) {
-                    console.error("Failed to create organization:", orgError);
-                    return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                if (inviteToken) {
+                    console.log("DEBUG: Processing Invite Token:", inviteToken);
+                    await admin.from("debug_logs").insert({ message: "Processing Invite Token", data: { inviteToken } });
+                    
+                    // Fetch invitation
+                    const { data: invite, error: inviteFetchError } = await admin
+                        .from("invitations")
+                        .select("*")
+                        .eq("token", inviteToken)
+                        .single();
+
+                    if (invite && !inviteFetchError) {
+                         await admin.from("debug_logs").insert({ message: "Invite Found", data: invite });
+                        // Check expiry
+                        if (new Date(invite.expires_at) > new Date()) {
+                            // Valid Invite - Add to Org
+                             const { error: memberError } = await admin
+                                .from("organization_members")
+                                .insert({
+                                    organization_id: invite.organization_id,
+                                    user_id: data.user.id,
+                                    role: invite.role.startsWith("STORE") ? "ORG_EMPLOYEE" : invite.role, 
+                                    status: "active",
+                                });
+
+                            if (!memberError) {
+                                // If Store Role, add to business_members
+                                if (invite.business_id && invite.role.startsWith("STORE")) {
+                                     await admin
+                                        .from("business_members")
+                                        .insert({
+                                            business_id: invite.business_id,
+                                            user_id: data.user.id,
+                                            role: invite.role,
+                                            status: "active"
+                                        });
+                                }
+
+                                // Delete invitation
+                                await admin.from("invitations").delete().eq("id", invite.id);
+                                
+                                inviteProcessed = true;
+                                targetOrgId = invite.organization_id;
+                                console.log("DEBUG: Invite processed successfully. User added to org:", invite.organization_id);
+                                await admin.from("debug_logs").insert({ message: "Invite Processed Success", data: { orgId: invite.organization_id } });
+                            } else {
+                                console.error("Failed to add invited user to org:", memberError);
+                                await admin.from("debug_logs").insert({ message: "Member Insert Failed", data: memberError });
+                            }
+                        } else {
+                            console.error("DEBUG: Invite expired");
+                            await admin.from("debug_logs").insert({ message: "Invite Expired", data: { expires_at: invite.expires_at } });
+                        }
+                    } else {
+                        console.error("DEBUG: Invite not found or error:", inviteFetchError);
+                        await admin.from("debug_logs").insert({ message: "Invite Not Found or Error", data: inviteFetchError });
+                    }
+                } else {
+                    await admin.from("debug_logs").insert({ message: "No Invite Token in Metadata", data: {} });
                 }
 
-                // 3. Create default business (Critical for Onboarding Check)
-                const { error: businessError } = await admin
-                    .from("businesses")
-                    .insert({
-                        organization_id: org.id,
-                        name: org.name,
-                        slug: org.slug,
-                        country: "US", // Default
-                        timezone: "UTC", // Default
-                        category: "retail", // Default
-                        status: "active",
-                    });
+                if (!inviteProcessed) {
+                    await admin.from("debug_logs").insert({ message: "Fallback to New Org Creation", data: {} });
+                    // Default Flow: Create new Organization
+                    const { data: org, error: orgError } = await admin
+                        .from("organizations")
+                        .insert({
+                            name: `${fullName}'s Restaurant`,
+                            slug: slug,
+                            type: "business",
+                            created_at: new Date().toISOString(), // Explicitly set created_at for sorting log? No, DB handles it.
+                        })
+                        .select() // Select all fields to access name and slug
+                        .single();
 
-                if (businessError) {
-                    console.error("Failed to create business:", businessError);
-                    return NextResponse.redirect(`${origin}/login?error=setup_failed`);
-                }
+                    if (orgError) {
+                        console.error("Failed to create organization:", orgError);
+                        return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                    }
+                    
+                    targetOrgId = org.id;
 
-                // 4. Add user as organization owner
-                const { error: memberError } = await admin
-                    .from("organization_members")
-                    .insert({
-                        organization_id: org.id,
-                        user_id: data.user.id,
-                        role: "owner",
-                        status: "active",
-                    });
+                    // 3. Create default business (Critical for Onboarding Check)
+                    const { error: businessError } = await admin
+                        .from("businesses")
+                        .insert({
+                            organization_id: org.id,
+                            name: org.name,
+                            slug: org.slug,
+                            country: "US", // Default
+                            timezone: "UTC", // Default
+                            category: "retail", // Default
+                            status: "active",
+                        });
 
-                if (memberError) {
-                    console.error("Failed to create org membership:", memberError);
-                    return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                    if (businessError) {
+                        console.error("Failed to create business:", businessError);
+                        return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                    }
+
+                    // 4. Add user as organization owner
+                    const { error: memberError } = await admin
+                        .from("organization_members")
+                        .insert({
+                            organization_id: org.id,
+                            user_id: data.user.id,
+                            role: "ORG_OWNER",
+                            status: "active",
+                        });
+
+                    if (memberError) {
+                        console.error("Failed to create org membership:", memberError);
+                        return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                    }
                 }
 
                 // 4. Log the event
-                await admin.from("events").insert({
-                    organization_id: org.id,
-                    user_id: data.user.id,
-                    event_type: "user.signed_up",
-                    entity_type: "user",
-                    entity_id: data.user.id,
-                    metadata: { email, full_name: fullName },
-                });
+
+                // 4. Log the event
+                // 4. Log the event
+                if (targetOrgId) {
+                    await admin.from("events").insert({
+                        organization_id: targetOrgId,
+                        user_id: data.user.id,
+                        event_type: "user.signed_up",
+                        entity_type: "user",
+                        entity_id: data.user.id,
+                        metadata: { email, full_name: fullName, invited: inviteProcessed },
+                    });
+                }
 
                 // 5. Send Welcome Email (Async / Fire & Forget)
                 const { sendEmail } = await import("@/lib/resend/send-email");
@@ -121,7 +217,10 @@ export async function GET(request: Request) {
                 }).catch(err => console.error("Failed to send welcome email:", err));
 
                 // Redirect new users to onboarding
-                return NextResponse.redirect(`${origin}/onboarding`);
+                // return NextResponse.redirect(`${origin}/onboarding`);
+                
+                // FALLTHROUGH: Don't return yet! We want to link the GBP account below.
+                // We'll redirect to /onboarding at the end.
             }
 
             // Existing user (or newly created step skipped? No, wait)
@@ -129,13 +228,17 @@ export async function GET(request: Request) {
             // We need to check if the current login is creating a GBP link.
             // Since we are redirecting to dashboard, we should ensure the link exists.
 
-            // Check if user is signing in via Google
-            // Note: .provider might be 'google' inside identities or app_metadata
+            console.log("DEBUG: Investigating Google Provider Connection");
+            console.log("DEBUG: App Metadata Provider:", data.user.app_metadata.provider);
+            console.log("DEBUG: Identities Providers:", data.user.identities?.map(id => id.provider));
+            
             const isGoogle = data.user.app_metadata.provider === 'google' ||
                 data.user.identities?.some(id => id.provider === 'google');
+            
+            console.log("DEBUG: isGoogle detected:", isGoogle);
 
             if (isGoogle) {
-                console.log("DEBUG: Google Provider Detected");
+                console.log("DEBUG: Google Provider Flow Started");
                 console.log("DEBUG: Session Keys:", Object.keys(data.session || {}));
                 console.log("DEBUG: Provider Token Present?", !!data.session?.provider_token);
                 console.log("DEBUG: Refresh Token Present?", !!data.session?.provider_refresh_token);
@@ -181,6 +284,9 @@ export async function GET(request: Request) {
                     const identityToken = googleIdentity?.identity_data?.provider_token;
                     // @ts-ignore
                     const identityRefreshToken = googleIdentity?.identity_data?.provider_refresh_token;
+
+                    console.log("DEBUG: Token Sources - Session Token:", !!sessionToken, "Session RT:", !!sessionRefreshToken);
+                    console.log("DEBUG: Token Sources - Identity Token:", !!identityToken, "Identity RT:", !!identityRefreshToken);
 
                     const finalAccessToken = sessionToken || identityToken;
                     const finalRefreshToken = sessionRefreshToken || identityRefreshToken;
@@ -285,11 +391,15 @@ export async function GET(request: Request) {
             }
 
             // Existing user — redirect to dashboard
+            // Redirect Logic
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            // If user existed OR was just invited/processed, go to dashboard. Only true new org creators go to onboarding.
+            const destination = (existingUser || inviteProcessed) ? "/dashboard" : "/onboarding";
+
             if (rootDomain.includes("localhost")) {
-                return NextResponse.redirect(`http://${rootDomain}/dashboard`);
+                return NextResponse.redirect(`http://${rootDomain}${destination}`);
             } else {
-                return NextResponse.redirect(`http://dashboard.${rootDomain}`);
+                return NextResponse.redirect(`http://dashboard.${rootDomain}${destination === "/dashboard" ? "" : destination}`);
             }
         }
     }

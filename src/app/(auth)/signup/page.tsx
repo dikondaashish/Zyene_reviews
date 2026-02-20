@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2 } from "lucide-react";
@@ -25,6 +26,9 @@ export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    const searchParams = useSearchParams();
+    const inviteToken = searchParams.get("invite");
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setIsLoading(true);
@@ -43,6 +47,7 @@ export default function SignupPage() {
             options: {
                 data: {
                     full_name: fullName,
+                    invite: inviteToken, // Pass invite token to metadata
                 },
                 emailRedirectTo: `${window.location.origin}/api/auth/callback`,
             },
