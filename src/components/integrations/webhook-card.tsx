@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 export function WebhookCard({ businessId }: { businessId: string }) {
     const [copied, setCopied] = useState(false);
-    const webhookUrl = `https://dashboard.zyeneratings.com/api/webhooks/generic?key=${businessId}`;
+    const webhookUrl = `https://dashboard.zyene.in/api/webhooks/generic?key=${businessId}`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(webhookUrl);

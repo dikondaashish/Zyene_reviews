@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
 
     const cookieOptions = {
-        domain: rootDomain.includes("localhost") ? "localhost" : `.${rootDomain.split(":")[0]}`,
+        domain: rootDomain.includes("localhost") || rootDomain.includes("127.0.0.1") ? undefined : `.${rootDomain.split(":")[0]}`,
         path: "/",
         sameSite: "lax" as const,
         secure: process.env.NODE_ENV === "production",
@@ -145,6 +145,7 @@ export async function middleware(request: NextRequest) {
             "/login",
             "/signup",
             "/forgot-password",
+            "/docs",
             "/r/" // Keep legacy paths working
         ];
 

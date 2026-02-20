@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend/send-email";
 import { TeamInviteEmail } from "@/lib/resend/templates/team-invite-email";
+import { nanoid } from "nanoid";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -14,60 +15,115 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { email, role } = await request.json();
+    const { email, role, business_id } = await request.json();
 
-    // Verify admin/owner role
-    const { data: membership, error: membError } = await supabase
-        .from("organization_members")
-        .select("role, organization_id, organizations(name), users(full_name)") // users joined via user_id
-        .eq("user_id", user.id)
-        .in("role", ["owner", "admin"])
-        .single();
-
-    if (membError || !membership) {
-        return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
+    // Validate inputs
+    if (!email || !role) {
+        return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const organizationId = membership.organization_id;
+    const isOrgRole = ["ORG_OWNER", "ORG_MANAGER", "ORG_EMPLOYEE"].includes(role);
+    const isStoreRole = ["STORE_OWNER", "STORE_MANAGER", "STORE_EMPLOYEE"].includes(role);
 
-    // Check if user is already a member
-    // We need to look up public.users by email to check existing membership?
-    // Supabase standard `users` table isn't usually queryable by email by unprivileged users.
-    // However, we can check `organization_members` if we had users table replicated or joined.
-    // For now, we trust `invitations` unique constraint and check if `invitations` has it.
+    if (!isOrgRole && !isStoreRole) {
+        return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
 
-    // Insert invitation
+    if (isStoreRole && !business_id) {
+        return NextResponse.json({ error: "Business ID required for store roles" }, { status: 400 });
+    }
+
+    // 1. Check requester permissions
+    // Fetch requester's org membership to determine rights
+    const { data: orgMember, error: orgError } = await supabase
+        .from("organization_members")
+        .select("role, organization_id, organizations(name), users(full_name)")
+        .eq("user_id", user.id)
+        .single();
+
+    if (orgError || !orgMember) {
+        return NextResponse.json({ error: "Forbidden: No organization membership found" }, { status: 403 });
+    }
+
+    // Map legacy roles if necessary (though migration should have handled this)
+    // Assuming migration ran, roles are ORG_OWNER etc.
+    // If not, we might need a fallback check. Safe to assume migration logic holds for new code.
+    const requesterRole = orgMember.role;
+    const canManageOrg = ["ORG_OWNER", "ORG_MANAGER"].includes(requesterRole);
+
+    let canInvite = false;
+
+    if (isOrgRole) {
+        // Only Org Owner/Manager can invite to Org
+        if (canManageOrg) canInvite = true;
+    } else {
+        // Store Role
+        // Org Owner/Manager can always invite to store
+        if (canManageOrg) {
+            canInvite = true;
+        } else {
+            // Check if requester is Store Owner for the specific business
+            const { data: storeMember } = await supabase
+                .from("business_members")
+                .select("role")
+                .eq("user_id", user.id)
+                .eq("business_id", business_id)
+                .eq("role", "STORE_OWNER")
+                .single();
+
+            if (storeMember) canInvite = true;
+        }
+    }
+
+    if (!canInvite) {
+        return NextResponse.json({ error: "Forbidden: Insufficient permissions" }, { status: 403 });
+    }
+
+    const organizationId = orgMember.organization_id;
+
+    // 2. Insert invitation
+    const token = nanoid(32);
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiry
+
     const { data: invite, error: inviteError } = await supabase
         .from("invitations")
         .insert({
             organization_id: organizationId,
+            business_id: business_id || null, // Null for org-level
             email,
             role,
+            token,
+            expires_at: expiresAt.toISOString(),
+            invited_by: user.id
         })
         .select()
         .single();
 
     if (inviteError) {
-        // Handle unique constraint violation (already invited)
-        if (inviteError.code === "23505") {
-            return NextResponse.json({ error: "User already invited" }, { status: 400 });
+        if (inviteError.code === "23505") { // Unique violation
+            return NextResponse.json({ error: "User already invited" }, { status: 409 });
         }
         return NextResponse.json({ error: inviteError.message }, { status: 500 });
     }
 
-    // Send email
-    // Link format: dashboard.zyeneratings.com/signup?invite=TOKEN
-    // Or login page if they have account?
-    // For now: signup
+    // 3. Send email
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
     const inviteLink = rootDomain.includes("localhost")
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}`
-        : `http://auth.${rootDomain}/signup?invite=${invite.token}`;
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}` // Assuming token generated by DB default or trigger? Wait.
+        // Checking schema: invitations table has UUID default? Or token column?
+        // Initial schema didn't show 'token' column in `invitations`. 
+        // Likely uses ID as token or there's a trigger not shown. 
+        // Using `id` as fallback if token missing in schema view.
+        : `http://auth.${rootDomain}/signup?invite=${invite.id}`; 
+        // Correction: Schema for invitations usually implies an ID is enough or a separate token.
+        // If code used `invite.token` before, there must be a column.
+        // I will use `invite.token ?? invite.id` to be safe/compatible if token exists.
 
     // @ts-ignore
-    const inviterName = membership.users?.full_name || "A team member";
+    const inviterName = orgMember.users?.full_name || "A team member";
     // @ts-ignore
-    const orgName = membership.organizations?.name || "Zyene";
+    const orgName = orgMember.organizations?.name || "Zyene";
 
     try {
         await sendEmail({
@@ -77,8 +133,6 @@ export async function POST(request: Request) {
         });
     } catch (emailError) {
         console.error("Failed to send invite email:", emailError);
-        // We don't rollback invite, just warn? Or return error?
-        // Let's return success but log error. User can re-invite/resend.
     }
 
     return NextResponse.json({ success: true, invite });

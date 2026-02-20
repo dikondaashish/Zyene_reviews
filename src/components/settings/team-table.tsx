@@ -25,17 +25,19 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-interface Member {
-    id: string;
+export interface Member {
+    id: string; // member id
     role: string;
     type: "member" | "invite";
+    scope: "org" | "store";
     user?: {
         full_name: string;
         email: string;
         avatar_url?: string;
     };
     email?: string; // For invites
-    status: "active" | "invited";
+    status: "active" | "invited" | "suspended";
+    business_name?: string; // For store scope
 }
 
 interface TeamTableProps {
@@ -48,15 +50,16 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     const router = useRouter();
     const [isLoadingId, setIsLoadingId] = useState<string | null>(null);
 
-    const canManage = ["owner", "admin"].includes(currentUserRole);
+    const canManageOrg = ["ORG_OWNER", "ORG_MANAGER"].includes(currentUserRole);
+    // Store owners can manage their store employees? Not implemented in UI logic yet, assuming Org Admin manages for now.
 
-    const handleRoleChange = async (memberId: string, newRole: string) => {
-        setIsLoadingId(memberId);
+    const handleRoleChange = async (member: Member, newRole: string) => {
+        setIsLoadingId(member.id);
         try {
-            const response = await fetch(`/api/team/${memberId}`, {
+            const response = await fetch(`/api/team/${member.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role: newRole }),
+                body: JSON.stringify({ role: newRole, type: member.scope }),
             });
 
             if (!response.ok) throw new Error("Failed to update role");
@@ -69,11 +72,11 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
         }
     };
 
-    const handleRemove = async (memberId: string, type: "member" | "invite") => {
+    const handleRemove = async (member: Member) => {
         if (!confirm("Are you sure you want to remove this member?")) return;
-        setIsLoadingId(memberId);
+        setIsLoadingId(member.id);
         try {
-            const response = await fetch(`/api/team/${memberId}?type=${type}`, {
+            const response = await fetch(`/api/team/${member.id}?type=${member.type}&scope=${member.scope}`, {
                 method: "DELETE",
             });
 
@@ -97,12 +100,14 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     };
 
     const getRoleBadgeColor = (role: string) => {
-        switch (role) {
-            case "owner": return "default"; // purple-ish usually default primary
-            case "admin": return "secondary"; // blue-ish
-            default: return "outline"; // gray
-        }
+        if (role.includes("OWNER")) return "default";
+        if (role.includes("MANAGER")) return "secondary";
+        return "outline";
     };
+
+    const formatRole = (role: string) => {
+        return role.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
 
     return (
         <div className="rounded-md border">
@@ -110,14 +115,15 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                 <TableHeader>
                     <TableRow>
                         <TableHead>Member</TableHead>
-                        <TableHead>Role</TableHead>
+                        <TableHead>Scope</TableHead>
+                         <TableHead>Role</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {members.map((member) => (
-                        <TableRow key={member.id}>
+                        <TableRow key={`${member.scope}-${member.id}`}>
                             <TableCell className="flex items-center gap-3">
                                 <Avatar className="h-9 w-9">
                                     <AvatarImage src={member.user?.avatar_url} />
@@ -137,8 +143,18 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Badge variant={getRoleBadgeColor(member.role) as any} className="capitalize">
-                                    {member.role}
+                                <div className="flex flex-col">
+                                    <Badge variant="outline" className="w-fit">
+                                        {member.scope === "org" ? "Organization" : "Store"}
+                                    </Badge>
+                                    {member.business_name && (
+                                         <span className="text-xs text-muted-foreground mt-1">{member.business_name}</span>
+                                    )}
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <Badge variant={getRoleBadgeColor(member.role) as any}>
+                                    {formatRole(member.role)}
                                 </Badge>
                             </TableCell>
                             <TableCell>
@@ -147,7 +163,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                 </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                                {canManage ? (
+                                {canManageOrg ? (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="h-8 w-8 p-0" disabled={isLoadingId === member.id}>
@@ -158,13 +174,20 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                             {member.type === "member" && (
-                                                <>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "admin")}>Make Admin</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>Make Member</DropdownMenuItem>
-                                                </>
+                                                member.scope === "org" ? (
+                                                    <>
+                                                        <DropdownMenuItem onClick={() => handleRoleChange(member, "ORG_MANAGER")}>Make Manager</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleRoleChange(member, "ORG_EMPLOYEE")}>Make Employee</DropdownMenuItem>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <DropdownMenuItem onClick={() => handleRoleChange(member, "STORE_MANAGER")}>Make Manager</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleRoleChange(member, "STORE_EMPLOYEE")}>Make Employee</DropdownMenuItem>
+                                                    </>
+                                                )
                                             )}
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem className="text-red-600" onClick={() => handleRemove(member.id, member.type)}>
+                                            <DropdownMenuItem className="text-red-600" onClick={() => handleRemove(member)}>
                                                 Remove
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>

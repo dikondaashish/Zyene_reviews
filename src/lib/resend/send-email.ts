@@ -15,7 +15,7 @@ export async function sendEmail({ to, subject, html }: SendEmailProps) {
 
     try {
         const { data, error } = await resend.emails.send({
-            from: "Zyene Ratings <notifications@zyeneratings.com>", // Update with verified domain or default
+            from: "Zyene Ratings <notifications@zyene.in>", // Update with verified domain or default
             to,
             subject,
             html,

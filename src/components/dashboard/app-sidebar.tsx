@@ -13,6 +13,7 @@ import {
     Send,
     Settings,
     User,
+    Users,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -75,6 +76,11 @@ const settingsItems = [
         title: "General",
         url: "/settings",
         icon: User,
+    },
+    {
+        title: "Team",
+        url: "/settings/team",
+        icon: Users,
     },
     {
         title: "Notifications",

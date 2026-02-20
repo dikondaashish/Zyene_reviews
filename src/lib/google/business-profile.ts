@@ -23,6 +23,12 @@ export interface GoogleLocation {
         newReviewUri?: string;
         placeId?: string;
     };
+    categories?: {
+        primaryCategory?: {
+            displayName: string;
+        };
+    };
+    locationName?: string; // Sometimes returned as locationName? Check API docs. Usually it's title.
 }
 
 
@@ -52,10 +58,11 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3, ba
 
         if (response.status === 429) {
             if (retries > 0) {
-                // Add jitter: delay = random(0, backoff)
-                const jitter = Math.random() * backoff;
-                console.warn(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
-                await new Promise(resolve => setTimeout(resolve, jitter));
+                // Enforce minimum wait + jitter
+                // backoff = 2000, 4000, 8000
+                const delay = backoff + (Math.random() * 1000); 
+                console.warn(`[Google API] Rate limit hit (429). Retrying in ${Math.round(delay)}ms... (Attempts left: ${retries})`);
+                await new Promise(resolve => setTimeout(resolve, delay));
                 return fetchWithRetry(url, options, retries - 1, backoff * 2);
             } else {
                 console.error("[Google API] Rate limit exceeded after multiple retries.");

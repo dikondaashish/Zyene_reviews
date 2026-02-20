@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Filter, MessageSquare, Lock } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
+import { getBusinessContext } from "@/lib/business-context";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -18,15 +19,9 @@ export default async function ReviewsPage(props: {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
 
-    // 1. Get Business ID
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`organizations(businesses(id))`)
-        .eq("user_id", user.id)
-        .single();
-
-    // @ts-ignore
-    const businessId = memberData?.organizations?.businesses?.[0]?.id;
+    // 1. Get Business Context
+    const { activeBusiness } = await getBusinessContext(user.id);
+    const businessId = activeBusiness?.id;
 
     if (!businessId) {
         return (

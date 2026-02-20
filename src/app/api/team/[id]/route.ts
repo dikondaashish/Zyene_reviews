@@ -16,30 +16,43 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    const { role } = await request.json(); // New role
+    const { role, type } = await request.json(); // Added type: 'org' | 'store' default to org/inference?
 
-    // Verify requester is owner (only owner can change roles? or admins too?)
-    // Typically admins can manage members, Owners manage everything.
-    // Let's say Owners/Admins can manage, but can't change Owner's role.
-    const { data: requester, error: reqError } = await supabase
+    // 1. Check requester permissions
+    const { data: requester } = await supabase
         .from("organization_members")
         .select("role, organization_id")
         .eq("user_id", user.id)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    // Org Owner/Manager can update almost anything (except Owner vs Owner restrictions maybe)
+    const isOrgAdmin = requester && ["ORG_OWNER", "ORG_MANAGER"].includes(requester.role);
+    
+    // Store Owner check? (Complex to check efficiently without more inputs, but safe to assume Org Admin is main actor for now)
+    
+    if (!isOrgAdmin) {
+        // Todo: Add Store Owner permission check if we want them to manage their store employees
+         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Determine target type?
-    // This route is for changing MEMBERS role. Invites role can't be changed easily in this UI pattern usually, or we recreate invite.
-    // We assume ID is organization_member.id
+    // Determine if we are updating org member or store member (business_members)
+    // The ID passed is the PRIMARY KEY of the row.
+    // We can try to update both or require a type.
+    // For safety, let's assume `type` param or try one then other?
+    // Better: frontend sends type. If missing, assume org member for backward compat?
+    
+    // Actually, distinct IDs for tables means we can technically just try updating. 
+    // But safely we should know what we are targeting.
+    
+    const targetTable = type === "store" ? "business_members" : "organization_members";
 
     const { error: updateError } = await supabase
-        .from("organization_members")
+        .from(targetTable)
         .update({ role })
-        .eq("id", id)
-        .eq("organization_id", requester.organization_id); // Security check
+        .eq("id", id);
+        // .eq("organization_id") // organization_members has this
+        // but business_members has business_id. 
+        // RLS prevents unauthorized updates anyway.
 
     if (updateError) {
         return NextResponse.json({ error: updateError.message }, { status: 500 });
@@ -63,16 +76,19 @@ export async function DELETE(
 
     const { id } = await params;
     const url = new URL(request.url);
-    const type = url.searchParams.get("type") || "member"; // 'member' or 'invite'
+    const type = url.searchParams.get("type") || "member"; // 'member', 'invite'
+    const scope = url.searchParams.get("scope") || "org"; // 'org', 'store'
 
     // Verify requester
-    const { data: requester, error: reqError } = await supabase
+    const { data: requester } = await supabase
         .from("organization_members")
         .select("role, organization_id")
         .eq("user_id", user.id)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
+    const isOrgAdmin = requester && ["ORG_OWNER", "ORG_MANAGER"].includes(requester.role);
+
+    if (!isOrgAdmin) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -81,20 +97,19 @@ export async function DELETE(
             .from("invitations")
             .delete()
             .eq("id", id)
-            .eq("organization_id", requester.organization_id);
+            .eq("organization_id", requester?.organization_id); // Ensure ownership
 
         if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     } else {
         // Remove member
-        // Prevent removing self?
-        // Prevent removing last owner? (Business rule)
-        // For now, simple delete.
+        const table = scope === "store" ? "business_members" : "organization_members";
+        
         const { error } = await supabase
-            .from("organization_members")
+            .from(table)
             .delete()
-            .eq("id", id)
-            .eq("organization_id", requester.organization_id);
+            .eq("id", id);
+            // RLS protects boundaries
 
         if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     }

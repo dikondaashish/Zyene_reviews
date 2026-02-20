@@ -1,76 +1,106 @@
-"use client"
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { redirect } from "next/navigation"
+import { nanoid } from "nanoid"
+import { OnboardingFlow } from "./onboarding-flow"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { createClient } from "@/lib/supabase/client"
-import { Store, LogOut } from "lucide-react"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+export default async function OnboardingPage() {
+    const supabase = await createClient()
 
-export default function OnboardingPage() {
-    const supabase = createClient()
-    const router = useRouter()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
 
-    const handleConnectGoogle = async () => {
-        try {
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
-            const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/api/auth/callback?next=/dashboard`
-                : `http://auth.${rootDomain}/api/auth/callback?next=/dashboard`;
+    if (!user) {
+        return redirect("/login")
+    }
 
-            // In production, user must configure Google Provider in Supabase
-            const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-                    redirectTo,
-                    queryParams: {
-                        access_type: 'offline',
-                        prompt: 'consent',
-                    },
-                },
-            })
-            if (error) throw error
-        } catch (error: any) {
-            toast.error("Failed to initiate Google connection", {
-                description: error.message
-            })
+    const admin = createAdminClient()
+
+    // --- 1. Ensure public.users record exists ---
+    const { data: existingUser } = await admin
+        .from("users")
+        .select("id")
+        .eq("id", user.id)
+        .single()
+
+    if (!existingUser) {
+        const fullName =
+            user.user_metadata?.full_name ||
+            user.email?.split("@")[0] ||
+            "User"
+
+        await admin.from("users").insert({
+            id: user.id,
+            email: user.email!,
+            full_name: fullName,
+        })
+    }
+
+    // --- 2. Check if user already has an org membership ---
+    const { data: memberships } = await admin
+        .from("organization_members")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1)
+
+    if (memberships && memberships.length > 0) {
+        // User is already in an org, skip onboarding
+        return redirect("/dashboard")
+    }
+
+    // --- 3. Process invite if present in user metadata ---
+    const inviteToken = user.user_metadata?.invite
+
+    if (inviteToken) {
+        const { data: invite, error: inviteFetchError } = await admin
+            .from("invitations")
+            .select("*")
+            .eq("token", inviteToken)
+            .single()
+
+        if (invite && !inviteFetchError) {
+            // Check expiry
+            if (new Date(invite.expires_at) > new Date()) {
+                // Add to organization
+                const { error: memberError } = await admin
+                    .from("organization_members")
+                    .insert({
+                        organization_id: invite.organization_id,
+                        user_id: user.id,
+                        role: invite.role.startsWith("STORE") ? "ORG_EMPLOYEE" : invite.role,
+                        status: "active",
+                    })
+
+                if (!memberError) {
+                    // If store role, also add to business_members
+                    if (invite.business_id && invite.role.startsWith("STORE")) {
+                        await admin
+                            .from("business_members")
+                            .insert({
+                                business_id: invite.business_id,
+                                user_id: user.id,
+                                role: invite.role,
+                                status: "active",
+                            })
+                    }
+
+                    // Delete the invitation
+                    await admin.from("invitations").delete().eq("id", invite.id)
+
+                    // Success — go to dashboard
+                    return redirect("/dashboard")
+                } else {
+                    console.error("Failed to add invited user to org:", memberError)
+                }
+            } else {
+                console.error("Invite expired for token:", inviteToken)
+            }
+        } else {
+            console.error("Invite not found for token:", inviteToken, inviteFetchError)
         }
     }
 
-    const handleSignOut = async () => {
-        await supabase.auth.signOut()
-        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
-        const loginUrl = rootDomain.includes("localhost")
-            ? `http://${rootDomain}/login`
-            : `http://auth.${rootDomain}/login`;
-
-        // Redirect to login with error param
-        window.location.href = `${loginUrl}?error=account_not_created`
-    }
-
-    return (
-        <div className="container max-w-lg">
-            <Card>
-                <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                        <Store className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <CardTitle className="text-2xl">Connect Google Business Profile</CardTitle>
-                    <CardDescription>
-                        To activate your account and start managing reviews, you must connect a valid Google Business Profile.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleConnectGoogle}>
-                        Connect Google Business Profile
-                    </Button>
-                    <Button variant="ghost" className="w-full text-red-600 hover:text-red-700 hover:bg-red-50" onClick={handleSignOut}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Cancel & Sign Out
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
-    )
+    // --- 4. No invite or invite failed — show normal onboarding (Connect Google) ---
+    return <OnboardingFlow />
 }

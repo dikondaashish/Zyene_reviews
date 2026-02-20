@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { SendRequestDialog } from "./send-request-dialog";
+import { getBusinessContext } from "@/lib/business-context";
 
 export default async function RequestsPage({
     searchParams,
@@ -45,14 +46,11 @@ export default async function RequestsPage({
         return redirect("/login");
     }
 
-    // specific business for this user
-    const { data: business } = await supabase
-        .from("businesses")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
+    // Get business through org membership (same pattern as dashboard/reviews)
+    const { activeBusiness } = await getBusinessContext(user.id);
+    const business = activeBusiness;
 
-    if (!business) {
+    if (!business?.id) {
         return <div>Business not found. Please contact support.</div>;
     }
 

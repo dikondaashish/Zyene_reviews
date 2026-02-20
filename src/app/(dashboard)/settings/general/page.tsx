@@ -8,6 +8,7 @@ import { ProfileForm } from "@/components/settings/profile-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
 
 import { Separator } from "@/components/ui/separator";
+import { getBusinessContext } from "@/lib/business-context";
 
 export default async function GeneralSettingsPage() {
     const supabase = await createClient();
@@ -21,19 +22,7 @@ export default async function GeneralSettingsPage() {
     }
 
     // Fetch user's business
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organization_id,
-            organizations (
-                businesses (*)
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
-
-    // @ts-ignore
-    const business = memberData?.organizations?.businesses?.[0];
+    const { activeBusiness: business } = await getBusinessContext(user.id);
 
     if (!business) {
         return (

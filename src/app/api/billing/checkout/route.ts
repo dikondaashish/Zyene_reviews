@@ -44,12 +44,39 @@ export async function POST(request: Request) {
 
         // Create Stripe customer if needed
         if (!stripeCustomerId) {
+            // Fetch Organization Owner to use THEIR email for billing
+            const { data: ownerMember } = await admin
+                .from("organization_members")
+                .select("user_id")
+                .eq("organization_id", member.organization_id)
+                .eq("role", "ORG_OWNER")
+                .single();
+
+            let billingEmail = user.email; // Default to current user if owner not found (fallback)
+            let billingUserId = user.id;
+
+            if (ownerMember) {
+                // Fetch owner's email from public users table (or auth if possible via admin)
+                const { data: ownerUser } = await admin
+                    .from("users")
+                    .select("email")
+                    .eq("id", ownerMember.user_id)
+                    .single();
+                
+                if (ownerUser && ownerUser.email) {
+                    billingEmail = ownerUser.email;
+                    billingUserId = ownerMember.user_id;
+                }
+            }
+
+            console.log(`Creating Stripe Customer for Org ${org.name} with email ${billingEmail}`);
+
             const customer = await stripe.customers.create({
-                email: user.email,
+                email: billingEmail,
                 name: org.name,
                 metadata: {
                     organization_id: member.organization_id,
-                    supabase_user_id: user.id,
+                    supabase_user_id: billingUserId,
                 },
             });
             stripeCustomerId = customer.id;
