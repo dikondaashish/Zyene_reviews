@@ -43,6 +43,18 @@ export default async function ReviewsPage(props: {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
+    // Always fetch both counts for tab labels
+    const [{ count: publicCount }, { count: privateCount }] = await Promise.all([
+        supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", businessId),
+        supabase
+            .from("private_feedback")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", businessId),
+    ]);
+
     let reviews = [], count = 0;
     let totalPages = 0;
 
@@ -135,12 +147,12 @@ export default async function ReviewsPage(props: {
                 <div className="bg-slate-100 p-1 rounded-lg inline-flex">
                     <Link href="/reviews?type=public">
                         <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${type === 'public' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
-                            Public Reviews
+                            Public Reviews ({publicCount || 0})
                         </div>
                     </Link>
                     <Link href="/reviews?type=private">
                         <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${type === 'private' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
-                            Private Feedback
+                            Private Feedback ({privateCount || 0})
                             <Lock className="w-3 h-3" />
                         </div>
                     </Link>
