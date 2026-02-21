@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { SendRequestDialog } from "./send-request-dialog";
+import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function RequestsPage({
     searchParams,
@@ -45,20 +46,8 @@ export default async function RequestsPage({
         return redirect("/login");
     }
 
-    // Resolve business via user → organization_members → organizations → businesses
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                *,
-                businesses (*)
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
-
-    // @ts-ignore - Supabase types inference
-    const business = memberData?.organizations?.businesses?.[0];
+    // Get active business from context
+    const { business, organization } = await getActiveBusinessId();
 
     if (!business) {
         return <div>Business not found. Please contact support.</div>;

@@ -31,6 +31,7 @@ import Link from "next/link";
 import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
+import { getActiveBusinessId } from "@/lib/business-context";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -79,38 +80,18 @@ export default async function DashboardPage() {
         redirect("/login");
     }
 
-    // Fetch user's business and review platforms
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(
-            `
-            organizations (
-                *,
-                businesses (
-                    *,
-                    review_platforms (*)
-                )
-            )
-        `
-        )
-        .eq("user_id", user.id)
-        .single();
+    // Get active business from context (cookie-based)
+    const { business: activeBiz, organization } = await getActiveBusinessId();
 
-    // @ts-ignore - Supabase types inference
-    const organization = memberData?.organizations || {};
-    // @ts-ignore - Supabase types inference
-    // TODO: Ensure max_review_requests_per_month is always returned from the org query.
-    // Fallback to 5000 if the value is missing (e.g., for Growth/unlimited plans).
-    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 5000;
-
-    // @ts-ignore - Supabase types inference
-    const business = memberData?.organizations?.businesses?.[0] || {
+    const business = activeBiz || {
         id: null,
         total_reviews: 0,
         average_rating: 0,
         review_request_frequency_cap_days: 0,
         status: "inactive",
     };
+
+    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 5000;
 
     // @ts-ignore
     const googlePlatform = business?.review_platforms?.find(

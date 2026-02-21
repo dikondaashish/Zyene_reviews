@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { PublicProfileEditor } from "@/components/settings/public-profile-editor";
+import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function PublicProfilePage() {
     const supabase = await createClient();
@@ -11,19 +12,8 @@ export default async function PublicProfilePage() {
         redirect("/login");
     }
 
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organization_id,
-            organizations (
-                businesses (*)
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
-
-    // @ts-ignore
-    const business = memberData?.organizations?.businesses?.[0];
+    // Get active business from context
+    const { business } = await getActiveBusinessId();
 
     if (!business) {
         return (

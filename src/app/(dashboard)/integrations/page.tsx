@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getActiveBusinessId } from "@/lib/business-context";
 import { GoogleIntegrationCard } from "@/components/integrations/google-card";
 import { YelpIntegrationCard } from "@/components/integrations/yelp-card";
 import { FacebookIntegrationCard } from "@/components/integrations/facebook-card";
@@ -103,24 +104,8 @@ export default async function IntegrationsPage() {
         redirect("/login");
     }
 
-    // Fetch user's business and review platforms
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(
-            `
-            organizations (
-                businesses (
-                    *,
-                    review_platforms (*)
-                )
-            )
-        `
-        )
-        .eq("user_id", user.id)
-        .single();
-
-    // @ts-ignore - Supabase types inference
-    const business = memberData?.organizations?.businesses?.[0];
+    // Get active business from context
+    const { business } = await getActiveBusinessId();
 
     if (!business) {
         return (

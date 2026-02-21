@@ -5,6 +5,7 @@ import { UserNav } from "@/components/dashboard/user-nav";
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function DashboardLayout({
     children,
@@ -26,21 +27,8 @@ export default async function DashboardLayout({
         }
     }
 
-    // Fetch organizations with nested businesses and review platforms
-    const { data: members } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                *,
-                businesses (
-                    *,
-                    review_platforms (*)
-                )
-            )
-        `)
-        .eq("user_id", user.id);
-
-    const organizations = members?.map((m) => m.organizations).filter(Boolean) || [];
+    // Get active business context (handles cookie + validation + fallback)
+    const { businesses, businessId: activeBusinessId } = await getActiveBusinessId();
 
     return (
         <SidebarProvider>
@@ -51,7 +39,10 @@ export default async function DashboardLayout({
                     <Separator orientation="vertical" className="mr-2 h-4" />
                     <div className="flex-1 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <BusinessSwitcher organizations={organizations} />
+                            <BusinessSwitcher
+                                businesses={businesses}
+                                activeBusinessId={activeBusinessId}
+                            />
                         </div>
                         <UserNav user={user} />
                     </div>
