@@ -3,16 +3,24 @@ import { createAdminClient } from "@/lib/supabase/admin";
 interface LimitCheckResult {
     allowed: boolean;
     current: number;
-    max: number;
+    max: number; // -1 = unlimited
 }
+
+type LimitType =
+    | "review_requests"      // generic total (all channels)
+    | "email_requests"
+    | "sms_requests"
+    | "link_requests"
+    | "ai_replies"
+    | "businesses";
 
 /**
  * Check if an organization has remaining capacity for a given limit type.
- * Returns { allowed, current, max } where max = -1 means unlimited.
+ * For per-location plans, the limit is multiplied by the number of active businesses.
  */
 export async function checkLimit(
     organizationId: string,
-    limitType: "review_requests" | "ai_replies" | "businesses"
+    limitType: LimitType
 ): Promise<LimitCheckResult> {
     const supabase = createAdminClient();
 
@@ -20,7 +28,7 @@ export async function checkLimit(
     const { data: org, error: orgError } = await supabase
         .from("organizations")
         .select(
-            "plan, max_businesses, max_review_requests_per_month, max_ai_replies_per_month"
+            "plan, max_businesses, max_review_requests_per_month, max_ai_replies_per_month, max_email_requests_per_month, max_sms_requests_per_month, max_link_requests_per_month"
         )
         .eq("id", organizationId)
         .single();
@@ -33,14 +41,26 @@ export async function checkLimit(
     let max: number;
     switch (limitType) {
         case "businesses":
-            max = org.max_businesses;
+            max = org.max_businesses ?? 1;
+            break;
+        case "email_requests":
+            max = org.max_email_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            break;
+        case "sms_requests":
+            max = org.max_sms_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            break;
+        case "link_requests":
+            max = org.max_link_requests_per_month ?? org.max_review_requests_per_month ?? 100;
             break;
         case "review_requests":
-            max = org.max_review_requests_per_month;
+            // Generic total — sum of all channel limits or fallback
+            max = org.max_review_requests_per_month ?? 100;
             break;
         case "ai_replies":
-            max = org.max_ai_replies_per_month;
+            max = org.max_ai_replies_per_month ?? 0;
             break;
+        default:
+            max = 0;
     }
 
     // -1 means unlimited
@@ -52,7 +72,6 @@ export async function checkLimit(
     let current = 0;
 
     if (limitType === "businesses") {
-        // Count businesses in the organization
         const { count } = await supabase
             .from("businesses")
             .select("*", { count: "exact", head: true })
@@ -77,16 +96,7 @@ export async function checkLimit(
             return { allowed: max > 0, current: 0, max };
         }
 
-        if (limitType === "review_requests") {
-            const { count } = await supabase
-                .from("review_requests")
-                .select("*", { count: "exact", head: true })
-                .in("business_id", businessIds)
-                .gte("created_at", startOfMonth.toISOString());
-
-            current = count || 0;
-        } else if (limitType === "ai_replies") {
-            // Count reviews that had AI replies generated this month
+        if (limitType === "ai_replies") {
             const { count } = await supabase
                 .from("reviews")
                 .select("*", { count: "exact", head: true })
@@ -94,6 +104,26 @@ export async function checkLimit(
                 .eq("response_status", "responded")
                 .gte("responded_at", startOfMonth.toISOString());
 
+            current = count || 0;
+        } else {
+            // review_requests filtered by channel
+            let query = supabase
+                .from("review_requests")
+                .select("*", { count: "exact", head: true })
+                .in("business_id", businessIds)
+                .gte("created_at", startOfMonth.toISOString());
+
+            // Filter by channel for specific limit types
+            if (limitType === "email_requests") {
+                query = query.eq("channel", "email");
+            } else if (limitType === "sms_requests") {
+                query = query.eq("channel", "sms");
+            } else if (limitType === "link_requests") {
+                query = query.eq("channel", "link");
+            }
+            // "review_requests" = no channel filter (all channels)
+
+            const { count } = await query;
             current = count || 0;
         }
     }

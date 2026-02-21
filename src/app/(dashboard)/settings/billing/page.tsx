@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { BillingClient } from "@/components/settings/billing-client";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { PLANS, type Plan } from "@/lib/stripe/plans";
+import { PLANS, getPlanByPriceId } from "@/lib/stripe/plans";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -35,7 +35,6 @@ export default async function BillingPage() {
     const org = (memberData?.organizations as any);
 
     if (!org) {
-        // Handle case where user has no organization (shouldn't happen due to onboarding)
         return (
             <div className="p-4">
                 No organization found. Please contact support.
@@ -43,25 +42,28 @@ export default async function BillingPage() {
         );
     }
 
-    // Get usage stats
-    const [reviewRequests, aiReplies, businesses] = await Promise.all([
-        checkLimit(org.id, "review_requests"),
+    // Get usage stats (per-channel)
+    const [emailRequests, smsRequests, linkRequests, aiReplies, businesses] = await Promise.all([
+        checkLimit(org.id, "email_requests"),
+        checkLimit(org.id, "sms_requests"),
+        checkLimit(org.id, "link_requests"),
         checkLimit(org.id, "ai_replies"),
         checkLimit(org.id, "businesses"),
     ]);
 
-    // Determine current plan details
-    const currentPlanKey = org.plan || "free";
-    const currentPlan = PLANS[currentPlanKey] || PLANS.free;
+    // Determine current plan from Stripe subscription price ID or org.plan field
+    const orgPlanId = org.plan || "free";
+    const currentPlan = PLANS.find((p) => p.id === orgPlanId) || null;
 
     return (
         <BillingClient
-            currentPlanKey={currentPlanKey}
             currentPlan={currentPlan}
             planStatus={org.subscription_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
             usage={{
-                reviewRequests: { used: reviewRequests.current, max: reviewRequests.max },
+                emailRequests: { used: emailRequests.current, max: emailRequests.max },
+                smsRequests: { used: smsRequests.current, max: smsRequests.max },
+                linkRequests: { used: linkRequests.current, max: linkRequests.max },
                 aiReplies: { used: aiReplies.current, max: aiReplies.max },
                 businesses: { used: businesses.current, max: businesses.max },
             }}

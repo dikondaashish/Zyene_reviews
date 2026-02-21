@@ -17,10 +17,19 @@ import {
     ExternalLink,
     Loader2,
     Zap,
+    Crown,
+    Building2,
     AlertTriangle,
+    Mail,
+    MessageSquare,
+    Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Plan } from "@/lib/stripe/plans";
+
+// ─────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────
 
 interface UsageStat {
     used: number;
@@ -28,30 +37,38 @@ interface UsageStat {
 }
 
 interface BillingClientProps {
-    currentPlanKey: string;
-    currentPlan: Plan;
+    currentPlan: Plan | null;
     planStatus: string;
     hasStripeCustomer: boolean;
     usage: {
-        reviewRequests: UsageStat;
+        emailRequests: UsageStat;
+        smsRequests: UsageStat;
+        linkRequests: UsageStat;
         aiReplies: UsageStat;
         businesses: UsageStat;
     };
-    plans: Record<string, Plan>;
+    plans: Plan[];
 }
 
-function UsageBar({ label, stat }: { label: string; stat: UsageStat }) {
+// ─────────────────────────────────────────────────────────
+// Usage Bar Component
+// ─────────────────────────────────────────────────────────
+
+function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?: React.ReactNode }) {
     const isUnlimited = stat.max === -1;
-    const percentage = isUnlimited ? 0 : Math.min((stat.used / stat.max) * 100, 100);
+    const percentage = isUnlimited ? 0 : stat.max > 0 ? Math.min((stat.used / stat.max) * 100, 100) : 0;
     const isNearLimit = !isUnlimited && percentage >= 80;
 
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{label}</span>
+                <span className="text-muted-foreground flex items-center gap-2">
+                    {icon}
+                    {label}
+                </span>
                 <span className="font-medium">
-                    {stat.used}
-                    {isUnlimited ? " used" : ` / ${stat.max}`}
+                    {stat.used.toLocaleString()}
+                    {isUnlimited ? " used" : ` / ${stat.max.toLocaleString()}`}
                 </span>
             </div>
             {!isUnlimited && (
@@ -70,18 +87,29 @@ function UsageBar({ label, stat }: { label: string; stat: UsageStat }) {
     );
 }
 
+// ─────────────────────────────────────────────────────────
+// Main Component
+// ─────────────────────────────────────────────────────────
+
 export function BillingClient({
-    currentPlanKey,
     currentPlan,
     planStatus,
     hasStripeCustomer,
     usage,
     plans,
 }: BillingClientProps) {
+    const [interval, setInterval] = useState<"month" | "year">("month");
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
 
-    const isPaidPlan = currentPlanKey !== "free";
+    const isPaidPlan = !!currentPlan && currentPlan.price !== null && currentPlan.price > 0;
+    const currentPlanName = currentPlan?.name || "Free";
+
+    // Filter plans by selected interval (exclude enterprise)
+    const displayPlans = plans.filter(
+        (p) => p.interval === interval && p.id !== "enterprise"
+    );
+    const enterprisePlan = plans.find((p) => p.id === "enterprise");
 
     async function handleSubscribe(priceId: string) {
         setLoadingPlan(priceId);
@@ -119,6 +147,8 @@ export function BillingClient({
         }
     }
 
+    const intervalLabel = interval === "month" ? "/mo" : "/yr";
+
     return (
         <div className="space-y-8">
             <div>
@@ -128,7 +158,7 @@ export function BillingClient({
                 </p>
             </div>
 
-            {/* Current Plan Status */}
+            {/* Past Due Warning */}
             {planStatus === "past_due" && (
                 <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 flex items-center gap-3">
                     <AlertTriangle className="h-5 w-5 text-orange-600 shrink-0" />
@@ -168,35 +198,53 @@ export function BillingClient({
                             variant={isPaidPlan ? "default" : "secondary"}
                             className="text-sm px-3 py-1"
                         >
-                            {currentPlan.name}
+                            {currentPlanName}
                         </Badge>
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex items-baseline gap-2">
+                        {currentPlan?.originalPrice && currentPlan.originalPrice > (currentPlan.price || 0) && (
+                            <span className="text-xl line-through text-gray-400">
+                                ${currentPlan.originalPrice}
+                            </span>
+                        )}
                         <span className="text-4xl font-bold">
-                            ${currentPlan.price}
+                            ${currentPlan?.price ?? 0}
                         </span>
-                        {currentPlan.price > 0 && (
-                            <span className="text-muted-foreground">/month</span>
+                        {(currentPlan?.price ?? 0) > 0 && (
+                            <span className="text-muted-foreground">
+                                /{currentPlan?.interval === "year" ? "year" : "month"}
+                            </span>
                         )}
                     </div>
 
                     {/* Usage Stats */}
                     <div className="space-y-4 pt-2">
                         <h3 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">
-                            This Month's Usage
+                            This Month&apos;s Usage
                         </h3>
                         <UsageBar
-                            label="Review Requests"
-                            stat={usage.reviewRequests}
+                            label="Email Requests"
+                            stat={usage.emailRequests}
+                            icon={<Mail className="h-3.5 w-3.5" />}
+                        />
+                        <UsageBar
+                            label="SMS Requests"
+                            stat={usage.smsRequests}
+                            icon={<MessageSquare className="h-3.5 w-3.5" />}
+                        />
+                        <UsageBar
+                            label="Link Requests"
+                            stat={usage.linkRequests}
+                            icon={<LinkIcon className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="AI Replies"
                             stat={usage.aiReplies}
                         />
                         <UsageBar
-                            label="Businesses"
+                            label="Locations"
                             stat={usage.businesses}
                         />
                     </div>
@@ -221,149 +269,184 @@ export function BillingClient({
                 )}
             </Card>
 
-            {/* Upgrade Cards (show for free users OR for starter wanting to upgrade) */}
-            {(currentPlanKey === "free" || currentPlanKey === "starter") && (
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">
-                        {currentPlanKey === "free"
-                            ? "Upgrade Your Plan"
-                            : "Upgrade to Growth"}
+            {/* ─── Plan Picker ─── */}
+            <div>
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold">
+                        {isPaidPlan ? "Change Plan" : "Choose a Plan"}
                     </h2>
-                    <div className="grid gap-6 md:grid-cols-2">
-                        {/* Starter Plan */}
-                        {currentPlanKey === "free" && (
-                            <Card className="relative border-blue-200">
+
+                    {/* Monthly / Yearly Toggle */}
+                    <div className="bg-slate-100 p-1 rounded-lg inline-flex items-center">
+                        <button
+                            onClick={() => setInterval("month")}
+                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${interval === "month"
+                                ? "bg-white text-slate-900 shadow-sm"
+                                : "text-slate-500 hover:text-slate-900"
+                                }`}
+                        >
+                            Monthly
+                        </button>
+                        <button
+                            onClick={() => setInterval("year")}
+                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${interval === "year"
+                                ? "bg-white text-slate-900 shadow-sm"
+                                : "text-slate-500 hover:text-slate-900"
+                                }`}
+                        >
+                            Yearly
+                            <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
+                                Save ~40%
+                            </Badge>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-3">
+                    {/* Starter / Professional cards */}
+                    {displayPlans.map((plan) => {
+                        const isCurrentPlan = currentPlan?.id === plan.id;
+                        const isPro = plan.name === "Professional";
+
+                        return (
+                            <Card
+                                key={plan.id}
+                                className={`relative flex flex-col ${isPro
+                                    ? "border-blue-500 border-2 shadow-lg"
+                                    : "border-slate-200"
+                                    }`}
+                            >
+                                {isPro && (
+                                    <div className="absolute -top-3 right-4">
+                                        <Badge className="bg-blue-600 text-white">
+                                            Most Popular
+                                        </Badge>
+                                    </div>
+                                )}
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
-                                        <Zap className="h-5 w-5 text-blue-500" />
-                                        Starter
+                                        {isPro ? (
+                                            <Crown className="h-5 w-5 text-blue-500" />
+                                        ) : (
+                                            <Zap className="h-5 w-5 text-blue-500" />
+                                        )}
+                                        {plan.name}
                                     </CardTitle>
                                     <CardDescription>
-                                        Perfect for small businesses
+                                        {isPro
+                                            ? "For growing multi-location businesses"
+                                            : "Perfect for single-location businesses"}
                                     </CardDescription>
-                                    <div className="flex items-baseline gap-1 pt-2">
+                                    <div className="flex items-baseline gap-2 pt-2">
+                                        {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
+                                            <span className="text-lg line-through text-gray-400">
+                                                ${plan.originalPrice}
+                                            </span>
+                                        )}
                                         <span className="text-3xl font-bold">
-                                            $39
+                                            ${plan.price}
                                         </span>
                                         <span className="text-muted-foreground">
-                                            /month
+                                            {intervalLabel}
                                         </span>
                                     </div>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="flex-1">
                                     <ul className="space-y-2.5 text-sm">
-                                        {[
-                                            "1 business location",
-                                            "100 review requests/month",
-                                            "30 AI-generated replies/month",
-                                            "SMS & Email alerts",
-                                            "Google, Yelp & Facebook",
-                                            "Priority support",
-                                        ].map((feature) => (
+                                        {plan.features.map((feature) => (
                                             <li
                                                 key={feature}
-                                                className="flex items-center gap-2"
+                                                className="flex items-start gap-2"
                                             >
-                                                <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                                <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
                                 </CardContent>
                                 <CardFooter>
-                                    <Button
-                                        className="w-full"
-                                        onClick={() =>
-                                            handleSubscribe(
-                                                plans.starter.stripePriceId!
-                                            )
-                                        }
-                                        disabled={
-                                            loadingPlan ===
-                                            plans.starter.stripePriceId
-                                        }
-                                    >
-                                        {loadingPlan ===
-                                            plans.starter.stripePriceId ? (
-                                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                        ) : null}
-                                        Subscribe to Starter
-                                    </Button>
+                                    {isCurrentPlan ? (
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                            disabled
+                                        >
+                                            Current Plan
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            className={`w-full ${isPro
+                                                ? "bg-blue-600 hover:bg-blue-700"
+                                                : ""
+                                                }`}
+                                            onClick={() =>
+                                                handleSubscribe(plan.stripePriceId!)
+                                            }
+                                            disabled={
+                                                !plan.stripePriceId ||
+                                                loadingPlan === plan.stripePriceId
+                                            }
+                                        >
+                                            {loadingPlan === plan.stripePriceId ? (
+                                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                            ) : null}
+                                            {isPaidPlan
+                                                ? `Switch to ${plan.name}`
+                                                : `Subscribe to ${plan.name}`}
+                                        </Button>
+                                    )}
                                 </CardFooter>
                             </Card>
-                        )}
+                        );
+                    })}
 
-                        {/* Growth Plan */}
-                        <Card className="relative border-purple-200">
-                            <div className="absolute -top-3 right-4">
-                                <Badge className="bg-purple-600 text-white">
-                                    Most Popular
-                                </Badge>
-                            </div>
+                    {/* Enterprise Card */}
+                    {enterprisePlan && (
+                        <Card className="relative flex flex-col border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Zap className="h-5 w-5 text-purple-500" />
-                                    Growth
+                                    <Building2 className="h-5 w-5 text-slate-600" />
+                                    Enterprise
                                 </CardTitle>
                                 <CardDescription>
-                                    For growing businesses
+                                    For large organizations with custom needs
                                 </CardDescription>
-                                <div className="flex items-baseline gap-1 pt-2">
+                                <div className="pt-2">
                                     <span className="text-3xl font-bold">
-                                        $79
-                                    </span>
-                                    <span className="text-muted-foreground">
-                                        /month
+                                        Custom
                                     </span>
                                 </div>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="flex-1">
                                 <ul className="space-y-2.5 text-sm">
-                                    {[
-                                        "Up to 3 business locations",
-                                        "Unlimited review requests",
-                                        "Unlimited AI replies",
-                                        "SMS & Email alerts",
-                                        "Google, Yelp & Facebook",
-                                        "Priority support",
-                                        "Custom branding",
-                                    ].map((feature) => (
+                                    {enterprisePlan.features.map((feature) => (
                                         <li
                                             key={feature}
-                                            className="flex items-center gap-2"
+                                            className="flex items-start gap-2"
                                         >
-                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                            <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
                                             {feature}
                                         </li>
                                     ))}
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button
-                                    className="w-full bg-purple-600 hover:bg-purple-700"
-                                    onClick={() =>
-                                        handleSubscribe(
-                                            plans.growth.stripePriceId!
-                                        )
-                                    }
-                                    disabled={
-                                        loadingPlan ===
-                                        plans.growth.stripePriceId
-                                    }
+                                <a
+                                    href="mailto:sales@zyene.in"
+                                    className="w-full"
                                 >
-                                    {loadingPlan ===
-                                        plans.growth.stripePriceId ? (
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                    ) : null}
-                                    {currentPlanKey === "starter"
-                                        ? "Upgrade to Growth"
-                                        : "Subscribe to Growth"}
-                                </Button>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full"
+                                    >
+                                        Contact Sales
+                                    </Button>
+                                </a>
                             </CardFooter>
                         </Card>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

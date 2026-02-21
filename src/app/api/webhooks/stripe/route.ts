@@ -1,6 +1,6 @@
 import { stripe } from "@/lib/stripe/client";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { PLANS, getPlanByPriceId } from "@/lib/stripe/plans";
+import { getPlanByPriceId, FREE_LIMITS } from "@/lib/stripe/plans";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -60,24 +60,34 @@ export async function POST(request: Request) {
                     break;
                 }
 
-                const planInfo = getPlanByPriceId(priceId);
-                const planKey = planInfo?.key || "starter";
-                const planLimits = planInfo?.plan.limits || PLANS.starter.limits;
+                const plan = getPlanByPriceId(priceId);
+                const planId = plan?.id || "starter_monthly";
+                const limits = plan?.limits || {
+                    maxLocations: 1,
+                    emailRequestsPerMonth: 2500,
+                    smsRequestsPerMonth: 2500,
+                    linkRequestsPerMonth: 5000,
+                    aiRepliesPerMonth: -1,
+                    teamMembers: 5,
+                };
 
                 await supabase
                     .from("organizations")
                     .update({
                         stripe_customer_id: customerId,
                         stripe_subscription_id: subscriptionId,
-                        plan: planKey,
+                        plan: planId,
                         plan_status: "active",
-                        max_businesses: planLimits.maxBusinesses,
-                        max_review_requests_per_month: planLimits.maxReviewRequestsPerMonth,
-                        max_ai_replies_per_month: planLimits.maxAiRepliesPerMonth,
+                        max_businesses: limits.maxLocations,
+                        max_review_requests_per_month: limits.emailRequestsPerMonth + limits.smsRequestsPerMonth + limits.linkRequestsPerMonth,
+                        max_ai_replies_per_month: limits.aiRepliesPerMonth,
+                        max_email_requests_per_month: limits.emailRequestsPerMonth,
+                        max_sms_requests_per_month: limits.smsRequestsPerMonth,
+                        max_link_requests_per_month: limits.linkRequestsPerMonth,
                     })
                     .eq("id", organizationId);
 
-                console.log(`✅ Organization ${organizationId} upgraded to ${planKey}`);
+                console.log(`✅ Organization ${organizationId} upgraded to ${planId}`);
                 break;
             }
 
@@ -100,14 +110,16 @@ export async function POST(request: Request) {
 
                 // If price changed, update plan and limits
                 if (priceId) {
-                    const planInfo = getPlanByPriceId(priceId);
-                    if (planInfo) {
-                        updateData.plan = planInfo.key;
-                        updateData.max_businesses = planInfo.plan.limits.maxBusinesses;
+                    const plan = getPlanByPriceId(priceId);
+                    if (plan) {
+                        updateData.plan = plan.id;
+                        updateData.max_businesses = plan.limits.maxLocations;
                         updateData.max_review_requests_per_month =
-                            planInfo.plan.limits.maxReviewRequestsPerMonth;
-                        updateData.max_ai_replies_per_month =
-                            planInfo.plan.limits.maxAiRepliesPerMonth;
+                            plan.limits.emailRequestsPerMonth + plan.limits.smsRequestsPerMonth + plan.limits.linkRequestsPerMonth;
+                        updateData.max_ai_replies_per_month = plan.limits.aiRepliesPerMonth;
+                        updateData.max_email_requests_per_month = plan.limits.emailRequestsPerMonth;
+                        updateData.max_sms_requests_per_month = plan.limits.smsRequestsPerMonth;
+                        updateData.max_link_requests_per_month = plan.limits.linkRequestsPerMonth;
                     }
                 }
 
@@ -124,17 +136,18 @@ export async function POST(request: Request) {
                 const subscription = event.data.object as Stripe.Subscription;
                 const customerId = subscription.customer as string;
 
-                const freeLimits = PLANS.free.limits;
-
                 await supabase
                     .from("organizations")
                     .update({
                         plan: "free",
                         plan_status: "canceled",
                         stripe_subscription_id: null,
-                        max_businesses: freeLimits.maxBusinesses,
-                        max_review_requests_per_month: freeLimits.maxReviewRequestsPerMonth,
-                        max_ai_replies_per_month: freeLimits.maxAiRepliesPerMonth,
+                        max_businesses: FREE_LIMITS.maxLocations,
+                        max_review_requests_per_month: FREE_LIMITS.emailRequestsPerMonth + FREE_LIMITS.smsRequestsPerMonth + FREE_LIMITS.linkRequestsPerMonth,
+                        max_ai_replies_per_month: FREE_LIMITS.aiRepliesPerMonth,
+                        max_email_requests_per_month: FREE_LIMITS.emailRequestsPerMonth,
+                        max_sms_requests_per_month: FREE_LIMITS.smsRequestsPerMonth,
+                        max_link_requests_per_month: FREE_LIMITS.linkRequestsPerMonth,
                     })
                     .eq("stripe_customer_id", customerId);
 
@@ -160,7 +173,6 @@ export async function POST(request: Request) {
         }
     } catch (error: any) {
         console.error("Webhook processing error:", error);
-        // Still return 200 to prevent Stripe retries for processing errors
     }
 
     return NextResponse.json({ received: true });

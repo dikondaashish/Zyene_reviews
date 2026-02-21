@@ -24,7 +24,7 @@ export default function MarketingPage() {
             Know About Every Review in <span className="text-blue-600">15 Minutes</span>. Not 5 Days.
           </h1>
           <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for business owners at $39/mo, not $300/mo.
+            Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for business owners starting at $29.99/mo.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
@@ -206,55 +206,77 @@ export default function MarketingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Free Tier */}
+            {/* Starter */}
             <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col">
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Free</h3>
-                <div className="text-4xl font-bold text-slate-900">$0<span className="text-lg font-normal text-slate-500">/mo</span></div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">Starter</h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-lg line-through text-gray-400">$49.99</span>
+                  <span className="text-4xl font-bold text-slate-900">$29.99</span>
+                  <span className="text-lg font-normal text-slate-500">/mo</span>
+                </div>
+                <p className="text-sm text-slate-500 mt-1">or $299.99/year (save 50%)</p>
               </div>
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 1 Location
+              <ul className="space-y-3 mb-8 flex-1 text-sm">
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Easy to use dashboard
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Google Only
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 1 Location
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 10 Review Requests/mo
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 2,500 email + 2,500 SMS requests/mo
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Email Alerts
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 5,000 review link requests/mo
+                </li>
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited AI-powered replies
+                </li>
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Campaign automation
+                </li>
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Google, Yelp, Facebook integration
                 </li>
               </ul>
               <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                <Button className="w-full" variant="outline">Start Free</Button>
+                <Button className="w-full" variant="outline">Get Started</Button>
               </Link>
             </div>
 
-            {/* Starter Tier */}
+            {/* Professional — Most Popular */}
             <div className="bg-white rounded-2xl p-8 border-2 border-blue-600 shadow-xl relative flex flex-col scale-105 z-10">
               <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
                 MOST POPULAR
               </div>
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-blue-600 mb-2">Starter</h3>
-                <div className="text-4xl font-bold text-slate-900">$39<span className="text-lg font-normal text-slate-500">/mo</span></div>
+                <h3 className="text-lg font-semibold text-blue-600 mb-2">Professional</h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-lg line-through text-gray-400">$89.99</span>
+                  <span className="text-4xl font-bold text-slate-900">$59.99</span>
+                  <span className="text-lg font-normal text-slate-500">/mo</span>
+                </div>
+                <p className="text-sm text-slate-500 mt-1">or $599.99/year (save 44%)</p>
               </div>
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 1 Location
+              <ul className="space-y-3 mb-8 flex-1 text-sm">
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Everything in Starter, plus:
                 </li>
-                <li className="flex items-center text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> All Platforms
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 3 Locations
                 </li>
-                <li className="flex items-center text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 100 Review Requests/mo
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 3,000 email + SMS/mo per location
                 </li>
-                <li className="flex items-center text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> SMS + Email Alerts
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 6,000 review links/mo per location
                 </li>
-                <li className="flex items-center text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 30 AI Replies/mo
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 15 team members
+                </li>
+                <li className="flex items-start text-slate-900 font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Priority support
                 </li>
               </ul>
               <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
@@ -262,32 +284,33 @@ export default function MarketingPage() {
               </Link>
             </div>
 
-            {/* Growth Tier */}
+            {/* Enterprise */}
             <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col">
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Growth</h3>
-                <div className="text-4xl font-bold text-slate-900">$79<span className="text-lg font-normal text-slate-500">/mo</span></div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">Enterprise</h3>
+                <div className="text-4xl font-bold text-slate-900">Custom</div>
+                <p className="text-sm text-slate-500 mt-1">Tailored to your needs</p>
               </div>
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> 3 Locations
+              <ul className="space-y-3 mb-8 flex-1 text-sm">
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Everything in Professional
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Unlimited Requests
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited locations
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Unlimited AI Replies
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited requests
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Team Access
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Dedicated account manager
                 </li>
-                <li className="flex items-center text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0" /> Priority Support
+                <li className="flex items-start text-slate-600">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Custom integrations & SLA
                 </li>
               </ul>
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                <Button className="w-full" variant="outline">Get Started</Button>
-              </Link>
+              <a href="mailto:sales@zyene.in">
+                <Button className="w-full" variant="outline">Contact Sales</Button>
+              </a>
             </div>
           </div>
         </div>
