@@ -42,19 +42,6 @@ export default async function DashboardLayout({
 
     const organizations = members?.map((m) => m.organizations).filter(Boolean) || [];
 
-    // Check for Google Business Profile connection
-    const hasGoogleBusinessProfile = organizations.some((org: any) =>
-        org.businesses?.some((business: any) =>
-            business.review_platforms?.some((platform: any) =>
-                platform.platform === 'google'
-            )
-        )
-    );
-
-    if (!hasGoogleBusinessProfile) {
-        redirect("/onboarding");
-    }
-
     return (
         <SidebarProvider>
             <AppSidebar />

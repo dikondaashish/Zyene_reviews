@@ -4,6 +4,7 @@ import * as React from "react"
 import {
     BarChart3,
     Bell,
+    Building2,
     ChevronDown,
     CreditCard,
     Home,
@@ -42,6 +43,11 @@ const items = [
         title: "Dashboard",
         url: "/dashboard",
         icon: Home,
+    },
+    {
+        title: "Businesses",
+        url: "/businesses",
+        icon: Building2,
     },
     {
         title: "Reviews",

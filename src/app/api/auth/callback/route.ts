@@ -120,8 +120,8 @@ export async function GET(request: Request) {
                     html: welcomeEmail({ userName: fullName || "User", loginUrl }),
                 }).catch(err => console.error("Failed to send welcome email:", err));
 
-                // Redirect new users to onboarding
-                return NextResponse.redirect(`${origin}/onboarding`);
+                // Redirect new users to dashboard
+                return NextResponse.redirect(`${origin}/dashboard`);
             }
 
             // Existing user (or newly created step skipped? No, wait)
