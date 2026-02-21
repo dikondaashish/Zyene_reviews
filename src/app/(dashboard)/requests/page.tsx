@@ -45,21 +45,26 @@ export default async function RequestsPage({
         return redirect("/login");
     }
 
-    // specific business for this user
-    const { data: business } = await supabase
-        .from("businesses")
-        .select("*")
+    // Resolve business via user → organization_members → organizations → businesses
+    const { data: memberData } = await supabase
+        .from("organization_members")
+        .select(`
+            organizations (
+                *,
+                businesses (*)
+            )
+        `)
         .eq("user_id", user.id)
         .single();
+
+    // @ts-ignore - Supabase types inference
+    const business = memberData?.organizations?.businesses?.[0];
 
     if (!business) {
         return <div>Business not found. Please contact support.</div>;
     }
 
     // --- STATS FETCHING ---
-    // Efficiently count statuses
-    // We can use multiple queries or a single one with filters if supabase supports it well,
-    // or just separate count queries.
 
     // Total Sent
     const { count: totalSent } = await supabase
@@ -68,41 +73,18 @@ export default async function RequestsPage({
         .eq("business_id", business.id);
 
     // Delivered
-    const { count: deliveredCount } = await supabase
-        .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", business.id)
-        .in("status", ["delivered", "clicked", "review_left"]); // Assuming clicked/review_left implies delivered logic? 
-    // Or just 'delivered' status? 
-    // Twilio updates status to 'delivered'. 'clicked' is a separate state in our logic flow?
-    // User prompt: "Status badges: Queued (gray), Sent (blue), Delivered (green), Clicked (purple), Review Left (gold star), Failed (red)"
-    // It seems they are mutually exclusive or progressive states? 
-    // Usually: sent -> delivered -> clicked -> review_left.
-    // So I should count all "progressive" states.
-
-    // Actually, 'delivered' might be a specific webhook update.
-    // For now, let's assume 'sent' is the baseline.
-    // Let's count specific statuses for now to be distinct or cumulative?
-    // "Delivery Rate (sent/total * 100%)" -> Wait, user said "Delivery Rate (sent/total)".
-    // Maybe they mean "delivered/sent"? 
-    // User: "Delivery Rate (sent/total * 100%)" - wait, sent/total is 100% if total is sent?
-    // Maybe they mean "delivered / total * 100%"?
-    // I'll assume they mean "Delivered / Total Requests".
-
-    // Let's just fetch all requests for the counts if volume is low, but better to use count queries.
-    // I'll do distinct count queries.
-
     const { count: delivered } = await supabase
         .from("review_requests")
         .select("*", { count: "exact", head: true })
         .eq("business_id", business.id)
         .eq("status", "delivered");
 
+    // Clicked (includes review_left)
     const { count: clicked } = await supabase
         .from("review_requests")
         .select("*", { count: "exact", head: true })
         .eq("business_id", business.id)
-        .or("status.eq.clicked,review_left.eq.true"); // Clicked OR Review Left implies Clicked.
+        .or("status.eq.clicked,review_left.eq.true");
 
     const { count: reviews } = await supabase
         .from("review_requests")
@@ -112,9 +94,7 @@ export default async function RequestsPage({
 
     const safeTotal = totalSent || 0;
     const deliveryRate = safeTotal > 0 ? ((delivered || 0) / safeTotal) * 100 : 0;
-    // Click rate: clicked / sent?
     const clickRate = safeTotal > 0 ? ((clicked || 0) / safeTotal) * 100 : 0;
-    // Review Conversion: review_left / clicked
     const safeClicked = clicked || 0;
     const conversionRate = safeClicked > 0 ? ((reviews || 0) / safeClicked) * 100 : 0;
 
@@ -256,7 +236,6 @@ export default async function RequestsPage({
                 <Button variant="outline" size="sm" disabled={!requests || requests.length < pageSize}>
                     Next
                 </Button>
-                {/* Note: In a real app, wire these to Next/Link or router.push with ?page=x */}
             </div>
         </div>
     );

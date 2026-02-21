@@ -71,7 +71,7 @@ export default function MarketingLayout({
                                 <span className="text-blue-600">Zyene</span> Ratings
                             </Link>
                             <p className="text-sm text-slate-500 mb-4">
-                                Made for restaurant owners who want more 5-star reviews without the hassle.
+                                Made for business owners who want more 5-star reviews without the hassle.
                             </p>
                             <p className="text-sm text-slate-400">
                                 © {new Date().getFullYear()} Zyene Inc.

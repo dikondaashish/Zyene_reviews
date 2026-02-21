@@ -99,7 +99,9 @@ export default async function DashboardPage() {
     // @ts-ignore - Supabase types inference
     const organization = memberData?.organizations || {};
     // @ts-ignore - Supabase types inference
-    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 10;
+    // TODO: Ensure max_review_requests_per_month is always returned from the org query.
+    // Fallback to 5000 if the value is missing (e.g., for Growth/unlimited plans).
+    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 5000;
 
     // @ts-ignore - Supabase types inference
     const business = memberData?.organizations?.businesses?.[0] || {

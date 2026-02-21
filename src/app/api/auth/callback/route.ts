@@ -49,7 +49,7 @@ export async function GET(request: Request) {
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
-                        name: `${fullName}'s Restaurant`,
+                        name: `${fullName}'s Business`,
                         slug: slug,
                         type: "business",
                     })

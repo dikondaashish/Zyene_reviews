@@ -24,7 +24,7 @@ export default function MarketingPage() {
             Know About Every Review in <span className="text-blue-600">15 Minutes</span>. Not 5 Days.
           </h1>
           <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for restaurant owners at $39/mo, not $300/mo.
+            Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for business owners at $39/mo, not $300/mo.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
@@ -98,7 +98,7 @@ export default function MarketingPage() {
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-3">Expensive Tools</h3>
               <p className="text-slate-600 leading-relaxed">
-                Birdeye charges $300/mo. Podium charges more. You're a restaurant owner, not an enterprise software buyer.
+                Birdeye charges $300/mo. Podium charges more. You're a business owner, not an enterprise software buyer.
               </p>
             </div>
           </div>
@@ -300,7 +300,7 @@ export default function MarketingPage() {
             Start managing your reviews in 5 minutes
           </h2>
           <p className="text-blue-100 text-xl mb-10 max-w-2xl mx-auto">
-            Join hundreds of restaurant owners who save time and grow their business with Zyene.
+            Join hundreds of business owners who save time and grow their business with Zyene.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>

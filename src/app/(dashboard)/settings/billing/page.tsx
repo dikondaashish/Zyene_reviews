@@ -15,8 +15,8 @@ export default async function BillingPage() {
         redirect("/login");
     }
 
-    // Fetch user's organizations
-    const { data: members } = await supabase
+    // Fetch user's organization via membership
+    const { data: memberData } = await supabase
         .from("organization_members")
         .select(`
             organizations (
@@ -28,13 +28,11 @@ export default async function BillingPage() {
                 subscription_status
             )
         `)
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .single();
 
-    // Default to the first organization for now
-    // In a real multi-org app, this would come from a cookie or URL param
-    const member = members?.[0];
-    const rawOrg = member?.organizations;
-    const org = Array.isArray(rawOrg) ? rawOrg[0] : rawOrg;
+    // @ts-ignore - Supabase types inference
+    const org = (memberData?.organizations as any);
 
     if (!org) {
         // Handle case where user has no organization (shouldn't happen due to onboarding)

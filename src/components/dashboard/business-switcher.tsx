@@ -45,7 +45,7 @@ export function BusinessSwitcher({ organizations }: { organizations: any[] }) {
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    Create Business
+                    Add a Business
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -86,7 +86,7 @@ export default function SignupPage() {
             <CardHeader className="space-y-1">
                 <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
                 <CardDescription>
-                    Start managing your restaurant reviews in minutes
+                    Start managing your business reviews in minutes
                 </CardDescription>
             </CardHeader>
 

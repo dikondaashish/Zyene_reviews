@@ -1464,8 +1464,18 @@ The project uses **25 shadcn/ui components**, all located in `src/components/ui/
 |---|---|---|---|
 | `GET` | `/api/auth/callback` | Supabase | OAuth callback, user provisioning, GBP linking |
 | `POST` | `/api/sync/google` | User | Trigger manual Google review sync |
-| `GET` | `/api/cron/sync-reviews` | Cron | Scheduled sync for all platforms |
-| `GET` | `/api/cron/daily-digest` | Cron | Daily digest email (13:00 UTC) |
+| `GET` | `/api/cron/sync-reviews` | Cron (Bearer Auth) | Scheduled sync for all platforms (Recommended: Every 6 hours) |
+| `GET` | `/api/cron/daily-digest` | Cron (Bearer Auth) | Daily digest email (13:00 UTC) |
+
+### Cron Configuration Reference
+Based on production setup (e.g., EasyCron/Vercel Cron):
+- **Schedule**: `0 */6 * * *` (Every 6 hours)
+- **Timezone**: America/New_York (or UTC)
+- **Auth Header**:
+  - Key: `Authorization`
+  - Value: `Bearer [CRON_SECRET_KEY]`
+- **Timeout**: 30s+
+
 | `POST` | `/api/reviews/[id]/reply` | User | Submit reply to Google review |
 | `POST` | `/api/ai/analyze` | User | Run AI sentiment analysis on a review |
 | `POST` | `/api/ai/suggest-reply` | User | Generate AI reply suggestions |

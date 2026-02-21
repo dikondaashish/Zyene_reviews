@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zyene Ratings - Review Management for Restaurants",
+  title: "Zyene Ratings - Review Management for Businesses",
   description: "Automate your customer reviews and grow your business with Zyene Ratings.",
 };
 

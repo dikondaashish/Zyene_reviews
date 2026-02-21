@@ -1,17 +1,18 @@
-export const SENTIMENT_PROMPT = `Analyze this restaurant review. Return ONLY valid JSON, no markdown:
+export const SENTIMENT_PROMPT = `Analyze this customer review. Return ONLY valid JSON, no markdown:
 {
   "sentiment": "positive" | "negative" | "neutral" | "mixed",
   "urgency": (number 1-10, where 10 is most urgent. Consider: star rating,
     emotional intensity, health/safety mentions, profanity, potential to go viral),
   "themes": (array of applicable themes from: "food_quality", "service_speed",
     "staff_behavior", "cleanliness", "pricing", "ambiance", "delivery",
-    "wait_time", "portion_size", "parking", "noise", "other"),
+    "wait_time", "portion_size", "parking", "noise", "product_quality",
+    "professionalism", "communication", "value", "other"),
   "summary": "One sentence summary of the key issue or praise"
 }
 Rating: {rating}/5
 Review: {text}`;
 
-export const REPLY_PROMPT = `You are responding to a customer review as the owner of {business_name}.
+export const REPLY_PROMPT = `You are responding to a customer review as the owner of {business_name}, a {business_category} business.
 Generate 2 reply options. Rules:
 - Be genuine, not corporate or robotic
 - Reference specific things the customer mentioned
