@@ -25,7 +25,7 @@ export default async function BillingPage() {
                 plan,
                 stripe_customer_id,
                 stripe_subscription_id,
-                subscription_status
+                plan_status
             )
         `)
         .eq("user_id", user.id)
@@ -58,7 +58,7 @@ export default async function BillingPage() {
     return (
         <BillingClient
             currentPlan={currentPlan}
-            planStatus={org.subscription_status || "active"}
+            planStatus={org.plan_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
             usage={{
                 emailRequests: { used: emailRequests.current, max: emailRequests.max },
