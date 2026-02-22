@@ -12,9 +12,9 @@ export default function AddBusinessPage() {
 
     const handleConnectGoogle = async () => {
         try {
-            // STEP 1: Get the current user's org ID and store it in a cookie
-            // This is critical: the OAuth flow may switch the auth user (different Google account),
-            // so we need to remember which org to add the business to.
+            // Get the current user's org ID — we pass it in the redirect URL
+            // so the callback knows which org to add the business to,
+            // even if a different Google account is used for OAuth.
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) {
                 toast.error("You must be logged in to add a business")
@@ -33,15 +33,16 @@ export default function AddBusinessPage() {
                 return
             }
 
-            // Store org ID + original user ID in a cookie before OAuth redirect
-            document.cookie = `add_business_org_id=${memberData.organization_id}; path=/; max-age=600; samesite=lax`
-            document.cookie = `add_business_user_id=${user.id}; path=/; max-age=600; samesite=lax`
+            const orgId = memberData.organization_id
+            const userId = user.id
 
-            // STEP 2: Trigger Google OAuth
+            // Build the redirect URL with org_id and user_id as query params.
+            // These travel through the entire OAuth redirect chain:
+            // dashboard → Google → Supabase → our callback
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/api/auth/callback?next=/businesses`
-                : `http://auth.${rootDomain}/api/auth/callback?next=/businesses`;
+                ? `http://${rootDomain}/api/auth/callback?next=/businesses&add_org=${orgId}&add_user=${userId}`
+                : `http://auth.${rootDomain}/api/auth/callback?next=/businesses&add_org=${orgId}&add_user=${userId}`;
 
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',

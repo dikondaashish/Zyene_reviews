@@ -3,12 +3,17 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
-import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/dashboard";
+
+    // "Add a Business" flow: org_id and user_id passed as URL query params.
+    // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
+    const addBusinessOrgId = searchParams.get("add_org");
+    const addBusinessUserId = searchParams.get("add_user");
+    const isAddBusinessFlow = !!(addBusinessOrgId && next === "/businesses");
 
     if (code) {
         const supabase = await createClient();
@@ -16,22 +21,14 @@ export async function GET(request: Request) {
 
         if (!error && data.user) {
             const admin = createAdminClient();
-            const cookieStore = await cookies();
 
-            // ─── CHECK FOR "ADD BUSINESS" FLOW ────────────────
-            // If these cookies exist, the user was adding a business to an existing org.
-            // The OAuth may have created a new auth user (different Google account),
-            // but we still want to add the business to the ORIGINAL org.
-            const addBusinessOrgId = cookieStore.get("add_business_org_id")?.value;
-            const addBusinessUserId = cookieStore.get("add_business_user_id")?.value;
-
-            if (addBusinessOrgId && next === "/businesses") {
+            if (isAddBusinessFlow && addBusinessOrgId) {
                 // ─── ADD BUSINESS FLOW ──────────────────────────
-                // Clear cookies immediately
-                cookieStore.set("add_business_org_id", "", { path: "/", maxAge: 0 });
-                cookieStore.set("add_business_user_id", "", { path: "/", maxAge: 0 });
+                // A user was already logged in, clicked "Add a Business",
+                // and connected with a Google account (possibly different from their login email).
+                // We create the new business in their ORIGINAL org (passed via URL param).
 
-                // Ensure the new auth user has a public.users record
+                // Ensure the OAuth user has a public.users record (in case it's a new auth user)
                 const { data: existingUser } = await admin
                     .from("users")
                     .select("id")
@@ -39,7 +36,6 @@ export async function GET(request: Request) {
                     .single();
 
                 if (!existingUser) {
-                    // Create user record for the new Google auth user
                     await admin.from("users").insert({
                         id: data.user.id,
                         email: data.user.email!,
@@ -47,7 +43,7 @@ export async function GET(request: Request) {
                     });
                 }
 
-                // Extract Google tokens
+                // Extract Google tokens from the OAuth session
                 const finalAccessToken = data.session?.provider_token;
                 const finalRefreshToken = data.session?.provider_refresh_token;
 
@@ -83,7 +79,7 @@ export async function GET(request: Request) {
                     console.error("Failed to fetch GBP hierarchy:", hierarchyError);
                 }
 
-                // Create the NEW business in the ORIGINAL org (from cookie)
+                // Create the NEW business in the ORIGINAL org (from URL param)
                 const newBizName = locationName || `${data.user.user_metadata?.full_name || "New"}'s Business`;
                 const newBizSlug = `${newBizName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
 
@@ -121,15 +117,12 @@ export async function GET(request: Request) {
                     console.log(`✅ New business "${newBizName}" (${newBusiness.id}) added to org ${addBusinessOrgId}`);
                 }
 
-                // CRITICAL: Sign back in as the ORIGINAL user
-                // The OAuth may have switched the session to a different Google account.
-                // We need to restore the original user's session.
+                // If the OAuth switched to a DIFFERENT auth user (different Google account),
+                // sign out and redirect to login so they can log back in as their original user.
                 if (addBusinessUserId && addBusinessUserId !== data.user.id) {
-                    console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Signing out OAuth user.`);
-                    // Sign out the new Google user — the original user will need to re-login
+                    console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Signing out.`);
                     await supabase.auth.signOut();
 
-                    // Redirect to login with a message
                     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
                     if (rootDomain.includes("localhost")) {
                         return NextResponse.redirect(`http://${rootDomain}/login?message=business_added`);
@@ -138,7 +131,7 @@ export async function GET(request: Request) {
                     }
                 }
 
-                // Same user (same Google account) — redirect to businesses page
+                // Same Google account — redirect straight to businesses page
                 const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
                 if (rootDomain.includes("localhost")) {
                     return NextResponse.redirect(`http://${rootDomain}/businesses`);
@@ -147,7 +140,7 @@ export async function GET(request: Request) {
                 }
             }
 
-            // ─── NORMAL AUTH FLOW ───────────────────────────────
+            // ─── NORMAL AUTH FLOW (not "Add Business") ──────────
             const { data: existingUser } = await admin
                 .from("users")
                 .select("id")
@@ -163,7 +156,6 @@ export async function GET(request: Request) {
                 const email = data.user.email!;
                 const slug = `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
 
-                // 1. Create user record
                 const { error: userError } = await admin.from("users").insert({
                     id: data.user.id,
                     email: email,
@@ -175,7 +167,6 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                // 2. Create default organization
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
@@ -191,7 +182,6 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                // 3. Create default business
                 await admin.from("businesses").insert({
                     organization_id: org.id,
                     name: org.name,
@@ -202,7 +192,6 @@ export async function GET(request: Request) {
                     status: "active",
                 });
 
-                // 4. Add user as organization owner
                 await admin.from("organization_members").insert({
                     organization_id: org.id,
                     user_id: data.user.id,
@@ -210,7 +199,6 @@ export async function GET(request: Request) {
                     status: "active",
                 });
 
-                // 5. Log event
                 await admin.from("events").insert({
                     organization_id: org.id,
                     user_id: data.user.id,
@@ -220,7 +208,6 @@ export async function GET(request: Request) {
                     metadata: { email, full_name: fullName },
                 });
 
-                // 6. Send Welcome Email
                 const { sendEmail } = await import("@/lib/resend/send-email");
                 const { welcomeEmail } = await import("@/lib/resend/templates/welcome-email");
                 const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
@@ -245,7 +232,6 @@ export async function GET(request: Request) {
                 const finalAccessToken = data.session?.provider_token;
                 const finalRefreshToken = data.session?.provider_refresh_token;
 
-                // Fetch Google hierarchy
                 let googleAccountId: string | null = null;
                 let googleLocationId: string | null = null;
                 let externalId: string | null = null;
@@ -273,7 +259,6 @@ export async function GET(request: Request) {
                     console.error("Failed to fetch GBP hierarchy:", e);
                 }
 
-                // Find user's first business and update its tokens
                 const { data: memberData } = await admin
                     .from("organization_members")
                     .select(`organizations ( businesses (id) )`)
@@ -327,7 +312,6 @@ export async function GET(request: Request) {
                 }
             }
 
-            // Redirect to dashboard
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
             if (rootDomain.includes("localhost")) {
                 return NextResponse.redirect(`http://${rootDomain}/dashboard`);
