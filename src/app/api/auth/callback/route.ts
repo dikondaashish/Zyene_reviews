@@ -118,12 +118,34 @@ export async function GET(request: Request) {
                 }
 
                 // If the OAuth switched to a DIFFERENT auth user (different Google account),
-                // sign out and redirect to login so they can log back in as their original user.
+                // sign out the OAuth user and auto-login the ORIGINAL user via magic link.
                 if (addBusinessUserId && addBusinessUserId !== data.user.id) {
-                    console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Signing out.`);
+                    console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Auto-restoring original user.`);
                     await supabase.auth.signOut();
 
+                    // Look up original user's email
+                    const { data: originalUser } = await admin.auth.admin.getUserById(addBusinessUserId);
                     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+
+                    if (originalUser?.user?.email) {
+                        // Generate a magic link to auto-login the original user
+                        const redirectTo = rootDomain.includes("localhost")
+                            ? `http://${rootDomain}/businesses`
+                            : `http://dashboard.${rootDomain}/businesses`;
+
+                        const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+                            type: 'magiclink',
+                            email: originalUser.user.email,
+                            options: { redirectTo },
+                        });
+
+                        if (!linkError && linkData?.properties?.action_link) {
+                            // Redirect to the magic link — this will auto-sign them in
+                            return NextResponse.redirect(linkData.properties.action_link);
+                        }
+                    }
+
+                    // Fallback: redirect to login if magic link generation failed
                     if (rootDomain.includes("localhost")) {
                         return NextResponse.redirect(`http://${rootDomain}/login?message=business_added`);
                     } else {
