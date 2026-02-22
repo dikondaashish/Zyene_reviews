@@ -16,8 +16,14 @@ const sidebarNavItems = [
         href: "/settings/general",
     },
     {
-        title: "Public Profile",
-        href: "/settings/public-profile",
+        title: "Business Information",
+        href: "/settings/business-information",
+        children: [
+            {
+                title: "Public Profile",
+                href: "/settings/public-profile",
+            },
+        ],
     },
     {
         title: "Notifications",
@@ -41,19 +47,42 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             <aside className="-mx-4 lg:w-1/5">
                 <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
                     {sidebarNavItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                buttonVariants({ variant: "ghost" }),
-                                pathname === item.href
-                                    ? "bg-muted hover:bg-muted"
-                                    : "hover:bg-transparent hover:underline",
-                                "justify-start"
+                        <div key={item.href}>
+                            <Link
+                                href={item.href}
+                                className={cn(
+                                    buttonVariants({ variant: "ghost" }),
+                                    pathname === item.href
+                                        ? "bg-muted hover:bg-muted"
+                                        : "hover:bg-transparent hover:underline",
+                                    "justify-start w-full"
+                                )}
+                            >
+                                {item.title}
+                            </Link>
+                            {item.children && (
+                                <div className="ml-4 mt-1 flex flex-col space-y-1">
+                                    {item.children.map((child) => (
+                                        <Link
+                                            key={child.href}
+                                            href={child.href}
+                                            className={cn(
+                                                buttonVariants({ variant: "ghost", size: "sm" }),
+                                                pathname === child.href
+                                                    ? "bg-muted hover:bg-muted"
+                                                    : "hover:bg-transparent hover:underline",
+                                                "justify-start text-sm pl-4 border-l-2",
+                                                pathname === child.href
+                                                    ? "border-blue-600 text-blue-600"
+                                                    : "border-transparent text-muted-foreground"
+                                            )}
+                                        >
+                                            {child.title}
+                                        </Link>
+                                    ))}
+                                </div>
                             )}
-                        >
-                            {item.title}
-                        </Link>
+                        </div>
                     ))}
                 </nav>
             </aside>

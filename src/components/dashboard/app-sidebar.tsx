@@ -13,7 +13,9 @@ import {
     Plug,
     Send,
     Settings,
+    Store,
     User,
+    Users,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -83,6 +85,11 @@ const settingsItems = [
         icon: User,
     },
     {
+        title: "Business Info",
+        url: "/settings/business-information",
+        icon: Store,
+    },
+    {
         title: "Notifications",
         url: "/settings/notifications",
         icon: Bell,
@@ -91,6 +98,11 @@ const settingsItems = [
         title: "Billing",
         url: "/settings/billing",
         icon: CreditCard,
+    },
+    {
+        title: "Team",
+        url: "/settings/team",
+        icon: Users,
     },
 ]
 

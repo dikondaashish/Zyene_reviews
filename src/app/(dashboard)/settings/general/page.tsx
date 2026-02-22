@@ -2,8 +2,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-import { BusinessInfoForm } from "@/components/settings/business-info-form";
-import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 import { ProfileForm } from "@/components/settings/profile-form";
 import { OrganizationNameForm } from "@/components/settings/organization-name-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
@@ -22,28 +20,17 @@ export default async function GeneralSettingsPage() {
         redirect("/login");
     }
 
-    // Get active business from context
-    const { business, organization } = await getActiveBusinessId();
-
-    if (!business) {
-        return (
-            <div className="p-8 text-center">
-                <h2 className="text-xl font-semibold">No business found</h2>
-                <p className="text-muted-foreground">Please create an organization first.</p>
-            </div>
-        );
-    }
+    const { organization } = await getActiveBusinessId();
 
     return (
         <div className="space-y-6">
             <div>
                 <h3 className="text-lg font-medium">General Settings</h3>
                 <p className="text-sm text-muted-foreground">
-                    Manage your business details and personal profile.
+                    Manage your profile and organization.
                 </p>
             </div>
             <Separator />
-
 
             <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Profile</h4>
@@ -55,20 +42,6 @@ export default async function GeneralSettingsPage() {
             <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Organization</h4>
                 {organization && <OrganizationNameForm organization={organization} />}
-            </div>
-
-            <Separator />
-
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Business Information</h4>
-                <BusinessInfoForm business={business} />
-            </div>
-
-            <Separator />
-
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Review Request Settings</h4>
-                <ReviewSettingsForm business={business} />
             </div>
 
             <Separator />
