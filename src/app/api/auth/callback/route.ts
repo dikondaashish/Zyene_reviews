@@ -9,13 +9,15 @@ export async function GET(request: Request) {
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/dashboard";
 
+    // Detect "Add a Business" flow vs normal login
+    const isAddBusinessFlow = next === "/businesses";
+
     if (code) {
         const supabase = await createClient();
 
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error && data.user) {
-            // Check if user record exists in our public.users table
             const admin = createAdminClient();
 
             const { data: existingUser } = await admin
@@ -25,7 +27,7 @@ export async function GET(request: Request) {
                 .single();
 
             if (!existingUser) {
-                // New user — provision their account
+                // ─── NEW USER SIGNUP ───────────────────────────────
                 const fullName =
                     data.user.user_metadata?.full_name ||
                     data.user.email?.split("@")[0] ||
@@ -53,7 +55,7 @@ export async function GET(request: Request) {
                         slug: slug,
                         type: "business",
                     })
-                    .select() // Select all fields to access name and slug
+                    .select()
                     .single();
 
                 if (orgError) {
@@ -61,16 +63,16 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                // 3. Create default business (Critical for Onboarding Check)
+                // 3. Create default business
                 const { error: businessError } = await admin
                     .from("businesses")
                     .insert({
                         organization_id: org.id,
                         name: org.name,
                         slug: org.slug,
-                        country: "US", // Default
-                        timezone: "UTC", // Default
-                        category: "retail", // Default
+                        country: "US",
+                        timezone: "UTC",
+                        category: "retail",
                         status: "active",
                     });
 
@@ -94,7 +96,7 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                // 4. Log the event
+                // 5. Log the event
                 await admin.from("events").insert({
                     organization_id: org.id,
                     user_id: data.user.id,
@@ -104,7 +106,7 @@ export async function GET(request: Request) {
                     metadata: { email, full_name: fullName },
                 });
 
-                // 5. Send Welcome Email (Async / Fire & Forget)
+                // 6. Send Welcome Email (Async / Fire & Forget)
                 const { sendEmail } = await import("@/lib/resend/send-email");
                 const { welcomeEmail } = await import("@/lib/resend/templates/welcome-email");
 
@@ -113,7 +115,6 @@ export async function GET(request: Request) {
                     ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
                     : `http://auth.${rootDomain}/login`;
 
-                // We don't await this to prevent blocking the auth flow
                 sendEmail({
                     to: email,
                     subject: "Welcome to Zyene Reviews!",
@@ -124,133 +125,102 @@ export async function GET(request: Request) {
                 return NextResponse.redirect(`${origin}/dashboard`);
             }
 
-            // Existing user (or newly created step skipped? No, wait)
-            // Logic for linking GBP if not already linked
-            // We need to check if the current login is creating a GBP link.
-            // Since we are redirecting to dashboard, we should ensure the link exists.
-
-            // Check if user is signing in via Google
-            // Note: .provider might be 'google' inside identities or app_metadata
+            // ─── EXISTING USER ──────────────────────────────────
             const isGoogle = data.user.app_metadata.provider === 'google' ||
                 data.user.identities?.some(id => id.provider === 'google');
 
             if (isGoogle) {
-                console.log("DEBUG: Google Provider Detected");
-                console.log("DEBUG: Session Keys:", Object.keys(data.session || {}));
-                console.log("DEBUG: Provider Token Present?", !!data.session?.provider_token);
-                console.log("DEBUG: Refresh Token Present?", !!data.session?.provider_refresh_token);
-                if (data.session?.provider_refresh_token) {
-                    console.log("DEBUG: Provider Refresh Token Length:", data.session.provider_refresh_token.length);
-                } else {
-                    console.log("DEBUG: Provider Refresh Token is MISSING/UNDEFINED");
+                // Extract Google tokens
+                const sessionToken = data.session?.provider_token;
+                const sessionRefreshToken = data.session?.provider_refresh_token;
+                const googleIdentity = data.user.identities?.find(id => id.provider === 'google');
+                // @ts-ignore
+                const identityToken = googleIdentity?.identity_data?.provider_token;
+                // @ts-ignore
+                const identityRefreshToken = googleIdentity?.identity_data?.provider_refresh_token;
+                const finalAccessToken = sessionToken || identityToken;
+                const finalRefreshToken = sessionRefreshToken || identityRefreshToken;
+
+                // Fetch Google Business Profile hierarchy
+                let googleAccountId: string | null = null;
+                let googleLocationId: string | null = null;
+                let externalId: string | null = null;
+                let googleReviewUrl: string | null = null;
+                let locationName: string | null = null;
+
+                try {
+                    if (finalAccessToken) {
+                        const accounts = await listAccounts(finalAccessToken);
+                        if (accounts.length > 0) {
+                            const account = accounts[0];
+                            googleAccountId = account.name.split("/")[1];
+
+                            const locations = await listLocations(finalAccessToken, account.name);
+                            if (locations.length > 0) {
+                                const location = locations[0];
+                                googleLocationId = location.name.split("/").pop() || null;
+                                externalId = googleLocationId;
+                                locationName = location.title || (location as any).storefrontAddress?.locality || null;
+
+                                googleReviewUrl = location.metadata?.newReviewUri || location.metadata?.mapsUri || null;
+                                if (location.metadata?.placeId) {
+                                    googleReviewUrl = `https://search.google.com/local/writereview?placeid=${location.metadata.placeId}`;
+                                }
+                            }
+                        }
+                    }
+                } catch (hierarchyError) {
+                    console.error("Failed to fetch GBP hierarchy:", hierarchyError);
                 }
 
-                // Find user's business
+                // Find user's organization
                 const { data: memberData } = await admin
                     .from("organization_members")
                     .select(`
+                        organization_id,
                         organizations (
-                            businesses (id)
+                            id,
+                            businesses (id, name)
                         )
                     `)
                     .eq("user_id", data.user.id)
                     .single();
 
-                // @ts-ignore - Supabase types might be deep
-                const businessId = memberData?.organizations?.businesses?.[0]?.id;
-                console.log("DEBUG: Found Business ID:", businessId);
+                // @ts-ignore
+                const orgId = memberData?.organization_id;
+                // @ts-ignore
+                const existingBusinesses: any[] = memberData?.organizations?.businesses || [];
 
-                if (businessId) {
-                    // Check if platform exists
-                    const { data: platformData } = await admin
-                        .from("review_platforms")
+                if (isAddBusinessFlow && orgId) {
+                    // ─── ADD BUSINESS FLOW ───────────────────────
+                    // Create a NEW business in the existing org
+                    const newBizName = locationName || "New Business";
+                    const newBizSlug = `${newBizName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
+
+                    const { data: newBusiness, error: newBizError } = await admin
+                        .from("businesses")
+                        .insert({
+                            organization_id: orgId,
+                            name: newBizName,
+                            slug: newBizSlug,
+                            country: "US",
+                            timezone: "UTC",
+                            category: "retail",
+                            status: "active",
+                            google_review_url: googleReviewUrl,
+                        })
                         .select("id")
-                        .eq("business_id", businessId)
-                        .eq("platform", "google")
                         .single();
 
-                    console.log("DEBUG: Platform Data Found?", !!platformData);
-
-                    // Robust Token Extraction
-                    const sessionToken = data.session?.provider_token;
-                    const sessionRefreshToken = data.session?.provider_refresh_token;
-
-                    // Fallback: Check identities if session is missing tokens
-                    const googleIdentity = data.user.identities?.find(id => id.provider === 'google');
-                    // @ts-ignore
-                    const identityToken = googleIdentity?.identity_data?.provider_token;
-                    // @ts-ignore
-                    const identityRefreshToken = googleIdentity?.identity_data?.provider_refresh_token;
-
-                    const finalAccessToken = sessionToken || identityToken;
-                    const finalRefreshToken = sessionRefreshToken || identityRefreshToken;
-
-                    console.log("DEBUG: Token Extraction Result:");
-                    console.log("- Session RT:", !!sessionRefreshToken);
-                    console.log("- Identity RT:", !!identityRefreshToken);
-                    console.log("- Final RT:", !!finalRefreshToken);
-
-                    // Fetch Google Hierarchy IDs
-                    let googleAccountId: string | null = null;
-                    let googleLocationId: string | null = null;
-                    let externalId: string | null = null;
-                    let googleReviewUrl: string | null = null;
-
-                    try {
-                        if (finalAccessToken) {
-                            console.log("DEBUG: Fetching Google Hierarchy...");
-                            const accounts = await listAccounts(finalAccessToken);
-                            if (accounts.length > 0) {
-                                const account = accounts[0]; // Default to first account
-                                googleAccountId = account.name.split("/")[1];
-
-                                const locations = await listLocations(finalAccessToken, account.name);
-                                if (locations.length > 0) {
-                                    const location = locations[0]; // Default to first location
-                                    googleLocationId = location.name.split("/").pop() || null;
-                                    externalId = googleLocationId; // This is what we used before as external_id
-
-                                    // Extract URL
-                                    googleReviewUrl = location.metadata?.newReviewUri || location.metadata?.mapsUri || null;
-                                    if (location.metadata?.placeId) {
-                                        googleReviewUrl = `https://search.google.com/local/writereview?placeid=${location.metadata.placeId}`;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (hierarchyError) {
-                        console.error("DEBUG: Failed to fetch hierarchy in callback:", hierarchyError);
-                        // Ensure we don't block auth, backfill will handle it later
+                    if (newBizError) {
+                        console.error("Failed to create new business:", newBizError);
+                        return NextResponse.redirect(`${origin}/businesses?error=add_failed`);
                     }
 
-                    if (platformData) {
-                        console.log("DEBUG: Updating Platform Tokens & IDs...");
-                        const updatePayload: any = {
-                            access_token: finalAccessToken,
-                            sync_status: "active",
-                            updated_at: new Date().toISOString(),
-                        };
-
-                        if (googleAccountId) updatePayload.google_account_id = googleAccountId;
-                        if (googleLocationId) updatePayload.google_location_id = googleLocationId;
-                        if (externalId) updatePayload.external_id = externalId; // Ensure external_id is set
-                        if (googleReviewUrl) updatePayload.external_url = googleReviewUrl;
-
-                        if (finalRefreshToken) {
-                            updatePayload.refresh_token = finalRefreshToken;
-                        }
-
-                        const { error: updateError } = await admin
-                            .from("review_platforms")
-                            .update(updatePayload)
-                            .eq("id", platformData.id);
-
-                        if (updateError) console.error("DEBUG: Update Error:", updateError);
-                        else console.log("DEBUG: Update Success");
-                    } else {
-                        console.log("DEBUG: Inserting New Platform...");
-                        const { data: insertData, error: insertError } = await admin.from("review_platforms").insert({
-                            business_id: businessId,
+                    // Link Google platform to the NEW business
+                    if (newBusiness) {
+                        await admin.from("review_platforms").insert({
+                            business_id: newBusiness.id,
                             platform: "google",
                             sync_status: "active",
                             access_token: finalAccessToken || "",
@@ -258,30 +228,73 @@ export async function GET(request: Request) {
                             google_account_id: googleAccountId,
                             google_location_id: googleLocationId,
                             external_id: externalId,
-                            external_url: googleReviewUrl
-                        }).select().single();
+                            external_url: googleReviewUrl,
+                        });
 
-                        if (insertError) {
-                            console.error("DEBUG: Insert Error:", JSON.stringify(insertError));
-                        } else {
-                            console.log("DEBUG: Insert Success - Platform ID:", insertData?.id);
-                        }
+                        console.log(`✅ New business "${newBizName}" (${newBusiness.id}) added to org ${orgId}`);
                     }
 
-                    // If we got the URL, try to update business table too
-                    if (googleReviewUrl) {
-                        await admin.from("businesses")
-                            .update({ google_review_url: googleReviewUrl })
-                            .eq("id", businessId)
-                            .is("google_review_url", null); // Only if empty
+                    // Redirect back to businesses page
+                    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                    if (rootDomain.includes("localhost")) {
+                        return NextResponse.redirect(`http://${rootDomain}/businesses`);
+                    } else {
+                        return NextResponse.redirect(`http://dashboard.${rootDomain}/businesses`);
                     }
                 } else {
-                    console.log("DEBUG: No Business Found for User", data.user.id);
+                    // ─── NORMAL LOGIN FLOW ───────────────────────
+                    // Update existing first business's Google tokens
+                    const businessId = existingBusinesses[0]?.id;
+
+                    if (businessId) {
+                        const { data: platformData } = await admin
+                            .from("review_platforms")
+                            .select("id")
+                            .eq("business_id", businessId)
+                            .eq("platform", "google")
+                            .single();
+
+                        if (platformData) {
+                            // Update existing platform tokens
+                            const updatePayload: any = {
+                                access_token: finalAccessToken,
+                                sync_status: "active",
+                                updated_at: new Date().toISOString(),
+                            };
+                            if (googleAccountId) updatePayload.google_account_id = googleAccountId;
+                            if (googleLocationId) updatePayload.google_location_id = googleLocationId;
+                            if (externalId) updatePayload.external_id = externalId;
+                            if (googleReviewUrl) updatePayload.external_url = googleReviewUrl;
+                            if (finalRefreshToken) updatePayload.refresh_token = finalRefreshToken;
+
+                            await admin
+                                .from("review_platforms")
+                                .update(updatePayload)
+                                .eq("id", platformData.id);
+                        } else {
+                            // Insert new platform for existing business
+                            await admin.from("review_platforms").insert({
+                                business_id: businessId,
+                                platform: "google",
+                                sync_status: "active",
+                                access_token: finalAccessToken || "",
+                                refresh_token: finalRefreshToken || "",
+                                google_account_id: googleAccountId,
+                                google_location_id: googleLocationId,
+                                external_id: externalId,
+                                external_url: googleReviewUrl,
+                            });
+                        }
+
+                        // Update business URL if empty
+                        if (googleReviewUrl) {
+                            await admin.from("businesses")
+                                .update({ google_review_url: googleReviewUrl })
+                                .eq("id", businessId)
+                                .is("google_review_url", null);
+                        }
+                    }
                 }
-            } else {
-                console.log("DEBUG: Not identified as Google Provider");
-                console.log("Provider:", data.user.app_metadata.provider);
-                console.log("Identities:", data.user.identities);
             }
 
             // Existing user — redirect to dashboard
