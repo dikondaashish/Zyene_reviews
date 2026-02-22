@@ -118,38 +118,48 @@ export async function GET(request: Request) {
                 }
 
                 // If the OAuth switched to a DIFFERENT auth user (different Google account),
-                // sign out the OAuth user and auto-login the ORIGINAL user via magic link.
+                // sign out the OAuth user and restore the ORIGINAL user's session server-side.
                 if (addBusinessUserId && addBusinessUserId !== data.user.id) {
                     console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Auto-restoring original user.`);
                     await supabase.auth.signOut();
 
-                    // Look up original user's email
                     const { data: originalUser } = await admin.auth.admin.getUserById(addBusinessUserId);
                     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
 
                     if (originalUser?.user?.email) {
-                        // Generate a magic link to auto-login the original user
-                        const redirectTo = rootDomain.includes("localhost")
-                            ? `http://${rootDomain}/businesses`
-                            : `http://dashboard.${rootDomain}/businesses`;
-
-                        const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+                        // Generate a magic link token and verify it SERVER-SIDE.
+                        // This sets the session cookies for the original user without any redirect.
+                        const { data: linkData } = await admin.auth.admin.generateLink({
                             type: 'magiclink',
                             email: originalUser.user.email,
-                            options: { redirectTo },
                         });
 
-                        if (!linkError && linkData?.properties?.action_link) {
-                            // Redirect to the magic link — this will auto-sign them in
-                            return NextResponse.redirect(linkData.properties.action_link);
+                        if (linkData?.properties?.hashed_token) {
+                            const { error: verifyError } = await supabase.auth.verifyOtp({
+                                token_hash: linkData.properties.hashed_token,
+                                type: 'magiclink',
+                            });
+
+                            if (!verifyError) {
+                                console.log(`✅ Session restored for ${originalUser.user.email}`);
+                                // Session is now set — redirect to businesses page
+                                if (rootDomain.includes("localhost")) {
+                                    return NextResponse.redirect(`http://${rootDomain}/businesses`);
+                                } else {
+                                    return NextResponse.redirect(`http://dashboard.${rootDomain}/businesses`);
+                                }
+                            } else {
+                                console.error("Failed to verify magic link:", verifyError);
+                            }
                         }
                     }
 
-                    // Fallback: redirect to login if magic link generation failed
-                    if (rootDomain.includes("localhost")) {
-                        return NextResponse.redirect(`http://${rootDomain}/login?message=business_added`);
+                    // Fallback: redirect to login if auto-restore failed
+                    const rootDomain2 = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                    if (rootDomain2.includes("localhost")) {
+                        return NextResponse.redirect(`http://${rootDomain2}/login?message=business_added`);
                     } else {
-                        return NextResponse.redirect(`http://auth.${rootDomain}/login?message=business_added`);
+                        return NextResponse.redirect(`http://auth.${rootDomain2}/login?message=business_added`);
                     }
                 }
 
