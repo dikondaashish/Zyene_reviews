@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
+import { OrganizationDisplay } from "@/components/dashboard/organization-display";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { getActiveBusinessId } from "@/lib/business-context";
@@ -28,7 +29,7 @@ export default async function DashboardLayout({
     }
 
     // Get active business context (handles cookie + validation + fallback)
-    const { businesses, businessId: activeBusinessId } = await getActiveBusinessId();
+    const { businesses, businessId: activeBusinessId, organization } = await getActiveBusinessId();
 
     return (
         <SidebarProvider>
@@ -39,6 +40,7 @@ export default async function DashboardLayout({
                     <Separator orientation="vertical" className="mr-2 h-4" />
                     <div className="flex-1 flex items-center justify-between">
                         <div className="flex items-center gap-2">
+                            <OrganizationDisplay organization={organization} />
                             <BusinessSwitcher
                                 businesses={businesses}
                                 activeBusinessId={activeBusinessId}
