@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
 import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 import { ProfileForm } from "@/components/settings/profile-form";
+import { OrganizationNameForm } from "@/components/settings/organization-name-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
 
 import { Separator } from "@/components/ui/separator";
@@ -22,7 +23,7 @@ export default async function GeneralSettingsPage() {
     }
 
     // Get active business from context
-    const { business } = await getActiveBusinessId();
+    const { business, organization } = await getActiveBusinessId();
 
     if (!business) {
         return (
@@ -47,6 +48,13 @@ export default async function GeneralSettingsPage() {
             <div className="space-y-4">
                 <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Profile</h4>
                 <ProfileForm user={user} />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Organization</h4>
+                {organization && <OrganizationNameForm organization={organization} />}
             </div>
 
             <Separator />
