@@ -12,6 +12,32 @@ export default function AddBusinessPage() {
 
     const handleConnectGoogle = async () => {
         try {
+            // STEP 1: Get the current user's org ID and store it in a cookie
+            // This is critical: the OAuth flow may switch the auth user (different Google account),
+            // so we need to remember which org to add the business to.
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) {
+                toast.error("You must be logged in to add a business")
+                return
+            }
+
+            // Fetch org ID
+            const { data: memberData } = await supabase
+                .from("organization_members")
+                .select("organization_id")
+                .eq("user_id", user.id)
+                .single()
+
+            if (!memberData?.organization_id) {
+                toast.error("No organization found")
+                return
+            }
+
+            // Store org ID + original user ID in a cookie before OAuth redirect
+            document.cookie = `add_business_org_id=${memberData.organization_id}; path=/; max-age=600; samesite=lax`
+            document.cookie = `add_business_user_id=${user.id}; path=/; max-age=600; samesite=lax`
+
+            // STEP 2: Trigger Google OAuth
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
             const redirectTo = rootDomain.includes("localhost")
                 ? `http://${rootDomain}/api/auth/callback?next=/businesses`
@@ -59,6 +85,7 @@ export default function AddBusinessPage() {
                         <CardTitle className="text-2xl">Add a Business</CardTitle>
                         <CardDescription>
                             Connect your Google Business Profile to start managing reviews for a new location.
+                            You can use a different Google account than the one you signed up with.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
