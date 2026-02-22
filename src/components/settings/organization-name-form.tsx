@@ -4,11 +4,9 @@ import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { Pencil } from "lucide-react"
+import { Pencil, Check, X, Building2 } from "lucide-react"
 
 interface OrganizationNameFormProps {
     organization: {
@@ -57,62 +55,62 @@ export function OrganizationNameForm({ organization }: OrganizationNameFormProps
     }
 
     return (
-        <Card>
-            <CardContent className="pt-6">
-                <div className="space-y-3">
-                    <Label htmlFor="org-name">Organization Name</Label>
-                    {editing ? (
-                        <div className="flex items-center gap-3">
-                            <Input
-                                id="org-name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder="Enter organization name"
-                                className="max-w-sm"
-                                disabled={saving}
-                                autoFocus
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleSave()
-                                    if (e.key === "Escape") {
-                                        setName(organization.name)
-                                        setEditing(false)
-                                    }
-                                }}
-                            />
-                            <Button size="sm" onClick={handleSave} disabled={saving}>
-                                {saving ? "Saving..." : "Save"}
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => {
-                                    setName(organization.name)
-                                    setEditing(false)
-                                }}
-                                disabled={saving}
-                            >
-                                Cancel
-                            </Button>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-3">
-                            <p className="text-sm font-medium">{organization.name}</p>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-7 px-2 text-muted-foreground hover:text-foreground"
-                                onClick={() => setEditing(true)}
-                            >
-                                <Pencil className="h-3.5 w-3.5 mr-1" />
-                                Edit
-                            </Button>
-                        </div>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                        This is the name of your organization shown across the dashboard.
-                    </p>
+        <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 shrink-0">
+                <Building2 className="h-5 w-5" />
+            </div>
+            {editing ? (
+                <div className="flex items-center gap-2 flex-1">
+                    <Input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Enter organization name"
+                        className="max-w-sm h-9"
+                        disabled={saving}
+                        autoFocus
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSave()
+                            if (e.key === "Escape") {
+                                setName(organization.name)
+                                setEditing(false)
+                            }
+                        }}
+                    />
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                        onClick={handleSave}
+                        disabled={saving}
+                    >
+                        <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                        onClick={() => {
+                            setName(organization.name)
+                            setEditing(false)
+                        }}
+                        disabled={saving}
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
                 </div>
-            </CardContent>
-        </Card>
+            ) : (
+                <div className="flex items-center gap-2 flex-1">
+                    <span className="text-sm font-medium">{organization.name}</span>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                        onClick={() => setEditing(true)}
+                    >
+                        <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                </div>
+            )}
+        </div>
     )
 }

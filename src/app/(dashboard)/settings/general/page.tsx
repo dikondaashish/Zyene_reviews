@@ -6,7 +6,6 @@ import { ProfileForm } from "@/components/settings/profile-form";
 import { OrganizationNameForm } from "@/components/settings/organization-name-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
 
-import { Separator } from "@/components/ui/separator";
 import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function GeneralSettingsPage() {
@@ -23,29 +22,44 @@ export default async function GeneralSettingsPage() {
     const { organization } = await getActiveBusinessId();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
+            {/* Page Header */}
             <div>
-                <h3 className="text-lg font-medium">General Settings</h3>
-                <p className="text-sm text-muted-foreground">
-                    Manage your profile and organization.
+                <h3 className="text-xl font-semibold tracking-tight">General</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                    Manage your personal profile and organization settings.
                 </p>
             </div>
-            <Separator />
 
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Profile</h4>
-                <ProfileForm user={user} />
+            {/* Profile Section */}
+            <div className="rounded-lg border bg-white shadow-sm">
+                <div className="border-b px-6 py-4">
+                    <h4 className="text-sm font-semibold">Your Profile</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                        Update your personal information visible to your team.
+                    </p>
+                </div>
+                <div className="px-6 py-5">
+                    <ProfileForm user={user} />
+                </div>
             </div>
 
-            <Separator />
+            {/* Organization Section */}
+            {organization && (
+                <div className="rounded-lg border bg-white shadow-sm">
+                    <div className="border-b px-6 py-4">
+                        <h4 className="text-sm font-semibold">Organization</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            The name shown across your dashboard and team invitations.
+                        </p>
+                    </div>
+                    <div className="px-6 py-5">
+                        <OrganizationNameForm organization={organization} />
+                    </div>
+                </div>
+            )}
 
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Organization</h4>
-                {organization && <OrganizationNameForm organization={organization} />}
-            </div>
-
-            <Separator />
-
+            {/* Danger Zone */}
             <DeleteAccountSection />
         </div>
     );

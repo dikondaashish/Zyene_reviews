@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, User } from "lucide-react";
 
 const profileFormSchema = z.object({
     full_name: z.string().min(2),
@@ -54,7 +54,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 throw new Error(error.message || "Failed to update profile");
             }
 
-            toast.success("Profile updated");
+            toast.success("Profile updated successfully");
             router.refresh();
         } catch (error: any) {
             toast.error(error.message);
@@ -63,38 +63,57 @@ export function ProfileForm({ user }: ProfileFormProps) {
         }
     }
 
-
-
     return (
-        <div className="space-y-6">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="full_name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Your Name</FormLabel>
+                                <FormLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                    Full Name
+                                </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="John Doe" {...field} />
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input
+                                            placeholder="John Doe"
+                                            className="pl-9"
+                                            {...field}
+                                        />
+                                    </div>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                     <div className="space-y-2">
-                        <FormLabel>Email</FormLabel>
-                        <Input value={user.email} disabled readOnly className="bg-muted" />
-                        <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
+                        <FormLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                            Email Address
+                        </FormLabel>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                value={user.email}
+                                disabled
+                                readOnly
+                                className="pl-9 bg-muted/50"
+                            />
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            Email cannot be changed.
+                        </p>
                     </div>
-
-                    <Button type="submit" disabled={isLoading}>
+                </div>
+                <div className="flex justify-end pt-2">
+                    <Button type="submit" disabled={isLoading} size="sm">
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Save Changes
                     </Button>
-                </form>
-            </Form>
-
-        </div>
+                </div>
+            </form>
+        </Form>
     );
 }

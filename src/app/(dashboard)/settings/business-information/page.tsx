@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
 import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 
-import { Separator } from "@/components/ui/separator";
 import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function BusinessInformationPage() {
@@ -23,33 +22,47 @@ export default async function BusinessInformationPage() {
 
     if (!business) {
         return (
-            <div className="p-8 text-center">
-                <h2 className="text-xl font-semibold">No business found</h2>
-                <p className="text-muted-foreground">Please create a business first.</p>
+            <div className="rounded-lg border bg-white shadow-sm p-8 text-center">
+                <h2 className="text-lg font-semibold">No business found</h2>
+                <p className="text-sm text-muted-foreground mt-1">Please create a business first.</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
+            {/* Page Header */}
             <div>
-                <h3 className="text-lg font-medium">Business Information</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold tracking-tight">Business Information</h3>
+                <p className="text-sm text-muted-foreground mt-1">
                     Manage your business details and review request settings.
                 </p>
             </div>
-            <Separator />
 
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Business Details</h4>
-                <BusinessInfoForm business={business} />
+            {/* Business Details */}
+            <div className="rounded-lg border bg-white shadow-sm">
+                <div className="border-b px-6 py-4">
+                    <h4 className="text-sm font-semibold">Business Details</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                        Core information about your business location and contact.
+                    </p>
+                </div>
+                <div className="px-6 py-5">
+                    <BusinessInfoForm business={business} />
+                </div>
             </div>
 
-            <Separator />
-
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Review Request Settings</h4>
-                <ReviewSettingsForm business={business} />
+            {/* Review Settings */}
+            <div className="rounded-lg border bg-white shadow-sm">
+                <div className="border-b px-6 py-4">
+                    <h4 className="text-sm font-semibold">Review Request Settings</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                        Customize how review requests are sent to your customers.
+                    </p>
+                </div>
+                <div className="px-6 py-5">
+                    <ReviewSettingsForm business={business} />
+                </div>
             </div>
         </div>
     );
