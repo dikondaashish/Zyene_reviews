@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,338 +7,404 @@ import {
   CheckCircle2,
   MessageSquare,
   Zap,
-  Star,
   LayoutDashboard,
   Clock,
   DollarSign,
   ShieldCheck,
-  Smartphone
+  Smartphone,
+  Star,
+  AlertCircle
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 export default function MarketingPage() {
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
+  const staggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full bg-[#f5f5f4] text-[#262626] overflow-hidden font-sans pt-20">
 
-      {/* HERO SECTION */}
-      <section className="w-full py-20 md:py-32 bg-gradient-to-b from-white to-blue-50/30">
-        <div className="container mx-auto px-4 sm:px-8 max-w-7xl text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 max-w-4xl mx-auto leading-tight">
-            Know About Every Review in <span className="text-blue-600">15 Minutes</span>. Not 5 Days.
-          </h1>
-          <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Real-time SMS alerts, AI-powered replies, and more 5-star reviews — built for business owners starting at $29.99/mo.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 h-12 text-base shadow-lg shadow-blue-600/20 w-full sm:w-auto">
-                Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="#how-it-works">
-              <Button variant="outline" size="lg" className="rounded-full px-8 h-12 text-base border-slate-300 text-slate-700 hover:bg-slate-50 w-full sm:w-auto">
-                See How It Works
-              </Button>
-            </Link>
-          </div>
+      {/* 1. HERO SECTION */}
+      <section className="w-full pt-16 pb-24 md:pt-24 md:pb-32 px-4 md:px-8">
+        <div className="container mx-auto max-w-[1400px]">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
+            {/* Left Content */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className="w-full lg:w-[45%] pr-0 lg:pr-8"
+            >
+              <motion.h1
+                variants={fadeInUp}
+                className="text-5xl md:text-7xl lg:text-[5.5rem] font-medium tracking-tighter text-[#262626] mb-8 leading-[1.05]"
+              >
+                Know about every review in 15 minutes
+              </motion.h1>
+              <motion.p
+                variants={fadeInUp}
+                className="text-xl md:text-2xl text-slate-600 mb-10 leading-relaxed font-light"
+              >
+                Zyene powers more than <span className="font-bold">1,000</span> businesses with
+                the <span className="font-bold text-slate-900">#1 review management platform</span> —
+                helping local owners win more trust, and thrive in a digital-first world.
+              </motion.p>
+              <motion.div variants={fadeInUp}>
+                <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                  <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg px-8 py-7 text-[1.1rem] font-medium transition-all">
+                    Get Free Alerts Starting Today <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.div>
 
-          {/* Dashboard Mockup */}
-          <div className="relative mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden aspect-[16/9] md:aspect-[16/8]">
-            <div className="absolute inset-0 bg-slate-50 flex items-center justify-center">
-              <div className="text-center p-8">
-                <LayoutDashboard className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-400 font-medium">Dashboard Preview</p>
+            {/* Right Visual (SpotHopper Petal Shape) */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full lg:w-[50%] relative"
+            >
+              {/* Petal Container */}
+              <div className="relative aspect-[4/3] w-full bg-slate-800 rounded-tl-[4rem] rounded-bl-[4rem] rounded-br-[4rem] rounded-tr-lg overflow-hidden shadow-2xl flex items-center justify-center p-8">
+                {/* Abstract Background for Hero instead of photo */}
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900 mix-blend-multiply opacity-80" />
+                <div className="relative z-10 w-full h-full flex flex-col justify-between opacity-30">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
+                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
+                  </div>
+                  <div className="space-y-4 w-full">
+                    <div className="h-4 bg-white/40 rounded-full w-3/4"></div>
+                    <div className="h-4 bg-white/40 rounded-full w-full"></div>
+                    <div className="h-4 bg-white/40 rounded-full w-5/6"></div>
+                  </div>
+                  <div className="h-1/2 w-full flex items-end justify-between gap-3">
+                    <div className="w-1/5 bg-white/30 rounded-t-lg h-full"></div>
+                    <div className="w-1/5 bg-white/30 rounded-t-lg h-2/3"></div>
+                    <div className="w-1/5 bg-white/30 rounded-t-lg h-5/6"></div>
+                    <div className="w-1/5 bg-white/30 rounded-t-lg h-1/3"></div>
+                    <div className="w-1/5 bg-white/30 rounded-t-lg h-3/4"></div>
+                  </div>
+                </div>
               </div>
-            </div>
-            {/* Optional: Use an actual screenshot if available later */}
-            <div className="absolute top-0 left-0 right-0 h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
-              <div className="h-3 w-3 rounded-full bg-red-400"></div>
-              <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
-              <div className="h-3 w-3 rounded-full bg-green-400"></div>
-            </div>
+
+              {/* Floating Overlap Card (SpotHopper Style) */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-16 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 max-w-[320px] w-[90%]"
+              >
+                <div className="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
+                  <div className="h-8 w-8 rounded-full bg-orange-50 text-[#f97316] flex items-center justify-center">
+                    <Star className="h-4 w-4 fill-current" />
+                  </div>
+                  <h3 className="font-semibold text-[#262626]">Real-time Review Alerts</h3>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between bg-slate-50 p-2 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                      <span className="text-sm font-medium text-slate-600">John Doe</span>
+                    </div>
+                    <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-1 rounded-full flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> 5-Star Left
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between bg-slate-50 p-2 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                      <span className="text-sm font-medium text-slate-600">Sarah Smith</span>
+                    </div>
+                    <span className="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-1 rounded-full flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> 1-Star Alert
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEM SECTION */}
-      <section className="w-full py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              95% of happy customers never leave a review.
-              <br className="hidden md:block" />
-              <span className="text-red-600">The unhappy ones always do.</span>
+      {/* 2. THE PROBLEM SECTION (Header only, matching SpotHopper sections) */}
+      <section className="w-full py-16 px-4">
+        <div className="container mx-auto max-w-4xl text-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-medium tracking-tight text-[#262626] leading-tight">
+              One platform to attract, <br />
+              keep & grow your customers
             </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-blue-100 hover:shadow-lg transition-all">
-              <div className="h-12 w-12 bg-red-100 rounded-xl flex items-center justify-center mb-6 text-red-600">
-                <Clock className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">5-Day Discovery Lag</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Most owners find bad reviews days after they're posted. By then, hundreds of potential customers have seen it.
-              </p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-blue-100 hover:shadow-lg transition-all">
-              <div className="h-12 w-12 bg-orange-100 rounded-xl flex items-center justify-center mb-6 text-orange-600">
-                <LayoutDashboard className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Review Overwhelm</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Managing Google, Yelp, and Facebook separately wastes hours. You miss notifications and forget to reply.
-              </p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-blue-100 hover:shadow-lg transition-all">
-              <div className="h-12 w-12 bg-slate-200 rounded-xl flex items-center justify-center mb-6 text-slate-700">
-                <DollarSign className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Expensive Tools</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Birdeye charges $300/mo. Podium charges more. You're a business owner, not an enterprise software buyer.
-              </p>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
-      <section id="features" className="w-full py-24 bg-slate-50 border-y border-slate-200">
-        <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-          <div className="grid md:grid-cols-3 gap-12 text-center md:text-left">
-            {/* Feature 1 */}
-            <div className="flex flex-col md:items-start items-center">
-              <div className="h-14 w-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <Zap className="h-7 w-7" />
+      {/* 3. FEATURE 1: 50/50 Split Container (SpotHopper Style) */}
+      <section className="w-full px-4 mb-24">
+        <div className="container mx-auto max-w-[1400px]">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="bg-white rounded-[2rem] border border-black/5 overflow-hidden flex flex-col md:flex-row shadow-sm"
+          >
+            {/* Left Side (White) */}
+            <div className="w-full md:w-1/2 p-12 md:p-16 lg:p-20">
+              <div className="flex items-center gap-2 text-orange-600 font-semibold mb-8">
+                <Zap className="h-5 w-5" /> Effortless Monitoring
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">Instant SMS Alerts</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                Get texted within 15 minutes of any bad review. Never be blindsided again. catch issues before they go viral.
-              </p>
+
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-[#262626] mb-12 leading-tight">
+                Never get blindsided by a <br /> bad review again
+              </h3>
+
+              <div className="space-y-8">
+                <div className="flex max-w-md">
+                  <div className="mr-4 mt-1">
+                    <MessageSquare className="h-6 w-6 text-[#f97316]" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-[#262626] mb-1">Instant SMS Alerts</h4>
+                    <p className="text-slate-500 font-light leading-relaxed">Get a text message the moment someone leaves a review. Catch 1-star issues while the customer is still in the building.</p>
+                  </div>
+                </div>
+
+                <div className="flex max-w-md">
+                  <div className="mr-4 mt-1">
+                    <LayoutDashboard className="h-6 w-6 text-[#f97316]" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-[#262626] mb-1">Centralized Dashboard</h4>
+                    <p className="text-slate-500 font-light leading-relaxed">Manage Google, Yelp, and Facebook from one single place instead of constantly checking three different apps.</p>
+                  </div>
+                </div>
+              </div>
+
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
+                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
 
-            {/* Feature 2 */}
-            <div className="flex flex-col md:items-start items-center">
-              <div className="h-14 w-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <MessageSquare className="h-7 w-7" />
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">AI-Powered Replies</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                One-click AI-generated responses in your voice. Professional, empathetic, or friendly tone—you decide.
-              </p>
-            </div>
+            {/* Right Side (Beige with mockup) */}
+            <div className="w-full md:w-1/2 bg-[#f3f4f6] p-8 md:p-16 flex items-center justify-center min-h-[500px]">
+              <div className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md border border-black/5">
+                {/* Fake Map / Dashboard UI */}
+                <div className="w-full h-48 bg-slate-100 rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
+                  <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-1 opacity-10">
+                    {Array.from({ length: 16 }).map((_, i) => <div key={i} className="bg-slate-400"></div>)}
+                  </div>
+                  <div className="relative bg-white px-4 py-2 rounded-full shadow-md text-sm font-semibold flex items-center gap-2 text-slate-700">
+                    <Clock className="w-4 h-4 text-orange-500" /> Ping: 12:45 PM
+                  </div>
+                </div>
 
-            {/* Feature 3 */}
-            <div className="flex flex-col md:items-start items-center">
-              <div className="h-14 w-14 bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <Smartphone className="h-7 w-7" />
+                <div className="space-y-4">
+                  <div className="p-4 border border-orange-100 rounded-2xl bg-orange-50/50 flex gap-4 items-center">
+                    <div className="h-10 w-10 bg-orange-100 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="font-bold text-orange-600">1</span>
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-sm text-[#262626]">Your Business</h5>
+                      <div className="flex text-orange-500 text-xs mt-1">
+                        ★★★★★ 4.8
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 border border-slate-100 rounded-2xl bg-slate-50 flex gap-4 items-center opacity-60">
+                    <div className="h-10 w-10 bg-slate-200 rounded-lg flex items-center justify-center shrink-0">
+                      <span className="font-bold text-slate-500">2</span>
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-sm text-[#262626]">Competitor A</h5>
+                      <div className="flex text-slate-400 text-xs mt-1">
+                        ★★★★☆ 3.8
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">Get More 5-Star Reviews</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                Send customers a quick SMS after their visit. One tap for them to leave a Google review. Watch your rating climb.
-              </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* HOW IT WORKS SECTION */}
-      <section id="how-it-works" className="w-full py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              How It Works
+      {/* 4. FEATURE 2: 50/50 Split Container (Reversed) */}
+      <section className="w-full px-4 mb-24">
+        <div className="container mx-auto max-w-[1400px]">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="bg-white rounded-[2rem] border border-black/5 overflow-hidden flex flex-col md:flex-row-reverse shadow-sm"
+          >
+            {/* Right Side (White Content) */}
+            <div className="w-full md:w-1/2 p-12 md:p-16 lg:p-20">
+              <div className="flex items-center gap-2 text-orange-600 font-semibold mb-8">
+                <Star className="h-5 w-5" /> Automated Reputation
+              </div>
+
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-[#262626] mb-12 leading-tight">
+                Turn happy customers into <br /> your best marketers
+              </h3>
+
+              <div className="space-y-8">
+                <div className="flex max-w-md">
+                  <div className="mr-4 mt-1">
+                    <ShieldCheck className="h-6 w-6 text-[#f97316]" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-[#262626] mb-1">AI-Powered Replies</h4>
+                    <p className="text-slate-500 font-light leading-relaxed">Instantly generate professional, empathetic, or friendly replies in your brand's voice with a single click.</p>
+                  </div>
+                </div>
+
+                <div className="flex max-w-md">
+                  <div className="mr-4 mt-1">
+                    <Smartphone className="h-6 w-6 text-[#f97316]" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-[#262626] mb-1">Auto-Request Reviews</h4>
+                    <p className="text-slate-500 font-light leading-relaxed">Automatically send SMS or email campaigns to recent customers asking for reviews on autopilot.</p>
+                  </div>
+                </div>
+              </div>
+
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
+                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* Left Side (Beige with mockup) */}
+            <div className="w-full md:w-1/2 bg-[#f3f4f6] p-8 md:p-16 flex items-center justify-center min-h-[500px]">
+              <div className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md border border-black/5">
+                {/* Fake AI Reply UI */}
+                <div className="flex gap-4 mb-6 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 bg-slate-200 rounded-full shrink-0"></div>
+                  <div>
+                    <div className="h-4 w-24 bg-slate-200 rounded-full mb-2"></div>
+                    <div className="flex gap-1 text-yellow-400 mb-2">
+                      <Star className="w-4 h-4 fill-current" />
+                      <Star className="w-4 h-4 fill-current" />
+                      <Star className="w-4 h-4 fill-current" />
+                      <Star className="w-4 h-4 fill-current" />
+                      <Star className="w-4 h-4 fill-current" />
+                    </div>
+                    <p className="text-sm text-slate-500">"This place was amazing! Definitely coming back."</p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-orange-50 rounded-2xl border border-orange-100 text-[#ea580c] text-sm relative">
+                  <div className="absolute -top-3 right-4 bg-orange-600 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> AI Generated
+                  </div>
+                  "Thank you so much! We are thrilled to hear you enjoyed your visit and look forward to welcoming you back soon."
+                </div>
+
+                <div className="mt-6 flex gap-3">
+                  <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg">Publish to Google</Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 5. HOW IT WORKS */}
+      <section className="w-full py-24 px-4 bg-[#f3f4f6]">
+        <div className="container mx-auto max-w-7xl">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="text-center mb-20"
+          >
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-[#262626] mb-6">
+              How it Works
             </h2>
-            <p className="text-lg text-slate-600">Success in 3 simple steps</p>
-          </div>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connecting Line (Desktop) */}
-            <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-slate-200 -z-10"></div>
-
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}
+            className="grid md:grid-cols-3 gap-12 relative max-w-5xl mx-auto"
+          >
             {/* Step 1 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="h-24 w-24 bg-white border-4 border-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-8 shadow-sm text-2xl font-bold z-10">
+            <motion.div variants={fadeInUp} className="flex flex-col items-center text-center px-4">
+              <div className="h-20 w-20 bg-[#f97316] text-white rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-orange-600/20 text-3xl font-bold z-10">
                 1
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Connect Google</h3>
-              <p className="text-slate-600">
-                One click to link your Google Business Profile. We sync your data instantly.
+              <h3 className="text-2xl font-semibold text-[#262626] mb-4">Connect</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-light">
+                One click to link your Google Business Profile. We sync your data in seconds.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 2 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="h-24 w-24 bg-white border-4 border-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-8 shadow-sm text-2xl font-bold z-10">
+            <motion.div variants={fadeInUp} className="flex flex-col items-center text-center px-4">
+              <div className="h-20 w-20 bg-[#f97316] text-white rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-orange-600/20 text-3xl font-bold z-10">
                 2
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Get Alerted</h3>
-              <p className="text-slate-600">
-                Instant SMS when reviews come in. Our AI analyzes sentiment and urgency for you.
+              <h3 className="text-2xl font-semibold text-[#262626] mb-4">Get Alerted</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-light">
+                Instant SMS when reviews arrive. Our AI analyzes sentiment and flags urgency.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 3 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="h-24 w-24 bg-white border-4 border-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-8 shadow-sm text-2xl font-bold z-10">
+            <motion.div variants={fadeInUp} className="flex flex-col items-center text-center px-4">
+              <div className="h-20 w-20 bg-[#f97316] text-white rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-orange-600/20 text-3xl font-bold z-10">
                 3
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Reply & Grow</h3>
-              <p className="text-slate-600">
-                AI suggests the perfect reply. Send review requests to happy customers.
+              <h3 className="text-2xl font-semibold text-[#262626] mb-4">Reply & Grow</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-light">
+                One-tap AI replies. Ask happy customers for reviews on autopilot.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* PRICING SECTION */}
-      <section id="pricing" className="w-full py-24 bg-slate-50 border-t border-slate-200">
-        <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-lg text-slate-600">No hidden fees. Cancel anytime.</p>
-          </div>
+      {/* 6. FINAL CTA */}
+      <section className="w-full py-32 px-4 bg-[#f3f4f6]">
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+          className="container mx-auto max-w-5xl bg-[#262626] rounded-[2rem] p-12 md:p-20 text-center text-white relative overflow-hidden"
+        >
+          {/* Decorative background shapes */}
+          <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-orange-600 opacity-20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-orange-600 opacity-20 rounded-full blur-3xl"></div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Starter */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Starter</h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-lg line-through text-gray-400">$49.99</span>
-                  <span className="text-4xl font-bold text-slate-900">$29.99</span>
-                  <span className="text-lg font-normal text-slate-500">/mo</span>
-                </div>
-                <p className="text-sm text-slate-500 mt-1">or $299.99/year (save 50%)</p>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1 text-sm">
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Easy to use dashboard
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 1 Location
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 2,500 email + 2,500 SMS requests/mo
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 5,000 review link requests/mo
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited AI-powered replies
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Campaign automation
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Google, Yelp, Facebook integration
-                </li>
-              </ul>
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                <Button className="w-full" variant="outline">Get Started</Button>
-              </Link>
-            </div>
-
-            {/* Professional — Most Popular */}
-            <div className="bg-white rounded-2xl p-8 border-2 border-blue-600 shadow-xl relative flex flex-col scale-105 z-10">
-              <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
-                MOST POPULAR
-              </div>
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-blue-600 mb-2">Professional</h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-lg line-through text-gray-400">$89.99</span>
-                  <span className="text-4xl font-bold text-slate-900">$59.99</span>
-                  <span className="text-lg font-normal text-slate-500">/mo</span>
-                </div>
-                <p className="text-sm text-slate-500 mt-1">or $599.99/year (save 44%)</p>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1 text-sm">
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Everything in Starter, plus:
-                </li>
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 3 Locations
-                </li>
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 3,000 email + SMS/mo per location
-                </li>
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 6,000 review links/mo per location
-                </li>
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> 15 team members
-                </li>
-                <li className="flex items-start text-slate-900 font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Priority support
-                </li>
-              </ul>
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 h-11">Get Started</Button>
-              </Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Enterprise</h3>
-                <div className="text-4xl font-bold text-slate-900">Custom</div>
-                <p className="text-sm text-slate-500 mt-1">Tailored to your needs</p>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1 text-sm">
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Everything in Professional
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited locations
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Unlimited requests
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Dedicated account manager
-                </li>
-                <li className="flex items-start text-slate-600">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600 mr-3 shrink-0 mt-0.5" /> Custom integrations & SLA
-                </li>
-              </ul>
-              <a href="mailto:sales@zyene.in">
-                <Button className="w-full" variant="outline">Contact Sales</Button>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA SECTION */}
-      <section className="w-full py-24 bg-blue-600 text-white">
-        <div className="container mx-auto px-4 sm:px-8 max-w-5xl text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-8">
-            Start managing your reviews in 5 minutes
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight mb-8 relative z-10 leading-tight">
+            Ready to grow your business?
           </h2>
-          <p className="text-blue-100 text-xl mb-10 max-w-2xl mx-auto">
-            Join hundreds of business owners who save time and grow their business with Zyene.
+          <p className="text-slate-300 text-xl mb-12 max-w-2xl mx-auto font-light relative z-10">
+            Join hundreds of local businesses who are automating their reputation and saving time every day.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center relative z-10">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-10 h-14 rounded-full font-bold shadow-xl">
-                Start Free Trial
+              <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white text-[1.1rem] px-10 py-7 rounded-lg font-medium transition-all">
+                Book a Free Demo <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
-          <div className="mt-8 flex items-center justify-center gap-2 text-blue-200 text-sm">
-            <ShieldCheck className="h-4 w-4" />
-            <span>No credit card required for trial</span>
-          </div>
-        </div>
+        </motion.div>
       </section>
 
     </div>
