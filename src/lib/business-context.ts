@@ -72,6 +72,8 @@ export async function getActiveBusinessId(): Promise<{
     };
 }
 
+import { revalidatePath } from "next/cache";
+
 /**
  * Set the active business ID cookie.
  * Called when user switches business via the BusinessSwitcher.
@@ -84,4 +86,7 @@ export async function setActiveBusiness(businessId: string) {
         httpOnly: true,
         sameSite: "lax",
     });
+
+    // Purge the entire router cache to ensure all pages immediately reflect the new active business
+    revalidatePath("/", "layout");
 }
