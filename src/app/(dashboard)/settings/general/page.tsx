@@ -31,33 +31,34 @@ export default async function GeneralSettingsPage() {
                 </p>
             </div>
 
-            {/* Profile Section */}
-            <div className="rounded-lg border bg-white shadow-sm">
-                <div className="border-b px-6 py-4">
-                    <h4 className="text-sm font-semibold">Your Profile</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                        Update your personal information visible to your team.
-                    </p>
-                </div>
-                <div className="px-6 py-5">
-                    <ProfileForm user={user} />
-                </div>
-            </div>
-
-            {/* Organization Section */}
-            {organization && (
-                <div className="rounded-lg border bg-white shadow-sm">
+            {/* Combined Profile & Organization Section */}
+            <div className="rounded-lg border bg-white shadow-sm flex flex-col">
+                <div>
                     <div className="border-b px-6 py-4">
-                        <h4 className="text-sm font-semibold">Organization</h4>
+                        <h4 className="text-sm font-semibold">Your Profile</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                            The name shown across your dashboard and team invitations.
+                            Update your personal information visible to your team.
                         </p>
                     </div>
                     <div className="px-6 py-5">
-                        <OrganizationNameForm organization={organization} />
+                        <ProfileForm user={user} />
                     </div>
                 </div>
-            )}
+
+                {organization && (
+                    <div className="border-t">
+                        <div className="border-b px-6 py-4">
+                            <h4 className="text-sm font-semibold">Organization</h4>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                                The name shown across your dashboard and team invitations.
+                            </p>
+                        </div>
+                        <div className="px-6 py-5">
+                            <OrganizationNameForm organization={organization} />
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {/* Danger Zone */}
             <DeleteAccountSection />
