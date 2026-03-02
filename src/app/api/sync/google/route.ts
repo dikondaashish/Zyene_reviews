@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
 import { NextResponse } from "next/server";
+import { syncRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -9,6 +10,12 @@ export async function POST(request: Request) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Apply Rate Limiting (1 sync per 5 mins per user)
+    const { success: rateLimitSuccess } = await syncRateLimit.limit(user.id);
+    if (!rateLimitSuccess) {
+        return NextResponse.json({ error: "Sync rate limit exceeded. Please wait 5 minutes." }, { status: 429 });
     }
 
     try {

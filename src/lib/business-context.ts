@@ -26,20 +26,47 @@ export async function getActiveBusinessId(): Promise<{
         return { businessId: null, business: null, organization: null, businesses: [] };
     }
 
-    // Fetch user's org with all businesses
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                *,
-                businesses (
+    // ── Redis Caching for Business Context ──
+    const cacheKey = `user_businesses:${user.id}`;
+    let memberData: any = null;
+
+    try {
+        const { redis } = await import("@/lib/redis");
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            memberData = typeof cached === "string" ? JSON.parse(cached) : cached;
+        }
+    } catch (e) {
+        console.error("Redis cache error:", e);
+    }
+
+    if (!memberData) {
+        // Fetch user's org with all businesses
+        const { data } = await supabase
+            .from("organization_members")
+            .select(`
+                organizations (
                     *,
-                    review_platforms (*)
+                    businesses (
+                        *,
+                        review_platforms (*)
+                    )
                 )
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
+            `)
+            .eq("user_id", user.id)
+            .single();
+
+        memberData = data;
+
+        if (memberData) {
+            try {
+                const { redis } = await import("@/lib/redis");
+                await redis.set(cacheKey, JSON.stringify(memberData), { ex: 300 }); // 5 min TTL
+            } catch (e) {
+                console.error("Redis cache set error:", e);
+            }
+        }
+    }
 
     const organization = (memberData as any)?.organizations || null;
     const businesses: any[] = organization?.businesses || [];

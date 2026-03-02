@@ -5,6 +5,7 @@ import { sendSMS } from "@/lib/twilio/send-sms";
 import { sendEmail } from "@/lib/resend/send-email";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { campaignRateLimit } from "@/lib/rate-limit";
 
 const sendSchema = z.object({
     contacts: z.array(
@@ -31,6 +32,12 @@ export async function POST(
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Apply Rate Limiting (5 campaigns/min per user)
+    const { success: rateLimitSuccess } = await campaignRateLimit.limit(user.id);
+    if (!rateLimitSuccess) {
+        return NextResponse.json({ error: "Rate limit exceeded. Try again later." }, { status: 429 });
     }
 
     // Parse body

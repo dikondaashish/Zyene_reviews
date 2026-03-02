@@ -2,11 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { anthropic } from "@/lib/ai/client";
 import { REPLY_PROMPT } from "@/lib/ai/prompts";
 import { NextResponse } from "next/server";
+import { aiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Apply Rate Limiting (20 AI replies/min per user)
+    const { success: rateLimitSuccess } = await aiRateLimit.limit(user.id);
+    if (!rateLimitSuccess) {
+        return NextResponse.json({ error: "AI rate limit exceeded. Please wait a minute." }, { status: 429 });
+    }
 
     const { reviewId } = await request.json();
     if (!reviewId) return NextResponse.json({ error: "Review ID required" }, { status: 400 });

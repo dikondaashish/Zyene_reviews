@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/lib/twilio/send-sms";
 import { NextResponse } from "next/server";
+import { requestRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
     try {
@@ -17,6 +18,12 @@ export async function POST(request: Request) {
 
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        // Apply Rate Limiting (10 requests/min per user)
+        const { success: rateLimitSuccess } = await requestRateLimit.limit(user.id);
+        if (!rateLimitSuccess) {
+            return new NextResponse("Rate limit exceeded. Try again later.", { status: 429 });
         }
 
         const body = await request.json();

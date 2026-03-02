@@ -122,211 +122,250 @@ export default async function DashboardPage() {
     let newReviews30d = 0;
 
     if (business.id) {
-        // ── Precompute date boundaries (used by multiple queries) ──
-        const now = new Date();
-        const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        // ── Redis Caching ──
+        const cacheKey = `dashboard:stats:${business.id}`;
+        let cachedStats: any = null;
+        try {
+            const { redis } = await import('@/lib/redis');
+            cachedStats = await redis.get(cacheKey);
+        } catch (e) {
+            console.error("Redis fetch error:", e);
+        }
 
-        // ── Fire ALL queries in parallel via Promise.all ──
-        const [
-            // Core stats
-            respondedResult,
-            pendingResult,
-            recentResult,
-            attentionResult,
-            monthResult,
-            trendResult,
-            ratingResult,
-            // Sentiment counts
-            positiveResult,
-            negMixedResult,
-            sentimentTotalResult,
-            // Engagement & usage
-            completedRequestsResult,
-            sentRequestsResult,
-            monthlyRequestsResult,
-            newReview30dResult,
-        ] = await Promise.all([
+        if (cachedStats) {
+            // Restore from cache
+            const stats = typeof cachedStats === 'string' ? JSON.parse(cachedStats) : cachedStats;
+            responseRate = stats.responseRate || 0;
+            pendingCount = stats.pendingCount || 0;
+            recentReviews = stats.recentReviews || [];
+            attentionReviews = stats.attentionReviews || [];
+            trendData = stats.trendData || [];
+            ratingData = stats.ratingData || [];
+            totalReviewsTrend = stats.totalReviewsTrend || 0;
+            averageRatingTrend = stats.averageRatingTrend || 0;
+            positivePercent = stats.positivePercent || 0;
+            negativePercent = stats.negativePercent || 0;
+            hasSentimentData = stats.hasSentimentData || false;
+            engagementRate = stats.engagementRate || 0;
+            hasEngagementData = stats.hasEngagementData || false;
+            requestsThisMonth = stats.requestsThisMonth || 0;
+            newReviews30d = stats.newReviews30d || 0;
+        } else {
+            // ── Precompute date boundaries (used by multiple queries) ──
+            const now = new Date();
+            const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            // ── Fire ALL queries in parallel via Promise.all ──
+            const [
+                // Core stats
+                respondedResult,
+                pendingResult,
+                recentResult,
+                attentionResult,
+                monthResult,
+                trendResult,
+                ratingResult,
+                // Sentiment counts
+                positiveResult,
+                negMixedResult,
+                sentimentTotalResult,
+                // Engagement & usage
+                completedRequestsResult,
+                sentRequestsResult,
+                monthlyRequestsResult,
+                newReview30dResult,
+            ] = await Promise.all([
+                // 1. Response Rate
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("response_status", "responded"),
+                // 2. Pending Reviews Count
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("response_status", "pending"),
+                // 3. Recent Reviews (5 most recent)
+                supabase
+                    .from("reviews")
+                    .select("*")
+                    .eq("business_id", business.id)
+                    .order("review_date", { ascending: false })
+                    .limit(5),
+                // 4. Needs Attention (urgent or negative, still pending)
+                supabase
+                    .from("reviews")
+                    .select("*")
+                    .eq("business_id", business.id)
+                    .eq("response_status", "pending")
+                    .or("rating.lte.2,urgency_score.gte.7")
+                    .order("urgency_score", { ascending: false, nullsFirst: false })
+                    .limit(5),
+                // 5. Monthly trend data (since start of last month)
+                supabase
+                    .from("reviews")
+                    .select("review_date, rating")
+                    .eq("business_id", business.id)
+                    .gte("review_date", startOfLastMonth.toISOString()),
+                // 6. 30-day Chart Data
+                supabase
+                    .from("reviews")
+                    .select("review_date")
+                    .eq("business_id", business.id)
+                    .gte("review_date", thirtyDaysAgo.toISOString()),
+                // 7. Rating Distribution
+                supabase
+                    .from("reviews")
+                    .select("rating")
+                    .eq("business_id", business.id),
+                // 8a. Positive sentiment count
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("sentiment", "positive"),
+                // 8b. Negative/mixed sentiment count
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .in("sentiment", ["negative", "mixed"]),
+                // 8c. Total with sentiment
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .not("sentiment", "is", null),
+                // 9a. Completed requests
+                supabase
+                    .from("review_requests")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .in("status", ["completed", "feedback_left"]),
+                // 9b. Sent requests (non-queued)
+                supabase
+                    .from("review_requests")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .not("status", "eq", "queued"),
+                // 10. Request usage this month
+                supabase
+                    .from("review_requests")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .gte("created_at", startOfThisMonth.toISOString()),
+                // 11. New reviews (30 days)
+                supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .gte("review_date", thirtyDaysAgo.toISOString()),
+            ]);
+
+            // ── Process results ──
+
             // 1. Response Rate
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .eq("response_status", "responded"),
-            // 2. Pending Reviews Count
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .eq("response_status", "pending"),
-            // 3. Recent Reviews (5 most recent)
-            supabase
-                .from("reviews")
-                .select("*")
-                .eq("business_id", business.id)
-                .order("review_date", { ascending: false })
-                .limit(5),
-            // 4. Needs Attention (urgent or negative, still pending)
-            supabase
-                .from("reviews")
-                .select("*")
-                .eq("business_id", business.id)
-                .eq("response_status", "pending")
-                .or("rating.lte.2,urgency_score.gte.7")
-                .order("urgency_score", { ascending: false, nullsFirst: false })
-                .limit(5),
-            // 5. Monthly trend data (since start of last month)
-            supabase
-                .from("reviews")
-                .select("review_date, rating")
-                .eq("business_id", business.id)
-                .gte("review_date", startOfLastMonth.toISOString()),
-            // 6. 30-day Chart Data
-            supabase
-                .from("reviews")
-                .select("review_date")
-                .eq("business_id", business.id)
-                .gte("review_date", thirtyDaysAgo.toISOString()),
+            if (business.total_reviews > 0) {
+                responseRate = ((respondedResult.count || 0) / business.total_reviews) * 100;
+            }
+
+            // 2. Pending
+            pendingCount = pendingResult.count || 0;
+
+            // 3. Recent
+            recentReviews = recentResult.data || [];
+
+            // 4. Attention
+            attentionReviews = attentionResult.data || [];
+
+            // 5. Monthly Trends
+            const monthData = monthResult.data;
+            if (monthData) {
+                const thisMonthReviews = monthData.filter(r => new Date(r.review_date) >= startOfThisMonth);
+                const lastMonthReviews = monthData.filter(r => new Date(r.review_date) < startOfThisMonth && new Date(r.review_date) >= startOfLastMonth);
+
+                totalReviewsTrend = thisMonthReviews.length - lastMonthReviews.length;
+
+                const thisMonthAvg = thisMonthReviews.length > 0
+                    ? thisMonthReviews.reduce((sum, r) => sum + r.rating, 0) / thisMonthReviews.length
+                    : 0;
+                const lastMonthAvg = lastMonthReviews.length > 0
+                    ? lastMonthReviews.reduce((sum, r) => sum + r.rating, 0) / lastMonthReviews.length
+                    : 0;
+
+                if (thisMonthAvg > 0 && lastMonthAvg > 0) {
+                    averageRatingTrend = thisMonthAvg - lastMonthAvg;
+                } else if (thisMonthAvg > 0) {
+                    averageRatingTrend = thisMonthAvg;
+                }
+            }
+
+            // 6. 30-day Chart
+            const trendRaw = trendResult.data;
+            if (trendRaw && trendRaw.length > 0) {
+                const dayMap: Record<string, number> = {};
+                trendRaw.forEach((r) => {
+                    const day = new Date(r.review_date).toISOString().split("T")[0];
+                    dayMap[day] = (dayMap[day] || 0) + 1;
+                });
+                for (let i = 0; i < 30; i++) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - (29 - i));
+                    const key = d.toISOString().split("T")[0];
+                    if (!dayMap[key]) dayMap[key] = 0;
+                }
+                trendData = Object.entries(dayMap)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([day, count]) => ({ day, count }));
+            }
+
             // 7. Rating Distribution
-            supabase
-                .from("reviews")
-                .select("rating")
-                .eq("business_id", business.id),
-            // 8a. Positive sentiment count
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .eq("sentiment", "positive"),
-            // 8b. Negative/mixed sentiment count
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .in("sentiment", ["negative", "mixed"]),
-            // 8c. Total with sentiment
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .not("sentiment", "is", null),
-            // 9a. Completed requests
-            supabase
-                .from("review_requests")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .in("status", ["completed", "feedback_left"]),
-            // 9b. Sent requests (non-queued)
-            supabase
-                .from("review_requests")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .not("status", "eq", "queued"),
-            // 10. Request usage this month
-            supabase
-                .from("review_requests")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .gte("created_at", startOfThisMonth.toISOString()),
-            // 11. New reviews (30 days)
-            supabase
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .gte("review_date", thirtyDaysAgo.toISOString()),
-        ]);
-
-        // ── Process results ──
-
-        // 1. Response Rate
-        if (business.total_reviews > 0) {
-            responseRate = ((respondedResult.count || 0) / business.total_reviews) * 100;
-        }
-
-        // 2. Pending
-        pendingCount = pendingResult.count || 0;
-
-        // 3. Recent
-        recentReviews = recentResult.data || [];
-
-        // 4. Attention
-        attentionReviews = attentionResult.data || [];
-
-        // 5. Monthly Trends
-        const monthData = monthResult.data;
-        if (monthData) {
-            const thisMonthReviews = monthData.filter(r => new Date(r.review_date) >= startOfThisMonth);
-            const lastMonthReviews = monthData.filter(r => new Date(r.review_date) < startOfThisMonth && new Date(r.review_date) >= startOfLastMonth);
-
-            totalReviewsTrend = thisMonthReviews.length - lastMonthReviews.length;
-
-            const thisMonthAvg = thisMonthReviews.length > 0
-                ? thisMonthReviews.reduce((sum, r) => sum + r.rating, 0) / thisMonthReviews.length
-                : 0;
-            const lastMonthAvg = lastMonthReviews.length > 0
-                ? lastMonthReviews.reduce((sum, r) => sum + r.rating, 0) / lastMonthReviews.length
-                : 0;
-
-            if (thisMonthAvg > 0 && lastMonthAvg > 0) {
-                averageRatingTrend = thisMonthAvg - lastMonthAvg;
-            } else if (thisMonthAvg > 0) {
-                averageRatingTrend = thisMonthAvg;
+            const ratingRaw = ratingResult.data;
+            if (ratingRaw && ratingRaw.length > 0) {
+                const ratingMap: Record<number, number> = {};
+                ratingRaw.forEach((r) => {
+                    ratingMap[r.rating] = (ratingMap[r.rating] || 0) + 1;
+                });
+                ratingData = Object.entries(ratingMap).map(([rating, count]) => ({
+                    rating: Number(rating),
+                    count,
+                }));
             }
-        }
 
-        // 6. 30-day Chart
-        const trendRaw = trendResult.data;
-        if (trendRaw && trendRaw.length > 0) {
-            const dayMap: Record<string, number> = {};
-            trendRaw.forEach((r) => {
-                const day = new Date(r.review_date).toISOString().split("T")[0];
-                dayMap[day] = (dayMap[day] || 0) + 1;
-            });
-            for (let i = 0; i < 30; i++) {
-                const d = new Date();
-                d.setDate(d.getDate() - (29 - i));
-                const key = d.toISOString().split("T")[0];
-                if (!dayMap[key]) dayMap[key] = 0;
+            // 8. Sentiment
+            const totalSentiment = sentimentTotalResult.count || 0;
+            if (totalSentiment > 0) {
+                hasSentimentData = true;
+                positivePercent = ((positiveResult.count || 0) / totalSentiment) * 100;
+                negativePercent = ((negMixedResult.count || 0) / totalSentiment) * 100;
             }
-            trendData = Object.entries(dayMap)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([day, count]) => ({ day, count }));
-        }
 
-        // 7. Rating Distribution
-        const ratingRaw = ratingResult.data;
-        if (ratingRaw && ratingRaw.length > 0) {
-            const ratingMap: Record<number, number> = {};
-            ratingRaw.forEach((r) => {
-                ratingMap[r.rating] = (ratingMap[r.rating] || 0) + 1;
-            });
-            ratingData = Object.entries(ratingMap).map(([rating, count]) => ({
-                rating: Number(rating),
-                count,
-            }));
-        }
+            // 9. Engagement
+            if ((sentRequestsResult.count || 0) > 0) {
+                hasEngagementData = true;
+                engagementRate = ((completedRequestsResult.count || 0) / (sentRequestsResult.count || 1)) * 100;
+            }
 
-        // 8. Sentiment
-        const totalSentiment = sentimentTotalResult.count || 0;
-        if (totalSentiment > 0) {
-            hasSentimentData = true;
-            positivePercent = ((positiveResult.count || 0) / totalSentiment) * 100;
-            negativePercent = ((negMixedResult.count || 0) / totalSentiment) * 100;
-        }
+            // 10. Request Usage
+            requestsThisMonth = monthlyRequestsResult.count || 0;
 
-        // 9. Engagement
-        if ((sentRequestsResult.count || 0) > 0) {
-            hasEngagementData = true;
-            engagementRate = ((completedRequestsResult.count || 0) / (sentRequestsResult.count || 1)) * 100;
-        }
+            // 11. New Reviews 30d
+            newReviews30d = newReview30dResult.count || 0;
 
-        // 10. Request Usage
-        requestsThisMonth = monthlyRequestsResult.count || 0;
-
-        // 11. New Reviews 30d
-        newReviews30d = newReview30dResult.count || 0;
+            // Save to cache
+            try {
+                const statsToCache = { responseRate, pendingCount, recentReviews, attentionReviews, trendData, ratingData, totalReviewsTrend, averageRatingTrend, positivePercent, negativePercent, hasSentimentData, engagementRate, hasEngagementData, requestsThisMonth, newReviews30d };
+                const { redis } = await import('@/lib/redis');
+                await redis.set(cacheKey, JSON.stringify(statsToCache), { ex: 300 }); // 5 minutes TTL
+            } catch (e) {
+                console.error("Redis set error:", e);
+            }
+        } // Close cache miss `else`
     }
 
     // ── Computed Stats ──────────────────────────────────────────
