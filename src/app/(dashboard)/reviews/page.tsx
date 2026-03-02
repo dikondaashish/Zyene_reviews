@@ -68,8 +68,7 @@ export default async function ReviewsPage(props: {
             .order("created_at", { ascending: false })
             .range(from, to);
 
-        // @ts-ignore
-        reviews = data || [];
+        reviews = (data as any) || [];
         count = totalCount || 0;
     } else {
         // Fetch Public Reviews

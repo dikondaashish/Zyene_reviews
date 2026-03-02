@@ -13,14 +13,13 @@ export async function POST(request: Request) {
         .from("notification_preferences")
         .upsert({
             user_id: user.id,
+            business_id: body.business_id,
             sms_enabled: body.sms_enabled,
-            phone_number: body.phone_number,
             email_enabled: body.email_enabled,
             digest_enabled: body.digest_enabled,
-            min_urgency_score: body.min_urgency_score,
-            quiet_hours_start: body.quiet_hours_start || null,
-            quiet_hours_end: body.quiet_hours_end || null,
-            updated_at: new Date().toISOString()
+            min_urgency_for_sms: body.min_urgency_score ?? 7,
+            quiet_hours_start: body.quiet_hours_start || "22:00",
+            quiet_hours_end: body.quiet_hours_end || "08:00",
         });
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });

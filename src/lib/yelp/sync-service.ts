@@ -58,8 +58,8 @@ export async function syncYelpReviewsForPlatform(
                 author_name: review.authorName,
                 author_avatar_url: review.authorAvatarUrl,
                 rating: review.rating,
-                content: review.content,
-                published_at: review.publishedAt,
+                text: review.content,
+                review_date: review.publishedAt,
                 response_status: "pending" as const,
                 // Yelp does not support replies via API
             };
@@ -81,7 +81,7 @@ export async function syncYelpReviewsForPlatform(
             }
 
             // 4. AI analysis for new unanalyzed reviews
-            if (upserted && !upserted.sentiment && upserted.content) {
+            if (upserted && !upserted.sentiment && upserted.text) {
                 console.log(`[Yelp AI] Analyzing review ${upserted.id}...`);
                 analyzedCount++;
                 const analysisResult = await analyzeReview(upserted);

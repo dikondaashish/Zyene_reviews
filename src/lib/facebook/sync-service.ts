@@ -60,8 +60,8 @@ export async function syncFacebookReviewsForPlatform(
                 external_id: review.externalId,
                 author_name: review.authorName,
                 rating: review.rating,
-                content: review.content,
-                published_at: review.publishedAt,
+                text: review.content,
+                review_date: review.publishedAt,
                 response_status: "pending" as const,
             };
 
@@ -82,7 +82,7 @@ export async function syncFacebookReviewsForPlatform(
             }
 
             // 4. AI analysis for new unanalyzed reviews
-            if (upserted && !upserted.sentiment && upserted.content) {
+            if (upserted && !upserted.sentiment && upserted.text) {
                 console.log(
                     `[Facebook AI] Analyzing review ${upserted.id}...`
                 );

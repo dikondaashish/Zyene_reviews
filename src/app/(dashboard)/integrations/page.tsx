@@ -122,8 +122,7 @@ export default async function IntegrationsPage() {
         );
     }
 
-    // @ts-ignore
-    const platforms = business?.review_platforms || [];
+    const platforms = (business as any)?.review_platforms || [];
 
     const googlePlatform = platforms.find(
         (p: any) => p.platform === "google"

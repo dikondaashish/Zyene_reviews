@@ -41,9 +41,7 @@ export async function getActiveBusinessId(): Promise<{
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore
-    const organization = memberData?.organizations || null;
-    // @ts-ignore
+    const organization = (memberData as any)?.organizations || null;
     const businesses: any[] = organization?.businesses || [];
 
     if (businesses.length === 0) {

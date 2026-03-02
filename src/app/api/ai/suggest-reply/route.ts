@@ -30,12 +30,11 @@ export async function POST(request: Request) {
     if (error || !review) return NextResponse.json({ error: "Review not found" }, { status: 404 });
 
     try {
-        // @ts-ignore
-        const businessName = review.businesses?.name || "our business";
+        const businessName = (review as any).businesses?.name || "our business";
         const prompt = REPLY_PROMPT
             .replace("{business_name}", businessName)
             .replace("{rating}", review.rating.toString())
-            .replace("{text}", review.content || "");
+            .replace("{text}", review.text || "");
 
         const response = await anthropic.messages.create({
             model: "claude-sonnet-4-5-20250929",

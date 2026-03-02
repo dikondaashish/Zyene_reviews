@@ -9,6 +9,7 @@ import { VolumeChart } from "@/components/analytics/volume-chart";
 import { SentimentChart } from "@/components/analytics/sentiment-chart";
 import { ThemeChart } from "@/components/analytics/theme-chart";
 import { PlatformTable } from "@/components/analytics/platform-table";
+import { getActiveBusinessId } from "@/lib/business-context";
 
 // Helper to get start date
 function getStartDate(range: string) {
@@ -28,7 +29,7 @@ interface Review {
     sentiment: string | null;
     themes: string[] | null;
     response_status: string | null;
-    response_date: string | null;
+    responded_at: string | null;
 }
 
 export default async function AnalyticsPage({
@@ -45,21 +46,37 @@ export default async function AnalyticsPage({
         return redirect("/login");
     }
 
+    // Get active business for scoping queries
+    const { businessId } = await getActiveBusinessId();
+
     const range = searchParams.range || "30d";
     const startDate = getStartDate(range);
 
-    // 1. Fetch Reviews
-    const { data: reviews } = await supabase
+    // 1. Fetch Reviews (scoped to active business)
+    let reviewsQuery = supabase
         .from("reviews")
         .select("*")
         .gte("created_at", startDate.toISOString())
         .order("created_at", { ascending: true });
 
-    // 2. Fetch Review Requests
-    const { count: requestsCount } = await supabase
+    if (businessId) {
+        reviewsQuery = reviewsQuery.eq("business_id", businessId);
+    }
+
+    // 2. Fetch Review Requests (scoped to active business)
+    let requestsQuery = supabase
         .from("review_requests")
         .select("*", { count: "exact", head: true })
         .gte("created_at", startDate.toISOString());
+
+    if (businessId) {
+        requestsQuery = requestsQuery.eq("business_id", businessId);
+    }
+
+    const [{ data: reviews }, { count: requestsCount }] = await Promise.all([
+        reviewsQuery,
+        requestsQuery,
+    ]);
 
     const reviewList: Review[] = reviews || [];
     const totalReviews = reviewList.length;
@@ -69,7 +86,7 @@ export default async function AnalyticsPage({
     // Stats
     const totalRating = reviewList.reduce((acc: number, r: Review) => acc + (r.rating || 0), 0);
     const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
-    const respondedCount = reviewList.filter((r: Review) => r.response_status === "responded" || r.response_date).length;
+    const respondedCount = reviewList.filter((r: Review) => r.response_status === "responded" || r.responded_at).length;
     const responseRate = totalReviews > 0 ? (respondedCount / totalReviews) * 100 : 0;
 
     // Trend & Volume Data (Group by Date)

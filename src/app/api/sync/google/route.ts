@@ -29,11 +29,9 @@ export async function POST(request: Request) {
 
         if (membError || !memberData) throw new Error("Business not found");
 
-        // @ts-ignore
-        const business = memberData.organizations.businesses?.[0];
+        const business = (memberData as any).organizations.businesses?.[0];
         if (!business) throw new Error("Business record missing");
 
-        // @ts-ignore
         const platform = business.review_platforms?.find((p: any) => p.platform === 'google');
         if (!platform) throw new Error("Google platform not connected");
 

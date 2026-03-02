@@ -39,8 +39,7 @@ export async function GET() {
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore
-    const businessId = memberData?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
 
     if (!businessId) {
         return NextResponse.json({ campaigns: [] });
@@ -93,8 +92,7 @@ export async function POST(request: Request) {
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore
-    const businessId = memberData?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
 
     if (!businessId) {
         return NextResponse.json({ error: "No business found" }, { status: 404 });

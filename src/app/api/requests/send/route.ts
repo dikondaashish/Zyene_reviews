@@ -63,7 +63,7 @@ export async function POST(request: Request) {
             .from("customer_contacts")
             .select("last_request_sent_at")
             .eq("business_id", businessId)
-            .eq("phone", customerPhone) // Assuming 'phone' column
+            .eq("phone", customerPhone)
             .single();
 
         if (contact && contact.last_request_sent_at) {
@@ -164,7 +164,7 @@ export async function POST(request: Request) {
         // If I can't increment atomically easily, I'll read-modify-write.
         // I already read `contact` above (Step 3).
 
-        const existingCount = contact ? (contact as any).total_requests_sent || 0 : 0; // Type casting safely
+        // contactFull below fetches all fields for the actual increment
 
         // Wait, I need to fetch `total_requests_sent` in Step 3 if I want to increment it.
         const { data: contactFull } = await supabase
@@ -181,11 +181,11 @@ export async function POST(request: Request) {
             .upsert({
                 business_id: businessId,
                 phone: customerPhone,
-                name: customerName || contactFull?.name, // Keep existing name if not provided
+                name: customerName || contactFull?.name,
                 total_requests_sent: newCount,
                 last_request_sent_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-            }, { onConflict: "business_id,phone" }); // Check constraint name?
+            }, { onConflict: "business_id,phone" });
 
         if (sendStatus === "failed") {
             return new NextResponse(`Failed to send SMS: ${errorMessage}`, { status: 500 });

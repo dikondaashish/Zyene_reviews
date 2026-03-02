@@ -56,7 +56,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         // We need Account ID. Since we don't store it, fetch lists.
         // TODO: Store account_id in review_platforms to optimize this.
-        const accounts = await listAccounts(accessToken);
+        const accounts = await listAccounts(accessToken!);
         // Prioritize ORGANIZATION type if multiple, else first.
         const account = accounts.find((a: any) => a.type === "ORGANIZATION") || accounts[0];
 
@@ -65,7 +65,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         const accountId = account.name.split("/")[1];
 
         // 6. Post Reply to Google
-        await replyToReview(accessToken, accountId, locationId, review.external_id, text);
+        if (!review.external_id) throw new Error("Review external ID missing");
+        await replyToReview(accessToken!, accountId, locationId, review.external_id, text);
 
         // 7. Update Database
         const admin = createAdminClient();

@@ -138,12 +138,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         // If missing, we MUST fetch them (Backward compatibility / First run before auth fix)
         if (!googleAccountId || !googleLocationId) {
             console.log("[Sync] IDs missing. Fetching hierarchy to backfill...");
-            const accounts = await listAccounts(accessToken);
+            const accounts = await listAccounts(accessToken!);
             if (accounts.length === 0) throw new Error("No Google Accounts found");
             const account = accounts[0];
             googleAccountId = account.name.split("/")[1];
 
-            const locations = await listLocations(accessToken, account.name);
+            const locations = await listLocations(accessToken!, account.name);
 
             let locationDetails = null;
             // Match by external_id if possible
@@ -156,7 +156,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
                 if (locations.length === 0) throw new Error("No Locations found for this account");
                 locationDetails = locations[0];
             }
-            googleLocationId = locationDetails.name.split("/").pop(); // locations/{id} -> id
+            googleLocationId = locationDetails.name.split("/").pop() ?? null; // locations/{id} -> id
 
             // Update DB with backfilled IDs
             await admin.from("review_platforms").update({
@@ -172,7 +172,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         // 4. Call reviews.list directly
         console.log(`[Sync] Fetching reviews for Account: ${googleAccountId}, Location: ${googleLocationId}`);
-        const googleReviews = await listReviews(accessToken, googleAccountId!, googleLocationId!);
+        const googleReviews = await listReviews(accessToken!, googleAccountId!, googleLocationId!);
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 

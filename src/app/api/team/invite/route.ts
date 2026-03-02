@@ -64,10 +64,8 @@ export async function POST(request: Request) {
         ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}`
         : `http://auth.${rootDomain}/signup?invite=${invite.token}`;
 
-    // @ts-ignore
-    const inviterName = membership.users?.full_name || "A team member";
-    // @ts-ignore
-    const orgName = membership.organizations?.name || "Zyene";
+    const inviterName = (membership as any).users?.full_name || "A team member";
+    const orgName = (membership as any).organizations?.name || "Zyene";
 
     try {
         await sendEmail({

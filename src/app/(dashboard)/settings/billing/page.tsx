@@ -31,8 +31,7 @@ export default async function BillingPage() {
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore - Supabase types inference
-    const org = (memberData?.organizations as any);
+    const org = (memberData as any)?.organizations;
 
     if (!org) {
         return (

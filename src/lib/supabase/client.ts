@@ -1,12 +1,13 @@
 "use client";
 
 import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "./database.types";
 
 export function createClient() {
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
     const cookieDomain = rootDomain.includes("localhost") ? "localhost" : `.${rootDomain}`;
 
-    return createBrowserClient(
+    return createBrowserClient<Database>(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {

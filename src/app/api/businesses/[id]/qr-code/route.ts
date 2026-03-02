@@ -31,8 +31,7 @@ export async function GET(
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore - Supabase types inference
-    const business = member?.organizations?.businesses?.find(
+    const business = (member as any)?.organizations?.businesses?.find(
         (b: any) => b.id === businessId
     );
 

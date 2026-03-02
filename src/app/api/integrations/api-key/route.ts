@@ -25,9 +25,7 @@ export async function POST(req: Request) {
         .eq("user_id", user.id)
         .single();
 
-    // @ts-ignore
-    const businesses = member?.organizations?.businesses || [];
-    // @ts-ignore
+    const businesses = (member as any)?.organizations?.businesses || [];
     const ownsBusiness = businesses.some((b: any) => b.id === businessId);
 
     if (!ownsBusiness) {

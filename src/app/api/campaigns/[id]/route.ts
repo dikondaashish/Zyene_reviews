@@ -13,8 +13,7 @@ async function verifyCampaignOwnership(supabase: any, userId: string, campaignId
         .eq("user_id", userId)
         .single();
 
-    // @ts-ignore
-    const businessId = memberData?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
     if (!businessId) return null;
 
     const { data: campaign } = await supabase
