@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { globalApiRateLimit } from "@/lib/rate-limit";
 
 export async function middleware(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
@@ -55,7 +56,31 @@ export async function middleware(request: NextRequest) {
         return response;
     };
 
+    // --- GLOBAL API RATE LIMITING (DDoS Protection) ---
     if (pathname.startsWith("/api")) {
+        // Whitelist webhook and background job endpoints from global rate limiting
+        const whitelistedPaths = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        const isWhitelisted = whitelistedPaths.some(p => pathname.startsWith(p));
+
+        if (!isWhitelisted) {
+            const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+                || request.headers.get("x-real-ip")
+                || "anonymous";
+
+            try {
+                const { success } = await globalApiRateLimit.limit(ip);
+                if (!success) {
+                    return NextResponse.json(
+                        { error: "Too many requests. Please slow down." },
+                        { status: 429 }
+                    );
+                }
+            } catch (e) {
+                // If Redis is down, fail open (don't block legitimate traffic)
+                console.error("Global rate limit check failed:", e);
+            }
+        }
+
         return supabaseResponse;
     }
 

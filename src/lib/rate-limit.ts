@@ -36,3 +36,12 @@ export const syncRateLimit = new Ratelimit({
     analytics: true,
     prefix: '@upstash/ratelimit/sync',
 });
+
+// 5. Global API Rate Limit (DDoS protection layer in middleware)
+// 60 requests per minute per IP address across ALL /api/* routes
+export const globalApiRateLimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(60, '1 m'),
+    analytics: true,
+    prefix: '@upstash/ratelimit/global',
+});
