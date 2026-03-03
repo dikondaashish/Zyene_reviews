@@ -93,7 +93,7 @@ export async function middleware(request: NextRequest) {
         if (user && pathname === "/") {
             return createResponse(
                 NextResponse.redirect(
-                    new URL(`http://dashboard.${rootDomain}`, request.url)
+                    new URL(`https://dashboard.${rootDomain}`, request.url)
                 )
             );
         }
@@ -112,7 +112,7 @@ export async function middleware(request: NextRequest) {
         if (!user) {
             return createResponse(
                 NextResponse.redirect(
-                    new URL(`http://auth.${rootDomain}`, request.url)
+                    new URL(`https://auth.${rootDomain}`, request.url)
                 )
             );
         }
