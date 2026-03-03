@@ -67,13 +67,32 @@ export async function POST(request: Request) {
             ? `http://${rootDomain}`
             : `http://dashboard.${rootDomain}`;
 
+        // Auto-apply the correct coupon based on the plan
+        const starterPriceIds = [
+            process.env.STRIPE_STARTER_MONTHLY_PRICE_ID,
+            process.env.STRIPE_STARTER_YEARLY_PRICE_ID,
+        ];
+        const proPriceIds = [
+            process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
+            process.env.STRIPE_PRO_YEARLY_PRICE_ID,
+        ];
+
+        let couponId: string | undefined;
+        if (starterPriceIds.includes(priceId)) {
+            couponId = process.env.STRIPE_NEW_CUSTOMER_COUPON_ID;
+        } else if (proPriceIds.includes(priceId)) {
+            couponId = process.env.STRIPE_NEW_PRO_CUSTOMER_COUPON_ID;
+        }
+
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomerId,
             mode: "subscription",
             line_items: [{ price: priceId, quantity: 1 }],
             success_url: `${dashboardUrl}/settings/billing?success=true`,
             cancel_url: `${dashboardUrl}/settings/billing?canceled=true`,
-            allow_promotion_codes: true,
+            ...(couponId
+                ? { discounts: [{ coupon: couponId }] }
+                : { allow_promotion_codes: true }),
             metadata: {
                 organization_id: member.organization_id,
             },

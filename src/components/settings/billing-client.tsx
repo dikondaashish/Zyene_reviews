@@ -296,7 +296,7 @@ export function BillingClient({
                         >
                             Yearly
                             <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
-                                Save ~40%
+                                Save ~17%
                             </Badge>
                         </button>
                     </div>
@@ -432,7 +432,7 @@ export function BillingClient({
                             </CardContent>
                             <CardFooter>
                                 <a
-                                    href="mailto:sales@zyene.in"
+                                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
                                     className="w-full"
                                 >
                                     <Button
