@@ -1,6 +1,7 @@
 import { anthropic } from "@/lib/ai/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { aiRateLimit } from "@/lib/rate-limit";
 
 const requestSchema = z.object({
     businessName: z.string().min(1),
@@ -11,6 +12,23 @@ const requestSchema = z.object({
 
 export async function POST(request: Request) {
     try {
+        // Enforce Rate Limiting keyed by IP Address
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+            || request.headers.get("x-real-ip")
+            || "anonymous";
+
+        try {
+            const { success } = await aiRateLimit.limit(ip);
+            if (!success) {
+                return NextResponse.json(
+                    { error: "Too many requests. Please try again in a few minutes." },
+                    { status: 429 }
+                );
+            }
+        } catch (e) {
+            console.error("AI Rate limit check failed:", e);
+        }
+
         const body = await request.json();
         const parsed = requestSchema.safeParse(body);
 
