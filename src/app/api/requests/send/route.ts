@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/lib/twilio/send-sms";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
 
         if (businessError || !business) {
             console.error("Business fetch error:", businessError);
+            if (businessError) Sentry.captureException(businessError, { tags: { route: "requests-send", step: "fetch_business" } });
             return new NextResponse("Business not found or access denied", { status: 403 });
         }
 
@@ -115,6 +117,7 @@ export async function POST(request: Request) {
 
         if (insertError) {
             console.error("Insert Request Error:", insertError);
+            Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_request" } });
             return new NextResponse("Failed to create request record", { status: 500 });
         }
 
@@ -157,6 +160,7 @@ export async function POST(request: Request) {
 
         if (updateError) {
             console.error("Update Request Error:", updateError);
+            Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
         }
 
         // 8. Upsert Customer Contact
@@ -202,6 +206,7 @@ export async function POST(request: Request) {
 
     } catch (error: any) {
         console.error("Request API Error:", error);
+        Sentry.captureException(error, { tags: { route: "requests-send" } });
         return new NextResponse(error.message || "Internal Server Error", { status: 500 });
     }
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
@@ -77,6 +78,7 @@ export async function GET(request: Request) {
                     }
                 } catch (hierarchyError) {
                     console.error("Failed to fetch GBP hierarchy:", hierarchyError);
+                    Sentry.captureException(hierarchyError, { tags: { route: "auth-callback", step: "fetch_gbp_hierarchy_add_biz" } });
                 }
 
                 // Create the NEW business in the ORIGINAL org (from URL param)
@@ -100,6 +102,7 @@ export async function GET(request: Request) {
 
                 if (newBizError) {
                     console.error("Failed to create new business:", newBizError);
+                    Sentry.captureException(newBizError, { tags: { route: "auth-callback", step: "create_new_business" } });
                 } else if (newBusiness) {
                     // Link Google platform to the new business
                     await admin.from("review_platforms").insert({
@@ -150,6 +153,7 @@ export async function GET(request: Request) {
                                 }
                             } else {
                                 console.error("Failed to verify magic link:", verifyError);
+                                Sentry.captureException(verifyError, { tags: { route: "auth-callback", step: "verify_magic_link" } });
                             }
                         }
                     }
@@ -196,6 +200,7 @@ export async function GET(request: Request) {
 
                 if (userError) {
                     console.error("Failed to create user record:", userError);
+                    Sentry.captureException(userError, { tags: { route: "auth-callback", step: "create_user" } });
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
@@ -211,6 +216,7 @@ export async function GET(request: Request) {
 
                 if (orgError) {
                     console.error("Failed to create organization:", orgError);
+                    Sentry.captureException(orgError, { tags: { route: "auth-callback", step: "create_organization" } });
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
@@ -251,7 +257,10 @@ export async function GET(request: Request) {
                     to: email,
                     subject: "Welcome to Zyene Reviews!",
                     html: welcomeEmail({ userName: fullName || "User", loginUrl }),
-                }).catch(err => console.error("Failed to send welcome email:", err));
+                }).catch(err => {
+                    console.error("Failed to send welcome email:", err);
+                    Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
+                });
 
                 return NextResponse.redirect(`${origin}/dashboard`);
             }
@@ -289,6 +298,7 @@ export async function GET(request: Request) {
                     }
                 } catch (e) {
                     console.error("Failed to fetch GBP hierarchy:", e);
+                    Sentry.captureException(e, { tags: { route: "auth-callback", step: "fetch_gbp_hierarchy_login" } });
                 }
 
                 const { data: memberData } = await admin

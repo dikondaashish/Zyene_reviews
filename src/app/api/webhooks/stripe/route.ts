@@ -1,4 +1,5 @@
 import { stripe } from "@/lib/stripe/client";
+import * as Sentry from "@sentry/nextjs";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPlanByPriceId, FREE_LIMITS } from "@/lib/stripe/plans";
 import { NextResponse } from "next/server";
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
         );
     } catch (err: any) {
         console.error("Webhook signature verification failed:", err.message);
+        Sentry.captureException(err, { tags: { route: "stripe-webhook", error_type: "signature_verification" } });
         return NextResponse.json(
             { error: `Webhook Error: ${err.message}` },
             { status: 400 }
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
 
                 if (!organizationId) {
                     console.error("No organization_id in checkout session metadata");
+                    Sentry.captureMessage("Stripe checkout session missing organization_id metadata", { level: "error", extra: { session_id: session.id } });
                     break;
                 }
 
@@ -57,6 +60,7 @@ export async function POST(request: Request) {
 
                 if (!priceId) {
                     console.error("No price ID found in subscription");
+                    Sentry.captureMessage("Stripe checkout subscription missing price ID", { level: "error", extra: { subscription_id: subscription.id } });
                     break;
                 }
 
@@ -173,6 +177,7 @@ export async function POST(request: Request) {
         }
     } catch (error: any) {
         console.error("Webhook processing error:", error);
+        Sentry.captureException(error, { tags: { route: "stripe-webhook" } });
     }
 
     return NextResponse.json({ received: true });

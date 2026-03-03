@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { getBusiness, getReviews } from "@/lib/yelp/adapter";
 import { syncYelpReviewsForPlatform } from "@/lib/yelp/sync-service";
+import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
 
         if (error) {
             console.error("[Yelp Confirm] Upsert error:", error);
+            Sentry.captureException(error, { tags: { route: "yelp-confirm", step: "upsert_platform" } });
             return NextResponse.json(
                 { error: "Failed to save Yelp connection" },
                 { status: 500 }
@@ -85,6 +87,7 @@ export async function POST(req: Request) {
         } catch (syncError: any) {
             // Connection saved but sync failed — user can retry
             console.error("[Yelp Confirm] Initial sync error:", syncError);
+            Sentry.captureException(syncError, { tags: { route: "yelp-confirm", step: "initial_sync" } });
             return NextResponse.json({
                 success: true,
                 platform,
@@ -99,6 +102,7 @@ export async function POST(req: Request) {
         }
     } catch (error: any) {
         console.error("[Yelp Confirm] Error:", error);
+        Sentry.captureException(error, { tags: { route: "yelp-confirm" } });
         return NextResponse.json(
             { error: error.message || "Failed to connect Yelp" },
             { status: 500 }

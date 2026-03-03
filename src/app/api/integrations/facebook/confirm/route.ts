@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getPageDetails } from "@/lib/facebook/adapter";
 import { syncFacebookReviewsForPlatform } from "@/lib/facebook/sync-service";
 import { cookies } from "next/headers";
+import * as Sentry from "@sentry/nextjs";
 
 /**
  * POST: Confirm Facebook page connection.
@@ -115,6 +116,7 @@ export async function POST(req: Request) {
 
         if (error) {
             console.error("[Facebook Confirm] Upsert error:", error);
+            Sentry.captureException(error, { tags: { route: "facebook-confirm", step: "upsert_platform" } });
             return NextResponse.json(
                 { error: "Failed to save Facebook connection" },
                 { status: 500 }
@@ -145,12 +147,14 @@ export async function POST(req: Request) {
                 "[Facebook Confirm] Initial sync error:",
                 syncError
             );
+            Sentry.captureException(syncError, { tags: { route: "facebook-confirm", step: "initial_sync" } });
             // Connection saved, sync will retry on next cron
         }
 
         return response;
     } catch (error: any) {
         console.error("[Facebook Confirm] Error:", error);
+        Sentry.captureException(error, { tags: { route: "facebook-confirm" } });
         return NextResponse.json(
             { error: error.message || "Failed to connect Facebook" },
             { status: 500 }

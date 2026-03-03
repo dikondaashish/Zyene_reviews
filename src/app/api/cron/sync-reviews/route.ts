@@ -3,6 +3,7 @@ import { syncGoogleReviewsForPlatform, SyncResult } from "@/lib/google/sync-serv
 import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/lib/yelp/sync-service";
 import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/lib/facebook/sync-service";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export async function GET(request: Request) {
     // Verify Cron Secret
@@ -24,6 +25,7 @@ export async function GET(request: Request) {
 
     if (error) {
         console.error("Cron: Failed to fetch platforms", error);
+        Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
@@ -54,6 +56,10 @@ export async function GET(request: Request) {
             results.push({ id: platform.id, platform: platform.platform, status: "success", ...stats });
         } catch (error: any) {
             console.error(`[Cron] Sync Failed for ${platform.platform} platform ${platform.id}:`, error);
+            Sentry.captureException(error, {
+                tags: { route: "cron-sync-reviews", platform: platform.platform },
+                extra: { platform_id: platform.id }
+            });
             results.push({ id: platform.id, platform: platform.platform, status: "error", error: error.message });
         }
     }
