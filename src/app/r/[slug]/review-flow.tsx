@@ -219,13 +219,24 @@ export function PublicReviewFlow({
             };
 
             if (requestId) {
-                await supabase.from("review_requests").update(trackData).eq("id", requestId);
+                await fetch("/api/track/review", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "update", requestId, trackData }),
+                });
             } else {
-                await supabase.from("review_requests").insert({
-                    business_id: businessId,
-                    channel: "sms",
-                    trigger_source: "manual",
-                    ...trackData
+                await fetch("/api/track/review", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        action: "insert",
+                        trackData: {
+                            business_id: businessId,
+                            channel: "sms",
+                            trigger_source: "manual",
+                            ...trackData,
+                        },
+                    }),
                 });
             }
         } catch (err) {
@@ -265,14 +276,19 @@ export function PublicReviewFlow({
             if (error) throw error;
 
             if (requestId) {
-                await supabase
-                    .from("review_requests")
-                    .update({
-                        status: "feedback_left",
-                        review_left: true,
-                        rating_given: rating,
-                    })
-                    .eq("id", requestId);
+                await fetch("/api/track/review", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        action: "update",
+                        requestId,
+                        trackData: {
+                            status: "feedback_left",
+                            review_left: true,
+                            rating_given: rating,
+                        },
+                    }),
+                });
             }
 
             setStep("thankyou");
