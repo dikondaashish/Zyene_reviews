@@ -16,7 +16,7 @@ export default function AuthLayout({
                             <Star className="h-5 w-5 text-white" />
                         </div>
                         <span className="text-2xl font-bold text-gray-900">
-                            Zyene Ratings
+                            Zyene Reviews
                         </span>
                     </Link>
                 </div>
