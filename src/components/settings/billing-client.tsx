@@ -419,6 +419,11 @@ export function BillingClient({
                                             {intervalLabel}
                                         </span>
                                     </div>
+                                    {!isPaidPlan && (
+                                        <p className="text-sm text-green-600 font-medium mt-1">
+                                            7-day free trial included
+                                        </p>
+                                    )}
                                 </CardHeader>
                                 <CardContent className="flex-1">
                                     <ul className="space-y-2.5 text-sm">
@@ -461,7 +466,7 @@ export function BillingClient({
                                             ) : null}
                                             {isPaidPlan
                                                 ? `Switch to ${plan.name}`
-                                                : `Get ${plan.name}`}
+                                                : "Start Free Trial"}
                                         </Button>
                                     )}
                                 </CardFooter>

@@ -141,6 +141,14 @@ export async function POST(request: Request) {
             ...(couponId
                 ? { discounts: [{ coupon: couponId }] }
                 : { allow_promotion_codes: true }),
+            subscription_data: {
+                trial_period_days: 7,
+                trial_settings: {
+                    end_behavior: {
+                        missing_payment_method: "cancel",
+                    },
+                },
+            },
             metadata: {
                 organization_id: member.organization_id,
             },
