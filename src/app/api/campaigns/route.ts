@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import { getActiveBusinessId } from "@/lib/business-context";
 import { z } from "zod";
 
 const createCampaignSchema = z.object({
@@ -17,7 +17,7 @@ const createCampaignSchema = z.object({
     follow_up_template: z.string().optional(),
 });
 
-// GET /api/campaigns — list campaigns for the user's business
+// GET /api/campaigns — list campaigns for the user's ACTIVE business
 export async function GET() {
     const supabase = await createClient();
 
@@ -29,18 +29,8 @@ export async function GET() {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's business via org membership
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                businesses ( id )
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
-
-    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
+    // Use the active business from cookie (respects business switcher)
+    const { businessId } = await getActiveBusinessId();
 
     if (!businessId) {
         return NextResponse.json({ campaigns: [] });
@@ -82,18 +72,8 @@ export async function POST(request: Request) {
         );
     }
 
-    // Get user's business
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                businesses ( id )
-            )
-        `)
-        .eq("user_id", user.id)
-        .single();
-
-    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
+    // Get user's active business
+    const { businessId } = await getActiveBusinessId();
 
     if (!businessId) {
         return NextResponse.json({ error: "No business found" }, { status: 404 });
