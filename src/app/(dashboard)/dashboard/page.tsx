@@ -81,7 +81,7 @@ export default async function DashboardPage() {
     }
 
     // Get active business from context (cookie-based)
-    const { business: activeBiz, organization } = await getActiveBusinessId();
+    const { business: activeBiz, organization, businesses: allBusinesses } = await getActiveBusinessId();
 
     const business = activeBiz || {
         id: null,
@@ -91,7 +91,9 @@ export default async function DashboardPage() {
         status: "inactive",
     };
 
-    const maxRequestsPerMonth = organization?.max_review_requests_per_month || 5000;
+    const totalOrgLimit = organization?.max_review_requests_per_month || 5000;
+    const businessCount = Math.max(allBusinesses.length, 1);
+    const maxRequestsPerMonth = Math.floor(totalOrgLimit / businessCount);
 
     const googlePlatform = (business as any)?.review_platforms?.find(
         (p: any) => p.platform === "google"
