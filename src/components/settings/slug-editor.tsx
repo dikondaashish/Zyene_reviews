@@ -157,7 +157,7 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                 <div className="flex items-center gap-2">
                                     <div className="flex-1 relative">
                                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
-                                            zyene.in/
+                                            zyenereviews.com/
                                         </div>
                                         <Input
                                             placeholder="your-business-name"
@@ -197,8 +197,8 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                             Warning: Breaking Change
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Changing your link to <strong>zyene.in/{pendingSlug}</strong> will break your current link
-                            (<strong>zyene.in/{initialSlug}</strong>).
+                            Changing your link to <strong>zyenereviews.com/{pendingSlug}</strong> will break your current link
+                            (<strong>zyenereviews.com/{initialSlug}</strong>).
                             <br /><br />
                             Any existing QR codes or printed materials will stop working immediately. Are you sure you want to continue?
                         </AlertDialogDescription>

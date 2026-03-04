@@ -149,7 +149,7 @@ export async function GET(request: Request) {
                                 if (rootDomain.includes("localhost")) {
                                     return NextResponse.redirect(`http://${rootDomain}/businesses`);
                                 } else {
-                                    return NextResponse.redirect(`http://dashboard.${rootDomain}/businesses`);
+                                    return NextResponse.redirect(`https://dashboard.${rootDomain}/businesses`);
                                 }
                             } else {
                                 console.error("Failed to verify magic link:", verifyError);
@@ -163,7 +163,7 @@ export async function GET(request: Request) {
                     if (rootDomain2.includes("localhost")) {
                         return NextResponse.redirect(`http://${rootDomain2}/login?message=business_added`);
                     } else {
-                        return NextResponse.redirect(`http://auth.${rootDomain2}/login?message=business_added`);
+                        return NextResponse.redirect(`https://auth.${rootDomain2}/login?message=business_added`);
                     }
                 }
 
@@ -172,7 +172,7 @@ export async function GET(request: Request) {
                 if (rootDomain.includes("localhost")) {
                     return NextResponse.redirect(`http://${rootDomain}/businesses`);
                 } else {
-                    return NextResponse.redirect(`http://dashboard.${rootDomain}/businesses`);
+                    return NextResponse.redirect(`https://dashboard.${rootDomain}/businesses`);
                 }
             }
 
@@ -251,7 +251,7 @@ export async function GET(request: Request) {
                 const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
                 const loginUrl = rootDomain.includes("localhost")
                     ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
-                    : `http://auth.${rootDomain}/login`;
+                    : `https://auth.${rootDomain}/login`;
 
                 sendEmail({
                     to: email,
@@ -357,7 +357,7 @@ export async function GET(request: Request) {
             if (rootDomain.includes("localhost")) {
                 return NextResponse.redirect(`http://${rootDomain}/dashboard`);
             } else {
-                return NextResponse.redirect(`http://dashboard.${rootDomain}`);
+                return NextResponse.redirect(`https://dashboard.${rootDomain}`);
             }
         }
     }

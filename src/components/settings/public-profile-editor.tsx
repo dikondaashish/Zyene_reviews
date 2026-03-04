@@ -64,7 +64,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         handleValuesChange({ logo_url: url });
     }, [handleValuesChange]);
 
-    const previewUrl = `zyene.in/${previewState.slug}`;
+    const previewUrl = `zyenereviews.com/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
 
     // Share & QR state

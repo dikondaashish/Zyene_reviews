@@ -63,7 +63,7 @@ export default function MarketingPage() {
                 helping local owners win more trust, and thrive in a digital-first world.
               </motion.p>
               <motion.div variants={fadeInUp}>
-                <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                   <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg px-8 py-7 text-[1.1rem] font-medium transition-all">
                     Get Free Alerts Starting Today <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -198,7 +198,7 @@ export default function MarketingPage() {
                 </div>
               </div>
 
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -287,7 +287,7 @@ export default function MarketingPage() {
                 </div>
               </div>
 
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -398,7 +398,7 @@ export default function MarketingPage() {
             Join hundreds of local businesses who are automating their reputation and saving time every day.
           </p>
           <div className="flex items-center justify-center relative z-10">
-            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `http://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
               <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white text-[1.1rem] px-10 py-7 rounded-lg font-medium transition-all">
                 Book a Free Demo <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

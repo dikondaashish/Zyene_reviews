@@ -42,7 +42,7 @@ export default function AddBusinessPage() {
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
             const redirectTo = rootDomain.includes("localhost")
                 ? `http://${rootDomain}/api/auth/callback?next=/businesses&add_org=${orgId}&add_user=${userId}`
-                : `http://auth.${rootDomain}/api/auth/callback?next=/businesses&add_org=${orgId}&add_user=${userId}`;
+                : `https://auth.${rootDomain}/api/auth/callback?next=/businesses&add_org=${orgId}&add_user=${userId}`;
 
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
