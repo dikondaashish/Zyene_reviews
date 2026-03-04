@@ -23,7 +23,7 @@ export async function GET(request: Request) {
         .select(`
             id,
             rating,
-            content,
+            text,
             author_name,
             sentiment,
             created_at,
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     type Review = {
         id: string;
         rating: number;
-        content: string | null;
+        text: string | null;
         author_name: string | null;
         sentiment: string | null;
         created_at: string;
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
             .from("reviews")
             .select("*", { count: "exact", head: true })
             .eq("business_id", businessId)
-            .is("reply_text", null);
+            .is("response_text", null);
 
         // 3. Stats for Digest
         const totalNew = reviews.length;
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
         const digestItems = reviews.slice(0, 5).map((r) => ({
             rating: r.rating,
             authorName: r.author_name || "Anonymous",
-            text: r.content || "",
+            text: r.text || "",
             sentiment: r.sentiment as "positive" | "negative" | "neutral"
         }));
 
