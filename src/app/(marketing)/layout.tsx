@@ -94,12 +94,12 @@ export default function MarketingLayout({
 
             <footer className="border-t bg-slate-50 py-12">
                 <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-                        <div className="col-span-2 md:col-span-1">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+                        <div className="col-span-2 md:col-span-2">
                             <Link href="/" className="font-bold text-lg text-slate-900 mb-4 block">
                                 <span className="text-orange-600">Zyene</span> Reviews
                             </Link>
-                            <p className="text-sm text-slate-500 mb-4">
+                            <p className="text-sm text-slate-500 mb-4 max-w-sm">
                                 Made for business owners who want more 5-star reviews without the hassle.
                             </p>
                             <p className="text-sm text-slate-400">
@@ -109,9 +109,16 @@ export default function MarketingLayout({
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Product</h3>
                             <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="#features" className="hover:text-blue-600">Features</Link></li>
-                                <li><Link href="#pricing" className="hover:text-blue-600">Pricing</Link></li>
+                                <li><Link href="/#features" className="hover:text-blue-600">Features</Link></li>
+                                <li><Link href="/#pricing" className="hover:text-blue-600">Pricing</Link></li>
                                 <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-blue-600">Log In</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
+                            <ul className="space-y-2 text-sm text-slate-600">
+                                <li><Link href="/help" className="hover:text-blue-600">Help Center</Link></li>
+                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Status Page</a></li>
                             </ul>
                         </div>
                         <div>
@@ -119,6 +126,7 @@ export default function MarketingLayout({
                             <ul className="space-y-2 text-sm text-slate-600">
                                 <li><Link href="/privacy" className="hover:text-blue-600">Privacy Policy</Link></li>
                                 <li><Link href="/terms" className="hover:text-blue-600">Terms of Service</Link></li>
+                                <li><Link href="/data-retention" className="hover:text-blue-600">Data Retention</Link></li>
                             </ul>
                         </div>
                     </div>

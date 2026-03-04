@@ -294,6 +294,47 @@ export type Database = {
           },
         ]
       }
+      competitors: {
+        Row: {
+          average_rating: number | null
+          business_id: string
+          created_at: string | null
+          google_url: string | null
+          id: string
+          name: string
+          total_reviews: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          average_rating?: number | null
+          business_id: string
+          created_at?: string | null
+          google_url?: string | null
+          id?: string
+          name: string
+          total_reviews?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          average_rating?: number | null
+          business_id?: string
+          created_at?: string | null
+          google_url?: string | null
+          id?: string
+          name?: string
+          total_reviews?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitors_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_contacts: {
         Row: {
           business_id: string

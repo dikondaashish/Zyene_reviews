@@ -16,6 +16,7 @@ import {
     Store,
     User,
     Users,
+    Target
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -55,6 +56,11 @@ const items = [
         title: "Customers",
         url: "/customers",
         icon: Users,
+    },
+    {
+        title: "Competitors",
+        url: "/competitors",
+        icon: Target,
     },
     {
         title: "Reviews",
