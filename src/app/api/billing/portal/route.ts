@@ -54,6 +54,26 @@ export async function POST() {
             ? `http://${rootDomain}`
             : `https://dashboard.${rootDomain}`;
 
+        // Verify the Stripe customer exists before creating portal session
+        try {
+            await stripe.customers.retrieve(org.stripe_customer_id);
+        } catch (custError: any) {
+            if (custError?.code === "resource_missing") {
+                // Stale customer ID — clear it from DB
+                console.warn(`Stale Stripe customer ID ${org.stripe_customer_id} for org ${member.organization_id}, clearing...`);
+                await admin
+                    .from("organizations")
+                    .update({ stripe_customer_id: null, stripe_subscription_id: null })
+                    .eq("id", member.organization_id);
+
+                return NextResponse.json(
+                    { error: "Your billing account needs to be set up. Please subscribe to a plan first." },
+                    { status: 400 }
+                );
+            }
+            throw custError; // Re-throw other errors
+        }
+
         const session = await stripe.billingPortal.sessions.create({
             customer: org.stripe_customer_id,
             return_url: `${dashboardUrl}/settings/billing`,
