@@ -7,6 +7,7 @@ import { FacebookIntegrationCard } from "@/components/integrations/facebook-card
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
 import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
+import { WidgetCard } from "@/components/integrations/widget-card";
 import {
     Store,
     Utensils,
@@ -16,6 +17,7 @@ import {
     Star,
     Zap,
     Code2,
+    MonitorPlay
 } from "lucide-react";
 
 // ── Brand Icons ──
@@ -282,6 +284,21 @@ export default async function IntegrationsPage() {
                         businessId={business.id}
                         apiKey={apiKey}
                     />
+                </div>
+            </section>
+
+            {/* ── Divider ── */}
+            <hr className="border-border/50" />
+
+            {/* ── Section 3: Website Elements ── */}
+            <section className="space-y-5">
+                <SectionHeader
+                    title="Website Elements"
+                    description="Embed your top reviews directly on your own website"
+                    icon={MonitorPlay}
+                />
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+                    <WidgetCard businessSlug={business.slug} />
                 </div>
             </section>
         </div>

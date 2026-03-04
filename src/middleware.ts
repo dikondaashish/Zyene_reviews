@@ -172,7 +172,8 @@ export async function middleware(request: NextRequest) {
             "/forgot-password",
             "/privacy",
             "/terms",
-            "/r/" // Keep legacy paths working
+            "/r/", // Keep legacy paths working
+            "/w/", // Embeddable widgets
         ];
 
         const isReserved = reservedPrefixes.some(prefix => pathname.startsWith(prefix));
