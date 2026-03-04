@@ -233,7 +233,7 @@ export async function GET(request: Request) {
                 await admin.from("organization_members").insert({
                     organization_id: org.id,
                     user_id: data.user.id,
-                    role: "owner",
+                    role: "ORG_OWNER",
                     status: "active",
                 });
 
