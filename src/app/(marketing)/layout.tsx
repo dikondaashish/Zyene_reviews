@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, X } from "lucide-react";
 import { useState } from "react";
 
+import { CookieBanner } from "@/components/ui/cookie-banner";
+
 export default function MarketingLayout({
     children,
 }: {
@@ -91,6 +93,7 @@ export default function MarketingLayout({
             <main className="flex-1">
                 {children}
             </main>
+            <CookieBanner />
 
             <footer className="border-t bg-slate-50 py-12">
                 <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
