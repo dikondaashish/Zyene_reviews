@@ -4,8 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/resend/send-email";
 import { dailyDigestEmail } from "@/lib/resend/templates/daily-digest-email";
 
-export const runtime = "edge";
-
 export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
