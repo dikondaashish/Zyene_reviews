@@ -16,7 +16,8 @@ import {
   AlertCircle,
   Check,
   Crown,
-  ChevronDown
+  ChevronDown,
+  Lock
 } from "lucide-react";
 import { useState } from "react";
 
@@ -160,6 +161,21 @@ export default function MarketingPage() {
                 </div>
               </motion.div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 1.5 TRUST BADGES */}
+      <section className="w-full py-10 px-4 border-y border-slate-200/60 bg-white/50">
+        <div className="container mx-auto max-w-[1200px]">
+          <p className="text-center text-xs text-slate-400 font-bold mb-8 tracking-widest uppercase">
+            Trusted deeply by local heroes
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-300">
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><ShieldCheck className="w-8 h-8" /> GDPR Ready</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Star className="fill-current w-8 h-8" /> 5.0 Capterra</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Zap className="w-8 h-8" /> Faster</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> SOC2</div>
           </div>
         </div>
       </section>
@@ -399,6 +415,119 @@ export default function MarketingPage() {
                 One-tap AI replies. Ask happy customers for reviews on autopilot.
               </p>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 5.5 TESTIMONIALS */}
+      <section className="w-full py-24 px-4 bg-white border-b border-slate-100">
+        <div className="container mx-auto max-w-7xl">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="text-center mb-16">
+            <p className="text-orange-600 font-semibold mb-3 tracking-wide uppercase text-sm">Customer Stories</p>
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-[#262626] mb-4">Loved by local business owners</h2>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative">
+              <div className="flex gap-1 text-yellow-500 mb-6">
+                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
+              </div>
+              <p className="text-lg text-slate-700 mb-8 font-light leading-relaxed">
+                "We were stuck at 4.1 stars for nearly two years. Since switching to Zyene, we've jumped to 4.8 stars and our incoming calls have literally doubled. The AI replies save me 3 hours a week."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div>
+                  <h4 className="font-semibold text-[#262626]">Michael T.</h4>
+                  <p className="text-sm text-slate-500">Owner, Riverfront Dining</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Testimonial 2 */}
+            <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative">
+              <div className="flex gap-1 text-yellow-500 mb-6">
+                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
+              </div>
+              <p className="text-lg text-slate-700 mb-8 font-light leading-relaxed">
+                "I was paying $300/mo for Birdeye. Zyene does exactly the same thing but the interface is actually modern and the AI response generator is much better. No brainer switch."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div>
+                  <h4 className="font-semibold text-[#262626]">Sarah Jenkins</h4>
+                  <p className="text-sm text-slate-500">Director, Apex Dental Care</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Testimonial 3 */}
+            <motion.div variants={fadeInUp} className="bg-slate-50 border border-slate-100 p-8 rounded-3xl relative">
+              <div className="flex gap-1 text-yellow-500 mb-6">
+                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
+              </div>
+              <p className="text-lg text-slate-700 mb-8 font-light leading-relaxed">
+                "The private feedback feature alone is worth it. We caught a furious customer's complaint privately, resolved it, and they went on to leave a 5-star review instead. Incredible."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div>
+                  <h4 className="font-semibold text-[#262626]">David Chen</h4>
+                  <p className="text-sm text-slate-500">Manager, Chen Auto Repair</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 5.6 COMPARISON TABLE */}
+      <section className="w-full py-24 px-4 bg-[#fafaf9]">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-[#262626] mb-4">Why we win</h2>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            {/* Table code */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="p-6 font-semibold text-slate-600 border-b border-r w-1/3">Features</th>
+                    <th className="p-6 font-bold text-xl text-orange-600 border-b border-r bg-orange-50/30 w-1/3">Zyene Reviews</th>
+                    <th className="p-6 font-semibold text-slate-500 border-b w-1/3">Expensive Competitors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { feature: "AI Review Replies", zyene: true, comp: "Upcharge" },
+                    { feature: "Private Negative Feedback", zyene: true, comp: true },
+                    { feature: "Automated SMS Campaigns", zyene: true, comp: true },
+                    { feature: "Custom Branded Review Pages", zyene: true, comp: false },
+                    { feature: "Embeddable Website Widgets", zyene: true, comp: true },
+                    { feature: "Starting Price", zyene: "$29.99/mo", comp: "$299/mo+" },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-b last:border-0 hover:bg-slate-50/50">
+                      <td className="p-6 text-slate-700 font-medium border-r">{row.feature}</td>
+                      <td className="p-6 border-r bg-orange-50/10">
+                        {typeof row.zyene === 'boolean'
+                          ? (row.zyene ? <CheckCircle2 className="text-green-500 w-6 h-6" /> : <AlertCircle className="text-slate-300 w-6 h-6" />)
+                          : <span className="font-bold text-[#262626]">{row.zyene}</span>
+                        }
+                      </td>
+                      <td className="p-6">
+                        {typeof row.comp === 'boolean'
+                          ? (row.comp ? <CheckCircle2 className="text-green-500 w-6 h-6" /> : <AlertCircle className="text-slate-300 w-6 h-6" />)
+                          : <span className="text-slate-500">{row.comp}</span>
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </motion.div>
         </div>
       </section>

@@ -25,7 +25,8 @@ import {
     AlertCircle,
     CheckCircle2,
     Clock,
-    Mail
+    Mail,
+    Download
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { SendRequestDialog } from "./send-request-dialog";
@@ -142,13 +143,21 @@ export default async function RequestsPage({
                     <h1 className="text-3xl font-bold tracking-tight">Review Requests</h1>
                     <p className="text-muted-foreground mt-1">Manage and track your review invitations.</p>
                 </div>
-                <SendRequestDialog
-                    businessId={business.id}
-                    businessSlug={business.slug}
-                    businessName={business.name}
-                    initialCustomer={initialCustomer}
-                    autoOpen={!!initialCustomer}
-                />
+                <div className="flex items-center gap-2">
+                    <Button variant="outline" asChild>
+                        <a href={`/api/requests/export`}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Export CSV
+                        </a>
+                    </Button>
+                    <SendRequestDialog
+                        businessId={business.id}
+                        businessSlug={business.slug}
+                        businessName={business.name}
+                        initialCustomer={initialCustomer}
+                        autoOpen={!!initialCustomer}
+                    />
+                </div>
             </div>
 
             {/* STATS */}

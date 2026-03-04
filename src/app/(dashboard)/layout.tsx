@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { UserNav } from "@/components/dashboard/user-nav";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { OrganizationDisplay } from "@/components/dashboard/organization-display";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -46,10 +47,13 @@ export default async function DashboardLayout({
                                 activeBusinessId={activeBusinessId}
                             />
                         </div>
-                        <UserNav user={user} />
+                        <div className="flex items-center gap-2">
+                            <ThemeToggle />
+                            <UserNav user={user} />
+                        </div>
                     </div>
                 </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 min-h-[calc(100vh-4rem)]">
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 dark:bg-background min-h-[calc(100vh-4rem)]">
                     {children}
                 </main>
             </SidebarInset>

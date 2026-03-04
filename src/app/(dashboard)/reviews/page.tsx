@@ -6,7 +6,7 @@ import { ReviewsFilters } from "@/components/reviews/reviews-filters";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { Filter, MessageSquare, Lock } from "lucide-react";
+import { Filter, MessageSquare, Lock, Download } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/business-context";
 
@@ -131,6 +131,12 @@ export default async function ReviewsPage(props: {
                     <p className="text-muted-foreground text-sm mt-1">Manage and respond to your customer reviews.</p>
                 </div>
                 <div className="flex gap-2">
+                    <Button variant="outline" asChild>
+                        <a href={`/api/reviews/export?type=${type}`}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Export CSV
+                        </a>
+                    </Button>
                     <SyncButton />
                 </div>
             </div>
