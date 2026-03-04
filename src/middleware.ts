@@ -81,6 +81,26 @@ export async function middleware(request: NextRequest) {
             }
         }
 
+        // CSRF Protection: Validate Origin on mutating requests
+        const csrfWhitelisted = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        const isCsrfWhitelisted = csrfWhitelisted.some(p => pathname.startsWith(p));
+
+        if (!isCsrfWhitelisted) {
+            const origin = request.headers.get("origin");
+            const allowedOrigins = [
+                `https://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            ];
+
+            if (
+                ["POST", "PUT", "DELETE", "PATCH"].includes(request.method) &&
+                !allowedOrigins.includes(origin ?? "")
+            ) {
+                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            }
+        }
+
         return supabaseResponse;
     }
 

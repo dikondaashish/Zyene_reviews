@@ -34,12 +34,22 @@ export async function POST(request: Request) {
             .eq("user_id", user.id)
             .single();
 
+        interface GoogleSyncContext {
+            organizations: {
+                businesses: Array<{
+                    id: string;
+                    review_platforms: Array<{ id: string; platform: string }>;
+                }>;
+            } | null;
+        }
+
         if (membError || !memberData) throw new Error("Business not found");
 
-        const business = (memberData as any).organizations.businesses?.[0];
+        const memberTyped = memberData as unknown as GoogleSyncContext;
+        const business = memberTyped.organizations?.businesses?.[0];
         if (!business) throw new Error("Business record missing");
 
-        const platform = business.review_platforms?.find((p: any) => p.platform === 'google');
+        const platform = business.review_platforms?.find((p) => p.platform === 'google');
         if (!platform) throw new Error("Google platform not connected");
 
         // 2. Call Sync Service
@@ -52,13 +62,13 @@ export async function POST(request: Request) {
         // 1. Conflict (Already Running)
         if (error.code === 'CONFLICT') {
             console.warn(`[Sync API] 409 Conflict: ${error.message}`);
-            return NextResponse.json({ message: error.message }, { status: 409 });
+            return NextResponse.json({ message: "Conflict: Google API resource state" }, { status: 409 });
         }
 
         // 2. Rate Limit (Cooldown)
         if (error.code === 'RATE_LIMIT') {
             console.warn(`[Sync API] 429 Rate Limit: ${error.message}`);
-            return NextResponse.json({ message: error.message }, { status: 429 });
+            return NextResponse.json({ message: "Rate limit exceeded" }, { status: 429 });
         }
 
         // 3. Auth / Business Logic Errors
@@ -73,12 +83,12 @@ export async function POST(request: Request) {
             message = "Authentication expired. Please reconnect Google.";
         } else if (error.message === "Business not found" || error.message === "Google platform not connected") {
             status = 404;
-            message = error.message;
+            message = "Integration not found";
         }
 
         console.error("Sync Error:", error);
         return NextResponse.json(
-            { error: message, details: error.message },
+            { error: message, details: "Internal Server Error" },
             { status }
         );
     }

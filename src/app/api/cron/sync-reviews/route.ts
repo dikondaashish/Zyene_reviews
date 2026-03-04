@@ -6,12 +6,15 @@ import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
 export async function GET(request: Request) {
-    // Verify Cron Secret
+    // Verify Cron Secret — always required (no localhost bypass)
     const authHeader = request.headers.get("authorization");
-    const isLocal = request.headers.get("host")?.includes("localhost");
-
-    if (!isLocal && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return new NextResponse("Unauthorized", { status: 401 });
+    if (
+        process.env.NODE_ENV === "development" &&
+        process.env.ALLOW_INSECURE_CRON === "true"
+    ) {
+        // allow through for local dev only
+    } else if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const admin = createAdminClient();
@@ -26,7 +29,7 @@ export async function GET(request: Request) {
     if (error) {
         console.error("Cron: Failed to fetch platforms", error);
         Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
     console.log(`[Cron] Starting sync for ${platforms?.length || 0} platforms`);
@@ -60,7 +63,7 @@ export async function GET(request: Request) {
                 tags: { route: "cron-sync-reviews", platform: platform.platform },
                 extra: { platform_id: platform.id }
             });
-            results.push({ id: platform.id, platform: platform.platform, status: "error", error: error.message });
+            results.push({ id: platform.id, platform: platform.platform, status: "error", error: "Internal Server Error" });
         }
     }
 

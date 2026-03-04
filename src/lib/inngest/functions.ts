@@ -30,7 +30,15 @@ export const processCampaignContact = inngest.createFunction(
             return data;
         });
 
-        const business = (campaign as any).businesses;
+        interface CampaignWithBusiness {
+            businesses: {
+                name: string;
+                slug: string;
+                review_request_frequency_cap_days: number | null;
+                review_platforms: Array<{ platform: string }>;
+            } | null;
+        }
+        const business = (campaign as unknown as CampaignWithBusiness).businesses;
         if (!business) throw new Error("Business not found for campaign");
 
         // 2. Filter contacts (Frequency Cap & Opt-out checks)
@@ -53,8 +61,13 @@ export const processCampaignContact = inngest.createFunction(
                     .eq("phone", contact.phone)
                     .single();
 
-                if (existingContact?.last_request_sent_at) {
-                    const lastSent = new Date(existingContact.last_request_sent_at);
+                interface CustomerRecord {
+                    last_request_sent_at?: string | null;
+                }
+                const existingCustTyped = existingContact as unknown as CustomerRecord;
+
+                if (existingCustTyped?.last_request_sent_at) {
+                    const lastSent = new Date(existingCustTyped.last_request_sent_at);
                     const now = new Date();
                     const diffDays = (now.getTime() - lastSent.getTime()) / (1000 * 3600 * 24);
                     if (diffDays < frequencyCapDays) {
@@ -149,27 +162,12 @@ export const processCampaignContact = inngest.createFunction(
                 })
                 .eq("id", requestRecord.id);
 
-            // Update frequency cap tracking
-            if (contact.phone || contact.email) {
-                const { data: contactFull } = await supabase
-                    .from("customers")
-                    .select("total_requests_sent, first_name, last_name")
-                    .eq("business_id", businessId)
-                    .or(contact.phone ? `phone.eq.${contact.phone}` : `email.eq.${contact.email}`)
-                    .single();
-
-                await supabase
-                    .from("customers")
-                    .upsert({
-                        business_id: businessId,
-                        phone: contact.phone || undefined,
-                        email: contact.email || undefined,
-                        first_name: contact.name ? contact.name.split(' ')[0] : (contactFull?.first_name || null),
-                        last_name: contact.name && contact.name.includes(' ') ? contact.name.split(' ').slice(1).join(' ') : (contactFull?.last_name || null),
-                        total_requests_sent: (contactFull?.total_requests_sent || 0) + 1,
-                        last_request_sent_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString(),
-                    }, { onConflict: contact.phone ? "business_id,phone" : "business_id,email" });
+            // Atomic frequency cap tracking via RPC
+            if (contact.phone) {
+                await supabase.rpc("increment_customer_requests", {
+                    p_business_id: businessId,
+                    p_phone: contact.phone,
+                });
             }
         });
 

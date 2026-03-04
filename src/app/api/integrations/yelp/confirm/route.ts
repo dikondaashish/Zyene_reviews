@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getBusiness, getReviews } from "@/lib/yelp/adapter";
 import { syncYelpReviewsForPlatform } from "@/lib/yelp/sync-service";
 import * as Sentry from "@sentry/nextjs";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -31,8 +32,9 @@ export async function POST(req: Request) {
             .eq("user_id", user.id)
             .single();
 
-        const businesses = (member as any)?.organizations?.businesses || [];
-        const ownsBusiness = businesses.some((b: any) => b.id === businessId);
+        const memberTyped = member as unknown as MemberOrgContext;
+        const businesses = memberTyped?.organizations?.businesses || [];
+        const ownsBusiness = businesses.some((b) => b.id === businessId);
 
         if (!ownsBusiness) {
             return NextResponse.json(
@@ -104,7 +106,7 @@ export async function POST(req: Request) {
         console.error("[Yelp Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "yelp-confirm" } });
         return NextResponse.json(
-            { error: error.message || "Failed to connect Yelp" },
+            { error: "Internal Server Error" },
             { status: 500 }
         );
     }

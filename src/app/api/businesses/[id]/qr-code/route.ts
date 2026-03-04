@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { generateQRCodeDataURL } from "@/lib/qr/generate-qr";
 import { NextResponse } from "next/server";
+import type { MemberOrgContext, NestedBusiness } from "@/lib/types/member-context";
 
 export async function GET(
     request: Request,
@@ -31,8 +32,9 @@ export async function GET(
         .eq("user_id", user.id)
         .single();
 
-    const business = (member as any)?.organizations?.businesses?.find(
-        (b: any) => b.id === businessId
+    const memberTyped = member as unknown as MemberOrgContext;
+    const business = memberTyped?.organizations?.businesses?.find(
+        (b) => b.id === businessId
     );
 
     if (!business) {

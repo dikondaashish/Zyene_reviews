@@ -68,7 +68,13 @@ export async function getActiveBusinessId(): Promise<{
         }
     }
 
-    const organization = (memberData as any)?.organizations || null;
+    interface MemberDataWithOrg {
+        organizations: Record<string, unknown> & {
+            businesses: Array<Record<string, unknown> & { id: string }>;
+        };
+    }
+    const memberTyped = memberData as unknown as MemberDataWithOrg | null;
+    const organization = memberTyped?.organizations || null;
     const businesses: any[] = organization?.businesses || [];
 
     if (businesses.length === 0) {

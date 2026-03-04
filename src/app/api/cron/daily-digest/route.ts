@@ -111,9 +111,15 @@ export async function GET(request: Request) {
                 .select("*, users(email)")
                 .in("user_id", userIds);
 
+            interface DigestRecipient {
+                digest_enabled?: boolean;
+                users: { email: string } | null;
+            }
+
             const recipients = prefs?.filter(p => {
-                const digestEnabled = (p as any).digest_enabled !== false; // Default true
-                const hasEmail = (p.users as any)?.email;
+                const pTyped = p as unknown as DigestRecipient;
+                const digestEnabled = pTyped.digest_enabled !== false; // Default true
+                const hasEmail = pTyped.users?.email;
                 return digestEnabled && hasEmail;
             }) || [];
 
@@ -130,7 +136,8 @@ export async function GET(request: Request) {
                 });
 
                 await Promise.all(recipients.map(recipient => {
-                    const email = (recipient.users as any).email;
+                    const rTyped = recipient as unknown as DigestRecipient;
+                    const email = rTyped.users!.email;
                     return sendEmail({
                         to: email,
                         subject: `Daily Review Summary for ${business.name}`,

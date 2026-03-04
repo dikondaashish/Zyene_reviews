@@ -7,18 +7,25 @@ export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*")
+        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
         .eq("id", platformId)
         .single();
 
     if (platformError || !platform) throw new Error("Platform not found");
 
-    let accessToken = platform.access_token;
-    const refreshToken = platform.refresh_token;
+    interface PlatformWithTokens {
+        access_token: string | null;
+        refresh_token: string | null;
+        token_expires_at: string | null;
+    }
+    const platformTyped = platform as unknown as PlatformWithTokens;
+
+    let accessToken = platformTyped.access_token;
+    const refreshToken = platformTyped.refresh_token;
 
     // Check Token Expiry (Buffer: 5 minutes)
     const now = new Date();
-    const expiry = platform.token_expires_at ? new Date(platform.token_expires_at) : null;
+    const expiry = platformTyped.token_expires_at ? new Date(platformTyped.token_expires_at) : null;
     const isExpired = !expiry || (expiry.getTime() - now.getTime() < 5 * 60 * 1000);
 
     if (isExpired) {

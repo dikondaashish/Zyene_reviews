@@ -155,7 +155,7 @@ export async function POST(request: Request) {
                 await supabase
                     .from("organizations")
                     .update({
-                        plan: "none",
+                        plan: "free",
                         plan_status: "canceled",
                         stripe_subscription_id: null,
                         max_businesses: FREE_LIMITS.maxLocations,

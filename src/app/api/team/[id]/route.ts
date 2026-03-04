@@ -83,7 +83,7 @@ export async function DELETE(
             .eq("id", id)
             .eq("organization_id", requester.organization_id);
 
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 
     } else {
         // Remove member
@@ -96,7 +96,7 @@ export async function DELETE(
             .eq("id", id)
             .eq("organization_id", requester.organization_id);
 
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 
 // Helper: verify ownership of a campaign
 async function verifyCampaignOwnership(supabase: any, userId: string, campaignId: string) {
@@ -13,7 +14,7 @@ async function verifyCampaignOwnership(supabase: any, userId: string, campaignId
         .eq("user_id", userId)
         .single();
 
-    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
     if (!businessId) return null;
 
     const { data: campaign } = await supabase

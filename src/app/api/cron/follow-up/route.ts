@@ -4,10 +4,13 @@ import { sendReviewRequest } from "@/lib/notifications/review-request";
 
 export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");
-    const isLocal = request.headers.get("host")?.includes("localhost");
-
-    if (!isLocal && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return new NextResponse("Unauthorized", { status: 401 });
+    if (
+        process.env.NODE_ENV === "development" &&
+        process.env.ALLOW_INSECURE_CRON === "true"
+    ) {
+        // allow through for local dev only
+    } else if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
@@ -105,6 +108,6 @@ export async function GET(request: Request) {
 
     } catch (error: any) {
         console.error("[Cron] Follow-up job failed:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

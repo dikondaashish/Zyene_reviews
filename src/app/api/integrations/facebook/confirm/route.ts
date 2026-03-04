@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 import { getPageDetails } from "@/lib/facebook/adapter";
 import { syncFacebookReviewsForPlatform } from "@/lib/facebook/sync-service";
 import { cookies } from "next/headers";
 import * as Sentry from "@sentry/nextjs";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 
 /**
  * POST: Confirm Facebook page connection.
@@ -64,8 +66,9 @@ export async function POST(req: Request) {
             .eq("user_id", user.id)
             .single();
 
-        const businesses = (member as any)?.organizations?.businesses || [];
-        const ownsBusiness = businesses.some((b: any) => b.id === businessId);
+        const memberTyped = member as unknown as MemberOrgContext;
+        const businesses = memberTyped?.organizations?.businesses || [];
+        const ownsBusiness = businesses.some((b) => b.id === businessId);
 
         if (!ownsBusiness) {
             return NextResponse.json(
@@ -156,7 +159,7 @@ export async function POST(req: Request) {
         console.error("[Facebook Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "facebook-confirm" } });
         return NextResponse.json(
-            { error: error.message || "Failed to connect Facebook" },
+            { error: "Internal Server Error" },
             { status: 500 }
         );
     }

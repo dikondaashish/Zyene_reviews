@@ -3,6 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend/send-email";
 import { TeamInviteEmail } from "@/lib/resend/templates/team-invite-email";
+import { z } from "zod";
+
+const inviteSchema = z.object({
+    email: z.string().email().max(255),
+    role: z.enum(["admin", "manager", "member", "viewer"]),
+});
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -14,7 +20,11 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { email, role } = await request.json();
+    const parsed = inviteSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    }
+    const { email, role } = parsed.data;
 
     // Verify admin/owner role
     const { data: membership, error: membError } = await supabase
@@ -30,11 +40,34 @@ export async function POST(request: Request) {
 
     const organizationId = membership.organization_id;
 
-    // Check if user is already a member
-    // We need to look up public.users by email to check existing membership?
-    // Supabase standard `users` table isn't usually queryable by email by unprivileged users.
-    // However, we can check `organization_members` if we had users table replicated or joined.
-    // For now, we trust `invitations` unique constraint and check if `invitations` has it.
+    interface MembershipWithOrg {
+        organizations: { name: string; max_team_members?: number } | null;
+        users: { full_name: string | null } | null;
+    }
+    const membershipTyped = membership as unknown as MembershipWithOrg;
+
+    // FIX 4.2: Enforce team member limit
+    const org = membershipTyped.organizations;
+    const maxMembers = org?.max_team_members ?? 1;
+
+    const { count: currentMemberCount } = await supabase
+        .from("organization_members")
+        .select("*", { count: "exact", head: true })
+        .eq("organization_id", organizationId);
+
+    const { count: pendingInviteCount } = await supabase
+        .from("invitations")
+        .select("*", { count: "exact", head: true })
+        .eq("organization_id", organizationId)
+        .is("accepted_at", null);
+
+    const totalSeats = (currentMemberCount || 0) + (pendingInviteCount || 0);
+    if (totalSeats >= maxMembers) {
+        return NextResponse.json(
+            { error: "Team member limit reached. Please upgrade your plan." },
+            { status: 403 }
+        );
+    }
 
     // Insert invitation
     const { data: invite, error: inviteError } = await supabase
@@ -64,8 +97,8 @@ export async function POST(request: Request) {
         ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}`
         : `https://auth.${rootDomain}/signup?invite=${invite.token}`;
 
-    const inviterName = (membership as any).users?.full_name || "A team member";
-    const orgName = (membership as any).organizations?.name || "Zyene";
+    const inviterName = membershipTyped.users?.full_name || "A team member";
+    const orgName = membershipTyped.organizations?.name || "Zyene";
 
     try {
         await sendEmail({

@@ -24,7 +24,7 @@ export async function syncFacebookReviewsForPlatform(
     // 1. Get platform record
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*")
+        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
         .eq("id", platformId)
         .single();
 

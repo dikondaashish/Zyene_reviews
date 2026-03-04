@@ -16,6 +16,14 @@ export async function POST() {
     }
 
     try {
+        interface OrgMemberWithRole {
+            role: string;
+            organizations: {
+                id: string;
+                stripe_customer_id: string | null;
+            } | null;
+        }
+
         // Get user's organization
         const admin = createAdminClient();
         const { data: member } = await admin
@@ -32,15 +40,19 @@ export async function POST() {
         }
 
         // Security: Only owners and managers can manage billing
-        const memberRole = (member as any).role;
-        if (memberRole && !["ORG_OWNER", "ORG_MANAGER"].includes(memberRole)) {
+        const memberTyped = member as unknown as OrgMemberWithRole;
+        const memberRole = memberTyped.role;
+        if (memberRole && !["owner", "admin", "manager"].includes(memberRole)) {
             return NextResponse.json(
                 { error: "You don't have permission to manage billing." },
                 { status: 403 }
             );
         }
 
-        const org = member.organizations as any;
+        const org = memberTyped.organizations;
+        if (!org) {
+            return NextResponse.json({ error: "Organization lookup failed" }, { status: 404 });
+        }
 
         if (!org.stripe_customer_id) {
             return NextResponse.json(

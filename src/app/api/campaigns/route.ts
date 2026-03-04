@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 import { z } from "zod";
 
 const createCampaignSchema = z.object({
@@ -39,7 +40,7 @@ export async function GET() {
         .eq("user_id", user.id)
         .single();
 
-    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
 
     if (!businessId) {
         return NextResponse.json({ campaigns: [] });
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
         .eq("user_id", user.id)
         .single();
 
-    const businessId = (memberData as any)?.organizations?.businesses?.[0]?.id;
+    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
 
     if (!businessId) {
         return NextResponse.json({ error: "No business found" }, { status: 404 });

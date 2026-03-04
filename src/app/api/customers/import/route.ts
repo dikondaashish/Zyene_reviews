@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import * as Sentry from "@sentry/nextjs";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -31,7 +32,8 @@ export async function POST(req: Request) {
             .eq("status", "active")
             .single();
 
-        const businesses = (member as any)?.organizations?.businesses || [];
+        const memberTyped = member as unknown as MemberOrgContext;
+        const businesses = memberTyped?.organizations?.businesses || [];
         const activeBusiness = businesses[0];
 
         if (!activeBusiness) {

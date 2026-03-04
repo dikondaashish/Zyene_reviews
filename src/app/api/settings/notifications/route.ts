@@ -22,7 +22,7 @@ export async function POST(request: Request) {
             quiet_hours_end: body.quiet_hours_end || "08:00",
         });
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 
     return NextResponse.json({ success: true });
 }

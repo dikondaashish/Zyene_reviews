@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
+import type { MemberOrgContext } from "@/lib/types/member-context";
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -25,8 +26,9 @@ export async function POST(req: Request) {
         .eq("user_id", user.id)
         .single();
 
-    const businesses = (member as any)?.organizations?.businesses || [];
-    const ownsBusiness = businesses.some((b: any) => b.id === businessId);
+    const memberTyped = member as unknown as MemberOrgContext;
+    const businesses = memberTyped?.organizations?.businesses || [];
+    const ownsBusiness = businesses.some((b) => b.id === businessId);
 
     if (!ownsBusiness) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 403 });

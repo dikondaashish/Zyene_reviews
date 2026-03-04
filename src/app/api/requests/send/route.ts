@@ -10,8 +10,6 @@ export async function POST(request: Request) {
     try {
         const supabase = await createClient();
         const admindClient = createAdminClient();
-        // Actually, user is authenticated, so we should use `supabase` for things they own, but `sms_opt_outs` might be global?
-        // User said `sms_opt_outs` table exists.
 
         const {
             data: { user },
@@ -75,8 +73,13 @@ export async function POST(request: Request) {
             .eq("phone", customerPhone)
             .single();
 
-        if (contact && contact.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
+        interface CustomerRecord {
+            last_request_sent_at?: string | null;
+        }
+        const contactTyped = contact as unknown as CustomerRecord;
+
+        if (contactTyped?.last_request_sent_at) {
+            const lastSent = new Date(contactTyped.last_request_sent_at);
             const now = new Date();
             const diffDays = (now.getTime() - lastSent.getTime()) / (1000 * 3600 * 24);
 
@@ -97,11 +100,7 @@ export async function POST(request: Request) {
             return new NextResponse("Customer has opted out", { status: 400 });
         }
 
-        // 5. Generate Review Link
-        // Need a unique ID for the request. We insert first with 'queued' status? 
-        // Or generate distinct ID? Supabase generates ID on insert.
-        // User said: "Generate unique review link: ...ref=${requestId}".
-        // So I must insert first.
+        // 5. Generate Review Link — insert first to get requestId for the link
 
         const { data: requestRecord, error: insertError } = await supabase
             .from("review_requests")
@@ -140,12 +139,7 @@ export async function POST(request: Request) {
                 errorMessage = result.error;
             }
         } else {
-            // Email not implemented yet per instructions
-            // But for now mark as sent if selected? User said "email disabled for now" in UI.
-            // If manual post sent email, just mark sent/fake?
-            // Prompt says "If channel = 'sms': ... Send via sendSMS()".
-            // It implies other channels might just be logged?
-            // I'll stick to SMS logic.
+            // Email channel — not yet implemented; will be handled when email sending is enabled
         }
 
         // 7. Update Request Status
@@ -163,39 +157,11 @@ export async function POST(request: Request) {
             Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
         }
 
-        // 8. Upsert Customer Contact
-        // We need to increment total_requests_sent.
-        // First fetch existing or just use upsert with onConflict?
-        // Supabase upsert:
-        // We need `business_id` + `phone` to be unique constraint.
-        // I'll assume they are unique.
-
-        // Fetch again to be safe on existing count?
-        // Or just upsert.
-        // If I can't increment atomically easily, I'll read-modify-write.
-        // I already read `contact` above (Step 3).
-
-        // contactFull below fetches all fields for the actual increment
-
-        // Update frequency tracking
-        const { data: existingCustomer } = await supabase
-            .from("customers")
-            .select("total_requests_sent, first_name, last_name")
-            .eq("business_id", businessId)
-            .eq("phone", customerPhone)
-            .single();
-
-        await supabase
-            .from("customers")
-            .upsert({
-                business_id: businessId,
-                phone: customerPhone,
-                first_name: customerName ? customerName.split(' ')[0] : (existingCustomer?.first_name || null),
-                last_name: customerName && customerName.includes(' ') ? customerName.split(' ').slice(1).join(' ') : (existingCustomer?.last_name || null),
-                last_request_sent_at: new Date().toISOString(),
-                total_requests_sent: (existingCustomer?.total_requests_sent || 0) + 1,
-                updated_at: new Date().toISOString(),
-            }, { onConflict: "business_id,phone" });
+        // 8. Upsert Customer Contact — atomic frequency tracking via RPC (FIX 4.3)
+        await supabase.rpc("increment_customer_requests", {
+            p_business_id: businessId,
+            p_phone: customerPhone,
+        });
 
         if (sendStatus === "failed") {
             return new NextResponse(`Failed to send SMS: ${errorMessage}`, { status: 500 });
@@ -206,6 +172,9 @@ export async function POST(request: Request) {
     } catch (error: any) {
         console.error("Request API Error:", error);
         Sentry.captureException(error, { tags: { route: "requests-send" } });
-        return new NextResponse(error.message || "Internal Server Error", { status: 500 });
+        return NextResponse.json(
+            { error: "An unexpected error occurred. Please try again." },
+            { status: 500 }
+        );
     }
 }
