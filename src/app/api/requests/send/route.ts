@@ -9,7 +9,7 @@ import { requestRateLimit } from "@/lib/rate-limit";
 export async function POST(request: Request) {
     try {
         const supabase = await createClient();
-        const admindClient = createAdminClient(); // For bypassing RLS on customer_contacts upsert if needed, or strictly secure it.
+        const admindClient = createAdminClient();
         // Actually, user is authenticated, so we should use `supabase` for things they own, but `sms_opt_outs` might be global?
         // User said `sms_opt_outs` table exists.
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         const frequencyCapDays = business.review_request_frequency_cap_days || 30; // Default 30?
 
         const { data: contact } = await supabase
-            .from("customer_contacts")
+            .from("customers")
             .select("last_request_sent_at")
             .eq("business_id", businessId)
             .eq("phone", customerPhone)
@@ -177,24 +177,23 @@ export async function POST(request: Request) {
 
         // contactFull below fetches all fields for the actual increment
 
-        // Wait, I need to fetch `total_requests_sent` in Step 3 if I want to increment it.
-        const { data: contactFull } = await supabase
-            .from("customer_contacts")
-            .select("*")
+        // Update frequency tracking
+        const { data: existingCustomer } = await supabase
+            .from("customers")
+            .select("total_requests_sent, first_name, last_name")
             .eq("business_id", businessId)
             .eq("phone", customerPhone)
             .single();
 
-        const newCount = (contactFull?.total_requests_sent || 0) + 1;
-
         await supabase
-            .from("customer_contacts")
+            .from("customers")
             .upsert({
                 business_id: businessId,
                 phone: customerPhone,
-                name: customerName || contactFull?.name,
-                total_requests_sent: newCount,
+                first_name: customerName ? customerName.split(' ')[0] : (existingCustomer?.first_name || null),
+                last_name: customerName && customerName.includes(' ') ? customerName.split(' ').slice(1).join(' ') : (existingCustomer?.last_name || null),
                 last_request_sent_at: new Date().toISOString(),
+                total_requests_sent: (existingCustomer?.total_requests_sent || 0) + 1,
                 updated_at: new Date().toISOString(),
             }, { onConflict: "business_id,phone" });
 

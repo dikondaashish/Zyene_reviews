@@ -16,6 +16,7 @@ import {
     Pause,
     Play,
     Upload,
+    FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,6 +43,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import { CSVImportDialog } from "@/components/campaigns/csv-import-dialog";
 
 interface Campaign {
     id: string;
@@ -96,6 +98,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [csvDialogOpen, setCsvDialogOpen] = useState(false);
 
     // Add contacts form
     const [contactName, setContactName] = useState("");
@@ -193,6 +196,34 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
         }
     };
 
+    const handleCSVImport = async (contacts: { name?: string; email?: string; phone?: string }[]) => {
+        if (!campaign) return;
+
+        setSending(true);
+        try {
+            const res = await fetch(`/api/campaigns/${campaign.id}/send`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contacts }),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                toast.error(result.error || "Failed to import");
+                return;
+            }
+
+            toast.success(`Imported: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
+            setCsvDialogOpen(false);
+            fetchCampaign();
+        } catch {
+            toast.error("Failed to import");
+        } finally {
+            setSending(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center py-20">
@@ -280,8 +311,16 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                     <Upload className="mr-2 h-4 w-4" />
                                     Bulk
                                 </Button>
-                                <Button variant="outline" size="sm" disabled>
-                                    CSV (Coming Soon)
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setDialogOpen(false);
+                                        setCsvDialogOpen(true);
+                                    }}
+                                >
+                                    <FileText className="mr-2 h-4 w-4" />
+                                    CSV
                                 </Button>
                             </div>
 
@@ -457,6 +496,12 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                     )}
                 </CardContent>
             </Card>
+            <CSVImportDialog
+                open={csvDialogOpen}
+                onOpenChange={setCsvDialogOpen}
+                onImport={handleCSVImport}
+                isImporting={sending}
+            />
         </div>
     );
 }
