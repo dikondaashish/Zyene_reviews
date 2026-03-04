@@ -13,8 +13,30 @@ import {
   ShieldCheck,
   Smartphone,
   Star,
-  AlertCircle
+  AlertCircle,
+  Check,
+  Crown,
+  ChevronDown
 } from "lucide-react";
+import { useState } from "react";
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-slate-200 last:border-0">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full py-5 text-left"
+      >
+        <span className="text-lg font-medium text-[#262626]">{question}</span>
+        <ChevronDown className={`h-5 w-5 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <p className="pb-5 text-slate-600 leading-relaxed">{answer}</p>
+      )}
+    </div>
+  );
+}
 import { motion, Variants } from "framer-motion";
 
 export default function MarketingPage() {
@@ -65,7 +87,7 @@ export default function MarketingPage() {
               <motion.div variants={fadeInUp}>
                 <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                   <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg px-8 py-7 text-[1.1rem] font-medium transition-all">
-                    Get Free Alerts Starting Today <ArrowRight className="ml-2 h-5 w-5" />
+                    Start Your 7-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               </motion.div>
@@ -160,7 +182,7 @@ export default function MarketingPage() {
       </section>
 
       {/* 3. FEATURE 1: 50/50 Split Container (SpotHopper Style) */}
-      <section className="w-full px-4 mb-24">
+      <section id="features" className="w-full px-4 mb-24">
         <div className="container mx-auto max-w-[1400px]">
           <motion.div
             initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
@@ -198,9 +220,9 @@ export default function MarketingPage() {
                 </div>
               </div>
 
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href="#pricing">
                 <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
-                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                  See Pricing <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -287,9 +309,9 @@ export default function MarketingPage() {
                 </div>
               </div>
 
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href="#pricing">
                 <Button variant="outline" className="mt-12 text-[#262626] border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-lg px-6 py-6 font-medium">
-                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                  See Pricing <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -381,13 +403,159 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      {/* 6. FINAL CTA */}
+      {/* 6. PRICING SECTION */}
+      <section id="pricing" className="w-full py-24 px-4 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-[#262626] mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-slate-500 font-light">
+              Start with a 7-day free trial. No credit card required.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}
+            className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          >
+            {/* Starter */}
+            <motion.div variants={fadeInUp} className="bg-white border border-slate-200 rounded-2xl p-8 flex flex-col">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="h-5 w-5 text-orange-500" />
+                <h3 className="text-xl font-semibold text-[#262626]">Starter</h3>
+              </div>
+              <p className="text-sm text-slate-500 mb-6">Perfect for single-location businesses</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-lg line-through text-gray-400">$49.99</span>
+                <span className="text-4xl font-bold text-[#262626]">$29.99</span>
+                <span className="text-slate-500">/mo</span>
+              </div>
+              <p className="text-sm text-green-600 font-medium mb-6">7-day free trial included</p>
+              <ul className="space-y-3 text-sm text-slate-600 flex-1 mb-8">
+                {["Easy to use dashboard", "SEO optimized AI reviews", "1 Location", "2,500 email requests/month", "2,500 SMS requests/month", "5,000 review link requests/month", "Campaign automation", "Customizable review page", "Private feedback capture", "Google, Yelp, Facebook integration", "AI-powered replies"].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg py-6 font-medium">
+                  Start Free Trial
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Professional */}
+            <motion.div variants={fadeInUp} className="bg-[#262626] text-white border-2 border-orange-500 rounded-2xl p-8 flex flex-col relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
+              <div className="flex items-center gap-2 mb-2">
+                <Crown className="h-5 w-5 text-orange-400" />
+                <h3 className="text-xl font-semibold">Professional</h3>
+              </div>
+              <p className="text-sm text-slate-400 mb-6">For growing multi-location businesses</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-lg line-through text-gray-500">$89.99</span>
+                <span className="text-4xl font-bold">$59.99</span>
+                <span className="text-slate-400">/mo</span>
+              </div>
+              <p className="text-sm text-green-400 font-medium mb-6">7-day free trial included</p>
+              <ul className="space-y-3 text-sm text-slate-300 flex-1 mb-8">
+                {["Everything in Starter, plus:", "3 Locations", "3,000 email requests/month per location", "3,000 SMS requests/month per location", "6,000 review link requests/month per location", "Priority support"].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-400 shrink-0 mt-0.5" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white rounded-lg py-6 font-medium">
+                  Start Free Trial
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Enterprise */}
+            <motion.div variants={fadeInUp} className="bg-white border border-slate-200 rounded-2xl p-8 flex flex-col">
+              <div className="flex items-center gap-2 mb-2">
+                <ShieldCheck className="h-5 w-5 text-orange-500" />
+                <h3 className="text-xl font-semibold text-[#262626]">Enterprise</h3>
+              </div>
+              <p className="text-sm text-slate-500 mb-6">For franchises & large organizations</p>
+              <div className="flex items-baseline gap-2 mb-6">
+                <span className="text-4xl font-bold text-[#262626]">Custom</span>
+              </div>
+              <ul className="space-y-3 text-sm text-slate-600 flex-1 mb-8">
+                {["Everything in Professional, plus:", "Unlimited locations", "Custom request limits", "Dedicated account manager", "Custom integrations", "SLA guarantee", "White-label options"].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <a href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise">
+                <Button variant="outline" className="w-full rounded-lg py-6 font-medium">
+                  Contact Sales
+                </Button>
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. FAQ SECTION */}
+      <section className="w-full py-24 px-4 bg-[#f3f4f6]">
+        <div className="container mx-auto max-w-3xl">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-[#262626] mb-4">
+              Frequently Asked Questions
+            </h2>
+          </motion.div>
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+            className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100"
+          >
+            <FAQItem
+              question="How does the 7-day free trial work?"
+              answer="Sign up with any plan and get full access for 7 days — no credit card required until the trial ends. If you cancel within 7 days, you won't be charged."
+            />
+            <FAQItem
+              question="How do review requests work?"
+              answer="You can send review requests via email, SMS, or a shareable link. Each request directs your customer to your custom review page where they can leave feedback or be guided to Google/Yelp/Facebook."
+            />
+            <FAQItem
+              question="Does Zyene post AI replies directly to Google?"
+              answer="Zyene generates AI-powered reply suggestions in one click. You can review, edit, and copy them to post on Google — keeping you in full control of your responses."
+            />
+            <FAQItem
+              question="Can I manage multiple locations?"
+              answer="Yes! The Professional plan supports up to 3 locations with independent limits per location. Enterprise plans offer unlimited locations."
+            />
+            <FAQItem
+              question="What happens to negative reviews?"
+              answer="Our smart review page captures negative feedback privately — so unhappy customers reach you directly instead of posting a 1-star public review. You get notified instantly."
+            />
+            <FAQItem
+              question="Can I cancel anytime?"
+              answer="Absolutely. You can cancel your subscription anytime from your billing settings. No contracts, no hidden fees."
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 8. FINAL CTA */}
       <section className="w-full py-32 px-4 bg-[#f3f4f6]">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
           className="container mx-auto max-w-5xl bg-[#262626] rounded-[2rem] p-12 md:p-20 text-center text-white relative overflow-hidden"
         >
-          {/* Decorative background shapes */}
           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-orange-600 opacity-20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-orange-600 opacity-20 rounded-full blur-3xl"></div>
 
@@ -395,12 +563,12 @@ export default function MarketingPage() {
             Ready to grow your business?
           </h2>
           <p className="text-slate-300 text-xl mb-12 max-w-2xl mx-auto font-light relative z-10">
-            Join hundreds of local businesses who are automating their reputation and saving time every day.
+            Join thousands of local businesses who are automating their reputation and saving time every day.
           </p>
           <div className="flex items-center justify-center relative z-10">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
               <Button size="lg" className="bg-[#f97316] hover:bg-[#ea580c] text-white text-[1.1rem] px-10 py-7 rounded-lg font-medium transition-all">
-                Book a Free Demo <ArrowRight className="ml-2 h-5 w-5" />
+                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
