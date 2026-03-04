@@ -111,7 +111,7 @@ export const PLANS: Plan[] = [
         features: STARTER_FEATURES,
     },
     {
-        id: "pro_monthly",
+        id: "professional_monthly",
         name: "Professional",
         interval: "month",
         price: 59.99,
@@ -121,7 +121,7 @@ export const PLANS: Plan[] = [
         features: PRO_FEATURES,
     },
     {
-        id: "pro_yearly",
+        id: "professional_yearly",
         name: "Professional",
         interval: "year",
         price: 599.99,
@@ -167,10 +167,10 @@ export function getEnterprisePlan(): Plan {
 }
 
 /**
- * Free-tier fallback limits (used when a subscription is canceled).
+ * Unsubscribed fallback limits (used when a subscription is canceled).
  * Not a selectable plan — just the defaults for downgraded orgs.
  */
-export const FREE_LIMITS: PlanLimits = {
+export const UNSUBSCRIBED_LIMITS: PlanLimits = {
     maxLocations: 1,
     emailRequestsPerMonth: 10,
     smsRequestsPerMonth: 0,
@@ -178,3 +178,6 @@ export const FREE_LIMITS: PlanLimits = {
     aiRepliesPerMonth: 0,
     teamMembers: 1,
 };
+
+/** @deprecated Use UNSUBSCRIBED_LIMITS instead */
+export const FREE_LIMITS = UNSUBSCRIBED_LIMITS;

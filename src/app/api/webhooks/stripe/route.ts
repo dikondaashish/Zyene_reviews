@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         console.error("Webhook signature verification failed:", err.message);
         Sentry.captureException(err, { tags: { route: "stripe-webhook", error_type: "signature_verification" } });
         return NextResponse.json(
-            { error: `Webhook Error: ${err.message}` },
+            { error: "Invalid webhook signature" },
             { status: 400 }
         );
     }
@@ -51,6 +51,18 @@ export async function POST(request: Request) {
                 if (!organizationId) {
                     console.error("No organization_id in checkout session metadata");
                     Sentry.captureMessage("Stripe checkout session missing organization_id metadata", { level: "error", extra: { session_id: session.id } });
+                    break;
+                }
+
+                // Idempotency: Skip if this subscription is already linked
+                const { data: existingOrg } = await supabase
+                    .from("organizations")
+                    .select("stripe_subscription_id")
+                    .eq("id", organizationId)
+                    .single();
+
+                if (existingOrg?.stripe_subscription_id === subscriptionId) {
+                    console.log(`⚡ Skipping duplicate checkout.session.completed for org ${organizationId}`);
                     break;
                 }
 
@@ -143,7 +155,7 @@ export async function POST(request: Request) {
                 await supabase
                     .from("organizations")
                     .update({
-                        plan: "free",
+                        plan: "none",
                         plan_status: "canceled",
                         stripe_subscription_id: null,
                         max_businesses: FREE_LIMITS.maxLocations,
@@ -177,7 +189,15 @@ export async function POST(request: Request) {
         }
     } catch (error: any) {
         console.error("Webhook processing error:", error);
-        Sentry.captureException(error, { tags: { route: "stripe-webhook" } });
+        Sentry.captureException(error, {
+            tags: { route: "stripe-webhook", event_type: event.type },
+            extra: { event_id: event.id },
+        });
+        // Return 500 so Stripe retries this event
+        return NextResponse.json(
+            { error: "Webhook processing failed" },
+            { status: 500 }
+        );
     }
 
     return NextResponse.json({ received: true });

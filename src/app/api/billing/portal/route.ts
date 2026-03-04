@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe/client";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export async function POST() {
     const supabase = await createClient();
@@ -19,7 +20,7 @@ export async function POST() {
         const admin = createAdminClient();
         const { data: member } = await admin
             .from("organization_members")
-            .select("organization_id, organizations(*)")
+            .select("organization_id, role, organizations(*)")
             .eq("user_id", user.id)
             .single();
 
@@ -27,6 +28,15 @@ export async function POST() {
             return NextResponse.json(
                 { error: "No organization found" },
                 { status: 404 }
+            );
+        }
+
+        // Security: Only owners and managers can manage billing
+        const memberRole = (member as any).role;
+        if (memberRole && !["ORG_OWNER", "ORG_MANAGER"].includes(memberRole)) {
+            return NextResponse.json(
+                { error: "You don't have permission to manage billing." },
+                { status: 403 }
             );
         }
 
@@ -42,7 +52,7 @@ export async function POST() {
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const dashboardUrl = rootDomain.includes("localhost")
             ? `http://${rootDomain}`
-            : `http://dashboard.${rootDomain}`;
+            : `https://dashboard.${rootDomain}`;
 
         const session = await stripe.billingPortal.sessions.create({
             customer: org.stripe_customer_id,
@@ -52,8 +62,9 @@ export async function POST() {
         return NextResponse.json({ url: session.url });
     } catch (error: any) {
         console.error("Portal Error:", error);
+        Sentry.captureException(error, { tags: { route: "billing-portal" } });
         return NextResponse.json(
-            { error: error.message || "Failed to create portal session" },
+            { error: "Failed to open billing portal. Please try again." },
             { status: 500 }
         );
     }

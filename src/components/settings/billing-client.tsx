@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
     Card,
     CardContent,
@@ -23,6 +24,10 @@ import {
     Mail,
     MessageSquare,
     Link as LinkIcon,
+    Bot,
+    MapPin,
+    Sparkles,
+    ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Plan } from "@/lib/stripe/plans";
@@ -101,9 +106,27 @@ export function BillingClient({
     const [interval, setInterval] = useState<"month" | "year">("month");
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    // Show toast after checkout redirect
+    useEffect(() => {
+        if (searchParams.get("success") === "true") {
+            toast.success("Subscription activated!", {
+                description: "Your plan is now active. Welcome aboard!",
+            });
+            // Clean up URL params
+            router.replace("/settings/billing");
+        } else if (searchParams.get("canceled") === "true") {
+            toast.info("Checkout canceled", {
+                description: "No charges were made. You can subscribe anytime.",
+            });
+            router.replace("/settings/billing");
+        }
+    }, [searchParams, router]);
 
     const isPaidPlan = !!currentPlan && currentPlan.price !== null && currentPlan.price > 0;
-    const currentPlanName = currentPlan?.name || "Free";
+    const currentPlanName = currentPlan?.name || "No Active Plan";
 
     // Filter plans by selected interval (exclude enterprise)
     const displayPlans = plans.filter(
@@ -122,7 +145,17 @@ export function BillingClient({
             const data = await res.json();
 
             if (!res.ok) throw new Error(data.error);
-            if (data.url) window.location.href = data.url;
+
+            if (data.switched) {
+                // Plan was switched in-place (no Stripe checkout needed)
+                toast.success("Plan switched!", {
+                    description: "Your subscription has been updated. Changes take effect immediately.",
+                });
+                router.refresh();
+            } else if (data.url) {
+                // New subscription — redirect to Stripe checkout
+                window.location.href = data.url;
+            }
         } catch (error: any) {
             toast.error(error.message || "Failed to start checkout");
         } finally {
@@ -148,6 +181,9 @@ export function BillingClient({
     }
 
     const intervalLabel = interval === "month" ? "/mo" : "/yr";
+    const monthlyStarterPrice = plans.find(p => p.id === "starter_monthly")?.price ?? 0;
+    const yearlyStarterPrice = plans.find(p => p.id === "starter_yearly")?.price ?? 0;
+    const yearlySavings = monthlyStarterPrice > 0 ? Math.round((1 - yearlyStarterPrice / (monthlyStarterPrice * 12)) * 100) : 0;
 
     return (
         <div className="space-y-8">
@@ -204,18 +240,25 @@ export function BillingClient({
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-baseline gap-2">
-                        {currentPlan?.originalPrice && currentPlan.originalPrice > (currentPlan.price || 0) && (
-                            <span className="text-xl line-through text-gray-400">
-                                ${currentPlan.originalPrice}
-                            </span>
-                        )}
-                        <span className="text-4xl font-bold">
-                            ${currentPlan?.price ?? 0}
-                        </span>
-                        {(currentPlan?.price ?? 0) > 0 && (
-                            <span className="text-muted-foreground">
-                                /{currentPlan?.interval === "year" ? "year" : "month"}
-                            </span>
+                        {isPaidPlan ? (
+                            <>
+                                {currentPlan?.originalPrice && currentPlan.originalPrice > (currentPlan.price || 0) && (
+                                    <span className="text-xl line-through text-gray-400">
+                                        ${currentPlan.originalPrice}
+                                    </span>
+                                )}
+                                <span className="text-4xl font-bold">
+                                    ${currentPlan?.price}
+                                </span>
+                                <span className="text-muted-foreground">
+                                    /{currentPlan?.interval === "year" ? "year" : "month"}
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-4xl font-bold">No Active Plan</span>
+                                <span className="text-muted-foreground text-sm">Choose a plan below to get started</span>
+                            </>
                         )}
                     </div>
 
@@ -242,10 +285,12 @@ export function BillingClient({
                         <UsageBar
                             label="AI Replies"
                             stat={usage.aiReplies}
+                            icon={<Bot className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="Locations"
                             stat={usage.businesses}
+                            icon={<MapPin className="h-3.5 w-3.5" />}
                         />
                     </div>
                 </CardContent>
@@ -267,10 +312,34 @@ export function BillingClient({
                         </Button>
                     </CardFooter>
                 )}
+
+                {/* Upgrade CTA for free users */}
+                {!isPaidPlan && (
+                    <CardFooter className="bg-blue-50/50 border-t flex items-center gap-3 p-4">
+                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-blue-900">
+                                Get started with Zyene Reviews
+                            </p>
+                            <p className="text-xs text-blue-700">
+                                Choose a plan below — starting at ${monthlyStarterPrice}/month
+                            </p>
+                        </div>
+                        <Button
+                            size="sm"
+                            className="bg-blue-600 hover:bg-blue-700 gap-1 shrink-0"
+                            onClick={() => {
+                                document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" });
+                            }}
+                        >
+                            Upgrade <ArrowRight className="h-3.5 w-3.5" />
+                        </Button>
+                    </CardFooter>
+                )}
             </Card>
 
             {/* ─── Plan Picker ─── */}
-            <div>
+            <div id="plan-picker">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold">
                         {isPaidPlan ? "Change Plan" : "Choose a Plan"}
@@ -296,7 +365,7 @@ export function BillingClient({
                         >
                             Yearly
                             <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
-                                Save ~17%
+                                Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
                             </Badge>
                         </button>
                     </div>
@@ -392,7 +461,7 @@ export function BillingClient({
                                             ) : null}
                                             {isPaidPlan
                                                 ? `Switch to ${plan.name}`
-                                                : `Subscribe to ${plan.name}`}
+                                                : `Get ${plan.name}`}
                                         </Button>
                                     )}
                                 </CardFooter>
@@ -437,8 +506,9 @@ export function BillingClient({
                                 >
                                     <Button
                                         variant="outline"
-                                        className="w-full"
+                                        className="w-full gap-2"
                                     >
+                                        <Mail className="h-4 w-4" />
                                         Contact Sales
                                     </Button>
                                 </a>

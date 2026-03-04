@@ -67,9 +67,9 @@ export default async function RequestPage({
     }
 
     // Access Control 1: Subscription Check
-    // If plan is 'free' OR status is not 'active'
+    // If plan is 'none' OR status is not 'active'
     const org = business.organization as any;
-    const hasActiveSubscription = org?.plan && org.plan !== "free" && org.plan_status === "active";
+    const hasActiveSubscription = org?.plan && org.plan !== "none" && org.plan_status === "active";
 
     if (!hasActiveSubscription) {
         return <AccessError type="subscription" businessName={business.name} />;

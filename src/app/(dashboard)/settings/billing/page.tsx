@@ -51,7 +51,7 @@ export default async function BillingPage() {
     ]);
 
     // Determine current plan from Stripe subscription price ID or org.plan field
-    const orgPlanId = org.plan || "free";
+    const orgPlanId = org.plan || "none";
     const currentPlan = PLANS.find((p) => p.id === orgPlanId) || null;
 
     return (

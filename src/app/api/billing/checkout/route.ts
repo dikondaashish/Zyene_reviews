@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { stripe } from "@/lib/stripe/client";
+import { PLANS } from "@/lib/stripe/plans";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -17,9 +19,21 @@ export async function POST(request: Request) {
     try {
         const { priceId } = await request.json();
 
-        if (!priceId) {
+        if (!priceId || typeof priceId !== "string") {
             return NextResponse.json(
                 { error: "priceId is required" },
+                { status: 400 }
+            );
+        }
+
+        // Security: Validate priceId against known plans to prevent spoofing
+        const validPriceIds = PLANS
+            .map((p) => p.stripePriceId)
+            .filter(Boolean);
+
+        if (!validPriceIds.includes(priceId)) {
+            return NextResponse.json(
+                { error: "Invalid plan selected" },
                 { status: 400 }
             );
         }
@@ -28,7 +42,7 @@ export async function POST(request: Request) {
         const admin = createAdminClient();
         const { data: member } = await admin
             .from("organization_members")
-            .select("organization_id, organizations(*)")
+            .select("organization_id, role, organizations(*)")
             .eq("user_id", user.id)
             .single();
 
@@ -36,6 +50,15 @@ export async function POST(request: Request) {
             return NextResponse.json(
                 { error: "No organization found" },
                 { status: 404 }
+            );
+        }
+
+        // Security: Only owners and managers can manage billing
+        const memberRole = (member as any).role;
+        if (memberRole && !["ORG_OWNER", "ORG_MANAGER"].includes(memberRole)) {
+            return NextResponse.json(
+                { error: "You don't have permission to manage billing. Contact your organization owner." },
+                { status: 403 }
             );
         }
 
@@ -61,13 +84,38 @@ export async function POST(request: Request) {
                 .eq("id", member.organization_id);
         }
 
-        // Create checkout session
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const dashboardUrl = rootDomain.includes("localhost")
             ? `http://${rootDomain}`
-            : `http://dashboard.${rootDomain}`;
+            : `https://dashboard.${rootDomain}`;
 
-        // Auto-apply the correct coupon based on the plan
+        // ── Guard: If already subscribed, update plan instead of creating a new subscription ──
+        if (org.stripe_subscription_id) {
+            try {
+                const existingSub = await stripe.subscriptions.retrieve(org.stripe_subscription_id);
+
+                // Only update if the subscription is still active/trialing
+                if (["active", "trialing", "past_due"].includes(existingSub.status)) {
+                    await stripe.subscriptions.update(org.stripe_subscription_id, {
+                        items: [{
+                            id: existingSub.items.data[0].id,
+                            price: priceId,
+                        }],
+                        proration_behavior: "create_prorations",
+                    });
+
+                    return NextResponse.json({
+                        url: `${dashboardUrl}/settings/billing?success=true`,
+                        switched: true,
+                    });
+                }
+            } catch (subError: any) {
+                // If subscription retrieval fails (deleted, etc.), fall through to new checkout
+                console.warn("Could not update existing subscription, creating new checkout:", subError.message);
+            }
+        }
+
+        // ── New subscription checkout ──
         const starterPriceIds = [
             process.env.STRIPE_STARTER_MONTHLY_PRICE_ID,
             process.env.STRIPE_STARTER_YEARLY_PRICE_ID,
@@ -101,8 +149,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ url: session.url });
     } catch (error: any) {
         console.error("Checkout Error:", error);
+        Sentry.captureException(error, { tags: { route: "billing-checkout" } });
         return NextResponse.json(
-            { error: error.message || "Failed to create checkout session" },
+            { error: "Failed to create checkout session. Please try again." },
             { status: 500 }
         );
     }
