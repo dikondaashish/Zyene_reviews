@@ -86,11 +86,9 @@ export async function syncYelpReviewsForPlatform(
                 analyzedCount++;
                 const analysisResult = await analyzeReview(upserted);
 
-                // 5. Send alert if urgent
-                if (analysisResult) {
-                    await sendReviewAlert({ ...upserted, ...analysisResult });
-                    alertsCount++;
-                }
+                // 5. Send alert (Email always, SMS if urgent)
+                await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
+                alertsCount++;
             }
         }
 

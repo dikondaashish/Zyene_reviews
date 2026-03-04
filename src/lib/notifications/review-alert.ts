@@ -7,17 +7,15 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export async function sendReviewAlert(review: any) {
     // Logic: Urgency >= 7 OR Rating <= 2 -> SMS + Email
-    // Urgency 4-6 -> Email only
-    // Urgency 1-3 -> Daily Digest (Skip here)
+    // All other reviews -> Email only (removing the 4-6 restriction so users get notified of all reviews)
 
     const urgency = review.urgency_score || 0;
     const rating = review.rating || 5;
 
     // Determine alert level
     const isHighUrgency = urgency >= 7 || rating <= 2;
-    const isMediumUrgency = urgency >= 4 && urgency < 7;
-
-    if (!isHighUrgency && !isMediumUrgency) return;
+    // Email goes out for everything now, so this check is removed
+    // We just proceed for all reviews
 
     const admin = createAdminClient();
 
@@ -97,11 +95,11 @@ export async function sendReviewAlert(review: any) {
             await sendSMS(pref.phone_number, body);
         }
 
-        // --- EMAIL ALERT (High or Medium Urgency & Email Enabled) ---
+        // --- EMAIL ALERT (Email Enabled) ---
         // Default to true if email_enabled is undefined (legacy records)
         const emailEnabled = pref.email_enabled !== false;
 
-        if ((isHighUrgency || isMediumUrgency) && emailEnabled && userEmail) {
+        if (emailEnabled && userEmail) {
             const emailHtml = reviewAlertEmail({
                 businessName: business.name,
                 rating: rating,

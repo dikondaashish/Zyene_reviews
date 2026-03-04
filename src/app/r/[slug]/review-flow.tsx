@@ -265,15 +265,21 @@ export function PublicReviewFlow({
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase.from("private_feedback").insert({
-                business_id: businessId,
-                review_request_id: requestId,
-                rating: rating,
-                content: feedback,
-                customer_email: customerEmail || null,
-                created_at: new Date().toISOString(),
+            const res = await fetch("/api/reviews/private", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    business_id: businessId,
+                    review_request_id: requestId,
+                    rating: rating,
+                    content: feedback,
+                    customer_email: customerEmail || null,
+                })
             });
-            if (error) throw error;
+
+            if (!res.ok) {
+                throw new Error("Failed to submit feedback");
+            }
 
             if (requestId) {
                 await fetch("/api/track/review", {

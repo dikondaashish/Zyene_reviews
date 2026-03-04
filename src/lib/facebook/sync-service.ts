@@ -89,10 +89,9 @@ export async function syncFacebookReviewsForPlatform(
                 analyzedCount++;
                 const analysisResult = await analyzeReview(upserted);
 
-                if (analysisResult) {
-                    await sendReviewAlert({ ...upserted, ...analysisResult });
-                    alertsCount++;
-                }
+                // Send email alert for all new reviews
+                await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
+                alertsCount++;
             }
         }
 
