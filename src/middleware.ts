@@ -170,6 +170,8 @@ export async function middleware(request: NextRequest) {
             "/login",
             "/signup",
             "/forgot-password",
+            "/privacy",
+            "/terms",
             "/r/" // Keep legacy paths working
         ];
 
