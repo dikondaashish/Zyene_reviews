@@ -64,12 +64,9 @@ export const processCampaignContact = inngest.createFunction(
             return { allowed: true, reason: undefined as string | undefined };
         });
 
-        if (!canSend.allowed) {
-            return { status: "skipped", reason: canSend.reason };
-        }
-
-        // 3. Create Request Record (to generate the link)
+        // 3. Create Request Record explicitly as "queued" or "skipped"
         const requestRecord = await step.run("create-request-record", async () => {
+            const status = canSend.allowed ? (campaign.delay_minutes > 0 ? "queued" : "sending") : "skipped";
             const { data, error } = await supabase
                 .from("review_requests")
                 .insert({
@@ -79,7 +76,8 @@ export const processCampaignContact = inngest.createFunction(
                     customer_phone: contact.phone || null,
                     customer_email: contact.email || null,
                     channel: campaign.channel,
-                    status: "filtered", // Initial status
+                    status: status,
+                    error_message: canSend.reason || null
                 })
                 .select()
                 .single();
@@ -87,26 +85,48 @@ export const processCampaignContact = inngest.createFunction(
             return data;
         });
 
-        // 4. Send Message (SMS/Email)
+        if (!canSend.allowed) {
+            return { status: "skipped", reason: canSend.reason };
+        }
+
+        // 4. Handle Initial Delay
+        if (campaign.delay_minutes > 0) {
+            // Sleep for the specified delay
+            await step.sleep("initial-delay", `${campaign.delay_minutes}m`);
+
+            // Update status to sending
+            await step.run("update-status-sending", async () => {
+                await supabase
+                    .from("review_requests")
+                    .update({ status: "sending" })
+                    .eq("id", requestRecord.id);
+            });
+        }
+
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+        const protocol = rootDomain.includes("localhost") ? "http" : "https";
+        const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestRecord.id}`;
+
+        // 5. Send Initial Message
         const sendResult = await step.run("send-message", async () => {
             let sendStatus = "sent";
             let errorMessage = null;
 
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-            const protocol = rootDomain.includes("localhost") ? "http" : "https";
-            const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestRecord.id}`;
-
             try {
                 if (campaign.channel === "sms" && contact.phone) {
-                    const messageBody = `Hi ${contact.name || "there"}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+                    // Use custom template or fallback
+                    let messageBody = campaign.sms_template || `Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback — it only takes 30 seconds: {review_link}`;
+                    messageBody = messageBody
+                        .replace(/\{customer_name\}/g, contact.name || "there")
+                        .replace(/\{business_name\}/g, business.name)
+                        .replace(/\{review_link\}/g, reviewLink);
+
                     const result = await sendSMS(contact.phone, messageBody);
                     if (!result.sent) {
                         sendStatus = "failed";
                         errorMessage = result.error;
                     }
                 } else if (campaign.channel === "email" && contact.email) {
-                    // Implement email sending logic here once Resend is fully configured
-                    // const result = await sendEmail({ ... });
                     sendStatus = "sent";
                 } else {
                     sendStatus = "failed";
@@ -120,9 +140,8 @@ export const processCampaignContact = inngest.createFunction(
             return { sendStatus, errorMessage };
         });
 
-        // 5. Update Database Records
-        await step.run("update-database", async () => {
-            // Update request status
+        // 6. Update Database for Initial Send
+        await step.run("update-initial-database", async () => {
             await supabase
                 .from("review_requests")
                 .update({
@@ -132,7 +151,7 @@ export const processCampaignContact = inngest.createFunction(
                 })
                 .eq("id", requestRecord.id);
 
-            // Upsert customer contact for frequency cap tracking
+            // Update frequency cap tracking
             if (contact.phone) {
                 const { data: contactFull } = await supabase
                     .from("customer_contacts")
@@ -153,6 +172,71 @@ export const processCampaignContact = inngest.createFunction(
                     }, { onConflict: "business_id,phone" });
             }
         });
+
+        if (sendResult.sendStatus !== "sent") {
+            return { status: "completed_with_error", sendResult };
+        }
+
+        // 7. Follow-up Logic
+        if (campaign.follow_up_enabled && campaign.follow_up_delay_hours > 0) {
+            // Sleep until the follow up is due
+            await step.sleep("follow-up-delay", `${campaign.follow_up_delay_hours}h`);
+
+            // Check if user has already interacted
+            const needsFollowUp = await step.run("check-follow-up-eligibility", async () => {
+                const { data } = await supabase
+                    .from("review_requests")
+                    .select("status, review_left")
+                    .eq("id", requestRecord.id)
+                    .single();
+
+                // If they already left a review, or clicked the link, don't spam them
+                if (data?.review_left || data?.status === "clicked" || data?.status === "follow_up_sent") {
+                    return false;
+                }
+                return true;
+            });
+
+            if (needsFollowUp) {
+                const followUpResult = await step.run("send-follow-up", async () => {
+                    let sendStatus = "follow_up_sent";
+                    let errorMessage = null;
+
+                    try {
+                        if (campaign.channel === "sms" && contact.phone) {
+                            let messageBody = campaign.follow_up_template || `Hi {customer_name}, just a friendly reminder — we'd love your feedback for {business_name}: {review_link}`;
+                            messageBody = messageBody
+                                .replace(/\{customer_name\}/g, contact.name || "there")
+                                .replace(/\{business_name\}/g, business.name)
+                                .replace(/\{review_link\}/g, reviewLink);
+
+                            const result = await sendSMS(contact.phone, messageBody);
+                            if (!result.sent) {
+                                sendStatus = "follow_up_failed";
+                                errorMessage = result.error;
+                            }
+                        } else if (campaign.channel === "email" && contact.email) {
+                            sendStatus = "follow_up_sent";
+                        }
+                    } catch (err: any) {
+                        sendStatus = "follow_up_failed";
+                        errorMessage = err.message;
+                    }
+                    return { sendStatus, errorMessage };
+                });
+
+                // Update database for follow-up
+                await step.run("update-follow-up-database", async () => {
+                    await supabase
+                        .from("review_requests")
+                        .update({
+                            status: followUpResult.sendStatus,
+                            error_message: followUpResult.errorMessage,
+                        })
+                        .eq("id", requestRecord.id);
+                });
+            }
+        }
 
         return { status: "completed", sendResult };
     }
