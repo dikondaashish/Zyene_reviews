@@ -93,7 +93,7 @@ export async function middleware(request: NextRequest) {
         if (user && pathname === "/") {
             return createResponse(
                 NextResponse.redirect(
-                    new URL(`https://dashboard.${rootDomain}`, request.url)
+                    new URL(`https://app.${rootDomain}`, request.url)
                 )
             );
         }
@@ -107,8 +107,8 @@ export async function middleware(request: NextRequest) {
         return supabaseResponse;
     }
 
-    // --- DASHBOARD SUBDOMAIN (dashboard.domain) ---
-    if (hostname === `dashboard.${rootDomain}`) {
+    // --- APP SUBDOMAIN (app.domain) ---
+    if (hostname === `app.${rootDomain}`) {
         if (!user) {
             return createResponse(
                 NextResponse.redirect(

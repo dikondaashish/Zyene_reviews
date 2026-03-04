@@ -52,7 +52,7 @@ export async function POST() {
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const dashboardUrl = rootDomain.includes("localhost")
             ? `http://${rootDomain}`
-            : `https://dashboard.${rootDomain}`;
+            : `https://app.${rootDomain}`;
 
         // Verify the Stripe customer exists before creating portal session
         try {

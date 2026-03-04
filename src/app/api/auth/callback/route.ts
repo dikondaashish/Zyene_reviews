@@ -149,7 +149,7 @@ export async function GET(request: Request) {
                                 if (rootDomain.includes("localhost")) {
                                     return NextResponse.redirect(`http://${rootDomain}/businesses`);
                                 } else {
-                                    return NextResponse.redirect(`https://dashboard.${rootDomain}/businesses`);
+                                    return NextResponse.redirect(`https://app.${rootDomain}/businesses`);
                                 }
                             } else {
                                 console.error("Failed to verify magic link:", verifyError);
@@ -172,7 +172,7 @@ export async function GET(request: Request) {
                 if (rootDomain.includes("localhost")) {
                     return NextResponse.redirect(`http://${rootDomain}/businesses`);
                 } else {
-                    return NextResponse.redirect(`https://dashboard.${rootDomain}/businesses`);
+                    return NextResponse.redirect(`https://app.${rootDomain}/businesses`);
                 }
             }
 
@@ -357,7 +357,7 @@ export async function GET(request: Request) {
             if (rootDomain.includes("localhost")) {
                 return NextResponse.redirect(`http://${rootDomain}/dashboard`);
             } else {
-                return NextResponse.redirect(`https://dashboard.${rootDomain}`);
+                return NextResponse.redirect(`https://app.${rootDomain}`);
             }
         }
     }

@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     }
 
     // Send email
-    // Link format: dashboard.zyeneratings.com/signup?invite=TOKEN
+    // Link format: app.zyenereviews.com/signup?invite=TOKEN
     // Or login page if they have account?
     // For now: signup
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";

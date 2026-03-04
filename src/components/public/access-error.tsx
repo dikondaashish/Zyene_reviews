@@ -46,7 +46,7 @@ export function AccessError({ type, businessName }: AccessErrorProps) {
                     </div>
 
                     <Button asChild className="w-full" size="lg">
-                        <Link href={isSubscription ? "https://dashboard.zyenereviews.com/settings/billing" : "https://dashboard.zyenereviews.com/onboarding"}>
+                        <Link href={isSubscription ? "https://app.zyenereviews.com/settings/billing" : "https://app.zyenereviews.com/onboarding"}>
                             {isSubscription ? "Upgrade Subscription" : "Connect Google Profile"}
                             <ExternalLink className="ml-2 h-4 w-4" />
                         </Link>
