@@ -52,6 +52,11 @@ const items = [
         icon: Building2,
     },
     {
+        title: "Customers",
+        url: "/customers",
+        icon: Users,
+    },
+    {
         title: "Reviews",
         url: "/reviews",
         icon: MessageSquare,

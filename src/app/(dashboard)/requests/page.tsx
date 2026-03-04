@@ -34,7 +34,7 @@ import { getActiveBusinessId } from "@/lib/business-context";
 export default async function RequestsPage({
     searchParams,
 }: {
-    searchParams: { page?: string };
+    searchParams: { page?: string, customer?: string };
 }) {
     const supabase = await createClient();
 
@@ -101,6 +101,25 @@ export default async function RequestsPage({
         .order("created_at", { ascending: false })
         .range(from, to);
 
+    // Initial customer pre-fill if we navigated from the Customers page
+    const customerId = searchParams.customer;
+    let initialCustomer = undefined;
+
+    if (customerId) {
+        const { data: customerData } = await supabase
+            .from("customers")
+            .select("*")
+            .eq("id", customerId)
+            .single();
+
+        if (customerData) {
+            initialCustomer = {
+                name: `${customerData.first_name || ""} ${customerData.last_name || ""}`.trim(),
+                phone: customerData.phone || ""
+            };
+        }
+    }
+
 
     // Badge helper
     const getStatusBadge = (status: string, reviewLeft: boolean) => {
@@ -123,7 +142,13 @@ export default async function RequestsPage({
                     <h1 className="text-3xl font-bold tracking-tight">Review Requests</h1>
                     <p className="text-muted-foreground mt-1">Manage and track your review invitations.</p>
                 </div>
-                <SendRequestDialog businessId={business.id} businessSlug={business.slug} businessName={business.name} />
+                <SendRequestDialog
+                    businessId={business.id}
+                    businessSlug={business.slug}
+                    businessName={business.name}
+                    initialCustomer={initialCustomer}
+                    autoOpen={!!initialCustomer}
+                />
             </div>
 
             {/* STATS */}

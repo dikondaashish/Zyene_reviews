@@ -53,10 +53,12 @@ interface SendRequestDialogProps {
     businessId: string;
     businessSlug?: string;
     businessName?: string;
+    initialCustomer?: { name: string; phone: string };
+    autoOpen?: boolean;
 }
 
-export function SendRequestDialog({ businessId, businessSlug, businessName }: SendRequestDialogProps) {
-    const [open, setOpen] = useState(false);
+export function SendRequestDialog({ businessId, businessSlug, businessName, initialCustomer, autoOpen }: SendRequestDialogProps) {
+    const [open, setOpen] = useState(autoOpen || false);
     const [isLoading, setIsLoading] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -65,8 +67,8 @@ export function SendRequestDialog({ businessId, businessSlug, businessName }: Se
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema) as any,
         defaultValues: {
-            customerName: "",
-            customerPhone: "",
+            customerName: initialCustomer?.name || "",
+            customerPhone: initialCustomer?.phone || "",
             channel: "sms",
             scheduledFor: false,
         },
