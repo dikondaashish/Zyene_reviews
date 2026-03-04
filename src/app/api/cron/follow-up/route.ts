@@ -21,7 +21,7 @@ export async function GET(request: Request) {
         // 1. Fetch campaigns that have follow-ups enabled
         const { data: campaigns, error: campaignError } = await admin
             .from("campaigns")
-            .select("id, follow_up_enabled, follow_up_delay_hours, channel, follow_up_template, businesses (id, name, logo_url, settings)")
+            .select("id, follow_up_enabled, follow_up_delay_hours, channel, follow_up_template, businesses (id, name, logo_url)")
             .eq("status", "active")
             .eq("follow_up_enabled", true);
 
