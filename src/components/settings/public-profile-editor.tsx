@@ -111,13 +111,55 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
 
     const handleDownloadQr = () => {
         if (!qrDataUrl) return;
-        const link = document.createElement("a");
-        link.href = qrDataUrl;
-        link.download = `${previewState.slug}-qr-code.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        toast.success("QR code downloaded!");
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const width = 500;
+        const height = 650;
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.roundRect(0, 0, width, height, 16);
+        ctx.fill();
+
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(20, 20, width - 40, height - 40, 16);
+        ctx.stroke();
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 32px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Leave a Review", width / 2, 90);
+
+        const qrImg = new Image();
+        qrImg.onload = () => {
+            const qrSize = 300;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(qrImg, (width - qrSize) / 2, 120, qrSize, qrSize);
+
+            ctx.fillStyle = "#666666";
+            ctx.font = "14px sans-serif";
+            ctx.fillText(previewUrl, width / 2, 470);
+
+            ctx.fillStyle = "#999999";
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText("Powered by Zyene", width / 2, 520);
+
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${previewState.slug}-qr-code.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success("QR code downloaded!");
+        };
+        qrImg.src = qrDataUrl;
     };
 
     const handlePrintQr = () => {

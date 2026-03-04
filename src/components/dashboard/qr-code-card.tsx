@@ -60,13 +60,66 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
 
     const handleDownload = () => {
         if (!qrDataUrl) return;
-        const link = document.createElement("a");
-        link.href = qrDataUrl;
-        link.download = `${businessSlug}-qr-code.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        toast.success("QR code downloaded!");
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const width = 500;
+        const height = 650;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Background
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.roundRect(0, 0, width, height, 16);
+        ctx.fill();
+
+        // Border
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(20, 20, width - 40, height - 40, 16);
+        ctx.stroke();
+
+        // Title: "Review Us on Google"
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 32px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Review Us on Google", width / 2, 90);
+
+        // QR Code image
+        const qrImg = new Image();
+        qrImg.onload = () => {
+            const qrSize = 300;
+            const qrX = (width - qrSize) / 2;
+            const qrY = 120;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+
+            // URL text
+            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+            ctx.fillStyle = "#666666";
+            ctx.font = "14px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`${rootDomain}/${businessSlug}`, width / 2, 470);
+
+            // "Powered by Zyene"
+            ctx.fillStyle = "#999999";
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText("Powered by Zyene", width / 2, 520);
+
+            // Download
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${businessSlug}-qr-code.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast.success("QR code downloaded!");
+        };
+        qrImg.src = qrDataUrl;
     };
 
     const handlePrint = () => {
