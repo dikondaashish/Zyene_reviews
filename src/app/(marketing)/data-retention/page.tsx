@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shield, Database, Lock, Clock } from "lucide-react";
 
 export const metadata = {
-    title: "Data Retention Policy - Zyene Ratings",
+    title: "Data Retention Policy - Zyene Reviews",
     description: "Our policy regarding data storage, retention limits, and deletion protocols.",
 };
 
@@ -23,12 +23,12 @@ export default function DataRetentionPage() {
                             <Database className="w-8 h-8" />
                         </div>
                         <h1 className="text-4xl font-bold tracking-tight mb-4 text-slate-900">Data Retention Policy</h1>
-                        <p className="text-slate-600 text-lg">Last Updated: October 2023</p>
+                        <p className="text-slate-600 text-lg">Last Updated: March 2026</p>
                     </div>
 
                     <div className="prose prose-slate max-w-none text-slate-600 dark:prose-invert">
                         <p>
-                            At Zyene Ratings, we prioritize your privacy and data security. This Data Retention Policy outlines how long we store your data, when we delete it, and how you can request deletion. We adhere to GDPR and CCPA compliance standards.
+                            At Zyene Reviews, we prioritize your privacy and data security. This Data Retention Policy outlines how long we store your data, when we delete it, and how you can request deletion. We adhere to GDPR and CCPA compliance standards.
                         </p>
 
                         <div className="grid sm:grid-cols-2 gap-6 my-10 not-prose">

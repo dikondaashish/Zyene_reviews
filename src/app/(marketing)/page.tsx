@@ -319,7 +319,7 @@ export default function MarketingPage() {
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-[#262626] mb-1">Auto-Request Reviews</h4>
-                    <p className="text-slate-500 font-light leading-relaxed">Automatically send SMS or email campaigns to recent customers asking for reviews on autopilot.</p>
+                    <p className="text-slate-500 font-light leading-relaxed">Automatically send SMS or email campaigns to recent customers asking for reviews via email, SMS, or shareable links.</p>
                   </div>
                 </div>
               </div>
