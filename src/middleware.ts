@@ -192,6 +192,10 @@ export async function middleware(request: NextRequest) {
             "/forgot-password",
             "/privacy",
             "/terms",
+            "/data-retention",
+            "/help",
+            "/about",
+            "/contact",
             "/r/", // Keep legacy paths working
             "/w/", // Embeddable widgets
         ];
