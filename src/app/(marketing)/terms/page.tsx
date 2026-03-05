@@ -88,7 +88,7 @@ export default function TermsOfServicePage() {
 
                     <h2 className="text-2xl font-semibold mt-10 mb-4">12. Governing Law &amp; Jurisdiction</h2>
                     <p>
-                        These Terms shall be governed and construed in accordance with the laws of the State of Texas, United States, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts located in the State of Texas.
+                        These Terms shall be governed and construed in accordance with the laws of the State of Missouri, United States, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts located in the State of Missouri.
                     </p>
 
                     <h2 className="text-2xl font-semibold mt-10 mb-4">13. Contact Us</h2>
