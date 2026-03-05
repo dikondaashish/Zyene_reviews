@@ -81,9 +81,8 @@ export default function MarketingPage() {
                 variants={fadeInUp}
                 className="text-xl md:text-2xl text-slate-600 mb-10 leading-relaxed font-light"
               >
-                Zyene powers more than <span className="font-bold">1,000</span> businesses with
-                the <span className="font-bold text-slate-900">#1 review management platform</span> —
-                helping local owners win more trust, and thrive in a digital-first world.
+                The review management platform built for <span className="font-bold text-slate-900">local businesses</span> —
+                helping owners monitor reviews, respond faster, and build trust in a digital-first world.
               </motion.p>
               <motion.div variants={fadeInUp}>
                 <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
@@ -169,13 +168,13 @@ export default function MarketingPage() {
       <section className="w-full py-10 px-4 border-y border-slate-200/60 bg-white/50">
         <div className="container mx-auto max-w-[1200px]">
           <p className="text-center text-xs text-slate-400 font-bold mb-8 tracking-widest uppercase">
-            Trusted deeply by local heroes
+            Built with trust and security
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-300">
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><ShieldCheck className="w-8 h-8" /> GDPR Ready</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Star className="fill-current w-8 h-8" /> 5.0 Capterra</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Zap className="w-8 h-8" /> Faster</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> SOC2</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> 256-bit Encryption</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><ShieldCheck className="w-8 h-8" /> GDPR Compliant</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><CheckCircle2 className="w-8 h-8" /> No Review Gating</div>
+            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> Secure OAuth</div>
           </div>
         </div>
       </section>
@@ -390,7 +389,7 @@ export default function MarketingPage() {
               </div>
               <h3 className="text-2xl font-semibold text-[#262626] mb-4">Connect</h3>
               <p className="text-slate-600 text-lg leading-relaxed font-light">
-                One click to link your Google Business Profile. We sync your data in seconds.
+                Securely connect your Google Business Profile through Google&apos;s official authorization. We request only the permissions needed to read and help you respond to reviews.
               </p>
             </motion.div>
 
@@ -468,7 +467,7 @@ export default function MarketingPage() {
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
               </div>
               <p className="text-lg text-slate-700 mb-8 font-light leading-relaxed">
-                "The private feedback feature alone is worth it. We caught a furious customer's complaint privately, resolved it, and they went on to leave a 5-star review instead. Incredible."
+                "The feedback collection feature alone is worth it. We heard from a concerned customer directly, resolved their issue quickly, and they updated their review to 5 stars. Incredible."
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-slate-300"></div>
@@ -503,7 +502,7 @@ export default function MarketingPage() {
                 <tbody>
                   {[
                     { feature: "AI Review Replies", zyene: true, comp: "Upcharge" },
-                    { feature: "Private Negative Feedback", zyene: true, comp: true },
+                    { feature: "Customer Feedback Collection", zyene: true, comp: true },
                     { feature: "Automated SMS Campaigns", zyene: true, comp: true },
                     { feature: "Custom Branded Review Pages", zyene: true, comp: false },
                     { feature: "Embeddable Website Widgets", zyene: true, comp: true },
@@ -565,7 +564,7 @@ export default function MarketingPage() {
               </div>
               <p className="text-sm text-green-600 font-medium mb-6">7-day free trial included</p>
               <ul className="space-y-3 text-sm text-slate-600 flex-1 mb-8">
-                {["Easy to use dashboard", "SEO optimized AI reviews", "1 Location", "2,500 email requests/month", "2,500 SMS requests/month", "5,000 review link requests/month", "Campaign automation", "Customizable review page", "Private feedback capture", "Google, Yelp, Facebook integration", "AI-powered replies"].map((f) => (
+                {["Easy to use dashboard", "SEO optimized AI reviews", "1 Location", "2,500 email requests/month", "2,500 SMS requests/month", "5,000 review link requests/month", "Campaign automation", "Customizable review page", "Direct customer feedback", "Google, Yelp, Facebook integration", "AI-powered replies"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
                     {f}
@@ -669,7 +668,7 @@ export default function MarketingPage() {
             />
             <FAQItem
               question="What happens to negative reviews?"
-              answer="Our smart review page captures negative feedback privately — so unhappy customers reach you directly instead of posting a 1-star public review. You get notified instantly."
+              answer="All customers are invited to share feedback through your review page. Our platform helps you respond quickly to concerns and improve your service. Every customer gets the same experience regardless of their rating. You're notified instantly of all feedback."
             />
             <FAQItem
               question="Can I cancel anytime?"
@@ -692,7 +691,7 @@ export default function MarketingPage() {
             Ready to grow your business?
           </h2>
           <p className="text-slate-300 text-xl mb-12 max-w-2xl mx-auto font-light relative z-10">
-            Join thousands of local businesses who are automating their reputation and saving time every day.
+            Join local businesses who are managing their reputation and saving time every day.
           </p>
           <div className="flex items-center justify-center relative z-10">
             <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>

@@ -103,7 +103,7 @@ export default function MarketingLayout({
                                 <span className="text-orange-600">Zyene</span> Reviews
                             </Link>
                             <p className="text-sm text-slate-500 mb-4 max-w-sm">
-                                Made for business owners who want more 5-star reviews without the hassle.
+                                Review management software for local businesses.
                             </p>
                             <p className="text-sm text-slate-400">
                                 © {new Date().getFullYear()} Zyene Reviews.
@@ -120,8 +120,9 @@ export default function MarketingLayout({
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
                             <ul className="space-y-2 text-sm text-slate-600">
+                                <li><Link href="/about" className="hover:text-blue-600">About Us</Link></li>
+                                <li><Link href="/contact" className="hover:text-blue-600">Contact</Link></li>
                                 <li><Link href="/help" className="hover:text-blue-600">Help Center</Link></li>
-                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">Status Page</a></li>
                             </ul>
                         </div>
                         <div>
@@ -132,6 +133,11 @@ export default function MarketingLayout({
                                 <li><Link href="/data-retention" className="hover:text-blue-600">Data Retention</Link></li>
                             </ul>
                         </div>
+                    </div>
+                    <div className="border-t border-slate-200 pt-6">
+                        <p className="text-xs text-slate-400 text-center">
+                            Zyene Reviews is an independent platform and is not affiliated with, endorsed by, or sponsored by Google LLC.
+                        </p>
                     </div>
                 </div>
             </footer>

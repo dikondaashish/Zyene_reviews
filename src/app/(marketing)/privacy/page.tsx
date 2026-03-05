@@ -32,6 +32,16 @@ export default function PrivacyPolicyPage() {
                         <li>You can revoke access to these platforms at any time through your integration settings.</li>
                     </ul>
 
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">2a. Google API Limited Use Disclosure</h2>
+                    <p>In accordance with Google&apos;s Limited Use requirements, Zyene Reviews commits to the following:</p>
+                    <ul className="list-disc pl-6 space-y-2 mb-6">
+                        <li>We do not use Google user data for advertising purposes.</li>
+                        <li>We do not sell, lease, or transfer Google API data to third parties.</li>
+                        <li>We do not use Google API data for purposes unrelated to providing or improving user-facing functionality within our Services.</li>
+                        <li>Our use of Google API data is strictly limited to providing and improving the review management features of our Services.</li>
+                        <li>Users can revoke Zyene&apos;s access to their Google data at any time through their <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account security settings</a>.</li>
+                    </ul>
+
                     <h2 className="text-2xl font-semibold mt-10 mb-4">3. How We Use Your Information</h2>
                     <p>We use information that we collect about you or that you provide to us, including any personal information:</p>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
@@ -52,23 +62,34 @@ export default function PrivacyPolicyPage() {
                         <li>With your consent.</li>
                     </ul>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">5. Data Security</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">5. Cookies &amp; Tracking Technologies</h2>
+                    <p>We use cookies and similar tracking technologies to:</p>
+                    <ul className="list-disc pl-6 space-y-2 mb-6">
+                        <li>Remember your preferences and login sessions.</li>
+                        <li>Analyze site traffic and usage patterns (via Vercel Analytics).</li>
+                        <li>Improve the performance and reliability of our Services.</li>
+                    </ul>
+                    <p>
+                        You can manage cookie preferences through your browser settings. We do not use tracking technologies for third-party advertising.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">6. Data Security</h2>
                     <p>
                         We have implemented measures designed to secure your personal information from accidental loss and from unauthorized access, use, alteration, and disclosure. All payment transactions are encrypted and processed through our payment gateway provider, Stripe. We do not store your credit card information on our servers.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">6. Your Data Rights</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">7. Your Data Rights</h2>
                     <p>
                         Depending on your location, you may have the right to request access to, correction of, or deletion of your personal data.
                         You can manage your account information within the application dashboard. To exercise other data rights, please contact us.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">7. Changes to Our Privacy Policy</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">8. Changes to Our Privacy Policy</h2>
                     <p>
                         It is our policy to post any changes we make to our privacy policy on this page. If we make material changes to how we treat our users' personal information, we will notify you by email to the primary email address specified in your account.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">8. Contact Information</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">9. Contact Information</h2>
                     <p>
                         To ask questions or comment about this privacy policy and our privacy practices, contact us at: <a href="mailto:support@zyenereviews.com">support@zyenereviews.com</a>.
                     </p>

@@ -42,6 +42,7 @@ export default function TermsOfServicePage() {
                     </p>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
                         <li>You must have obtained the necessary consent from your customers before sending them review requests.</li>
+                        <li>Businesses must obtain explicit written or electronic consent from customers before sending SMS review requests through our platform, in compliance with the Telephone Consumer Protection Act (TCPA) and Federal Communications Commission (FCC) regulations.</li>
                         <li>You are solely responsible for the content of the messages sent through our platform.</li>
                         <li>Zyene Reviews reserves the right to suspend your account if we determine, in our sole discretion, that you are sending spam or violating communication laws.</li>
                     </ul>
