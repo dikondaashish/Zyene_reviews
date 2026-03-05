@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ChevronRight, ArrowRight, Mail, FileText, Phone } from "lucide-react";
 
 export const metadata = {
-    title: "Help Center - Zyene Ratings",
-    description: "Support and Help Center for Zyene Ratings users.",
+    title: "Help Center - Zyene Reviews",
+    description: "Support and Help Center for Zyene Reviews users.",
 };
 
 export default function HelpCenterPage() {

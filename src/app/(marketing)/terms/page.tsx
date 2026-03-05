@@ -71,7 +71,27 @@ export default function TermsOfServicePage() {
                         IN NO EVENT SHALL ZYENE REVIEWS, NOR ITS DIRECTORS, EMPLOYEES, PARTNERS, AGENTS, SUPPLIERS, OR AFFILIATES, BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM (I) YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE SERVICES; (II) ANY CONDUCT OR CONTENT OF ANY THIRD PARTY ON THE SERVICES; (III) ANY CONTENT OBTAINED FROM THE SERVICES; AND (IV) UNAUTHORIZED ACCESS, USE OR ALTERATION OF YOUR TRANSMISSIONS OR CONTENT.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">9. Contact Us</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">9. Intellectual Property</h2>
+                    <p>
+                        The Services, including its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of The Budget Wheels LLC and its licensors. The Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of The Budget Wheels LLC.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">10. Customer Data Ownership</h2>
+                    <p>
+                        You retain all rights to the data you upload or provide to our Services, including customer contact information, review responses, and business profile content. We do not claim ownership of your data. Upon termination of your account, you may request an export of your data within 30 days. After 90 days post-termination, your data will be permanently deleted in accordance with our Data Retention Policy.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">11. Service Availability</h2>
+                    <p>
+                        We strive to maintain 99.9% uptime for our Services, but we do not guarantee uninterrupted or error-free operation. The Services may be temporarily unavailable due to scheduled maintenance, system upgrades, or factors beyond our control. We are not liable for any loss or damage resulting from service downtime or interruptions.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">12. Governing Law &amp; Jurisdiction</h2>
+                    <p>
+                        These Terms shall be governed and construed in accordance with the laws of the State of Texas, United States, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts located in the State of Texas.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">13. Contact Us</h2>
                     <p>
                         If you have any questions about these Terms, please contact us at: <a href="mailto:support@zyenereviews.com">support@zyenereviews.com</a>.
                     </p>

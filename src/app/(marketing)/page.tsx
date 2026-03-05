@@ -299,7 +299,7 @@ export default function MarketingPage() {
               </div>
 
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-[#262626] mb-12 leading-tight">
-                Turn happy customers into <br /> your best marketers
+                Automate your review <br /> collection process
               </h3>
 
               <div className="space-y-8">
@@ -411,7 +411,7 @@ export default function MarketingPage() {
               </div>
               <h3 className="text-2xl font-semibold text-[#262626] mb-4">Reply & Grow</h3>
               <p className="text-slate-600 text-lg leading-relaxed font-light">
-                One-tap AI replies. Ask happy customers for reviews on autopilot.
+                One-tap AI replies. Ask customers for reviews via email, SMS, or shareable links.
               </p>
             </motion.div>
           </motion.div>
