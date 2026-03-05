@@ -6,6 +6,16 @@ export default function AboutPage() {
     return (
         <div className="min-h-screen bg-slate-50 py-24">
             <div className="container mx-auto px-4 sm:px-8 max-w-4xl">
+                {/* Hero image */}
+                <div className="w-full h-56 md:h-72 rounded-2xl overflow-hidden mb-8">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&h=400&fit=crop&q=80"
+                        alt="Team collaborating on review management software"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+
                 <div className="bg-white p-8 md:p-16 rounded-2xl shadow-sm border border-slate-100">
                     <h1 className="text-4xl font-bold text-slate-900 mb-4">About Zyene Reviews</h1>
                     <p className="text-lg text-slate-600 mb-12 leading-relaxed">

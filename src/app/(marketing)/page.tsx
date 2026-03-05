@@ -101,28 +101,14 @@ export default function MarketingPage() {
               className="w-full lg:w-[50%] relative"
             >
               {/* Petal Container */}
-              <div className="relative aspect-[4/3] w-full bg-slate-800 rounded-tl-[4rem] rounded-bl-[4rem] rounded-br-[4rem] rounded-tr-lg overflow-hidden shadow-2xl flex items-center justify-center p-8">
-                {/* Abstract Background for Hero instead of photo */}
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900 mix-blend-multiply opacity-80" />
-                <div className="relative z-10 w-full h-full flex flex-col justify-between opacity-30">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
-                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
-                    <div className="w-3 h-3 rounded-full bg-white/50"></div>
-                  </div>
-                  <div className="space-y-4 w-full">
-                    <div className="h-4 bg-white/40 rounded-full w-3/4"></div>
-                    <div className="h-4 bg-white/40 rounded-full w-full"></div>
-                    <div className="h-4 bg-white/40 rounded-full w-5/6"></div>
-                  </div>
-                  <div className="h-1/2 w-full flex items-end justify-between gap-3">
-                    <div className="w-1/5 bg-white/30 rounded-t-lg h-full"></div>
-                    <div className="w-1/5 bg-white/30 rounded-t-lg h-2/3"></div>
-                    <div className="w-1/5 bg-white/30 rounded-t-lg h-5/6"></div>
-                    <div className="w-1/5 bg-white/30 rounded-t-lg h-1/3"></div>
-                    <div className="w-1/5 bg-white/30 rounded-t-lg h-3/4"></div>
-                  </div>
-                </div>
+              <div className="relative aspect-[4/3] w-full rounded-tl-[4rem] rounded-bl-[4rem] rounded-br-[4rem] rounded-tr-lg overflow-hidden shadow-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80"
+                  alt="Business owner checking reviews on tablet"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
               </div>
 
               {/* Floating Overlap Card (SpotHopper Style) */}
@@ -245,12 +231,14 @@ export default function MarketingPage() {
             {/* Right Side (Beige with mockup) */}
             <div className="w-full md:w-1/2 bg-[#f3f4f6] p-8 md:p-16 flex items-center justify-center min-h-[500px]">
               <div className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md border border-black/5">
-                {/* Fake Map / Dashboard UI */}
-                <div className="w-full h-48 bg-slate-100 rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
-                  <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-1 opacity-10">
-                    {Array.from({ length: 16 }).map((_, i) => <div key={i} className="bg-slate-400"></div>)}
-                  </div>
-                  <div className="relative bg-white px-4 py-2 rounded-full shadow-md text-sm font-semibold flex items-center gap-2 text-slate-700">
+                <div className="w-full h-48 rounded-2xl mb-6 relative overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=300&fit=crop&q=80"
+                    alt="Local business storefront"
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                  <div className="absolute bottom-3 left-3 bg-white px-4 py-2 rounded-full shadow-md text-sm font-semibold flex items-center gap-2 text-slate-700">
                     <Clock className="w-4 h-4 text-orange-500" /> Ping: 12:45 PM
                   </div>
                 </div>
@@ -336,7 +324,10 @@ export default function MarketingPage() {
               <div className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md border border-black/5">
                 {/* Fake AI Reply UI */}
                 <div className="flex gap-4 mb-6 pb-6 border-b border-slate-100">
-                  <div className="w-12 h-12 bg-slate-200 rounded-full shrink-0"></div>
+                  <div className="w-12 h-12 rounded-full shrink-0 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&q=80" alt="Customer" className="w-full h-full object-cover" />
+                  </div>
                   <div>
                     <div className="h-4 w-24 bg-slate-200 rounded-full mb-2"></div>
                     <div className="flex gap-1 text-yellow-400 mb-2">
@@ -436,7 +427,10 @@ export default function MarketingPage() {
                 "We were stuck at 4.1 stars for nearly two years. Since switching to Zyene, we've jumped to 4.8 stars and our incoming calls have literally doubled. The AI replies save me 3 hours a week."
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div className="w-12 h-12 rounded-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80" alt="Michael T." className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <h4 className="font-semibold text-[#262626]">Michael T.</h4>
                   <p className="text-sm text-slate-500">Owner, Riverfront Dining</p>
@@ -453,7 +447,10 @@ export default function MarketingPage() {
                 "I was paying $300/mo for Birdeye. Zyene does exactly the same thing but the interface is actually modern and the AI response generator is much better. No brainer switch."
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div className="w-12 h-12 rounded-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&q=80" alt="Sarah Jenkins" className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <h4 className="font-semibold text-[#262626]">Sarah Jenkins</h4>
                   <p className="text-sm text-slate-500">Director, Apex Dental Care</p>
@@ -470,7 +467,10 @@ export default function MarketingPage() {
                 "The feedback collection feature alone is worth it. We heard from a concerned customer directly, resolved their issue quickly, and they updated their review to 5 stars. Incredible."
               </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-slate-300"></div>
+                <div className="w-12 h-12 rounded-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&q=80" alt="David Chen" className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <h4 className="font-semibold text-[#262626]">David Chen</h4>
                   <p className="text-sm text-slate-500">Manager, Chen Auto Repair</p>
