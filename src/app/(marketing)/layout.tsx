@@ -106,7 +106,7 @@ export default function MarketingLayout({
                                 Review management software for local businesses.
                             </p>
                             <p className="text-sm text-slate-400">
-                                © {new Date().getFullYear()} Zyene Reviews.
+                                © {new Date().getFullYear()} The Budget Wheels LLC. All rights reserved.
                             </p>
                         </div>
                         <div>

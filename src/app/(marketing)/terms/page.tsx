@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
                     <p className="text-sm text-slate-500 mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 
                     <p>
-                        Welcome to Zyene Reviews. These Terms of Service ("Terms") govern your access to and use of our
+                        Welcome to Zyene Reviews, a product of The Budget Wheels LLC. These Terms of Service ("Terms") govern your access to and use of our
                         reputation management platform, websites, and services (collectively, the "Services").
                         Please read these Terms carefully before using the Services.
                     </p>

@@ -9,7 +9,7 @@ export default function AboutPage() {
                 <div className="bg-white p-8 md:p-16 rounded-2xl shadow-sm border border-slate-100">
                     <h1 className="text-4xl font-bold text-slate-900 mb-4">About Zyene Reviews</h1>
                     <p className="text-lg text-slate-600 mb-12 leading-relaxed">
-                        We build software that helps local businesses manage their online reputation — so they can
+                        Zyene Reviews is a product of <strong>The Budget Wheels LLC</strong>. We build software that helps local businesses manage their online reputation — so they can
                         focus on what they do best: serving their customers.
                     </p>
 
