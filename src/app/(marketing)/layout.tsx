@@ -105,9 +105,10 @@ export default function MarketingLayout({
                             <p className="text-sm text-slate-500 mb-4 max-w-sm">
                                 Review management software for local businesses.
                             </p>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-slate-400 mb-4">
                                 © {new Date().getFullYear()} The Budget Wheels LLC. All rights reserved.
                             </p>
+                            <iframe src="https://status.zyenereviews.com/badge?theme=light" width="250" height="30" frameBorder="0" scrolling="no" style={{ colorScheme: "normal" }}></iframe>
                         </div>
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Product</h3>
