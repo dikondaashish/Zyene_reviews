@@ -100,6 +100,9 @@ export async function GET(request: Request) {
             }
         }
 
+        // Heartbeat success ping!
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/qaTkuG86YMyWVZNXgeBDtGWc").catch(() => { });
+
         return NextResponse.json({
             success: true,
             campaignsProcessed: campaigns.length,
@@ -108,6 +111,8 @@ export async function GET(request: Request) {
 
     } catch (error: any) {
         console.error("[Cron] Follow-up job failed:", error);
+        // Heartbeat fail ping
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/qaTkuG86YMyWVZNXgeBDtGWc/fail").catch(() => { });
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

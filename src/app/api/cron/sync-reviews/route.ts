@@ -29,6 +29,8 @@ export async function GET(request: Request) {
     if (error) {
         console.error("Cron: Failed to fetch platforms", error);
         Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
+        // Heartbeat fail ping
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV/fail").catch(() => { });
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
@@ -66,6 +68,9 @@ export async function GET(request: Request) {
             results.push({ id: platform.id, platform: platform.platform, status: "error", error: "Internal Server Error" });
         }
     }
+
+    // Heartbeat success ping!
+    await fetch("https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV").catch(() => { });
 
     return NextResponse.json({
         success: true,
