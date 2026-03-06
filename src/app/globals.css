@@ -124,3 +124,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* BetterStack Announcement Banner Custom CSS */
+.betteruptime-announcement { top: unset; bottom: 0; background: white; }
+.betteruptime-announcement__message { color: black }

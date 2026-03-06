@@ -5,6 +5,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,6 +46,11 @@ export default function RootLayout({
             <SpeedInsights />
           </QueryProvider>
         </ThemeProvider>
+        <Script
+          src="https://uptime.betterstack.com/widgets/announcement.js"
+          data-id="239670"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
