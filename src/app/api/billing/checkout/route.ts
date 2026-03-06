@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         // Security: Only owners, admins, and managers can manage billing
         const memberTyped = member as unknown as OrgMemberWithRole;
         const memberRole = memberTyped.role;
-        if (!memberRole || !["owner", "admin", "manager"].includes(memberRole)) {
+        if (!memberRole || !["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(memberRole)) {
             return NextResponse.json(
                 { error: "You don't have permission to manage billing. Contact your organization owner." },
                 { status: 403 }
