@@ -14,143 +14,154 @@ export async function GET(request: Request) {
     const now = new Date();
     const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
 
-    // 1. Get all businesses with active 'google' platform
-    // We could filter businesses that actually have reviews in last 24h, but Supabase doesn't support complex joins easily in one go.
-    // Better: Get reviews from last 24h, then group by business.
-
-    const { data: recentReviews, error: reviewError } = await admin
-        .from("reviews")
-        .select(`
-            id,
-            rating,
-            text,
-            author_name,
-            sentiment,
-            created_at,
-            business_id,
-            businesses (
-                id,
-                name,
-                organization_id,
-                slug
-            )
-        `)
-        .gte("created_at", yesterday.toISOString())
-        .order("created_at", { ascending: false });
-
-    if (reviewError) {
-        return NextResponse.json({ error: reviewError.message }, { status: 500 });
-    }
-
-    if (!recentReviews || recentReviews.length === 0) {
-        return NextResponse.json({ message: "No new reviews found" });
-    }
-
-    // Group reviews by business
-    type Review = {
-        id: string;
-        rating: number;
-        text: string | null;
-        author_name: string | null;
-        sentiment: string | null;
-        created_at: string;
-        business_id: string;
-        businesses: {
-            id: string;
-            name: string;
-            organization_id: string;
-            slug: string;
-        };
-    };
-
-    const businessMap = new Map<string, Review[]>();
-    (recentReviews as unknown as Review[]).forEach((review) => {
-        if (!review.businesses) return;
-        const bid = review.business_id;
-        if (!businessMap.has(bid)) {
-            businessMap.set(bid, []);
-        }
-        businessMap.get(bid)!.push(review);
-    });
-
-    let emailsSent = 0;
-
-    for (const [businessId, reviews] of businessMap.entries()) {
-        const business = reviews[0].businesses;
-
-        // 2. Get Pending Count for this business (all time pending)
-        const { count: pendingCount } = await admin
+    try {
+        const { data: recentReviews, error: reviewError } = await admin
             .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", businessId)
-            .is("response_text", null);
+            .select(`
+                id,
+                rating,
+                text,
+                author_name,
+                sentiment,
+                created_at,
+                business_id,
+                businesses (
+                    id,
+                    name,
+                    organization_id,
+                    slug
+                )
+            `)
+            .gte("created_at", yesterday.toISOString())
+            .order("created_at", { ascending: false });
 
-        // 3. Stats for Digest
-        const totalNew = reviews.length;
-        const avgRating = reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / totalNew;
-        const digestItems = reviews.slice(0, 5).map((r) => ({
-            rating: r.rating,
-            authorName: r.author_name || "Anonymous",
-            text: r.text || "",
-            sentiment: r.sentiment as "positive" | "negative" | "neutral"
-        }));
+        if (reviewError) {
+            // Heartbeat fail
+            await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ/fail").catch(() => { });
+            return NextResponse.json({ error: reviewError.message }, { status: 500 });
+        }
 
-        // 4. Get Recruitpients (Org Members with Digest Enabled)
-        const { data: members } = await admin
-            .from("organization_members")
-            .select("user_id")
-            .eq("organization_id", business.organization_id);
+        if (!recentReviews || recentReviews.length === 0) {
+            // Still a success, just nothing to do
+            await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
+            return NextResponse.json({ message: "No new reviews found" });
+        }
 
-        if (members && members.length > 0) {
-            const userIds = members.map(m => m.user_id);
+        // Group reviews by business
+        type Review = {
+            id: string;
+            rating: number;
+            text: string | null;
+            author_name: string | null;
+            sentiment: string | null;
+            created_at: string;
+            business_id: string;
+            businesses: {
+                id: string;
+                name: string;
+                organization_id: string;
+                slug: string;
+            };
+        };
 
-            const { data: prefs } = await admin
-                .from("notification_preferences")
-                .select("*, users(email)")
-                .in("user_id", userIds);
-
-            interface DigestRecipient {
-                digest_enabled?: boolean;
-                users: { email: string } | null;
+        const businessMap = new Map<string, Review[]>();
+        (recentReviews as unknown as Review[]).forEach((review) => {
+            if (!review.businesses) return;
+            const bid = review.business_id;
+            if (!businessMap.has(bid)) {
+                businessMap.set(bid, []);
             }
+            businessMap.get(bid)!.push(review);
+        });
 
-            const recipients = prefs?.filter(p => {
-                const pTyped = p as unknown as DigestRecipient;
-                const digestEnabled = pTyped.digest_enabled !== false; // Default true
-                const hasEmail = pTyped.users?.email;
-                return digestEnabled && hasEmail;
-            }) || [];
+        let emailsSent = 0;
 
-            // 5. Build & Send Email
-            if (recipients.length > 0) {
-                const emailHtml = dailyDigestEmail({
-                    businessName: business.name,
-                    reviews: digestItems,
-                    totalNew,
-                    avgRating,
-                    pendingCount: pendingCount || 0,
-                    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-                    settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
-                });
+        for (const [businessId, reviews] of businessMap.entries()) {
+            const business = reviews[0].businesses;
 
-                await Promise.all(recipients.map(recipient => {
-                    const rTyped = recipient as unknown as DigestRecipient;
-                    const email = rTyped.users!.email;
-                    return sendEmail({
-                        to: email,
-                        subject: `Daily Review Summary for ${business.name}`,
-                        html: emailHtml
+            // 2. Get Pending Count for this business (all time pending)
+            const { count: pendingCount } = await admin
+                .from("reviews")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", businessId)
+                .is("response_text", null);
+
+            // 3. Stats for Digest
+            const totalNew = reviews.length;
+            const avgRating = reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / totalNew;
+            const digestItems = reviews.slice(0, 5).map((r) => ({
+                rating: r.rating,
+                authorName: r.author_name || "Anonymous",
+                text: r.text || "",
+                sentiment: r.sentiment as "positive" | "negative" | "neutral"
+            }));
+
+            // 4. Get Recruitpients (Org Members with Digest Enabled)
+            const { data: members } = await admin
+                .from("organization_members")
+                .select("user_id")
+                .eq("organization_id", business.organization_id);
+
+            if (members && members.length > 0) {
+                const userIds = members.map(m => m.user_id);
+
+                const { data: prefs } = await admin
+                    .from("notification_preferences")
+                    .select("*, users(email)")
+                    .in("user_id", userIds);
+
+                interface DigestRecipient {
+                    digest_enabled?: boolean;
+                    users: { email: string } | null;
+                }
+
+                const recipients = prefs?.filter(p => {
+                    const pTyped = p as unknown as DigestRecipient;
+                    const digestEnabled = pTyped.digest_enabled !== false; // Default true
+                    const hasEmail = pTyped.users?.email;
+                    return digestEnabled && hasEmail;
+                }) || [];
+
+                // 5. Build & Send Email
+                if (recipients.length > 0) {
+                    const emailHtml = dailyDigestEmail({
+                        businessName: business.name,
+                        reviews: digestItems,
+                        totalNew,
+                        avgRating,
+                        pendingCount: pendingCount || 0,
+                        dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+                        settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
                     });
-                }));
 
-                emailsSent += recipients.length;
+                    await Promise.all(recipients.map(recipient => {
+                        const rTyped = recipient as unknown as DigestRecipient;
+                        const email = rTyped.users!.email;
+                        return sendEmail({
+                            to: email,
+                            subject: `Daily Review Summary for ${business.name}`,
+                            html: emailHtml
+                        });
+                    }));
+
+                    emailsSent += recipients.length;
+                }
             }
         }
-    }
 
-    return NextResponse.json({
-        message: "Daily digest processed",
-        businessesProcessed: businessMap.size,
-        emailsSent
-    });
+        // Heartbeat success ping!
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
+
+        return NextResponse.json({
+            message: "Daily digest processed",
+            businessesProcessed: businessMap.size,
+            emailsSent
+        });
+
+    } catch (error: any) {
+        console.error("Daily Digest CRON Error:", error);
+        // Heartbeat fail ping
+        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ/fail").catch(() => { });
+        return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+    }
 }
