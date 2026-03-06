@@ -123,6 +123,7 @@ export default function MarketingLayout({
                                 <li><Link href="/about" className="hover:text-blue-600">About Us</Link></li>
                                 <li><Link href="/contact" className="hover:text-blue-600">Contact</Link></li>
                                 <li><Link href="/help" className="hover:text-blue-600">Help Center</Link></li>
+                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">System Status</a></li>
                             </ul>
                         </div>
                         <div>
