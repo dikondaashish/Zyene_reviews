@@ -52,7 +52,7 @@ export default async function WidgetPage({
     }));
 
     return (
-        <div className="w-full h-full min-h-[100px] bg-white overflow-hidden m-0 p-0">
+        <div className="w-full h-full min-h-25 bg-white overflow-hidden m-0 p-0">
             <ReviewCarousel reviews={formattedReviews} businessName={business.name} />
         </div>
     );

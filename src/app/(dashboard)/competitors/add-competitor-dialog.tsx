@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { Plus, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { addCompetitor } from "@/app/actions/competitor";
 import { Database } from "@/lib/supabase/database.types";
@@ -31,27 +31,45 @@ export function AddCompetitorDialog({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [name, setName] = useState("");
     const [googleUrl, setGoogleUrl] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Clear previous field errors
+        setFieldErrors({});
 
         if (!name.trim()) {
-            toast.error("Competitor name is required");
+            setFieldErrors({ name: "Competitor name is required" });
             return;
         }
 
         setIsSubmitting(true);
         try {
-            const data = await addCompetitor(businessId, name, googleUrl);
+            const result = await addCompetitor(businessId, name, googleUrl);
+
+            if (!result.success) {
+                if (result.fieldError) {
+                    // Show field-level validation error
+                    setFieldErrors({
+                        [result.fieldError.field]: result.fieldError.message,
+                    });
+                } else {
+                    // Show general error toast
+                    toast.error(result.error || "Couldn't add competitor. Please try again.");
+                }
+                return;
+            }
+
+            // Success
             toast.success("Competitor added successfully");
-            onSuccess(data);
+            onSuccess(result.data);
             setOpen(false);
 
             // Reset form
             setName("");
             setGoogleUrl("");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to add competitor");
+            setFieldErrors({});
         } finally {
             setIsSubmitting(false);
         }
@@ -62,10 +80,10 @@ export function AddCompetitorDialog({
             <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 h-4 w-4" />
-                    track Competitor
+                    Track Competitor
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-106.25">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Add a Competitor</DialogTitle>
@@ -74,40 +92,84 @@ export function AddCompetitorDialog({
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
+                        {/* Competitor Name Field */}
+                        <div className="grid grid-cols-4 items-start gap-4">
+                            <Label htmlFor="name" className="text-right pt-2">
                                 Name *
                             </Label>
-                            <Input
-                                id="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="col-span-3"
-                                placeholder="Local Plumber LLC"
-                                required
-                            />
+                            <div className="col-span-3">
+                                <Input
+                                    id="name"
+                                    value={name}
+                                    onChange={(e) => {
+                                        setName(e.target.value);
+                                        if (fieldErrors.name) {
+                                            setFieldErrors({ ...fieldErrors, name: "" });
+                                        }
+                                    }}
+                                    placeholder="Local Plumber LLC"
+                                    required
+                                    disabled={isSubmitting}
+                                    className={fieldErrors.name ? "border-red-500" : ""}
+                                />
+                                {fieldErrors.name && (
+                                    <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {fieldErrors.name}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="url" className="text-right">
+
+                        {/* Google Maps URL Field */}
+                        <div className="grid grid-cols-4 items-start gap-4">
+                            <Label htmlFor="url" className="text-right pt-2">
                                 Google Maps URL
                             </Label>
-                            <Input
-                                id="url"
-                                value={googleUrl}
-                                onChange={(e) => setGoogleUrl(e.target.value)}
-                                className="col-span-3"
-                                placeholder="https://maps.google.com/..."
-                            />
+                            <div className="col-span-3">
+                                <Input
+                                    id="url"
+                                    value={googleUrl}
+                                    onChange={(e) => {
+                                        setGoogleUrl(e.target.value);
+                                        if (fieldErrors.googleUrl) {
+                                            setFieldErrors({ ...fieldErrors, googleUrl: "" });
+                                        }
+                                    }}
+                                    placeholder="https://maps.google.com/..."
+                                    disabled={isSubmitting}
+                                    className={fieldErrors.googleUrl ? "border-red-500" : ""}
+                                />
+                                {fieldErrors.googleUrl && (
+                                    <div className="flex items-start gap-1 mt-1 text-xs text-red-600">
+                                        <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
+                                        {fieldErrors.googleUrl}
+                                    </div>
+                                )}
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Example: https://maps.google.com/maps/place/...
+                                </p>
+                            </div>
                         </div>
+
                         <p className="text-xs text-muted-foreground col-span-4 pl-16">
-                            Note: We'll start monitoring their rating and review count over time. Automated syncing will be supported in a future update.
+                            We'll monitor their rating and review count automatically. First sync may take a few minutes.
                         </p>
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                                setOpen(false);
+                                setFieldErrors({});
+                            }}
+                            disabled={isSubmitting}
+                        >
                             Cancel
                         </Button>
                         <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {isSubmitting ? "Adding..." : "Add Competitor"}
                         </Button>
                     </DialogFooter>

@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { MobileSidebarFAB } from "@/components/dashboard/mobile-sidebar-fab";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { OrganizationDisplay } from "@/components/dashboard/organization-display";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
 import { getActiveBusinessId } from "@/lib/business-context";
 
 export default async function DashboardLayout({
@@ -32,31 +33,31 @@ export default async function DashboardLayout({
     // Get active business context (handles cookie + validation + fallback)
     const { businesses, businessId: activeBusinessId, organization } = await getActiveBusinessId();
 
+    const headerContent = (
+        <div className="flex-1 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+                <OrganizationDisplay organization={organization} />
+                <BusinessSwitcher
+                    businesses={businesses}
+                    activeBusinessId={activeBusinessId}
+                />
+            </div>
+            <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <UserNav user={user} />
+            </div>
+        </div>
+    );
+
     return (
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
-                    <SidebarTrigger className="-ml-1" />
-                    <Separator orientation="vertical" className="mr-2 h-4" />
-                    <div className="flex-1 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <OrganizationDisplay organization={organization} />
-                            <BusinessSwitcher
-                                businesses={businesses}
-                                activeBusinessId={activeBusinessId}
-                            />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <ThemeToggle />
-                            <UserNav user={user} />
-                        </div>
-                    </div>
-                </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 dark:bg-background min-h-[calc(100vh-4rem)]">
+                <DashboardLayoutClient header={headerContent}>
                     {children}
-                </main>
+                </DashboardLayoutClient>
             </SidebarInset>
+            <MobileSidebarFAB />
         </SidebarProvider>
     );
 }

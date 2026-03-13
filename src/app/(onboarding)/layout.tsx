@@ -18,8 +18,26 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50">
-            {children}
+        <div className="min-h-screen bg-white flex flex-col">
+            {/* Header with logo */}
+            <header className="border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex items-center gap-2">
+                        {/* Logo */}
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">ZR</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-900">Zyene Reviews</span>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main content */}
+            <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+                <div className="w-full max-w-2xl">
+                    {children}
+                </div>
+            </main>
         </div>
     );
 }

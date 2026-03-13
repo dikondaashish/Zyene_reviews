@@ -85,7 +85,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             success: true,
-            successCount,
+            imported: successCount,
             totalAttempted: insertPayload.length
         });
 

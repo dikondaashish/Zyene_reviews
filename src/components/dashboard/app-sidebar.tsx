@@ -16,10 +16,13 @@ import {
     Store,
     User,
     Users,
-    Target
+    Target,
+    Menu,
+    X,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 import {
     Sidebar,
@@ -33,12 +36,14 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
+    useSidebar,
 } from "@/components/ui/sidebar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button"
 
 // Menu items.
 const items = [
@@ -122,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const isSettingsActive = pathname.startsWith("/settings")
 
     return (
-        <Sidebar collapsible="icon" {...props}>
+        <Sidebar collapsible="icon" {...props} className="border-r border-gray-200">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -133,66 +138,93 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">Zyene Ratings</span>
-                                    <span className="">v1.0.0</span>
+                                    <span className="text-xs">v1.0.0</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            <SidebarContent>
+
+            <SidebarContent data-tour-target="tour-sidebar">
                 <SidebarMenu>
-                    {items.map((item) => (
-                        <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton
-                                asChild
-                                isActive={pathname === item.url || pathname.startsWith(item.url + '/')}
-                                tooltip={item.title}
-                            >
-                                <Link href={item.url}>
-                                    <item.icon />
-                                    <span>{item.title}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
+                    {items.map((item) => {
+                        const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    tooltip={item.title}
+                                    className={`
+                                        transition-all duration-150
+                                        ${isActive 
+                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
+                                            : "hover:bg-gray-50"
+                                        }
+                                    `}
+                                >
+                                    <Link href={item.url}>
+                                        <item.icon className={isActive ? "text-orange-600" : ""} />
+                                        <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
                 </SidebarMenu>
             </SidebarContent>
+
             <SidebarFooter>
                 <SidebarMenu>
                     <Collapsible defaultOpen={isSettingsActive} className="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
                                 <SidebarMenuButton
-                                    isActive={isSettingsActive}
+                                    className={`
+                                        transition-all duration-150
+                                        ${isSettingsActive 
+                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
+                                            : "hover:bg-gray-50"
+                                        }
+                                    `}
                                     tooltip="Settings"
                                 >
-                                    <Settings />
-                                    <span>Settings</span>
+                                    <Settings className={isSettingsActive ? "text-orange-600" : ""} />
+                                    <span className={isSettingsActive ? "font-semibold" : ""}>Settings</span>
                                     <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                 </SidebarMenuButton>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
-                                    {settingsItems.map((item) => (
-                                        <SidebarMenuSubItem key={item.title}>
-                                            <SidebarMenuSubButton
-                                                asChild
-                                                isActive={pathname === item.url}
-                                            >
-                                                <Link href={item.url}>
-                                                    <item.icon className="h-4 w-4" />
-                                                    <span>{item.title}</span>
-                                                </Link>
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                    ))}
+                                    {settingsItems.map((item) => {
+                                        const isActive = pathname === item.url;
+                                        return (
+                                            <SidebarMenuSubItem key={item.title}>
+                                                <SidebarMenuSubButton
+                                                    asChild
+                                                    className={`
+                                                        transition-all duration-150
+                                                        ${isActive 
+                                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
+                                                            : "hover:bg-gray-50"
+                                                        }
+                                                    `}
+                                                >
+                                                    <Link href={item.url}>
+                                                        <item.icon className={`h-4 w-4 ${isActive ? "text-orange-600" : ""}`} />
+                                                        <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
+                                                    </Link>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        );
+                                    })}
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </SidebarMenuItem>
                     </Collapsible>
                 </SidebarMenu>
             </SidebarFooter>
+
             <SidebarRail />
         </Sidebar>
     )

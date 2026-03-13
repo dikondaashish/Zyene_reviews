@@ -137,6 +137,26 @@ export async function middleware(request: NextRequest) {
             );
         }
 
+        // Check onboarding status (only for non-onboarding paths)
+        if (!pathname.startsWith("/onboarding")) {
+            try {
+                const { data } = await supabase
+                    .from("users")
+                    .select("onboarding_completed")
+                    .eq("id", user.id)
+                    .single();
+
+                if (data && !data.onboarding_completed) {
+                    return createResponse(
+                        NextResponse.redirect(new URL("/onboarding", request.url))
+                    );
+                }
+            } catch (error) {
+                // If check fails, allow the request to proceed
+                console.error("Onboarding status check failed:", error);
+            }
+        }
+
         // Redirect /dashboard to / for clean URL
         if (pathname === "/dashboard") {
             return createResponse(
@@ -165,10 +185,36 @@ export async function middleware(request: NextRequest) {
                 return supabaseResponse;
             }
 
+            // Allow onboarding path
+            if (pathname.startsWith("/onboarding")) {
+                return supabaseResponse;
+            }
+
             // If accessing /dashboard and not logged in -> redirect /login
             if (pathname.startsWith("/dashboard") && !user) {
                 return createResponse(NextResponse.redirect(new URL("/login", request.url)));
             }
+
+            // Check onboarding status for dashboard access
+            if (pathname.startsWith("/dashboard") && user) {
+                try {
+                    const { data } = await supabase
+                        .from("users")
+                        .select("onboarding_completed")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (data && !data.onboarding_completed) {
+                        return createResponse(
+                            NextResponse.redirect(new URL("/onboarding", request.url))
+                        );
+                    }
+                } catch (error) {
+                    // If check fails, allow the request to proceed
+                    console.error("Onboarding status check failed:", error);
+                }
+            }
+
             // If accessing /login and logged in -> redirect /dashboard
             if ((pathname === "/login" || pathname === "/") && user) {
                 return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));

@@ -24,7 +24,7 @@ export default async function ReviewsPage(props: {
 
     if (!businessId) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px]">
+            <div className="flex flex-col items-center justify-center min-h-100">
                 <h2 className="text-xl font-semibold">No Business Found</h2>
                 <p className="text-muted-foreground">Please complete onboarding.</p>
             </div>

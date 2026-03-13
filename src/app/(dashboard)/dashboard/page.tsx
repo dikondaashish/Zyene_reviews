@@ -23,6 +23,9 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { GoogleConnectButton } from "@/components/dashboard/google-connect-button";
 import { SyncButton } from "@/components/dashboard/sync-button";
+import { GoogleConnectEmptyState } from "@/components/dashboard/google-connect-empty-state";
+import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
+import { DashboardTourOverlay } from "@/components/dashboard/dashboard-tour-overlay";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -123,6 +126,10 @@ export default async function DashboardPage() {
     let requestsThisMonth = 0;
     let newReviews30d = 0;
 
+    // Getting started banner stats
+    let customerCount = 0;
+    let notificationsConfigured = false;
+
     if (business.id) {
         // ── Redis Caching ──
         const cacheKey = `dashboard:stats:${business.id}`;
@@ -152,6 +159,25 @@ export default async function DashboardPage() {
             hasEngagementData = stats.hasEngagementData || false;
             requestsThisMonth = stats.requestsThisMonth || 0;
             newReviews30d = stats.newReviews30d || 0;
+
+            // Always fetch customer count and notification prefs (not cached)
+            const [customerCountCached, notificationPrefsCached] = await Promise.all([
+                supabase
+                    .from("customers")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id),
+                supabase
+                    .from("notification_preferences")
+                    .select("*")
+                    .eq("business_id", business.id)
+                    .eq("user_id", user.id)
+                    .limit(1),
+            ]);
+            customerCount = customerCountCached.count || 0;
+            notificationsConfigured =
+                (notificationPrefsCached.data &&
+                notificationPrefsCached.data.length > 0 &&
+                (notificationPrefsCached.data[0].email_enabled || notificationPrefsCached.data[0].sms_enabled)) || false;
         } else {
             // ── Precompute date boundaries (used by multiple queries) ──
             const now = new Date();
@@ -179,6 +205,9 @@ export default async function DashboardPage() {
                 sentRequestsResult,
                 monthlyRequestsResult,
                 newReview30dResult,
+                // Getting started banner
+                customerCountResult,
+                notificationPrefsResult,
             ] = await Promise.all([
                 // 1. Response Rate
                 supabase
@@ -267,6 +296,18 @@ export default async function DashboardPage() {
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
                     .gte("review_date", thirtyDaysAgo.toISOString()),
+                // 12. Customer count (for getting started banner)
+                supabase
+                    .from("customers")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id),
+                // 13. Notification preferences (for getting started banner)
+                supabase
+                    .from("notification_preferences")
+                    .select("*")
+                    .eq("business_id", business.id)
+                    .eq("user_id", user.id)
+                    .limit(1),
             ]);
 
             // ── Process results ──
@@ -359,6 +400,15 @@ export default async function DashboardPage() {
             // 11. New Reviews 30d
             newReviews30d = newReview30dResult.count || 0;
 
+            // 12. Customer Count
+            customerCount = customerCountResult.count || 0;
+
+            // 13. Notification Preferences
+            notificationsConfigured =
+                (notificationPrefsResult.data &&
+                notificationPrefsResult.data.length > 0 &&
+                (notificationPrefsResult.data[0].email_enabled || notificationPrefsResult.data[0].sms_enabled)) || false;
+
             // Save to cache
             try {
                 const statsToCache = { responseRate, pendingCount, recentReviews, attentionReviews, trendData, ratingData, totalReviewsTrend, averageRatingTrend, positivePercent, negativePercent, hasSentimentData, engagementRate, hasEngagementData, requestsThisMonth, newReviews30d };
@@ -419,23 +469,56 @@ export default async function DashboardPage() {
                 {isGoogleConnected && <SyncButton />}
             </div>
 
+            {/* Getting Started Banner */}
+            {!organization?.onboarding_completed && (
+                <GettingStartedBanner
+                    googleConnected={isGoogleConnected}
+                    customerCount={customerCount}
+                    requestSent={requestsThisMonth > 0}
+                    notificationsConfigured={notificationsConfigured}
+                />
+            )}
+
+            {/* Tour Overlay */}
+            <DashboardTourOverlay />
+
             {/* Stats Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
                             Total Reviews
                         </CardTitle>
-                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center gap-2">
+                            {!isGoogleConnected && (
+                                <div className="relative w-2 h-2">
+                                    <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse"></div>
+                                </div>
+                            )}
+                            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
                             {business.total_reviews}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center justify-between">
-                            <span>From Google Reviews</span>
-                            {formatTrend(totalReviewsTrend)}
+                        <p className={`text-xs mt-1 ${!isGoogleConnected ? "text-orange-600 font-medium" : "text-muted-foreground"}`}>
+                            {!isGoogleConnected ? (
+                                <span>📌 Connect Google to import your reviews</span>
+                            ) : (
+                                <>
+                                    <span>From Google Reviews</span>
+                                    {formatTrend(totalReviewsTrend) && <span className="ml-2">{formatTrend(totalReviewsTrend)}</span>}
+                                </>
+                            )}
                         </p>
+                        {!isGoogleConnected && (
+                            <Link href="/integrations">
+                                <Button size="sm" className="mt-3 w-full" variant="outline">
+                                    Connect Now →
+                                </Button>
+                            </Link>
+                        )}
                     </CardContent>
                 </Card>
                 <Card>
@@ -477,9 +560,14 @@ export default async function DashboardPage() {
                         <Clock className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{pendingCount}</div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {pendingLabel}
+                        <div className={`text-2xl font-bold ${pendingCount === 0 ? "text-green-600" : ""}`}>
+                            {pendingCount}
+                        </div>
+                        <p className={`text-xs mt-1 ${pendingCount === 0 ? "text-green-600 font-medium" : "text-muted-foreground"}`}>
+                            {pendingCount === 0
+                                ? "No reviews waiting for a response. You're all caught up! ✓"
+                                : `${pendingCount} awaiting response`
+                            }
                         </p>
                     </CardContent>
                 </Card>
@@ -636,7 +724,7 @@ export default async function DashboardPage() {
                             </Link>
                         )}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent data-tour-target="tour-recent-reviews">
                         {recentReviews.length > 0 ? (
                             <div className="space-y-4">
                                 {recentReviews.map((review: any) => (
@@ -697,14 +785,7 @@ export default async function DashboardPage() {
                                         <SyncButton />
                                     </>
                                 ) : (
-                                    <>
-                                        <p className="text-muted-foreground">
-                                            Connect Google to see your reviews.
-                                        </p>
-                                        <GoogleConnectButton
-                                            isConnected={false}
-                                        />
-                                    </>
+                                    <GoogleConnectEmptyState />
                                 )}
                             </div>
                         )}
@@ -731,7 +812,7 @@ export default async function DashboardPage() {
                             </Link>
                         )}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent data-tour-target="tour-needs-attention">
                         {attentionReviews.length > 0 ? (
                             <div className="space-y-4">
                                 {attentionReviews.map((review: any) => (
