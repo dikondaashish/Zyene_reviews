@@ -10,11 +10,19 @@ import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4Form } from "@/components/onboarding/step4-form";
 
+interface OnboardingOrganization {
+  id: string;
+  name: string;
+}
+
 interface OnboardingBusiness {
   id: string;
   name: string;
-  city: string;
+  city: string | null;
   category: string | null;
+  address_line1?: string | null;
+  state?: string | null;
+  phone?: string | null;
 }
 
 interface OnboardingUser {
@@ -30,11 +38,11 @@ export default function OnboardingPage() {
   const supabase = createClient();
   const { currentStep, setCurrentStep, isLoading, reset } = useOnboardingStore();
   const [user, setUser] = useState<OnboardingUser | null>(null);
-  const [organizationId, setOrganizationId] = useState<string | null>(null);
+  const [organization, setOrganization] = useState<OnboardingOrganization | null>(null);
   const [business, setBusiness] = useState<OnboardingBusiness | null>(null);
   const [googleConnected, setGoogleConnected] = useState(false);
 
-  // Load user and organization on mount
+  // Load user, organization, and business on mount
   useEffect(() => {
     const loadUserAndOrg = async () => {
       const {
@@ -44,22 +52,25 @@ export default function OnboardingPage() {
       if (user) {
         setUser(user);
 
-        // Get user's organization
-        const { data: org } = await supabase
+        const { data: member } = await supabase
           .from("organization_members")
           .select("organization_id")
           .eq("user_id", user.id)
-          .eq("role", "owner")
+          .in("role", ["owner", "ORG_OWNER"])
           .single();
 
-        if (org) {
-          setOrganizationId(org.organization_id);
+        if (member) {
+          const { data: org } = await supabase
+            .from("organizations")
+            .select("id, name")
+            .eq("id", member.organization_id)
+            .single();
+          if (org) setOrganization(org);
 
-          // Load the most recent business in this organization
           const { data: biz } = await supabase
             .from("businesses")
-            .select("id, name, city, category")
-            .eq("organization_id", org.organization_id)
+            .select("id, name, city, category, address_line1, state, phone")
+            .eq("organization_id", member.organization_id)
             .order("created_at", { ascending: false })
             .limit(1)
             .single();
@@ -67,7 +78,7 @@ export default function OnboardingPage() {
           if (biz) {
             setBusiness({
               ...biz,
-              city: biz.city ?? "",
+              city: biz.city ?? null,
             });
           }
         }
@@ -101,15 +112,13 @@ export default function OnboardingPage() {
     setCurrentStep(2);
   };
 
-  if (!user || !organizationId) {
+  if (!user || !organization) {
     return (
       <div className="flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     );
   }
-
-  const userFullName = user.user_metadata?.full_name || "";
 
   return (
     <div>
@@ -119,15 +128,18 @@ export default function OnboardingPage() {
           <Step1Form
             onNext={handleStep1Next}
             isLoading={isLoading}
-            organizationId={organizationId}
-            initialFullName={userFullName}
+            organizationId={organization.id}
+            initialOrgName={organization.name}
           />
         )}
         {currentStep === 2 && business && (
           <Step2Form
             businessId={business.id}
             businessName={business.name}
-            city={business.city}
+            city={business.city ?? ""}
+            address={business.address_line1 ?? ""}
+            state={business.state ?? ""}
+            phone={business.phone ?? ""}
             onNext={async () => {
               setGoogleConnected(true);
               setCurrentStep(3);
@@ -142,7 +154,7 @@ export default function OnboardingPage() {
           <Step3Form
             businessId={business.id}
             businessName={business.name}
-            city={business.city}
+            city={business.city ?? ""}
             onNext={async () => setCurrentStep(4)}
             isLoading={isLoading}
           />

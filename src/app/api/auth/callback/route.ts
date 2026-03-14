@@ -265,7 +265,11 @@ export async function GET(request: Request) {
                     Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
                 });
 
-                return NextResponse.redirect(`${origin}/dashboard`);
+                // New users go to onboarding on app subdomain
+                if (rootDomain.includes("localhost")) {
+                    return NextResponse.redirect(`http://${rootDomain}/onboarding`);
+                }
+                return NextResponse.redirect(`https://app.${rootDomain}/onboarding`);
             }
 
             // ─── EXISTING USER LOGIN ────────────────────────────

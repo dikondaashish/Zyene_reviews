@@ -157,17 +157,15 @@ export async function initializeGoogleAuth(
       };
     }
 
-    // Fetch Google Business Profile data
+    // Fetch Google Business Profile data and optionally update business with first location
     let reviewData = { reviewCount: 0, averageRating: 0 };
+    let locationInfo: { businessName?: string; address?: string; city?: string; state?: string } | undefined;
 
     try {
-      // Get list of locations for the account
       const accountsResponse = await fetch(
         "https://mybusinessbusinessinformation.googleapis.com/v1/accounts",
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
 
@@ -176,15 +174,11 @@ export async function initializeGoogleAuth(
         const accounts = accountsData.accounts || [];
 
         if (accounts.length > 0) {
-          const accountId = accounts[0].name; // Format: "accounts/{accountId}"
-
-          // Get locations for the first account
+          const accountId = accounts[0].name;
           const locationsResponse = await fetch(
-            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations`,
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,reviewCount,averageRating`,
             {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
+              headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
 
@@ -193,18 +187,40 @@ export async function initializeGoogleAuth(
             const locations = locationsData.locations || [];
 
             if (locations.length > 0) {
-              const location = locations[0];
+              const loc = locations[0];
               reviewData = {
-                reviewCount: location.reviewCount || 0,
-                averageRating: location.averageRating || 0,
+                reviewCount: loc.reviewCount || 0,
+                averageRating: loc.averageRating || 0,
               };
+              const addr = loc.storefrontAddress;
+              locationInfo = {
+                businessName: loc.title || undefined,
+                address: addr?.addressLines?.join(", "),
+                city: addr?.locality,
+                state: addr?.administrativeArea,
+              };
+              // Update business with first location data
+              const slug = (loc.title || "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+              await supabase
+                .from("businesses")
+                .update({
+                  name: loc.title || undefined,
+                  address_line1: addr?.addressLines?.[0] || null,
+                  city: addr?.locality || null,
+                  state: addr?.administrativeArea || null,
+                  updated_at: new Date().toISOString(),
+                  ...(slug ? { slug } : {}),
+                })
+                .eq("id", businessId);
             }
           }
         }
       }
     } catch (apiError) {
       console.error("Error fetching Google Business Profile data:", apiError);
-      // Continue even if we can't fetch the data
     }
 
     // Store the access token in review_platforms table
@@ -216,7 +232,7 @@ export async function initializeGoogleAuth(
         access_token: accessToken,
         refresh_token: tokenData.refresh_token || null,
         token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
-        is_connected: true,
+        sync_status: "active",
       })
       .eq("business_id", businessId)
       .eq("platform", "google");
@@ -234,6 +250,7 @@ export async function initializeGoogleAuth(
     return {
       success: true,
       reviewData,
+      locationInfo,
     };
   } catch (error: any) {
     console.error("Unexpected error in initializeGoogleAuth:", error);
@@ -620,6 +637,89 @@ export async function createOrganization(
       success: false,
       error: "An unexpected error occurred. Please try again.",
     };
+  }
+}
+
+/**
+ * Update organization name (Step 1 of onboarding)
+ */
+export async function updateOrganizationName(
+  organizationId: string,
+  name: string
+) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: "You are not authenticated." };
+    }
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const { error } = await supabase
+      .from("organizations")
+      .update({ name, slug, updated_at: new Date().toISOString() })
+      .eq("id", organizationId);
+    if (error) {
+      console.error("Error updating organization:", error);
+      return { success: false, error: "Failed to update organization name." };
+    }
+    const { error: stepError } = await supabase
+      .from("users")
+      .update({ onboarding_step: 2 } as any)
+      .eq("id", user.id);
+    if (stepError) console.error("Error updating onboarding step:", stepError);
+    revalidatePath("/onboarding");
+    return { success: true };
+  } catch (error: any) {
+    console.error("updateOrganizationName:", error);
+    return { success: false, error: "An unexpected error occurred." };
+  }
+}
+
+/**
+ * Update business name and first location (Step 2 of onboarding)
+ */
+export async function updateBusinessAndLocation(
+  businessId: string,
+  data: { businessName: string; address?: string; city?: string; state?: string; phone?: string }
+) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: "You are not authenticated." };
+    }
+    const slug = data.businessName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const { error } = await supabase
+      .from("businesses")
+      .update({
+        name: data.businessName,
+        slug,
+        address_line1: data.address || null,
+        city: data.city || null,
+        state: data.state || null,
+        phone: data.phone || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", businessId);
+    if (error) {
+      console.error("Error updating business:", error);
+      return { success: false, error: "Failed to update business." };
+    }
+    revalidatePath("/onboarding");
+    return { success: true };
+  } catch (error: any) {
+    console.error("updateBusinessAndLocation:", error);
+    return { success: false, error: "An unexpected error occurred." };
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,10 +8,18 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, CheckCircle2, Mail, MessageSquare, ChevronRight } from "lucide-react";
-import { step4FormSchema, type Step4FormData } from "@/lib/validations/onboarding";
-import { sendFirstReviewRequest, completeOnboarding } from "@/app/actions/onboarding";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, Bell, MessageCircle, Star, ChevronRight } from "lucide-react";
+import { step3FormSchema, type Step3FormData } from "@/lib/validations/onboarding";
+import { saveNotificationPreferences } from "@/app/actions/onboarding";
 import { OnboardingCompletionScreen } from "./completion-screen";
 
 interface Step4FormProps {
@@ -34,76 +42,45 @@ export function Step4Form({
   isLoading: externalIsLoading = false,
 }: Step4FormProps) {
   const [isLoading, setIsLoading] = useState(externalIsLoading);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [showCompletion, setShowCompletion] = useState(false);
-  const [requestSent, setRequestSent] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<Step4FormData>({
-    resolver: zodResolver(step4FormSchema),
+  const form = useForm<Step3FormData>({
+    resolver: zodResolver(step3FormSchema),
     defaultValues: {
-      recipientName: userName,
-      recipientEmail: userEmail,
-      recipientPhone: "",
-      channel: "email",
+      emailAlerts: true,
+      emailFrequency: "daily_digest",
+      smsAlerts: false,
+      smsPhoneNumber: "",
+      minRatingThreshold: "1",
     },
     mode: "onChange",
   });
 
-  const channel = watch("channel");
-  const recipientName = watch("recipientName");
+  const emailAlerts = form.watch("emailAlerts");
+  const smsAlerts = form.watch("smsAlerts");
+  const emailFrequency = form.watch("emailFrequency");
+  const minRatingThreshold = form.watch("minRatingThreshold");
 
-  // Show completion screen if showCompletion is true
-  if (showCompletion) {
-    return (
-      <OnboardingCompletionScreen
-        firstName={userName}
-        email={userEmail}
-        googleConnected={googleConnected}
-        requestSent={requestSent}
-        onComplete={onNext}
-      />
-    );
-  }
-
-  // Fire confetti on success
   const fireConfetti = async () => {
     try {
       const confettiModule = await import("canvas-confetti");
       const confetti = confettiModule.default;
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    } catch (error) {
-      // Confetti library not available or not installed - silently skip
-      console.debug("canvas-confetti not available, skipping animation");
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    } catch {
+      console.debug("canvas-confetti not available");
     }
   };
 
-  const onSubmit = async (data: Step4FormData) => {
+  const onSubmit = async (data: Step3FormData) => {
     setIsLoading(true);
     try {
-      const result = await sendFirstReviewRequest(businessId, data);
-
+      const result = await saveNotificationPreferences(businessId, data);
       if (result.success) {
+        toast.success("Notification preferences saved! 🔔");
         await fireConfetti();
-        setShowSuccess(true);
-        setRequestSent(true);
-        toast.success("Request sent! Check your inbox to see what your customers experience. 🎉");
-
-        // Show completion screen after success state
-        setTimeout(() => {
-          setShowCompletion(true);
-        }, 1500);
+        setShowCompletion(true);
       } else {
-        toast.error(result.error || "Failed to send review request");
+        toast.error(result.error || "Failed to save preferences");
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -113,244 +90,174 @@ export function Step4Form({
     }
   };
 
-  const handleSkip = async () => {
-    setIsLoading(true);
-    try {
-      const result = await completeOnboarding(businessId);
-
-      if (result.success) {
-        // Show completion screen instead of immediately redirecting
-        setShowCompletion(true);
-      } else {
-        toast.error(result.error || "Failed to skip");
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (showSuccess) {
+  if (showCompletion) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="text-center space-y-4"
-      >
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
-          <CheckCircle2 className="h-8 w-8 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900">Request sent!</h2>
-        <p className="text-gray-600">
-          Check your inbox to see exactly what your customers will experience
-        </p>
-      </motion.div>
+      <OnboardingCompletionScreen
+        firstName={userName}
+        email={userEmail}
+        googleConnected={googleConnected}
+        requestSent={false}
+        onComplete={onNext}
+      />
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50 }}
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.4 }}
       className="space-y-6"
     >
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
         <motion.div
-          className="bg-blue-600 h-2 rounded-full"
-          initial={{ width: "75%" }}
+          className="h-full bg-blue-600 rounded-full"
+          initial={{ width: 0 }}
           animate={{ width: "100%" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         />
       </div>
 
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Get your first review in minutes
-        </h1>
-        <p className="text-gray-600">
-          Send a test request to see exactly what your customers experience
+      <div>
+        <h2 className="text-3xl font-bold text-gray-900">Notifications</h2>
+        <p className="text-gray-600 mt-2">
+          We’ll alert you when new reviews come in. Then you’re all set — confetti and dashboard.
         </p>
       </div>
 
-      {/* Benefits */}
-      <div className="space-y-2">
-        {[
-          "Test that your setup is working",
-          "See exactly what your customers receive",
-          "Start building your review pipeline",
-        ].map((benefit, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: idx * 0.1 }}
-            className="flex items-center gap-3"
-          >
-            <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
-            <span className="text-gray-700">{benefit}</span>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Form & Preview */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <Card className="border-gray-200">
-          <CardContent className="pt-6 space-y-4">
-            {/* Recipient Name */}
-            <div className="space-y-2">
-              <Label htmlFor="recipientName" className="text-sm font-medium">
-                Recipient Name
-              </Label>
-              <Input
-                id="recipientName"
-                {...register("recipientName")}
-                placeholder="Test User"
-                disabled={isLoading || isSubmitting}
-              />
-              {errors.recipientName && (
-                <p className="text-sm text-red-600">{errors.recipientName.message}</p>
-              )}
-            </div>
-
-            {/* Recipient Email */}
-            <div className="space-y-2">
-              <Label htmlFor="recipientEmail" className="text-sm font-medium">
-                Recipient Email
-              </Label>
-              <Input
-                id="recipientEmail"
-                {...register("recipientEmail")}
-                type="email"
-                placeholder="test@example.com"
-                disabled={isLoading || isSubmitting}
-              />
-              {errors.recipientEmail && (
-                <p className="text-sm text-red-600">{errors.recipientEmail.message}</p>
-              )}
-            </div>
-
-            {/* Channel Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">Delivery Channel</Label>
-              <div className="flex gap-3">
-                {[
-                  { value: "email" as const, label: "Email", icon: Mail },
-                  { value: "sms" as const, label: "SMS", icon: MessageSquare },
-                  { value: "both" as const, label: "Both", icon: Mail },
-                ].map(({ value, label, icon: Icon }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setValue("channel", value)}
-                    disabled={isLoading || isSubmitting}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all ${
-                      channel === value
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Recipient Phone (if SMS selected) */}
-            {(channel === "sms" || channel === "both") && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-2"
-              >
-                <Label htmlFor="recipientPhone" className="text-sm font-medium">
-                  Recipient Phone
-                </Label>
-                <Input
-                  id="recipientPhone"
-                  {...register("recipientPhone")}
-                  placeholder="(555) 123-4567"
-                  disabled={isLoading || isSubmitting}
-                />
-                {errors.recipientPhone && (
-                  <p className="text-sm text-red-600">{errors.recipientPhone.message}</p>
-                )}
-              </motion.div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Preview Card */}
-        <Card className="border-gray-200 bg-gray-50">
-          <CardContent className="pt-6 space-y-4">
-            <p className="text-sm font-medium text-gray-700">Preview</p>
-
-            {channel === "email" || channel === "both" ? (
-              <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-2">
-                <p className="text-xs text-gray-500">Subject:</p>
-                <p className="text-sm font-medium">
-                  How was your experience at {businessName}?
-                </p>
-                <div className="h-px bg-gray-200" />
-                <p className="text-sm text-gray-600">Hi {recipientName},</p>
-                <p className="text-sm text-gray-600">
-                  We'd love to hear about your recent experience at {businessName}...
-                </p>
-              </div>
-            ) : null}
-
-            {channel === "sms" || channel === "both" ? (
-              <div className="flex justify-end">
-                <div className="bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2 max-w-xs">
-                  <p className="text-sm">
-                    Hi {recipientName}, we'd love your feedback on {businessName}. Click to review:
-                    {" "}
-                    <span className="font-medium">[review link]</span>
-                  </p>
+          <CardContent className="pt-6 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-3 flex-1">
+                  <div className="mt-1 p-2 bg-blue-100 rounded-lg">
+                    <Bell className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="emailAlerts" className="text-base font-semibold cursor-pointer">
+                      Email alerts
+                    </Label>
+                    <p className="text-sm text-gray-600">Get notified by email for new reviews</p>
+                  </div>
                 </div>
+                <Switch
+                  id="emailAlerts"
+                  checked={emailAlerts}
+                  onCheckedChange={(c) => form.setValue("emailAlerts", c)}
+                  disabled={isLoading}
+                />
               </div>
-            ) : null}
+              <AnimatePresence>
+                {emailAlerts && (
+                  <motion.div
+                    key="email-frequency"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="ml-11 space-y-2"
+                  >
+                    <Label>Frequency</Label>
+                    <Select
+                      value={emailFrequency}
+                      onValueChange={(v) => form.setValue("emailFrequency", v as Step3FormData["emailFrequency"])}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="immediately">Immediately</SelectItem>
+                        <SelectItem value="daily_digest">Daily digest</SelectItem>
+                        <SelectItem value="weekly_summary">Weekly summary</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="h-px bg-gray-200" />
+
+            <div className="space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-3 flex-1">
+                  <div className="mt-1 p-2 bg-green-100 rounded-lg">
+                    <MessageCircle className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="smsAlerts" className="text-base font-semibold cursor-pointer">
+                      SMS alerts
+                    </Label>
+                    <p className="text-sm text-gray-600">Text for urgent 1–2 star reviews</p>
+                  </div>
+                </div>
+                <Switch
+                  id="smsAlerts"
+                  checked={smsAlerts}
+                  onCheckedChange={(c) => form.setValue("smsAlerts", c)}
+                  disabled={isLoading}
+                />
+              </div>
+              <AnimatePresence>
+                {smsAlerts && (
+                  <motion.div
+                    key="sms-phone"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="ml-11 space-y-2"
+                  >
+                    <Label>Phone number</Label>
+                    <Input
+                      {...form.register("smsPhoneNumber")}
+                      placeholder="(555) 123-4567"
+                      disabled={isLoading}
+                    />
+                    {form.formState.errors.smsPhoneNumber && (
+                      <p className="text-sm text-red-500">{form.formState.errors.smsPhoneNumber.message}</p>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="h-px bg-gray-200" />
+
+            <div className="space-y-2">
+              <Label className="text-base font-semibold flex items-center gap-2">
+                <div className="p-2 bg-yellow-100 rounded-lg">
+                  <Star className="h-5 w-5 text-yellow-600" />
+                </div>
+                Alert me for reviews rated
+              </Label>
+              <Select
+                value={minRatingThreshold}
+                onValueChange={(v) => form.setValue("minRatingThreshold", v as Step3FormData["minRatingThreshold"])}
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-full md:w-56">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Any rating</SelectItem>
+                  <SelectItem value="2">2 stars or below</SelectItem>
+                  <SelectItem value="3">3 stars or below</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Buttons */}
-        <div className="flex gap-3 pt-2">
-          <Button
-            type="submit"
-            disabled={isLoading || isSubmitting}
-            className="flex-1 bg-black hover:bg-gray-800 text-white"
-            size="lg"
-          >
-            {isLoading || isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
-              </>
-            ) : (
-              <>
-                Send Request
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </div>
-
-        {/* Skip Link */}
-        <button
-          type="button"
-          onClick={handleSkip}
-          disabled={isLoading || isSubmitting}
-          className="w-full text-center text-gray-600 hover:text-gray-900 text-sm font-medium"
+        <Button
+          type="submit"
+          disabled={isLoading || !form.formState.isValid}
+          className="w-full py-6"
         >
-          Skip and go to dashboard
-        </button>
+          {isLoading ? (
+            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
+          ) : (
+            <>Save & finish <ChevronRight className="ml-2 h-5 w-5" /></>
+          )}
+        </Button>
       </form>
     </motion.div>
   );
