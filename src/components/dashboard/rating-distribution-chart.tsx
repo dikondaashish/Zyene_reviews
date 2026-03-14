@@ -39,7 +39,7 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
 
     if (!hasData) {
         return (
-            <div className="flex items-center justify-center h-[250px] text-muted-foreground text-sm">
+            <div className="flex h-62.5 items-center justify-center text-muted-foreground text-sm">
                 No ratings data yet
             </div>
         );
@@ -79,7 +79,12 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
                         borderRadius: "8px",
                         fontSize: "13px",
                     }}
-                    formatter={(value: number | undefined) => [value ?? 0, "Reviews"]}
+                    formatter={(value) => {
+                        const normalized = Array.isArray(value)
+                            ? Number(value[0])
+                            : Number(value);
+                        return [Number.isFinite(normalized) ? normalized : 0, "Reviews"];
+                    }}
                 />
                 <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={20}>
                     {fullData.map((entry) => (

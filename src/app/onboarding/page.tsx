@@ -4,28 +4,34 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useOnboardingStore } from "@/lib/stores/onboarding-store";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, ChevronRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4Form } from "@/components/onboarding/step4-form";
 
-// Main Onboarding Component - Uses imported Step1-4 form components
+interface OnboardingBusiness {
+  id: string;
+  name: string;
+  city: string;
+  category: string | null;
+}
 
-// Main Onboarding Component
+interface OnboardingUser {
+  id: string;
+  email?: string | null;
+  user_metadata?: {
+    full_name?: string;
+  };
+}
+
 export default function OnboardingPage() {
   const router = useRouter();
   const supabase = createClient();
-  const { currentStep, setCurrentStep, isLoading, setIsLoading, reset } = useOnboardingStore();
-  const [user, setUser] = useState<any>(null);
+  const { currentStep, setCurrentStep, isLoading, reset } = useOnboardingStore();
+  const [user, setUser] = useState<OnboardingUser | null>(null);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
-  const [business, setBusiness] = useState<any>(null);
+  const [business, setBusiness] = useState<OnboardingBusiness | null>(null);
   const [googleConnected, setGoogleConnected] = useState(false);
 
   // Load user and organization on mount
@@ -59,7 +65,10 @@ export default function OnboardingPage() {
             .single();
 
           if (biz) {
-            setBusiness(biz);
+            setBusiness({
+              ...biz,
+              city: biz.city ?? "",
+            });
           }
         }
       }
@@ -80,55 +89,16 @@ export default function OnboardingPage() {
         .single();
 
       if (data?.onboarding_completed) {
-        router.push("/");
+        router.push("/dashboard");
       }
     };
 
     checkOnboarding();
-  }, [user, supabase, router, setCurrentStep]);
+  }, [user, supabase, router]);
 
-  const handleStep1Next = (business: any) => {
+  const handleStep1Next = () => {
     // Business created and onboarding_step updated to 2 by server action
     setCurrentStep(2);
-  };
-
-  const handleNext = async () => {
-    setIsLoading(true);
-    try {
-      if (!user) return;
-
-      const nextStep = Math.min(currentStep + 1, 4);
-      const { error } = await supabase
-        .from("users")
-        .update({
-          onboarding_completed: nextStep === 4,
-        })
-        .eq("id", user.id);
-
-      if (error) {
-        toast.error("Failed to save progress. Please try again.");
-        return;
-      }
-
-      setCurrentStep(nextStep);
-
-      if (nextStep === 4) {
-        toast.success("🎉 Onboarding complete!");
-        setTimeout(() => {
-          reset();
-          router.push("/");
-        }, 1000);
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleBack = () => {
-    const prevStep = Math.max(currentStep - 1, 1);
-    setCurrentStep(prevStep);
   };
 
   if (!user || !organizationId) {
@@ -186,7 +156,7 @@ export default function OnboardingPage() {
             googleConnected={googleConnected}
             onNext={() => {
               reset();
-              router.push("/");
+              router.push("/dashboard");
             }}
             isLoading={isLoading}
           />

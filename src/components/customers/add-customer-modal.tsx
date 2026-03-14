@@ -91,8 +91,9 @@ export function AddCustomerModal({ open, onOpenChange, businessId }: AddCustomer
             onOpenChange(false);
             form.reset();
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to add customer");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Failed to add customer";
+            toast.error(message);
             console.error("Error adding customer:", error);
         } finally {
             setIsLoading(false);

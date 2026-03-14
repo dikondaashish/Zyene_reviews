@@ -32,7 +32,7 @@ const CATEGORIES = [
 ];
 
 interface Step1Props {
-  onNext: (business: any) => void;
+  onNext: (business: { id: string; name: string; city: string | null; category: string | null }) => void;
   isLoading: boolean;
   organizationId: string;
   initialFullName?: string;
@@ -48,7 +48,6 @@ export function Step1Form({ onNext, isLoading, organizationId, initialFullName }
     watch,
     formState: { errors, isValid },
     handleSubmit,
-    setValue,
   } = useForm<Step1FormData>({
     resolver: zodResolver(step1FormSchema),
     mode: "onChange",
@@ -85,7 +84,7 @@ export function Step1Form({ onNext, isLoading, organizationId, initialFullName }
       } else {
         toast.error(result.error || "Failed to create business");
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setSubmitting(false);

@@ -25,7 +25,6 @@ import { GoogleConnectButton } from "@/components/dashboard/google-connect-butto
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { GoogleConnectEmptyState } from "@/components/dashboard/google-connect-empty-state";
 import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
-import { DashboardTourOverlay } from "@/components/dashboard/dashboard-tour-overlay";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -327,18 +326,21 @@ export default async function DashboardPage() {
             attentionReviews = attentionResult.data || [];
 
             // 5. Monthly Trends
-            const monthData = monthResult.data;
+            const monthData = (monthResult.data || []) as Array<{
+                review_date: string;
+                rating: number;
+            }>;
             if (monthData) {
-                const thisMonthReviews = monthData.filter(r => new Date(r.review_date) >= startOfThisMonth);
-                const lastMonthReviews = monthData.filter(r => new Date(r.review_date) < startOfThisMonth && new Date(r.review_date) >= startOfLastMonth);
+                const thisMonthReviews = monthData.filter((r) => new Date(r.review_date) >= startOfThisMonth);
+                const lastMonthReviews = monthData.filter((r) => new Date(r.review_date) < startOfThisMonth && new Date(r.review_date) >= startOfLastMonth);
 
                 totalReviewsTrend = thisMonthReviews.length - lastMonthReviews.length;
 
                 const thisMonthAvg = thisMonthReviews.length > 0
-                    ? thisMonthReviews.reduce((sum, r) => sum + r.rating, 0) / thisMonthReviews.length
+                    ? thisMonthReviews.reduce((sum: number, r) => sum + r.rating, 0) / thisMonthReviews.length
                     : 0;
                 const lastMonthAvg = lastMonthReviews.length > 0
-                    ? lastMonthReviews.reduce((sum, r) => sum + r.rating, 0) / lastMonthReviews.length
+                    ? lastMonthReviews.reduce((sum: number, r) => sum + r.rating, 0) / lastMonthReviews.length
                     : 0;
 
                 if (thisMonthAvg > 0 && lastMonthAvg > 0) {
@@ -349,7 +351,7 @@ export default async function DashboardPage() {
             }
 
             // 6. 30-day Chart
-            const trendRaw = trendResult.data;
+            const trendRaw = (trendResult.data || []) as Array<{ review_date: string }>;
             if (trendRaw && trendRaw.length > 0) {
                 const dayMap: Record<string, number> = {};
                 trendRaw.forEach((r) => {
@@ -368,7 +370,7 @@ export default async function DashboardPage() {
             }
 
             // 7. Rating Distribution
-            const ratingRaw = ratingResult.data;
+            const ratingRaw = (ratingResult.data || []) as Array<{ rating: number }>;
             if (ratingRaw && ratingRaw.length > 0) {
                 const ratingMap: Record<number, number> = {};
                 ratingRaw.forEach((r) => {
@@ -478,9 +480,6 @@ export default async function DashboardPage() {
                     notificationsConfigured={notificationsConfigured}
                 />
             )}
-
-            {/* Tour Overlay */}
-            <DashboardTourOverlay />
 
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">

@@ -17,6 +17,17 @@ export default async function OnboardingLayout({
         redirect(`https://auth.${rootDomain}`);
     }
 
+    // First-time users only: completed users should not access onboarding.
+    const { data: profile } = await supabase
+        .from("users")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .single();
+
+    if (profile?.onboarding_completed) {
+        redirect("/dashboard");
+    }
+
     return (
         <div className="min-h-screen bg-white flex flex-col">
             {/* Header with logo */}

@@ -74,9 +74,8 @@ export function Step4Form({
   // Fire confetti on success
   const fireConfetti = async () => {
     try {
-      // @ts-ignore - canvas-confetti is optional
-      const module = await import("canvas-confetti");
-      const confetti = module.default;
+      const confettiModule = await import("canvas-confetti");
+      const confetti = confettiModule.default;
       confetti({
         particleCount: 100,
         spread: 70,

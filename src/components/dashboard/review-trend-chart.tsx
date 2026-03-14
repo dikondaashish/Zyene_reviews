@@ -18,7 +18,7 @@ interface TrendDataPoint {
 export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
     if (data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-[250px] text-muted-foreground text-sm">
+            <div className="flex h-62.5 items-center justify-center text-muted-foreground text-sm">
                 No review data in the last 30 days
             </div>
         );
@@ -58,14 +58,22 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
                         borderRadius: "8px",
                         fontSize: "13px",
                     }}
-                    labelFormatter={(value: any) => {
-                        const d = new Date(String(value));
+                    labelFormatter={(value) => {
+                        const normalized = typeof value === "string" || typeof value === "number"
+                            ? String(value)
+                            : "";
+                        const d = new Date(normalized);
                         return d.toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                         });
                     }}
-                    formatter={(value: number | undefined) => [value ?? 0, "Reviews"]}
+                    formatter={(value) => {
+                        const normalized = Array.isArray(value)
+                            ? Number(value[0])
+                            : Number(value);
+                        return [Number.isFinite(normalized) ? normalized : 0, "Reviews"];
+                    }}
                 />
                 <Area
                     type="monotone"

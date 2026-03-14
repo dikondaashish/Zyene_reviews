@@ -183,7 +183,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
-        let newReviewCount = 0;
+        const newReviewCount = 0;
         let analyzedCount = 0;
         let alertsCount = 0;
 

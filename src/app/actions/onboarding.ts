@@ -2,7 +2,22 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { step1FormSchema, step3FormSchema, step4FormSchema, type Step1FormData, type Step3FormData, type Step4FormData } from "@/lib/validations/onboarding";
+import {
+  step1FormSchema,
+  step3FormSchema,
+  step4FormSchema,
+  stepOrganizationSchema,
+  stepBusinessLocationSchema,
+  stepCategorySchema,
+  stepNotificationsSchema,
+  type Step1FormData,
+  type Step3FormData,
+  type Step4FormData,
+  type StepOrganizationFormData,
+  type StepBusinessLocationFormData,
+  type StepCategoryFormData,
+  type StepNotificationsFormData,
+} from "@/lib/validations/onboarding";
 
 export async function createBusinessAndAdvanceOnboarding(
   data: Step1FormData,
@@ -502,6 +517,349 @@ export async function completeOnboarding(businessId: string) {
     };
   } catch (error: any) {
     console.error("Unexpected error in completeOnboarding:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+// ====================
+// NEW: 4-Step Onboarding Functions
+// ====================
+
+/**
+ * Step 1: Create Organization
+ * User enters organization name → Creates organization record
+ */
+export async function createOrganization(
+  data: StepOrganizationFormData
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get authenticated user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "You are not authenticated. Please log in and try again.",
+      };
+    }
+
+    // Validate input
+    const validationResult = stepOrganizationSchema.safeParse(data);
+    if (!validationResult.success) {
+      const firstError = Object.values(validationResult.error.flatten().fieldErrors)[0]?.[0];
+      return {
+        success: false,
+        error: firstError || "Validation failed",
+      };
+    }
+
+    // Generate slug from organization name
+    const slug = data.organizationName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    // Create organization
+    const { data: organization, error: orgError } = await supabase
+      .from("organizations")
+      .insert({
+        name: data.organizationName,
+        slug: slug,
+        type: "business",
+        plan: "none",
+        plan_status: "active",
+      })
+      .select()
+      .single();
+
+    if (orgError || !organization) {
+      console.error("Error creating organization:", orgError);
+      return {
+        success: false,
+        error: "Failed to create organization. Please try again.",
+      };
+    }
+
+    // Add user as owner of organization
+    const { error: memberError } = await supabase
+      .from("organization_members")
+      .insert({
+        organization_id: organization.id,
+        user_id: user.id,
+        role: "owner",
+      });
+
+    if (memberError) {
+      console.error("Error adding organization member:", memberError);
+      return {
+        success: false,
+        error: "Failed to set up organization access. Please try again.",
+      };
+    }
+
+    revalidatePath("/onboarding");
+
+    return {
+      success: true,
+      organization: {
+        id: organization.id,
+        name: organization.name,
+        slug: organization.slug,
+      },
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in createOrganization:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+/**
+ * Step 2: Create Business + Location Details
+ * User enters business name + location details → Creates business record with location info
+ */
+export async function createBusinessWithLocation(
+  organizationId: string,
+  data: StepBusinessLocationFormData
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get authenticated user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "You are not authenticated. Please log in and try again.",
+      };
+    }
+
+    // Validate input
+    const validationResult = stepBusinessLocationSchema.safeParse(data);
+    if (!validationResult.success) {
+      const firstError = Object.values(validationResult.error.flatten().fieldErrors)[0]?.[0];
+      return {
+        success: false,
+        error: firstError || "Validation failed",
+      };
+    }
+
+    // Generate business slug
+    const businessSlug = data.businessName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    // Create business with location info
+    const { data: business, error: businessError } = await supabase
+      .from("businesses")
+      .insert({
+        organization_id: organizationId,
+        name: data.businessName,
+        slug: businessSlug,
+        address_line1: data.address,
+        city: data.city,
+        state: data.state.toUpperCase(),
+        phone: data.phone || null,
+        category: "uncategorized", // Will be set in Step 3
+        country: "US", // Default to US
+        timezone: "America/Los_Angeles", // Default timezone, can be updated later
+      })
+      .select()
+      .single();
+
+    if (businessError || !business) {
+      console.error("Error creating business:", businessError);
+      return {
+        success: false,
+        error: "Failed to create business. Please try again.",
+      };
+    }
+
+    revalidatePath("/onboarding");
+
+    return {
+      success: true,
+      business: {
+        id: business.id,
+        name: business.name,
+        slug: business.slug,
+        address_line1: business.address_line1,
+        city: business.city,
+        state: business.state,
+      },
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in createBusinessWithLocation:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+/**
+ * Step 3: Update Business Category
+ * User selects business category → Updates business record
+ */
+export async function updateBusinessCategory(
+  businessId: string,
+  data: StepCategoryFormData
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get authenticated user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "You are not authenticated. Please log in and try again.",
+      };
+    }
+
+    // Validate input
+    const validationResult = stepCategorySchema.safeParse(data);
+    if (!validationResult.success) {
+      const firstError = Object.values(validationResult.error.flatten().fieldErrors)[0]?.[0];
+      return {
+        success: false,
+        error: firstError || "Validation failed",
+      };
+    }
+
+    // Update business category
+    const { error: updateError } = await supabase
+      .from("businesses")
+      .update({
+        category: data.category,
+      })
+      .eq("id", businessId);
+
+    if (updateError) {
+      console.error("Error updating business category:", updateError);
+      return {
+        success: false,
+        error: "Failed to update category. Please try again.",
+      };
+    }
+
+    revalidatePath("/onboarding");
+
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in updateBusinessCategory:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+/**
+ * Step 4: Create Notification Preferences
+ * User configures notifications → Creates notification_preferences record
+ */
+export async function createNotificationPreferences(
+  businessId: string,
+  data: StepNotificationsFormData
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get authenticated user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "You are not authenticated. Please log in and try again.",
+      };
+    }
+
+    // Validate input
+    const validationResult = stepNotificationsSchema.safeParse(data);
+    if (!validationResult.success) {
+      const firstError = Object.values(validationResult.error.flatten().fieldErrors)[0]?.[0];
+      return {
+        success: false,
+        error: firstError || "Validation failed",
+      };
+    }
+
+    // Validate SMS phone requirement
+    if (data.smsAlerts && !data.phone) {
+      return {
+        success: false,
+        error: "Please provide a phone number for SMS alerts.",
+      };
+    }
+
+    // Create notification preferences
+    const { error: preferencesError } = await supabase
+      .from("notification_preferences")
+      .insert({
+        user_id: user.id,
+        business_id: businessId,
+        email_enabled: data.emailAlerts,
+        sms_enabled: data.smsAlerts,
+        sms_phone_number: data.phone || null,
+        email_frequency: "immediately", // Default to immediate
+        digest_enabled: false,
+        quiet_hours_start: "22:00:00", // Default quiet hours
+        quiet_hours_end: "08:00:00",
+        min_urgency_for_sms: 1,
+        min_rating_threshold: 1,
+      });
+
+    if (preferencesError) {
+      console.error("Error creating notification preferences:", preferencesError);
+      return {
+        success: false,
+        error: "Failed to save notification preferences. Please try again.",
+      };
+    }
+
+    // Mark onboarding as completed for the user
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({
+        onboarding_completed: true,
+      } as any)
+      .eq("id", user.id);
+
+    if (updateError) {
+      console.error("Error marking onboarding complete:", updateError);
+      // Continue anyway - preferences were saved
+    }
+
+    revalidatePath("/onboarding");
+    revalidatePath("/dashboard");
+
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in createNotificationPreferences:", error);
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

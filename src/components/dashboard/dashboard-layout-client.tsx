@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { DashboardTourProvider } from "@/components/tours/DashboardTourProvider";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -36,6 +37,7 @@ export function DashboardLayoutClient({
 
     return (
         <>
+            <DashboardTourProvider />
             <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
                 {/* Sidebar trigger only on tablet */}
                 {isTablet && (

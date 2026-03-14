@@ -137,24 +137,29 @@ export async function middleware(request: NextRequest) {
             );
         }
 
-        // Check onboarding status (only for non-onboarding paths)
-        if (!pathname.startsWith("/onboarding")) {
-            try {
-                const { data } = await supabase
-                    .from("users")
-                    .select("onboarding_completed")
-                    .eq("id", user.id)
-                    .single();
+        try {
+            const { data } = await supabase
+                .from("users")
+                .select("onboarding_completed")
+                .eq("id", user.id)
+                .single();
 
-                if (data && !data.onboarding_completed) {
-                    return createResponse(
-                        NextResponse.redirect(new URL("/onboarding", request.url))
-                    );
-                }
-            } catch (error) {
-                // If check fails, allow the request to proceed
-                console.error("Onboarding status check failed:", error);
+            // First-time users must complete onboarding before visiting app pages.
+            if (!pathname.startsWith("/onboarding") && data && !data.onboarding_completed) {
+                return createResponse(
+                    NextResponse.redirect(new URL("/onboarding", request.url))
+                );
             }
+
+            // Returning users should never revisit onboarding.
+            if (pathname.startsWith("/onboarding") && data?.onboarding_completed) {
+                return createResponse(
+                    NextResponse.redirect(new URL("/", request.url))
+                );
+            }
+        } catch (error) {
+            // If check fails, allow the request to proceed
+            console.error("Onboarding status check failed:", error);
         }
 
         // Redirect /dashboard to / for clean URL
@@ -185,8 +190,26 @@ export async function middleware(request: NextRequest) {
                 return supabaseResponse;
             }
 
-            // Allow onboarding path
+            // Allow onboarding path only for first-time users.
             if (pathname.startsWith("/onboarding")) {
+                if (!user) {
+                    return createResponse(NextResponse.redirect(new URL("/login", request.url)));
+                }
+
+                try {
+                    const { data } = await supabase
+                        .from("users")
+                        .select("onboarding_completed")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (data?.onboarding_completed) {
+                        return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
+                    }
+                } catch (error) {
+                    console.error("Onboarding status check failed:", error);
+                }
+
                 return supabaseResponse;
             }
 
