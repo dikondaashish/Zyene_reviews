@@ -210,7 +210,7 @@ export async function GET(request: Request) {
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
-                        name: `${fullName}'s Business`,
+                        name: `${fullName}'s Org`,
                         slug: slug,
                         type: "business",
                     })
@@ -225,7 +225,7 @@ export async function GET(request: Request) {
 
                 await admin.from("businesses").insert({
                     organization_id: org.id,
-                    name: org.name,
+                    name: `${fullName}'s Org`,
                     slug: org.slug,
                     country: "US",
                     timezone: "UTC",

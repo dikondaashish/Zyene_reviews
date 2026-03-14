@@ -14,6 +14,7 @@ Set in production (e.g. Vercel):
 
 - `NEXT_PUBLIC_ROOT_DOMAIN=zyenereviews.com` (no `www.`)
 - `NEXT_PUBLIC_APP_URL=https://app.zyenereviews.com`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` – required for “Connect with Google” on Step 2 (Google Cloud OAuth client ID for the app origin). If missing, users see a friendly error instead of Google’s “invalid_request”.
 
 Marketing layout uses `auth.${NEXT_PUBLIC_ROOT_DOMAIN}` for login/signup links. Auth callback redirects new users to `app.${NEXT_PUBLIC_ROOT_DOMAIN}/onboarding`.
 

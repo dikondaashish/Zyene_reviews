@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -49,9 +49,11 @@ export function Step3Form({
 
   const form = useForm<StepCategoryFormData>({
     resolver: zodResolver(stepCategorySchema),
-    defaultValues: { category: undefined },
+    defaultValues: { category: undefined as unknown as StepCategoryFormData["category"] },
     mode: "onChange",
   });
+
+  const selectedCategory = form.watch("category");
 
   const onSubmit = async (data: StepCategoryFormData) => {
     setIsLoading(true);
@@ -96,29 +98,38 @@ export function Step3Form({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-2">
           <Label>Business category</Label>
-          <Select
-            value={form.watch("category")}
-            onValueChange={(v) => form.setValue("category", v as StepCategoryFormData["category"])}
-            disabled={isLoading}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIES.map((c) => (
-                <SelectItem key={c.value} value={c.value}>
-                  {c.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Controller
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <Select
+                value={field.value}
+                onValueChange={(v) => {
+                  field.onChange(v);
+                  form.trigger("category");
+                }}
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>
+                      {c.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
           {form.formState.errors.category && (
             <p className="text-sm text-red-500">{form.formState.errors.category.message}</p>
           )}
         </div>
         <Button
           type="submit"
-          disabled={!form.formState.isValid || isLoading}
+          disabled={!selectedCategory || isLoading}
           className="w-full py-6"
         >
           {isLoading ? (
