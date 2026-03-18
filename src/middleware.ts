@@ -111,10 +111,26 @@ export async function middleware(request: NextRequest) {
     // --- AUTH SUBDOMAIN (auth.domain) ---
     if (hostname === `auth.${rootDomain}`) {
         if (user && pathname === "/") {
+            const targetUrl = `https://app.${rootDomain}`;
+
+            // RSC client-side navigations use fetch with _rsc param.
+            // A cross-origin redirect in response to a fetch triggers a CORS preflight error.
+            // Instead, respond with a 200 + x-middleware-redirect header so Next.js client router
+            // performs a full page navigation to the app subdomain.
+            const isRSC = request.headers.get("rsc") === "1" || request.nextUrl.searchParams.has("_rsc");
+            if (isRSC) {
+                const res = new NextResponse(null, { status: 200 });
+                res.headers.set("x-middleware-redirect", targetUrl);
+                res.headers.set("Access-Control-Allow-Origin", `https://auth.${rootDomain}`);
+                res.headers.set("Access-Control-Allow-Credentials", "true");
+                supabaseResponse.cookies.getAll().forEach((cookie) => {
+                    res.cookies.set(cookie);
+                });
+                return res;
+            }
+
             return createResponse(
-                NextResponse.redirect(
-                    new URL(`https://app.${rootDomain}`, request.url)
-                )
+                NextResponse.redirect(new URL(targetUrl, request.url))
             );
         }
         // Rewrite root to /login
