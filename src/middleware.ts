@@ -8,6 +8,35 @@ export async function middleware(request: NextRequest) {
     });
 
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const hostname = request.headers.get("host")!;
+    const { pathname } = request.nextUrl;
+
+    // --- CORS PREFLIGHT HANDLER ---
+    // OPTIONS preflight requests must NEVER be redirected.
+    // Return 204 with proper CORS headers for cross-subdomain requests.
+    if (request.method === "OPTIONS") {
+        const origin = request.headers.get("origin") || "";
+        const allowedOrigins = [
+            `https://auth.${rootDomain}`,
+            `https://app.${rootDomain}`,
+            `https://${rootDomain}`,
+        ];
+
+        if (allowedOrigins.includes(origin)) {
+            return new NextResponse(null, {
+                status: 204,
+                headers: {
+                    "Access-Control-Allow-Origin": origin,
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Url",
+                    "Access-Control-Allow-Credentials": "true",
+                    "Access-Control-Max-Age": "86400",
+                },
+            });
+        }
+
+        return new NextResponse(null, { status: 204 });
+    }
 
     const cookieOptions = {
         domain: rootDomain.includes("localhost") ? "localhost" : `.${rootDomain.split(":")[0]}`,
@@ -46,8 +75,20 @@ export async function middleware(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    const hostname = request.headers.get("host")!;
-    const { pathname } = request.nextUrl;
+    // Helper to add CORS headers to cross-subdomain responses
+    const addCorsHeaders = (response: NextResponse) => {
+        const origin = request.headers.get("origin") || "";
+        const allowedOrigins = [
+            `https://auth.${rootDomain}`,
+            `https://app.${rootDomain}`,
+            `https://${rootDomain}`,
+        ];
+        if (allowedOrigins.includes(origin)) {
+            response.headers.set("Access-Control-Allow-Origin", origin);
+            response.headers.set("Access-Control-Allow-Credentials", "true");
+        }
+        return response;
+    };
 
     const createResponse = (response: NextResponse) => {
         supabaseResponse.cookies.getAll().forEach((cookie) => {
@@ -113,16 +154,23 @@ export async function middleware(request: NextRequest) {
         if (user && pathname === "/") {
             const targetUrl = `https://app.${rootDomain}`;
 
-            // RSC client-side navigations use fetch with _rsc param.
-            // A cross-origin redirect in response to a fetch triggers a CORS preflight error.
-            // Instead, respond with a 200 + x-middleware-redirect header so Next.js client router
-            // performs a full page navigation to the app subdomain.
-            const isRSC = request.headers.get("rsc") === "1" || request.nextUrl.searchParams.has("_rsc");
+            // RSC client-side navigations use fetch requests.
+            // A cross-origin redirect in response to a fetch triggers a CORS error.
+            // Detect RSC requests and respond with a full-page redirect via
+            // x-middleware-redirect header so the Next.js client router navigates properly.
+            const isRSC = request.headers.get("rsc") === "1"
+                || request.headers.get("next-router-state-tree")
+                || request.nextUrl.searchParams.has("_rsc");
+
             if (isRSC) {
-                const res = new NextResponse(null, { status: 200 });
-                res.headers.set("x-middleware-redirect", targetUrl);
-                res.headers.set("Access-Control-Allow-Origin", `https://auth.${rootDomain}`);
-                res.headers.set("Access-Control-Allow-Credentials", "true");
+                const res = new NextResponse(null, {
+                    status: 200,
+                    headers: {
+                        "x-middleware-redirect": targetUrl,
+                        "Location": targetUrl,
+                    },
+                });
+                addCorsHeaders(res);
                 supabaseResponse.cookies.getAll().forEach((cookie) => {
                     res.cookies.set(cookie);
                 });
@@ -140,12 +188,27 @@ export async function middleware(request: NextRequest) {
             );
         }
         // Pass other paths (e.g. /signup, /forgot-password)
-        return supabaseResponse;
+        return addCorsHeaders(supabaseResponse);
     }
 
     // --- APP SUBDOMAIN (app.domain) ---
     if (hostname === `app.${rootDomain}`) {
         if (!user) {
+            // For RSC/fetch requests from auth subdomain, don't redirect (causes CORS error)
+            const isRSC = request.headers.get("rsc") === "1"
+                || request.headers.get("next-router-state-tree")
+                || request.nextUrl.searchParams.has("_rsc");
+            const origin = request.headers.get("origin") || "";
+
+            if (isRSC && origin === `https://auth.${rootDomain}`) {
+                const res = new NextResponse(
+                    JSON.stringify({ redirect: `https://auth.${rootDomain}` }),
+                    { status: 401 }
+                );
+                addCorsHeaders(res);
+                return res;
+            }
+
             return createResponse(
                 NextResponse.redirect(
                     new URL(`https://auth.${rootDomain}`, request.url)
