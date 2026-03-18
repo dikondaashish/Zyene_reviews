@@ -1088,8 +1088,10 @@ export type Database = {
           created_at: string
           email: string
           full_name: string | null
+          has_completed_tour: boolean
           id: string
           onboarding_completed: boolean
+          onboarding_step: number
           phone: string | null
           timezone: string
           updated_at: string
@@ -1099,8 +1101,10 @@ export type Database = {
           created_at?: string
           email: string
           full_name?: string | null
+          has_completed_tour?: boolean
           id: string
           onboarding_completed?: boolean
+          onboarding_step?: number
           phone?: string | null
           timezone?: string
           updated_at?: string
@@ -1110,8 +1114,10 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string | null
+          has_completed_tour?: boolean
           id?: string
           onboarding_completed?: boolean
+          onboarding_step?: number
           phone?: string | null
           timezone?: string
           updated_at?: string

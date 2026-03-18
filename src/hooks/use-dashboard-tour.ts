@@ -1,59 +1,95 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const TOUR_COMPLETED_KEY = "zyene_dashboard_tour_completed";
-const TOUR_VERSION = "1"; // Increment this to reset tour for all users
+import { useEffect, useState, useCallback } from "react";
+import { getTourStatus, completeTour as completeTourAction, resetTour as resetTourAction } from "@/app/actions/tour";
 
 /**
- * Hook to manage dashboard tour state with react-joyride
- * Tracks whether user has seen the tour and provides controls
+ * Hook to manage dashboard tour state backed by Supabase
+ * Checks user's has_completed_tour status and provides controls
  */
 export const useDashboardTour = () => {
-  const [runTour, setRunTour] = useState(false);
-  const isFirstTime = runTour;
+    const [runTour, setRunTour] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize tour on client-side only
-  useEffect(() => {
-    const completed = localStorage.getItem(TOUR_COMPLETED_KEY);
-    const completedVersion = localStorage.getItem(
-      `${TOUR_COMPLETED_KEY}_version`
-    );
+    // Fetch tour status from backend on mount
+    useEffect(() => {
+        let cancelled = false;
 
-    // If not completed or version doesn't match, show tour
-    const shouldShowTour = !completed || completedVersion !== TOUR_VERSION;
+        const checkTourStatus = async () => {
+            try {
+                const hasCompleted = await getTourStatus();
+                if (!cancelled && !hasCompleted) {
+                    // Auto-start tour for first-time users after short delay for DOM readiness
+                    setTimeout(() => {
+                        if (!cancelled) {
+                            setRunTour(true);
+                        }
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error("Failed to fetch tour status:", error);
+            } finally {
+                if (!cancelled) {
+                    setIsLoading(false);
+                }
+            }
+        };
 
-    if (shouldShowTour) {
-      // Auto-start tour for first-time users after a small delay
-      setTimeout(() => {
+        checkTourStatus();
+        return () => { cancelled = true; };
+    }, []);
+
+    // Mark tour as completed in database
+    const completeTour = useCallback(async () => {
+        setRunTour(false);
+        setCurrentStep(0);
+        try {
+            await completeTourAction();
+        } catch (error) {
+            console.error("Failed to save tour completion:", error);
+        }
+    }, []);
+
+    // Manually start/restart tour
+    const startTour = useCallback(async () => {
+        try {
+            await resetTourAction();
+        } catch (error) {
+            console.error("Failed to reset tour:", error);
+        }
+        setCurrentStep(0);
         setRunTour(true);
-      }, 800);
-    }
-  }, []);
+    }, []);
 
-  // Mark tour as completed
-  const completeTour = () => {
-    localStorage.setItem(TOUR_COMPLETED_KEY, "true");
-    localStorage.setItem(`${TOUR_COMPLETED_KEY}_version`, TOUR_VERSION);
-    setRunTour(false);
-  };
+    // Skip tour (same as complete)
+    const skipTour = useCallback(() => {
+        completeTour();
+    }, [completeTour]);
 
-  // Manually start/restart tour
-  const startTour = () => {
-    setRunTour(true);
-  };
+    // Navigate between steps
+    const nextStep = useCallback((totalSteps: number) => {
+        if (currentStep < totalSteps - 1) {
+            setCurrentStep((prev) => prev + 1);
+        } else {
+            completeTour();
+        }
+    }, [currentStep, completeTour]);
 
-  // Skip tour
-  const skipTour = () => {
-    completeTour();
-  };
+    const prevStep = useCallback(() => {
+        if (currentStep > 0) {
+            setCurrentStep((prev) => prev - 1);
+        }
+    }, [currentStep]);
 
-  return {
-    runTour,
-    setRunTour,
-    isFirstTime,
-    completeTour,
-    startTour,
-    skipTour,
-  };
+    return {
+        runTour,
+        currentStep,
+        isLoading,
+        completeTour,
+        startTour,
+        skipTour,
+        nextStep,
+        prevStep,
+    };
 };

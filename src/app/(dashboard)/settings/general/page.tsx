@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { GeneralSettingsForm } from "@/components/settings/general-settings-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
+import { RestartTourSection } from "@/components/settings/restart-tour-section";
 
 import { getActiveBusinessId } from "@/lib/business-context";
 
@@ -32,6 +33,9 @@ export default async function GeneralSettingsPage() {
 
             {/* Combined Profile & Organization Settings Form */}
             <GeneralSettingsForm user={user} organization={organization} />
+
+            {/* Product Tour */}
+            <RestartTourSection />
 
             {/* Danger Zone */}
             <DeleteAccountSection />

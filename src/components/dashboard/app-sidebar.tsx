@@ -61,6 +61,7 @@ const items = [
         title: "Customers",
         url: "/customers",
         icon: Users,
+        tourTarget: "tour-customers-nav",
     },
     {
         title: "Competitors",
@@ -86,6 +87,7 @@ const items = [
         title: "Analytics",
         url: "/analytics",
         icon: BarChart3,
+        tourTarget: "tour-analytics-nav",
     },
     {
         title: "Integrations",
@@ -151,7 +153,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {items.map((item) => {
                         const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
                         return (
-                            <SidebarMenuItem key={item.title}>
+                            <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
                                 <SidebarMenuButton
                                     asChild
                                     tooltip={item.title}
@@ -177,7 +179,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <SidebarMenu>
                     <Collapsible defaultOpen={isSettingsActive} className="group/collapsible">
-                        <SidebarMenuItem>
+                        <SidebarMenuItem data-tour-target="tour-settings-nav">
                             <CollapsibleTrigger asChild>
                                 <SidebarMenuButton
                                     className={`

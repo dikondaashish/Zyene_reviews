@@ -1,72 +1,63 @@
-import type { Step } from "react-joyride";
-
 /**
  * Dashboard tour configuration for first-time users
  * Guides users through key features of the dashboard
  */
 
-export const dashboardTourSteps: Step[] = [
-  {
-    target: ".dashboard-main",
-    content:
-      "Welcome to Zyene Reviews! This is your dashboard where you can manage everything.",
-    placement: "center",
-    disableBeacon: true,
-  },
-  {
-    target: ".sidebar-navigation",
-    content:
-      "Use the sidebar to navigate between different sections: Reviews, Campaigns, Customers, and Settings.",
-    placement: "right",
-  },
-  {
-    target: ".business-switcher",
-    content:
-      "Switch between your locations/businesses here. You can manage multiple locations from the same dashboard.",
-    placement: "bottom",
-  },
-  {
-    target: ".reviews-section",
-    content:
-      "View and respond to customer reviews from all your platforms (Google, Yelp, Facebook) in one place.",
-    placement: "right",
-  },
-  {
-    target: ".campaigns-section",
-    content:
-      "Create and manage email & SMS campaigns to send review requests and promotional messages to customers.",
-    placement: "right",
-  },
-  {
-    target: ".insights-section",
-    content:
-      "Track your average rating, total reviews, and customer sentiment analytics in real-time.",
-    placement: "left",
-  },
-  {
-    target: ".settings-nav",
-    content:
-      "Configure notifications, team members, billing, and integrations in Settings.",
-    placement: "left",
-  },
-  {
-    target: ".dashboard-main",
-    content:
-      "🎉 You're all set! Start by checking your reviews or sending your first campaign. You can always restart this tour from the help menu.",
-    placement: "center",
-  },
-];
+export interface TourStep {
+    target: string; // data-tour-target attribute value
+    title: string;
+    description: string;
+    placement: "top" | "bottom" | "left" | "right" | "center";
+    icon: string; // Emoji icon for the step header
+}
 
-/**
- * Joyride styles for consistent branding
- */
-export const tourStyles = {
-  options: {
-    arrowColor: "#fff",
-    backgroundColor: "#fff",
-    primaryColor: "#3b82f6", // blue-500
-    textColor: "#1f2937", // gray-800
-    width: 350,
-    zIndex: 10000,
-  },
-};
+export const dashboardTourSteps: TourStep[] = [
+    {
+        target: "tour-sidebar",
+        title: "Navigation Menu",
+        description:
+            "Browse all sections from here — Reviews, Campaigns, Customers, Analytics, Integrations, and more. Everything is one click away.",
+        placement: "right",
+        icon: "🧭",
+    },
+    {
+        target: "tour-stats",
+        title: "Dashboard Cards",
+        description:
+            "Your key metrics at a glance — total reviews, average rating, response rate, and pending reviews. These update in real-time.",
+        placement: "bottom",
+        icon: "📊",
+    },
+    {
+        target: "tour-customers-nav",
+        title: "Customers",
+        description:
+            "Manage your customer database, import contacts, and send personalized review requests via email or SMS.",
+        placement: "right",
+        icon: "👥",
+    },
+    {
+        target: "tour-settings-nav",
+        title: "Settings",
+        description:
+            "Configure your profile, business info, notifications, billing, and team members all in one place.",
+        placement: "right",
+        icon: "⚙️",
+    },
+    {
+        target: "tour-analytics-nav",
+        title: "Reports & Analytics",
+        description:
+            "Track review trends, customer sentiment, engagement rates, and performance analytics over time.",
+        placement: "right",
+        icon: "📈",
+    },
+    {
+        target: "tour-recent-reviews",
+        title: "Recent Reviews",
+        description:
+            "Your latest customer reviews appear here for quick action. Respond, analyze sentiment, and stay on top of feedback.",
+        placement: "top",
+        icon: "💬",
+    },
+];
