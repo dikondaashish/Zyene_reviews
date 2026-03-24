@@ -40,11 +40,22 @@ export async function getValidGoogleToken(platformId: string) {
         try {
             const tokens = await refreshGoogleToken(refreshToken);
             accessToken = tokens.access_token;
+            
+            // NEW: Encrypt the new access token before storing
+            const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", { 
+                plain_text: accessToken 
+            });
+            
+            if (encError) {
+                console.error("[Token] Encryption failed during refresh:", encError);
+                throw new Error("Failed to secure new token");
+            }
+
             // Calculate new expiry (tokens.expires_in is in seconds)
             const newExpiry = new Date(now.getTime() + (tokens.expires_in * 1000));
 
             await admin.from("review_platforms").update({
-                access_token: accessToken,
+                access_token: encAccess,
                 token_expires_at: newExpiry.toISOString(),
                 sync_status: 'active',
                 updated_at: new Date().toISOString(),
