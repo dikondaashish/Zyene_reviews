@@ -145,6 +145,65 @@ export async function listLocations(accessToken: string, accountName: string): P
     return data.locations || [];
 }
 
+const GBP_PREREQS_URL = "https://developers.google.com/my-business/content/prereqs";
+
+/** Parse Google API error JSON for reviews sync (403/429). */
+export function parseGoogleReviewsApiError(errorBody: string, httpStatus: number): {
+    kind: "api_disabled" | "gbp_access_pending" | "other";
+    userMessage: string;
+    activationUrl?: string;
+} {
+    try {
+        const j = JSON.parse(errorBody) as {
+            error?: { message?: string; details?: Array<{ reason?: string; metadata?: Record<string, string> }> };
+        };
+        const msg = j?.error?.message ?? "";
+        const details = j?.error?.details ?? [];
+        const disabled =
+            details.some((d) => d.reason === "SERVICE_DISABLED") ||
+            /not been used|is disabled|SERVICE_DISABLED/i.test(msg);
+
+        if (disabled) {
+            const activationUrl = details.find((d) => d.metadata?.activationUrl)?.metadata?.activationUrl;
+            return {
+                kind: "api_disabled",
+                userMessage:
+                    "Enable the Google My Business API (mybusiness.googleapis.com) on this project using the link below, " +
+                    "and also enable My Business Account Management + Business Information APIs. Wait 2–5 minutes, then try Sync again.",
+                activationUrl,
+            };
+        }
+
+        // Quota 0 / GBP formal access — after APIs are enabled but Google still blocks
+        const gbpAccess =
+            /quota of 0|quota.*exhausted|RESOURCE_EXHAUSTED|request for GBP|GBP API access|Business Profile API access|prerequisite|not been granted|additional access required/i.test(
+                msg
+            ) || details.some((d) => d.reason === "RESOURCE_EXHAUSTED");
+        if (gbpAccess && httpStatus === 403) {
+            return {
+                kind: "gbp_access_pending",
+                userMessage:
+                    "Google may require Business Profile API access approval or a non-zero quota (common with the split My Business APIs). " +
+                    `Apply here: ${GBP_PREREQS_URL} — approval can take days to weeks.`,
+            };
+        }
+    } catch {
+        /* not JSON */
+    }
+    return {
+        kind: "other",
+        userMessage:
+            "Google denied access to reviews. Enable Google My Business API + Account Management + Business Information APIs. " +
+            "Grant business.manage scope and reconnect Google from Integrations. " +
+            `If quota stays 0, request GBP access: ${GBP_PREREQS_URL}`,
+    };
+}
+
+/** @deprecated use parseGoogleReviewsApiError */
+export function parseGoogle403Error(errorBody: string) {
+    return parseGoogleReviewsApiError(errorBody, 403);
+}
+
 export async function listReviews(accessToken: string, accountId: string, locationId: string): Promise<GoogleReview[]> {
     // URL: https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews
     // Note: accountId and locationId are raw IDs, not "accounts/{id}"
@@ -165,19 +224,25 @@ export async function listReviews(accessToken: string, accountId: string, locati
 
         if (response.status === 429) {
             const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
+            error.code = "RATE_LIMIT";
             throw error;
         }
-        // 403: token lacks scope, API disabled in Cloud Console, or OAuth app restrictions
+        // 403: SERVICE_DISABLED, quota/access, or scope
         if (response.status === 403) {
+            const parsed = parseGoogleReviewsApiError(errorBody, 403);
+            const code =
+                parsed.kind === "api_disabled"
+                    ? "GOOGLE_API_DISABLED"
+                    : parsed.kind === "gbp_access_pending"
+                      ? "GOOGLE_GBP_ACCESS_PENDING"
+                      : "GOOGLE_REVIEWS_FORBIDDEN";
             const err: any = new Error(
-                "GOOGLE_REVIEWS_FORBIDDEN: Google denied access to list reviews. " +
-                    "Enable **Google My Business API** (or Google Business Profile API) in the same Google Cloud project as your OAuth client, " +
-                    "ensure the user granted scope https://www.googleapis.com/auth/business.manage, and reconnect Google from Integrations. " +
-                    `Details: ${errorBody}`
+                `${code}: ${parsed.userMessage}${parsed.activationUrl ? ` ${parsed.activationUrl}` : ""}`
             );
-            err.code = "GOOGLE_REVIEWS_FORBIDDEN";
+            err.code = code;
             err.statusCode = 403;
+            err.activationUrl = parsed.activationUrl;
+            err.userMessage = parsed.userMessage;
             throw err;
         }
         throw new Error(`Failed to list reviews: ${response.status} ${response.statusText} - ${errorBody}`);

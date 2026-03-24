@@ -75,9 +75,24 @@ export async function POST(request: Request) {
         let status = 500;
         let message = "Failed to sync reviews";
         let details: string | undefined = "Internal Server Error";
-        const errAny = error as { code?: string; message?: string };
+        const errAny = error as { code?: string; message?: string; activationUrl?: string; userMessage?: string };
 
-        if (errAny.code === "GOOGLE_REVIEWS_FORBIDDEN" || error.message.includes("GOOGLE_REVIEWS_FORBIDDEN")) {
+        if (errAny.code === "GOOGLE_API_DISABLED" || error.message.includes("GOOGLE_API_DISABLED")) {
+            status = 403;
+            message =
+                "Enable the Google My Business API in Google Cloud (same project as your OAuth client).";
+            details =
+                errAny.userMessage ||
+                error.message.replace(/^GOOGLE_API_DISABLED:\s*/, "");
+            if (errAny.activationUrl) {
+                details = `${details}\n\nOpen: ${errAny.activationUrl}`;
+            }
+        } else if (errAny.code === "GOOGLE_GBP_ACCESS_PENDING" || error.message.includes("GOOGLE_GBP_ACCESS_PENDING")) {
+            status = 403;
+            message =
+                "Google Business Profile API access or quota may still be pending. Submit Google’s access request if your quota is 0.";
+            details = errAny.userMessage || error.message.replace(/^GOOGLE_GBP_ACCESS_PENDING:\s*/, "");
+        } else if (errAny.code === "GOOGLE_REVIEWS_FORBIDDEN" || error.message.includes("GOOGLE_REVIEWS_FORBIDDEN")) {
             status = 403;
             message =
                 "Google blocked access to your reviews (403). Usually: enable Google My Business API in Google Cloud, " +
