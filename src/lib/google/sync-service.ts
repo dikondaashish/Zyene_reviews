@@ -188,46 +188,9 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         let alertsCount = 0;
 
         for (const review of googleReviews) {
-            const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
-            const numericRating = ratingMap[review.starRating] || 0;
-
-            const reviewData = {
-                business_id: platform.business_id,
-                platform: "google",
-                platform_id: platform.id,
-                external_id: review.reviewId,
-                author_name: review.reviewer.displayName,
-                author_avatar_url: review.reviewer.profilePhotoUrl || null,
-                rating: numericRating,
-                text: review.comment || "",
-                review_date: review.createTime, // ISO string mapped to review_date
-                response_status: review.reviewReply ? "responded" : "pending",
-                response_text: review.reviewReply?.comment || null,
-                responded_at: review.reviewReply?.updateTime || null,
-                response_source: review.reviewReply ? 'google' : null
-            };
-
-            const { data: upserted, error: upsertError } = await admin
-                .from("reviews")
-                .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
-                .select()
-                .single();
-
-            if (upsertError) console.error("Upsert Error:", upsertError);
-            else {
-                // 4. Trigger AI Analysis if not analyzed
-                if (upserted && !upserted.sentiment && upserted.text) {
-                    console.log(`[AI] Analyzing review ${upserted.id}...`);
-                    analyzedCount++;
-                    const result = await analyzeReview(upserted);
-
-                    // 5. Send Alert if Urgent
-                    if (result) {
-                        await sendReviewAlert({ ...upserted, ...result });
-                        alertsCount++;
-                    }
-                }
-            }
+            const stats = await processGoogleReview(admin, platform, review);
+            if (stats.analyzed) analyzedCount++;
+            if (stats.alerted) alertsCount++;
         }
 
         // 4. Update Platform Stats
@@ -297,4 +260,57 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             last_synced_at: new Date().toISOString() // We update last_synced_at on finish (success or fail)
         }).eq("id", platformId);
     }
+}
+
+/**
+ * Processes a single Google Review: Upserts to DB, Triggers AI Analysis, Sends Alerts.
+ */
+export async function processGoogleReview(admin: any, platform: any, review: any) {
+    const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
+    const numericRating = ratingMap[review.starRating] || 0;
+
+    const reviewData = {
+        business_id: platform.business_id,
+        platform: "google",
+        platform_id: platform.id,
+        external_id: review.reviewId,
+        author_name: review.reviewer.displayName,
+        author_avatar_url: review.reviewer.profilePhotoUrl || null,
+        rating: numericRating,
+        text: review.comment || "",
+        review_date: review.createTime,
+        response_status: review.reviewReply ? "responded" : "pending",
+        response_text: review.reviewReply?.comment || null,
+        responded_at: review.reviewReply?.updateTime || null,
+        response_source: review.reviewReply ? 'google' : null,
+        updated_at: new Date().toISOString()
+    };
+
+    const { data: upserted, error: upsertError } = await admin
+        .from("reviews")
+        .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
+        .select()
+        .single();
+
+    let analyzed = false;
+    let alerted = false;
+
+    if (upsertError) {
+        console.error("Upsert Error:", upsertError);
+    } else {
+        // Trigger AI Analysis if text exists and not already analyzed
+        if (upserted && !upserted.sentiment && upserted.text) {
+            console.log(`[AI] Analyzing review ${upserted.id}...`);
+            analyzed = true;
+            const result = await analyzeReview(upserted);
+
+            // Send Alert if Urgent
+            if (result) {
+                await sendReviewAlert({ ...upserted, ...result });
+                alerted = true;
+            }
+        }
+    }
+
+    return { analyzed, alerted };
 }

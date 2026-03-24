@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
+import { registerNotifications } from "@/lib/google/notifications";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -210,7 +211,7 @@ export async function GET(request: Request) {
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
-                        name: `${fullName}'s Business`,
+                        name: `${fullName}'s Org`,
                         slug: slug,
                         type: "business",
                     })
@@ -355,6 +356,18 @@ export async function GET(request: Request) {
                             external_id: externalId,
                             external_url: googleReviewUrl,
                         });
+                    }
+
+                    // NEW: Register for real-time notifications via Pub/Sub
+                    const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
+                    if (topicName && googleAccountId && finalAccessToken) {
+                        try {
+                            const accountName = `accounts/${googleAccountId}`;
+                            console.log(`[Google API Webhook] Registering notifications for account ${accountName} to topic ${topicName}`);
+                            await registerNotifications(finalAccessToken, accountName, topicName);
+                        } catch (regError) {
+                            console.error("[Google API Webhook] Failed to register GBP notifications:", regError);
+                        }
                     }
 
                     if (googleReviewUrl) {

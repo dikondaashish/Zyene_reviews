@@ -189,3 +189,28 @@ export async function replyToReview(
         throw new Error(`Failed to reply to review: ${response.status} ${response.statusText}`);
     }
 }
+
+/**
+ * Fetches a single review by its resource name.
+ * @param accessToken Valid Google access token
+ * @param reviewName Format: accounts/{accountId}/locations/{locationId}/reviews/{reviewId}
+ */
+export async function getReview(accessToken: string, reviewName: string): Promise<GoogleReview> {
+    const url = `${BASE_URL_REVIEWS}/${reviewName}`;
+
+    const response = await fetchWithRetry(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
+        const errorBody = await response.text();
+        throw new Error(`Failed to get review (${response.status}): ${errorBody}`);
+    }
+
+    return response.json();
+}

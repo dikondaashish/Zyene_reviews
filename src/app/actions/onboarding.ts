@@ -18,6 +18,7 @@ import {
   type StepCategoryFormData,
   type StepNotificationsFormData,
 } from "@/lib/validations/onboarding";
+import { registerNotifications } from "@/lib/google/notifications";
 
 export async function createBusinessAndAdvanceOnboarding(
   data: Step1FormData,
@@ -243,6 +244,32 @@ export async function initializeGoogleAuth(
         success: false,
         error: "Failed to store connection. Please try again.",
       };
+    }
+
+    // NEW: Register for real-time notifications via Pub/Sub
+    const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
+    if (topicName && locationInfo?.businessName) {
+      try {
+        // Find the account name from locations
+        // InitializeGoogleAuth fetches locations[0]
+        // The topic name should be pre-configured in env
+        const accountsResponse = await fetch(
+          "https://mybusinessaccountmanagement.googleapis.com/v1/accounts",
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        if (accountsResponse.ok) {
+          const accountsData = await accountsResponse.json();
+          const accountName = accountsData.accounts?.[0]?.name;
+          if (accountName) {
+            console.log(`[Google API] Registering notifications for account ${accountName} to topic ${topicName}`);
+            await registerNotifications(accessToken, accountName, topicName);
+            console.log(`[Google API] Notification registration successful.`);
+          }
+        }
+      } catch (regError) {
+        console.error("[Google API] Failed to register GBP notifications:", regError);
+        // Don't fail the whole connection, just log it.
+      }
     }
 
     revalidatePath("/onboarding");
