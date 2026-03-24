@@ -124,8 +124,14 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
         setIsSyncing(true);
         try {
             const res = await fetch("/api/sync/google", { method: "POST" });
-            if (!res.ok) throw new Error("Sync failed");
-            toast.success("Sync started successfully");
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                const msg = (data as { error?: string; details?: string }).error || "Sync failed";
+                const details = (data as { details?: string }).details;
+                toast.error(msg, { description: details });
+                return;
+            }
+            toast.success(`Synced ${(data as { total?: number }).total ?? 0} reviews`);
             router.refresh();
         } catch {
             toast.error("Failed to start sync");

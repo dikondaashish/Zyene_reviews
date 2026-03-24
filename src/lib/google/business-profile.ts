@@ -74,8 +74,13 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3, ba
     }
 }
 
+/** Same OAuth client must be used for refresh as for the initial consent (often NEXT_PUBLIC_GOOGLE_CLIENT_ID). */
+function getGoogleOAuthClientId(): string | undefined {
+    return process.env.GOOGLE_CLIENT_ID?.trim() || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
+}
+
 export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTokenResponse> {
-    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientId = getGoogleOAuthClientId();
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
     if (!clientId || !clientSecret) {
@@ -157,11 +162,23 @@ export async function listReviews(accessToken: string, accountId: string, locati
     if (!response.ok) {
         const errorBody = await response.text();
         console.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
-        
+
         if (response.status === 429) {
             const error: any = new Error("Google API Rate Limit Exceeded");
             error.code = 'RATE_LIMIT';
             throw error;
+        }
+        // 403: token lacks scope, API disabled in Cloud Console, or OAuth app restrictions
+        if (response.status === 403) {
+            const err: any = new Error(
+                "GOOGLE_REVIEWS_FORBIDDEN: Google denied access to list reviews. " +
+                    "Enable **Google My Business API** (or Google Business Profile API) in the same Google Cloud project as your OAuth client, " +
+                    "ensure the user granted scope https://www.googleapis.com/auth/business.manage, and reconnect Google from Integrations. " +
+                    `Details: ${errorBody}`
+            );
+            err.code = "GOOGLE_REVIEWS_FORBIDDEN";
+            err.statusCode = 403;
+            throw err;
         }
         throw new Error(`Failed to list reviews: ${response.status} ${response.statusText} - ${errorBody}`);
     }

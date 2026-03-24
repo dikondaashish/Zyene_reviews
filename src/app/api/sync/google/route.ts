@@ -74,8 +74,22 @@ export async function POST(request: Request) {
         // 3. Auth / Business Logic Errors
         let status = 500;
         let message = "Failed to sync reviews";
+        let details: string | undefined = "Internal Server Error";
+        const errAny = error as { code?: string; message?: string };
 
-        if (error.message.includes("No Google Accounts")) {
+        if (errAny.code === "GOOGLE_REVIEWS_FORBIDDEN" || error.message.includes("GOOGLE_REVIEWS_FORBIDDEN")) {
+            status = 403;
+            message =
+                "Google blocked access to your reviews (403). Usually: enable Google My Business API in Google Cloud, " +
+                "use OAuth scope business.manage, and reconnect Google from Integrations.";
+            details = error.message.replace(/^GOOGLE_REVIEWS_FORBIDDEN:\s*/, "");
+        } else if (error.message.includes("403") && error.message.toLowerCase().includes("forbidden")) {
+            status = 403;
+            message =
+                "Google denied access when loading reviews. Enable Google My Business API for your OAuth project " +
+                "and reconnect Google with the Business Profile permission.";
+            details = error.message;
+        } else if (error.message.includes("No Google Accounts")) {
             status = 400;
             message = "No Google Business Profile found.";
         } else if (error.message.includes("reconnect") || error.message.includes("refresh token")) {
@@ -88,7 +102,7 @@ export async function POST(request: Request) {
 
         console.error("Sync Error:", error);
         return NextResponse.json(
-            { error: message, details: "Internal Server Error" },
+            { error: message, details },
             { status }
         );
     }

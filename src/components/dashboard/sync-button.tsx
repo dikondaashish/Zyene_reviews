@@ -16,9 +16,13 @@ export function SyncButton() {
             const res = await fetch("/api/sync/google", { method: "POST" })
             const data = await res.json()
 
-            if (!res.ok) throw new Error(data.error || "Sync failed")
+            if (!res.ok) {
+                const msg = data.error || "Sync failed"
+                const desc = data.details && typeof data.details === "string" ? data.details : undefined
+                throw new Error(desc ? `${msg}\n${desc}` : msg)
+            }
 
-            toast.success(`Synced ${data.count || 0} reviews!`)
+            toast.success(`Synced ${data.total ?? 0} reviews!`)
             router.refresh()
         } catch (error: any) {
             toast.error("Failed to sync reviews", {
