@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -82,6 +82,11 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
     const router = useRouter();
     const [isSyncing, setIsSyncing] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isConnected = !!platform;
     const isError = platform?.sync_status?.startsWith("error");
@@ -224,7 +229,7 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
                                 <span className="text-xs font-medium uppercase tracking-wide">Last Synced</span>
                             </div>
                             <p className="text-sm font-semibold mt-1">
-                                {platform?.last_synced_at ? timeAgo(platform.last_synced_at) : "Never"}
+                                {!mounted ? "..." : (platform?.last_synced_at ? timeAgo(platform.last_synced_at) : "Never")}
                             </p>
                         </div>
                     </div>

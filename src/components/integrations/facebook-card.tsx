@@ -51,6 +51,11 @@ export function FacebookIntegrationCard({
     const [showPageSelect, setShowPageSelect] = useState(false);
     const [pages, setPages] = useState<any[]>([]);
     const [confirmingPage, setConfirmingPage] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isConnected = platform?.sync_status === "active";
     const isError =
@@ -208,11 +213,11 @@ export function FacebookIntegrationCard({
                             <div className="rounded-lg bg-white dark:bg-gray-900 p-2 shadow-sm">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <Clock className="h-3.5 w-3.5 text-gray-500" />
-                                    {lastSynced
+                                    {!mounted ? "..." : (lastSynced
                                         ? new Date(
                                             platform.last_synced_at
                                         ).toLocaleDateString()
-                                        : "Never"}
+                                        : "Never")}
                                 </div>
                                 <div className="text-[10px] text-muted-foreground">
                                     Last Sync

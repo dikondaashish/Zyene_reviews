@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Star, CheckCircle2, RefreshCw, Clock, ExternalLink, AlertTriangle, Loader2, Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,6 +59,11 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
     const [searchResults, setSearchResults] = useState<YelpBusinessResult[]>([]);
     const [isConfirming, setIsConfirming] = useState<string | null>(null);
     const [isSyncing, setIsSyncing] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isConnected = platform && platform.sync_status === "active";
     const hasError = platform && platform.sync_status?.startsWith("error");
@@ -174,9 +179,9 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                 <Clock className="w-3 h-3" /> Last synced
                             </div>
                             <p className="text-xs font-medium text-slate-900 mt-1">
-                                {platform.last_synced_at
+                                {!mounted ? "..." : (platform.last_synced_at
                                     ? new Date(platform.last_synced_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
-                                    : "Never"}
+                                    : "Never")}
                             </p>
                         </div>
                     </div>
