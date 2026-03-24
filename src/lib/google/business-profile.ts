@@ -155,12 +155,15 @@ export async function listReviews(accessToken: string, accountId: string, locati
     });
 
     if (!response.ok) {
+        const errorBody = await response.text();
+        console.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
+        
         if (response.status === 429) {
             const error: any = new Error("Google API Rate Limit Exceeded");
             error.code = 'RATE_LIMIT';
             throw error;
         }
-        throw new Error(`Failed to list reviews: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to list reviews: ${response.status} ${response.statusText} - ${errorBody}`);
     }
 
     const data = await response.json();
