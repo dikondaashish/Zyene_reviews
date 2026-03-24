@@ -21,16 +21,47 @@ export async function syncFacebookReviewsForPlatform(
 ): Promise<FacebookSyncResult> {
     const admin = createAdminClient();
 
-    // 1. Get platform record
+    // 1. Get RAW platform record (encrypted tokens)
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
+        .select("*")
         .eq("id", platformId)
         .single();
 
     if (platformError || !platform) {
+        console.error(`[Facebook Sync] Fetch failed for ${platformId}:`, platformError);
         throw new Error(`Facebook platform not found: ${platformId}`);
     }
+
+    // 2. Decrypt tokens via RPC (More robust than inline select)
+    let accessToken: string | null = null;
+    let refreshToken: string | null = null;
+
+    if (platform.access_token) {
+        const { data: decAccess, error: decAccessError } = await admin.rpc("decrypt_token", { 
+            encrypted_text: platform.access_token 
+        });
+        if (decAccessError) {
+            console.error(`[Facebook Sync] Access token decryption failed for ${platformId}:`, decAccessError);
+            throw new Error("Failed to decrypt access token");
+        }
+        accessToken = decAccess;
+    }
+
+    if (platform.refresh_token) {
+        const { data: decRefresh, error: decRefreshError } = await admin.rpc("decrypt_token", { 
+            encrypted_text: platform.refresh_token 
+        });
+        if (decRefreshError) {
+            console.error(`[Facebook Sync] Refresh token decryption failed for ${platformId}:`, decRefreshError);
+            throw new Error("Failed to decrypt refresh token");
+        }
+        refreshToken = decRefresh;
+    }
+
+    // Update platform object with decrypted tokens for rest of function
+    platform.access_token = accessToken;
+    platform.refresh_token = refreshToken;
 
     const pageId = platform.external_id;
     const pageAccessToken = platform.access_token;

@@ -5,27 +5,54 @@ import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
+    
+    // 1. Fetch RAW platform record (encrypted tokens)
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
+        .select("*")
         .eq("id", platformId)
         .single();
 
-    if (platformError || !platform) throw new Error("Platform not found");
-
-    interface PlatformWithTokens {
-        access_token: string | null;
-        refresh_token: string | null;
-        token_expires_at: string | null;
+    if (platformError || !platform) {
+        console.error(`[Token] Fetch failed for ${platformId}:`, platformError);
+        throw new Error("Platform not found");
     }
-    const platformTyped = platform as unknown as PlatformWithTokens;
 
-    let accessToken = platformTyped.access_token;
-    const refreshToken = platformTyped.refresh_token;
+    // 2. Decrypt tokens via RPC (More robust than inline select)
+    let accessToken: string | null = null;
+    let refreshToken: string | null = null;
 
-    // Check Token Expiry (Buffer: 5 minutes)
+    if (platform.access_token) {
+        const { data: decAccess, error: decAccessError } = await admin.rpc("decrypt_token", { 
+            encrypted_text: platform.access_token 
+        });
+        if (decAccessError) {
+            console.error(`[Token] Access token decryption failed for ${platformId}:`, decAccessError);
+            throw new Error("Failed to decrypt access token");
+        }
+        accessToken = decAccess;
+    }
+
+    if (platform.refresh_token) {
+        const { data: decRefresh, error: decRefreshError } = await admin.rpc("decrypt_token", { 
+            encrypted_text: platform.refresh_token 
+        });
+        if (decRefreshError) {
+            console.error(`[Token] Refresh token decryption failed for ${platformId}:`, decRefreshError);
+            throw new Error("Failed to decrypt refresh token");
+        }
+        refreshToken = decRefresh;
+    }
+
+    const platformWithTokens = { 
+        ...platform, 
+        access_token: accessToken, 
+        refresh_token: refreshToken 
+    };
+
+    // 3. Check Token Expiry (Buffer: 5 minutes)
     const now = new Date();
-    const expiry = platformTyped.token_expires_at ? new Date(platformTyped.token_expires_at) : null;
+    const expiry = platformWithTokens.token_expires_at ? new Date(platformWithTokens.token_expires_at) : null;
     const isExpired = !expiry || (expiry.getTime() - now.getTime() < 5 * 60 * 1000);
 
     if (isExpired) {
@@ -63,7 +90,10 @@ export async function getValidGoogleToken(platformId: string) {
 
             console.log(`[Token] Refreshed. New expiry: ${newExpiry.toISOString()}`);
 
-            return { accessToken, platform: { ...platform, access_token: accessToken, token_expires_at: newExpiry.toISOString() } };
+            return { 
+                accessToken, 
+                platform: { ...platformWithTokens, access_token: accessToken, token_expires_at: newExpiry.toISOString() } 
+            };
         } catch (error) {
             console.error(`[Token] Refresh failed:`, error);
             await admin.from("review_platforms").update({
@@ -74,7 +104,7 @@ export async function getValidGoogleToken(platformId: string) {
         }
     }
 
-    return { accessToken, platform };
+    return { accessToken, platform: platformWithTokens };
 }
 
 export interface SyncResult {
