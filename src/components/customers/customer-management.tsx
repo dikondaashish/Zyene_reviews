@@ -214,16 +214,15 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
             {/* Modals */}
             <AddCustomerModal 
-                isOpen={isAddModalOpen} 
-                onClose={() => setIsAddModalOpen(false)}
+                open={isAddModalOpen} 
+                onOpenChange={setIsAddModalOpen}
                 onSuccess={fetchCustomers}
                 businessId={businessId}
             />
             <CSVImportModal
-                isOpen={isImportModalOpen}
-                onClose={() => setIsImportModalOpen(false)}
+                open={isImportModalOpen}
+                onOpenChange={setIsImportModalOpen}
                 onSuccess={fetchCustomers}
-                businessId={businessId}
             />
 
             {/* Bulk Actions */}

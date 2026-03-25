@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
                     try {
                         // This mirrors the logic in /api/requests/send
-                        const { data: requestRecord } = await supabase
+                        const { data: requestRecord, error: insertReqError } = await supabase
                             .from("review_requests")
                             .insert({
                                 business_id: businessId,
@@ -120,7 +120,13 @@ export async function POST(request: NextRequest) {
                             })
                             .select()
                             .single();
-                        
+
+                        if (insertReqError || !requestRecord) {
+                            console.error("Bulk insert review_request failed:", insertReqError);
+                            failCount++;
+                            continue;
+                        }
+
                         const reviewLink = `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${business.slug}?ref=${requestRecord.id}`;
                         const messageBody = `Hi ${customer.first_name || "there"}! Thanks for visiting ${business.name}. We'd love your feedback: ${reviewLink}`;
 

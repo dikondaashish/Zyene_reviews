@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 interface CSVImportModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    onSuccess?: () => void | Promise<void>;
 }
 
 interface CSVRow {
@@ -30,7 +31,7 @@ interface CSVRow {
     [key: string]: string | undefined;
 }
 
-export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
+export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [fileName, setFileName] = useState<string | null>(null);
     const [csvData, setCSVData] = useState<CSVRow[]>([]);
@@ -112,6 +113,7 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
             toast.success(`Successfully imported ${result.imported} customers`);
             onOpenChange(false);
             resetState();
+            await onSuccess?.();
             router.refresh();
         } catch (error: any) {
             toast.error(error.message || "Failed to import customers");

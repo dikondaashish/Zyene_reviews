@@ -1125,12 +1125,12 @@ export type Database = {
           id?: string
           platform?: string
           platform_id?: string | null
-          rating: number
+          rating?: number
           responded_at?: string | null
           response_source?: string | null
           response_status?: string
           response_text?: string | null
-          review_date: string
+          review_date?: string
           sentiment?: string | null
           text?: string | null
           themes?: string[] | null

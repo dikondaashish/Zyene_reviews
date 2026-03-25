@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Bell, MessageCircle, Star, ChevronRight } from "lucide-react";
+import { Loader2, Bell, MessageCircle, Star, ChevronRight, CheckCircle2 } from "lucide-react";
 import { step3FormSchema, type Step3FormData } from "@/lib/validations/onboarding";
 import { saveNotificationPreferences } from "@/app/actions/onboarding";
 import { OnboardingCompletionScreen } from "./completion-screen";

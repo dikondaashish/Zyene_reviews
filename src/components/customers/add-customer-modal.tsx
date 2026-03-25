@@ -45,9 +45,10 @@ interface AddCustomerModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     businessId: string;
+    onSuccess?: () => void | Promise<void>;
 }
 
-export function AddCustomerModal({ open, onOpenChange, businessId }: AddCustomerModalProps) {
+export function AddCustomerModal({ open, onOpenChange, businessId, onSuccess }: AddCustomerModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
@@ -90,6 +91,7 @@ export function AddCustomerModal({ open, onOpenChange, businessId }: AddCustomer
             toast.success("Customer added successfully");
             onOpenChange(false);
             form.reset();
+            await onSuccess?.();
             router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "Failed to add customer";
