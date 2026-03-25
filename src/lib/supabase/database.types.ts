@@ -906,6 +906,7 @@ export type Database = {
           external_url: string | null
           google_account_id: string | null
           google_location_id: string | null
+          google_performance_synced_at: string | null
           id: string
           last_synced_at: string | null
           platform: string
@@ -924,6 +925,7 @@ export type Database = {
           external_url?: string | null
           google_account_id?: string | null
           google_location_id?: string | null
+          google_performance_synced_at?: string | null
           id?: string
           last_synced_at?: string | null
           platform: string
@@ -942,6 +944,7 @@ export type Database = {
           external_url?: string | null
           google_account_id?: string | null
           google_location_id?: string | null
+          google_performance_synced_at?: string | null
           id?: string
           last_synced_at?: string | null
           platform?: string
@@ -954,6 +957,102 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "review_platforms_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_performance_metrics: {
+        Row: {
+          id: string
+          review_platform_id: string
+          business_id: string
+          metric_date: string
+          metric_key: string
+          dimension_key: string
+          value: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          review_platform_id: string
+          business_id: string
+          metric_date: string
+          metric_key: string
+          dimension_key?: string
+          value?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          review_platform_id?: string
+          business_id?: string
+          metric_date?: string
+          metric_key?: string
+          dimension_key?: string
+          value?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_performance_metrics_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_performance_metrics_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_search_keyword_monthly: {
+        Row: {
+          id: string
+          review_platform_id: string
+          business_id: string
+          month_start: string
+          keyword: string
+          impressions: number
+          is_threshold: boolean
+          synced_at: string
+        }
+        Insert: {
+          id?: string
+          review_platform_id: string
+          business_id: string
+          month_start: string
+          keyword: string
+          impressions?: number
+          is_threshold?: boolean
+          synced_at?: string
+        }
+        Update: {
+          id?: string
+          review_platform_id?: string
+          business_id?: string
+          month_start?: string
+          keyword?: string
+          impressions?: number
+          is_threshold?: boolean
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_search_keyword_monthly_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_search_keyword_monthly_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"

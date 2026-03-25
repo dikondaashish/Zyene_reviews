@@ -30,7 +30,13 @@ export async function registerNotifications(
         },
         body: JSON.stringify({
             pubsubTopic: topicName,
-            notificationTypes: ["NEW_REVIEW", "UPDATED_REVIEW"],
+            notificationTypes: [
+                "NEW_REVIEW",
+                "UPDATED_REVIEW",
+                "NEW_QUESTION",
+                "NEW_ANSWER",
+                "NEW_CUSTOMER_MEDIA",
+            ],
         }),
     });
 

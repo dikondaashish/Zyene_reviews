@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
+import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
 
@@ -55,6 +56,10 @@ export async function POST(request: Request) {
         // 2. Call Sync Service
         console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
         const result = await syncGoogleReviewsForPlatform(platform.id);
+
+        syncGooglePerformanceForPlatform(platform.id).catch((e) => {
+            console.error("[Manual Sync] Google Performance sync failed (non-fatal):", e);
+        });
 
         return NextResponse.json(result);
 

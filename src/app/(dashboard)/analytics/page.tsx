@@ -1,4 +1,3 @@
-
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -9,12 +8,22 @@ import { VolumeChart } from "@/components/analytics/volume-chart";
 import { SentimentChart } from "@/components/analytics/sentiment-chart";
 import { ThemeChart } from "@/components/analytics/theme-chart";
 import { PlatformTable } from "@/components/analytics/platform-table";
+import { GooglePerformanceProfileChart } from "@/components/analytics/google-performance-profile-chart";
 import { getActiveBusinessId } from "@/lib/business-context";
+import {
+    estimateDiscoverySplit,
+    getGooglePerformanceDailySeries,
+    getGooglePerformanceTotals,
+    getGoogleSearchKeywords,
+} from "@/lib/google/performance-queries";
+import { StatsCard } from "@/components/analytics/stats-card";
+import { ExportDataButton } from "@/components/analytics/export-data-button";
 import { ReportGenerator } from "@/components/analytics/report-generator";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 // Helper with comparison support
 function getPeriods(range: string) {
@@ -53,9 +62,6 @@ function getPeriods(range: string) {
     return { currentStart, currentEnd, previousStart, previousEnd };
 }
 
-import { StatsCard } from "@/components/analytics/stats-card";
-import { ExportDataButton } from "@/components/analytics/export-data-button";
-
 export default async function AnalyticsPage({
     searchParams,
 }: {
@@ -73,7 +79,7 @@ export default async function AnalyticsPage({
     const { businessId, business } = await getActiveBusinessId();
     const sp = await searchParams;
     const range = sp.range || "30d";
-    const { currentStart, previousStart } = getPeriods(range);
+    const { currentStart, currentEnd, previousStart } = getPeriods(range);
 
     // 1. Fetch Reviews (current + previous)
     let reviewsQuery = supabase
@@ -202,15 +208,44 @@ export default async function AnalyticsPage({
         .sort((a, b) => b.count - a.count)
         .slice(0, 10);
 
-    const platformData = [{
-        platform: "Google",
-        reviews: totalReviews,
-        avgRating: avgRating,
-        responseRate: responseRate
-    }];
-
     const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
     const isDemo = !isGoogleConnected;
+
+    let perfTotals: Awaited<ReturnType<typeof getGooglePerformanceTotals>> = null;
+    let perfSeries: Awaited<ReturnType<typeof getGooglePerformanceDailySeries>> = [];
+    let searchKeywords: Awaited<ReturnType<typeof getGoogleSearchKeywords>> = [];
+    let discoverySplit = { discoveryPct: 0, directPct: 0 };
+
+    if (businessId && isGoogleConnected) {
+        perfTotals = await getGooglePerformanceTotals(supabase, businessId, currentStart, currentEnd);
+        perfSeries = await getGooglePerformanceDailySeries(supabase, businessId, currentStart, currentEnd);
+        searchKeywords = await getGoogleSearchKeywords(supabase, businessId, 30);
+        discoverySplit = estimateDiscoverySplit(
+            searchKeywords.map((k) => ({ keyword: k.keyword, impressions: k.impressions })),
+            (business as { name?: string })?.name || ""
+        );
+    }
+
+    const platformData = [
+        {
+            platform: "Google",
+            reviews: totalReviews,
+            avgRating: avgRating,
+            responseRate: responseRate,
+            profileViews: perfTotals?.profileViews,
+            callClicks: perfTotals?.callClicks,
+            directionRequests: perfTotals?.directionRequests,
+            websiteClicks: perfTotals?.websiteClicks,
+        },
+    ];
+
+    const funnelMax = Math.max(
+        perfTotals?.profileViews ?? 0,
+        perfTotals?.websiteClicks ?? 0,
+        perfTotals?.callClicks ?? 0,
+        perfTotals?.directionRequests ?? 0,
+        1
+    );
 
     return (
         <div className="flex flex-1 flex-col gap-6 p-6 overflow-hidden">
@@ -314,6 +349,114 @@ export default async function AnalyticsPage({
                     </CardContent>
                 </Card>
             </div>
+
+            {isGoogleConnected && (
+                <>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Google listing performance</CardTitle>
+                            <p className="text-sm text-muted-foreground font-normal">
+                                Daily metrics from Google Business Profile Performance (selected period)
+                            </p>
+                        </CardHeader>
+                        <CardContent>
+                            <GooglePerformanceProfileChart data={perfSeries} />
+                        </CardContent>
+                    </Card>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Search keywords</CardTitle>
+                                <p className="text-sm text-muted-foreground font-normal">
+                                    Monthly impressions per keyword (most recent months first)
+                                </p>
+                            </CardHeader>
+                            <CardContent>
+                                {searchKeywords.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">
+                                        No keyword data yet. Run Sync on the dashboard or wait for the daily job.
+                                    </p>
+                                ) : (
+                                    <ul className="divide-y rounded-md border max-h-[280px] overflow-y-auto">
+                                        {searchKeywords.slice(0, 25).map((k) => (
+                                            <li
+                                                key={`${k.monthStart}-${k.keyword}`}
+                                                className="flex justify-between gap-2 px-3 py-2 text-sm"
+                                            >
+                                                <span className="truncate" title={k.keyword}>
+                                                    {k.keyword}
+                                                </span>
+                                                <span className="tabular-nums text-muted-foreground shrink-0">
+                                                    {k.impressions.toLocaleString()}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Discovery vs branded (estimate)</CardTitle>
+                                <p className="text-sm text-muted-foreground font-normal">
+                                    Uses your business name vs search terms — refine in a later release
+                                </p>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div>
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                                        Discovery-style terms
+                                    </p>
+                                    <p className="text-3xl font-bold">{discoverySplit.discoveryPct}%</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                                        Branded / name match
+                                    </p>
+                                    <p className="text-2xl font-semibold text-muted-foreground">
+                                        {discoverySplit.directPct}%
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Engagement funnel</CardTitle>
+                            <p className="text-sm text-muted-foreground font-normal">
+                                Relative volume across Google listing actions (selected period)
+                            </p>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                                {(
+                                    [
+                                        ["Profile views", perfTotals?.profileViews ?? 0],
+                                        ["Website clicks", perfTotals?.websiteClicks ?? 0],
+                                        ["Call clicks", perfTotals?.callClicks ?? 0],
+                                        ["Direction requests", perfTotals?.directionRequests ?? 0],
+                                    ] as const
+                                ).map(([label, val]) => (
+                                    <div key={label} className="space-y-2">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">{label}</span>
+                                            <span className="font-medium tabular-nums">
+                                                {val.toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <Progress
+                                            value={Math.min(100, (val / funnelMax) * 100)}
+                                            className="h-2"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </>
+            )}
 
             {/* Platform Table */}
             <Card>

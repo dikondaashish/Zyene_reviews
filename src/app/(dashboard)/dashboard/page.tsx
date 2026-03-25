@@ -19,7 +19,12 @@ import {
     Target,
     Send,
     Calendar,
-    Sparkles, Trophy,
+    Sparkles,
+    Trophy,
+    Eye,
+    Phone,
+    Navigation2,
+    MousePointerClick,
 } from "lucide-react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
@@ -38,6 +43,11 @@ import { RatingDistributionChart } from "@/components/dashboard/rating-distribut
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
 import { getActiveBusinessId } from "@/lib/business-context";
 import { DASHBOARD_DEMO_DATA } from "@/lib/dashboard-demo-data";
+import {
+    dateRangeLastNDays,
+    getGooglePerformanceTotals,
+    type GooglePerformanceTotals,
+} from "@/lib/google/performance-queries";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -106,6 +116,9 @@ export default async function DashboardPage() {
     );
     const isGoogleConnected = !!googlePlatform;
     const lastSynced = googlePlatform?.last_synced_at;
+
+    let googlePerf: GooglePerformanceTotals | null = null;
+    let perfSyncedAt: string | null = null;
 
     // ── Demo Data Injection ───────────────────────────────────
     const useDemoData = !isGoogleConnected;
@@ -474,6 +487,22 @@ export default async function DashboardPage() {
         // Mock business stats for cards
         (business as any).total_reviews = DASHBOARD_DEMO_DATA.total_reviews;
         (business as any).average_rating = DASHBOARD_DEMO_DATA.average_rating;
+        googlePerf = {
+            profileViews: 3421,
+            callClicks: 89,
+            directionRequests: 156,
+            websiteClicks: 234,
+            rawRowCount: 120,
+        };
+        perfSyncedAt = new Date().toISOString();
+    }
+
+    if (!useDemoData && business.id && isGoogleConnected) {
+        const { start, end } = dateRangeLastNDays(30);
+        googlePerf = await getGooglePerformanceTotals(supabase, business.id, start, end);
+        perfSyncedAt =
+            (googlePlatform as { google_performance_synced_at?: string | null })
+                ?.google_performance_synced_at ?? null;
     }
 
     const reviewsCount = business.total_reviews;
@@ -505,6 +534,15 @@ export default async function DashboardPage() {
                             {formatDistanceToNow(new Date(lastSynced), {
                                 addSuffix: true,
                             })}
+                            {perfSyncedAt && (
+                                <>
+                                    {" "}
+                                    · Google listing metrics:{" "}
+                                    {formatDistanceToNow(new Date(perfSyncedAt), {
+                                        addSuffix: true,
+                                    })}
+                                </>
+                            )}
                         </p>
                     )}
                 </div>
@@ -624,6 +662,70 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Google Business Profile performance (last 30 days) */}
+            {(useDemoData || isGoogleConnected) && googlePerf && (
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                            Google listing performance
+                        </h2>
+                        <span className="text-xs text-muted-foreground">Last 30 days</span>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Profile views</CardTitle>
+                                <Eye className="h-4 w-4 text-blue-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {googlePerf.profileViews.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Search + Maps impressions
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Phone calls</CardTitle>
+                                <Phone className="h-4 w-4 text-green-600" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {googlePerf.callClicks.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">Call button taps</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Direction requests</CardTitle>
+                                <Navigation2 className="h-4 w-4 text-violet-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {googlePerf.directionRequests.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">Route opens</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Website clicks</CardTitle>
+                                <MousePointerClick className="h-4 w-4 text-orange-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {googlePerf.websiteClicks.toLocaleString()}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">Website link taps</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            )}
 
             {/* Extended Stats Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

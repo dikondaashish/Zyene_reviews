@@ -14,6 +14,11 @@ interface PlatformData {
     reviews: number;
     avgRating: number;
     responseRate: number;
+    /** Google Business Profile Performance (optional) */
+    profileViews?: number;
+    callClicks?: number;
+    directionRequests?: number;
+    websiteClicks?: number;
 }
 
 export function PlatformTable({ data }: { data: PlatformData[] }) {
@@ -26,12 +31,16 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                         <TableHead className="text-right">Reviews</TableHead>
                         <TableHead className="text-right">Avg Rating</TableHead>
                         <TableHead className="text-right">Response Rate</TableHead>
+                        <TableHead className="text-right hidden lg:table-cell">Profile views</TableHead>
+                        <TableHead className="text-right hidden lg:table-cell">Calls</TableHead>
+                        <TableHead className="text-right hidden xl:table-cell">Directions</TableHead>
+                        <TableHead className="text-right hidden xl:table-cell">Site clicks</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.length === 0 ? (
                         <TableRow>
-                            <TableCell colSpan={4} className="h-24 text-center">
+                            <TableCell colSpan={8} className="h-24 text-center">
                                 No data available.
                             </TableCell>
                         </TableRow>
@@ -50,6 +59,18 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                     <Badge variant={row.responseRate >= 90 ? "default" : row.responseRate >= 50 ? "secondary" : "destructive"}>
                                         {row.responseRate.toFixed(0)}%
                                     </Badge>
+                                </TableCell>
+                                <TableCell className="text-right hidden lg:table-cell text-muted-foreground">
+                                    {row.profileViews !== undefined ? row.profileViews.toLocaleString() : "—"}
+                                </TableCell>
+                                <TableCell className="text-right hidden lg:table-cell text-muted-foreground">
+                                    {row.callClicks !== undefined ? row.callClicks.toLocaleString() : "—"}
+                                </TableCell>
+                                <TableCell className="text-right hidden xl:table-cell text-muted-foreground">
+                                    {row.directionRequests !== undefined ? row.directionRequests.toLocaleString() : "—"}
+                                </TableCell>
+                                <TableCell className="text-right hidden xl:table-cell text-muted-foreground">
+                                    {row.websiteClicks !== undefined ? row.websiteClicks.toLocaleString() : "—"}
                                 </TableCell>
                             </TableRow>
                         ))

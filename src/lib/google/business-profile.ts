@@ -46,7 +46,7 @@ const BASE_URL_ACCOUNT = "https://mybusinessaccountmanagement.googleapis.com/v1"
 const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
 const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
+export async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
         const response = await fetch(url, options);
 

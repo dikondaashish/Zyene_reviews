@@ -38,6 +38,7 @@ interface GoogleCardProps {
         id: string;
         external_id: string;
         last_synced_at: string | null;
+        google_performance_synced_at?: string | null;
         sync_status: string | null;
         total_reviews: number;
     } | null;
@@ -242,6 +243,9 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
                             </p>
                         </div>
                     </div>
+                    <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                        Listing performance (views, calls, directions, site clicks) and monthly search keywords sync with Sync or the daily cron.
+                    </p>
                 </CardContent>
                 <CardFooter className="flex justify-between gap-2 pt-0">
                     <AlertDialog>

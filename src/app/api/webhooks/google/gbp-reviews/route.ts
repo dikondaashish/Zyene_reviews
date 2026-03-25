@@ -20,10 +20,20 @@ export async function POST(req: NextRequest) {
 
         console.log("[GBP Webhook] Received notification:", payload);
 
-        // The payload can contain 'new_review' or 'updated_review'
+        // Reviews: new_review / updated_review. Phase 1+ also subscribes to Q&A and media; those are no-ops until Phase 2 handlers exist.
         const reviewInfo = payload.new_review || payload.updated_review;
         if (!reviewInfo) {
-            console.log("[GBP Webhook] No review info in payload (not a review event)");
+            const other =
+                payload.new_question ||
+                payload.updated_question ||
+                payload.new_answer ||
+                payload.updated_answer ||
+                payload.new_customer_media;
+            if (other) {
+                console.log("[GBP Webhook] Non-review notification received (acknowledged; Phase 2 will process)");
+            } else {
+                console.log("[GBP Webhook] No review info in payload (not a review event)");
+            }
             return new NextResponse(null, { status: 204 });
         }
 
