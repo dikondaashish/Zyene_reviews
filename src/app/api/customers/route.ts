@@ -22,36 +22,15 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Verify user has access to this business (either via business_members or organization_members)
-        const { data: access, error: accessError } = await supabase
-            .from("businesses")
-            .select(`
-                id,
-                organizations!inner (
-                    organization_members!inner (
-                        user_id
-                    )
-                )
-            `)
-            .eq("id", businessId)
-            .eq("organizations.organization_members.user_id", user.id)
-            .single();
+        // Verify user has access to this business
+        const { userCanAccessBusiness } = await import("@/lib/supabase/verify-business-access");
+        const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
 
-        if (accessError || !access) {
-            // Fallback: check business_members specifically (though usually redundant if they are org members)
-            const { data: businessMember } = await supabase
-                .from("business_members")
-                .select("role")
-                .eq("business_id", businessId)
-                .eq("user_id", user.id)
-                .single();
-
-            if (!businessMember) {
-                return NextResponse.json(
-                    { error: "You don't have access to this business" },
-                    { status: 403 }
-                );
-            }
+        if (!hasAccess) {
+            return NextResponse.json(
+                { error: "You don't have access to this business" },
+                { status: 403 }
+            );
         }
 
         // Insert customer with conflict resolution (upsert)

@@ -1,44 +1,37 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Business access is granted via organization membership (organization_members),
- * not the legacy business_members table. Aligns with getActiveBusinessId and
- * /api/requests/send ownership checks.
+ * Verifies if a user has access to a business either via business_members 
+ * OR via organization_members of the owning organization.
  */
-export async function getBusinessIdsForUser(
-    supabase: SupabaseClient,
-    userId: string
-): Promise<string[]> {
-    const { data: memberships, error } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                businesses ( id )
-            )
-        `)
-        .eq("user_id", userId)
-        .eq("status", "active");
-
-    if (error || !memberships?.length) {
-        return [];
-    }
-
-    const ids = new Set<string>();
-    for (const row of memberships) {
-        const org = (row as { organizations?: { businesses?: { id: string }[] } | null })
-            .organizations;
-        for (const b of org?.businesses ?? []) {
-            ids.add(b.id);
-        }
-    }
-    return [...ids];
-}
-
 export async function userCanAccessBusiness(
-    supabase: SupabaseClient,
-    userId: string,
-    businessId: string
+  supabase: SupabaseClient, 
+  userId: string, 
+  businessId: string
 ): Promise<boolean> {
-    const ids = await getBusinessIdsForUser(supabase, userId);
-    return ids.includes(businessId);
+  const { data, error } = await supabase
+    .from("businesses")
+    .select(`
+        id,
+        organizations!inner (
+            organization_members!inner (
+                user_id
+            )
+        )
+    `)
+    .eq("id", businessId)
+    .eq("organizations.organization_members.user_id", userId)
+    .single();
+
+  if (data && !error) return true;
+
+  // Fallback: check business_members
+  const { data: businessMember } = await supabase
+    .from("business_members")
+    .select("role")
+    .eq("business_id", businessId)
+    .eq("user_id", userId)
+    .single();
+
+  return !!businessMember;
 }

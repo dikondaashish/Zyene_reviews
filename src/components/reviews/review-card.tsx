@@ -17,6 +17,7 @@ import {
 
 interface Review {
     id: string;
+    business_id: string;
     author_name: string;
     rating: number;
     content: string;
@@ -35,13 +36,22 @@ interface ReplySuggestion {
     text: string;
 }
 
-export function ReviewCard({ review }: { review: Review }) {
+export function ReviewCard({ 
+    review, 
+    isSelected = false, 
+    onSelect 
+}: { 
+    review: Review;
+    isSelected?: boolean;
+    onSelect?: (id: string, selected: boolean) => void;
+}) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [isSuggesting, setIsSuggesting] = useState(false);
     const [suggestions, setSuggestions] = useState<ReplySuggestion[]>([]);
+    const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
     const router = useRouter();
 
@@ -90,6 +100,23 @@ export function ReviewCard({ review }: { review: Review }) {
         }
     };
 
+    const handleUpdateStatus = async (status: 'pending' | 'ignored') => {
+        setIsUpdatingStatus(true);
+        try {
+            const res = await fetch(`/api/reviews/${review.id}`, {
+                method: "PATCH",
+                body: JSON.stringify({ status }),
+            });
+            if (!res.ok) throw new Error("Failed to update status");
+            toast.success(`Review ${status === 'ignored' ? 'ignored' : 'moved to pending'}`);
+            router.refresh();
+        } catch (e: any) {
+            toast.error(e.message);
+        } finally {
+            setIsUpdatingStatus(false);
+        }
+    };
+
     const applySuggestion = (text: string) => {
         setReplyText(text);
         // Maybe scroll to textarea?
@@ -115,9 +142,26 @@ export function ReviewCard({ review }: { review: Review }) {
     };
 
     return (
-        <div className="bg-white border rounded-lg p-5 space-y-3 hover:shadow-md transition-shadow duration-200">
-            {/* Header */}
-            <div className="flex justify-between items-start">
+        <div className={cn(
+            "bg-white rounded-xl border p-4 shadow-sm hover:shadow-md transition-all duration-300 relative group",
+            isSelected && "border-blue-200 bg-blue-50/20 shadow-blue-50"
+        )}>
+            {/* Selection Checkbox */}
+            {onSelect && (
+                <div className={cn(
+                    "absolute left-4 top-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity",
+                    isSelected && "opacity-100"
+                )}>
+                    <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => onSelect(review.id, e.target.checked)}
+                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    />
+                </div>
+            )}
+
+            <div className={cn("flex justify-between items-start mb-3", onSelect && "pl-7")}>
                 <div className="flex gap-3">
                     <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm border border-slate-200">
                         {(review.author_name || "A").charAt(0)}
@@ -248,8 +292,24 @@ export function ReviewCard({ review }: { review: Review }) {
                                 <MoreHorizontal className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem className="text-xs cursor-pointer">Mark as Ignored</DropdownMenuItem>
+                        <DropdownMenuContent align="end" className="w-48">
+                            {review.response_status === 'ignored' ? (
+                                <DropdownMenuItem 
+                                    className="text-xs cursor-pointer"
+                                    onClick={() => handleUpdateStatus('pending')}
+                                    disabled={isUpdatingStatus}
+                                >
+                                    Move to Pending
+                                </DropdownMenuItem>
+                            ) : (
+                                <DropdownMenuItem 
+                                    className="text-xs cursor-pointer"
+                                    onClick={() => handleUpdateStatus('ignored')}
+                                    disabled={isUpdatingStatus}
+                                >
+                                    Mark as Ignored
+                                </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem className="text-xs text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer">Report Review</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
