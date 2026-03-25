@@ -33,7 +33,7 @@ import { AddCompetitorDialog } from "./add-competitor-dialog";
 import { deleteCompetitor } from "@/app/actions/competitor";
 import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { formatDistanceToNow } from "date-fns";
+import { TimeAgo } from "@/components/ui/time-ago";
 import { Database } from "@/lib/supabase/database.types";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
@@ -166,7 +166,7 @@ export function CompetitorsList({
                                     {competitors.map((competitor) => {
                                         const syncing = isSyncing(competitor);
                                         const updatedAt = competitor.updated_at 
-                                            ? formatDistanceToNow(new Date(competitor.updated_at), { addSuffix: true })
+                                            ? <TimeAgo date={competitor.updated_at} />
                                             : "—";
                                         
                                         return (

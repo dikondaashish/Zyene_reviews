@@ -9,6 +9,11 @@ import { useRouter } from "next/navigation";
 export function TrialBanner({ organization }: { organization: any }) {
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(true);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     if (!organization || organization.plan !== "free" || !organization.trial_ends_at) {
         return null;
@@ -43,7 +48,7 @@ export function TrialBanner({ organization }: { organization: any }) {
                         </span>
                     ) : (
                         <span className="text-indigo-900 dark:text-indigo-300">
-                            You have <span className="font-bold text-indigo-700 dark:text-indigo-200">{timeLeft}</span> left on your trial.
+                            You have <span className="font-bold text-indigo-700 dark:text-indigo-200">{!mounted ? "..." : timeLeft}</span> left on your trial.
                         </span>
                     )}
                 </div>

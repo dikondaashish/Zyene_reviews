@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDistanceToNow } from "date-fns";
+import { TimeAgo } from "@/components/ui/time-ago";
 import { Star, User, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +52,8 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                             {renderStars(feedback.rating)}
-                            <span className="text-xs text-slate-400">• {formatDistanceToNow(new Date(feedback.created_at), { addSuffix: true })}</span>
+                            <TimeAgo date={feedback.created_at} className="text-xs text-slate-400" />
+
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { TimeAgo } from "@/components/ui/time-ago";
 import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -126,7 +126,7 @@ export function ReviewCard({ review }: { review: Review }) {
                         <div className="font-semibold text-sm text-gray-900 line-clamp-1">{review.author_name || "Anonymous"}</div>
                         <div className="flex items-center gap-2 mt-0.5">
                             {renderStars(review.rating)}
-                            <span className="text-xs text-slate-400">• {formatDistanceToNow(new Date(review.published_at), { addSuffix: true })}</span>
+                            <TimeAgo date={review.published_at} className="text-xs text-slate-400" fallback="" />
                             <span className="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide border border-blue-100">{review.platform || 'Google'}</span>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ export function ReviewCard({ review }: { review: Review }) {
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 mb-1">
                         <CornerDownRight className="w-3 h-3 text-slate-400" />
                         Your Response
-                        {review.responded_at && <span className="text-slate-400 font-normal ml-auto text-[10px]">{formatDistanceToNow(new Date(review.responded_at), { addSuffix: true })}</span>}
+                        {review.responded_at && <TimeAgo date={review.responded_at} className="text-slate-400 font-normal ml-auto text-[10px]" />}
                     </div>
                     <p className="text-slate-600">{review.response_text}</p>
                 </div>
