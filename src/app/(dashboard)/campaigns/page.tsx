@@ -92,7 +92,21 @@ export default function CampaignsPage() {
                 toast.success(`Campaign ${newStatus === "active" ? "resumed" : "paused"}`);
                 fetchCampaigns();
             } else {
-                toast.error("Failed to update campaign");
+                const errorData = await res.json();
+                if (errorData.code === "EMAIL_NOT_VERIFIED") {
+                    toast.error("Email verification required", {
+                        description: "You must verify your email before activating campaigns.",
+                        action: {
+                            label: "Resend Email",
+                            onClick: () => {
+                                // This is handled by the top banner, but we could trigger it here too
+                                console.log("Resend verification requested");
+                            }
+                        }
+                    });
+                } else {
+                    toast.error(errorData.error || "Failed to update campaign");
+                }
             }
         } catch {
             toast.error("Failed to update campaign");
@@ -147,20 +161,54 @@ export default function CampaignsPage() {
 
             {/* Empty State */}
             {!loading && campaigns.length === 0 && (
-                <Card className="flex flex-col items-center justify-center py-16">
-                    <Megaphone className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No campaigns yet</h3>
-                    <p className="text-muted-foreground text-center max-w-md mb-6">
-                        Create one to start collecting reviews automatically. Set it up
-                        once, it runs on its own.
-                    </p>
-                    <Button asChild>
-                        <Link href="/campaigns/new">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Create Your First Campaign
-                        </Link>
-                    </Button>
-                </Card>
+                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-white to-orange-50/30 rounded-3xl border border-orange-100 shadow-sm relative overflow-hidden">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-100/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+                    <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
+                        <div className="w-24 h-24 bg-gradient-to-tr from-orange-500 to-orange-400 rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-orange-200 rotate-3 transform transition-transform hover:rotate-0 duration-500">
+                            <Megaphone className="h-12 w-12 text-white" />
+                        </div>
+                        
+                        <h3 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                            Your first review is just one campaign away
+                        </h3>
+                        
+                        <p className="text-lg text-gray-500 mb-10 leading-relaxed">
+                            Automate your review requests and watch your reputation grow. Set up a campaign in minutes and let Zyene do the heavy lifting.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                            <Button size="lg" className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl shadow-lg shadow-orange-200 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
+                                <Link href="/campaigns/new">
+                                    <Plus className="mr-2 h-5 w-5" />
+                                    Launch Your First Campaign
+                                </Link>
+                            </Button>
+                            <Button size="lg" variant="outline" className="h-14 px-8 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-2xl transition-all" asChild>
+                                <Link href="/analytics">
+                                    Browse Sample Reports
+                                </Link>
+                            </Button>
+                        </div>
+
+                        <div className="mt-12 flex items-center gap-8 text-sm text-gray-400">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                                Automated SMS/Email
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                                Smart Triggers
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                                Real-time Tracking
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Campaign Cards */}

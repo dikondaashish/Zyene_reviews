@@ -21,6 +21,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Zyene Reviews - Reputation Management for Local Businesses",
   description: "Automate your customer reviews and grow your business with Zyene Reviews.",
+  manifest: "/manifest.json",
+  themeColor: "#4f46e5",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Zyene Reviews",
+  },
 };
 
 export default function RootLayout({

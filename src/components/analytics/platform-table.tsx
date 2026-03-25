@@ -38,8 +38,8 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                     ) : (
                         data.map((row) => (
                             <TableRow key={row.platform}>
-                                <TableCell className="font-medium capitalize flex items-center gap-2">
-                                    {row.platform === "google" && (
+                                <TableCell className="font-medium flex items-center gap-2">
+                                    {(row.platform.toLowerCase() === "google") && (
                                         <span className="text-blue-500">G</span> // Placeholder icon
                                     )}
                                     {row.platform}

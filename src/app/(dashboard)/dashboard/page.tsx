@@ -19,7 +19,9 @@ import {
     Target,
     Send,
     Calendar,
+    Sparkles, Trophy,
 } from "lucide-react";
+import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { Progress } from "@/components/ui/progress";
 import { GoogleConnectButton } from "@/components/dashboard/google-connect-button";
 import { SyncButton } from "@/components/dashboard/sync-button";
@@ -34,6 +36,7 @@ import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
 import { getActiveBusinessId } from "@/lib/business-context";
+import { DASHBOARD_DEMO_DATA } from "@/lib/dashboard-demo-data";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -102,6 +105,9 @@ export default async function DashboardPage() {
     );
     const isGoogleConnected = !!googlePlatform;
     const lastSynced = googlePlatform?.last_synced_at;
+
+    // ── Demo Data Injection ───────────────────────────────────
+    const useDemoData = !isGoogleConnected;
 
     // ── Real Data Queries ──────────────────────────────────────
 
@@ -451,14 +457,80 @@ export default async function DashboardPage() {
         );
     };
 
+    if (useDemoData) {
+        responseRate = DASHBOARD_DEMO_DATA.responseRate;
+        pendingCount = DASHBOARD_DEMO_DATA.pendingCount;
+        recentReviews = [...DASHBOARD_DEMO_DATA.recentReviews];
+        trendData = [...DASHBOARD_DEMO_DATA.trendData];
+        ratingData = [...DASHBOARD_DEMO_DATA.ratingData];
+        positivePercent = DASHBOARD_DEMO_DATA.positivePercent;
+        negativePercent = DASHBOARD_DEMO_DATA.negativePercent;
+        hasSentimentData = true;
+        engagementRate = DASHBOARD_DEMO_DATA.engagementRate;
+        hasEngagementData = true;
+        newReviews30d = DASHBOARD_DEMO_DATA.newReviews30d;
+        
+        // Mock business stats for cards
+        (business as any).total_reviews = DASHBOARD_DEMO_DATA.total_reviews;
+        (business as any).average_rating = DASHBOARD_DEMO_DATA.average_rating;
+    }
+
+    const reviewsCount = business.total_reviews;
+
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
+            <MilestoneCelebration currentCount={reviewsCount} type="reviews" />
+            
+            {/* Demo Mode Banner */}
+            {useDemoData && (
+                <div className="relative group overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 rounded-2xl p-6 shadow-xl shadow-indigo-500/20 mb-2">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-700"></div>
+                    
+                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-5 text-white">
+                            <div className="bg-white/20 backdrop-blur-md p-3 rounded-xl border border-white/30 shadow-inner">
+                                <Sparkles className="w-8 h-8 text-white animate-pulse" />
+                            </div>
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-xl font-bold tracking-tight">Experience Zyene in Action</h3>
+                                    <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm text-[10px] uppercase tracking-wider py-0 px-2 h-5">
+                                        Demo Mode
+                                    </Badge>
+                                </div>
+                                <p className="text-white/80 text-sm max-w-lg leading-relaxed">
+                                    You&apos;re currently viewing <span className="font-semibold text-white">simulated data</span>. Connect your Google Business Profile to unlock real-time reputation management and automated review requests.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 shrink-0">
+                            <Link href="/integrations">
+                                <Button size="lg" className="bg-white text-indigo-600 hover:bg-white/90 font-bold border-none shadow-lg shadow-black/10 px-6 h-12 rounded-xl group/btn">
+                                    Connect Real Profile
+                                    <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-bold tracking-tight">
-                        Dashboard
-                    </h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            Dashboard
+                        </h1>
+                        {useDemoData && (
+                            <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5">
+                                <Sparkles className="w-3 h-3" />
+                                Interactive Demo
+                            </Badge>
+                        )}
+                    </div>
                     {lastSynced && (
                         <p className="text-sm text-muted-foreground">
                             Last synced:{" "}

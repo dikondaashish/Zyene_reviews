@@ -9,6 +9,8 @@ import { OrganizationDisplay } from "@/components/dashboard/organization-display
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
 import { getActiveBusinessId } from "@/lib/business-context";
+import { VerificationBanner } from "@/components/dashboard/verification-banner";
+import { TrialBanner } from "@/components/dashboard/trial-banner";
 
 export default async function DashboardLayout({
     children,
@@ -53,6 +55,8 @@ export default async function DashboardLayout({
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
+                <VerificationBanner user={user} />
+                <TrialBanner organization={organization} />
                 <DashboardLayoutClient header={headerContent}>
                     {children}
                 </DashboardLayoutClient>

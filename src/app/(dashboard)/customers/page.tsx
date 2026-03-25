@@ -139,16 +139,50 @@ export default function CustomersPage() {
                 </CardHeader>
                 <CardContent>
                     {customers.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-center">
-                            <Users className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
-                            <h3 className="text-lg font-semibold">No customers found</h3>
-                            <p className="text-sm text-muted-foreground max-w-sm mt-2 mb-6">
-                                Upload a CSV file or add customers manually to start sending review requests.
-                            </p>
-                            <Button onClick={() => setImportCSVOpen(true)}>
-                                <UploadCloud className="mr-2 h-4 w-4" />
-                                Import from CSV
-                            </Button>
+                        <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-white to-green-50/20 rounded-3xl border border-green-100/50 shadow-sm relative overflow-hidden">
+                            {/* Decorative Background Elements */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-green-100/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-100/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+                            <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
+                                <div className="w-20 h-20 bg-gradient-to-tr from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-green-100 -rotate-2 transform transition-transform hover:rotate-0 duration-500">
+                                    <Users className="h-10 w-10 text-white" />
+                                </div>
+                                
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
+                                    No customers in your list yet
+                                </h3>
+                                
+                                <p className="text-gray-500 mb-8 leading-relaxed">
+                                    Start building your customer database to send automated review requests. You can add them one by one or import your entire list at once.
+                                </p>
+
+                                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                                    <Button onClick={() => setImportCSVOpen(true)} size="lg" className="h-12 px-6 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-md shadow-orange-100 transition-all">
+                                        <UploadCloud className="mr-2 h-4 w-4" />
+                                        Import from CSV
+                                    </Button>
+                                    <Button onClick={() => setAddCustomerOpen(true)} variant="outline" size="lg" className="h-12 px-6 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl transition-all">
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add Manually
+                                    </Button>
+                                </div>
+
+                                <div className="mt-10 flex items-center gap-6 text-xs text-gray-400 font-medium uppercase tracking-wider">
+                                    <span className="flex items-center gap-1.5">
+                                        <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                                        Bulk Import
+                                    </span>
+                                    <span className="flex items-center gap-1.5">
+                                        <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
+                                        Auto-Syncing
+                                    </span>
+                                    <span className="flex items-center gap-1.5">
+                                        <div className="w-1 h-1 bg-purple-400 rounded-full"></div>
+                                        GDPR Compliant
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         <div className="rounded-md border">

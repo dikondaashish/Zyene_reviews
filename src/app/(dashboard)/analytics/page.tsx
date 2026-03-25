@@ -10,6 +10,8 @@ import { SentimentChart } from "@/components/analytics/sentiment-chart";
 import { ThemeChart } from "@/components/analytics/theme-chart";
 import { PlatformTable } from "@/components/analytics/platform-table";
 import { getActiveBusinessId } from "@/lib/business-context";
+import { ReportGenerator } from "@/components/analytics/report-generator";
+import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 
 // Helper to get start date
 function getStartDate(range: string) {
@@ -47,7 +49,7 @@ export default async function AnalyticsPage({
     }
 
     // Get active business for scoping queries
-    const { businessId } = await getActiveBusinessId();
+    const { businessId, business } = await getActiveBusinessId();
 
     const range = searchParams.range || "30d";
     const startDate = getStartDate(range);
@@ -162,7 +164,7 @@ export default async function AnalyticsPage({
 
     // Platform Data (Placeholder for now, just Google)
     const platformData = [{
-        platform: "google",
+        platform: "Google",
         reviews: totalReviews,
         avgRating: avgRating,
         responseRate: responseRate
@@ -170,10 +172,21 @@ export default async function AnalyticsPage({
 
     return (
         <div className="flex flex-1 flex-col gap-6 p-6 overflow-hidden">
+            <MilestoneCelebration currentCount={totalReviews} type="reviews" />
+            <MilestoneCelebration currentCount={avgRating} type="rating" />
+
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+                <div className="flex items-center gap-4">
+                    <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+                    <ReportGenerator 
+                        businessName={business?.name} 
+                        dateRange={range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months"} 
+                    />
+                </div>
                 <AnalyticsFilters />
             </div>
+
+            <div id="analytics-content" className="flex flex-col gap-6 w-full bg-background p-1">
 
             {/* Stats Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -264,6 +277,7 @@ export default async function AnalyticsPage({
                     <PlatformTable data={platformData} />
                 </CardContent>
             </Card>
+            </div>
         </div>
     );
 }

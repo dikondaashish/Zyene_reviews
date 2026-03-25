@@ -97,15 +97,49 @@ export function CompetitorsList({
             </div>
 
             {competitors.length === 0 ? (
-                <Card className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-dashed">
-                    <div className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
-                        <Plus className="h-8 w-8 text-slate-400" />
+                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-white to-blue-50/20 rounded-3xl border border-blue-100/50 shadow-sm relative overflow-hidden">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-100/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+                    <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
+                        <div className="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-blue-100 rotate-2 transform transition-transform hover:rotate-0 duration-500">
+                            <Star className="h-10 w-10 text-white fill-white" />
+                        </div>
+                        
+                        <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
+                            See how you stack up against the competition
+                        </h3>
+                        
+                        <p className="text-gray-500 mb-8 leading-relaxed">
+                            Monitor your competitors' ratings and review volume in real-time. Gain insights into their performance and stay ahead in your local market.
+                        </p>
+
+                        <AddCompetitorDialog
+                            businessId={businessId}
+                            onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
+                        />
+
+                        <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="p-2 bg-blue-50 rounded-lg text-blue-500"><Star className="h-4 w-4" /></div>
+                                Rating Tracking
+                            </div>
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="p-2 bg-indigo-50 rounded-lg text-indigo-500"><BarChart className="h-4 w-4" /></div>
+                                Volume Growth
+                            </div>
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="p-2 bg-purple-50 rounded-lg text-purple-500"><CartesianGrid className="h-4 w-4" /></div>
+                                Market Share
+                            </div>
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="p-2 bg-green-50 rounded-lg text-green-500"><ExternalLink className="h-4 w-4" /></div>
+                                Direct Links
+                            </div>
+                        </div>
                     </div>
-                    <CardTitle className="text-xl mb-2">No competitors tracked yet</CardTitle>
-                    <CardDescription className="max-w-sm mb-6">
-                        Add competitors to monitor their ratings, review counts, and performance compared to your business.
-                    </CardDescription>
-                </Card>
+                </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2">
                     {/* Data Table */}

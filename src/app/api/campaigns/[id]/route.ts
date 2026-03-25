@@ -81,6 +81,14 @@ export async function PATCH(
 
     const body = await request.json();
 
+    // Force email verification for active campaigns
+    if (body.status === "active" && !user.email_confirmed_at) {
+        return NextResponse.json(
+            { error: "Email verification required", code: "EMAIL_NOT_VERIFIED" },
+            { status: 403 }
+        );
+    }
+
     // Only allow safe fields to update
     const allowedFields = [
         "name", "status", "trigger_type", "channel",

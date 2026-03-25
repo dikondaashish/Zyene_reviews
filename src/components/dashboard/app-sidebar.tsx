@@ -139,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     <span className="text-lg font-bold text-white">Z</span>
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
-                                    <span className="font-semibold">Zyene Ratings</span>
+                                    <span className="font-semibold">Zyene Reviews</span>
                                     <span className="text-xs">v1.0.0</span>
                                 </div>
                             </Link>

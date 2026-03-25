@@ -172,9 +172,13 @@ export default async function ReviewsPage(props: {
                                 <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                                     <MessageSquare className="h-6 w-6 text-gray-400" />
                                 </div>
-                                <h3 className="text-lg font-medium text-gray-900">No reviews found</h3>
+                                <h3 className="text-lg font-medium text-gray-900">
+                                    {publicCount === 0 ? "No reviews synced yet" : "No reviews found"}
+                                </h3>
                                 <p className="text-muted-foreground max-w-sm mt-1 mb-6">
-                                    Try adjusting your filters or sync your reviews.
+                                    {publicCount === 0 
+                                        ? "Connect your Google Business Profile to import and manage your reviews." 
+                                        : "Try adjusting your filters or sync your reviews."}
                                 </p>
                                 <SyncButton />
                             </div>

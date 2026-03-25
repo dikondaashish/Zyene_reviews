@@ -11,9 +11,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Upload, AlertCircle } from "lucide-react";
+import { Loader2, Upload, AlertCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import Papa from "papaparse";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface CSVImportModalProps {
     open: boolean;
@@ -32,6 +34,7 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [fileName, setFileName] = useState<string | null>(null);
     const [csvData, setCSVData] = useState<CSVRow[]>([]);
+    const [hasConsent, setHasConsent] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
@@ -39,7 +42,6 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Validate file type
         if (!file.name.endsWith(".csv")) {
             toast.error("Please upload a CSV file");
             return;
@@ -47,7 +49,6 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
 
         setFileName(file.name);
 
-        // Parse CSV
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
@@ -66,6 +67,11 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
     };
 
     const handleImport = async () => {
+        if (!hasConsent) {
+            toast.error("Please acknowledge the consent requirement");
+            return;
+        }
+
         if (csvData.length === 0) {
             toast.error("No data to import");
             return;
@@ -73,9 +79,8 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
 
         setIsLoading(true);
         try {
-            // Map CSV rows to customer format - match the API endpoint expectations
             const customersToImport = csvData
-                .filter((row) => row.email || row.name) // At least email or name
+                .filter((row) => row.email || row.name)
                 .map((row) => {
                     const nameParts = (row.name || "").trim().split(/\s+/);
                     return {
@@ -87,7 +92,7 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
                 });
 
             if (customersToImport.length === 0) {
-                toast.error("No valid customers found in CSV (need at least name or email)");
+                toast.error("No valid customers found in CSV");
                 setIsLoading(false);
                 return;
             }
@@ -100,38 +105,44 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || error.message || "Failed to import customers");
+                throw new Error(error.error || "Failed to import customers");
             }
 
             const result = await response.json();
             toast.success(`Successfully imported ${result.imported} customers`);
             onOpenChange(false);
-            setFileName(null);
-            setCSVData([]);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-            }
+            resetState();
             router.refresh();
         } catch (error: any) {
             toast.error(error.message || "Failed to import customers");
-            console.error("Error importing customers:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
+    const resetState = () => {
+        setFileName(null);
+        setCSVData([]);
+        setHasConsent(false);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-106.25">
+        <Dialog open={open} onOpenChange={(val) => {
+            if (!val) resetState();
+            onOpenChange(val);
+        }}>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Import Customers from CSV</DialogTitle>
+                    <DialogTitle>Import Customers</DialogTitle>
                     <DialogDescription>
-                        Upload a CSV file with customer data. Required columns: name or email
+                        Upload a CSV file. Required columns: name or email.
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
-                    {/* File Upload Area */}
                     <div
                         onClick={() => fileInputRef.current?.click()}
                         className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-slate-400 transition-colors"
@@ -147,80 +158,54 @@ export function CSVImportModal({ open, onOpenChange }: CSVImportModalProps) {
                         <p className="font-medium text-sm">
                             {fileName ? fileName : "Click to upload or drag and drop"}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-1">CSV files only</p>
                     </div>
 
-                    {/* CSV Format Help */}
-                    <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 space-y-2">
-                        <p className="text-sm font-medium flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4" />
-                            CSV Format
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                            Your CSV should include columns like: <strong>name</strong>, <strong>email</strong>, <strong>phone</strong>, <strong>notes</strong>
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                            Example:
-                        </p>
-                        <pre className="text-xs bg-white dark:bg-slate-950 p-2 rounded border text-muted-foreground overflow-x-auto">
-                            {`name,email,phone
-John Doe,john@example.com,(555) 123-4567
-Jane Smith,jane@example.com,(555) 987-6543`}
-                        </pre>
-                    </div>
-
-                    {/* Data Preview */}
                     {csvData.length > 0 && (
-                        <div className="space-y-2">
-                            <p className="text-sm font-medium">Preview: {csvData.length} rows loaded</p>
-                            <div className="bg-slate-50 dark:bg-slate-950 rounded p-3 max-h-32 overflow-y-auto text-xs">
+                        <div className="space-y-3">
+                            <div className="bg-slate-50 rounded-lg p-3 max-h-32 overflow-y-auto text-xs border">
                                 <table className="w-full">
                                     <tbody>
                                         {csvData.slice(0, 3).map((row, idx) => (
                                             <tr key={idx} className="border-b last:border-0">
-                                                <td className="py-1 pr-2 text-muted-foreground truncate">
-                                                    {row.name || row.email || "—"}
-                                                </td>
-                                                <td className="py-1 text-muted-foreground truncate">
-                                                    {row.email || "—"}
-                                                </td>
+                                                <td className="py-1 pr-2 truncate font-medium">{row.name || "—"}</td>
+                                                <td className="py-1 truncate text-muted-foreground">{row.email || "—"}</td>
                                             </tr>
                                         ))}
-                                        {csvData.length > 3 && (
-                                            <tr>
-                                                <td colSpan={2} className="py-1 text-muted-foreground text-center">
-                                                    ... and {csvData.length - 3} more
-                                                </td>
-                                            </tr>
-                                        )}
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 space-y-3">
+                                <div className="flex gap-3">
+                                    <ShieldCheck className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-semibold text-orange-900">Compliance Acknowledgment</p>
+                                        <p className="text-xs text-orange-800/80 leading-relaxed">
+                                            I certify that I have obtained express consent to contact these individuals via SMS/Email in accordance with TCPA/CAN-SPAM.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-2 pt-1 border-t border-orange-100">
+                                    <Checkbox 
+                                        id="consent" 
+                                        checked={hasConsent}
+                                        onCheckedChange={(v) => setHasConsent(v as boolean)}
+                                    />
+                                    <Label htmlFor="consent" className="text-xs font-medium text-orange-900 cursor-pointer">
+                                        I confirm I have explicit consent.
+                                    </Label>
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
 
                 <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                            onOpenChange(false);
-                            setFileName(null);
-                            setCSVData([]);
-                            if (fileInputRef.current) {
-                                fileInputRef.current.value = "";
-                            }
-                        }}
-                        disabled={isLoading}
-                    >
+                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button
-                        onClick={handleImport}
-                        disabled={isLoading || csvData.length === 0}
-                    >
-                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    <Button onClick={handleImport} disabled={isLoading || csvData.length === 0 || !hasConsent}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                         {isLoading ? "Importing..." : "Import Customers"}
                     </Button>
                 </DialogFooter>

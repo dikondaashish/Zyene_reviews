@@ -62,7 +62,14 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Force email verification for active campaigns
     const body = await request.json();
+    if (body.status === "active" && !user.email_confirmed_at) {
+        return NextResponse.json(
+            { error: "Email verification required", code: "EMAIL_NOT_VERIFIED" },
+            { status: 403 }
+        );
+    }
     const parsed = createCampaignSchema.safeParse(body);
 
     if (!parsed.success) {
