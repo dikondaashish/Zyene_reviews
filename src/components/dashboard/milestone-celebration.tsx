@@ -72,8 +72,8 @@ export function MilestoneCelebration({ currentCount, type }: MilestoneCelebratio
             : `Phenomenal! Your business maintains a ${milestone} star rating! ⭐`;
 
         toast.custom((t: any) => (
-            <div className={`${t.visible ? 'animate-in fade-in zoom-in' : 'animate-out fade-out zoom-out'} max-w-md w-full bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex ring-1 ring-black ring-opacity-5 overflow-hidden`}>
-                <div className="flex-1 w-0 p-4">
+            <div className={`${t.visible ? 'animate-in fade-in zoom-in' : 'animate-out fade-out zoom-out'} max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300`}>
+                <div className="flex-1 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
                             <div className="bg-primary/20 p-2 rounded-full">
