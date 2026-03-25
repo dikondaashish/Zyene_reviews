@@ -129,7 +129,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const isSettingsActive = pathname.startsWith("/settings")
 
     return (
-        <Sidebar collapsible="icon" {...props} className="border-r border-gray-200">
+        <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -160,8 +160,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={`
                                         transition-all duration-150
                                         ${isActive 
-                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
+                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                                         }
                                     `}
                                 >
@@ -185,8 +185,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={`
                                         transition-all duration-150
                                         ${isSettingsActive 
-                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
+                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                                         }
                                     `}
                                     tooltip="Settings"
@@ -207,8 +207,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                     className={`
                                                         transition-all duration-150
                                                         ${isActive 
-                                                            ? "bg-orange-50 text-orange-600 border-l-3 border-l-orange-600" 
-                                                            : "hover:bg-gray-50"
+                                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
+                                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                                                         }
                                                     `}
                                                 >
