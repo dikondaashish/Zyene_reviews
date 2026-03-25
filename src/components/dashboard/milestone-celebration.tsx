@@ -8,6 +8,7 @@ import { Sparkles, Trophy } from "lucide-react";
 interface MilestoneCelebrationProps {
     currentCount: number;
     type: "reviews" | "requests" | "rating";
+    isDemo?: boolean;
 }
 
 const MILESTONES = {
@@ -16,10 +17,12 @@ const MILESTONES = {
     rating: [4.5, 4.8, 5.0]
 };
 
-export function MilestoneCelebration({ currentCount, type }: MilestoneCelebrationProps) {
+export function MilestoneCelebration({ currentCount, type, isDemo }: MilestoneCelebrationProps) {
     const [lastMilestone, setLastMilestone] = useState<number | null>(null);
 
     useEffect(() => {
+        if (isDemo) return;
+        
         // Initialize from localStorage to avoid repeats
         const storageKey = `zyene-milestone-${type}`;
         const saved = localStorage.getItem(storageKey);
@@ -29,7 +32,7 @@ export function MilestoneCelebration({ currentCount, type }: MilestoneCelebratio
     }, [type]);
 
     useEffect(() => {
-        if (currentCount === 0) return;
+        if (isDemo || currentCount === 0) return;
 
         const milestones = MILESTONES[type];
         const reachedMilestone = milestones.findLast(m => currentCount >= m);

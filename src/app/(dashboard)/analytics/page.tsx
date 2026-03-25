@@ -170,10 +170,13 @@ export default async function AnalyticsPage({
         responseRate: responseRate
     }];
 
+    const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
+    const isDemo = !isGoogleConnected;
+
     return (
         <div className="flex flex-1 flex-col gap-6 p-6 overflow-hidden">
-            <MilestoneCelebration currentCount={totalReviews} type="reviews" />
-            <MilestoneCelebration currentCount={avgRating} type="rating" />
+            <MilestoneCelebration currentCount={totalReviews} type="reviews" isDemo={isDemo} />
+            <MilestoneCelebration currentCount={avgRating} type="rating" isDemo={isDemo} />
 
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
