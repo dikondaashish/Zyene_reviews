@@ -195,15 +195,27 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                         variant="outline"
                         size="sm"
                         className="h-7 text-xs"
-                        onClick={() => {
+                        onClick={async () => {
                             setIsSyncing(true);
-                            fetch("/api/cron/sync-reviews")
-                                .then(() => {
-                                    toast.success("Sync triggered");
-                                    router.refresh();
-                                })
-                                .catch(() => toast.error("Sync failed"))
-                                .finally(() => setIsSyncing(false));
+                            try {
+                                const res = await fetch("/api/cron/sync-reviews");
+                                const data = await res.json().catch(() => ({}));
+
+                                if (!res.ok) {
+                                    const msg = data.error || "Sync failed";
+                                    const details = data.details;
+                                    toast.error(msg, { description: details });
+                                    return;
+                                }
+
+                                toast.success("Sync triggered");
+                                router.refresh();
+                            } catch (err: any) {
+                                console.error("[Yelp Sync] Error:", err);
+                                toast.error("Sync failed");
+                            } finally {
+                                setIsSyncing(false);
+                            }
                         }}
                         disabled={isSyncing}
                     >

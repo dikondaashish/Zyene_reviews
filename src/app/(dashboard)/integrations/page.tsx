@@ -173,15 +173,13 @@ export default async function IntegrationsPage() {
                         <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
                             <Puzzle className="h-4 w-4 text-primary" />
                             <span className="text-sm font-medium">
-                                {connectedCount} platform
-                                {connectedCount !== 1 ? "s" : ""} connected
+                                {`${connectedCount} platform${connectedCount !== 1 ? "s" : ""} connected`}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
                             <Star className="h-4 w-4 text-yellow-500" />
                             <span className="text-sm font-medium">
-                                {totalReviews.toLocaleString()} total reviews
-                                synced
+                                {`${totalReviews.toLocaleString("en-US")} total reviews synced`}
                             </span>
                         </div>
                     </div>

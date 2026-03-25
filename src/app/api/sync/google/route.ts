@@ -78,15 +78,17 @@ export async function POST(request: Request) {
         const errAny = error as { code?: string; message?: string; activationUrl?: string; userMessage?: string };
 
         if (errAny.code === "GOOGLE_API_DISABLED" || error.message.includes("GOOGLE_API_DISABLED")) {
-            status = 403;
-            message =
-                "Enable the Google My Business API in Google Cloud (same project as your OAuth client).";
-            details =
-                errAny.userMessage ||
-                error.message.replace(/^GOOGLE_API_DISABLED:\s*/, "");
-            if (errAny.activationUrl) {
-                details = `${details}\n\nOpen: ${errAny.activationUrl}`;
-            }
+            console.error("Sync Error:", error);
+            return NextResponse.json(
+                {
+                    error: "Google My Business API is not enabled for this Cloud project.",
+                    details:
+                        "Use the link (same project as your OAuth client). Click Enable, then enable My Business Account Management and My Business Business Information APIs. Wait 2–5 minutes and try Sync again.",
+                    activationUrl: errAny.activationUrl,
+                    code: "GOOGLE_API_DISABLED",
+                },
+                { status: 403 }
+            );
         } else if (errAny.code === "GOOGLE_GBP_ACCESS_PENDING" || error.message.includes("GOOGLE_GBP_ACCESS_PENDING")) {
             status = 403;
             message =

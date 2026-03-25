@@ -132,11 +132,20 @@ export function FacebookIntegrationCard({
             const res = await fetch("/api/cron/sync-reviews", {
                 headers: { host: "localhost" },
             });
-            if (!res.ok) throw new Error("Sync failed");
+            const data = await res.json().catch(() => ({}));
+            
+            if (!res.ok) {
+                const msg = data.error || "Sync failed";
+                const details = data.details;
+                toast.error(msg, { description: details });
+                return;
+            }
+            
             toast.success("Facebook reviews synced!");
             router.refresh();
-        } catch {
-            toast.error("Sync failed. Please try again.");
+        } catch (err: any) {
+            console.error("[Facebook Sync] Error:", err);
+            toast.error(err.message || "Sync failed. Please try again.");
         } finally {
             setSyncing(false);
         }

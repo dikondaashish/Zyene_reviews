@@ -17,17 +17,18 @@ export function SyncButton() {
             const data = await res.json()
 
             if (!res.ok) {
-                const msg = data.error || "Sync failed"
-                const desc = data.details && typeof data.details === "string" ? data.details : undefined
-                throw new Error(desc ? `${msg}\n${desc}` : msg)
+                const msg = (data as { error?: string }).error || "Sync failed"
+                const details = (data as { details?: string }).details
+                const activationUrl = (data as { activationUrl?: string }).activationUrl
+                const description = [details, activationUrl].filter(Boolean).join("\n\n")
+                toast.error(msg, { description: description || undefined, duration: 12_000 })
+                return
             }
 
-            toast.success(`Synced ${data.total ?? 0} reviews!`)
+            toast.success(`Synced ${(data as { total?: number }).total ?? 0} reviews!`)
             router.refresh()
         } catch (error: any) {
-            toast.error("Failed to sync reviews", {
-                description: error.message
-            })
+            toast.error("Failed to sync reviews", { description: error?.message })
         } finally {
             setIsSyncing(false)
         }
