@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 import { type NextRequest, NextResponse } from "next/server";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/lib/twilio/send-sms";
@@ -16,15 +17,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Verify access
-        const { data: businessMember } = await supabase
-            .from("business_members")
-            .select("role")
-            .eq("business_id", businessId)
-            .eq("user_id", user.id)
-            .single();
-
-        if (!businessMember) {
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
             return NextResponse.json({ error: "Access denied" }, { status: 403 });
         }
 

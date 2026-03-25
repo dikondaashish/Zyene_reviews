@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -21,19 +22,36 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Verify user has access to this business
-        const { data: businessMember } = await supabase
-            .from("business_members")
-            .select("role")
-            .eq("business_id", businessId)
-            .eq("user_id", user.id)
+        // Verify user has access to this business (either via business_members or organization_members)
+        const { data: access, error: accessError } = await supabase
+            .from("businesses")
+            .select(`
+                id,
+                organizations!inner (
+                    organization_members!inner (
+                        user_id
+                    )
+                )
+            `)
+            .eq("id", businessId)
+            .eq("organizations.organization_members.user_id", user.id)
             .single();
 
-        if (!businessMember) {
-            return NextResponse.json(
-                { error: "You don't have access to this business" },
-                { status: 403 }
-            );
+        if (accessError || !access) {
+            // Fallback: check business_members specifically (though usually redundant if they are org members)
+            const { data: businessMember } = await supabase
+                .from("business_members")
+                .select("role")
+                .eq("business_id", businessId)
+                .eq("user_id", user.id)
+                .single();
+
+            if (!businessMember) {
+                return NextResponse.json(
+                    { error: "You don't have access to this business" },
+                    { status: 403 }
+                );
+            }
         }
 
         // Insert customer with conflict resolution (upsert)
@@ -89,6 +107,14 @@ export async function GET(request: NextRequest) {
 
         if (!businessId) {
             return NextResponse.json({ error: "Business ID is required" }, { status: 400 });
+        }
+
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "You don't have access to this business" },
+                { status: 403 }
+            );
         }
 
         let query = supabase
@@ -159,6 +185,14 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: "ID and Business ID are required" }, { status: 400 });
         }
 
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "You don't have access to this business" },
+                { status: 403 }
+            );
+        }
+
         const { error } = await supabase
             .from("customers")
             .delete()
@@ -183,6 +217,14 @@ export async function PATCH(request: NextRequest) {
 
         if (!id || !businessId) {
             return NextResponse.json({ error: "ID and Business ID are required" }, { status: 400 });
+        }
+
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
+            return NextResponse.json(
+                { error: "You don't have access to this business" },
+                { status: 403 }
+            );
         }
 
         const { data, error } = await supabase
