@@ -119,6 +119,8 @@ export async function GET(request: Request) {
                         google_location_id: googleLocationId,
                         external_id: externalId,
                         external_url: googleReviewUrl,
+                        total_reviews: 0,
+                        average_rating: 0,
                     });
 
                     console.log(`✅ New business "${newBizName}" (${newBusiness.id}) added to org ${addBusinessOrgId}`);
@@ -349,6 +351,8 @@ export async function GET(request: Request) {
                             business_id: businessId,
                             platform: "google",
                             sync_status: "active",
+                            total_reviews: 0,
+                            average_rating: 0,
                             access_token: encAccess,
                             refresh_token: encRefresh,
                             google_account_id: googleAccountId,

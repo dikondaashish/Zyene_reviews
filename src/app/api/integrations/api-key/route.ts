@@ -61,6 +61,8 @@ export async function POST(req: Request) {
             platform: "api",
             external_id: apiKey,
             sync_status: "active",
+            total_reviews: 0,
+            average_rating: 0,
         });
     }
 

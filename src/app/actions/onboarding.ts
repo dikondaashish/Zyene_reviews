@@ -234,6 +234,8 @@ export async function initializeGoogleAuth(
         access_token: accessToken,
         refresh_token: tokenData.refresh_token || null,
         token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
+        total_reviews: reviewData.reviewCount,
+        average_rating: reviewData.averageRating,
         sync_status: "active",
       })
       .eq("business_id", businessId)
