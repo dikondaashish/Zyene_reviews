@@ -52,10 +52,10 @@ export interface Customer {
     email: string | null;
     phone: string | null;
     tags: string[] | null;
-    visit_count: number;
-    total_spend_cents: number;
+    visit_count: number | null;
+    total_spend_cents: number | null;
     last_request_sent_at: string | null;
-    total_requests_sent: number;
+    total_requests_sent: number | null;
     created_at: string;
 }
 
@@ -153,7 +153,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="text-gray-600 font-medium">{row.getValue("visit_count")}</div>,
+            cell: ({ row }) => <div className="text-gray-600 font-medium">{row.getValue("visit_count") || 0}</div>,
         },
         {
             accessorKey: "total_spend_cents",
@@ -169,7 +169,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                 </Button>
             ),
             cell: ({ row }) => {
-                const amount = parseFloat(row.getValue("total_spend_cents")) / 100;
+                const amount = (parseFloat(row.getValue("total_spend_cents")) || 0) / 100;
                 const formatted = new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "USD",
@@ -183,7 +183,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
             cell: ({ row }) => (
                 <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs font-normal border-gray-200 text-gray-600">
-                        {row.getValue("total_requests_sent")} sent
+                        {row.getValue("total_requests_sent") || 0} sent
                     </Badge>
                 </div>
             ),

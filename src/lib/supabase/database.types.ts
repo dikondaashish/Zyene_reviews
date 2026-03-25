@@ -387,9 +387,15 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          last_request_sent_at: string | null
+          last_visit_at: string | null
+          notes: string | null
           phone: string | null
           tags: string[] | null
+          total_requests_sent: number | null
+          total_spend_cents: number | null
           updated_at: string
+          visit_count: number | null
         }
         Insert: {
           business_id: string
@@ -398,9 +404,15 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          last_request_sent_at?: string | null
+          last_visit_at?: string | null
+          notes?: string | null
           phone?: string | null
           tags?: string[] | null
+          total_requests_sent?: number | null
+          total_spend_cents?: number | null
           updated_at?: string
+          visit_count?: number | null
         }
         Update: {
           business_id?: string
@@ -409,9 +421,15 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          last_request_sent_at?: string | null
+          last_visit_at?: string | null
+          notes?: string | null
           phone?: string | null
           tags?: string[] | null
+          total_requests_sent?: number | null
+          total_spend_cents?: number | null
           updated_at?: string
+          visit_count?: number | null
         }
         Relationships: [
           {
@@ -454,7 +472,7 @@ export type Database = {
           event_type?: string
           id?: string
           metadata?: Json
-          organization_id?: string
+          organization_id: string
           user_id?: string | null
         }
         Relationships: [
@@ -579,38 +597,100 @@ export type Database = {
           },
         ]
       }
+      locations: {
+        Row: {
+          address: string
+          business_id: string
+          city: string
+          created_at: string | null
+          google_place_id: string | null
+          id: string
+          is_primary: boolean | null
+          name: string
+          phone: string | null
+          slug: string
+          state: string
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          business_id: string
+          city: string
+          created_at?: string | null
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name: string
+          phone?: string | null
+          slug: string
+          state: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          business_id?: string
+          city?: string
+          created_at?: string | null
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name?: string
+          phone?: string | null
+          slug?: string
+          state?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locations_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           business_id: string
           digest_enabled: boolean
           email_enabled: boolean
+          email_frequency: string
           id: string
+          min_rating_threshold: number
           min_urgency_for_sms: number
           quiet_hours_end: string
           quiet_hours_start: string
           sms_enabled: boolean
+          sms_phone_number: string | null
           user_id: string
         }
         Insert: {
           business_id: string
           digest_enabled?: boolean
           email_enabled?: boolean
+          email_frequency?: string
           id?: string
+          min_rating_threshold?: number
           min_urgency_for_sms?: number
           quiet_hours_end?: string
           quiet_hours_start?: string
           sms_enabled?: boolean
+          sms_phone_number?: string | null
           user_id: string
         }
         Update: {
           business_id?: string
           digest_enabled?: boolean
           email_enabled?: boolean
+          email_frequency?: string
           id?: string
+          min_rating_threshold?: number
           min_urgency_for_sms?: number
           quiet_hours_end?: string
           quiet_hours_start?: string
           sms_enabled?: boolean
+          sms_phone_number?: string | null
           user_id?: string
         }
         Relationships: [
@@ -848,9 +928,9 @@ export type Database = {
           last_synced_at?: string | null
           platform: string
           refresh_token?: string | null
-          sync_status?: string
+          sync_status: string
           token_expires_at?: string | null
-          total_reviews?: number
+          total_reviews: number
           updated_at?: string | null
         }
         Update: {
@@ -895,6 +975,8 @@ export type Database = {
           customer_phone: string | null
           delivered_at: string | null
           error_message: string | null
+          follow_up_delay_hours: number
+          follow_up_enabled: boolean
           follow_up_sent_at: string | null
           id: string
           is_follow_up_sent: boolean | null
@@ -921,6 +1003,8 @@ export type Database = {
           customer_phone?: string | null
           delivered_at?: string | null
           error_message?: string | null
+          follow_up_delay_hours?: number
+          follow_up_enabled?: boolean
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
@@ -947,6 +1031,8 @@ export type Database = {
           customer_phone?: string | null
           delivered_at?: string | null
           error_message?: string | null
+          follow_up_delay_hours?: number
+          follow_up_enabled?: boolean
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
@@ -1039,12 +1125,12 @@ export type Database = {
           id?: string
           platform?: string
           platform_id?: string | null
-          rating?: number
+          rating: number
           responded_at?: string | null
           response_source?: string | null
           response_status?: string
           response_text?: string | null
-          review_date?: string
+          review_date: string
           sentiment?: string | null
           text?: string | null
           themes?: string[] | null
@@ -1130,6 +1216,14 @@ export type Database = {
     }
     Functions: {
       acquire_platform_lock: { Args: { p_id: string }; Returns: boolean }
+      bulk_add_customer_tags: {
+        Args: { customer_ids: string[]; new_tags: string[] }
+        Returns: undefined
+      }
+      bulk_remove_customer_tags: {
+        Args: { customer_ids: string[]; tags_to_remove: string[] }
+        Returns: undefined
+      }
       decrypt_token: { Args: { encrypted_text: string }; Returns: string }
       encrypt_token: { Args: { plain_text: string }; Returns: string }
       get_user_business_ids: { Args: never; Returns: string[] }
