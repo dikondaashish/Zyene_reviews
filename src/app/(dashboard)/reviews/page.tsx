@@ -9,6 +9,9 @@ import Link from "next/link";
 import { Filter, MessageSquare, Lock, Download } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/business-context";
+import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles } from "lucide-react";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -20,7 +23,10 @@ export default async function ReviewsPage(props: {
     if (!user) redirect("/login");
 
     // Get active business from context
-    const { businessId } = await getActiveBusinessId();
+    const { businessId, business } = await getActiveBusinessId();
+
+    const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
+    const isDemo = !isGoogleConnected;
 
     if (!businessId) {
         return (
@@ -119,14 +125,23 @@ export default async function ReviewsPage(props: {
 
     return (
         <div className="flex flex-col gap-6 h-full">
+            {isDemo && <DemoModeBanner className="mb-2" />}
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
                         Reviews
-                        <span className="text-sm font-normal text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
-                            {count || 0}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-normal text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
+                                {count || 0}
+                            </span>
+                            {isDemo && (
+                                <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
+                                    <Sparkles className="w-3 h-3" />
+                                    Interactive Demo
+                                </Badge>
+                            )}
+                        </div>
                     </h1>
                     <p className="text-muted-foreground text-sm mt-1">Manage and respond to your customer reviews.</p>
                 </div>

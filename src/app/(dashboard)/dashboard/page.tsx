@@ -22,6 +22,7 @@ import {
     Sparkles, Trophy,
 } from "lucide-react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
+import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Progress } from "@/components/ui/progress";
 import { GoogleConnectButton } from "@/components/dashboard/google-connect-button";
 import { SyncButton } from "@/components/dashboard/sync-button";
@@ -482,40 +483,7 @@ export default async function DashboardPage() {
             <MilestoneCelebration currentCount={reviewsCount} type="reviews" isDemo={useDemoData} />
             
             {/* Demo Mode Banner */}
-            {useDemoData && (
-                <div className="relative group overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 rounded-2xl p-6 shadow-xl shadow-indigo-500/20 mb-2">
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-700"></div>
-                    
-                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-5 text-white">
-                            <div className="bg-white/20 backdrop-blur-md p-3 rounded-xl border border-white/30 shadow-inner">
-                                <Sparkles className="w-8 h-8 text-white animate-pulse" />
-                            </div>
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <h3 className="text-xl font-bold tracking-tight">Experience Zyene in Action</h3>
-                                    <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm text-[10px] uppercase tracking-wider py-0 px-2 h-5">
-                                        Demo Mode
-                                    </Badge>
-                                </div>
-                                <p className="text-white/80 text-sm max-w-lg leading-relaxed">
-                                    You&apos;re currently viewing <span className="font-semibold text-white">simulated data</span>. Connect your Google Business Profile to unlock real-time reputation management and automated review requests.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-3 shrink-0">
-                            <Link href="/integrations">
-                                <Button size="lg" className="bg-white text-indigo-600 hover:bg-white/90 font-bold border-none shadow-lg shadow-black/10 px-6 h-12 rounded-xl group/btn">
-                                    Connect Real Profile
-                                    <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {useDemoData && <DemoModeBanner className="mb-2" />}
 
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -561,10 +529,8 @@ export default async function DashboardPage() {
                             Total Reviews
                         </CardTitle>
                         <div className="flex items-center gap-2">
-                            {!isGoogleConnected && (
-                                <div className="relative w-2 h-2">
-                                    <div className="absolute inset-0 bg-orange-500 rounded-full animate-pulse"></div>
-                                </div>
+                            {useDemoData && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
                             )}
                             <MessageSquare className="h-4 w-4 text-muted-foreground" />
                         </div>
@@ -597,7 +563,12 @@ export default async function DashboardPage() {
                         <CardTitle className="text-sm font-medium">
                             Average Rating
                         </CardTitle>
-                        <Star className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center gap-2">
+                            {useDemoData && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                            <Star className="h-4 w-4 text-muted-foreground" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
@@ -614,7 +585,12 @@ export default async function DashboardPage() {
                         <CardTitle className="text-sm font-medium">
                             Response Rate
                         </CardTitle>
-                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center gap-2">
+                            {useDemoData && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{responseRate.toFixed(1)}%</div>
@@ -628,7 +604,12 @@ export default async function DashboardPage() {
                         <CardTitle className="text-sm font-medium">
                             Pending Reviews
                         </CardTitle>
-                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center gap-2">
+                            {useDemoData && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className={`text-2xl font-bold ${pendingCount === 0 ? "text-green-600" : ""}`}>

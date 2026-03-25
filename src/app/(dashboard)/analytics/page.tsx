@@ -12,6 +12,9 @@ import { PlatformTable } from "@/components/analytics/platform-table";
 import { getActiveBusinessId } from "@/lib/business-context";
 import { ReportGenerator } from "@/components/analytics/report-generator";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
+import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
+import { Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 // Helper to get start date
 function getStartDate(range: string) {
@@ -178,9 +181,19 @@ export default async function AnalyticsPage({
             <MilestoneCelebration currentCount={totalReviews} type="reviews" isDemo={isDemo} />
             <MilestoneCelebration currentCount={avgRating} type="rating" isDemo={isDemo} />
 
+            {isDemo && <DemoModeBanner className="mb-2" />}
+
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+                    <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+                        Analytics
+                        {isDemo && (
+                            <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
+                                <Sparkles className="w-3 h-3" />
+                                Interactive Demo
+                            </Badge>
+                        )}
+                    </h1>
                     <ReportGenerator 
                         businessName={business?.name} 
                         dateRange={range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months"} 
@@ -195,7 +208,12 @@ export default async function AnalyticsPage({
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">New Reviews</CardTitle>
+                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
+                            New Reviews
+                            {isDemo && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{totalReviews}</div>
@@ -204,7 +222,12 @@ export default async function AnalyticsPage({
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
+                            Average Rating
+                            {isDemo && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{avgRating.toFixed(1)}</div>
@@ -213,7 +236,12 @@ export default async function AnalyticsPage({
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
+                            Response Rate
+                            {isDemo && (
+                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
+                            )}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{responseRate.toFixed(0)}%</div>

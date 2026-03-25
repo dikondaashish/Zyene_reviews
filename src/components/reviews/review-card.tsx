@@ -149,6 +149,11 @@ export function ReviewCard({ review }: { review: Review }) {
                             {review.sentiment}
                         </span>
                     )}
+                    {review.id.startsWith("demo-") && (
+                        <span className="text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            Demo Data
+                        </span>
+                    )}
                     {getStatusBadge(review.response_status)}
                 </div>
             </div>
