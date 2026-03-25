@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail } from "lucide-react";
+import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
 
 export default function SignupPage() {
     const [fullName, setFullName] = useState("");
@@ -146,6 +147,9 @@ export default function SignupPage() {
                             autoComplete="name"
                             className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
                         />
+                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                             Your name will be visible on your business profile.
+                        </p>
                     </div>
 
                     <div className="space-y-1.5">
@@ -163,6 +167,9 @@ export default function SignupPage() {
                             autoComplete="email"
                             className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
                         />
+                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                            <Mail className="h-3 w-3" /> We use this for critical dashboard alerts and secure access.
+                        </p>
                     </div>
 
                     <div className="space-y-1.5">
@@ -190,6 +197,10 @@ export default function SignupPage() {
                                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                             </button>
                         </div>
+                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                            <ShieldCheck className="h-3 w-3" /> Help us protect your business with a strong, unique password.
+                        </p>
+                        <PasswordStrengthIndicator password={password} />
                     </div>
 
                     <button
