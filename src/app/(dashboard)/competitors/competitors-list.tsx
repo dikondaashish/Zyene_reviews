@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2, ExternalLink, Star, Loader2 } from "lucide-react";
@@ -48,11 +48,19 @@ export function CompetitorsList({
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isSyncing = (competitor: Competitor): boolean => {
         if (competitor.average_rating !== 0 && competitor.average_rating !== null) return false;
         if (competitor.total_reviews !== 0) return false;
         
+        // During hydration, return a stable value (false) to match server
+        if (!mounted) return false;
+
         // Consider it syncing if created less than 2 minutes ago
         const createdAt = new Date(competitor.created_at || "");
         const now = new Date();

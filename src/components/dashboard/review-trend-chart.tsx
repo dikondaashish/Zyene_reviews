@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import { useState, useEffect } from "react";
     AreaChart,
     Area,
     XAxis,
@@ -16,12 +16,22 @@ interface TrendDataPoint {
 }
 
 export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     if (data.length === 0) {
         return (
             <div className="flex h-62.5 items-center justify-center text-muted-foreground text-sm">
                 No review data in the last 30 days
             </div>
         );
+    }
+
+    if (!mounted) {
+        return <div className="h-[250px] w-full" />;
     }
 
     return (

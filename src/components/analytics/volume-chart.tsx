@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
+
 import {
     BarChart,
     Bar,
@@ -20,12 +22,21 @@ interface VolumeDataPoint {
 }
 
 export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     if (data.length === 0) {
         return (
             <div className="flex h-[300px] items-center justify-center text-muted-foreground">
                 No volume data for this period
             </div>
         );
+    }
+    if (!mounted) {
+        return <div className="h-[300px] w-full" />;
     }
 
     return (
