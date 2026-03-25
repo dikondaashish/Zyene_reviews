@@ -33,232 +33,111 @@ interface Step4FormProps {
 }
 
 export function Step4Form({
-  businessId,
   businessName,
   userEmail,
   userName,
   googleConnected,
   onNext,
-  isLoading: externalIsLoading = false,
+  isLoading = false,
 }: Step4FormProps) {
-  const [isLoading, setIsLoading] = useState(externalIsLoading);
-  const [showCompletion, setShowCompletion] = useState(false);
-
-  const form = useForm<Step3FormData>({
-    resolver: zodResolver(step3FormSchema),
-    defaultValues: {
-      emailAlerts: true,
-      emailFrequency: "daily_digest",
-      smsAlerts: false,
-      smsPhoneNumber: "",
-      minRatingThreshold: "1",
-    },
-    mode: "onChange",
-  });
-
-  const emailAlerts = form.watch("emailAlerts");
-  const smsAlerts = form.watch("smsAlerts");
-  const emailFrequency = form.watch("emailFrequency");
-  const minRatingThreshold = form.watch("minRatingThreshold");
+  const [mounted, setMounted] = useState(false);
+  const firstName = userName.split(" ")[0];
 
   const fireConfetti = async () => {
     try {
       const confettiModule = await import("canvas-confetti");
       const confetti = confettiModule.default;
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#2563eb", "#10b981", "#fbbf24", "#ef4444"],
+      });
     } catch {
       console.debug("canvas-confetti not available");
     }
   };
 
-  const onSubmit = async (data: Step3FormData) => {
-    setIsLoading(true);
-    try {
-      const result = await saveNotificationPreferences(businessId, data);
-      if (result.success) {
-        toast.success("Notification preferences saved! 🔔");
-        await fireConfetti();
-        setShowCompletion(true);
-      } else {
-        toast.error(result.error || "Failed to save preferences");
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    setMounted(true);
+    fireConfetti();
+    // Auto-complete after 5 seconds
+    const timer = setTimeout(() => {
+      // onNext(); // Keep it manual for now so user can see the success
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  if (showCompletion) {
-    return (
-      <OnboardingCompletionScreen
-        firstName={userName}
-        email={userEmail}
-        googleConnected={googleConnected}
-        requestSent={false}
-        onComplete={onNext}
-      />
-    );
-  }
+  if (!mounted) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-6"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="text-center space-y-8 py-4"
     >
-      <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-blue-600 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        />
+      <div className="relative inline-flex mb-2">
+        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-25" />
+        <div className="relative w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-inner">
+          <CheckCircle2 className="h-10 w-10 text-blue-600" />
+        </div>
       </div>
 
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Notifications</h2>
-        <p className="text-gray-600 mt-2">
-          We’ll alert you when new reviews come in. Then you’re all set — confetti and dashboard.
+      <div className="space-y-3">
+        <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+          You're all set, {firstName}! 🎉
+        </h2>
+        <p className="text-lg text-slate-600 max-w-sm mx-auto">
+          Your Zyene Reviews dashboard is ready for {businessName}.
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <Card className="border-gray-200">
-          <CardContent className="pt-6 space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3 flex-1">
-                  <div className="mt-1 p-2 bg-blue-100 rounded-lg">
-                    <Bell className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <Label htmlFor="emailAlerts" className="text-base font-semibold cursor-pointer">
-                      Email alerts
-                    </Label>
-                    <p className="text-sm text-gray-600">Get notified by email for new reviews</p>
-                  </div>
-                </div>
-                <Switch
-                  id="emailAlerts"
-                  checked={emailAlerts}
-                  onCheckedChange={(c) => form.setValue("emailAlerts", c)}
-                  disabled={isLoading}
-                />
-              </div>
-              <AnimatePresence>
-                {emailAlerts && (
-                  <motion.div
-                    key="email-frequency"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="ml-11 space-y-2"
-                  >
-                    <Label>Frequency</Label>
-                    <Select
-                      value={emailFrequency}
-                      onValueChange={(v) => form.setValue("emailFrequency", v as Step3FormData["emailFrequency"])}
-                      disabled={isLoading}
-                    >
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="immediately">Immediately</SelectItem>
-                        <SelectItem value="daily_digest">Daily digest</SelectItem>
-                        <SelectItem value="weekly_summary">Weekly summary</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+      <div className="grid grid-cols-1 gap-3 max-w-sm mx-auto text-left">
+        <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+          </div>
+          <span className="text-sm font-medium text-slate-700">Business Profile Created</span>
+        </div>
+        
+        {googleConnected && (
+          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
             </div>
+            <span className="text-sm font-medium text-slate-700">Google Business Profile Syncing</span>
+          </div>
+        )}
 
-            <div className="h-px bg-gray-200" />
+        <div className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+            <Star className="h-5 w-5 text-blue-600" />
+          </div>
+          <p className="text-xs text-slate-600">
+            <strong>Next:</strong> Send your first review request from the dashboard.
+          </p>
+        </div>
+      </div>
 
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3 flex-1">
-                  <div className="mt-1 p-2 bg-green-100 rounded-lg">
-                    <MessageCircle className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <Label htmlFor="smsAlerts" className="text-base font-semibold cursor-pointer">
-                      SMS alerts
-                    </Label>
-                    <p className="text-sm text-gray-600">Text for urgent 1–2 star reviews</p>
-                  </div>
-                </div>
-                <Switch
-                  id="smsAlerts"
-                  checked={smsAlerts}
-                  onCheckedChange={(c) => form.setValue("smsAlerts", c)}
-                  disabled={isLoading}
-                />
-              </div>
-              <AnimatePresence>
-                {smsAlerts && (
-                  <motion.div
-                    key="sms-phone"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="ml-11 space-y-2"
-                  >
-                    <Label>Phone number</Label>
-                    <Input
-                      {...form.register("smsPhoneNumber")}
-                      placeholder="(555) 123-4567"
-                      disabled={isLoading}
-                    />
-                    {form.formState.errors.smsPhoneNumber && (
-                      <p className="text-sm text-red-500">{form.formState.errors.smsPhoneNumber.message}</p>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="h-px bg-gray-200" />
-
-            <div className="space-y-2">
-              <Label className="text-base font-semibold flex items-center gap-2">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Star className="h-5 w-5 text-yellow-600" />
-                </div>
-                Alert me for reviews rated
-              </Label>
-              <Select
-                value={minRatingThreshold}
-                onValueChange={(v) => form.setValue("minRatingThreshold", v as Step3FormData["minRatingThreshold"])}
-                disabled={isLoading}
-              >
-                <SelectTrigger className="w-full md:w-56">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Any rating</SelectItem>
-                  <SelectItem value="2">2 stars or below</SelectItem>
-                  <SelectItem value="3">3 stars or below</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="pt-4">
         <Button
-          type="submit"
-          disabled={isLoading || !form.formState.isValid}
-          className="w-full py-6"
+          onClick={onNext}
+          disabled={isLoading}
+          className="w-full h-16 text-lg bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-100 rounded-2xl font-bold group"
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
+            <Loader2 className="h-6 w-6 animate-spin" />
           ) : (
-            <>Save & finish <ChevronRight className="ml-2 h-5 w-5" /></>
+            <>
+              Go to my Dashboard
+              <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </>
           )}
         </Button>
-      </form>
+        <p className="mt-4 text-xs text-slate-400 font-medium">
+          Ready to skyrocket your online reputation.
+        </p>
+      </div>
     </motion.div>
   );
 }

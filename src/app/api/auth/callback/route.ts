@@ -94,7 +94,7 @@ export async function GET(request: Request) {
                         slug: newBizSlug,
                         country: "US",
                         timezone: "UTC",
-                        category: "retail",
+                        category: "uncategorized",
                         status: "active",
                         google_review_url: googleReviewUrl,
                     })
@@ -230,7 +230,7 @@ export async function GET(request: Request) {
                     slug: org.slug,
                     country: "US",
                     timezone: "UTC",
-                    category: "retail",
+                    category: "uncategorized",
                     status: "active",
                 });
 

@@ -120,59 +120,93 @@ export default function OnboardingPage() {
     );
   }
 
+  const stepTitles = [
+    "Organization",
+    "Business Profile",
+    "Category",
+    "All Set!"
+  ];
+
   return (
-    <div>
-      {/* Step content */}
-      <div>
-        {currentStep === 1 && (
-          <Step1Form
-            onNext={handleStep1Next}
-            isLoading={isLoading}
-            organizationId={organization.id}
-            initialOrgName={organization.name}
-          />
-        )}
-        {currentStep === 2 && business && (
-          <Step2Form
-            businessId={business.id}
-            businessName={business.name}
-            city={business.city ?? ""}
-            address={business.address_line1 ?? ""}
-            state={business.state ?? ""}
-            phone={business.phone ?? ""}
-            onNext={async () => {
-              setGoogleConnected(true);
-              setCurrentStep(3);
-            }}
-            onSkip={async () => {
-              setCurrentStep(3);
-            }}
-            isLoading={isLoading}
-          />
-        )}
-        {currentStep === 3 && business && (
-          <Step3Form
-            businessId={business.id}
-            businessName={business.name}
-            city={business.city ?? ""}
-            onNext={async () => setCurrentStep(4)}
-            isLoading={isLoading}
-          />
-        )}
-        {currentStep === 4 && business && user && (
-          <Step4Form
-            businessId={business.id}
-            businessName={business.name}
-            userEmail={user.email || ""}
-            userName={user.user_metadata?.full_name || "Valued Customer"}
-            googleConnected={googleConnected}
-            onNext={() => {
-              reset();
-              router.push("/dashboard");
-            }}
-            isLoading={isLoading}
-          />
-        )}
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-xl">
+        {/* Progress Header */}
+        <div className="mb-8 space-y-4">
+          <div className="flex justify-between items-end mb-2">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">
+                Step {currentStep} of 4
+              </p>
+              <h1 className="text-xl font-bold text-slate-900">
+                {stepTitles[currentStep - 1]}
+              </h1>
+            </div>
+            {currentStep === 1 && (
+              <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                 ⏱️ Takes 2 minutes
+              </span>
+            )}
+          </div>
+          <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-blue-600 transition-all duration-500 ease-out"
+              style={{ width: `${(currentStep / 4) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Step content */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
+          {currentStep === 1 && (
+            <Step1Form
+              onNext={handleStep1Next}
+              isLoading={isLoading}
+              organizationId={organization.id}
+              initialOrgName={organization.name}
+            />
+          )}
+          {currentStep === 2 && business && (
+            <Step2Form
+              businessId={business.id}
+              businessName={business.name}
+              city={business.city ?? ""}
+              address={business.address_line1 ?? ""}
+              state={business.state ?? ""}
+              phone={business.phone ?? ""}
+              onNext={async () => {
+                setGoogleConnected(true);
+                setCurrentStep(3);
+              }}
+              onSkip={async () => {
+                setCurrentStep(3);
+              }}
+              isLoading={isLoading}
+            />
+          )}
+          {currentStep === 3 && business && (
+            <Step3Form
+              businessId={business.id}
+              businessName={business.name}
+              city={business.city ?? ""}
+              onNext={async () => setCurrentStep(4)}
+              isLoading={isLoading}
+            />
+          )}
+          {currentStep === 4 && business && user && (
+            <Step4Form
+              businessId={business.id}
+              businessName={business.name}
+              userEmail={user.email || ""}
+              userName={user.user_metadata?.full_name || "Valued Customer"}
+              googleConnected={googleConnected}
+              onNext={() => {
+                reset();
+                router.push("/dashboard");
+              }}
+              isLoading={isLoading}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

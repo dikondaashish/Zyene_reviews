@@ -200,61 +200,125 @@ export function Step2Form({
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
-      <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-blue-600 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: "50%" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        />
-      </div>
+      {/* Removed local progress bar - now in shell */}
 
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Business name & first location</h2>
-        <p className="text-gray-600 mt-2">
-          Enter manually or connect Google to auto-fill from your Google Business Profile.
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Connect Google in 30 seconds
+        </h2>
+        <p className="text-gray-600 max-w-sm mx-auto">
+          We'll automatically pull your business name, address, and reviews to set everything up for you.
         </p>
       </div>
 
-      <form className="space-y-4">
-        <div className="space-y-2">
-          <Label>Business name</Label>
-          <Input
-            {...form.register("businessName")}
-            placeholder="Acme Restaurant"
-            disabled={isLoading}
-          />
-          {form.formState.errors.businessName && (
-            <p className="text-sm text-red-500">{form.formState.errors.businessName.message}</p>
-          )}
+      {/* Google connect - PRIMARY CTA */}
+      <div className="bg-blue-50/50 border-2 border-blue-100 rounded-3xl p-8 space-y-6 text-center shadow-sm">
+        <div className="mx-auto w-16 h-16 rounded-2xl bg-white shadow-md flex items-center justify-center mb-2">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+          </svg>
         </div>
-        <div className="space-y-2">
-          <Label>First location — Address</Label>
-          <Input
-            {...form.register("address")}
-            placeholder="123 Main St"
-            disabled={isLoading}
-          />
-          {form.formState.errors.address && (
-            <p className="text-sm text-red-500">{form.formState.errors.address.message}</p>
-          )}
+
+        {googleState.status === "idle" && (
+          <Button 
+            type="button" 
+            onClick={handleConnectClick} 
+            className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Connect Google Business Profile
+          </Button>
+        )}
+        {googleState.status === "connecting" && (
+          <div className="flex flex-col items-center justify-center gap-3 py-2">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <p className="text-sm font-medium text-blue-800">Connecting your profile...</p>
+          </div>
+        )}
+        {googleState.status === "success" && (
+          <div className="space-y-4">
+            <div className="flex flex-col items-center gap-2 text-green-600">
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle2 className="h-7 w-7" />
+              </div>
+              <p className="font-bold text-lg text-green-700">Success!</p>
+              <p className="text-sm">
+                Found {googleState.reviewCount != null ? `your profile with ${googleState.reviewCount} reviews` : "your business profile"}
+              </p>
+            </div>
+            <Button 
+              type="button" 
+              onClick={onSaveAndNext} 
+              className="w-full bg-green-600 hover:bg-green-700"
+              disabled={advancing}
+            >
+              Confirm and Continue
+            </Button>
+          </div>
+        )}
+        {googleState.status === "error" && (
+          <div className="space-y-3">
+             <div className="p-3 bg-red-50 text-red-700 rounded-xl text-xs border border-red-100">
+               {googleState.errorMessage}
+             </div>
+             <Button type="button" variant="outline" onClick={() => setGoogleState({ status: "idle" })} className="w-full rounded-xl">
+               <RefreshCw className="h-4 w-4 mr-2" /> Try again
+             </Button>
+          </div>
+        )}
+      </div>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t border-gray-200"></div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
+          <span className="bg-white px-4 text-gray-400">Or enter manually</span>
+        </div>
+      </div>
+
+      <div className="space-y-4 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>City</Label>
-            <Input {...form.register("city")} placeholder="San Francisco" disabled={isLoading} />
-            {form.formState.errors.city && (
-              <p className="text-sm text-red-500">{form.formState.errors.city.message}</p>
-            )}
+            <Label className="text-xs font-bold text-gray-500 uppercase">Business name</Label>
+            <Input
+              {...form.register("businessName")}
+              placeholder="Acme Restaurant"
+              disabled={isLoading || googleState.status === "success"}
+              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+            />
           </div>
           <div className="space-y-2">
-            <Label>State</Label>
+            <Label className="text-xs font-bold text-gray-500 uppercase">Address</Label>
+            <Input
+              {...form.register("address")}
+              placeholder="123 Main St"
+              disabled={isLoading || googleState.status === "success"}
+              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+            />
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-1 space-y-2">
+            <Label className="text-xs font-bold text-gray-500 uppercase">City</Label>
+            <Input 
+               {...form.register("city")} 
+               placeholder="San Francisco" 
+               disabled={isLoading || googleState.status === "success"} 
+               className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+            />
+          </div>
+          <div className="col-span-1 space-y-2">
+            <Label className="text-xs font-bold text-gray-500 uppercase">State</Label>
             <Select
               value={form.watch("state")}
               onValueChange={(v) => form.setValue("state", v)}
-              disabled={isLoading}
+              disabled={isLoading || googleState.status === "success"}
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-12 border-gray-200 focus:border-blue-300 rounded-xl">
                 <SelectValue placeholder="State" />
               </SelectTrigger>
               <SelectContent>
@@ -264,88 +328,43 @@ export function Step2Form({
               </SelectContent>
             </Select>
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label>Phone (optional)</Label>
-          <Input
-            {...form.register("phone")}
-            placeholder="(555) 555-5555"
-            disabled={isLoading}
-          />
-        </div>
-
-        {/* Google connect */}
-        <div className="border border-gray-200 rounded-xl p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-              </svg>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">Connect Google to auto-fill</p>
-              <p className="text-sm text-gray-600">We’ll pull your business name and address from Google Business Profile.</p>
-            </div>
+          <div className="col-span-1 space-y-2">
+            <Label className="text-xs font-bold text-gray-500 uppercase">Phone</Label>
+            <Input
+              {...form.register("phone")}
+              placeholder="(555) 555-5555"
+              disabled={isLoading || googleState.status === "success"}
+              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+            />
           </div>
-          {googleState.status === "idle" && (
-            <Button type="button" variant="outline" onClick={handleConnectClick} className="w-full">
-              Connect with Google
-            </Button>
-          )}
-          {googleState.status === "connecting" && (
-            <div className="flex items-center gap-2 text-gray-600">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              Connecting...
-            </div>
-          )}
-          {googleState.status === "success" && (
-            <div className="flex items-center gap-2 text-green-600">
-              <CheckCircle2 className="h-5 w-5" />
-              Connected {googleState.reviewCount != null && `— ${googleState.reviewCount} reviews`}
-            </div>
-          )}
-          {googleState.status === "error" && (
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-red-600">{googleState.errorMessage}</p>
-              <Button type="button" variant="ghost" size="sm" onClick={() => setGoogleState({ status: "idle" })}>
-                <RefreshCw className="h-4 w-4" /> Try again
-              </Button>
-            </div>
-          )}
         </div>
 
-        <div className="flex gap-3 pt-4">
+        {googleState.status !== "success" && (
           <Button
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="flex-1 py-6"
+            className="w-full py-6 mt-4 rounded-xl text-base font-semibold"
           >
             {advancing || isLoading ? (
               <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
             ) : (
-              <>Next <ChevronRight className="ml-2 h-5 w-5" /></>
+              <>Save and continue <ChevronRight className="ml-2 h-5 w-5" /></>
             )}
           </Button>
-        </div>
-        <div className="text-center space-y-2 mt-4">
+        )}
+
+        <div className="text-center pt-2">
           <button
             type="button"
             onClick={handleSkip}
             disabled={advancing}
             className="text-xs text-slate-400 hover:text-slate-600 underline transition-colors"
           >
-            I will connect later (you will not see any data)
+            I'll connect later
           </button>
-          <div className="flex items-center justify-center gap-1.5 text-[10px] text-amber-600">
-            <AlertTriangle className="w-3 h-3" />
-            <span>Without Google, the dashboard will show demo data only</span>
-          </div>
         </div>
-      </form>
+      </div>
     </motion.div>
   );
 }

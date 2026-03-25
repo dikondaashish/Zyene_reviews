@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redis } from "@/lib/redis";
 import {
   step1FormSchema,
   step3FormSchema,
@@ -631,6 +632,11 @@ export async function createOrganization(
       };
     }
 
+    // Invalidate business context cache
+    const cacheKey = `user_businesses:${user.id}`;
+    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    revalidatePath("/", "layout");
+
     // Add user as owner of organization
     const { error: memberError } = await supabase
       .from("organization_members")
@@ -815,6 +821,10 @@ export async function createBusinessWithLocation(
       };
     }
 
+    // Invalidate business context cache
+    const cacheKey = `user_businesses:${user.id}`;
+    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    revalidatePath("/", "layout");
     revalidatePath("/onboarding");
 
     return {
@@ -886,6 +896,11 @@ export async function updateBusinessCategory(
       };
     }
 
+    // Invalidate business context cache
+    const cacheKey = `user_businesses:${user.id}`;
+    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    revalidatePath("/", "layout");
+    revalidatePath("/businesses");
     revalidatePath("/onboarding");
 
     return {

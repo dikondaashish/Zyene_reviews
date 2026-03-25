@@ -79,14 +79,7 @@ export function Step3Form({
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
-      <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-blue-600 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: "75%" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        />
-      </div>
+      {/* Removed local progress bar - now in shell */}
 
       <div>
         <h2 className="text-3xl font-bold text-gray-900">Category selection</h2>

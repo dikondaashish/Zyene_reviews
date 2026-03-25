@@ -16,6 +16,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 import { stepOrganizationSchema, type StepOrganizationFormData } from "@/lib/validations/onboarding";
 import { updateOrganizationName } from "@/app/actions/onboarding";
 
@@ -81,14 +88,7 @@ export function Step1Form({
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
-      <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-blue-600 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: "25%" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        />
-      </div>
+      {/* Removed local progress bar - now in shell */}
 
       <div>
         <h2 className="text-3xl font-bold text-gray-900">Set up your organization</h2>
@@ -104,9 +104,21 @@ export function Step1Form({
             name="organizationName"
             render={({ field }) => (
               <FormItem>
-                <Label htmlFor="organizationName" className="font-semibold">
-                  Organization name
-                </Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Label htmlFor="organizationName" className="font-semibold">
+                    Organization name
+                  </Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-slate-400 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-[250px] p-3 text-xs leading-relaxed">
+                        <p>Your <strong>Organization</strong> is the umbrella account that owns one or more business locations. Most users just use their company name here.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <FormControl>
                   <Input
                     id="organizationName"
