@@ -90,10 +90,11 @@ export function MilestoneCelebration({ currentCount, type }: MilestoneCelebratio
                         </div>
                     </div>
                 </div>
-                <div className="flex border-l border-muted">
+                <div className="flex border-l border-muted/50">
                     <button
+                        type="button"
                         onClick={() => toast.dismiss(t.id)}
-                        className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-primary hover:text-primary/80 focus:outline-none"
+                        className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus:outline-none cursor-pointer active:bg-primary/10 whitespace-nowrap"
                     >
                         Awesome!
                     </button>
