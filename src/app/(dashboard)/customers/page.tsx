@@ -30,8 +30,10 @@ export default function CustomersPage() {
     const [loading, setLoading] = useState(true);
     const [addCustomerOpen, setAddCustomerOpen] = useState(false);
     const [importCSVOpen, setImportCSVOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const fetchData = async () => {
             const supabase = createClient();
             const {
@@ -205,7 +207,9 @@ export default function CustomersPage() {
                                             </td>
                                             <td className="p-4 align-middle">{c.email || <span className="text-muted-foreground italic">N/A</span>}</td>
                                             <td className="p-4 align-middle">{c.phone || <span className="text-muted-foreground italic">N/A</span>}</td>
-                                            <td className="p-4 align-middle">{new Date(c.created_at).toLocaleDateString()}</td>
+                                            <td className="p-4 align-middle font-medium text-gray-600">
+                                                {mounted ? new Date(c.created_at).toLocaleDateString() : "—"}
+                                            </td>
                                             <td className="p-4 align-middle text-right">
                                                 <Button variant="ghost" size="sm" asChild>
                                                     <Link href={`/requests?customer=${c.id}`}>Send Request</Link>

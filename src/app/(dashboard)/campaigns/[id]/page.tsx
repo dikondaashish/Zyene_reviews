@@ -97,6 +97,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const [requests, setRequests] = useState<ReviewRequest[]>([]);
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [csvDialogOpen, setCsvDialogOpen] = useState(false);
 
@@ -125,6 +126,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     };
 
     useEffect(() => {
+        setMounted(true);
         fetchCampaign();
     }, [resolvedParams.id]);
 
@@ -268,7 +270,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                             </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                            {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {new Date(campaign.created_at).toLocaleDateString()}
+                            {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "—"}
                         </p>
                     </div>
                 </div>
@@ -485,7 +487,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-sm text-muted-foreground">
-                                            {req.sent_at
+                                            {req.sent_at && mounted
                                                 ? new Date(req.sent_at).toLocaleString()
                                                 : "—"}
                                         </TableCell>

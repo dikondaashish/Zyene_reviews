@@ -19,6 +19,11 @@ interface ReviewCarouselProps {
 }
 
 export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
     // If no reviews, display a fallback
     if (!reviews || reviews.length === 0) {
         return (
@@ -108,7 +113,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                                     {review.author_name || "Valued Customer"}
                                 </span>
                                 <span className="text-xs text-slate-400 whitespace-nowrap">
-                                    {new Date(review.created_at).toLocaleDateString([], { month: 'short', year: 'numeric' })}
+                                    {mounted ? new Date(review.created_at).toLocaleDateString([], { month: 'short', year: 'numeric' }) : "—"}
                                 </span>
                             </div>
                         </div>

@@ -40,7 +40,7 @@ interface Review {
 export default async function AnalyticsPage({
     searchParams,
 }: {
-    searchParams: { range?: string };
+    searchParams: Promise<{ range?: string }>;
 }) {
     const supabase = await createClient();
     const {
@@ -54,7 +54,8 @@ export default async function AnalyticsPage({
     // Get active business for scoping queries
     const { businessId, business } = await getActiveBusinessId();
 
-    const range = searchParams.range || "30d";
+    const sp = await searchParams;
+    const range = sp.range || "30d";
     const startDate = getStartDate(range);
 
     // 1. Fetch Reviews (scoped to active business)

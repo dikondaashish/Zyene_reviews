@@ -35,8 +35,9 @@ import { getActiveBusinessId } from "@/lib/business-context";
 export default async function RequestsPage({
     searchParams,
 }: {
-    searchParams: { page?: string, customer?: string };
+    searchParams: Promise<{ page?: string; customer?: string }>;
 }) {
+    const sp = await searchParams;
     const supabase = await createClient();
 
     const {
@@ -90,7 +91,7 @@ export default async function RequestsPage({
 
 
     // --- LIST FETCHING ---
-    const page = Number(searchParams.page) || 1;
+    const page = Number(sp.page) || 1;
     const pageSize = 20;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
@@ -103,7 +104,7 @@ export default async function RequestsPage({
         .range(from, to);
 
     // Initial customer pre-fill if we navigated from the Customers page
-    const customerId = searchParams.customer;
+    const customerId = sp.customer;
     let initialCustomer = undefined;
 
     if (customerId) {

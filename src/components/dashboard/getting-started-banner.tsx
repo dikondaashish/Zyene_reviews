@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
@@ -18,14 +18,16 @@ export function GettingStartedBanner({
   requestSent,
   notificationsConfigured,
 }: GettingStartedBannerProps) {
-  const [isDismissed, setIsDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("getting-started-dismissed") === "true";
-  });
+  const [mounted, setMounted] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
-  const isHydrated = typeof window !== "undefined";
+  useEffect(() => {
+    setMounted(true);
+    const dismissed = localStorage.getItem("getting-started-dismissed") === "true";
+    setIsDismissed(dismissed);
+  }, []);
 
-  if (!isHydrated || isDismissed) return null;
+  if (!mounted || isDismissed) return null;
 
   const items = [
     { label: "Connect Google Business Profile", done: googleConnected, href: "/integrations" },
