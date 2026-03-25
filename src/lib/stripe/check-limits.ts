@@ -4,6 +4,7 @@ interface LimitCheckResult {
     allowed: boolean;
     current: number;
     max: number; // -1 = unlimited
+    remaining: number;
 }
 
 type LimitType =
@@ -34,7 +35,7 @@ export async function checkLimit(
         .single();
 
     if (orgError || !org) {
-        return { allowed: false, current: 0, max: 0 };
+        return { allowed: false, current: 0, max: 0, remaining: 0 };
     }
 
     // Determine the max for this limit type
@@ -65,7 +66,7 @@ export async function checkLimit(
 
     // -1 means unlimited
     if (max === -1) {
-        return { allowed: true, current: 0, max: -1 };
+        return { allowed: true, current: 0, max: -1, remaining: 999999 };
     }
 
     // Count current usage
@@ -93,7 +94,8 @@ export async function checkLimit(
         const businessIds = businesses?.map((b: { id: string }) => b.id) || [];
 
         if (businessIds.length === 0) {
-            return { allowed: max > 0, current: 0, max };
+            const calculatedMax = max > 0 ? max : 0;
+            return { allowed: max > 0, current: 0, max, remaining: calculatedMax };
         }
 
         if (limitType === "ai_replies") {
@@ -132,5 +134,6 @@ export async function checkLimit(
         allowed: current < max,
         current,
         max,
+        remaining: Math.max(0, max - current),
     };
 }
