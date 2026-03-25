@@ -15,10 +15,14 @@ import {
     MessageSquare,
     ArrowRight,
     Loader2,
+    LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
+import { CampaignTemplateCard } from "@/components/campaigns/campaign-template-card";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -144,13 +148,29 @@ export default function CampaignsPage() {
                         Create and manage automated review request campaigns
                     </p>
                 </div>
-                <Button asChild>
-                    <Link href="/campaigns/new">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Create Campaign
-                    </Link>
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button variant="outline" asChild className="hidden sm:flex">
+                        <Link href="/campaigns/templates">
+                            <LayoutGrid className="mr-2 h-4 w-4" />
+                            Browse Templates
+                        </Link>
+                    </Button>
+                    <Button asChild>
+                        <Link href="/campaigns/new">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create Campaign
+                        </Link>
+                    </Button>
+                </div>
             </div>
+
+            <Tabs defaultValue="all" className="w-full">
+                <TabsList className="mb-4">
+                    <TabsTrigger value="all">All Campaigns</TabsTrigger>
+                    <TabsTrigger value="templates">Template Library</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="all" className="space-y-6">
 
             {/* Loading */}
             {loading && (
@@ -179,18 +199,28 @@ export default function CampaignsPage() {
                             Automate your review requests and watch your reputation grow. Set up a campaign in minutes and let Zyene do the heavy lifting.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                            <Button size="lg" className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl shadow-lg shadow-orange-200 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2">
+                             <Button size="lg" className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl shadow-lg shadow-orange-200 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
                                 <Link href="/campaigns/new">
                                     <Plus className="mr-2 h-5 w-5" />
-                                    Launch Your First Campaign
+                                    Launch New Campaign
                                 </Link>
                             </Button>
-                            <Button size="lg" variant="outline" className="h-14 px-8 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-2xl transition-all" asChild>
-                                <Link href="/analytics">
-                                    Browse Sample Reports
-                                </Link>
-                            </Button>
+                        </div>
+
+                        {/* Quick Start Templates */}
+                        <div className="mt-16 w-full max-w-4xl">
+                            <div className="flex items-center justify-center gap-2 mb-8">
+                                <div className="h-px w-8 bg-orange-200"></div>
+                                <span className="text-orange-900 font-semibold uppercase tracking-wider text-xs">Or Quick Start with a Template</span>
+                                <div className="h-px w-8 bg-orange-200"></div>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+                                {CAMPAIGN_TEMPLATES.map((template) => (
+                                    <CampaignTemplateCard key={template.id} template={template} />
+                                ))}
+                            </div>
                         </div>
 
                         <div className="mt-12 flex items-center gap-8 text-sm text-gray-400">
@@ -211,118 +241,128 @@ export default function CampaignsPage() {
                 </div>
             )}
 
-            {/* Campaign Cards */}
-            {!loading && campaigns.length > 0 && (
-                <div className="grid gap-4">
-                    {campaigns.map((campaign) => {
-                        const status = statusConfig[campaign.status] || statusConfig.draft;
-                        const channel = channelConfig[campaign.channel] || channelConfig.sms;
-                        const ChannelIcon = channel.icon;
+                    {/* Campaign Cards */}
+                    {!loading && campaigns.length > 0 && (
+                        <div className="grid gap-4">
+                            {campaigns.map((campaign) => {
+                                const status = statusConfig[campaign.status] || statusConfig.draft;
+                                const channel = channelConfig[campaign.channel] || channelConfig.sms;
+                                const ChannelIcon = channel.icon;
 
-                        return (
-                            <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-                                <CardContent className="p-5">
-                                    <div className="flex items-start justify-between gap-4">
-                                        {/* Left: Name + badges */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <Link
-                                                    href={`/campaigns/${campaign.id}`}
-                                                    className="text-lg font-semibold hover:underline truncate"
-                                                >
-                                                    {campaign.name}
-                                                </Link>
-                                                <Badge
-                                                    variant={status.variant}
-                                                    className={
-                                                        campaign.status === "active"
-                                                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                                                            : campaign.status === "paused"
-                                                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
-                                                                : ""
-                                                    }
-                                                >
-                                                    {status.label}
-                                                </Badge>
-                                                <Badge variant="outline" className={channel.color}>
-                                                    <ChannelIcon className="mr-1 h-3 w-3" />
-                                                    {channel.label}
-                                                </Badge>
-                                            </div>
-
-                                            {/* Stats row */}
-                                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                                <span>
-                                                    Sent: <strong className="text-foreground">{campaign.total_sent}</strong>
-                                                </span>
-                                                <span>
-                                                    Opened: <strong className="text-foreground">{getOpenedPercent(campaign)}%</strong>
-                                                </span>
-                                                <span>
-                                                    Completed: <strong className="text-foreground">{getCompletedPercent(campaign)}%</strong>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Right: Actions */}
-                                        <div className="flex items-center gap-1 shrink-0">
-                                            {(campaign.status === "active" || campaign.status === "paused") && (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => toggleStatus(campaign)}
-                                                    title={campaign.status === "active" ? "Pause" : "Resume"}
-                                                >
-                                                    {campaign.status === "active" ? (
-                                                        <Pause className="h-4 w-4" />
-                                                    ) : (
-                                                        <Play className="h-4 w-4" />
-                                                    )}
-                                                </Button>
-                                            )}
-
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                asChild
-                                            >
-                                                <Link href={`/campaigns/${campaign.id}`}>
-                                                    <ArrowRight className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
-
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Delete Campaign</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            This will permanently delete &ldquo;{campaign.name}&rdquo; and all its data. This action cannot be undone.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() => deleteCampaign(campaign.id)}
-                                                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                return (
+                                    <Card key={campaign.id} className="hover:shadow-md transition-shadow">
+                                        <CardContent className="p-5">
+                                            <div className="flex items-start justify-between gap-4">
+                                                {/* Left: Name + badges */}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <Link
+                                                            href={`/campaigns/${campaign.id}`}
+                                                            className="text-lg font-semibold hover:underline truncate"
                                                         >
-                                                            Delete
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
-                </div>
-            )}
+                                                            {campaign.name}
+                                                        </Link>
+                                                        <Badge
+                                                            variant={status.variant}
+                                                            className={
+                                                                campaign.status === "active"
+                                                                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                                                                    : campaign.status === "paused"
+                                                                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                                                                        : ""
+                                                            }
+                                                        >
+                                                            {status.label}
+                                                        </Badge>
+                                                        <Badge variant="outline" className={channel.color}>
+                                                            <ChannelIcon className="mr-1 h-3 w-3" />
+                                                            {channel.label}
+                                                        </Badge>
+                                                    </div>
+
+                                                    {/* Stats row */}
+                                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                        <span>
+                                                            Sent: <strong className="text-foreground">{campaign.total_sent}</strong>
+                                                        </span>
+                                                        <span>
+                                                            Opened: <strong className="text-foreground">{getOpenedPercent(campaign)}%</strong>
+                                                        </span>
+                                                        <span>
+                                                            Completed: <strong className="text-foreground">{getCompletedPercent(campaign)}%</strong>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Right: Actions */}
+                                                <div className="flex items-center gap-1 shrink-0">
+                                                    {(campaign.status === "active" || campaign.status === "paused") && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={() => toggleStatus(campaign)}
+                                                            title={campaign.status === "active" ? "Pause" : "Resume"}
+                                                        >
+                                                            {campaign.status === "active" ? (
+                                                                <Pause className="h-4 w-4" />
+                                                            ) : (
+                                                                <Play className="h-4 w-4" />
+                                                            )}
+                                                        </Button>
+                                                    )}
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        asChild
+                                                    >
+                                                        <Link href={`/campaigns/${campaign.id}`}>
+                                                            <ArrowRight className="h-4 w-4" />
+                                                        </Link>
+                                                    </Button>
+
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Delete Campaign</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This will permanently delete &ldquo;{campaign.name}&rdquo; and all its data. This action cannot be undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    onClick={() => deleteCampaign(campaign.id)}
+                                                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+                    )}
+                </TabsContent>
+
+                <TabsContent value="templates">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                        {CAMPAIGN_TEMPLATES.map((template) => (
+                            <CampaignTemplateCard key={template.id} template={template} />
+                        ))}
+                    </div>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

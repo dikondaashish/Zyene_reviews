@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
 import {
     ArrowLeft,
     ArrowRight,
@@ -15,6 +16,7 @@ import {
     Upload,
     Lock,
     Eye,
+    Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -63,8 +65,10 @@ interface CampaignForm {
     follow_up_template: string;
 }
 
-export default function NewCampaignPage() {
+function NewCampaignForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const templateId = searchParams.get("templateId");
     const [step, setStep] = useState(0);
     const [saving, setSaving] = useState(false);
 
@@ -80,6 +84,18 @@ export default function NewCampaignPage() {
         follow_up_delay_hours: 48,
         follow_up_template: DEFAULT_FOLLOW_UP,
     });
+
+    useEffect(() => {
+        if (templateId) {
+            const template = CAMPAIGN_TEMPLATES.find(t => t.id === templateId);
+            if (template) {
+                setForm(prev => ({
+                    ...prev,
+                    ...template.defaultValues
+                }));
+            }
+        }
+    }, [templateId]);
 
     const updateForm = (updates: Partial<CampaignForm>) => {
         setForm((prev) => ({ ...prev, ...updates }));
@@ -504,5 +520,13 @@ export default function NewCampaignPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function NewCampaignPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>}>
+            <NewCampaignForm />
+        </Suspense>
     );
 }

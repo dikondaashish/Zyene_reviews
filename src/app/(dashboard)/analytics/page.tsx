@@ -16,26 +16,45 @@ import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-// Helper to get start date
-function getStartDate(range: string) {
+// Helper with comparison support
+function getPeriods(range: string) {
     const now = new Date();
+    const currentEnd = new Date(now);
+    let currentStart: Date;
+    let previousEnd: Date;
+    let previousStart: Date;
+
     switch (range) {
-        case "7d": return new Date(now.setDate(now.getDate() - 7));
-        case "30d": return new Date(now.setDate(now.getDate() - 30));
-        case "90d": return new Date(now.setDate(now.getDate() - 90));
-        case "12m": return new Date(now.setFullYear(now.getFullYear() - 1));
-        default: return new Date(now.setDate(now.getDate() - 30));
+        case "7d":
+            currentStart = new Date(now.setDate(now.getDate() - 7));
+            previousEnd = new Date(currentStart);
+            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 7));
+            break;
+        case "30d":
+            currentStart = new Date(now.setDate(now.getDate() - 30));
+            previousEnd = new Date(currentStart);
+            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 30));
+            break;
+        case "90d":
+            currentStart = new Date(now.setDate(now.getDate() - 90));
+            previousEnd = new Date(currentStart);
+            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 90));
+            break;
+        case "12m":
+            currentStart = new Date(now.setFullYear(now.getFullYear() - 1));
+            previousEnd = new Date(currentStart);
+            previousStart = new Date(new Date(currentStart).setFullYear(currentStart.getFullYear() - 1));
+            break;
+        default:
+            currentStart = new Date(now.setDate(now.getDate() - 30));
+            previousEnd = new Date(currentStart);
+            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 30));
     }
+    return { currentStart, currentEnd, previousStart, previousEnd };
 }
 
-interface Review {
-    created_at: string;
-    rating: number | null;
-    sentiment: string | null;
-    themes: string[] | null;
-    response_status: string | null;
-    responded_at: string | null;
-}
+import { StatsCard } from "@/components/analytics/stats-card";
+import { ExportDataButton } from "@/components/analytics/export-data-button";
 
 export default async function AnalyticsPage({
     searchParams,
@@ -51,54 +70,75 @@ export default async function AnalyticsPage({
         return redirect("/login");
     }
 
-    // Get active business for scoping queries
     const { businessId, business } = await getActiveBusinessId();
-
     const sp = await searchParams;
     const range = sp.range || "30d";
-    const startDate = getStartDate(range);
+    const { currentStart, previousStart } = getPeriods(range);
 
-    // 1. Fetch Reviews (scoped to active business)
+    // 1. Fetch Reviews (current + previous)
     let reviewsQuery = supabase
         .from("reviews")
         .select("*")
-        .gte("created_at", startDate.toISOString())
+        .gte("created_at", previousStart.toISOString())
         .order("created_at", { ascending: true });
 
     if (businessId) {
         reviewsQuery = reviewsQuery.eq("business_id", businessId);
     }
 
-    // 2. Fetch Review Requests (scoped to active business)
+    // 2. Fetch Review Requests (current + previous)
     let requestsQuery = supabase
         .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", startDate.toISOString());
+        .select("created_at")
+        .gte("created_at", previousStart.toISOString());
 
     if (businessId) {
         requestsQuery = requestsQuery.eq("business_id", businessId);
     }
 
-    const [{ data: reviews }, { count: requestsCount }] = await Promise.all([
+    const [{ data: allReviews }, { data: allRequests }] = await Promise.all([
         reviewsQuery,
         requestsQuery,
     ]);
 
-    const reviewList: Review[] = reviews || [];
-    const totalReviews = reviewList.length;
+    const currentReviews = (allReviews || []).filter(r => new Date(r.created_at) >= currentStart);
+    const previousReviews = (allReviews || []).filter(r => new Date(r.created_at) < currentStart);
+    const currentRequests = (allRequests || []).filter(r => new Date(r.created_at) >= currentStart);
+    const previousRequests = (allRequests || []).filter(r => new Date(r.created_at) < currentStart);
 
     // --- Aggregations ---
 
-    // Stats
-    const totalRating = reviewList.reduce((acc: number, r: Review) => acc + (r.rating || 0), 0);
+    // Stats (Current)
+    const totalReviews = currentReviews.length;
+    const totalRating = currentReviews.reduce((acc, r) => acc + (r.rating || 0), 0);
     const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
-    const respondedCount = reviewList.filter((r: Review) => r.response_status === "responded" || r.responded_at).length;
+    const respondedCount = currentReviews.filter((r) => r.response_status === "responded" || r.responded_at).length;
     const responseRate = totalReviews > 0 ? (respondedCount / totalReviews) * 100 : 0;
+    const requestsCount = currentRequests.length;
 
-    // Trend & Volume Data (Group by Date)
+    // Stats (Previous)
+    const prevTotalReviews = previousReviews.length;
+    const prevTotalRating = previousReviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+    const prevAvgRating = prevTotalReviews > 0 ? prevTotalRating / prevTotalReviews : 0;
+    const prevRespondedCount = previousReviews.filter((r) => r.response_status === "responded" || r.responded_at).length;
+    const prevResponseRate = prevTotalReviews > 0 ? (prevRespondedCount / prevTotalReviews) * 100 : 0;
+    const prevRequestsCount = previousRequests.length;
+
+    // Delta Calculations
+    const getDelta = (curr: number, prev: number) => {
+        if (prev === 0) return curr > 0 ? 100 : 0;
+        return ((curr - prev) / prev) * 100;
+    };
+
+    const reviewsDelta = getDelta(totalReviews, prevTotalReviews);
+    const ratingDelta = getDelta(avgRating, prevAvgRating);
+    const responseRateDelta = getDelta(responseRate, prevResponseRate);
+    const requestsDelta = getDelta(requestsCount, prevRequestsCount);
+
+    // Trend & Volume Data (Group current currentReviews by Date)
     const dateMap = new Map<string, { date: string; ratingSum: number; count: number; positive: number; neutral: number; negative: number }>();
 
-    reviewList.forEach((r: Review) => {
+    currentReviews.forEach((r) => {
         const date = new Date(r.created_at).toISOString().split('T')[0];
         if (!dateMap.has(date)) {
             dateMap.set(date, { date, ratingSum: 0, count: 0, positive: 0, neutral: 0, negative: 0 });
@@ -107,15 +147,12 @@ export default async function AnalyticsPage({
         entry.ratingSum += r.rating || 0;
         entry.count += 1;
 
-        // Sentiment for bucket
         const rating = r.rating || 0;
         if (rating >= 4) entry.positive++;
         else if (rating === 3) entry.neutral++;
         else entry.negative++;
     });
 
-    // Fill missing dates? For now, we'll just show days with data or linear if sparse. 
-    // Ideally we fill gaps, but let's sort current map values.
     const trendData = Array.from(dateMap.values())
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(d => ({
@@ -127,14 +164,14 @@ export default async function AnalyticsPage({
             negative: d.negative
         }));
 
-    // Sentiment Chart Data
+    // Sentiment Data
     const sentimentCounts = { positive: 0, neutral: 0, negative: 0, mixed: 0 };
-    reviewList.forEach((r: Review) => {
+    currentReviews.forEach((r) => {
         const s = (r.sentiment || "").toLowerCase();
         if (s === "positive") sentimentCounts.positive++;
         else if (s === "negative") sentimentCounts.negative++;
         else if (s === "mixed") sentimentCounts.mixed++;
-        else sentimentCounts.neutral++; // Default or 'neutral'
+        else sentimentCounts.neutral++;
     });
 
     const sentimentData = [
@@ -144,16 +181,15 @@ export default async function AnalyticsPage({
         { name: "Mixed", value: sentimentCounts.mixed, color: "#eab308" },
     ].filter(d => d.value > 0);
 
-    // Theme Analysis
+    // Theme Data
     const themeMap = new Map<string, { count: number; sentimentScore: number }>();
-    reviewList.forEach((r: Review) => {
+    currentReviews.forEach((r) => {
         if (Array.isArray(r.themes)) {
             r.themes.forEach((t: string) => {
                 const theme = t.toLowerCase();
                 if (!themeMap.has(theme)) themeMap.set(theme, { count: 0, sentimentScore: 0 });
                 const entry = themeMap.get(theme)!;
                 entry.count++;
-                // Simple score: +1 for 4-5 stars, -1 for 1-2 stars
                 if (r.rating && r.rating >= 4) entry.sentimentScore++;
                 if (r.rating && r.rating <= 2) entry.sentimentScore--;
             });
@@ -164,9 +200,8 @@ export default async function AnalyticsPage({
         .map(([theme, data]) => ({ theme, ...data }))
         .filter(t => t.count >= 2)
         .sort((a, b) => b.count - a.count)
-        .slice(0, 10); // Top 10
+        .slice(0, 10);
 
-    // Platform Data (Placeholder for now, just Google)
     const platformData = [{
         platform: "Google",
         reviews: totalReviews,
@@ -195,10 +230,13 @@ export default async function AnalyticsPage({
                             </Badge>
                         )}
                     </h1>
-                    <ReportGenerator 
-                        businessName={business?.name} 
-                        dateRange={range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months"} 
-                    />
+                    <div className="flex items-center gap-2">
+                        <ReportGenerator 
+                            businessName={business?.name} 
+                            dateRange={range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months"} 
+                        />
+                        <ExportDataButton businessId={businessId} range={range} />
+                    </div>
                 </div>
                 <AnalyticsFilters />
             </div>
@@ -207,57 +245,34 @@ export default async function AnalyticsPage({
 
             {/* Stats Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
-                            New Reviews
-                            {isDemo && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{totalReviews}</div>
-                        <p className="text-xs text-muted-foreground">In selected period</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
-                            Average Rating
-                            {isDemo && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{avgRating.toFixed(1)}</div>
-                        <p className="text-xs text-muted-foreground">Based on {totalReviews} reviews</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center justify-between w-full">
-                            Response Rate
-                            {isDemo && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{responseRate.toFixed(0)}%</div>
-                        <p className="text-xs text-muted-foreground">{respondedCount} responded</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Requests Sent</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{requestsCount || 0}</div>
-                        <p className="text-xs text-muted-foreground">Review invitations</p>
-                    </CardContent>
-                </Card>
+                <StatsCard 
+                    title="New Reviews"
+                    value={totalReviews}
+                    description="In selected period"
+                    trend={{ value: reviewsDelta, label: "vs last period" }}
+                    isDemo={isDemo}
+                />
+                <StatsCard 
+                    title="Average Rating"
+                    value={avgRating.toFixed(1)}
+                    description={`Based on ${totalReviews} reviews`}
+                    trend={{ value: ratingDelta, label: "vs last period" }}
+                    isDemo={isDemo}
+                />
+                <StatsCard 
+                    title="Response Rate"
+                    value={`${responseRate.toFixed(0)}%`}
+                    description={`${respondedCount} responded`}
+                    trend={{ value: responseRateDelta, label: "vs last period" }}
+                    isDemo={isDemo}
+                />
+                <StatsCard 
+                    title="Requests Sent"
+                    value={requestsCount}
+                    description="Review invitations"
+                    trend={{ value: requestsDelta, label: "vs last period" }}
+                    isDemo={isDemo}
+                />
             </div>
 
             {/* Main Charts */}
