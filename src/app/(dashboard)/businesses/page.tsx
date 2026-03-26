@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
     Building2,
-    MapPin,
     Star,
     Plus,
     CheckCircle2,
@@ -13,6 +12,7 @@ import {
     Lock,
 } from "lucide-react";
 import { getActiveBusinessId, setActiveBusiness } from "@/lib/business-context";
+import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
 
 export default async function BusinessesPage() {
     const supabase = await createClient();
@@ -147,6 +147,13 @@ export default async function BusinessesPage() {
                                         )}
                                     </div>
                                 </button>
+                                <div className="mt-2 flex justify-end">
+                                    <DeleteBusinessButton
+                                        businessId={business.id}
+                                        businessName={business.name}
+                                        disabled={businesses.length <= 1}
+                                    />
+                                </div>
                             </form>
                         );
                     })}

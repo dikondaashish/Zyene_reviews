@@ -75,7 +75,8 @@ export async function getActiveBusinessId(): Promise<{
     }
     const memberTyped = memberData as unknown as MemberDataWithOrg | null;
     const organization = memberTyped?.organizations || null;
-    const businesses: any[] = organization?.businesses || [];
+    const allBusinesses: any[] = organization?.businesses || [];
+    const businesses = allBusinesses.filter((b: any) => b.status !== "archived");
 
     if (businesses.length === 0) {
         return { businessId: null, business: null, organization, businesses: [] };
