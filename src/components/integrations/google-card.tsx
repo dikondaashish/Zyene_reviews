@@ -99,8 +99,8 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
             const rootDomain =
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/api/auth/callback?next=/dashboard/integrations`
-                : `https://auth.${rootDomain}/api/auth/callback?next=/dashboard/integrations`;
+                ? `http://${rootDomain}/api/auth/callback?next=/integrations`
+                : `https://auth.${rootDomain}/api/auth/callback?next=/integrations`;
 
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
