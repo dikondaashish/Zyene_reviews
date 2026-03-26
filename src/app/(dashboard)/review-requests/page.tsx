@@ -4,7 +4,6 @@ import { getActiveBusinessId } from "@/lib/business-context";
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -18,7 +17,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Send,
     MessageSquare,
@@ -29,7 +27,7 @@ import {
     Inbox,
 } from "lucide-react";
 import Link from "next/link";
-import { formatDistanceToNow, format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 interface ReviewRequest {
     id: string;

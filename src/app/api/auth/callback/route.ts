@@ -312,13 +312,6 @@ export async function GET(request: Request) {
                 const finalAccessToken = data.session?.provider_token;
                 const finalRefreshToken = data.session?.provider_refresh_token;
 
-                // Do NOT auto-pick a GBP location on connect.
-                // Location selection happens explicitly in the UI, per business.
-                let googleAccountId: string | null = null;
-                let googleLocationId: string | null = null;
-                let externalId: string | null = null;
-                let googleReviewUrl: string | null = null;
-
                 // Prefer explicit business id from the OAuth redirect (biz=...).
                 // Fallback to the first business in the user’s org membership.
                 let businessId: string | null = null;

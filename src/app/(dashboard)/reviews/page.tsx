@@ -1,12 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { ReviewCard } from "@/components/reviews/review-card";
 import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card";
 import { ReviewsFilters } from "@/components/reviews/reviews-filters";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { Filter, MessageSquare, Lock, Download } from "lucide-react";
+import { MessageSquare, Lock, Download } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";

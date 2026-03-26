@@ -1,8 +1,5 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { checkLimit } from "@/lib/stripe/check-limits";
-import { sendSMS } from "@/lib/twilio/send-sms";
-import { sendEmail } from "@/lib/resend/send-email";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 
 // This background job runs for EACH contact asynchronously
@@ -116,10 +113,6 @@ export const processCampaignContact = inngest.createFunction(
                     .eq("id", requestRecord.id);
             });
         }
-
-        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-        const protocol = rootDomain.includes("localhost") ? "http" : "https";
-        const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestRecord.id}`;
 
         // 5. Send Initial Message
         const sendResult = await step.run("send-message", async () => {

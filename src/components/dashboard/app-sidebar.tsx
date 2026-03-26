@@ -18,12 +18,9 @@ import {
     User,
     Users,
     Target,
-    Menu,
-    X,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 
 import {
     Sidebar,
@@ -37,14 +34,12 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
-    useSidebar,
 } from "@/components/ui/sidebar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
 
 // Menu items.
 const items = [

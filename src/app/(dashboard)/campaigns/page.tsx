@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -9,7 +8,6 @@ import {
     Plus,
     Pause,
     Play,
-    Pencil,
     Trash2,
     Mail,
     MessageSquare,
@@ -18,7 +16,7 @@ import {
     LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";

@@ -1,8 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { checkLimit } from "@/lib/stripe/check-limits";
-import { sendSMS } from "@/lib/twilio/send-sms";
-import { sendEmail } from "@/lib/resend/send-email";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { campaignRateLimit } from "@/lib/rate-limit";
@@ -81,18 +78,6 @@ export async function POST(
     if (campaign.status !== "active") {
         return NextResponse.json({ error: "Campaign is not active. Activate it first." }, { status: 400 });
     }
-
-    const orgId = business.organizations?.id;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const businessName = business.name || "our business";
-    const frequencyCapDays = business.review_request_frequency_cap_days || 30;
-
-    const results = {
-        sent: 0,
-        skipped: 0,
-        failed: 0,
-        reasons: [] as string[],
-    };
 
     // ── INNGEST BACKGROUND JOBS ──
     const { inngest } = await import("@/lib/inngest/client");

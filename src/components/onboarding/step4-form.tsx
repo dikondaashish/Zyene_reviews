@@ -1,26 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Loader2, Bell, MessageCircle, Star, ChevronRight, CheckCircle2 } from "lucide-react";
-import { step3FormSchema, type Step3FormData } from "@/lib/validations/onboarding";
-import { saveNotificationPreferences } from "@/app/actions/onboarding";
-import { OnboardingCompletionScreen } from "./completion-screen";
+import { Loader2, Star, ChevronRight, CheckCircle2 } from "lucide-react";
 
 interface Step4FormProps {
   businessId: string;
