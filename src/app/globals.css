@@ -135,14 +135,24 @@
 
 @layer utilities {
   .pro-hover {
-    @apply transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] 
-           hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 
-           active:translate-y-0 active:shadow-md cursor-pointer;
+    @apply transition-all duration-300 ease-out;
+    &:hover {
+      @apply -translate-y-1 shadow-xl shadow-primary/10;
+    }
+    &:active {
+      @apply translate-y-0 shadow-md;
+    }
   }
 
   .cta-button {
     @apply bg-[var(--cta)] text-[var(--cta-foreground)] hover:opacity-90 
-           pro-hover px-6 py-2.5 rounded-xl font-semibold;
+           transition-all duration-300 ease-out px-6 py-2.5 rounded-xl font-semibold;
+    &:hover {
+      @apply -translate-y-1 shadow-2xl shadow-primary/20;
+    }
+    &:active {
+      @apply translate-y-0 shadow-md;
+    }
   }
 }
 
