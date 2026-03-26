@@ -64,10 +64,10 @@ export function DeleteBusinessButton({
             <AlertDialogTrigger asChild>
                 <Button
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     disabled={disabled}
-                    className="h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="h-7 px-2 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                     <Trash2 className="h-3.5 w-3.5 mr-1" />
                     Delete

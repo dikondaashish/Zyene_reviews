@@ -69,92 +69,94 @@ export default async function BusinessesPage() {
                         const isActive = business.id === activeBusinessId;
 
                         return (
-                            <form
+                            <div
                                 key={business.id}
-                                action={async () => {
-                                    "use server";
-                                    await setActiveBusiness(business.id);
-                                    redirect("/dashboard");
-                                }}
+                                className={`border rounded-xl bg-white overflow-hidden transition-shadow ${isActive ? "ring-2 ring-blue-500 border-blue-200 shadow-sm" : "hover:shadow-md"
+                                    }`}
                             >
-                                <button
-                                    type="submit"
-                                    className={`w-full text-left border rounded-xl p-5 bg-white hover:shadow-md transition-shadow flex flex-col gap-3 ${isActive ? "ring-2 ring-blue-500 border-blue-200" : ""
-                                        }`}
+                                <form
+                                    action={async () => {
+                                        "use server";
+                                        await setActiveBusiness(business.id);
+                                        redirect("/dashboard");
+                                    }}
                                 >
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-blue-100" : "bg-blue-50"
-                                                }`}>
-                                                <Building2 className={`h-5 w-5 ${isActive ? "text-blue-700" : "text-blue-600"
-                                                    }`} />
+                                    <button type="submit" className="w-full text-left p-5 flex flex-col gap-3 hover:bg-slate-50/50 transition-colors">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-blue-100" : "bg-blue-50"
+                                                    }`}>
+                                                    <Building2 className={`h-5 w-5 ${isActive ? "text-blue-700" : "text-blue-600"
+                                                        }`} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold text-sm">
+                                                        {business.name}
+                                                    </h3>
+                                                    {business.category && (
+                                                        <p className="text-xs text-muted-foreground capitalize">
+                                                            {business.category}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-semibold text-sm">
-                                                    {business.name}
-                                                </h3>
-                                                {business.category && (
-                                                    <p className="text-xs text-muted-foreground capitalize">
-                                                        {business.category}
-                                                    </p>
+                                            <div className="flex flex-col items-end gap-1">
+                                                <Badge
+                                                    variant={
+                                                        business.status === "active"
+                                                            ? "default"
+                                                            : "secondary"
+                                                    }
+                                                    className="text-xs"
+                                                >
+                                                    {business.status}
+                                                </Badge>
+                                                {isActive && (
+                                                    <span className="text-[10px] text-blue-600 font-medium">
+                                                        Active
+                                                    </span>
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-1">
-                                            <Badge
-                                                variant={
-                                                    business.status === "active"
-                                                        ? "default"
-                                                        : "secondary"
-                                                }
-                                                className="text-xs"
-                                            >
-                                                {business.status}
-                                            </Badge>
-                                            {isActive && (
-                                                <span className="text-[10px] text-blue-600 font-medium">
-                                                    Active
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
 
-                                    {/* Rating */}
-                                    {rating && (
-                                        <div className="flex items-center gap-1.5 text-sm">
-                                            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                                            <span className="font-medium">{Number(rating).toFixed(1)}</span>
-                                            {business.total_reviews > 0 && (
-                                                <span className="text-muted-foreground">
-                                                    ({business.total_reviews} reviews)
-                                                </span>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {/* Google Connection Status */}
-                                    <div className="flex items-center gap-2 text-xs pt-1 border-t mt-1">
-                                        {isConnected ? (
-                                            <>
-                                                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                                                <span className="text-green-700">Google Business Profile connected</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
-                                                <span className="text-amber-700">Google not connected</span>
-                                            </>
+                                        {/* Rating */}
+                                        {rating && (
+                                            <div className="flex items-center gap-1.5 text-sm">
+                                                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                                <span className="font-medium">{Number(rating).toFixed(1)}</span>
+                                                {business.total_reviews > 0 && (
+                                                    <span className="text-muted-foreground">
+                                                        ({business.total_reviews} reviews)
+                                                    </span>
+                                                )}
+                                            </div>
                                         )}
-                                    </div>
-                                </button>
-                                <div className="mt-2 flex justify-end">
+
+                                        {/* Google Connection Status */}
+                                        <div className="flex items-center gap-2 text-xs pt-1 border-t mt-1">
+                                            {isConnected ? (
+                                                <>
+                                                    <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                                                    <span className="text-green-700">Google Business Profile connected</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
+                                                    <span className="text-amber-700">Google not connected</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </button>
+                                </form>
+                                <div className="flex items-center justify-between border-t bg-slate-50/70 px-4 py-2">
+                                    <span className="text-[11px] text-muted-foreground">Click card to switch active business</span>
                                     <DeleteBusinessButton
                                         businessId={business.id}
                                         businessName={business.name}
                                         disabled={businesses.length <= 1}
                                     />
                                 </div>
-                            </form>
+                            </div>
                         );
                     })}
                 </div>
