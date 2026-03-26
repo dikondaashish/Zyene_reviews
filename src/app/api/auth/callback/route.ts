@@ -332,9 +332,8 @@ export async function GET(request: Request) {
                 if (biz) {
                     const { data: bizRow, error: bizErr } = await admin
                         .from("businesses")
-                        .select("id")
-                        .eq("id", biz)
                         .select(`id, organizations!inner(organization_members!inner(user_id))`)
+                        .eq("id", biz)
                         .eq("organizations.organization_members.user_id", data.user.id)
                         .single();
                     if (!bizErr && bizRow?.id) {

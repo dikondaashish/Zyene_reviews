@@ -20,7 +20,10 @@ export async function registerNotifications(
     accountName: string,
     topicName: string
 ): Promise<NotificationSetting> {
-    const url = `${BASE_URL_NOTIFICATIONS}/${accountName}/notificationSetting`;
+    // PATCH requires an updateMask (field name: update_mask) to specify which fields are being updated.
+    // The API accepts this as the query parameter `updateMask`.
+    const updateMask = encodeURIComponent("pubsubTopic,notificationTypes");
+    const url = `${BASE_URL_NOTIFICATIONS}/${accountName}/notificationSetting?updateMask=${updateMask}`;
 
     const response = await fetch(url, {
         method: "PATCH",
