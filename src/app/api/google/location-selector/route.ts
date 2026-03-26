@@ -1,11 +1,13 @@
-import { createClient } from "@/lib/supabase/server";
 import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 import { getValidGoogleToken } from "@/lib/google/sync-service";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
 import { registerNotifications } from "@/lib/google/notifications";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redis } from "@/lib/redis";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
+import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
+import { requireUser } from "@/app/api/_shared/auth";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
 
 function buildGoogleReviewUrl(location: { metadata?: { placeId?: string; newReviewUri?: string; mapsUri?: string } }) {
     if (location.metadata?.placeId) {
@@ -15,32 +17,33 @@ function buildGoogleReviewUrl(location: { metadata?: { placeId?: string; newRevi
 }
 
 export async function GET(request: NextRequest) {
-    const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    const businessId = request.nextUrl.searchParams.get("businessId");
-    if (!businessId) return NextResponse.json({ error: "businessId required" }, { status: 400 });
-
-    const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
-    if (!allowed) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-    const { data: platform, error: platErr } = await supabase
-        .from("review_platforms")
-        .select("id, platform, google_account_id, google_location_id, sync_status")
-        .eq("business_id", businessId)
-        .eq("platform", "google")
-        .maybeSingle();
-
-    if (platErr || !platform) {
-        return NextResponse.json({ error: "Google not connected" }, { status: 404 });
-    }
-
     try {
+        const { supabase, user } = await requireUser();
+        const businessId = request.nextUrl.searchParams.get("businessId");
+        if (!businessId) {
+            throw new ApiRouteError("businessId required", { status: 400, code: "MISSING_BUSINESS_ID" });
+        }
+
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
+            throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
+        }
+
+        const { data: platform, error: platErr } = await supabase
+            .from("review_platforms")
+            .select("id, platform, google_account_id, google_location_id, sync_status")
+            .eq("business_id", businessId)
+            .eq("platform", "google")
+            .maybeSingle();
+
+        if (platErr || !platform) {
+            throw new ApiRouteError("Google not connected", { status: 404, code: "GOOGLE_NOT_CONNECTED" });
+        }
+
         const { accessToken } = await getValidGoogleToken(platform.id);
-        if (!accessToken) return NextResponse.json({ error: "Token unavailable" }, { status: 401 });
+        if (!accessToken) {
+            throw new ApiRouteError("Token unavailable", { status: 401, code: "TOKEN_UNAVAILABLE" });
+        }
 
         const accounts = await listAccounts(accessToken);
         const accountSummaries: Array<{
@@ -69,7 +72,7 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        return NextResponse.json({
+        return apiOk({
             accounts: accountSummaries,
             current: {
                 googleAccountId: platform.google_account_id as string | null,
@@ -80,46 +83,56 @@ export async function GET(request: NextRequest) {
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         const needsReconnect = /No refresh token available|reconnect/i.test(msg);
-        return NextResponse.json(
-            { error: needsReconnect ? "Authentication expired. Please reconnect Google." : msg },
-            { status: needsReconnect ? 401 : 400 }
-        );
+        if (needsReconnect) {
+            return apiError("Authentication expired. Please reconnect Google.", {
+                status: 401,
+                code: "AUTH_EXPIRED",
+            });
+        }
+        const normalized = toApiError(e);
+        return apiError(normalized.message || msg, {
+            status: normalized.status || 400,
+            code: normalized.code,
+            details: normalized.details,
+        });
     }
 }
 
 export async function POST(request: Request) {
-    const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    const body = (await request.json()) as {
-        businessId?: string;
-        accountName?: string; // accounts/{id}
-        locationName?: string; // locations/{id} or accounts/{id}/locations/{id}
-    };
-    if (!body.businessId || !body.accountName || !body.locationName) {
-        return NextResponse.json({ error: "businessId, accountName, and locationName required" }, { status: 400 });
-    }
-
-    const allowed = await userCanAccessBusiness(supabase, user.id, body.businessId);
-    if (!allowed) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-    const { data: platform, error: platErr } = await supabase
-        .from("review_platforms")
-        .select("id, business_id, platform")
-        .eq("business_id", body.businessId)
-        .eq("platform", "google")
-        .maybeSingle();
-
-    if (platErr || !platform) {
-        return NextResponse.json({ error: "Google not connected" }, { status: 404 });
-    }
-
     try {
+        const { supabase, user } = await requireUser();
+        const body = (await request.json()) as {
+            businessId?: string;
+            accountName?: string; // accounts/{id}
+            locationName?: string; // locations/{id} or accounts/{id}/locations/{id}
+        };
+        if (!body.businessId || !body.accountName || !body.locationName) {
+            throw new ApiRouteError("businessId, accountName, and locationName required", {
+                status: 400,
+                code: "INVALID_PAYLOAD",
+            });
+        }
+
+        const allowed = await userCanAccessBusiness(supabase, user.id, body.businessId);
+        if (!allowed) {
+            throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
+        }
+
+        const { data: platform, error: platErr } = await supabase
+            .from("review_platforms")
+            .select("id, business_id, platform")
+            .eq("business_id", body.businessId)
+            .eq("platform", "google")
+            .maybeSingle();
+
+        if (platErr || !platform) {
+            throw new ApiRouteError("Google not connected", { status: 404, code: "GOOGLE_NOT_CONNECTED" });
+        }
+
         const { accessToken } = await getValidGoogleToken(platform.id);
-        if (!accessToken) return NextResponse.json({ error: "Token unavailable" }, { status: 401 });
+        if (!accessToken) {
+            throw new ApiRouteError("Token unavailable", { status: 401, code: "TOKEN_UNAVAILABLE" });
+        }
 
         const accountName = body.accountName;
         const rawAccountId = accountName.replace(/^accounts\//, "");
@@ -127,7 +140,10 @@ export async function POST(request: Request) {
         const locs = await listLocations(accessToken, accountName);
         const match = locs.find((l) => l.name === body.locationName || l.name.endsWith(`/${body.locationName}`));
         if (!match) {
-            return NextResponse.json({ error: "Location not found for this account" }, { status: 404 });
+            throw new ApiRouteError("Location not found for this account", {
+                status: 404,
+                code: "LOCATION_NOT_FOUND",
+            });
         }
 
         const rawLocationId = match.name.split("/").pop() || null;
@@ -177,7 +193,7 @@ export async function POST(request: Request) {
             console.error("[Location Selector] Failed to clear business cache:", e);
         }
 
-        return NextResponse.json({
+        return apiOk({
             success: true,
             googleAccountId: rawAccountId,
             googleLocationId: rawLocationId,
@@ -185,7 +201,19 @@ export async function POST(request: Request) {
         });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        return NextResponse.json({ error: msg }, { status: 400 });
+        const needsReconnect = /No refresh token available|reconnect/i.test(msg);
+        if (needsReconnect) {
+            return apiError("Authentication expired. Please reconnect Google.", {
+                status: 401,
+                code: "AUTH_EXPIRED",
+            });
+        }
+        const normalized = toApiError(e);
+        return apiError(normalized.message || msg, {
+            status: normalized.status || 400,
+            code: normalized.code,
+            details: normalized.details,
+        });
     }
 }
 

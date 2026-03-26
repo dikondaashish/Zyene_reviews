@@ -1,24 +1,22 @@
-import { createClient } from "@/lib/supabase/server";
 import { syncYelpReviewsForPlatform } from "@/lib/yelp/sync-service";
-import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
+import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
+import { requireUser } from "@/app/api/_shared/auth";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
 
 export async function POST(request: Request) {
-    const supabase = await createClient();
-
-    // Check Auth
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Apply Rate Limiting (1 sync per 5 mins per user)
-    const { success: rateLimitSuccess } = await syncRateLimit.limit(user.id);
-    if (!rateLimitSuccess) {
-        return NextResponse.json({ error: "Sync rate limit exceeded. Please wait 5 minutes." }, { status: 429 });
-    }
-
     try {
+        const { supabase, user } = await requireUser();
+
+        // Apply Rate Limiting (1 sync per 5 mins per user)
+        const { success: rateLimitSuccess } = await syncRateLimit.limit(user.id);
+        if (!rateLimitSuccess) {
+            throw new ApiRouteError("Sync rate limit exceeded. Please wait 5 minutes.", {
+                status: 429,
+                code: "SYNC_RATE_LIMIT",
+            });
+        }
+
         // 1. Get Yelp Platform ID
         const { data: memberData, error: membError } = await supabase
             .from("organization_members")
@@ -34,34 +32,35 @@ export async function POST(request: Request) {
             .eq("user_id", user.id)
             .single();
 
-        if (membError || !memberData) throw new Error("Business not found");
+        if (membError || !memberData) {
+            throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
+        }
 
         const memberTyped = memberData as any;
         const business = memberTyped.organizations?.businesses?.[0];
-        if (!business) throw new Error("Business record missing");
+        if (!business) throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
 
         const platform = business.review_platforms?.find((p: any) => p.platform === 'yelp');
-        if (!platform) throw new Error("Yelp platform not connected");
+        if (!platform) {
+            throw new ApiRouteError("Yelp platform not connected", {
+                status: 404,
+                code: "YELP_PLATFORM_NOT_CONNECTED",
+            });
+        }
 
         // 2. Call Sync Service
         console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
         const result = await syncYelpReviewsForPlatform(platform.id);
 
-        return NextResponse.json(result);
+        return apiOk(result);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Yelp Sync Error:", error);
-        
-        let status = 500;
-        let message = error.message || "Failed to sync reviews";
-        
-        if (message === "Business not found" || message === "Yelp platform not connected") {
-            status = 404;
-        }
-
-        return NextResponse.json(
-            { error: message },
-            { status }
-        );
+        const normalized = toApiError(error);
+        return apiError(normalized.message || "Failed to sync reviews", {
+            status: normalized.status || 500,
+            code: normalized.code,
+            details: normalized.details,
+        });
     }
 }

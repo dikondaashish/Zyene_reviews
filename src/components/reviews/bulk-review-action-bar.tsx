@@ -21,6 +21,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId 
         try {
             const res = await fetch("/api/reviews/bulk", {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ids: selectedIds,
                     businessId,
@@ -28,10 +29,12 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId 
                 }),
             });
 
-            if (!res.ok) throw new Error("Failed to update reviews");
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error((data as { error?: string }).error || "Failed to update reviews");
 
-            const data = await res.json();
-            toast.success(`Successfully updated ${data.count} reviews`);
+            const payload = (data as { data?: { count?: number } }).data;
+            const updatedCount = payload?.count ?? (data as { count?: number }).count ?? selectedIds.length;
+            toast.success(`Successfully updated ${updatedCount} reviews`);
             onClearSelection();
             router.refresh();
         } catch (error: any) {

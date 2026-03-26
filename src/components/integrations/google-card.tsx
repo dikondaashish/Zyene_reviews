@@ -158,7 +158,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 }
                 return;
             }
-            const accs = (data as any)?.accounts || [];
+            const accs = (data as any)?.data?.accounts || (data as any)?.accounts || [];
             setAccounts(accs);
             if (accs.length > 0) {
                 setSelectedAccount(accs[0].resourceName);
@@ -209,7 +209,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 toast.error(msg, { description: description || undefined, duration: 12_000 });
                 return;
             }
-            toast.success(`Synced ${(data as { total?: number }).total ?? 0} reviews`);
+            const payload = (data as { data?: { total?: number } }).data;
+            const total = payload?.total ?? (data as { total?: number }).total ?? 0;
+            toast.success(`Synced ${total} reviews`);
             router.refresh();
         } catch (err: any) {
             console.error("[Google Sync] Error:", err);

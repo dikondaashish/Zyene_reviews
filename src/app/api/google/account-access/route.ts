@@ -1,45 +1,40 @@
-import { createClient } from "@/lib/supabase/server";
 import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 import { getValidGoogleToken } from "@/lib/google/sync-service";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
 import { listAccountAdmins } from "@/lib/google/account-management";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
+import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
+import { requireUser } from "@/app/api/_shared/auth";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
 
 export async function GET(request: NextRequest) {
-    const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const businessId = request.nextUrl.searchParams.get("businessId");
-    if (!businessId) {
-        return NextResponse.json({ error: "businessId required" }, { status: 400 });
-    }
-
-    const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
-    if (!allowed) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const { data: platform, error } = await supabase
-        .from("review_platforms")
-        .select("id, google_account_id, google_location_id, platform")
-        .eq("business_id", businessId)
-        .eq("platform", "google")
-        .eq("sync_status", "active")
-        .maybeSingle();
-
-    if (error || !platform?.google_location_id) {
-        return NextResponse.json({ error: "Google not connected" }, { status: 404 });
-    }
-
     try {
+        const { supabase, user } = await requireUser();
+        const businessId = request.nextUrl.searchParams.get("businessId");
+        if (!businessId) {
+            throw new ApiRouteError("businessId required", { status: 400, code: "MISSING_BUSINESS_ID" });
+        }
+
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        if (!allowed) {
+            throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
+        }
+
+        const { data: platform, error } = await supabase
+            .from("review_platforms")
+            .select("id, google_account_id, google_location_id, platform")
+            .eq("business_id", businessId)
+            .eq("platform", "google")
+            .eq("sync_status", "active")
+            .maybeSingle();
+
+        if (error || !platform?.google_location_id) {
+            throw new ApiRouteError("Google not connected", { status: 404, code: "GOOGLE_NOT_CONNECTED" });
+        }
+
         const { accessToken } = await getValidGoogleToken(platform.id);
         if (!accessToken) {
-            return NextResponse.json({ error: "Token unavailable" }, { status: 401 });
+            throw new ApiRouteError("Token unavailable", { status: 401, code: "TOKEN_UNAVAILABLE" });
         }
 
         const accounts = await listAccounts(accessToken);
@@ -98,7 +93,7 @@ export async function GET(request: NextRequest) {
             }
         }
 
-        return NextResponse.json({
+        return apiOk({
             accounts: accountSummaries,
             admins: admins.map((a) => ({
                 name: a.name,
@@ -110,7 +105,11 @@ export async function GET(request: NextRequest) {
             linkedLocationId: linkedLocId,
         });
     } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        return NextResponse.json({ error: msg }, { status: 400 });
+        const normalized = toApiError(e);
+        return apiError(normalized.message, {
+            status: normalized.status || 400,
+            code: normalized.code,
+            details: normalized.details,
+        });
     }
 }
