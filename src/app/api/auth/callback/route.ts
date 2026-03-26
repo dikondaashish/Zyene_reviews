@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
 import { registerNotifications } from "@/lib/google/notifications";
+import { redis } from "@/lib/redis";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -412,6 +413,13 @@ export async function GET(request: Request) {
                             .update({ google_review_url: googleReviewUrl })
                             .eq("id", businessId)
                             .is("google_review_url", null);
+                    }
+
+                    // Clear cached business context so the integrations UI immediately reflects "Connected".
+                    try {
+                        await redis.del(`user_businesses:${data.user.id}`);
+                    } catch (e) {
+                        console.error("[Auth Callback] Failed to clear business cache:", e);
                     }
                 }
             }

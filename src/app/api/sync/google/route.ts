@@ -6,6 +6,7 @@ import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
 import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
+import { redis } from "@/lib/redis";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -59,6 +60,13 @@ export async function POST(request: Request) {
         // 2. Call Sync Service
         console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
         const result = await syncGoogleReviewsForPlatform(platform.id);
+
+        // Invalidate cached business context so dashboard/integrations reflect new totals immediately.
+        try {
+            await redis.del(`user_businesses:${user.id}`);
+        } catch (e) {
+            console.error("[Manual Sync] Failed to clear business cache:", e);
+        }
 
         syncGooglePerformanceForPlatform(platform.id).catch((e) => {
             console.error("[Manual Sync] Google Performance sync failed (non-fatal):", e);
