@@ -559,7 +559,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-6 w-full">
-            <MilestoneCelebration currentCount={reviewsCount} type="reviews" isDemo={useDemoData} />
+            <MilestoneCelebration currentCount={reviewsCount} type="reviews" isDemo={useDemoData} scopeKey={business.id} />
             
             {/* Demo Mode Banner */}
             {useDemoData && <DemoModeBanner className="mb-2" />}

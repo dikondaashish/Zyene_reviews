@@ -9,6 +9,7 @@ interface MilestoneCelebrationProps {
     currentCount: number;
     type: "reviews" | "requests" | "rating";
     isDemo?: boolean;
+    scopeKey?: string; // e.g. businessId, to avoid cross-business repeats
 }
 
 const MILESTONES = {
@@ -17,22 +18,24 @@ const MILESTONES = {
     rating: [4.5, 4.8, 5.0]
 };
 
-export function MilestoneCelebration({ currentCount, type, isDemo }: MilestoneCelebrationProps) {
+export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: MilestoneCelebrationProps) {
     const [lastMilestone, setLastMilestone] = useState<number | null>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
         if (isDemo) return;
         
         // Initialize from localStorage to avoid repeats
-        const storageKey = `zyene-milestone-${type}`;
+        const storageKey = `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`;
         const saved = localStorage.getItem(storageKey);
         if (saved) {
             setLastMilestone(Number(saved));
         }
-    }, [type]);
+        setIsInitialized(true);
+    }, [type, scopeKey]);
 
     useEffect(() => {
-        if (isDemo || currentCount === 0) return;
+        if (isDemo || !isInitialized || currentCount === 0) return;
 
         const milestones = MILESTONES[type];
         const reachedMilestone = milestones.findLast(m => currentCount >= m);
@@ -43,9 +46,12 @@ export function MilestoneCelebration({ currentCount, type, isDemo }: MilestoneCe
             
             // Save to state and storage
             setLastMilestone(reachedMilestone);
-            localStorage.setItem(`zyene-milestone-${type}`, reachedMilestone.toString());
+            localStorage.setItem(
+                `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`,
+                reachedMilestone.toString()
+            );
         }
-    }, [currentCount, type, lastMilestone]);
+    }, [currentCount, type, lastMilestone, isInitialized]);
 
     const triggerCelebration = (milestone: number, milestoneType: string) => {
         // Confetti!
