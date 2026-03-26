@@ -243,12 +243,15 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         // If we fetched reviews but failed to write them, surface a clear error.
         if (googleReviews.length > 0 && syncedCount === 0) {
-            const msg =
-                lastUpsertError instanceof Error
-                    ? lastUpsertError.message
-                    : lastUpsertError
-                      ? String(lastUpsertError)
-                      : "Unknown upsert failure";
+            const msg = (() => {
+                if (!lastUpsertError) return "Unknown upsert failure";
+                if (lastUpsertError instanceof Error) return lastUpsertError.message;
+                try {
+                    return JSON.stringify(lastUpsertError);
+                } catch {
+                    return String(lastUpsertError);
+                }
+            })();
             throw new Error(
                 "Failed to write Google reviews to the database. " +
                     "Check that Vercel has SUPABASE_SERVICE_ROLE_KEY set (server env) and that RLS policies allow inserts. " +
@@ -347,7 +350,6 @@ export async function processGoogleReview(admin: any, platform: any, review: any
         response_text: review.reviewReply?.comment || null,
         responded_at: review.reviewReply?.updateTime || null,
         response_source: review.reviewReply ? 'google' : null,
-        updated_at: new Date().toISOString()
     };
 
     const { data: upserted, error: upsertError } = await admin
