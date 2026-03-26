@@ -3,6 +3,7 @@ import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
 import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
+import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
 
@@ -67,6 +68,9 @@ export async function POST(request: Request) {
         });
         syncGoogleListingProfileForPlatform(platform.id).catch((e) => {
             console.error("[Manual Sync] Google listing / profile health sync failed (non-fatal):", e);
+        });
+        syncGoogleLodgingForPlatform(platform.id).catch((e) => {
+            console.error("[Manual Sync] Google lodging sync failed (non-fatal):", e);
         });
 
         return NextResponse.json(result);

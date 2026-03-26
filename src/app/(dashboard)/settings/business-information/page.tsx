@@ -7,6 +7,7 @@ import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 import { PlaceActionLinksManager } from "@/components/settings/place-action-links-manager";
 import { GoogleListingEditor } from "@/components/settings/google-listing-editor";
 import { GoogleAccountAccessPanel } from "@/components/settings/google-account-access-panel";
+import { GoogleLodgingPanel } from "@/components/settings/google-lodging-panel";
 
 import { getActiveBusinessId } from "@/lib/business-context";
 
@@ -87,6 +88,21 @@ export default async function BusinessInformationPage() {
                     </div>
                     <div className="px-6 py-5">
                         <GoogleListingEditor businessId={business.id} />
+                    </div>
+                </div>
+            )}
+
+            {isGoogleConnected && (
+                <div className="rounded-lg border bg-white shadow-sm">
+                    <div className="border-b px-6 py-4">
+                        <h4 className="text-sm font-semibold">Hotel & lodging (Google)</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Lodging API: amenities, policies, and services shown on Google for hotel-type listings.
+                            Non-lodging businesses will see a short notice here.
+                        </p>
+                    </div>
+                    <div className="px-6 py-5">
+                        <GoogleLodgingPanel businessId={business.id} />
                     </div>
                 </div>
             )}

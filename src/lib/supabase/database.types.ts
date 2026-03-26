@@ -907,6 +907,9 @@ export type Database = {
           google_account_id: string | null
           google_location_id: string | null
           google_listing_synced_at: string | null
+          google_lodging_available: boolean | null
+          google_lodging_health_score: number | null
+          google_lodging_synced_at: string | null
           google_performance_synced_at: string | null
           google_place_actions_synced_at: string | null
           google_profile_health_score: number | null
@@ -930,6 +933,9 @@ export type Database = {
           google_account_id?: string | null
           google_location_id?: string | null
           google_listing_synced_at?: string | null
+          google_lodging_available?: boolean | null
+          google_lodging_health_score?: number | null
+          google_lodging_synced_at?: string | null
           google_performance_synced_at?: string | null
           google_place_actions_synced_at?: string | null
           google_profile_health_score?: number | null
@@ -953,6 +959,9 @@ export type Database = {
           google_account_id?: string | null
           google_location_id?: string | null
           google_listing_synced_at?: string | null
+          google_lodging_available?: boolean | null
+          google_lodging_health_score?: number | null
+          google_lodging_synced_at?: string | null
           google_performance_synced_at?: string | null
           google_place_actions_synced_at?: string | null
           google_profile_health_score?: number | null

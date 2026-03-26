@@ -28,6 +28,7 @@ import {
     HelpCircle,
     Link2,
     ListChecks,
+    BedDouble,
 } from "lucide-react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
@@ -522,6 +523,21 @@ export default async function DashboardPage() {
         brokenPlaceLinksCount = 1;
     }
 
+    let googleLodgingHealthScore: number | null = null;
+    let googleLodgingApplicable: boolean | null = null;
+    if (useDemoData) {
+        googleLodgingHealthScore = 68;
+        googleLodgingApplicable = true;
+    } else if (isGoogleConnected) {
+        const gp = googlePlatform as {
+            google_lodging_health_score?: number | null;
+            google_lodging_available?: boolean | null;
+        };
+        googleLodgingApplicable = typeof gp.google_lodging_available === "boolean" ? gp.google_lodging_available : null;
+        googleLodgingHealthScore =
+            typeof gp.google_lodging_health_score === "number" ? gp.google_lodging_health_score : null;
+    }
+
     if (!useDemoData && business.id && isGoogleConnected) {
         const { start, end } = dateRangeLastNDays(30);
         googlePerf = await getGooglePerformanceTotals(supabase, business.id, start, end);
@@ -698,7 +714,7 @@ export default async function DashboardPage() {
             </div>
 
             {(isGoogleConnected || useDemoData) && (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Unanswered Q&A</CardTitle>
@@ -773,6 +789,51 @@ export default async function DashboardPage() {
                             <Link href="/settings/business-information" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
                                     Edit listing
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Lodging completeness</CardTitle>
+                            <BedDouble className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            {googleLodgingApplicable === false ? (
+                                <>
+                                    <div className="text-2xl font-bold text-muted-foreground">—</div>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        Not a hotel/lodging listing on Google
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <div
+                                        className={`text-2xl font-bold ${
+                                            googleLodgingHealthScore === null
+                                                ? "text-muted-foreground"
+                                                : googleLodgingHealthScore >= 80
+                                                  ? "text-green-600"
+                                                  : googleLodgingHealthScore >= 40
+                                                    ? "text-amber-600"
+                                                    : "text-red-600"
+                                        }`}
+                                    >
+                                        {googleLodgingHealthScore !== null ? `${googleLodgingHealthScore}` : "—"}
+                                        {googleLodgingHealthScore !== null && (
+                                            <span className="text-lg font-semibold text-muted-foreground">/100</span>
+                                        )}
+                                    </div>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        {googleLodgingHealthScore === null && googleLodgingApplicable === null
+                                            ? "Run Google sync to detect lodging data"
+                                            : "Hotel amenities & policies filled on Google"}
+                                    </p>
+                                </>
+                            )}
+                            <Link href="/settings/business-information" className="mt-3 inline-block">
+                                <Button variant="outline" size="sm">
+                                    Lodging details
                                 </Button>
                             </Link>
                         </CardContent>

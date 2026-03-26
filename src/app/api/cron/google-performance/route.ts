@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
 import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
+import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
@@ -45,6 +46,12 @@ export async function GET(request: Request) {
         keywords?: number;
         phase2?: { ok: boolean; error?: string; questions?: number; placeLinks?: number };
         phase3?: { ok: boolean; error?: string; profileHealthScore?: number };
+        phase4?: {
+            ok: boolean;
+            error?: string;
+            lodgingAvailable?: boolean;
+            lodgingHealthScore?: number;
+        };
     }> = [];
 
     for (const p of platforms || []) {
@@ -79,6 +86,21 @@ export async function GET(request: Request) {
                 Sentry.captureException(e);
             }
 
+            let phase4: (typeof results)[0]["phase4"];
+            try {
+                const p4 = await syncGoogleLodgingForPlatform(p.id);
+                phase4 = {
+                    ok: p4.success,
+                    error: p4.error,
+                    lodgingAvailable: p4.lodgingAvailable,
+                    lodgingHealthScore: p4.healthScore,
+                };
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                phase4 = { ok: false, error: msg };
+                Sentry.captureException(e);
+            }
+
             results.push({
                 platformId: p.id,
                 ok: r.success && (phase2?.ok ?? false),
@@ -87,6 +109,7 @@ export async function GET(request: Request) {
                 keywords: r.keywordRowsUpserted,
                 phase2,
                 phase3,
+                phase4,
             });
             await new Promise((res) => setTimeout(res, 250));
         } catch (e: unknown) {
