@@ -103,14 +103,19 @@ export default async function ReviewsPage(props: {
 
         // Sort
         const sort = searchParams.sort || "newest";
-        if (sort === "newest") query = query.order("published_at", { ascending: false });
-        else if (sort === "oldest") query = query.order("published_at", { ascending: true });
+        // reviews table uses `review_date` (source timestamp) and `created_at` (ingest timestamp).
+        // Prefer `review_date` for user-visible ordering.
+        if (sort === "newest") query = query.order("review_date", { ascending: false });
+        else if (sort === "oldest") query = query.order("review_date", { ascending: true });
         else if (sort === "lowest") query = query.order("rating", { ascending: true });
         else if (sort === "highest") query = query.order("rating", { ascending: false });
 
         query = query.range(from, to);
 
-        const { data, count: totalCount } = await query;
+        const { data, count: totalCount, error } = await query;
+        if (error) {
+            console.error("[Reviews page] Failed to load reviews:", error);
+        }
         reviews = data || [];
         count = totalCount || 0;
     }
