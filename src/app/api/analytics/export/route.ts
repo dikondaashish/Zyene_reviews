@@ -14,22 +14,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const range = searchParams.get("range") || "30d";
 
-    // Resolve active business
-    const { data: orgMember } = await supabase
-        .from("organization_members")
-        .select("organization_id")
-        .eq("user_id", user.id)
-        .limit(1)
-        .single();
-
-    if (!orgMember) return new NextResponse("No organization found", { status: 403 });
-
-    const { data: business } = await supabase
-        .from("businesses")
-        .select("id, name")
-        .eq("organization_id", orgMember.organization_id)
-        .limit(1)
-        .single();
+    const { business } = await getActiveBusinessId();
 
     if (!business) return new NextResponse("No business found", { status: 403 });
 

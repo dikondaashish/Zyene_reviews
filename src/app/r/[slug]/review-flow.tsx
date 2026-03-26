@@ -224,20 +224,6 @@ export function PublicReviewFlow({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "update", requestId, trackData }),
                 });
-            } else {
-                await fetch("/api/track/review", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        action: "insert",
-                        trackData: {
-                            business_id: businessId,
-                            channel: "sms",
-                            trigger_source: "manual",
-                            ...trackData,
-                        },
-                    }),
-                });
             }
         } catch (err) {
             console.error("Tracking error:", err);

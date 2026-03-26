@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import * as Sentry from "@sentry/nextjs";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import { getActiveBusinessId } from "@/lib/business-context";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { customers } = await req.json();
+        const { customers, businessId: requestedBusinessId } = await req.json();
 
         if (!customers || !Array.isArray(customers) || customers.length === 0) {
             return NextResponse.json(
@@ -24,26 +25,20 @@ export async function POST(req: Request) {
             );
         }
 
-        // 1. Get user's active business ID
-        const { data: member } = await supabase
-            .from("organization_members")
-            .select("organizations ( businesses ( id ) )")
-            .eq("user_id", user.id)
-            .eq("status", "active")
-            .single();
-
-        const memberTyped = member as unknown as MemberOrgContext;
-        const businesses = memberTyped?.organizations?.businesses || [];
-        const activeBusiness = businesses[0];
-
-        if (!activeBusiness) {
+        // 1. Resolve business (explicit businessId takes precedence, then active business context)
+        const activeCtx = await getActiveBusinessId();
+        const resolvedBusinessId = requestedBusinessId || activeCtx.business?.id;
+        if (!resolvedBusinessId) {
             return NextResponse.json(
                 { error: "No active business found" },
                 { status: 400 }
             );
         }
-
-        const businessId = activeBusiness.id;
+        const hasAccess = await userCanAccessBusiness(supabase, user.id, resolvedBusinessId);
+        if (!hasAccess) {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+        const businessId = resolvedBusinessId;
 
         // 2. Prepare payload for insertion
         const insertPayload = customers.map((c: any) => ({

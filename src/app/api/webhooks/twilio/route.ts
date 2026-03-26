@@ -1,18 +1,34 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { twilioClient } from "@/lib/twilio/client";
 import { NextResponse } from "next/server";
+import twilio from "twilio";
 
 export async function POST(request: Request) {
     try {
-        const formData = await request.formData();
-        const Body = formData.get("Body")?.toString().trim().toUpperCase() || "";
-        const From = formData.get("From")?.toString() || "";
+        const rawBody = await request.text();
+        const formData = new URLSearchParams(rawBody);
+        const Body = formData.get("Body")?.trim().toUpperCase() || "";
+        const From = formData.get("From") || "";
+        const signature = request.headers.get("x-twilio-signature");
+
+        const authToken = process.env.TWILIO_AUTH_TOKEN;
+        const webhookUrl =
+            process.env.TWILIO_WEBHOOK_URL ||
+            request.url;
+
+        if (!authToken || !signature) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const params: Record<string, string> = {};
+        for (const [k, v] of formData.entries()) params[k] = v;
+        const valid = twilio.validateRequest(authToken, signature, webhookUrl, params);
+        if (!valid) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
         if (!From) return new NextResponse("Values missing", { status: 400 });
 
         const admin = createAdminClient();
-        const messaging = twilioClient.messages; // Or simpler TwiML?
-        // Twilio expects TwiML response or just 200 OK.
 
         let replyText = "";
 

@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { campaignRateLimit } from "@/lib/rate-limit";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 
 const sendSchema = z.object({
     contacts: z.array(
@@ -47,32 +48,18 @@ export async function POST(
         );
     }
 
-    // Verify campaign ownership and get business
-    const { data: business } = await supabase
-        .from("businesses")
-        .select(`
-            *,
-            organizations (
-                id,
-                organization_members!inner(user_id)
-            )
-        `)
-        .eq("organizations.organization_members.user_id", user.id)
-        .single();
-
-    if (!business) {
-        return NextResponse.json({ error: "Business not found" }, { status: 404 });
-    }
-
     const { data: campaign } = await supabase
         .from("campaigns")
-        .select("*")
+        .select("id, business_id, status")
         .eq("id", campaignId)
-        .eq("business_id", business.id)
-        .single();
+        .maybeSingle();
 
-    if (!campaign) {
+    if (!campaign?.business_id) {
         return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+    }
+    const canAccess = await userCanAccessBusiness(supabase, user.id, campaign.business_id);
+    if (!canAccess) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (campaign.status !== "active") {
@@ -86,7 +73,7 @@ export async function POST(
         name: "campaign/send.contact" as const,
         data: {
             campaignId,
-            businessId: business.id,
+            businessId: campaign.business_id,
             contact: {
                 name: contact.name,
                 phone: contact.phone,

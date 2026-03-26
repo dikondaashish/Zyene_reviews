@@ -2,6 +2,23 @@
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const businessPatchSchema = z
+    .object({
+        name: z.string().min(1).max(255).optional(),
+        category: z.string().min(1).max(100).optional(),
+        timezone: z.string().min(1).max(80).optional(),
+        country: z.string().min(2).max(2).optional(),
+        phone: z.string().max(30).optional().nullable(),
+        website: z.string().url().max(500).optional().nullable(),
+        logo_url: z.string().url().max(1000).optional().nullable(),
+        address: z.string().max(1000).optional().nullable(),
+        city: z.string().max(120).optional().nullable(),
+        state: z.string().max(120).optional().nullable(),
+        postal_code: z.string().max(20).optional().nullable(),
+    })
+    .strict();
 
 export async function PATCH(
     request: Request,
@@ -10,7 +27,21 @@ export async function PATCH(
     try {
         const { supabase, user } = await requireUser();
         const { id } = await params;
-        const body = await request.json();
+        const raw = await request.json();
+        const parsed = businessPatchSchema.safeParse(raw);
+        if (!parsed.success) {
+            throw new ApiRouteError("Invalid business update payload", {
+                status: 400,
+                code: "INVALID_BUSINESS_UPDATE",
+            });
+        }
+        const body = parsed.data;
+        if (Object.keys(body).length === 0) {
+            throw new ApiRouteError("No valid fields to update", {
+                status: 400,
+                code: "EMPTY_BUSINESS_UPDATE",
+            });
+        }
 
         // Verify ownership via organization_members
         const { data: membership, error: membError } = await supabase

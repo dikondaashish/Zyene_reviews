@@ -1,27 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
 
 // Helper: verify ownership of a campaign
 async function verifyCampaignOwnership(supabase: any, userId: string, campaignId: string) {
-    const { data: memberData } = await supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                businesses ( id )
-            )
-        `)
-        .eq("user_id", userId)
-        .single();
+    const { data: campaignById } = await supabase
+        .from("campaigns")
+        .select("id, business_id")
+        .eq("id", campaignId)
+        .maybeSingle();
+    if (!campaignById?.business_id) return null;
 
-    const businessId = (memberData as unknown as MemberOrgContext)?.organizations?.businesses?.[0]?.id;
-    if (!businessId) return null;
+    const allowed = await userCanAccessBusiness(supabase, userId, campaignById.business_id);
+    if (!allowed) return null;
 
     const { data: campaign } = await supabase
         .from("campaigns")
         .select("*")
         .eq("id", campaignId)
-        .eq("business_id", businessId)
+        .eq("business_id", campaignById.business_id)
         .single();
 
     return campaign;

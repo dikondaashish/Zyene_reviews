@@ -1,27 +1,51 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { z } from "zod";
+
+const updateSchema = z.object({
+    action: z.literal("update"),
+    requestId: z.string().uuid(),
+    trackData: z
+        .object({
+            status: z.string().max(50).optional(),
+            review_left: z.boolean().optional(),
+            rating_given: z.number().int().min(1).max(5).optional(),
+            tags_selected: z.array(z.string().max(80)).max(20).optional(),
+            ai_review_text: z.string().max(5000).optional(),
+            completed_at: z.string().datetime().optional(),
+        })
+        .refine((obj) => Object.keys(obj).length > 0, "trackData cannot be empty"),
+});
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { action, requestId, trackData } = body;
+        const parsed = updateSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json({ error: "Invalid tracking payload" }, { status: 400 });
+        }
+        const { requestId, trackData } = parsed.data;
 
-        // Use the admin client to bypass RLS securely on the server
+        // Admin client is safe here only after strict request-level validation.
         const supabase = createAdminClient();
 
-        if (action === "update" && requestId) {
-            const { error } = await supabase
-                .from("review_requests")
-                .update(trackData)
-                .eq("id", requestId);
+        const { data: existing, error: lookupError } = await supabase
+            .from("review_requests")
+            .select("id")
+            .eq("id", requestId)
+            .maybeSingle();
 
-            if (error) throw error;
-        } else if (action === "insert") {
-            const { error } = await supabase
-                .from("review_requests")
-                .insert(trackData);
+        if (lookupError || !existing) {
+            return NextResponse.json({ error: "Review request not found" }, { status: 404 });
+        }
 
-            if (error) throw error;
+        const { error } = await supabase
+            .from("review_requests")
+            .update(trackData)
+            .eq("id", requestId);
+
+        if (error) {
+            throw error;
         }
 
         return NextResponse.json({ success: true });

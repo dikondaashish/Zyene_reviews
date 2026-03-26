@@ -1,25 +1,47 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { z } from "zod";
+
+const privateFeedbackSchema = z.object({
+    review_request_id: z.string().uuid(),
+    rating: z.number().int().min(1).max(5),
+    content: z.string().max(5000).optional().default(""),
+    customer_email: z.string().email().optional().nullable(),
+});
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { business_id, review_request_id, rating, content, customer_email } = body;
+        const parsed = privateFeedbackSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+        }
+        const { review_request_id, rating, content, customer_email } = parsed.data;
 
         // Validation
-        if (!business_id || !rating) {
+        if (!review_request_id || !rating) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const supabase = createAdminClient();
+        const { data: reviewRequest, error: requestErr } = await supabase
+            .from("review_requests")
+            .select("id, business_id")
+            .eq("id", review_request_id)
+            .maybeSingle();
+
+        if (requestErr || !reviewRequest?.business_id) {
+            return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
+        }
+        const business_id = reviewRequest.business_id;
 
         // 1. Insert Private Feedback
         const { data: feedback, error } = await supabase
             .from("private_feedback")
             .insert({
                 business_id,
-                review_request_id: review_request_id || null,
+                review_request_id,
                 rating,
                 content,
                 customer_email: customer_email || null,

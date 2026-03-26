@@ -7,6 +7,17 @@ import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
     try {
+        const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
+        if (sharedSecret) {
+            const provided = req.headers.get("x-webhook-secret");
+            if (provided !== sharedSecret) {
+                return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            }
+        } else if (process.env.NODE_ENV === "production") {
+            console.error("[GBP Webhook] GOOGLE_GBP_WEBHOOK_SECRET is not configured");
+            return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
+        }
+
         const body = await req.json();
 
         // 1. Verify Pub/Sub message structure

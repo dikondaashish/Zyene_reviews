@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getActiveBusinessId } from "@/lib/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
 
@@ -10,21 +11,7 @@ export async function GET(request: Request) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { data: orgMember } = await supabase
-        .from("organization_members")
-        .select("organization_id")
-        .eq("user_id", user.id)
-        .limit(1)
-        .single();
-
-    if (!orgMember) return new NextResponse("No organization found", { status: 403 });
-
-    const { data: business } = await supabase
-        .from("businesses")
-        .select("id, name")
-        .eq("organization_id", orgMember.organization_id)
-        .limit(1)
-        .single();
+    const { business } = await getActiveBusinessId();
 
     if (!business) return new NextResponse("No business found", { status: 403 });
 

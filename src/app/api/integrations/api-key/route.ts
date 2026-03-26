@@ -1,7 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import { z } from "zod";
+import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+
+const requestSchema = z.object({
+    businessId: z.string().uuid(),
+});
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -13,25 +18,15 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { businessId } = await req.json();
-
-    if (!businessId) {
-        return NextResponse.json({ error: "Business ID required" }, { status: 400 });
+    const parsed = requestSchema.safeParse(await req.json());
+    if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid business ID" }, { status: 400 });
     }
+    const { businessId } = parsed.data;
 
-    // Verify user owns this business
-    const { data: member } = await supabase
-        .from("organization_members")
-        .select("organizations ( businesses ( id ) )")
-        .eq("user_id", user.id)
-        .single();
-
-    const memberTyped = member as unknown as MemberOrgContext;
-    const businesses = memberTyped?.organizations?.businesses || [];
-    const ownsBusiness = businesses.some((b) => b.id === businessId);
-
-    if (!ownsBusiness) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
+    if (!hasAccess) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Generate a new API key
@@ -39,15 +34,18 @@ export async function POST(req: Request) {
 
     // Upsert into integrations table (or a dedicated api_keys table)
     // Using review_platforms with platform='api' as a lightweight approach
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
         .from("review_platforms")
         .select("id")
         .eq("business_id", businessId)
         .eq("platform", "api")
-        .single();
+        .maybeSingle();
+    if (existingError) {
+        return NextResponse.json({ error: "Failed to check existing API key" }, { status: 500 });
+    }
 
     if (existing) {
-        await supabase
+        const { error: updateError } = await supabase
             .from("review_platforms")
             .update({
                 external_id: apiKey,
@@ -55,8 +53,11 @@ export async function POST(req: Request) {
                 updated_at: new Date().toISOString(),
             })
             .eq("id", existing.id);
+        if (updateError) {
+            return NextResponse.json({ error: "Failed to update API key" }, { status: 500 });
+        }
     } else {
-        await supabase.from("review_platforms").insert({
+        const { error: insertError } = await supabase.from("review_platforms").insert({
             business_id: businessId,
             platform: "api",
             external_id: apiKey,
@@ -64,6 +65,9 @@ export async function POST(req: Request) {
             total_reviews: 0,
             average_rating: 0,
         });
+        if (insertError) {
+            return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
+        }
     }
 
     return NextResponse.json({ apiKey });

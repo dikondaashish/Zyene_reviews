@@ -1,6 +1,9 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const roleSchema = z.enum(["owner", "admin", "member"]);
 
 export async function PATCH(
     request: Request,
@@ -16,7 +19,11 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    const { role } = await request.json(); // New role
+    const parsed = roleSchema.safeParse((await request.json())?.role);
+    if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
+    const role = parsed.data;
 
     // Verify requester is owner (only owner can change roles? or admins too?)
     // Typically admins can manage members, Owners manage everything.
@@ -29,6 +36,22 @@ export async function PATCH(
 
     if (reqError || !["owner", "admin"].includes(requester.role)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const { data: targetMember } = await supabase
+        .from("organization_members")
+        .select("id, role, user_id")
+        .eq("id", id)
+        .eq("organization_id", requester.organization_id)
+        .maybeSingle();
+    if (!targetMember) {
+        return NextResponse.json({ error: "Member not found" }, { status: 404 });
+    }
+    if (requester.role !== "owner" && role === "owner") {
+        return NextResponse.json({ error: "Only owners can assign owner role" }, { status: 403 });
+    }
+    if (targetMember.role === "owner" && requester.role !== "owner") {
+        return NextResponse.json({ error: "Only owners can modify owner role" }, { status: 403 });
     }
 
     // Determine target type?
@@ -86,10 +109,21 @@ export async function DELETE(
         if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 
     } else {
-        // Remove member
-        // Prevent removing self?
-        // Prevent removing last owner? (Business rule)
-        // For now, simple delete.
+        const { data: targetMember } = await supabase
+            .from("organization_members")
+            .select("id, role, user_id")
+            .eq("id", id)
+            .eq("organization_id", requester.organization_id)
+            .maybeSingle();
+        if (!targetMember) {
+            return NextResponse.json({ error: "Member not found" }, { status: 404 });
+        }
+        if (targetMember.user_id === user.id) {
+            return NextResponse.json({ error: "You cannot remove yourself" }, { status: 400 });
+        }
+        if (targetMember.role === "owner") {
+            return NextResponse.json({ error: "Owner cannot be removed" }, { status: 403 });
+        }
         const { error } = await supabase
             .from("organization_members")
             .delete()
