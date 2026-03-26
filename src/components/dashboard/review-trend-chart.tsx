@@ -8,8 +8,8 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    ResponsiveContainer,
 } from "recharts";
+import { ProChartContainer, chartConfig } from "@/components/ui/pro-chart-container";
 
 interface TrendDataPoint {
     day: string;
@@ -36,20 +36,17 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
     }
 
     return (
-        <ResponsiveContainer width="100%" height={250}>
+        <ProChartContainer 
+            height={250} 
+            title="Review Trends" 
+            description="Automatic review volume tracking"
+            className="border-none bg-transparent p-0 backdrop-blur-none shadow-none"
+        >
             <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                <defs>
-                    <linearGradient id="reviewGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(221, 83%, 53%)" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="hsl(221, 83%, 53%)" stopOpacity={0} />
-                    </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <CartesianGrid {...chartConfig.grid} />
                 <XAxis
                     dataKey="day"
-                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                    tickLine={false}
-                    axisLine={false}
+                    {...chartConfig.xAxis}
                     tickFormatter={(value: string) => {
                         const d = new Date(value);
                         return `${d.getMonth() + 1}/${d.getDate()}`;
@@ -57,18 +54,11 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
                     interval="preserveStartEnd"
                 />
                 <YAxis
-                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                    tickLine={false}
-                    axisLine={false}
+                    {...chartConfig.yAxis}
                     allowDecimals={false}
                 />
                 <Tooltip
-                    contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                        fontSize: "13px",
-                    }}
+                    contentStyle={chartConfig.tooltip.contentStyle}
                     labelFormatter={(value) => {
                         const normalized = typeof value === "string" || typeof value === "number"
                             ? String(value)
@@ -89,11 +79,12 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
                 <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="hsl(221, 83%, 53%)"
+                    stroke="var(--primary)"
                     strokeWidth={2}
-                    fill="url(#reviewGradient)"
+                    fill="url(#proGradient)"
+                    animationDuration={1500}
                 />
             </AreaChart>
-        </ResponsiveContainer>
+        </ProChartContainer>
     );
 }

@@ -52,6 +52,8 @@ import {
     getGooglePerformanceTotals,
     type GooglePerformanceTotals,
 } from "@/services/google/performance-queries";
+import { ProStatCard } from "@/components/dashboard/pro-stat-card";
+import { AnimatedReviewCards } from "@/components/ui/animated-review-card";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -599,8 +601,8 @@ export default async function DashboardPage() {
                 {isGoogleConnected && <SyncButton />}
             </div>
 
-            {/* Getting Started Banner */}
-            {!organization?.onboarding_completed && (
+            {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
+            {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
                 <GettingStartedBanner
                     googleConnected={isGoogleConnected}
                     customerCount={customerCount}
@@ -610,107 +612,43 @@ export default async function DashboardPage() {
             )}
 
             {/* Stats Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Total Reviews
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                            {useDemoData && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {business.total_reviews}
-                        </div>
-                        <p className={`text-xs mt-1 ${!isGoogleConnected ? "text-orange-600 font-medium" : "text-muted-foreground"}`}>
-                            {!isGoogleConnected ? (
-                                <span>📌 Connect Google to import your reviews</span>
-                            ) : (
-                                <>
-                                    <span>From Google Reviews</span>
-                                    {formatTrend(totalReviewsTrend) && <span className="ml-2">{formatTrend(totalReviewsTrend)}</span>}
-                                </>
-                            )}
-                        </p>
-                        {!isGoogleConnected && (
-                            <Link href="/integrations">
-                                <Button size="sm" className="mt-3 w-full" variant="outline">
-                                    Connect Now →
-                                </Button>
-                            </Link>
-                        )}
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Average Rating
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                            {useDemoData && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                            <Star className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {Number(business.average_rating).toFixed(1)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center justify-between">
-                            <span>Based on Google</span>
-                            {formatTrend(averageRatingTrend, true)}
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Response Rate
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                            {useDemoData && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{responseRate.toFixed(1)}%</div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {responseRateLabel}
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Pending Reviews
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                            {useDemoData && (
-                                <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none">Demo Data</Badge>
-                            )}
-                            <Clock className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className={`text-2xl font-bold ${pendingCount === 0 ? "text-green-600" : ""}`}>
-                            {pendingCount}
-                        </div>
-                        <p className={`text-xs mt-1 ${pendingCount === 0 ? "text-green-600 font-medium" : "text-muted-foreground"}`}>
-                            {pendingCount === 0
-                                ? "No reviews waiting for a response. You're all caught up! ✓"
-                                : `${pendingCount} awaiting response`
-                            }
-                        </p>
-                    </CardContent>
-                </Card>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
+                <ProStatCard
+                    title="Total Reviews"
+                    value={business.total_reviews}
+                    iconName="reviews"
+                    description={!isGoogleConnected ? "Connect Google to import reviews" : "From Google Reviews"}
+                    trend={totalReviewsTrend}
+                    trendLabel="vs last month"
+                    delay={0.1}
+                />
+                <ProStatCard
+                    title="Average Rating"
+                    value={Number(business.average_rating)}
+                    iconName="rating"
+                    precision={1}
+                    description="Based on Google"
+                    trend={Math.round(averageRatingTrend * 10)}
+                    trendLabel="pts"
+                    delay={0.2}
+                />
+                <ProStatCard
+                    title="Response Rate"
+                    value={responseRate}
+                    iconName="response"
+                    suffix="%"
+                    precision={1}
+                    description={responseRateLabel}
+                    delay={0.3}
+                />
+                <ProStatCard
+                    title="Pending Reviews"
+                    value={pendingCount}
+                    iconName="pending"
+                    description={pendingCount === 0 ? "You're all caught up!" : "Awaiting response"}
+                    className={pendingCount === 0 ? "border-green-500/20 bg-green-500/5" : ""}
+                    delay={0.4}
+                />
             </div>
 
             {(isGoogleConnected || useDemoData) && (
@@ -1039,86 +977,45 @@ export default async function DashboardPage() {
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
-                {/* Recent Reviews */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle>Recent Reviews</CardTitle>
-                            <CardDescription>
-                                Latest reviews from your customers
-                            </CardDescription>
-                        </div>
-                        {recentReviews.length > 0 && (
+                {/* Spotlight Reviews */}
+                <Card className="overflow-hidden border-none bg-transparent shadow-none">
+                    <CardHeader className="px-0">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Sparkles className="h-4 w-4 text-primary" />
+                                    Review Spotlight
+                                </CardTitle>
+                                <CardDescription>
+                                    Interactive view of your latest feedback
+                                </CardDescription>
+                            </div>
                             <Link href="/reviews">
                                 <Button variant="ghost" size="sm" className="gap-1">
-                                    View all <ArrowRight className="h-3 w-3" />
+                                    Manage all <ArrowRight className="h-3 w-3" />
                                 </Button>
                             </Link>
-                        )}
+                        </div>
                     </CardHeader>
-                    <CardContent data-tour-target="tour-recent-reviews">
+                    <CardContent className="px-0 relative">
                         {recentReviews.length > 0 ? (
-                            <div className="space-y-4">
-                                {recentReviews.map((review: any) => (
-                                    <div
-                                        key={review.id}
-                                        className="flex flex-col gap-1.5 border-b border-border/50 pb-3 last:border-0 last:pb-0"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-medium text-sm">
-                                                    {review.author_name || "Anonymous"}
-                                                </span>
-                                                <SentimentBadge
-                                                    sentiment={review.sentiment}
-                                                />
-                                            </div>
-                                            <span className="text-xs text-muted-foreground">
-                                                {review.review_date
-                                                    ? formatDistanceToNow(
-                                                        new Date(review.review_date),
-                                                        { addSuffix: true }
-                                                    )
-                                                    : ""}
-                                            </span>
-                                        </div>
-                                        <Stars rating={review.rating} />
-                                        {review.text && (
-                                            <p className="text-sm text-muted-foreground line-clamp-2">
-                                                {review.text}
-                                            </p>
-                                        )}
-                                        <div className="flex items-center gap-2">
-                                            <Badge
-                                                variant={
-                                                    review.response_status === "responded"
-                                                        ? "default"
-                                                        : review.response_status === "pending"
-                                                            ? "secondary"
-                                                            : "outline"
-                                                }
-                                                className="text-xs"
-                                            >
-                                                {review.response_status}
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="py-4">
+                                <AnimatedReviewCards 
+                                    reviews={recentReviews.map((r: any) => ({
+                                        id: r.id,
+                                        name: r.author_name || "Anonymous",
+                                        avatar: r.author_photo_url || "",
+                                        text: r.text || "No review content provided.",
+                                        rating: r.rating
+                                    }))}
+                                    theme="default"
+                                    interactionType="drag"
+                                />
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-                                {isGoogleConnected ? (
-                                    <>
-                                        <MessageSquare className="h-10 w-10 text-muted-foreground/50" />
-                                        <p className="text-muted-foreground">
-                                            No reviews synced yet. Hit sync to
-                                            pull your latest reviews.
-                                        </p>
-                                        <SyncButton />
-                                    </>
-                                ) : (
-                                    <GoogleConnectEmptyState />
-                                )}
+                            <div className="flex flex-col items-center justify-center py-20 bg-card/30 rounded-2xl border border-dashed border-border">
+                                <MessageSquare className="h-10 w-10 text-muted-foreground/30 mb-4" />
+                                <p className="text-muted-foreground text-sm">No reviews to spotlight yet</p>
                             </div>
                         )}
                     </CardContent>

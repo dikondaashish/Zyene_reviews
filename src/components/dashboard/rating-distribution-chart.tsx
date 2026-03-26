@@ -7,9 +7,9 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    ResponsiveContainer,
     Cell,
 } from "recharts";
+import { ProChartContainer, chartConfig } from "@/components/ui/pro-chart-container";
 
 interface RatingData {
     rating: number;
@@ -17,11 +17,11 @@ interface RatingData {
 }
 
 const RATING_COLORS: Record<number, string> = {
-    1: "#ef4444", // red
-    2: "#f97316", // orange
-    3: "#eab308", // yellow
-    4: "#84cc16", // lime
-    5: "#22c55e", // green
+    1: "oklch(0.6 0.2 25)", // destructive/red
+    2: "oklch(0.7 0.15 45)", // orange
+    3: "oklch(0.8 0.15 85)", // yellow
+    4: "oklch(0.75 0.16 125)", // lime
+    5: "oklch(0.7 0.15 160)", // green
 };
 
 export function RatingDistributionChart({ data }: { data: RatingData[] }) {
@@ -46,39 +46,34 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
     }
 
     return (
-        <ResponsiveContainer width="100%" height={250}>
+        <ProChartContainer 
+            height={250} 
+            title="Rating Distribution" 
+            description="Lifetime rating breakdown"
+            className="border-none bg-transparent p-0 backdrop-blur-none shadow-none"
+        >
             <BarChart
                 data={fullData}
                 layout="vertical"
                 margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
             >
                 <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="hsl(var(--border))"
+                    {...chartConfig.grid}
                     horizontal={false}
                 />
                 <XAxis
                     type="number"
-                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                    tickLine={false}
-                    axisLine={false}
+                    {...chartConfig.xAxis}
                     allowDecimals={false}
                 />
                 <YAxis
                     dataKey="label"
                     type="category"
-                    tick={{ fontSize: 13, fill: "hsl(var(--muted-foreground))", fontWeight: 500 }}
-                    tickLine={false}
-                    axisLine={false}
+                    {...chartConfig.yAxis}
                     width={40}
                 />
                 <Tooltip
-                    contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                        fontSize: "13px",
-                    }}
+                    contentStyle={chartConfig.tooltip.contentStyle}
                     formatter={(value) => {
                         const normalized = Array.isArray(value)
                             ? Number(value[0])
@@ -86,7 +81,7 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
                         return [Number.isFinite(normalized) ? normalized : 0, "Reviews"];
                     }}
                 />
-                <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={20}>
+                <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={24} animationDuration={1500}>
                     {fullData.map((entry) => (
                         <Cell
                             key={`cell-${entry.rating}`}
@@ -95,6 +90,6 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
                     ))}
                 </Bar>
             </BarChart>
-        </ResponsiveContainer>
+        </ProChartContainer>
     );
 }

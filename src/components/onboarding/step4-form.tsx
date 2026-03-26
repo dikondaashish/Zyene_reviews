@@ -16,6 +16,7 @@ interface Step4FormProps {
 }
 
 export function Step4Form({
+  businessId,
   businessName,
   userEmail,
   userName,
@@ -24,6 +25,7 @@ export function Step4Form({
   isLoading = false,
 }: Step4FormProps) {
   const [mounted, setMounted] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
   const firstName = userName.split(" ")[0];
 
   const fireConfetti = async () => {
@@ -44,12 +46,22 @@ export function Step4Form({
   useEffect(() => {
     setMounted(true);
     fireConfetti();
-    // Auto-complete after 5 seconds
-    const timer = setTimeout(() => {
-      // onNext(); // Keep it manual for now so user can see the success
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+    
+    // Mark onboarding as completed in the background
+    const markComplete = async () => {
+      setIsCompleting(true);
+      try {
+        const { completeOnboarding } = await import("@/app/actions/onboarding");
+        await completeOnboarding(businessId);
+      } catch (error) {
+        console.error("Failed to complete onboarding:", error);
+      } finally {
+        setIsCompleting(false);
+      }
+    };
+    
+    markComplete();
+  }, [businessId]);
 
   if (!mounted) return null;
 
@@ -60,9 +72,9 @@ export function Step4Form({
       className="text-center space-y-8 py-4"
     >
       <div className="relative inline-flex mb-2">
-        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-25" />
-        <div className="relative w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-inner">
-          <CheckCircle2 className="h-10 w-10 text-blue-600" />
+        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping opacity-25" />
+        <div className="relative w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center border-2 border-primary/10 shadow-inner">
+          <CheckCircle2 className="h-12 w-12 text-primary" />
         </div>
       </div>
 
@@ -92,9 +104,9 @@ export function Step4Form({
           </div>
         )}
 
-        <div className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-            <Star className="h-5 w-5 text-blue-600" />
+        <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <Star className="h-5 w-5 text-primary" />
           </div>
           <p className="text-xs text-slate-600">
             <strong>Next:</strong> Send your first review request from the dashboard.
@@ -106,7 +118,7 @@ export function Step4Form({
         <Button
           onClick={onNext}
           disabled={isLoading}
-          className="w-full h-16 text-lg bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-100 rounded-2xl font-bold group"
+          className="cta-button w-full h-16 text-xl shadow-2xl shadow-primary/20"
         >
           {isLoading ? (
             <Loader2 className="h-6 w-6 animate-spin" />

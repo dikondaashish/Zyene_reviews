@@ -45,18 +45,18 @@ export function GettingStartedBanner({
   };
 
   return (
-    <div className="relative overflow-hidden bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-6">
+    <div className="relative overflow-hidden bg-card border border-border/50 rounded-2xl p-6 mb-6 shadow-sm">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Get Started</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-lg font-bold text-foreground">Get Started</h2>
+          <p className="text-sm text-muted-foreground mt-1">
             Complete these steps to unlock the full power of Zyene Reviews
           </p>
         </div>
         <button
           onClick={handleDismiss}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-muted-foreground hover:text-foreground transition-colors p-1"
           aria-label="Dismiss banner"
         >
           <X className="h-5 w-5" />
@@ -64,37 +64,46 @@ export function GettingStartedBanner({
       </div>
 
       {/* Progress Section */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-medium text-gray-700">
-            Progress: {completedCount} of {items.length} completed
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2 text-xs font-semibold uppercase tracking-wider">
+          <span className="text-muted-foreground">
+            Progress: {completedCount} of {items.length}
           </span>
-          <span className="text-xs font-semibold text-indigo-600">
+          <span className="text-primary">
             {Math.round(completionPercent)}%
           </span>
         </div>
-        <Progress value={completionPercent} className="h-1.5" />
+        <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-primary transition-all duration-500 ease-out"
+            style={{ width: `${completionPercent}%` }}
+          />
+        </div>
       </div>
 
       {/* Checklist Items */}
-      <div className="space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {items.map((item, index) => (
           <Link key={index} href={item.href}>
             <div
-              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${item.done
-                ? "bg-green-50/50 hover:bg-green-100/50"
-                : "bg-white hover:bg-gray-50"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all border ${item.done
+                ? "bg-green-500/5 border-green-500/20 text-green-700 dark:text-green-400"
+                : "bg-background border-border hover:border-primary/30 pro-hover"
                 }`}
             >
               <div
-                className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.done
+                className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${item.done
                   ? "border-green-500 bg-green-500"
-                  : "border-gray-300"
+                  : "border-border bg-background"
                   }`}
               >
-                {item.done && <Check className="h-3 w-3 text-white" />}
+                {item.done ? (
+                  <Check className="h-4 w-4 text-white" />
+                ) : (
+                  <span className="text-[10px] font-bold text-muted-foreground">{index + 1}</span>
+                )}
               </div>
-              <span className={`text-sm font-medium ${item.done ? "text-green-700" : "text-gray-700"}`}>
+              <span className={`text-sm font-semibold truncate ${!item.done && "text-foreground"}`}>
                 {item.label}
               </span>
             </div>

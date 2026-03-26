@@ -47,7 +47,7 @@ export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {
     }
 
     return (
-        <Button onClick={handleConnectGoogle} className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button onClick={handleConnectGoogle} className="cta-button">
             Connect Google &rarr;
         </Button>
     )

@@ -158,16 +158,16 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-xl">
         {/* Progress Header */}
         <div className="mb-8 space-y-4">
           <div className="flex justify-between items-end mb-2">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">
                 Step {currentStep} of 4
               </p>
-              <h1 className="text-xl font-bold text-slate-900">
+              <h1 className="text-xl font-bold text-foreground">
                 {stepTitles[currentStep - 1]}
               </h1>
             </div>
@@ -177,9 +177,9 @@ export default function OnboardingPage() {
               </span>
             )}
           </div>
-          <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
             <div 
-              className="h-full bg-blue-600 transition-all duration-500 ease-out"
+              className="h-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${(currentStep / 4) * 100}%` }}
             />
           </div>

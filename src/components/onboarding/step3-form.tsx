@@ -77,20 +77,22 @@ export function Step3Form({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6"
+      className="space-y-8"
     >
-      {/* Removed local progress bar - now in shell */}
-
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Category selection</h2>
-        <p className="text-gray-600 mt-2">
-          Choose the category that best fits your business.
+      <div className="text-center space-y-3">
+        <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+          What's your specialty?
+        </h2>
+        <p className="text-lg text-slate-600 max-w-sm mx-auto leading-relaxed">
+          Select a category so we can tailor the review collection templates to your specific industry.
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-2">
-          <Label>Business category</Label>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="space-y-4">
+          <Label className="text-sm font-black text-slate-500 uppercase tracking-widest ml-1">
+            Business category
+          </Label>
           <Controller
             control={form.control}
             name="category"
@@ -103,35 +105,54 @@ export function Step3Form({
                 }}
                 disabled={isLoading}
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a category" />
+                <SelectTrigger className="h-16 bg-white border-2 border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-lg shadow-sm">
+                  <SelectValue placeholder="Select your industry..." />
                 </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>
-                      {c.label}
-                    </SelectItem>
-                  ))}
+                <SelectContent className="rounded-2xl border-2 shadow-xl">
+                  <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-1">
+                    {CATEGORIES.map((c) => (
+                      <SelectItem 
+                        key={c.value} 
+                        value={c.value}
+                        className="rounded-xl py-3 px-4 focus:bg-blue-50 focus:text-blue-700 cursor-pointer transition-colors"
+                      >
+                        {c.label}
+                      </SelectItem>
+                    ))}
+                  </div>
                 </SelectContent>
               </Select>
             )}
           />
           {form.formState.errors.category && (
-            <p className="text-sm text-red-500">{form.formState.errors.category.message}</p>
+            <p className="text-sm font-medium text-red-500 flex items-center gap-1.5 ml-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+              {form.formState.errors.category.message}
+            </p>
           )}
         </div>
+
         <Button
           type="submit"
           disabled={!selectedCategory || isLoading}
-          className="w-full py-6"
+          className="w-full h-16 shadow-xl shadow-slate-200 rounded-[1.25rem] text-xl font-bold group"
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
+            <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Saving...</>
           ) : (
-            <>Next <ChevronRight className="ml-2 h-5 w-5" /></>
+            <>
+              Next
+              <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+            </>
           )}
         </Button>
       </form>
+
+      <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200/60 mt-4">
+        <p className="text-xs text-slate-500 leading-relaxed font-medium">
+          <strong>Tip:</strong> Don't see your category? Choose <strong>Other</strong> and we'll help you set it up later. Your selection helps us provide industry-specific response templates.
+        </p>
+      </div>
     </motion.div>
   );
 }

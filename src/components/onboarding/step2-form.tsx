@@ -198,23 +198,23 @@ export function Step2Form({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6"
+      className="space-y-8"
     >
-      {/* Removed local progress bar - now in shell */}
-
       <div className="text-center space-y-3">
-        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">
           Connect Google in 30 seconds
         </h2>
-        <p className="text-gray-600 max-w-sm mx-auto">
+        <p className="text-lg text-slate-600 max-w-sm mx-auto leading-relaxed">
           We'll automatically pull your business name, address, and reviews to set everything up for you.
         </p>
       </div>
 
       {/* Google connect - PRIMARY CTA */}
-      <div className="bg-blue-50/50 border-2 border-blue-100 rounded-3xl p-8 space-y-6 text-center shadow-sm">
-        <div className="mx-auto w-16 h-16 rounded-2xl bg-white shadow-md flex items-center justify-center mb-2">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+      <div className="bg-blue-50/40 border-2 border-blue-100/50 rounded-[2.5rem] p-10 space-y-8 text-center shadow-[0_8px_30px_rgb(37,99,235,0.06)] relative overflow-hidden group">
+        <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-blue-100/30 rounded-full blur-3xl group-hover:bg-blue-200/40 transition-colors" />
+        
+        <div className="relative mx-auto w-20 h-20 rounded-3xl bg-white shadow-lg flex items-center justify-center mb-2 transform transition-transform group-hover:scale-105 duration-300">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -223,102 +223,114 @@ export function Step2Form({
         </div>
 
         {googleState.status === "idle" && (
-          <Button 
-            type="button" 
-            onClick={handleConnectClick} 
-            className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Connect Google Business Profile
-          </Button>
+          <div className="space-y-4">
+            <Button 
+              type="button" 
+              onClick={handleConnectClick} 
+              className="w-full h-16 text-xl bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-200/50 rounded-[1.25rem] transition-all hover:scale-[1.02] active:scale-[0.98] font-bold"
+            >
+              Connect Business Profile
+            </Button>
+            <p className="text-xs text-blue-400 font-semibold tracking-wide uppercase">
+              Powered by Google Business Profile
+            </p>
+          </div>
         )}
         {googleState.status === "connecting" && (
-          <div className="flex flex-col items-center justify-center gap-3 py-2">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <p className="text-sm font-medium text-blue-800">Connecting your profile...</p>
+          <div className="flex flex-col items-center justify-center gap-4 py-4">
+            <div className="relative">
+              <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+              <div className="absolute inset-0 bg-blue-600/10 blur-xl rounded-full" />
+            </div>
+            <p className="text-lg font-bold text-blue-900 animate-pulse">Fetching your business details...</p>
           </div>
         )}
         {googleState.status === "success" && (
-          <div className="space-y-4">
-            <div className="flex flex-col items-center gap-2 text-green-600">
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="h-7 w-7" />
+          <div className="space-y-6">
+            <div className="flex flex-col items-center gap-3 text-green-600">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center ring-8 ring-green-50">
+                <CheckCircle2 className="h-10 w-10" />
               </div>
-              <p className="font-bold text-lg text-green-700">Success!</p>
-              <p className="text-sm">
-                Found {googleState.reviewCount != null ? `your profile with ${googleState.reviewCount} reviews` : "your business profile"}
-              </p>
+              <div className="space-y-1">
+                <p className="font-extrabold text-2xl text-green-700">Profile Linked!</p>
+                <p className="text-green-600/80 font-medium">
+                  Found {googleState.reviewCount != null ? `${googleState.reviewCount} reviews for your business` : "your business profile"}
+                </p>
+              </div>
             </div>
             <Button 
               type="button" 
               onClick={onSaveAndNext} 
-              className="w-full bg-green-600 hover:bg-green-700"
+              className="w-full h-14 bg-green-600 hover:bg-green-700 text-lg rounded-2xl font-bold shadow-lg shadow-green-100"
               disabled={advancing}
             >
-              Confirm and Continue
+              Continue with {form.getValues("businessName") || "Profile"}
             </Button>
           </div>
         )}
         {googleState.status === "error" && (
-          <div className="space-y-3">
-             <div className="p-3 bg-red-50 text-red-700 rounded-xl text-xs border border-red-100">
+          <div className="space-y-4">
+             <div className="p-4 bg-red-50 text-red-700 rounded-2xl text-sm border border-red-100 font-medium">
                {googleState.errorMessage}
              </div>
-             <Button type="button" variant="outline" onClick={() => setGoogleState({ status: "idle" })} className="w-full rounded-xl">
+             <Button type="button" variant="outline" onClick={() => setGoogleState({ status: "idle" })} className="w-full h-12 rounded-xl text-slate-600 font-bold border-2">
                <RefreshCw className="h-4 w-4 mr-2" /> Try again
              </Button>
           </div>
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative flex items-center justify-center">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-gray-200"></div>
+          <div className="w-full border-t border-slate-200"></div>
         </div>
-        <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
-          <span className="bg-white px-4 text-gray-400">Or enter manually</span>
+        <div className="relative bg-slate-50 px-6">
+          <span className="text-xs uppercase tracking-[0.2em] font-black text-slate-400">
+            OR GO MANUAL
+          </span>
         </div>
       </div>
 
-      <div className="space-y-4 pt-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase">Business name</Label>
+            <Label className="text-xs font-black text-slate-500 uppercase tracking-wider ml-1">Business name</Label>
             <Input
               {...form.register("businessName")}
-              placeholder="Acme Restaurant"
+              placeholder="e.g. Acme Restaurant"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+              className="h-14 bg-white border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-base shadow-sm"
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase">Address</Label>
+            <Label className="text-xs font-black text-slate-500 uppercase tracking-wider ml-1">Address</Label>
             <Input
               {...form.register("address")}
               placeholder="123 Main St"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+              className="h-14 bg-white border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-base shadow-sm"
             />
           </div>
         </div>
         
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-1 space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase">City</Label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="space-y-2">
+            <Label className="text-xs font-black text-slate-500 uppercase tracking-wider ml-1">City</Label>
             <Input 
                {...form.register("city")} 
                placeholder="San Francisco" 
                disabled={isLoading || googleState.status === "success"} 
-               className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+               className="h-14 bg-white border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-base shadow-sm"
             />
           </div>
-          <div className="col-span-1 space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase">State</Label>
+          <div className="space-y-2">
+            <Label className="text-xs font-black text-slate-500 uppercase tracking-wider ml-1">State</Label>
             <Select
               value={form.watch("state")}
               onValueChange={(v) => form.setValue("state", v)}
               disabled={isLoading || googleState.status === "success"}
             >
-              <SelectTrigger className="h-12 border-gray-200 focus:border-blue-300 rounded-xl">
+              <SelectTrigger className="h-14 bg-white border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-base shadow-sm">
                 <SelectValue placeholder="State" />
               </SelectTrigger>
               <SelectContent>
@@ -328,13 +340,13 @@ export function Step2Form({
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-1 space-y-2">
-            <Label className="text-xs font-bold text-gray-500 uppercase">Phone</Label>
+          <div className="space-y-2">
+            <Label className="text-xs font-black text-slate-500 uppercase tracking-wider ml-1">Phone</Label>
             <Input
               {...form.register("phone")}
               placeholder="(555) 555-5555"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 border-gray-200 focus:border-blue-300 rounded-xl"
+              className="h-14 bg-white border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-base shadow-sm"
             />
           </div>
         </div>
@@ -344,12 +356,15 @@ export function Step2Form({
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full py-6 mt-4 rounded-xl text-base font-semibold"
+            className="w-full h-16 mt-4 shadow-xl shadow-slate-200 rounded-[1.25rem] text-lg font-bold group"
           >
             {advancing || isLoading ? (
-              <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
+              <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Saving...</>
             ) : (
-              <>Save and continue <ChevronRight className="ml-2 h-5 w-5" /></>
+              <>
+                Confirm details
+                <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+              </>
             )}
           </Button>
         )}
@@ -359,7 +374,7 @@ export function Step2Form({
             type="button"
             onClick={handleSkip}
             disabled={advancing}
-            className="text-xs text-slate-400 hover:text-slate-600 underline transition-colors"
+            className="text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors tracking-widest uppercase hover:underline underline-offset-4"
           >
             I'll connect later
           </button>
