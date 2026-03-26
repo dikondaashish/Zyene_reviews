@@ -41,25 +41,38 @@ export default function OnboardingPage() {
   const [organization, setOrganization] = useState<OnboardingOrganization | null>(null);
   const [business, setBusiness] = useState<OnboardingBusiness | null>(null);
   const [googleConnected, setGoogleConnected] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Load user, organization, and business on mount
   useEffect(() => {
     const loadUserAndOrg = async () => {
+      setLoadError(null);
       const {
         data: { user },
+        error: userErr,
       } = await supabase.auth.getUser();
+
+      if (userErr) {
+        setLoadError(userErr.message);
+        return;
+      }
 
       if (user) {
         setUser(user);
 
-        const { data: member } = await supabase
+        const { data: member, error: memberErr } = await supabase
           .from("organization_members")
           .select("organization_id")
           .eq("user_id", user.id)
-          .in("role", ["owner", "ORG_OWNER"])
-          .single();
+          // Users can have different role strings; do not hardcode here.
+          .maybeSingle();
 
-        if (member) {
+        if (memberErr) {
+          setLoadError(memberErr.message);
+          return;
+        }
+
+        if (member?.organization_id) {
           const { data: org } = await supabase
             .from("organizations")
             .select("id, name")
@@ -111,6 +124,23 @@ export default function OnboardingPage() {
     // Business created and onboarding_step updated to 2 by server action
     setCurrentStep(2);
   };
+
+  if (loadError) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 text-center px-6">
+        <p className="text-sm font-semibold text-slate-900">Onboarding failed to load</p>
+        <p className="text-sm text-muted-foreground max-w-md">
+          {loadError}
+        </p>
+        <button
+          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          onClick={() => window.location.reload()}
+        >
+          Reload
+        </button>
+      </div>
+    );
+  }
 
   if (!user || !organization) {
     return (
