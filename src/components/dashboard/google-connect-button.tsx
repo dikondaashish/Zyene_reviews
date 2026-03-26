@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/db/supabase/client"
 import { toast } from "sonner"
 
 export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {

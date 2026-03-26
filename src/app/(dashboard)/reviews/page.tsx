@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card";
 import { ReviewsFilters } from "@/components/reviews/reviews-filters";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MessageSquare, Lock, Download } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "lucide-react";

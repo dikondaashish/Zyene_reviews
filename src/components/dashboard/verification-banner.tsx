@@ -3,7 +3,7 @@
 import { AlertCircle, ArrowRight, Mail, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 
 export function VerificationBanner({ user }: { user: any }) {

@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import { analyzeReview } from "@/lib/ai/analysis";
+import { createClient } from "@/lib/db/supabase/server";
+import { analyzeReview } from "@/services/ai/analysis";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

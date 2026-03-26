@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { stripe } from "@/lib/stripe/client";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { stripe } from "@/services/stripe/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 

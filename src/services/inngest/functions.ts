@@ -1,5 +1,5 @@
 import { inngest } from "./client";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 
 // This background job runs for EACH contact asynchronously

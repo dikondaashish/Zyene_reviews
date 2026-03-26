@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnalyticsFilters } from "@/components/analytics/analytics-filters";
@@ -9,13 +9,13 @@ import { SentimentChart } from "@/components/analytics/sentiment-chart";
 import { ThemeChart } from "@/components/analytics/theme-chart";
 import { PlatformTable } from "@/components/analytics/platform-table";
 import { GooglePerformanceProfileChart } from "@/components/analytics/google-performance-profile-chart";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import {
     estimateDiscoverySplit,
     getGooglePerformanceDailySeries,
     getGooglePerformanceTotals,
     getGoogleSearchKeywords,
-} from "@/lib/google/performance-queries";
+} from "@/services/google/performance-queries";
 import { StatsCard } from "@/components/analytics/stats-card";
 import { ExportDataButton } from "@/components/analytics/export-data-button";
 import { ReportGenerator } from "@/components/analytics/report-generator";

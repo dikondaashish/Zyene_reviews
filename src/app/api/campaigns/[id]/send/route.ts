@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { campaignRateLimit } from "@/lib/rate-limit";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { campaignRateLimit } from "@/lib/auth/rate-limit";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 const sendSchema = z.object({
     contacts: z.array(
@@ -67,7 +67,7 @@ export async function POST(
     }
 
     // ── INNGEST BACKGROUND JOBS ──
-    const { inngest } = await import("@/lib/inngest/client");
+    const { inngest } = await import("@/services/inngest/client");
 
     const eventsToEnqueue = parsed.data.contacts.map((contact) => ({
         name: "campaign/send.contact" as const,

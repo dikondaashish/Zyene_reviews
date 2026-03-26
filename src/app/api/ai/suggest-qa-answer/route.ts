@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
-import { anthropic } from "@/lib/ai/client";
-import { QA_ANSWER_PROMPT } from "@/lib/ai/prompts";
+import { createClient } from "@/lib/db/supabase/server";
+import { anthropic } from "@/services/ai/client";
+import { QA_ANSWER_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
-import { aiRateLimit } from "@/lib/rate-limit";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { aiRateLimit } from "@/lib/auth/rate-limit";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 interface OrgRow {
     plan: string;

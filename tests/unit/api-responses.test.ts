@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apiError, apiOk } from "../src/app/api/_shared/responses";
+import { apiError, apiOk } from "../../src/app/api/_shared/responses";
 
 describe("api responses", () => {
   it("returns wrapped success payload", async () => {

@@ -1,10 +1,10 @@
-import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
-import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
-import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
-import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
-import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
-import { syncRateLimit } from "@/lib/rate-limit";
-import { redis } from "@/lib/redis";
+import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
+import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
+import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
+import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
+import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
+import { syncRateLimit } from "@/lib/auth/rate-limit";
+import { redis } from "@/lib/db/redis";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";

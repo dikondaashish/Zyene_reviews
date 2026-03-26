@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { useOnboardingStore } from "@/lib/stores/onboarding-store";
+import { createClient } from "@/lib/db/supabase/client";
+import { useOnboardingStore } from "@/lib/state/onboarding-store";
 import { Loader2 } from "lucide-react";
 import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";

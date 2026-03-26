@@ -1,8 +1,8 @@
 
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { sendEmail } from "@/lib/resend/send-email";
-import { dailyDigestEmail } from "@/lib/resend/templates/daily-digest-email";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { sendEmail } from "@/services/resend/send-email";
+import { dailyDigestEmail } from "@/services/resend/templates/daily-digest-email";
 
 export async function GET(request: Request) {
     const authHeader = request.headers.get("authorization");

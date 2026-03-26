@@ -1,5 +1,5 @@
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { notFound } from "next/navigation";
 import { PublicReviewFlow } from "./review-flow";
 import { Metadata } from "next";

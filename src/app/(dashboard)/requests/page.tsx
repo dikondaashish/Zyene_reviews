@@ -1,5 +1,5 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import {
     Card,
@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { SendRequestDialog } from "./send-request-dialog";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function RequestsPage({
     searchParams,

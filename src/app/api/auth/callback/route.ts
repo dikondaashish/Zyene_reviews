@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { nanoid } from "nanoid";
-import { listAccounts, listLocations } from "@/lib/google/business-profile";
-import { redis } from "@/lib/redis";
+import { listAccounts, listLocations } from "@/services/google/business-profile";
+import { redis } from "@/lib/db/redis";
 
 function safeNextPath(raw: string | null): string {
     const fallback = "/dashboard";
@@ -281,8 +281,8 @@ export async function GET(request: Request) {
                     metadata: { email, full_name: fullName },
                 });
 
-                const { sendEmail } = await import("@/lib/resend/send-email");
-                const { welcomeEmail } = await import("@/lib/resend/templates/welcome-email");
+                const { sendEmail } = await import("@/services/resend/send-email");
+                const { welcomeEmail } = await import("@/services/resend/templates/welcome-email");
                 const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
                 const loginUrl = rootDomain.includes("localhost")
                     ? `${process.env.NEXT_PUBLIC_APP_URL}/login`

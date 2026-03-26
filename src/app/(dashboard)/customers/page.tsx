@@ -1,5 +1,5 @@
-import { getActiveBusinessId } from "@/lib/business-context";
-import { createClient } from "@/lib/supabase/server";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { createClient } from "@/lib/db/supabase/server";
 import { CustomerManagement } from "@/components/customers/customer-management";
 import { redirect } from "next/navigation";
 

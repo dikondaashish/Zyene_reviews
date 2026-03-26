@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";

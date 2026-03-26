@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 // Helper: verify ownership of a campaign
 async function verifyCampaignOwnership(supabase: any, userId: string, campaignId: string) {

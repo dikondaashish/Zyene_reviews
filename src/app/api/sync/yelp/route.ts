@@ -1,5 +1,5 @@
-import { syncYelpReviewsForPlatform } from "@/lib/yelp/sync-service";
-import { syncRateLimit } from "@/lib/rate-limit";
+import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
+import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
 import { toast } from "sonner"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/db/supabase/client"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 
 function LoginForm() {

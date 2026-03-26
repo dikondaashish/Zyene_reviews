@@ -1,6 +1,6 @@
 import { anthropic } from "./client";
 import { SENTIMENT_PROMPT } from "./prompts";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 
 export async function analyzeReview(review: any) {
     if (!review.content && !review.text) return; // Need content

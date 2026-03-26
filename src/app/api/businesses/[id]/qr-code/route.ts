@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { generateQRCodeDataURL } from "@/lib/qr/generate-qr";
 import { NextResponse } from "next/server";
-import type { MemberOrgContext, NestedBusiness } from "@/lib/types/member-context";
+import type { MemberOrgContext, NestedBusiness } from "@/types/member-context";
 
 export async function GET(
     request: Request,

@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { z } from "zod";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 const requestSchema = z.object({
     businessId: z.string().uuid(),

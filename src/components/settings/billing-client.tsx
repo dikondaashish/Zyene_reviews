@@ -30,7 +30,7 @@ import {
     ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import type { Plan } from "@/lib/stripe/plans";
+import type { Plan } from "@/services/stripe/plans";
 
 // ─────────────────────────────────────────────────────────
 // Types

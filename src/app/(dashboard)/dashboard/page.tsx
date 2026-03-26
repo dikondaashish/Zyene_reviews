@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import {
     Card,
     CardContent,
@@ -45,13 +45,13 @@ import Link from "next/link";
 import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
-import { getActiveBusinessId } from "@/lib/business-context";
-import { DASHBOARD_DEMO_DATA } from "@/lib/dashboard-demo-data";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { DASHBOARD_DEMO_DATA } from "@/constants/dashboard-demo-data";
 import {
     dateRangeLastNDays,
     getGooglePerformanceTotals,
     type GooglePerformanceTotals,
-} from "@/lib/google/performance-queries";
+} from "@/services/google/performance-queries";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -161,7 +161,7 @@ export default async function DashboardPage() {
         const cacheKey = `dashboard:stats:${business.id}`;
         let cachedStats: any = null;
         try {
-            const { redis } = await import('@/lib/redis');
+            const { redis } = await import('@/lib/db/redis');
             cachedStats = await redis.get(cacheKey);
         } catch (e) {
             console.error("Redis fetch error:", e);
@@ -441,7 +441,7 @@ export default async function DashboardPage() {
             // Save to cache
             try {
                 const statsToCache = { responseRate, pendingCount, recentReviews, attentionReviews, trendData, ratingData, totalReviewsTrend, averageRatingTrend, positivePercent, negativePercent, hasSentimentData, engagementRate, hasEngagementData, requestsThisMonth, newReviews30d };
-                const { redis } = await import('@/lib/redis');
+                const { redis } = await import('@/lib/db/redis');
                 await redis.set(cacheKey, JSON.stringify(statsToCache), { ex: 300 }); // 5 minutes TTL
             } catch (e) {
                 console.error("Redis set error:", e);

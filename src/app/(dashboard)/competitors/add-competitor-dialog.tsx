@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { addCompetitor } from "@/app/actions/competitor";
-import { Database } from "@/lib/supabase/database.types";
+import { Database } from "@/lib/db/supabase/database.types";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 

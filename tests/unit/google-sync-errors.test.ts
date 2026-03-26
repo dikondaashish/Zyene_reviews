@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapGoogleSyncError } from "../src/lib/api/google-sync-errors";
+import { mapGoogleSyncError } from "../../src/lib/api/google-sync-errors";
 
 describe("mapGoogleSyncError", () => {
   it("maps conflict", () => {

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { getReview } from "@/lib/google/business-profile";
-import { getValidGoogleToken, processGoogleReview } from "@/lib/google/sync-service";
-import { extractGoogleLocationIdFromQaPayload, processQaWebhookForLocation } from "@/lib/google/webhook-qa";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { getReview } from "@/services/google/business-profile";
+import { getValidGoogleToken, processGoogleReview } from "@/services/google/sync-service";
+import { extractGoogleLocationIdFromQaPayload, processQaWebhookForLocation } from "@/services/google/webhook-qa";
 import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {

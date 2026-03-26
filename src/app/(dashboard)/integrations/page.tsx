@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { GoogleIntegrationCard } from "@/components/integrations/google-card";
 import { YelpIntegrationCard } from "@/components/integrations/yelp-card";
 import { FacebookIntegrationCard } from "@/components/integrations/facebook-card";

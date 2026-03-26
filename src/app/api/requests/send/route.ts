@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { sendSMS } from "@/lib/twilio/send-sms";
+import { sendSMS } from "@/services/twilio/send-sms";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { requestRateLimit } from "@/lib/rate-limit";
+import { requestRateLimit } from "@/lib/auth/rate-limit";
 
 export async function POST(request: Request) {
     try {

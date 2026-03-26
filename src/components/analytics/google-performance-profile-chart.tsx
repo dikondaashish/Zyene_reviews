@@ -11,7 +11,7 @@ import {
     ResponsiveContainer,
     Legend,
 } from "recharts";
-import type { DailyMetricPoint } from "@/lib/google/performance-queries";
+import type { DailyMetricPoint } from "@/services/google/performance-queries";
 
 export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint[] }) {
     const [mounted, setMounted] = useState(false);

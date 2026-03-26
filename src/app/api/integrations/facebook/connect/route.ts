@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { getAppId } from "@/lib/facebook/client";
+import { createClient } from "@/lib/db/supabase/server";
+import { getAppId } from "@/services/facebook/client";
 
 /**
  * GET: Redirects user to Facebook OAuth login.

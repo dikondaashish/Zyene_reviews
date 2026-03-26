@@ -1,12 +1,12 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 
 import { GeneralSettingsForm } from "@/components/settings/general-settings-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
 import { RestartTourSection } from "@/components/settings/restart-tour-section";
 
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function GeneralSettingsPage() {
     const supabase = await createClient();

@@ -1,7 +1,7 @@
-import { createAdminClient } from "@/lib/supabase/admin";
-import { sendSMS } from "@/lib/twilio/send-sms";
-import { sendEmail } from "@/lib/resend/send-email";
-import { reviewAlertEmail } from "@/lib/resend/templates/review-alert-email";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { sendSMS } from "@/services/twilio/send-sms";
+import { sendEmail } from "@/services/resend/send-email";
+import { reviewAlertEmail } from "@/services/resend/templates/review-alert-email";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

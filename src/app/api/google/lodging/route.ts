@@ -1,9 +1,9 @@
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
-import { getLodging, patchLodging, stripLodgingOutputOnly, type LodgingRecord } from "@/lib/google/lodging";
-import { mergeLodgingPatches, type LodgingPatches } from "@/lib/google/lodging-merge";
-import { computeLodgingHealth } from "@/lib/google/lodging-health";
-import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
+import { getLodging, patchLodging, stripLodgingOutputOnly, type LodgingRecord } from "@/services/google/lodging";
+import { mergeLodgingPatches, type LodgingPatches } from "@/services/google/lodging-merge";
+import { computeLodgingHealth } from "@/services/google/lodging-health";
+import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";

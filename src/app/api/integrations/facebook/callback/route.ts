@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { exchangeCodeForToken, getLongLivedToken } from "@/lib/facebook/client";
-import { getPages } from "@/lib/facebook/adapter";
+import { createClient } from "@/lib/db/supabase/server";
+import { exchangeCodeForToken, getLongLivedToken } from "@/services/facebook/client";
+import { getPages } from "@/services/facebook/adapter";
 
 /**
  * GET: Facebook OAuth callback.

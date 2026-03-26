@@ -1,5 +1,5 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
@@ -9,7 +9,7 @@ import { GoogleListingEditor } from "@/components/settings/google-listing-editor
 import { GoogleAccountAccessPanel } from "@/components/settings/google-account-access-panel";
 import { GoogleLodgingPanel } from "@/components/settings/google-lodging-panel";
 
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function BusinessInformationPage() {
     const supabase = await createClient();

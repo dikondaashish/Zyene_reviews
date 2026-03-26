@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/db/supabase/client"
 import { Store, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"

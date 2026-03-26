@@ -1,6 +1,6 @@
-import { sendSMS } from "@/lib/twilio/send-sms";
-import { sendEmail } from "@/lib/resend/send-email";
-import { reviewRequestEmail } from "@/lib/resend/templates/review-request-email";
+import { sendSMS } from "@/services/twilio/send-sms";
+import { sendEmail } from "@/services/resend/send-email";
+import { reviewRequestEmail } from "@/services/resend/templates/review-request-email";
 
 interface SendReviewRequestOptions {
     businessId: string;

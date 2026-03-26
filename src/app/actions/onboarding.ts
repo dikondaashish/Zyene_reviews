@@ -1,8 +1,8 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
-import { redis } from "@/lib/redis";
+import { redis } from "@/lib/db/redis";
 import {
   step1FormSchema,
   step3FormSchema,
@@ -18,8 +18,8 @@ import {
   type StepBusinessLocationFormData,
   type StepCategoryFormData,
   type StepNotificationsFormData,
-} from "@/lib/validations/onboarding";
-import { registerNotifications } from "@/lib/google/notifications";
+} from "@/lib/validation/onboarding";
+import { registerNotifications } from "@/services/google/notifications";
 
 export async function createBusinessAndAdvanceOnboarding(
   data: Step1FormData,

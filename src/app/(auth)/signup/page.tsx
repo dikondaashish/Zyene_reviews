@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail } from "lucide-react";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";

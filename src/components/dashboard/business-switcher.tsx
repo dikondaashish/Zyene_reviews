@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { setActiveBusiness } from "@/lib/business-context"
+import { setActiveBusiness } from "@/lib/auth/business-context"
 import Link from "next/link"
 
 interface BusinessSwitcherProps {

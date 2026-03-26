@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import {
     AlertCircle,
     Lock,
 } from "lucide-react";
-import { getActiveBusinessId, setActiveBusiness } from "@/lib/business-context";
+import { getActiveBusinessId, setActiveBusiness } from "@/lib/auth/business-context";
 import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
 
 export default async function BusinessesPage() {

@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 
 const COOKIE_NAME = "active_business_id";
 
@@ -31,7 +31,7 @@ export async function getActiveBusinessId(): Promise<{
     let memberData: any = null;
 
     try {
-        const { redis } = await import("@/lib/redis");
+        const { redis } = await import("@/lib/db/redis");
         const cached = await redis.get(cacheKey);
         if (cached) {
             memberData = typeof cached === "string" ? JSON.parse(cached) : cached;
@@ -60,7 +60,7 @@ export async function getActiveBusinessId(): Promise<{
 
         if (memberData) {
             try {
-                const { redis } = await import("@/lib/redis");
+                const { redis } = await import("@/lib/db/redis");
                 await redis.set(cacheKey, JSON.stringify(memberData), { ex: 300 }); // 5 min TTL
             } catch (e) {
                 console.error("Redis cache set error:", e);

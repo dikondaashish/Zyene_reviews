@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { type NextRequest, NextResponse } from "next/server";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { sendSMS } from "@/lib/twilio/send-sms";
+import { sendSMS } from "@/services/twilio/send-sms";
 import * as Sentry from "@sentry/nextjs";
 
 export async function POST(request: NextRequest) {

@@ -6,7 +6,7 @@ import { BrandingForm } from "./branding-form";
 
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/index";
 import { Link as LinkIcon, HelpCircle, QrCode, Check, Download, Printer, Share2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
-import { getBusiness, getReviews } from "@/lib/yelp/adapter";
-import { syncYelpReviewsForPlatform } from "@/lib/yelp/sync-service";
+import { getBusiness, getReviews } from "@/services/yelp/adapter";
+import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import * as Sentry from "@sentry/nextjs";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import type { MemberOrgContext } from "@/types/member-context";
 
 export async function POST(req: Request) {
     const supabase = await createClient();

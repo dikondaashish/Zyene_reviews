@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { MobileSidebarFAB } from "@/components/dashboard/mobile-sidebar-fab";
@@ -8,7 +8,7 @@ import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { OrganizationDisplay } from "@/components/dashboard/organization-display";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
 

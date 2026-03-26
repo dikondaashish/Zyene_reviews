@@ -1,4 +1,4 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
 import { listAllQuestions, questionToRow } from "./qanda";
 import {

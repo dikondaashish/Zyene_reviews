@@ -1,7 +1,7 @@
-import { stripe } from "@/lib/stripe/client";
+import { stripe } from "@/services/stripe/client";
 import * as Sentry from "@sentry/nextjs";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { getPlanByPriceId, FREE_LIMITS } from "@/lib/stripe/plans";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { getPlanByPriceId, FREE_LIMITS } from "@/services/stripe/plans";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 

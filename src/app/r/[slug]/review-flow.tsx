@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/index";
 
 // ─── Category → Tag mapping ────────────────────────────────────────────
 const CATEGORY_TAGS: Record<string, string[]> = {

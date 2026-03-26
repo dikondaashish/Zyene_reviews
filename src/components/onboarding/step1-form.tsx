@@ -23,7 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-import { stepOrganizationSchema, type StepOrganizationFormData } from "@/lib/validations/onboarding";
+import { stepOrganizationSchema, type StepOrganizationFormData } from "@/lib/validation/onboarding";
 import { updateOrganizationName } from "@/app/actions/onboarding";
 
 interface Step1Props {

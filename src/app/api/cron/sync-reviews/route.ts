@@ -1,7 +1,7 @@
-import { createAdminClient } from "@/lib/supabase/admin";
-import { syncGoogleReviewsForPlatform, SyncResult } from "@/lib/google/sync-service";
-import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/lib/yelp/sync-service";
-import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/lib/facebook/sync-service";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { syncGoogleReviewsForPlatform, SyncResult } from "@/services/google/sync-service";
+import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/services/yelp/sync-service";
+import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/services/facebook/sync-service";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 

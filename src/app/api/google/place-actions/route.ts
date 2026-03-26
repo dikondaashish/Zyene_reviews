@@ -1,11 +1,11 @@
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
 import {
     createPlaceActionLink,
     deletePlaceActionLink,
     listAllPlaceActionTypeMetadata,
-} from "@/lib/google/place-actions";
-import { syncGbpPlaceActionsForPlatform } from "@/lib/google/phase2-sync";
+} from "@/services/google/place-actions";
+import { syncGbpPlaceActionsForPlatform } from "@/services/google/phase2-sync";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";

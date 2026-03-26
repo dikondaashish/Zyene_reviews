@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { z } from "zod";
 

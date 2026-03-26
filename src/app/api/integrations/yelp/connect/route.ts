@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
-import { searchBusiness } from "@/lib/yelp/adapter";
+import { searchBusiness } from "@/services/yelp/adapter";
 
 export async function POST(req: Request) {
     const supabase = await createClient();

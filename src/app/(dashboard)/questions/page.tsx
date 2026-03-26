@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import {

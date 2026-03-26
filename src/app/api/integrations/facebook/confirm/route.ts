@@ -1,11 +1,11 @@
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { NextResponse } from "next/server";
-import { getPageDetails } from "@/lib/facebook/adapter";
-import { syncFacebookReviewsForPlatform } from "@/lib/facebook/sync-service";
+import { getPageDetails } from "@/services/facebook/adapter";
+import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { cookies } from "next/headers";
 import * as Sentry from "@sentry/nextjs";
-import type { MemberOrgContext } from "@/lib/types/member-context";
+import type { MemberOrgContext } from "@/types/member-context";
 
 /**
  * POST: Confirm Facebook page connection.

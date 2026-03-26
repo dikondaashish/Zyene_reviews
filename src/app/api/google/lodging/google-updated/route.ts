@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
-import { getLodgingGoogleUpdated, stripLodgingOutputOnly } from "@/lib/google/lodging";
+import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
+import { getLodgingGoogleUpdated, stripLodgingOutputOnly } from "@/services/google/lodging";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

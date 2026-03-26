@@ -1,12 +1,12 @@
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
 import {
     getGoogleLocation,
     patchGoogleLocation,
     type PatchListingInput,
-} from "@/lib/google/listing-information";
-import { computeProfileHealth } from "@/lib/google/profile-health";
-import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
+} from "@/services/google/listing-information";
+import { computeProfileHealth } from "@/services/google/profile-health";
+import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";

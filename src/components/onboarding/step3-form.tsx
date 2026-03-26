@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, ChevronRight } from "lucide-react";
-import { stepCategorySchema, type StepCategoryFormData } from "@/lib/validations/onboarding";
+import { stepCategorySchema, type StepCategoryFormData } from "@/lib/validation/onboarding";
 import { updateBusinessCategory } from "@/app/actions/onboarding";
 
 const CATEGORIES = [

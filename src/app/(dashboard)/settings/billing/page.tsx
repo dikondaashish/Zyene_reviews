@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { BillingClient } from "@/components/settings/billing-client";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { PLANS, getPlanByPriceId } from "@/lib/stripe/plans";
+import { PLANS, getPlanByPriceId } from "@/services/stripe/plans";
 
 export default async function BillingPage() {
     const supabase = await createClient();

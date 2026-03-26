@@ -1,6 +1,6 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getPageDetails } from "./adapter";
-import { analyzeReview } from "@/lib/ai/analysis";
+import { analyzeReview } from "@/services/ai/analysis";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 export interface FacebookSyncResult {

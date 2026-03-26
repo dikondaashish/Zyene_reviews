@@ -1,5 +1,5 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { TeamTable } from "@/components/settings/team-table";
 import { InviteMemberDialog } from "@/components/settings/invite-member-dialog";

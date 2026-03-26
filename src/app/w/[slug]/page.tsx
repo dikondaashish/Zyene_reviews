@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
 import { notFound } from "next/navigation";
 

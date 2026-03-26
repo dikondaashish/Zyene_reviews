@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { replyToReview, listAccounts } from "@/lib/google/business-profile";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
+import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { replyToReview, listAccounts } from "@/services/google/business-profile";
+import { getValidGoogleToken } from "@/services/google/sync-service";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {

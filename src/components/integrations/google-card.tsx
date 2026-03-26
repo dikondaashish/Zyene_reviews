@@ -28,10 +28,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { disconnectGoogle } from "@/app/(dashboard)/integrations/actions";
+import { disconnectGoogle } from "@/app/(dashboard)/integrations/_actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import {
     Dialog,
     DialogContent,

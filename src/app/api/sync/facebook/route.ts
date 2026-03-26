@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { syncFacebookReviewsForPlatform } from "@/lib/facebook/sync-service";
+import { createClient } from "@/lib/db/supabase/server";
+import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { NextResponse } from "next/server";
-import { syncRateLimit } from "@/lib/rate-limit";
+import { syncRateLimit } from "@/lib/auth/rate-limit";
 
 export async function POST(request: Request) {
     const supabase = await createClient();

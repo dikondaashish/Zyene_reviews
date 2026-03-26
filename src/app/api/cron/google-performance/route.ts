@@ -1,8 +1,8 @@
-import { createAdminClient } from "@/lib/supabase/admin";
-import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
-import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
-import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
-import { syncGoogleLodgingForPlatform } from "@/lib/google/phase4-sync";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
+import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
+import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
+import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 

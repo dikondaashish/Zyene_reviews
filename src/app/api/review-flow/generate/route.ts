@@ -1,7 +1,7 @@
-import { anthropic } from "@/lib/ai/client";
+import { anthropic } from "@/services/ai/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { aiRateLimit } from "@/lib/rate-limit";
+import { aiRateLimit } from "@/lib/auth/rate-limit";
 
 const requestSchema = z.object({
     businessName: z.string().min(1),

@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify user has access to this business
-        const { userCanAccessBusiness } = await import("@/lib/supabase/verify-business-access");
+        const { userCanAccessBusiness } = await import("@/lib/db/supabase/verify-business-access");
         const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
 
         if (!hasAccess) {

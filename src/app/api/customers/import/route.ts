@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import * as Sentry from "@sentry/nextjs";
-import { getActiveBusinessId } from "@/lib/business-context";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 export async function POST(req: Request) {
     const supabase = await createClient();

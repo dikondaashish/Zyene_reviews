@@ -1,4 +1,4 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGbpQuestionsForPlatform } from "./phase2-sync";
 
 function tryLocationFromQuestionName(name: unknown): string | null {

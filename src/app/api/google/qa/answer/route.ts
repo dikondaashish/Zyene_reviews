@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
-import { upsertQuestionAnswer } from "@/lib/google/qanda";
-import { syncGbpQuestionsForPlatform } from "@/lib/google/phase2-sync";
+import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
+import { upsertQuestionAnswer } from "@/services/google/qanda";
+import { syncGbpQuestionsForPlatform } from "@/services/google/phase2-sync";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

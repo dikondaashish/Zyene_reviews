@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { PublicProfileEditor } from "@/components/settings/public-profile-editor";
-import { getActiveBusinessId } from "@/lib/business-context";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function PublicProfilePage() {
     const supabase = await createClient();

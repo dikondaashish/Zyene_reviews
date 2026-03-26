@@ -34,7 +34,7 @@ import { deleteCompetitor } from "@/app/actions/competitor";
 import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TimeAgo } from "@/components/ui/time-ago";
-import { Database } from "@/lib/supabase/database.types";
+import { Database } from "@/lib/db/supabase/database.types";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 

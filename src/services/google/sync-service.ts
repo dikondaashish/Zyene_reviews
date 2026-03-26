@@ -1,6 +1,6 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
-import { analyzeReview } from "@/lib/ai/analysis";
+import { analyzeReview } from "@/services/ai/analysis";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 export async function getValidGoogleToken(platformId: string) {

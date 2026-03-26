@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ApiRouteError, toApiError } from "../src/app/api/_shared/errors";
+import { ApiRouteError, toApiError } from "../../src/app/api/_shared/errors";
 
 describe("api shared errors", () => {
   it("normalizes ApiRouteError with status/code/details", () => {

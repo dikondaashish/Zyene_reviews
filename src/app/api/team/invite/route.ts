@@ -1,8 +1,8 @@
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
-import { sendEmail } from "@/lib/resend/send-email";
-import { TeamInviteEmail } from "@/lib/resend/templates/team-invite-email";
+import { sendEmail } from "@/services/resend/send-email";
+import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
 import { z } from "zod";
 
 const inviteSchema = z.object({

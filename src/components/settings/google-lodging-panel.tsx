@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { LodgingPatches } from "@/lib/google/lodging-merge";
+import type { LodgingPatches } from "@/services/google/lodging-merge";
 
 type LodgingJson = Record<string, unknown>;
 

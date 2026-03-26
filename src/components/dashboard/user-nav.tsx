@@ -15,7 +15,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/db/supabase/client"
 import { useRouter } from "next/navigation"
 
 export function UserNav({ user }: { user: any }) {

@@ -1,7 +1,7 @@
-import { userCanAccessBusiness } from "@/lib/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/lib/google/sync-service";
-import { listAccounts, listLocations } from "@/lib/google/business-profile";
-import { listAccountAdmins } from "@/lib/google/account-management";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { getValidGoogleToken } from "@/services/google/sync-service";
+import { listAccounts, listLocations } from "@/services/google/business-profile";
+import { listAccountAdmins } from "@/services/google/account-management";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
