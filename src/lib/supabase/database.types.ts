@@ -906,8 +906,10 @@ export type Database = {
           external_url: string | null
           google_account_id: string | null
           google_location_id: string | null
+          google_listing_synced_at: string | null
           google_performance_synced_at: string | null
           google_place_actions_synced_at: string | null
+          google_profile_health_score: number | null
           google_qa_synced_at: string | null
           id: string
           last_synced_at: string | null
@@ -927,8 +929,10 @@ export type Database = {
           external_url?: string | null
           google_account_id?: string | null
           google_location_id?: string | null
+          google_listing_synced_at?: string | null
           google_performance_synced_at?: string | null
           google_place_actions_synced_at?: string | null
+          google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           id?: string
           last_synced_at?: string | null
@@ -948,8 +952,10 @@ export type Database = {
           external_url?: string | null
           google_account_id?: string | null
           google_location_id?: string | null
+          google_listing_synced_at?: string | null
           google_performance_synced_at?: string | null
           google_place_actions_synced_at?: string | null
+          google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           id?: string
           last_synced_at?: string | null

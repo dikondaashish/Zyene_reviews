@@ -27,6 +27,7 @@ import {
     MousePointerClick,
     HelpCircle,
     Link2,
+    ListChecks,
 } from "lucide-react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
@@ -529,6 +530,15 @@ export default async function DashboardPage() {
                 ?.google_performance_synced_at ?? null;
     }
 
+    let googleProfileHealthScore: number | null = null;
+    if (useDemoData) {
+        googleProfileHealthScore = 72;
+    } else if (isGoogleConnected) {
+        const gh = (googlePlatform as { google_profile_health_score?: number | null })
+            ?.google_profile_health_score;
+        googleProfileHealthScore = typeof gh === "number" ? gh : null;
+    }
+
     const reviewsCount = business.total_reviews;
 
     return (
@@ -688,7 +698,7 @@ export default async function DashboardPage() {
             </div>
 
             {(isGoogleConnected || useDemoData) && (
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Unanswered Q&A</CardTitle>
@@ -731,6 +741,38 @@ export default async function DashboardPage() {
                             <Link href="/settings/business-information" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
                                     Manage links
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Listing completeness</CardTitle>
+                            <ListChecks className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                className={`text-2xl font-bold ${
+                                    googleProfileHealthScore === null
+                                        ? "text-muted-foreground"
+                                        : googleProfileHealthScore >= 80
+                                          ? "text-green-600"
+                                          : googleProfileHealthScore >= 40
+                                            ? "text-amber-600"
+                                            : "text-red-600"
+                                }`}
+                            >
+                                {googleProfileHealthScore !== null ? `${googleProfileHealthScore}` : "—"}
+                                {googleProfileHealthScore !== null && (
+                                    <span className="text-lg font-semibold text-muted-foreground">/100</span>
+                                )}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                                Google profile fields filled (sync updates this score)
+                            </p>
+                            <Link href="/settings/business-information" className="mt-3 inline-block">
+                                <Button variant="outline" size="sm">
+                                    Edit listing
                                 </Button>
                             </Link>
                         </CardContent>

@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
+import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
@@ -43,6 +44,7 @@ export async function GET(request: Request) {
         daily?: number;
         keywords?: number;
         phase2?: { ok: boolean; error?: string; questions?: number; placeLinks?: number };
+        phase3?: { ok: boolean; error?: string; profileHealthScore?: number };
     }> = [];
 
     for (const p of platforms || []) {
@@ -63,6 +65,20 @@ export async function GET(request: Request) {
                 Sentry.captureException(e);
             }
 
+            let phase3: (typeof results)[0]["phase3"];
+            try {
+                const p3 = await syncGoogleListingProfileForPlatform(p.id);
+                phase3 = {
+                    ok: p3.success,
+                    error: p3.error,
+                    profileHealthScore: p3.profileHealthScore,
+                };
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                phase3 = { ok: false, error: msg };
+                Sentry.captureException(e);
+            }
+
             results.push({
                 platformId: p.id,
                 ok: r.success && (phase2?.ok ?? false),
@@ -70,6 +86,7 @@ export async function GET(request: Request) {
                 daily: r.dailyRowsUpserted,
                 keywords: r.keywordRowsUpserted,
                 phase2,
+                phase3,
             });
             await new Promise((res) => setTimeout(res, 250));
         } catch (e: unknown) {

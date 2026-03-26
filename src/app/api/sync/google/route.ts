@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
+import { syncGoogleListingProfileForPlatform } from "@/lib/google/phase3-sync";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
 
@@ -63,6 +64,9 @@ export async function POST(request: Request) {
         });
         syncGooglePhase2ForPlatform(platform.id).catch((e) => {
             console.error("[Manual Sync] Google Q&A / place actions sync failed (non-fatal):", e);
+        });
+        syncGoogleListingProfileForPlatform(platform.id).catch((e) => {
+            console.error("[Manual Sync] Google listing / profile health sync failed (non-fatal):", e);
         });
 
         return NextResponse.json(result);

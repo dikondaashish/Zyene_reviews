@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
 import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
 import { PlaceActionLinksManager } from "@/components/settings/place-action-links-manager";
+import { GoogleListingEditor } from "@/components/settings/google-listing-editor";
+import { GoogleAccountAccessPanel } from "@/components/settings/google-account-access-panel";
 
 import { getActiveBusinessId } from "@/lib/business-context";
 
@@ -73,6 +75,36 @@ export default async function BusinessInformationPage() {
                     <BusinessInfoForm business={business} />
                 </div>
             </div>
+
+            {isGoogleConnected && (
+                <div className="rounded-lg border bg-white shadow-sm">
+                    <div className="border-b px-6 py-4">
+                        <h4 className="text-sm font-semibold">Google Business Profile listing</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Edit the public listing fields Google shows on Search and Maps. This uses the Business
+                            Information API (same connection as reviews).
+                        </p>
+                    </div>
+                    <div className="px-6 py-5">
+                        <GoogleListingEditor businessId={business.id} />
+                    </div>
+                </div>
+            )}
+
+            {isGoogleConnected && (
+                <div className="rounded-lg border bg-white shadow-sm">
+                    <div className="border-b px-6 py-4">
+                        <h4 className="text-sm font-semibold">Google account access</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Accounts and locations your OAuth token can manage, plus admins on the linked Google
+                            Business account.
+                        </p>
+                    </div>
+                    <div className="px-6 py-5">
+                        <GoogleAccountAccessPanel businessId={business.id} />
+                    </div>
+                </div>
+            )}
 
             {/* Review Settings */}
             <div className="rounded-lg border bg-white shadow-sm">
