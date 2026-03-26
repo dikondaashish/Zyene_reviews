@@ -150,7 +150,12 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             const res = await fetch(`/api/google/location-selector?businessId=${encodeURIComponent(businessId)}`);
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-                toast.error("Failed to load Google locations", { description: (data as any)?.error });
+                const msg = (data as any)?.error || "Failed to load Google locations";
+                toast.error("Failed to load Google locations", { description: msg });
+                if (res.status === 401 && /reconnect/i.test(String(msg))) {
+                    setIsPickingLocation(false);
+                    router.refresh();
+                }
                 return;
             }
             const accs = (data as any)?.accounts || [];
@@ -301,16 +306,21 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 This business is connected to Google, but no GBP location has been selected yet.
                             </p>
                             <div className="mt-2">
-                                <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={async () => {
-                                        setIsPickingLocation(true);
-                                        await loadLocations();
-                                    }}
-                                >
-                                    Choose location
-                                </Button>
+                                <div className="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        onClick={async () => {
+                                            setIsPickingLocation(true);
+                                            await loadLocations();
+                                        }}
+                                    >
+                                        Choose location
+                                    </Button>
+                                    <Button size="sm" variant="outline" onClick={handleConnect}>
+                                        Reconnect Google
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     )}

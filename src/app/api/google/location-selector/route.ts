@@ -79,7 +79,11 @@ export async function GET(request: NextRequest) {
         });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        return NextResponse.json({ error: msg }, { status: 400 });
+        const needsReconnect = /No refresh token available|reconnect/i.test(msg);
+        return NextResponse.json(
+            { error: needsReconnect ? "Authentication expired. Please reconnect Google." : msg },
+            { status: needsReconnect ? 401 : 400 }
+        );
     }
 }
 
