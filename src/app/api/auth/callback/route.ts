@@ -4,22 +4,35 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations } from "@/lib/google/business-profile";
-import { registerNotifications } from "@/lib/google/notifications";
 import { redis } from "@/lib/redis";
 
+function safeNextPath(raw: string | null): string {
+    const fallback = "/dashboard";
+    if (!raw) return fallback;
+
+    const candidate = raw.startsWith("/") ? raw : `/${raw}`;
+    if (candidate.startsWith("//")) return fallback;
+    if (candidate.includes("\\") || candidate.includes("://")) return fallback;
+    return candidate;
+}
+
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url);
-    const code = searchParams.get("code");
-    const next = searchParams.get("next") ?? "/dashboard";
-    const biz = searchParams.get("biz");
+    try {
+        const { searchParams, origin } = new URL(request.url);
+        const code = searchParams.get("code");
+        const next = safeNextPath(searchParams.get("next"));
+        const biz = searchParams.get("biz");
 
-    // "Add a Business" flow: org_id and user_id passed as URL query params.
-    // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
-    const addBusinessOrgId = searchParams.get("add_org");
-    const addBusinessUserId = searchParams.get("add_user");
-    const isAddBusinessFlow = !!(addBusinessOrgId && next === "/businesses");
+        // "Add a Business" flow: org_id and user_id passed as URL query params.
+        // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
+        const addBusinessOrgId = searchParams.get("add_org");
+        const addBusinessUserId = searchParams.get("add_user");
+        const isAddBusinessFlow = !!(addBusinessOrgId && next === "/businesses");
 
-    if (code) {
+        if (!code) {
+            return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+        }
+
         const supabase = await createClient();
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -389,10 +402,14 @@ export async function GET(request: Request) {
                 : `https://app.${rootDomain}`;
 
             // Preserve the caller intent (e.g. integrations page -> /dashboard/integrations).
-            const normalizedNext = next.startsWith("/") ? next : `/${next}`;
-            return NextResponse.redirect(`${appBase}${normalizedNext}`);
+            return NextResponse.redirect(`${appBase}${next}`);
         }
+        return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+    } catch (error) {
+        Sentry.captureException(error, {
+            tags: { route: "auth-callback", step: "unhandled" },
+        });
+        const { origin } = new URL(request.url);
+        return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
     }
-
-    return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }
