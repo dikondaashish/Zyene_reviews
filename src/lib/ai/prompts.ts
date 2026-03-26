@@ -29,3 +29,12 @@ Return ONLY valid JSON:
 }
 Rating: {rating}/5
 Review: {text}`;
+
+export const QA_ANSWER_PROMPT = `You are the owner of {business_name}. A customer asked this on your Google Business Profile Q&A:
+"{question_text}"
+
+Write one helpful, concise answer (max 120 words) you could post as the business owner.
+- Be friendly and specific; if you need to defer (e.g. call for pricing), say so clearly.
+- Do not invent policies or guarantees.
+Return ONLY valid JSON:
+{ "answer": "..." }`;

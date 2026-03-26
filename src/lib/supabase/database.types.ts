@@ -907,6 +907,8 @@ export type Database = {
           google_account_id: string | null
           google_location_id: string | null
           google_performance_synced_at: string | null
+          google_place_actions_synced_at: string | null
+          google_qa_synced_at: string | null
           id: string
           last_synced_at: string | null
           platform: string
@@ -926,6 +928,8 @@ export type Database = {
           google_account_id?: string | null
           google_location_id?: string | null
           google_performance_synced_at?: string | null
+          google_place_actions_synced_at?: string | null
+          google_qa_synced_at?: string | null
           id?: string
           last_synced_at?: string | null
           platform: string
@@ -945,6 +949,8 @@ export type Database = {
           google_account_id?: string | null
           google_location_id?: string | null
           google_performance_synced_at?: string | null
+          google_place_actions_synced_at?: string | null
+          google_qa_synced_at?: string | null
           id?: string
           last_synced_at?: string | null
           platform?: string
@@ -1053,6 +1059,132 @@ export type Database = {
           },
           {
             foreignKeyName: "google_search_keyword_monthly_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gbp_place_action_links: {
+        Row: {
+          id: string
+          review_platform_id: string
+          business_id: string
+          google_link_name: string
+          place_action_type: string
+          uri: string
+          is_preferred: boolean
+          is_broken: boolean
+          last_link_check_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          review_platform_id: string
+          business_id: string
+          google_link_name: string
+          place_action_type: string
+          uri: string
+          is_preferred?: boolean
+          is_broken?: boolean
+          last_link_check_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          review_platform_id?: string
+          business_id?: string
+          google_link_name?: string
+          place_action_type?: string
+          uri?: string
+          is_preferred?: boolean
+          is_broken?: boolean
+          last_link_check_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gbp_place_action_links_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gbp_place_action_links_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gbp_questions: {
+        Row: {
+          id: string
+          review_platform_id: string
+          business_id: string
+          google_question_name: string
+          question_text: string
+          author_display_name: string | null
+          author_type: string | null
+          upvote_count: number
+          google_create_time: string | null
+          google_update_time: string | null
+          total_answer_count: number
+          has_merchant_answer: boolean
+          top_answers: unknown
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          review_platform_id: string
+          business_id: string
+          google_question_name: string
+          question_text: string
+          author_display_name?: string | null
+          author_type?: string | null
+          upvote_count?: number
+          google_create_time?: string | null
+          google_update_time?: string | null
+          total_answer_count?: number
+          has_merchant_answer?: boolean
+          top_answers?: unknown
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          review_platform_id?: string
+          business_id?: string
+          google_question_name?: string
+          question_text?: string
+          author_display_name?: string | null
+          author_type?: string | null
+          upvote_count?: number
+          google_create_time?: string | null
+          google_update_time?: string | null
+          total_answer_count?: number
+          has_merchant_answer?: boolean
+          top_answers?: unknown
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gbp_questions_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gbp_questions_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"

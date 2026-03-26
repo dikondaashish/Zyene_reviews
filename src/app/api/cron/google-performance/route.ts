@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
+import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
@@ -35,17 +36,40 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
-    const results: Array<{ platformId: string; ok: boolean; error?: string; daily?: number; keywords?: number }> = [];
+    const results: Array<{
+        platformId: string;
+        ok: boolean;
+        error?: string;
+        daily?: number;
+        keywords?: number;
+        phase2?: { ok: boolean; error?: string; questions?: number; placeLinks?: number };
+    }> = [];
 
     for (const p of platforms || []) {
         try {
             const r = await syncGooglePerformanceForPlatform(p.id);
+            let phase2: (typeof results)[0]["phase2"];
+            try {
+                const p2 = await syncGooglePhase2ForPlatform(p.id);
+                phase2 = {
+                    ok: p2.success,
+                    error: p2.error,
+                    questions: p2.questionsUpserted,
+                    placeLinks: p2.placeLinksUpserted,
+                };
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                phase2 = { ok: false, error: msg };
+                Sentry.captureException(e);
+            }
+
             results.push({
                 platformId: p.id,
-                ok: r.success,
-                error: r.error,
+                ok: r.success && (phase2?.ok ?? false),
+                error: [r.error, phase2?.error].filter(Boolean).join(" | ") || undefined,
                 daily: r.dailyRowsUpserted,
                 keywords: r.keywordRowsUpserted,
+                phase2,
             });
             await new Promise((res) => setTimeout(res, 250));
         } catch (e: unknown) {

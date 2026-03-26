@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
 import { ReviewSettingsForm } from "@/components/settings/review-settings-form";
+import { PlaceActionLinksManager } from "@/components/settings/place-action-links-manager";
 
 import { getActiveBusinessId } from "@/lib/business-context";
 
@@ -27,6 +28,27 @@ export default async function BusinessInformationPage() {
                 <p className="text-sm text-muted-foreground mt-1">Please create a business first.</p>
             </div>
         );
+    }
+
+    const isGoogleConnected = !!business.review_platforms?.find(
+        (p: { platform?: string }) => p.platform === "google"
+    );
+
+    let placeLinks: {
+        id: string;
+        place_action_type: string;
+        uri: string;
+        is_preferred: boolean;
+        is_broken: boolean;
+    }[] = [];
+
+    if (isGoogleConnected) {
+        const { data } = await supabase
+            .from("gbp_place_action_links")
+            .select("id, place_action_type, uri, is_preferred, is_broken")
+            .eq("business_id", business.id)
+            .order("place_action_type", { ascending: true });
+        placeLinks = data ?? [];
     }
 
     return (
@@ -64,6 +86,24 @@ export default async function BusinessInformationPage() {
                     <ReviewSettingsForm business={business} />
                 </div>
             </div>
+
+            {isGoogleConnected && (
+                <div className="rounded-lg border bg-white shadow-sm">
+                    <div className="border-b px-6 py-4">
+                        <h4 className="text-sm font-semibold">Google place action links</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Order online, reservations, and other action buttons on your Google listing. Changes sync
+                            to Google when you add or remove a link.
+                        </p>
+                    </div>
+                    <div className="px-6 py-5">
+                        <PlaceActionLinksManager
+                            businessId={business.id}
+                            initialLinks={placeLinks}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

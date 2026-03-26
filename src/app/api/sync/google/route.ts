@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { syncGoogleReviewsForPlatform } from "@/lib/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/lib/google/performance-sync";
+import { syncGooglePhase2ForPlatform } from "@/lib/google/phase2-sync";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/rate-limit";
 
@@ -59,6 +60,9 @@ export async function POST(request: Request) {
 
         syncGooglePerformanceForPlatform(platform.id).catch((e) => {
             console.error("[Manual Sync] Google Performance sync failed (non-fatal):", e);
+        });
+        syncGooglePhase2ForPlatform(platform.id).catch((e) => {
+            console.error("[Manual Sync] Google Q&A / place actions sync failed (non-fatal):", e);
         });
 
         return NextResponse.json(result);

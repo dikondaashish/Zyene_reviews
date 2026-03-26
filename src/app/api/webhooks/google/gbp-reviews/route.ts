@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getReview } from "@/lib/google/business-profile";
 import { getValidGoogleToken, processGoogleReview } from "@/lib/google/sync-service";
+import { extractGoogleLocationIdFromQaPayload, processQaWebhookForLocation } from "@/lib/google/webhook-qa";
 import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
@@ -23,6 +24,18 @@ export async function POST(req: NextRequest) {
         // Reviews: new_review / updated_review. Phase 1+ also subscribes to Q&A and media; those are no-ops until Phase 2 handlers exist.
         const reviewInfo = payload.new_review || payload.updated_review;
         if (!reviewInfo) {
+            const qaLoc = extractGoogleLocationIdFromQaPayload(payload as Record<string, unknown>);
+            if (qaLoc) {
+                try {
+                    await processQaWebhookForLocation(qaLoc);
+                    console.log("[GBP Webhook] Q&A notification processed for location", qaLoc);
+                } catch (e) {
+                    console.error("[GBP Webhook] Q&A sync failed:", e);
+                    Sentry.captureException(e, { tags: { route: "webhook-gbp-qa" } });
+                }
+                return new NextResponse(null, { status: 204 });
+            }
+
             const other =
                 payload.new_question ||
                 payload.updated_question ||
@@ -30,7 +43,7 @@ export async function POST(req: NextRequest) {
                 payload.updated_answer ||
                 payload.new_customer_media;
             if (other) {
-                console.log("[GBP Webhook] Non-review notification received (acknowledged; Phase 2 will process)");
+                console.log("[GBP Webhook] Non-review notification (no location parsed), ack");
             } else {
                 console.log("[GBP Webhook] No review info in payload (not a review event)");
             }

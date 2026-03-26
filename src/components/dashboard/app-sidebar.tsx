@@ -7,6 +7,7 @@ import {
     Building2,
     ChevronDown,
     CreditCard,
+    HelpCircle,
     Home,
     Megaphone,
     MessageSquare,
@@ -72,6 +73,11 @@ const items = [
         title: "Reviews",
         url: "/reviews",
         icon: MessageSquare,
+    },
+    {
+        title: "Q&A",
+        url: "/questions",
+        icon: HelpCircle,
     },
     {
         title: "Review Requests",

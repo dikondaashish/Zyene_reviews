@@ -25,6 +25,8 @@ import {
     Phone,
     Navigation2,
     MousePointerClick,
+    HelpCircle,
+    Link2,
 } from "lucide-react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
@@ -148,6 +150,9 @@ export default async function DashboardPage() {
     // Getting started banner stats
     let customerCount = 0;
     let notificationsConfigured = false;
+
+    let unansweredQaCount = 0;
+    let brokenPlaceLinksCount = 0;
 
     if (business.id) {
         // ── Redis Caching ──
@@ -442,6 +447,23 @@ export default async function DashboardPage() {
         } // Close cache miss `else`
     }
 
+    if (!useDemoData && business.id && isGoogleConnected) {
+        const [qaRes, plRes] = await Promise.all([
+            supabase
+                .from("gbp_questions")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", business.id)
+                .eq("has_merchant_answer", false),
+            supabase
+                .from("gbp_place_action_links")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", business.id)
+                .eq("is_broken", true),
+        ]);
+        unansweredQaCount = qaRes.count ?? 0;
+        brokenPlaceLinksCount = plRes.count ?? 0;
+    }
+
     // ── Computed Stats ──────────────────────────────────────────
 
     const responseRateLabel =
@@ -495,6 +517,8 @@ export default async function DashboardPage() {
             rawRowCount: 120,
         };
         perfSyncedAt = new Date().toISOString();
+        unansweredQaCount = 3;
+        brokenPlaceLinksCount = 1;
     }
 
     if (!useDemoData && business.id && isGoogleConnected) {
@@ -662,6 +686,57 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
+
+            {(isGoogleConnected || useDemoData) && (
+                <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Unanswered Q&A</CardTitle>
+                            <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                className={`text-2xl font-bold ${
+                                    unansweredQaCount === 0 ? "text-green-600" : "text-amber-600"
+                                }`}
+                            >
+                                {unansweredQaCount}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                                Google questions without a merchant answer
+                            </p>
+                            <Link href="/questions" className="mt-3 inline-block">
+                                <Button variant="outline" size="sm">
+                                    Manage Q&A
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Broken place links</CardTitle>
+                            <Link2 className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                className={`text-2xl font-bold ${
+                                    brokenPlaceLinksCount === 0 ? "text-green-600" : "text-red-600"
+                                }`}
+                            >
+                                {brokenPlaceLinksCount}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                                URLs that failed a quick availability check
+                            </p>
+                            <Link href="/settings/business-information" className="mt-3 inline-block">
+                                <Button variant="outline" size="sm">
+                                    Manage links
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
 
             {/* Google Business Profile performance (last 30 days) */}
             {(useDemoData || isGoogleConnected) && googlePerf && (
