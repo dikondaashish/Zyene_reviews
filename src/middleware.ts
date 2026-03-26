@@ -180,9 +180,13 @@ export async function middleware(request: NextRequest) {
                 return res;
             }
 
-            return createResponse(
+            // Non-RSC navigations are allowed to redirect, but we must still attach
+            // CORS headers so the browser doesn't block the redirected fetch.
+            const redirectRes = createResponse(
                 NextResponse.redirect(new URL(targetUrl, request.url))
             );
+            addCorsHeaders(redirectRes);
+            return redirectRes;
         }
         // Rewrite root to /login
         if (pathname === "/") {
