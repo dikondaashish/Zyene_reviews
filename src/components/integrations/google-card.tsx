@@ -42,6 +42,7 @@ interface GoogleCardProps {
         sync_status: string | null;
         total_reviews: number;
     } | null;
+    businessId: string;
     businessName?: string | null;
 }
 
@@ -79,7 +80,7 @@ function timeAgo(date: string) {
     return `${days}d ago`;
 }
 
-export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProps) {
+export function GoogleIntegrationCard({ platform, businessId, businessName }: GoogleCardProps) {
     const router = useRouter();
     const [isSyncing, setIsSyncing] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
@@ -99,8 +100,8 @@ export function GoogleIntegrationCard({ platform, businessName }: GoogleCardProp
             const rootDomain =
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/api/auth/callback?next=/integrations`
-                : `https://auth.${rootDomain}/api/auth/callback?next=/integrations`;
+                ? `http://${rootDomain}/api/auth/callback?next=/integrations&biz=${encodeURIComponent(businessId)}`
+                : `https://auth.${rootDomain}/api/auth/callback?next=/integrations&biz=${encodeURIComponent(businessId)}`;
 
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",

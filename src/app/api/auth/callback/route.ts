@@ -10,6 +10,7 @@ export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/dashboard";
+    const biz = searchParams.get("biz");
 
     // "Add a Business" flow: org_id and user_id passed as URL query params.
     // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
@@ -325,16 +326,35 @@ export async function GET(request: Request) {
                     Sentry.captureException(e, { tags: { route: "auth-callback", step: "fetch_gbp_hierarchy_login" } });
                 }
 
-                const { data: memberData } = await admin
-                    .from("organization_members")
-                    .select(`organizations ( businesses (id) )`)
-                    .eq("user_id", data.user.id)
-                    .single();
-
-                interface AuthMemberOrgContext {
-                    organizations: { businesses: Array<{ id: string }> } | null;
+                // Prefer explicit business id from the OAuth redirect (biz=...).
+                // Fallback to the first business in the user’s org membership.
+                let businessId: string | null = null;
+                if (biz) {
+                    const { data: bizRow, error: bizErr } = await admin
+                        .from("businesses")
+                        .select("id")
+                        .eq("id", biz)
+                        .select(`id, organizations!inner(organization_members!inner(user_id))`)
+                        .eq("organizations.organization_members.user_id", data.user.id)
+                        .single();
+                    if (!bizErr && bizRow?.id) {
+                        businessId = bizRow.id;
+                    }
                 }
-                const businessId = (memberData as unknown as AuthMemberOrgContext)?.organizations?.businesses?.[0]?.id;
+
+                if (!businessId) {
+                    const { data: memberData } = await admin
+                        .from("organization_members")
+                        .select(`organizations ( businesses (id) )`)
+                        .eq("user_id", data.user.id)
+                        .maybeSingle();
+
+                    interface AuthMemberOrgContext {
+                        organizations: { businesses: Array<{ id: string }> } | null;
+                    }
+                    businessId =
+                        (memberData as unknown as AuthMemberOrgContext)?.organizations?.businesses?.[0]?.id ?? null;
+                }
 
                 if (businessId) {
                     const { data: platformData } = await admin

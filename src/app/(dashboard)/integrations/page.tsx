@@ -202,6 +202,7 @@ export default async function IntegrationsPage() {
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
                     <GoogleIntegrationCard
                         platform={googlePlatform}
+                        businessId={business.id}
                         businessName={business.name}
                     />
                     <YelpIntegrationCard
