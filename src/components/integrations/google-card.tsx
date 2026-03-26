@@ -32,12 +32,29 @@ import { disconnectGoogle } from "@/app/(dashboard)/integrations/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 interface GoogleCardProps {
     platform?: {
         id: string;
         external_id: string;
         last_synced_at: string | null;
+        google_location_id?: string | null;
+        google_account_id?: string | null;
         google_performance_synced_at?: string | null;
         sync_status: string | null;
         total_reviews: number;
@@ -85,6 +102,11 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     const [isSyncing, setIsSyncing] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [isPickingLocation, setIsPickingLocation] = useState(false);
+    const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+    const [accounts, setAccounts] = useState<Array<{ resourceName: string; accountName: string; locations: Array<{ name: string; title: string; storeCode?: string | null }> }>>([]);
+    const [selectedAccount, setSelectedAccount] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<string>("");
 
     useEffect(() => {
         setMounted(true);
@@ -92,6 +114,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
 
     const isConnected = !!platform;
     const isError = platform?.sync_status?.startsWith("error");
+    const needsLocation = isConnected && !platform?.google_location_id;
 
     const supabase = createClient();
 
@@ -118,6 +141,52 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             if (error) throw error;
         } catch {
             toast.error("Failed to initiate Google connection");
+        }
+    };
+
+    const loadLocations = async () => {
+        setIsLoadingLocations(true);
+        try {
+            const res = await fetch(`/api/google/location-selector?businessId=${encodeURIComponent(businessId)}`);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                toast.error("Failed to load Google locations", { description: (data as any)?.error });
+                return;
+            }
+            const accs = (data as any)?.accounts || [];
+            setAccounts(accs);
+            if (accs.length > 0) {
+                setSelectedAccount(accs[0].resourceName);
+                const firstLoc = accs[0].locations?.[0]?.name;
+                if (firstLoc) setSelectedLocation(firstLoc);
+            }
+        } finally {
+            setIsLoadingLocations(false);
+        }
+    };
+
+    const saveLocation = async () => {
+        if (!selectedAccount || !selectedLocation) return;
+        try {
+            const res = await fetch("/api/google/location-selector", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    businessId,
+                    accountName: selectedAccount,
+                    locationName: selectedLocation,
+                }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                toast.error("Failed to save location", { description: (data as any)?.error });
+                return;
+            }
+            toast.success("Google location linked");
+            setIsPickingLocation(false);
+            router.refresh();
+        } catch (e: any) {
+            toast.error("Failed to save location", { description: e?.message });
         }
     };
 
@@ -225,6 +294,26 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                     </div>
                 </CardHeader>
                 <CardContent className="pb-3 space-y-3">
+                    {needsLocation && (
+                        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                            <p className="font-medium">Action required: choose your Google location</p>
+                            <p className="text-xs mt-1 text-amber-700">
+                                This business is connected to Google, but no GBP location has been selected yet.
+                            </p>
+                            <div className="mt-2">
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={async () => {
+                                        setIsPickingLocation(true);
+                                        await loadLocations();
+                                    }}
+                                >
+                                    Choose location
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                     {/* Stats row */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="rounded-lg bg-muted/50 p-3 text-center">
@@ -280,7 +369,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                         variant="secondary"
                         size="sm"
                         onClick={handleSync}
-                        disabled={isSyncing || isDisconnecting}
+                        disabled={isSyncing || isDisconnecting || needsLocation}
                     >
                         {isSyncing ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -290,6 +379,68 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                         Sync Now
                     </Button>
                 </CardFooter>
+
+                <Dialog open={isPickingLocation} onOpenChange={setIsPickingLocation}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Select Google Business Profile location</DialogTitle>
+                            <DialogDescription>
+                                Choose the GBP location that matches this Zyene business. This prevents mixing reviews between businesses.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <div className="text-sm font-medium">Account</div>
+                                <Select
+                                    value={selectedAccount}
+                                    onValueChange={(v) => {
+                                        setSelectedAccount(v);
+                                        const acc = accounts.find((a) => a.resourceName === v);
+                                        const firstLoc = acc?.locations?.[0]?.name;
+                                        if (firstLoc) setSelectedLocation(firstLoc);
+                                    }}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select account" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {accounts.map((a) => (
+                                            <SelectItem key={a.resourceName} value={a.resourceName}>
+                                                {a.accountName}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <div className="text-sm font-medium">Location</div>
+                                <Select value={selectedLocation} onValueChange={setSelectedLocation} disabled={!selectedAccount || isLoadingLocations}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder={isLoadingLocations ? "Loading…" : "Select location"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {(accounts.find((a) => a.resourceName === selectedAccount)?.locations || []).map((l) => (
+                                            <SelectItem key={l.name} value={l.name}>
+                                                {l.title}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsPickingLocation(false)}>
+                                Cancel
+                            </Button>
+                            <Button onClick={saveLocation} disabled={!selectedAccount || !selectedLocation}>
+                                Save
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </Card>
         );
     }

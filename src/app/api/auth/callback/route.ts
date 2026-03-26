@@ -299,33 +299,12 @@ export async function GET(request: Request) {
                 const finalAccessToken = data.session?.provider_token;
                 const finalRefreshToken = data.session?.provider_refresh_token;
 
+                // Do NOT auto-pick a GBP location on connect.
+                // Location selection happens explicitly in the UI, per business.
                 let googleAccountId: string | null = null;
                 let googleLocationId: string | null = null;
                 let externalId: string | null = null;
                 let googleReviewUrl: string | null = null;
-
-                try {
-                    if (finalAccessToken) {
-                        const accounts = await listAccounts(finalAccessToken);
-                        if (accounts.length > 0) {
-                            const account = accounts[0];
-                            googleAccountId = account.name.split("/")[1];
-                            const locations = await listLocations(finalAccessToken, account.name);
-                            if (locations.length > 0) {
-                                const location = locations[0];
-                                googleLocationId = location.name.split("/").pop() || null;
-                                externalId = googleLocationId;
-                                googleReviewUrl = location.metadata?.newReviewUri || location.metadata?.mapsUri || null;
-                                if (location.metadata?.placeId) {
-                                    googleReviewUrl = `https://search.google.com/local/writereview?placeid=${location.metadata.placeId}`;
-                                }
-                            }
-                        }
-                    }
-                } catch (e) {
-                    console.error("Failed to fetch GBP hierarchy:", e);
-                    Sentry.captureException(e, { tags: { route: "auth-callback", step: "fetch_gbp_hierarchy_login" } });
-                }
 
                 // Prefer explicit business id from the OAuth redirect (biz=...).
                 // Fallback to the first business in the user’s org membership.
@@ -373,10 +352,7 @@ export async function GET(request: Request) {
                             sync_status: "active",
                             updated_at: new Date().toISOString(),
                         };
-                        if (googleAccountId) updatePayload.google_account_id = googleAccountId;
-                        if (googleLocationId) updatePayload.google_location_id = googleLocationId;
-                        if (externalId) updatePayload.external_id = externalId;
-                        if (googleReviewUrl) updatePayload.external_url = googleReviewUrl;
+                        // Only update tokens here. Location is selected later.
                         if (finalRefreshToken) updatePayload.refresh_token = encRefresh;
 
                         await admin.from("review_platforms").update(updatePayload).eq("id", platformData.id);
@@ -389,31 +365,14 @@ export async function GET(request: Request) {
                             average_rating: 0,
                             access_token: encAccess,
                             refresh_token: encRefresh,
-                            google_account_id: googleAccountId,
-                            google_location_id: googleLocationId,
-                            external_id: externalId,
-                            external_url: googleReviewUrl,
+                            google_account_id: null,
+                            google_location_id: null,
+                            external_id: null,
+                            external_url: null,
                         });
                     }
 
-                    // NEW: Register for real-time notifications via Pub/Sub
-                    const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
-                    if (topicName && googleAccountId && finalAccessToken) {
-                        try {
-                            const accountName = `accounts/${googleAccountId}`;
-                            console.log(`[Google API Webhook] Registering notifications for account ${accountName} to topic ${topicName}`);
-                            await registerNotifications(finalAccessToken, accountName, topicName);
-                        } catch (regError) {
-                            console.error("[Google API Webhook] Failed to register GBP notifications:", regError);
-                        }
-                    }
-
-                    if (googleReviewUrl) {
-                        await admin.from("businesses")
-                            .update({ google_review_url: googleReviewUrl })
-                            .eq("id", businessId)
-                            .is("google_review_url", null);
-                    }
+                    // Notifications are registered after the user selects the correct GBP location/account.
 
                     // Clear cached business context so the integrations UI immediately reflects "Connected".
                     try {
