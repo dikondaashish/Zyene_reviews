@@ -1,4 +1,6 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+export const dynamic = "force-dynamic";
+
 import { syncGoogleReviewsForPlatform, SyncResult } from "@/services/google/sync-service";
 import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/services/facebook/sync-service";

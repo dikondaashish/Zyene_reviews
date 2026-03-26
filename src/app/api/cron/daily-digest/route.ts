@@ -1,4 +1,6 @@
 
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";

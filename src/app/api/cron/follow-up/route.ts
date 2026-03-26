@@ -1,4 +1,6 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 

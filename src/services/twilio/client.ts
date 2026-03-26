@@ -7,5 +7,9 @@ if (!accountSid || !authToken) {
     console.warn("Twilio credentials missing");
 }
 
-export const twilioClient = twilio(accountSid, authToken);
+// Only initialize Twilio if credentials are present to avoid potential build-time crashes
+export const twilioClient = (accountSid && authToken) 
+    ? twilio(accountSid, authToken) 
+    : null as any;
+
 export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
