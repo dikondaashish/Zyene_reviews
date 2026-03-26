@@ -110,6 +110,7 @@ export async function getValidGoogleToken(platformId: string) {
 export interface SyncResult {
     success: boolean;
     total: number;
+    fetched?: number;
     analyzed: number;
     alerts: number;
 }
@@ -224,14 +225,35 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
-        const newReviewCount = 0;
+        let syncedCount = 0;
         let analyzedCount = 0;
         let alertsCount = 0;
+        let lastUpsertError: unknown = null;
 
         for (const review of googleReviews) {
             const stats = await processGoogleReview(admin, platform, review);
+            if (stats.upserted) {
+                syncedCount++;
+            } else if (stats.error) {
+                lastUpsertError = stats.error;
+            }
             if (stats.analyzed) analyzedCount++;
             if (stats.alerted) alertsCount++;
+        }
+
+        // If we fetched reviews but failed to write them, surface a clear error.
+        if (googleReviews.length > 0 && syncedCount === 0) {
+            const msg =
+                lastUpsertError instanceof Error
+                    ? lastUpsertError.message
+                    : lastUpsertError
+                      ? String(lastUpsertError)
+                      : "Unknown upsert failure";
+            throw new Error(
+                "Failed to write Google reviews to the database. " +
+                    "Check that Vercel has SUPABASE_SERVICE_ROLE_KEY set (server env) and that RLS policies allow inserts. " +
+                    `Last error: ${msg}`
+            );
         }
 
         // 4. Update Platform Stats
@@ -282,7 +304,8 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         return {
             success: true,
-            total: googleReviews.length,
+            total: syncedCount,
+            fetched: googleReviews.length,
             analyzed: analyzedCount,
             alerts: alertsCount
         };
@@ -335,10 +358,12 @@ export async function processGoogleReview(admin: any, platform: any, review: any
 
     let analyzed = false;
     let alerted = false;
+    let upsertedOk = false;
 
     if (upsertError) {
         console.error("Upsert Error:", upsertError);
     } else {
+        upsertedOk = true;
         // Trigger AI Analysis if text exists and not already analyzed
         if (upserted && !upserted.sentiment && upserted.text) {
             console.log(`[AI] Analyzing review ${upserted.id}...`);
@@ -353,5 +378,5 @@ export async function processGoogleReview(admin: any, platform: any, review: any
         }
     }
 
-    return { analyzed, alerted };
+    return { upserted: upsertedOk, analyzed, alerted, error: upsertError };
 }
