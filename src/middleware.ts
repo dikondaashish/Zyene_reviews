@@ -28,7 +28,10 @@ export async function middleware(request: NextRequest) {
                 headers: {
                     "Access-Control-Allow-Origin": origin,
                     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Url",
+                    // Next.js can send multiple internal prefetch/RSC headers across subdomains.
+                    // Include all that we may see in preflight requests.
+                    "Access-Control-Allow-Headers":
+                        "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, next-router-segment-prefetch",
                     "Access-Control-Allow-Credentials": "true",
                     "Access-Control-Max-Age": "86400",
                 },
