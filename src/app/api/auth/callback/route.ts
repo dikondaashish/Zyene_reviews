@@ -21,7 +21,21 @@ export async function GET(request: Request) {
         const supabase = await createClient();
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-        if (!error && data.user) {
+        if (error || !data.user) {
+            const errMessage = (error as { message?: string } | null)?.message;
+            // Avoid leaking provider authorization code fragments into logs.
+            const safeMessage =
+                typeof errMessage === "string"
+                    ? errMessage.replace(/external code[^:]*:\s*[^\\s]+/i, "external code: <redacted>")
+                    : "No user returned from exchangeCodeForSession";
+
+            Sentry.captureException(new Error(safeMessage), {
+                tags: { route: "auth-callback", step: "exchangeCodeForSession" },
+            });
+            return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+        }
+
+        if (data.user) {
             const admin = createAdminClient();
 
             if (isAddBusinessFlow && addBusinessOrgId) {
@@ -384,11 +398,13 @@ export async function GET(request: Request) {
             }
 
             const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-            if (rootDomain.includes("localhost")) {
-                return NextResponse.redirect(`http://${rootDomain}/dashboard`);
-            } else {
-                return NextResponse.redirect(`https://app.${rootDomain}`);
-            }
+            const appBase = rootDomain.includes("localhost")
+                ? `http://${rootDomain}`
+                : `https://app.${rootDomain}`;
+
+            // Preserve the caller intent (e.g. integrations page -> /dashboard/integrations).
+            const normalizedNext = next.startsWith("/") ? next : `/${next}`;
+            return NextResponse.redirect(`${appBase}${normalizedNext}`);
         }
     }
 
