@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Copy, Download, Printer, Share2, QrCode, Check, RefreshCw } from "lucide-react";
+import { Copy, Download, Printer, Share2, QrCode, Check, RefreshCw, ShoppingCart } from "lucide-react";
 import {
     Card,
     CardContent,
@@ -11,6 +11,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 interface QRCodeCardProps {
@@ -249,28 +255,85 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
 
                 {/* Right Section: Big QR Code */}
                 <div className="p-6 md:py-10 md:pl-8 lg:pl-12 md:pr-16 lg:pr-24 flex flex-col items-center justify-center min-w-[280px] bg-white">
-                    <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-transform hover:scale-105 duration-300">
-                        {loading ? (
-                            <Skeleton className="h-[180px] w-[180px] rounded-xl" />
-                        ) : error ? (
-                            <div className="h-[180px] w-[180px] flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-slate-400">
-                                <p className="text-xs">Error generating QR</p>
-                                <Button variant="outline" size="sm" onClick={fetchQRCode} className="h-7 text-xs">
-                                    <RefreshCw className="h-3 w-3 mr-1" /> Retry
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <div className="group cursor-pointer flex flex-col items-center justify-center">
+                                <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 group-hover:shadow-md duration-300">
+                                    {loading ? (
+                                        <Skeleton className="h-[180px] w-[180px] rounded-xl" />
+                                    ) : error ? (
+                                        <div className="h-[180px] w-[180px] flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-slate-400">
+                                            <p className="text-xs">Error generating QR</p>
+                                            <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); fetchQRCode(); }} className="h-7 text-xs">
+                                                <RefreshCw className="h-3 w-3 mr-1" /> Retry
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={qrDataUrl!}
+                                            alt={`QR code for ${businessName}`}
+                                            className="h-[180px] w-[180px]"
+                                            style={{ imageRendering: 'pixelated' }}
+                                        />
+                                    )}
+                                </div>
+                                <p className="text-[13px] text-slate-900 font-medium text-center group-hover:text-blue-600 transition-colors">
+                                    Tap this icon to see your QR code
+                                </p>
+                            </div>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md rounded-2xl p-8 border-none shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)]">
+                            <DialogTitle className="sr-only">QR Code for {businessName}</DialogTitle>
+                            <div className="flex flex-col items-center mb-2">
+                                <h2 className="text-2xl font-bold text-slate-900 text-center mb-2">
+                                    {businessName} Review Page
+                                </h2>
+                                <div 
+                                    onClick={handleCopyLink}
+                                    className="flex items-center text-sm text-slate-500 hover:text-slate-900 cursor-pointer transition-colors w-fit mx-auto"
+                                >
+                                    {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                    {copied ? <Check className="w-3.5 h-3.5 ml-1.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 ml-1.5" />}
+                                </div>
+                            </div>
+                            
+                            <div className="flex justify-center my-6">
+                                {loading ? (
+                                    <Skeleton className="h-[220px] w-[220px] rounded-xl" />
+                                ) : error ? (
+                                    <div className="h-[220px] w-[220px] flex flex-col items-center justify-center gap-3 bg-slate-50 rounded-xl border border-dashed">
+                                        <p className="text-sm text-muted-foreground">Couldn't load QR code.</p>
+                                    </div>
+                                ) : (
+                                    <img
+                                        src={qrDataUrl!}
+                                        alt={`QR code for ${businessName}`}
+                                        className="h-[220px] w-[220px]"
+                                        style={{ imageRendering: 'pixelated' }}
+                                    />
+                                )}
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3 mt-2">
+                                <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Download QR
+                                </Button>
+                                <Button variant="outline" onClick={handleShare} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                    <Share2 className="h-4 w-4 mr-2" />
+                                    Share Link
+                                </Button>
+                                <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                    <Printer className="h-4 w-4 mr-2" />
+                                    Print QR
+                                </Button>
+                                <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]">
+                                    <ShoppingCart className="h-4 w-4 mr-2" />
+                                    Order Now
                                 </Button>
                             </div>
-                        ) : (
-                            <img
-                                src={qrDataUrl!}
-                                alt={`QR code for ${businessName}`}
-                                className="h-[180px] w-[180px]"
-                                style={{ imageRendering: 'pixelated' }}
-                            />
-                        )}
-                    </div>
-                    <p className="text-[13px] text-slate-900 font-medium text-center">
-                        Tap this icon to see your QR code
-                    </p>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </CardContent>
         </Card>
