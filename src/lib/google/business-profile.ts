@@ -1,0 +1,191 @@
+
+export interface GoogleTokenResponse {
+    access_token: string;
+    expires_in: number;
+    scope: string;
+    token_type: string;
+}
+
+export interface GoogleAccount {
+    name: string; // accounts/{accountId}
+    accountName: string;
+    type: string;
+    verificationState: string;
+    vettedState: string;
+}
+
+export interface GoogleLocation {
+    name: string; // locations/{locationId} or accounts/{accountId}/locations/{locationId}
+    title: string;
+    storeCode?: string;
+    metadata?: {
+        mapsUri?: string;
+        newReviewUri?: string;
+        placeId?: string;
+    };
+}
+
+
+export interface GoogleReview {
+    reviewId: string;
+    reviewer: {
+        displayName: string;
+        profilePhotoUrl?: string;
+    };
+    starRating: string; // "FIVE", "FOUR", etc.
+    comment?: string;
+    createTime: string;
+    updateTime: string;
+    reviewReply?: {
+        comment: string;
+        updateTime: string;
+    };
+}
+
+const BASE_URL_ACCOUNT = "https://mybusinessaccountmanagement.googleapis.com/v1";
+const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
+const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
+
+async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
+    try {
+        const response = await fetch(url, options);
+
+        if (response.status === 429) {
+            if (retries > 0) {
+                // Add jitter: delay = random(0, backoff)
+                const jitter = Math.random() * backoff;
+                console.warn(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
+                await new Promise(resolve => setTimeout(resolve, jitter));
+                return fetchWithRetry(url, options, retries - 1, backoff * 2);
+            } else {
+                console.error("[Google API] Rate limit exceeded after multiple retries.");
+            }
+        }
+
+        return response;
+    } catch (error) {
+        if (retries > 0) {
+            const jitter = Math.random() * backoff;
+            console.warn(`[Google API] Fetch failed. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`, error);
+            await new Promise(resolve => setTimeout(resolve, jitter));
+            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+        }
+        throw error;
+    }
+}
+
+export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTokenResponse> {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+        throw new Error("Missing Google Client ID or Secret in environment variables");
+    }
+
+    const response = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            client_id: clientId,
+            client_secret: clientSecret,
+            refresh_token: refreshToken,
+            grant_type: "refresh_token",
+        }),
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error(`[Token] Google Refresh Error (${response.status}): ${errorBody}`);
+        throw new Error(`Failed to refresh token: ${response.status} ${response.statusText} - ${errorBody}`);
+    }
+
+    return response.json();
+}
+
+export async function listAccounts(accessToken: string): Promise<GoogleAccount[]> {
+    const response = await fetchWithRetry(`${BASE_URL_ACCOUNT}/accounts`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
+        throw new Error(`Failed to list accounts: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.accounts || [];
+}
+
+
+export async function listLocations(accessToken: string, accountName: string): Promise<GoogleLocation[]> {
+    // accountName format: accounts/{accountId}
+    const response = await fetchWithRetry(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode,metadata`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
+        throw new Error(`Failed to list locations: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.locations || [];
+}
+
+export async function listReviews(accessToken: string, accountId: string, locationId: string): Promise<GoogleReview[]> {
+    // URL: https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews
+    // Note: accountId and locationId are raw IDs, not "accounts/{id}"
+    // But listLocations returns "locations/{locationId}" or "accounts/{accountId}/locations/{locationId}"?
+    // We need to parse.
+    // Actually, v4 API takes `accounts/{accountId}/locations/{locationId}/reviews` as PATH.
+    // Let's verify format.
+
+    const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews`;
+
+    const response = await fetchWithRetry(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+        if (response.status === 429) {
+            const error: any = new Error("Google API Rate Limit Exceeded");
+            error.code = 'RATE_LIMIT';
+            throw error;
+        }
+        throw new Error(`Failed to list reviews: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.reviews || [];
+}
+
+export async function replyToReview(
+    accessToken: string,
+    accountId: string,
+    locationId: string,
+    reviewId: string,
+    text: string
+): Promise<void> {
+    const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews/${reviewId}/reply`;
+
+    const response = await fetchWithRetry(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comment: text }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to reply to review: ${response.status} ${response.statusText}`);
+    }
+}
