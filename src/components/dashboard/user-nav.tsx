@@ -13,14 +13,21 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/db/supabase/client"
 import { useRouter } from "next/navigation"
+import { Globe, LogOut, Settings } from "lucide-react"
+import { useLanguage, SUPPORTED_LOCALES } from "@/lib/language-context"
 
 export function UserNav({ user }: { user: any }) {
     const router = useRouter()
     const supabase = createClient()
+    const { locale, setLocale, currentLocaleConfig } = useLanguage()
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
@@ -50,13 +57,38 @@ export function UserNav({ user }: { user: any }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => router.push("/settings")}>
-                        Settings
+                    <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer py-2 px-3">
+                        <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <span>Settings</span>
                     </DropdownMenuItem>
+                    
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger className="cursor-pointer py-2 px-3">
+                            <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <span>Language: {currentLocaleConfig.label}</span>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                            <DropdownMenuSubContent className="w-56" alignOffset={-5}>
+                                {SUPPORTED_LOCALES.map((config) => (
+                                    <DropdownMenuItem 
+                                        key={config.code}
+                                        onClick={() => setLocale(config.code)}
+                                        className="cursor-pointer py-2 px-3 flex items-center gap-3"
+                                    >
+                                        <span className="text-base leading-none">{config.flag}</span>
+                                        <span className={locale === config.code ? "font-bold" : ""}>
+                                            {config.label}
+                                        </span>
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                    </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                    Log out
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer py-2 px-3">
+                    <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span>Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

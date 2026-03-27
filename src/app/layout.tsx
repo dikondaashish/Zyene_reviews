@@ -3,6 +3,7 @@ import { DM_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { LanguageProvider } from "@/lib/language-context";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
@@ -47,12 +48,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            {children}
-            <Toaster />
-            <Analytics />
-            <SpeedInsights />
-          </QueryProvider>
+          <LanguageProvider>
+            <QueryProvider>
+              {children}
+              <Toaster />
+              <Analytics />
+              <SpeedInsights />
+            </QueryProvider>
+          </LanguageProvider>
         </ThemeProvider>
         <Script
           src="https://uptime.betterstack.com/widgets/announcement.js"
