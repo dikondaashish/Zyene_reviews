@@ -2,7 +2,22 @@
   "nav": {
     "settings": "Paramètres",
     "logout": "Déconnexion",
-    "language": "Langue"
+    "language": "Langue",
+    "dashboard": "Tableau de bord",
+    "businesses": "Entreprises",
+    "customers": "Clients",
+    "competitors": "Concurrents",
+    "reviews": "Avis",
+    "qa": "Q&R",
+    "requests": "Demandes d'avis",
+    "campaigns": "Campagnes",
+    "analytics": "Analyses",
+    "integrations": "Intégrations",
+    "general": "Général",
+    "business_info": "Infos Entreprise",
+    "notifications": "Notifications",
+    "billing": "Facturation",
+    "team": "Équipe"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -36,5 +51,37 @@
     "lodging_desc_empty": "Lancer synchro Google",
     "not_hotel": "Pas un hôtel sur Google",
     "lodging_details": "Détails hébergement"
+  },
+  "qr": {
+    "portal": "Votre portail de avis et commandes",
+    "description": "Partagez ceci avec vos clients pour recueillir des avis et stimuler les commandes.",
+    "download": "Télécharger",
+    "print": "Imprimer",
+    "order": "Commander QR maintenant",
+    "share": "Partager",
+    "tap_icon": "Appuyez sur cet icône pour voir votre code QR",
+    "review_page": "Page d'avis",
+    "download_short": "Télécharger QR",
+    "print_short": "Imprimer QR",
+    "share_link": "Partager le lien",
+    "order_now": "Commander maintenant"
+  },
+  "billing": {
+    "title": "Facturation",
+    "subtitle": "Gérez votre abonnement et votre facturation",
+    "current_plan": "Plan Actuel",
+    "active_subscription": "Votre abonnement actif",
+    "no_active_plan": "Aucun Plan Actif",
+    "choose_plan": "Choisissez un plan ci-dessous pour commencer",
+    "usage_title": "Consommation du mois",
+    "email_requests": "Requêtes email",
+    "sms_requests": "Requêtes SMS",
+    "link_requests": "Requêtes de lien",
+    "ai_replies": "Réponses IA",
+    "locations": "Emplacements",
+    "manage_subscription": "Gérer l'abonnement",
+    "upgrade": "Mettre à niveau",
+    "starter_msg": "Commencez avec Zyene Reviews",
+    "starter_price": "Choisissez un plan — à partir de 19/mois"
   }
 }

@@ -18,6 +18,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useLanguage } from "@/lib/language-context";
 
 interface QRCodeCardProps {
     businessId: string;
@@ -26,6 +27,7 @@ interface QRCodeCardProps {
 }
 
 export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCardProps) {
+    const { dict } = useLanguage();
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [reviewUrl, setReviewUrl] = useState<string>("");
     const [loading, setLoading] = useState(true);
@@ -216,10 +218,10 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                 {businessName}
                             </h2>
                             <h3 className="text-xl font-medium text-slate-900 mb-4">
-                                Your Review & Order Portal
+                                {dict.qr.portal}
                             </h3>
                             <p className="text-slate-600 text-base max-w-md mb-6 leading-relaxed">
-                                Share this with customers to collect reviews and drive orders.
+                                {dict.qr.description}
                             </p>
                             
                             <div 
@@ -237,19 +239,19 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-slate-200/60 min-w-[180px] md:pr-8 lg:pr-12">
                     <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
                         <Download className="h-3.5 w-3.5 mr-2" />
-                        Download
+                        {dict.qr.download}
                     </Button>
                     <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
                         <Printer className="h-3.5 w-3.5 mr-2" />
-                        Print
+                        {dict.qr.print}
                     </Button>
                     <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
                         <QrCode className="h-3.5 w-3.5 mr-2" />
-                        order QR now
+                        {dict.qr.order}
                     </Button>
                     <Button variant="outline" size="sm" onClick={handleShare} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
                         <Share2 className="h-3.5 w-3.5 mr-2" />
-                        Share
+                        {dict.qr.share}
                     </Button>
                 </div>
 
@@ -262,7 +264,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                     <QrCode className="h-[140px] w-[140px] text-slate-800" strokeWidth={1} />
                                 </div>
                                 <p className="text-[13px] text-slate-900 font-medium text-center group-hover:text-blue-600 transition-colors">
-                                    Tap this icon to see your QR code
+                                    {dict.qr.tap_icon}
                                 </p>
                             </div>
                         </DialogTrigger>
@@ -270,7 +272,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                             <DialogTitle className="sr-only">QR Code for {businessName}</DialogTitle>
                             <div className="flex flex-col items-center mb-2">
                                 <h2 className="text-2xl font-bold text-slate-900 text-center mb-2">
-                                    {businessName} Review Page
+                                    {businessName} {dict.qr.review_page}
                                 </h2>
                                 <div 
                                     onClick={handleCopyLink}
@@ -301,19 +303,19 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                             <div className="grid grid-cols-2 gap-3 mt-2">
                                 <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
                                     <Download className="h-4 w-4 mr-2" />
-                                    Download QR
+                                    {dict.qr.download_short}
                                 </Button>
                                 <Button variant="outline" onClick={handleShare} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
                                     <Share2 className="h-4 w-4 mr-2" />
-                                    Share Link
+                                    {dict.qr.share_link}
                                 </Button>
                                 <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
                                     <Printer className="h-4 w-4 mr-2" />
-                                    Print QR
+                                    {dict.qr.print_short}
                                 </Button>
                                 <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]">
                                     <ShoppingCart className="h-4 w-4 mr-2" />
-                                    Order Now
+                                    {dict.qr.order_now}
                                 </Button>
                             </div>
                         </DialogContent>

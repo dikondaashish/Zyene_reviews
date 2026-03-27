@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Plan } from "@/services/stripe/plans";
+import { useLanguage } from "@/lib/language-context";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -103,6 +104,7 @@ export function BillingClient({
     usage,
     plans,
 }: BillingClientProps) {
+    const { dict } = useLanguage();
     const [interval, setInterval] = useState<"month" | "year">("month");
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
@@ -130,7 +132,9 @@ export function BillingClient({
 
     // If no active plan, force usage max limits to 0, except for businesses which should be 1.
     // Also set used to 0 so it clearly shows "0 / 0".
-    const displayUsage = isPaidPlan 
+    // If no active plan, force usage max limits to 0, except for businesses which should be 1.
+    // Also set used to 0 so it clearly shows "0 / 0".
+    const displayUsage = (isPaidPlan || planStatus === "trialing")
         ? usage 
         : {
             emailRequests: { used: 0, max: 0 },
@@ -200,9 +204,9 @@ export function BillingClient({
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Billing</h1>
+                <h1 className="text-3xl font-bold tracking-tight">{dict.billing.title}</h1>
                 <p className="text-muted-foreground">
-                    Manage your subscription and billing
+                    {dict.billing.subtitle}
                 </p>
             </div>
 
@@ -236,17 +240,17 @@ export function BillingClient({
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle className="text-xl">
-                                Current Plan
+                                {dict.billing.current_plan}
                             </CardTitle>
                             <CardDescription>
-                                Your active subscription
+                                {dict.billing.active_subscription}
                             </CardDescription>
                         </div>
                         <Badge
                             variant={isPaidPlan ? "default" : "secondary"}
                             className="text-sm px-3 py-1"
                         >
-                            {currentPlanName}
+                            {isPaidPlan ? currentPlan?.name : dict.billing.no_active_plan}
                         </Badge>
                     </div>
                 </CardHeader>
@@ -268,8 +272,8 @@ export function BillingClient({
                             </>
                         ) : (
                             <>
-                                <span className="text-4xl font-bold">No Active Plan</span>
-                                <span className="text-muted-foreground text-sm">Choose a plan below to get started</span>
+                                <span className="text-4xl font-bold">{dict.billing.no_active_plan}</span>
+                                <span className="text-muted-foreground text-sm">{dict.billing.choose_plan}</span>
                             </>
                         )}
                     </div>
@@ -277,30 +281,30 @@ export function BillingClient({
                     {/* Usage Stats */}
                     <div className="space-y-4 pt-2">
                         <h3 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">
-                            This Month&apos;s Usage
+                            {dict.billing.usage_title}
                         </h3>
                         <UsageBar
-                            label="Email Requests"
+                            label={dict.billing.email_requests}
                             stat={displayUsage.emailRequests}
                             icon={<Mail className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label="SMS Requests"
+                            label={dict.billing.sms_requests}
                             stat={displayUsage.smsRequests}
                             icon={<MessageSquare className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label="Link Requests"
+                            label={dict.billing.link_requests}
                             stat={displayUsage.linkRequests}
                             icon={<LinkIcon className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label="AI Replies"
+                            label={dict.billing.ai_replies}
                             stat={displayUsage.aiReplies}
                             icon={<Bot className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label="Locations"
+                            label={dict.billing.locations}
                             stat={displayUsage.businesses}
                             icon={<MapPin className="h-3.5 w-3.5" />}
                         />
@@ -319,7 +323,7 @@ export function BillingClient({
                             ) : (
                                 <CreditCard className="h-4 w-4" />
                             )}
-                            Manage Subscription
+                            {dict.billing.manage_subscription}
                             <ExternalLink className="h-3 w-3" />
                         </Button>
                     </CardFooter>
@@ -331,10 +335,10 @@ export function BillingClient({
                         <Sparkles className="h-5 w-5 text-blue-600 shrink-0" />
                         <div className="flex-1">
                             <p className="text-sm font-medium text-blue-900">
-                                Get started with Zyene Reviews
+                                {dict.billing.starter_msg}
                             </p>
                             <p className="text-xs text-blue-700">
-                                Choose a plan below — starting at ${monthlyStarterPrice}/month
+                                {dict.billing.starter_price}
                             </p>
                         </div>
                         <Button
@@ -344,7 +348,7 @@ export function BillingClient({
                                 document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" });
                             }}
                         >
-                            Upgrade <ArrowRight className="h-3.5 w-3.5" />
+                            {dict.billing.upgrade} <ArrowRight className="h-3.5 w-3.5" />
                         </Button>
                     </CardFooter>
                 )}

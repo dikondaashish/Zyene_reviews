@@ -2,7 +2,22 @@
   "nav": {
     "settings": "Configuración",
     "logout": "Cerrar sesión",
-    "language": "Idioma"
+    "language": "Idioma",
+    "dashboard": "Panel",
+    "businesses": "Negocios",
+    "customers": "Clientes",
+    "competitors": "Competidores",
+    "reviews": "Reseñas",
+    "qa": "Preguntas",
+    "requests": "Solicitudes",
+    "campaigns": "Campañas",
+    "analytics": "Análisis",
+    "integrations": "Integraciones",
+    "general": "General",
+    "business_info": "Información",
+    "notifications": "Notificaciones",
+    "billing": "Facturación",
+    "team": "Equipo"
   },
   "dashboard": {
     "title": "Panel",
@@ -36,5 +51,37 @@
     "lodging_desc_empty": "Ejecutar sincronización de Google",
     "not_hotel": "No es un hotel en Google",
     "lodging_details": "Detalles de alojamiento"
+  },
+  "qr": {
+    "portal": "Tu Portal de Reseñas y Pedidos",
+    "description": "Comparte esto con tus clientes para recopilar reseñas y aumentar los pedidos.",
+    "download": "Descargar",
+    "print": "Imprimir",
+    "order": "Pedir QR ahora",
+    "share": "Compartir",
+    "tap_icon": "Toca este icono para ver tu código QR",
+    "review_page": "Página de reseñas",
+    "download_short": "Descargar QR",
+    "print_short": "Imprimir QR",
+    "share_link": "Compartir enlace",
+    "order_now": "Pedir ahora"
+  },
+  "billing": {
+    "title": "Facturación",
+    "subtitle": "Administre su suscripción y facturación",
+    "current_plan": "Plan Actual",
+    "active_subscription": "Su suscripción activa",
+    "no_active_plan": "Sin Plan Activo",
+    "choose_plan": "Elija un plan a continuación para comenzar",
+    "usage_title": "Uso de este mes",
+    "email_requests": "Solicitudes por correo",
+    "sms_requests": "Solicitudes por SMS",
+    "link_requests": "Solicitudes de enlaces",
+    "ai_replies": "Respuestas de IA",
+    "locations": "Ubicaciones",
+    "manage_subscription": "Administrar Suscripción",
+    "upgrade": "Mejorar",
+    "starter_msg": "Comienza con Zyene Reviews",
+    "starter_price": "Elija un plan a continuación — desde 19/mes"
   }
 }

@@ -2,7 +2,22 @@
   "nav": {
     "settings": "Settings",
     "logout": "Log out",
-    "language": "Language"
+    "language": "Language",
+    "dashboard": "Dashboard",
+    "businesses": "Businesses",
+    "customers": "Customers",
+    "competitors": "Competitors",
+    "reviews": "Reviews",
+    "qa": "Q&A",
+    "requests": "Review Requests",
+    "campaigns": "Campaigns",
+    "analytics": "Analytics",
+    "integrations": "Integrations",
+    "general": "General",
+    "business_info": "Business Info",
+    "notifications": "Notifications",
+    "billing": "Billing",
+    "team": "Team"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -36,5 +51,37 @@
     "lodging_desc_empty": "Run Google sync to detect lodging data",
     "not_hotel": "Not a hotel/lodging listing on Google",
     "lodging_details": "Lodging details"
+  },
+  "qr": {
+    "portal": "Your Review & Order Portal",
+    "description": "Share this with customers to collect reviews and drive orders.",
+    "download": "Download",
+    "print": "Print",
+    "order": "Order QR now",
+    "share": "Share",
+    "tap_icon": "Tap this icon to see your QR code",
+    "review_page": "Review Page",
+    "download_short": "Download QR",
+    "print_short": "Print QR",
+    "share_link": "Share Link",
+    "order_now": "Order Now"
+  },
+  "billing": {
+    "title": "Billing",
+    "subtitle": "Manage your subscription and billing",
+    "current_plan": "Current Plan",
+    "active_subscription": "Your active subscription",
+    "no_active_plan": "No Active Plan",
+    "choose_plan": "Choose a plan below to get started",
+    "usage_title": "This Month's Usage",
+    "email_requests": "Email Requests",
+    "sms_requests": "SMS Requests",
+    "link_requests": "Link Requests",
+    "ai_replies": "AI Replies",
+    "locations": "Locations",
+    "manage_subscription": "Manage Subscription",
+    "upgrade": "Upgrade",
+    "starter_msg": "Get started with Zyene Reviews",
+    "starter_price": "Choose a plan below — starting at 19/month"
   }
 }

@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { useLanguage } from "@/lib/language-context"
 
 import {
     Sidebar,
@@ -41,93 +42,94 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
-// Menu items.
-const items = [
-    {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: Home,
-    },
-    {
-        title: "Businesses",
-        url: "/businesses",
-        icon: Building2,
-    },
-    {
-        title: "Customers",
-        url: "/customers",
-        icon: Users,
-        tourTarget: "tour-customers-nav",
-    },
-    {
-        title: "Competitors",
-        url: "/competitors",
-        icon: Target,
-    },
-    {
-        title: "Reviews",
-        url: "/reviews",
-        icon: MessageSquare,
-    },
-    {
-        title: "Q&A",
-        url: "/questions",
-        icon: HelpCircle,
-    },
-    {
-        title: "Review Requests",
-        url: "/requests",
-        icon: Send,
-    },
-    {
-        title: "Campaigns",
-        url: "/campaigns",
-        icon: Megaphone,
-    },
-    {
-        title: "Analytics",
-        url: "/analytics",
-        icon: BarChart3,
-        tourTarget: "tour-analytics-nav",
-    },
-    {
-        title: "Integrations",
-        url: "/integrations",
-        icon: Plug,
-    },
-]
-
-const settingsItems = [
-    {
-        title: "General",
-        url: "/settings",
-        icon: User,
-    },
-    {
-        title: "Business Info",
-        url: "/settings/business-information",
-        icon: Store,
-    },
-    {
-        title: "Notifications",
-        url: "/settings/notifications",
-        icon: Bell,
-    },
-    {
-        title: "Billing",
-        url: "/settings/billing",
-        icon: CreditCard,
-    },
-    {
-        title: "Team",
-        url: "/settings/team",
-        icon: Users,
-    },
-]
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname()
+    const { dict } = useLanguage()
     const isSettingsActive = pathname.startsWith("/settings")
+
+    // Menu items.
+    const items = [
+        {
+            title: dict.nav.dashboard,
+            url: "/dashboard",
+            icon: Home,
+        },
+        {
+            title: dict.nav.businesses,
+            url: "/businesses",
+            icon: Building2,
+        },
+        {
+            title: dict.nav.customers,
+            url: "/customers",
+            icon: Users,
+            tourTarget: "tour-customers-nav",
+        },
+        {
+            title: dict.nav.competitors,
+            url: "/competitors",
+            icon: Target,
+        },
+        {
+            title: dict.nav.reviews,
+            url: "/reviews",
+            icon: MessageSquare,
+        },
+        {
+            title: dict.nav.qa,
+            url: "/questions",
+            icon: HelpCircle,
+        },
+        {
+            title: dict.nav.requests,
+            url: "/requests",
+            icon: Send,
+        },
+        {
+            title: dict.nav.campaigns,
+            url: "/campaigns",
+            icon: Megaphone,
+        },
+        {
+            title: dict.nav.analytics,
+            url: "/analytics",
+            icon: BarChart3,
+            tourTarget: "tour-analytics-nav",
+        },
+        {
+            title: dict.nav.integrations,
+            url: "/integrations",
+            icon: Plug,
+        },
+    ]
+
+    const settingsItems = [
+        {
+            title: dict.nav.general,
+            url: "/settings",
+            icon: User,
+        },
+        {
+            title: dict.nav.business_info,
+            url: "/settings/business-information",
+            icon: Store,
+        },
+        {
+            title: dict.nav.notifications,
+            url: "/settings/notifications",
+            icon: Bell,
+        },
+        {
+            title: dict.nav.billing,
+            url: "/settings/billing",
+            icon: CreditCard,
+        },
+        {
+            title: dict.nav.team,
+            url: "/settings/team",
+            icon: Users,
+        },
+    ]
 
     return (
         <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border">
@@ -190,10 +192,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                             : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                                         }
                                     `}
-                                    tooltip="Settings"
+                                    tooltip={dict.nav.settings}
                                 >
                                     <Settings className={isSettingsActive ? "text-orange-600" : ""} />
-                                    <span className={isSettingsActive ? "font-semibold" : ""}>Settings</span>
+                                    <span className={isSettingsActive ? "font-semibold" : ""}>{dict.nav.settings}</span>
                                     <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                 </SidebarMenuButton>
                             </CollapsibleTrigger>

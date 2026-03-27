@@ -2,7 +2,22 @@
   "nav": {
     "settings": "Configurações",
     "logout": "Sair",
-    "language": "Idioma"
+    "language": "Idioma",
+    "dashboard": "Painel",
+    "businesses": "Empresas",
+    "customers": "Clientes",
+    "competitors": "Concorrentes",
+    "reviews": "Avaliações",
+    "qa": "Q&A",
+    "requests": "Solicitações",
+    "campaigns": "Campanhas",
+    "analytics": "Análise",
+    "integrations": "Integrações",
+    "general": "Geral",
+    "business_info": "Informações",
+    "notifications": "Notificações",
+    "billing": "Faturamento",
+    "team": "Equipe"
   },
   "dashboard": {
     "title": "Painel",
@@ -36,5 +51,37 @@
     "lodging_desc_empty": "Sincronizar com Google",
     "not_hotel": "Não é hotel",
     "lodging_details": "Detalhes de hospedagem"
+  },
+  "qr": {
+    "portal": "Seu Portal de Avaliações e Pedidos",
+    "description": "Compartilhe isso com seus clientes para coletar avaliações e impulsionar pedidos.",
+    "download": "Baixar",
+    "print": "Imprimir",
+    "order": "Pedir QR agora",
+    "share": "Compartilhar",
+    "tap_icon": "Toque neste ícone para ver seu código QR",
+    "review_page": "Página de avaliação",
+    "download_short": "Baixar QR",
+    "print_short": "Imprimir QR",
+    "share_link": "Compartilhar link",
+    "order_now": "Pedir agora"
+  },
+  "billing": {
+    "title": "Faturamento",
+    "subtitle": "Gerencie sua assinatura e faturamento",
+    "current_plan": "Plano Atual",
+    "active_subscription": "Sua assinatura ativa",
+    "no_active_plan": "Nenhum Plano Ativo",
+    "choose_plan": "Escolha um plano abaixo para começar",
+    "usage_title": "Uso deste mês",
+    "email_requests": "Solicitações de e-mail",
+    "sms_requests": "Solicitações de SMS",
+    "link_requests": "Solicitações de link",
+    "ai_replies": "Respostas de IA",
+    "locations": "Locais",
+    "manage_subscription": "Gerenciar assinatura",
+    "upgrade": "Melhorar",
+    "starter_msg": "Comece com Zyene Reviews",
+    "starter_price": "Escolha um plano abaixo — a partir de 19/mês"
   }
 }

@@ -2,7 +2,22 @@
   "nav": {
     "settings": "Instellingen",
     "logout": "Uitloggen",
-    "language": "Taal"
+    "language": "Taal",
+    "dashboard": "Dashboard",
+    "businesses": "Bedrijven",
+    "customers": "Klanten",
+    "competitors": "Concurrenten",
+    "reviews": "Beoordelingen",
+    "qa": "V&A",
+    "requests": "Beoordelingsverzoeken",
+    "campaigns": "Campagnes",
+    "analytics": "Analyses",
+    "integrations": "Integraties",
+    "general": "Algemeen",
+    "business_info": "Bedrijfsinformatie",
+    "notifications": "Meldingen",
+    "billing": "Facturering",
+    "team": "Team"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -36,5 +51,37 @@
     "lodging_desc_empty": "Start Google-synchronisatie",
     "not_hotel": "Geen hotel op Google",
     "lodging_details": "Accommodatiedetails"
+  },
+  "qr": {
+    "portal": "Uw beoordelings- en bestelportaal",
+    "description": "Deel dit met uw klanten om beoordelingen te verzamelen en bestellingen te stimuleren.",
+    "download": "Downloaden",
+    "print": "Printen",
+    "order": "Bestel QR nu",
+    "share": "Delen",
+    "tap_icon": "Tik op dit icoon om uw QR-code te zien",
+    "review_page": "Beoordelingspagina",
+    "download_short": "Download QR",
+    "print_short": "Print QR",
+    "share_link": "Deel link",
+    "order_now": "Bestel nu"
+  },
+  "billing": {
+    "title": "Facturering",
+    "subtitle": "Beheer uw abonnement en facturering",
+    "current_plan": "Huidig Plan",
+    "active_subscription": "Uw actieve abonnement",
+    "no_active_plan": "Geen Actief Plan",
+    "choose_plan": "Kies hieronder een plan om te beginnen",
+    "usage_title": "Gebruik deze maand",
+    "email_requests": "Email-verzoeken",
+    "sms_requests": "SMS-verzoeken",
+    "link_requests": "Link-verzoeken",
+    "ai_replies": "AI-antwoorden",
+    "locations": "Locaties",
+    "manage_subscription": "Abonnement beheren",
+    "upgrade": "Upgraden",
+    "starter_msg": "Ga aan de slag met Zyene Reviews",
+    "starter_price": "Kies hieronder een plan — vanaf 19/maand"
   }
 }
