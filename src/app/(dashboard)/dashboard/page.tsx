@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { cookies } from "next/headers";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
     Card,
     CardContent,
@@ -92,6 +94,10 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
 }
 
 export default async function DashboardPage() {
+    const cookieStore = await cookies();
+    const localeVal = cookieStore.get('locale')?.value || 'en';
+    const dict = getDictionary(localeVal);
+
     const supabase = await createClient();
 
     const {
@@ -472,13 +478,13 @@ export default async function DashboardPage() {
 
     const responseRateLabel =
         business.total_reviews > 0
-            ? `${responseRate.toFixed(1)}% of reviews responded`
-            : "No reviews yet";
+            ? `${responseRate.toFixed(1)}${dict.dashboard.reviews_responded}`
+            : dict.dashboard.no_reviews;
 
     const pendingLabel =
         pendingCount > 0
-            ? `${pendingCount} awaiting response`
-            : "All caught up!";
+            ? `${pendingCount} ${dict.dashboard.awaiting_response}`
+            : dict.dashboard.all_caught_up;
 
     const formatTrend = (val: number, isRating = false) => {
         if (val === 0) return null;
@@ -571,25 +577,25 @@ export default async function DashboardPage() {
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl font-bold tracking-tight">
-                            Dashboard
+                            {dict.dashboard.title}
                         </h1>
                         {useDemoData && (
                             <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5">
                                 <Sparkles className="w-3 h-3" />
-                                Interactive Demo
+                                {dict.dashboard.demo_badge}
                             </Badge>
                         )}
                     </div>
                     {lastSynced && (
                         <p className="text-sm text-muted-foreground">
-                            Last synced:{" "}
+                            {dict.dashboard.last_synced}
                             {formatDistanceToNow(new Date(lastSynced), {
                                 addSuffix: true,
                             })}
                             {perfSyncedAt && (
                                 <>
                                     {" "}
-                                    · Google listing metrics:{" "}
+                                    · {dict.dashboard.google_metrics}
                                     {formatDistanceToNow(new Date(perfSyncedAt), {
                                         addSuffix: true,
                                     })}
@@ -623,26 +629,26 @@ export default async function DashboardPage() {
             {/* Stats Cards */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
                 <ProStatCard
-                    title="Total Reviews"
+                    title={dict.dashboard.total_reviews}
                     value={business.total_reviews}
                     iconName="reviews"
-                    description={!isGoogleConnected ? "Connect Google to import reviews" : "From Google Reviews"}
+                    description={!isGoogleConnected ? dict.dashboard.connect_google : dict.dashboard.from_google}
                     trend={totalReviewsTrend}
-                    trendLabel="vs last month"
+                    trendLabel={dict.dashboard.vs_last_month}
                     delay={0.1}
                 />
                 <ProStatCard
-                    title="Average Rating"
+                    title={dict.dashboard.average_rating}
                     value={Number(business.average_rating)}
                     iconName="rating"
                     precision={1}
-                    description="Based on Google"
+                    description={dict.dashboard.based_on_google}
                     trend={Math.round(averageRatingTrend * 10)}
-                    trendLabel="pts"
+                    trendLabel={dict.dashboard.pts}
                     delay={0.2}
                 />
                 <ProStatCard
-                    title="Response Rate"
+                    title={dict.dashboard.response_rate}
                     value={responseRate}
                     iconName="response"
                     suffix="%"
@@ -651,10 +657,10 @@ export default async function DashboardPage() {
                     delay={0.3}
                 />
                 <ProStatCard
-                    title="Pending Reviews"
+                    title={dict.dashboard.pending_reviews}
                     value={pendingCount}
                     iconName="pending"
-                    description={pendingCount === 0 ? "You're all caught up!" : "Awaiting response"}
+                    description={pendingCount === 0 ? dict.dashboard.all_caught_up : dict.dashboard.awaiting_response}
                     className={pendingCount === 0 ? "border-green-500/20 bg-green-500/5" : ""}
                     delay={0.4}
                 />
@@ -664,7 +670,7 @@ export default async function DashboardPage() {
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Unanswered Q&A</CardTitle>
+                            <CardTitle className="text-sm font-medium">{dict.dashboard.unanswered_qa}</CardTitle>
                             <HelpCircle className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -676,18 +682,18 @@ export default async function DashboardPage() {
                                 {unansweredQaCount}
                             </div>
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Google questions without a merchant answer
+                                {dict.dashboard.qa_desc}
                             </p>
                             <Link href="/questions" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
-                                    Manage Q&A
+                                    {dict.dashboard.manage_qa}
                                 </Button>
                             </Link>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Broken place links</CardTitle>
+                            <CardTitle className="text-sm font-medium">{dict.dashboard.broken_links}</CardTitle>
                             <Link2 className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -699,18 +705,18 @@ export default async function DashboardPage() {
                                 {brokenPlaceLinksCount}
                             </div>
                             <p className="mt-1 text-xs text-muted-foreground">
-                                URLs that failed a quick availability check
+                                {dict.dashboard.links_desc}
                             </p>
                             <Link href="/settings/business-information" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
-                                    Manage links
+                                    {dict.dashboard.manage_links}
                                 </Button>
                             </Link>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Listing completeness</CardTitle>
+                            <CardTitle className="text-sm font-medium">{dict.dashboard.listing_completeness}</CardTitle>
                             <ListChecks className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -731,18 +737,18 @@ export default async function DashboardPage() {
                                 )}
                             </div>
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Google profile fields filled (sync updates this score)
+                                {dict.dashboard.listing_desc}
                             </p>
                             <Link href="/settings/business-information" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
-                                    Edit listing
+                                    {dict.dashboard.edit_listing}
                                 </Button>
                             </Link>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Lodging completeness</CardTitle>
+                            <CardTitle className="text-sm font-medium">{dict.dashboard.lodging_completeness}</CardTitle>
                             <BedDouble className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -750,7 +756,7 @@ export default async function DashboardPage() {
                                 <>
                                     <div className="text-2xl font-bold text-muted-foreground">—</div>
                                     <p className="mt-1 text-xs text-muted-foreground">
-                                        Not a hotel/lodging listing on Google
+                                        {dict.dashboard.not_hotel}
                                     </p>
                                 </>
                             ) : (
@@ -773,14 +779,14 @@ export default async function DashboardPage() {
                                     </div>
                                     <p className="mt-1 text-xs text-muted-foreground">
                                         {googleLodgingHealthScore === null && googleLodgingApplicable === null
-                                            ? "Run Google sync to detect lodging data"
-                                            : "Hotel amenities & policies filled on Google"}
+                                            ? dict.dashboard.lodging_desc_empty
+                                            : dict.dashboard.lodging_desc}
                                     </p>
                                 </>
                             )}
                             <Link href="/settings/business-information" className="mt-3 inline-block">
                                 <Button variant="outline" size="sm">
-                                    Lodging details
+                                    {dict.dashboard.lodging_details}
                                 </Button>
                             </Link>
                         </CardContent>

@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Settings",
+    "logout": "Log out",
+    "language": "Language"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "demo_badge": "Interactive Demo",
+    "last_synced": "Last synced: ",
+    "google_metrics": "Google listing metrics: ",
+    "total_reviews": "Total Reviews",
+    "from_google": "From Google Reviews",
+    "connect_google": "Connect Google to import reviews",
+    "vs_last_month": "vs last month",
+    "average_rating": "Average Rating",
+    "based_on_google": "Based on Google",
+    "pts": "pts",
+    "response_rate": "Response Rate",
+    "reviews_responded": "% of reviews responded",
+    "no_reviews": "No reviews yet",
+    "pending_reviews": "Pending Reviews",
+    "awaiting_response": "Awaiting response",
+    "all_caught_up": "You're all caught up!",
+    "unanswered_qa": "Unanswered Q&A",
+    "qa_desc": "Google questions without a merchant answer",
+    "manage_qa": "Manage Q&A",
+    "broken_links": "Broken place links",
+    "links_desc": "URLs that failed a quick availability check",
+    "manage_links": "Manage links",
+    "listing_completeness": "Listing completeness",
+    "listing_desc": "Google profile fields filled (sync updates this score)",
+    "edit_listing": "Edit listing",
+    "lodging_completeness": "Lodging completeness",
+    "lodging_desc": "Hotel amenities & policies filled on Google",
+    "lodging_desc_empty": "Run Google sync to detect lodging data",
+    "not_hotel": "Not a hotel/lodging listing on Google",
+    "lodging_details": "Lodging details"
+  }
+}

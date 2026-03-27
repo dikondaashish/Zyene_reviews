@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "language": "Idioma"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "demo_badge": "Demostración",
+    "last_synced": "Última sincronización: ",
+    "google_metrics": "Métricas de Google: ",
+    "total_reviews": "Total de Reseñas",
+    "from_google": "De reseñas de Google",
+    "connect_google": "Conectar Google para importar reseñas",
+    "vs_last_month": "vs mes anterior",
+    "average_rating": "Calificación Media",
+    "based_on_google": "Basado en Google",
+    "pts": "pts",
+    "response_rate": "Tasa de Respuesta",
+    "reviews_responded": "% de reseñas respondidas",
+    "no_reviews": "Sin reseñas aún",
+    "pending_reviews": "Reseñas Pendientes",
+    "awaiting_response": "Esperando respuesta",
+    "all_caught_up": "¡Todo al día!",
+    "unanswered_qa": "Preguntas sin responder",
+    "qa_desc": "Preguntas de Google sin respuesta",
+    "manage_qa": "Gestionar Preguntas",
+    "broken_links": "Enlaces rotos",
+    "links_desc": "URLs que fallaron comprobación",
+    "manage_links": "Gestionar enlaces",
+    "listing_completeness": "Integridad del perfil",
+    "listing_desc": "Campos completados en Google",
+    "edit_listing": "Editar perfil",
+    "lodging_completeness": "Datos de alojamiento",
+    "lodging_desc": "Comodidades rellenadas en Google",
+    "lodging_desc_empty": "Ejecutar sincronización de Google",
+    "not_hotel": "No es un hotel en Google",
+    "lodging_details": "Detalles de alojamiento"
+  }
+}

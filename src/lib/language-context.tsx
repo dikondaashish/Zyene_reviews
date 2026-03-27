@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 export type SupportedLocale = "en" | "es" | "pt" | "fr" | "de" | "nl"
 
+import { getDictionary, Dictionary } from "./i18n/dictionaries"
+
 export interface LocaleConfig {
   code: SupportedLocale
   label: string
@@ -24,6 +26,7 @@ interface LanguageContextValue {
   locale: SupportedLocale
   setLocale: (locale: SupportedLocale) => void
   currentLocaleConfig: LocaleConfig
+  dict: Dictionary
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined)
@@ -46,12 +49,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, newLocale)
     // Also set as cookie for potential server-side use
     document.cookie = `locale=${newLocale};path=/;max-age=31536000;SameSite=Lax`
+    window.location.reload()
   }
 
   const currentLocaleConfig = SUPPORTED_LOCALES.find((l) => l.code === locale) || SUPPORTED_LOCALES[0]
+  const dict = getDictionary(locale)
 
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, currentLocaleConfig }}>
+    <LanguageContext.Provider value={{ locale, setLocale, currentLocaleConfig, dict }}>
       {children}
     </LanguageContext.Provider>
   )

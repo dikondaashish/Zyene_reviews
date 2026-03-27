@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Instellingen",
+    "logout": "Uitloggen",
+    "language": "Taal"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "demo_badge": "Demo",
+    "last_synced": "Laatst gesynchroniseerd: ",
+    "google_metrics": "Google-statistieken: ",
+    "total_reviews": "Totaal beoordelingen",
+    "from_google": "Van Google Beoordelingen",
+    "connect_google": "Verbind Google",
+    "vs_last_month": "vs vorige maand",
+    "average_rating": "Gemiddelde beoordeling",
+    "based_on_google": "Gebaseerd op Google",
+    "pts": "ptn",
+    "response_rate": "Reactiepercentage",
+    "reviews_responded": "% beoordelingen beantwoord",
+    "no_reviews": "Nog geen beoordelingen",
+    "pending_reviews": "In afwachting",
+    "awaiting_response": "Wachtend op reactie",
+    "all_caught_up": "Helemaal bijgewerkt!",
+    "unanswered_qa": "Onbeantwoorde V&A",
+    "qa_desc": "Google-vragen zonder antwoord",
+    "manage_qa": "V&A beheren",
+    "broken_links": "Defecte links",
+    "links_desc": "Mislukte URL's",
+    "manage_links": "Links beheren",
+    "listing_completeness": "Profielvolledigheid",
+    "listing_desc": "Ingevulde Google-velden",
+    "edit_listing": "Profiel bewerken",
+    "lodging_completeness": "Accommodatiedetails",
+    "lodging_desc": "Hotelfaciliteiten ingevuld",
+    "lodging_desc_empty": "Start Google-synchronisatie",
+    "not_hotel": "Geen hotel op Google",
+    "lodging_details": "Accommodatiedetails"
+  }
+}

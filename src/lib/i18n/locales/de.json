@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Einstellungen",
+    "logout": "Abmelden",
+    "language": "Sprache"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "demo_badge": "Demo",
+    "last_synced": "Zuletzt synchronisiert: ",
+    "google_metrics": "Google-Metriken: ",
+    "total_reviews": "Bewertungen gesamt",
+    "from_google": "Von Google Bewertungen",
+    "connect_google": "Google verbinden",
+    "vs_last_month": "vs. letzter Monat",
+    "average_rating": "Durchschnittsbewertung",
+    "based_on_google": "Basierend auf Google",
+    "pts": "Pkt",
+    "response_rate": "Antwortrate",
+    "reviews_responded": "% beantwortet",
+    "no_reviews": "Noch keine Bewertungen",
+    "pending_reviews": "Ausstehend",
+    "awaiting_response": "Warten auf Antwort",
+    "all_caught_up": "Alles erledigt!",
+    "unanswered_qa": "Unbeantwortete F&A",
+    "qa_desc": "Google-Fragen ohne Antwort",
+    "manage_qa": "F&A verwalten",
+    "broken_links": "Defekte Links",
+    "links_desc": "URLs fehlgeschlagen",
+    "manage_links": "Links verwalten",
+    "listing_completeness": "Profil-Vollständigkeit",
+    "listing_desc": "Google-Felder ausgefüllt",
+    "edit_listing": "Profil bearbeiten",
+    "lodging_completeness": "Unterkunftsdetails",
+    "lodging_desc": "Hoteleinrichtungen ausgefüllt",
+    "lodging_desc_empty": "Google-Synchronisation starten",
+    "not_hotel": "Kein Hotel auf Google",
+    "lodging_details": "Unterkunftsdetails"
+  }
+}

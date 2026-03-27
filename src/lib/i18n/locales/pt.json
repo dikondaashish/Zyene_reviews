@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Configurações",
+    "logout": "Sair",
+    "language": "Idioma"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "demo_badge": "Demonstração",
+    "last_synced": "Última sincronização: ",
+    "google_metrics": "Métricas do Google: ",
+    "total_reviews": "Total de Avaliações",
+    "from_google": "De avaliações do Google",
+    "connect_google": "Conectar Google",
+    "vs_last_month": "vs mês anterior",
+    "average_rating": "Avaliação Média",
+    "based_on_google": "Baseado no Google",
+    "pts": "pts",
+    "response_rate": "Taxa de Resposta",
+    "reviews_responded": "% de avaliações respondidas",
+    "no_reviews": "Sem avaliações ainda",
+    "pending_reviews": "Avaliações Pendentes",
+    "awaiting_response": "Aguardando resposta",
+    "all_caught_up": "Tudo em dia!",
+    "unanswered_qa": "Q&A sem resposta",
+    "qa_desc": "Perguntas sem resposta",
+    "manage_qa": "Gerenciar Q&A",
+    "broken_links": "Links quebrados",
+    "links_desc": "URLs com falha",
+    "manage_links": "Gerenciar links",
+    "listing_completeness": "Integração do Perfil",
+    "listing_desc": "Campos preenchidos",
+    "edit_listing": "Editar perfil",
+    "lodging_completeness": "Detalhes de hospedagem",
+    "lodging_desc": "Comodidades preenchidas",
+    "lodging_desc_empty": "Sincronizar com Google",
+    "not_hotel": "Não é hotel",
+    "lodging_details": "Detalhes de hospedagem"
+  }
+}

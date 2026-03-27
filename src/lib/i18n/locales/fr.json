@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "language": "Langue"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "demo_badge": "Démo",
+    "last_synced": "Dernière synchro: ",
+    "google_metrics": "Métriques Google: ",
+    "total_reviews": "Total des avis",
+    "from_google": "Avis Google",
+    "connect_google": "Connecter Google",
+    "vs_last_month": "vs mois dernier",
+    "average_rating": "Note moyenne",
+    "based_on_google": "Basé sur Google",
+    "pts": "pts",
+    "response_rate": "Taux de réponse",
+    "reviews_responded": "% d'avis répondus",
+    "no_reviews": "Aucun avis",
+    "pending_reviews": "Avis en attente",
+    "awaiting_response": "En attente",
+    "all_caught_up": "Tout est à jour!",
+    "unanswered_qa": "Q&R sans réponse",
+    "qa_desc": "Questions Google sans réponse",
+    "manage_qa": "Gérer Q&R",
+    "broken_links": "Liens brisés",
+    "links_desc": "URLs défectueuses",
+    "manage_links": "Gérer liens",
+    "listing_completeness": "Profil complet",
+    "listing_desc": "Champs remplis sur Google",
+    "edit_listing": "Éditer profil",
+    "lodging_completeness": "Détails hébergement",
+    "lodging_desc": "Politiques hôtel remplies",
+    "lodging_desc_empty": "Lancer synchro Google",
+    "not_hotel": "Pas un hôtel sur Google",
+    "lodging_details": "Détails hébergement"
+  }
+}

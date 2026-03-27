@@ -27,7 +27,7 @@ import { useLanguage, SUPPORTED_LOCALES } from "@/lib/language-context"
 export function UserNav({ user }: { user: any }) {
     const router = useRouter()
     const supabase = createClient()
-    const { locale, setLocale, currentLocaleConfig } = useLanguage()
+    const { locale, setLocale, currentLocaleConfig, dict } = useLanguage()
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
@@ -59,13 +59,13 @@ export function UserNav({ user }: { user: any }) {
                 <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer py-2 px-3">
                         <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
-                        <span>Settings</span>
+                        <span>{dict.nav.settings}</span>
                     </DropdownMenuItem>
                     
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger className="cursor-pointer py-2 px-3">
                             <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span>Language: {currentLocaleConfig.label}</span>
+                            <span>{dict.nav.language}: {currentLocaleConfig.label}</span>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent className="w-56" alignOffset={-5}>
@@ -88,7 +88,7 @@ export function UserNav({ user }: { user: any }) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer py-2 px-3">
                     <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
-                    <span>Log out</span>
+                    <span>{dict.nav.logout}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
