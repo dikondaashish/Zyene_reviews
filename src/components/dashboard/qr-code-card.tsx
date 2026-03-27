@@ -258,24 +258,8 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
-                                <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 group-hover:shadow-md duration-300">
-                                    {loading ? (
-                                        <Skeleton className="h-[180px] w-[180px] rounded-xl" />
-                                    ) : error ? (
-                                        <div className="h-[180px] w-[180px] flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-slate-400">
-                                            <p className="text-xs">Error generating QR</p>
-                                            <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); fetchQRCode(); }} className="h-7 text-xs">
-                                                <RefreshCw className="h-3 w-3 mr-1" /> Retry
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <img
-                                            src={qrDataUrl!}
-                                            alt={`QR code for ${businessName}`}
-                                            className="h-[180px] w-[180px]"
-                                            style={{ imageRendering: 'pixelated' }}
-                                        />
-                                    )}
+                                <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 group-hover:shadow-md duration-300 h-[228px] w-[228px]">
+                                    <QrCode className="h-[140px] w-[140px] text-slate-800" strokeWidth={1} />
                                 </div>
                                 <p className="text-[13px] text-slate-900 font-medium text-center group-hover:text-blue-600 transition-colors">
                                     Tap this icon to see your QR code
