@@ -197,66 +197,81 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
     };
 
     return (
-        <Card>
-            <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                    <QrCode className="h-5 w-5 text-muted-foreground" />
-                    <CardTitle className="text-base">Your Review Page</CardTitle>
-                </div>
-                <CardDescription className="flex items-center gap-2">
-                    <span className="font-mono text-xs truncate">{process.env.NEXT_PUBLIC_ROOT_DOMAIN}/{businessSlug}</span>
-                    <button
-                        onClick={handleCopyLink}
-                        className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
-                        aria-label="Copy link"
-                    >
-                        {copied ? (
-                            <Check className="h-3.5 w-3.5 text-green-500" />
-                        ) : (
-                            <Copy className="h-3.5 w-3.5" />
-                        )}
-                    </button>
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {/* QR Code */}
-                <div className="flex justify-center">
-                    {loading ? (
-                        <Skeleton className="h-[200px] w-[200px] rounded-lg" />
-                    ) : error ? (
-                        <div className="h-[200px] w-[200px] flex flex-col items-center justify-center gap-3 bg-slate-50 rounded-lg border border-dashed">
-                            <p className="text-sm text-muted-foreground">Couldn&apos;t generate QR code.</p>
-                            <Button variant="outline" size="sm" onClick={fetchQRCode}>
-                                <RefreshCw className="h-3 w-3 mr-1" /> Retry
-                            </Button>
+        <Card className="overflow-hidden bg-white shadow-sm border-slate-200/60 border mt-2">
+            <CardContent className="p-0 flex flex-col md:flex-row">
+                {/* Left Section: Text Content */}
+                <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
+                    <div className="flex items-start gap-4">
+                        <div className="mt-1 flex-shrink-0 text-slate-400">
+                            <QrCode className="w-8 h-8" strokeWidth={1.5} />
                         </div>
-                    ) : (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                            src={qrDataUrl!}
-                            alt={`QR code for ${businessName}`}
-                            className="h-[200px] w-[200px] rounded-lg"
-                        />
-                    )}
+                        <div>
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">
+                                {businessName}
+                            </h2>
+                            <h3 className="text-xl font-medium text-slate-900 mb-4">
+                                Your Review & Order Portal
+                            </h3>
+                            <p className="text-slate-600 text-base max-w-md mb-6 leading-relaxed">
+                                Share this with customers to collect reviews and drive orders.
+                            </p>
+                            
+                            <div 
+                                onClick={handleCopyLink}
+                                className="flex items-center text-sm font-mono text-slate-500 hover:text-slate-900 cursor-pointer transition-colors w-fit" 
+                            >
+                                {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                {copied ? <Check className="w-4 h-4 ml-2 text-green-500" /> : <Copy className="w-4 h-4 ml-2" />}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Action Buttons */}
-                {!loading && !error && (
-                    <div className="grid grid-cols-3 gap-2">
-                        <Button variant="outline" size="sm" onClick={handleDownload} className="text-xs" disabled={!qrDataUrl}>
-                            <Download className="h-3.5 w-3.5 mr-1" />
-                            Download
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={handlePrint} className="text-xs" disabled={!qrDataUrl}>
-                            <Printer className="h-3.5 w-3.5 mr-1" />
-                            Print
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={handleShare} className="text-xs">
-                            <Share2 className="h-3.5 w-3.5 mr-1" />
-                            Share
-                        </Button>
+                {/* Middle Action Buttons */}
+                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-slate-200/60 min-w-[200px]">
+                    <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                        <Download className="h-3.5 w-3.5 mr-2" />
+                        Download
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                        <Printer className="h-3.5 w-3.5 mr-2" />
+                        Print
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                        <QrCode className="h-3.5 w-3.5 mr-2" />
+                        order QR now
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleShare} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                        <Share2 className="h-3.5 w-3.5 mr-2" />
+                        Share
+                    </Button>
+                </div>
+
+                {/* Right Section: Big QR Code */}
+                <div className="p-6 md:p-10 flex flex-col items-center justify-center min-w-[320px] bg-white">
+                    <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-transform hover:scale-105 duration-300">
+                        {loading ? (
+                            <Skeleton className="h-[180px] w-[180px] rounded-xl" />
+                        ) : error ? (
+                            <div className="h-[180px] w-[180px] flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-slate-400">
+                                <p className="text-xs">Error generating QR</p>
+                                <Button variant="outline" size="sm" onClick={fetchQRCode} className="h-7 text-xs">
+                                    <RefreshCw className="h-3 w-3 mr-1" /> Retry
+                                </Button>
+                            </div>
+                        ) : (
+                            <img
+                                src={qrDataUrl!}
+                                alt={`QR code for ${businessName}`}
+                                className="h-[180px] w-[180px]"
+                                style={{ imageRendering: 'pixelated' }}
+                            />
+                        )}
                     </div>
-                )}
+                    <p className="text-[13px] text-slate-900 font-medium text-center">
+                        Tap this icon to see your QR code
+                    </p>
+                </div>
             </CardContent>
         </Card>
     );
