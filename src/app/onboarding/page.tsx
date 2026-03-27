@@ -296,6 +296,7 @@ export default function OnboardingPage() {
                   businessId={business.id}
                   businessName={business.name}
                   city={business.city ?? ""}
+                  initialCategory={business.category ?? undefined}
                   onNext={async () => setCurrentStep(4)}
                   isLoading={isLoading}
                 />

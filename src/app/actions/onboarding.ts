@@ -164,7 +164,7 @@ export async function initializeGoogleAuth(
     // Location details: mybusinessbusinessinformation API
     // Review counts: mybusiness API (separate endpoint)
     let reviewData = { reviewCount: 0, averageRating: 0 };
-    let locationInfo: { businessName?: string; address?: string; city?: string; state?: string; phone?: string } | undefined;
+    let locationInfo: { businessName?: string; address?: string; city?: string; state?: string; phone?: string; category?: string } | undefined;
 
     try {
       // Step 1: List accounts using the CORRECT Account Management API
@@ -188,7 +188,7 @@ export async function initializeGoogleAuth(
 
           // Step 2: List locations using Business Information API with valid readMask fields
           const locationsResponse = await fetch(
-            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,phoneNumbers`,
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,phoneNumbers,categories`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
@@ -207,12 +207,43 @@ export async function initializeGoogleAuth(
               const addr = loc.storefrontAddress;
               const phone = loc.phoneNumbers?.primaryPhone || undefined;
 
+              // Map Google's primaryCategory.displayName to our internal category values
+              const googleCategoryName = (loc.categories?.primaryCategory?.displayName || "").toLowerCase();
+              const CATEGORY_MAP: Record<string, string> = {
+                restaurant: "restaurant", dining: "restaurant", food: "restaurant", eatery: "restaurant",
+                pizza: "restaurant", sushi: "restaurant", burger: "restaurant", grill: "restaurant",
+                bistro: "restaurant", steakhouse: "restaurant", bakery: "restaurant",
+                cafe: "coffee", coffee: "coffee", "coffee shop": "coffee", tea: "coffee", "tea house": "coffee",
+                salon: "salon", beauty: "salon", barber: "salon", "hair salon": "salon",
+                "nail salon": "salon", cosmetics: "salon",
+                dentist: "dental", dental: "dental", orthodontist: "dental",
+                gym: "gym", fitness: "gym", "yoga studio": "gym", "pilates studio": "gym",
+                "personal trainer": "gym", crossfit: "gym",
+                spa: "spa", massage: "spa", wellness: "spa",
+                hotel: "hotel", motel: "hotel", resort: "hotel", inn: "hotel", "bed and breakfast": "hotel",
+                retail: "retail", store: "retail", shop: "retail", boutique: "retail", market: "retail",
+                auto: "automotive", automotive: "automotive", "car dealer": "automotive",
+                "car repair": "automotive", mechanic: "automotive", "auto repair": "automotive",
+                doctor: "healthcare", hospital: "healthcare", clinic: "healthcare",
+                medical: "healthcare", healthcare: "healthcare", pharmacy: "healthcare",
+                veterinarian: "healthcare", chiropractor: "healthcare",
+              };
+              let mappedCategory: string | undefined;
+              for (const [keyword, value] of Object.entries(CATEGORY_MAP)) {
+                if (googleCategoryName.includes(keyword)) {
+                  mappedCategory = value;
+                  break;
+                }
+              }
+              console.log(`[Google API] Google category: "${googleCategoryName}" → mapped: "${mappedCategory || "other"}"`);
+
               locationInfo = {
                 businessName: loc.title || undefined,
                 address: addr?.addressLines?.join(", ") || undefined,
                 city: addr?.locality || undefined,
                 state: addr?.administrativeArea || undefined,
                 phone,
+                category: mappedCategory || "other",
               };
 
               console.log("[Google API] Location info:", JSON.stringify(locationInfo));
@@ -250,6 +281,7 @@ export async function initializeGoogleAuth(
                   city: addr?.locality || null,
                   state: addr?.administrativeArea || null,
                   phone: phone || null,
+                  category: mappedCategory || "other",
                   updated_at: new Date().toISOString(),
                   ...(slug ? { slug } : {}),
                 })

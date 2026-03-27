@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -33,12 +33,14 @@ interface Step3FormProps {
   businessId: string;
   businessName: string;
   city: string;
+  initialCategory?: string;
   onNext: () => void;
   isLoading?: boolean;
 }
 
 export function Step3Form({
   businessId,
+  initialCategory,
   onNext,
   isLoading: externalIsLoading = false,
 }: Step3FormProps) {
@@ -46,9 +48,19 @@ export function Step3Form({
 
   const form = useForm<StepCategoryFormData>({
     resolver: zodResolver(stepCategorySchema),
-    defaultValues: { category: undefined as unknown as StepCategoryFormData["category"] },
+    defaultValues: {
+      category: (initialCategory as StepCategoryFormData["category"]) || (undefined as unknown as StepCategoryFormData["category"]),
+    },
     mode: "onChange",
   });
+
+  // If Google already provided a category, set it and trigger validation
+  useEffect(() => {
+    if (initialCategory) {
+      form.setValue("category", initialCategory as StepCategoryFormData["category"]);
+      form.trigger("category");
+    }
+  }, [initialCategory, form]);
 
   const selectedCategory = form.watch("category");
 
@@ -90,6 +102,18 @@ export function Step3Form({
         <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
           We&apos;ll tailor your review templates and response suggestions to match.
         </p>
+        {initialCategory && (
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200/60 rounded-full text-xs font-semibold text-emerald-700"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+            </svg>
+            Auto-detected from Google
+          </motion.div>
+        )}
       </div>
 
       {/* Category tile grid */}

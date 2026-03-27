@@ -42,7 +42,7 @@ interface Step2Props {
   /** Called after the pending code has been consumed so the parent can clear it */
   onGoogleCodeConsumed?: () => void;
   /** Called when Google returns business info so the parent state stays in sync */
-  onBusinessUpdate?: (info: { name?: string; address_line1?: string; city?: string; state?: string }) => void;
+  onBusinessUpdate?: (info: { name?: string; address_line1?: string; city?: string; state?: string; category?: string | null }) => void;
 }
 
 interface GoogleConnectionState {
@@ -143,6 +143,7 @@ export function Step2Form({
             address_line1: newAddress,
             city: newCity,
             state: newState,
+            category: (result.locationInfo as any).category || null,
           });
         }
       } else {
