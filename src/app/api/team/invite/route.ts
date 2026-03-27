@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const inviteSchema = z.object({
     email: z.string().email().max(255),
-    role: z.enum(["admin", "manager", "member", "viewer"]),
+    role: z.enum(["admin", "manager", "member", "viewer", "ORG_ADMIN", "ORG_MANAGER"]),
 });
 
 export async function POST(request: Request) {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         .from("organization_members")
         .select("role, organization_id, organizations(name), users(full_name)") // users joined via user_id
         .eq("user_id", user.id)
-        .in("role", ["owner", "admin"])
+        .in("role", ["owner", "admin", "ORG_OWNER", "ORG_ADMIN"])
         .single();
 
     if (membError || !membership) {

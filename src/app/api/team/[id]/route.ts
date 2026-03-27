@@ -3,7 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-const roleSchema = z.enum(["owner", "admin", "member"]);
+const roleSchema = z.enum(["owner", "admin", "member", "ORG_OWNER", "ORG_ADMIN"]);
 
 export async function PATCH(
     request: Request,
@@ -34,7 +34,7 @@ export async function PATCH(
         .eq("user_id", user.id)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
+    if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -47,10 +47,10 @@ export async function PATCH(
     if (!targetMember) {
         return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
-    if (requester.role !== "owner" && role === "owner") {
+    if (!["owner", "ORG_OWNER"].includes(requester.role) && ["owner", "ORG_OWNER"].includes(role)) {
         return NextResponse.json({ error: "Only owners can assign owner role" }, { status: 403 });
     }
-    if (targetMember.role === "owner" && requester.role !== "owner") {
+    if (["owner", "ORG_OWNER"].includes(targetMember.role) && !["owner", "ORG_OWNER"].includes(requester.role)) {
         return NextResponse.json({ error: "Only owners can modify owner role" }, { status: 403 });
     }
 
@@ -95,7 +95,7 @@ export async function DELETE(
         .eq("user_id", user.id)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
+    if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -121,7 +121,7 @@ export async function DELETE(
         if (targetMember.user_id === user.id) {
             return NextResponse.json({ error: "You cannot remove yourself" }, { status: 400 });
         }
-        if (targetMember.role === "owner") {
+        if (["owner", "ORG_OWNER"].includes(targetMember.role)) {
             return NextResponse.json({ error: "Owner cannot be removed" }, { status: 403 });
         }
         const { error } = await supabase

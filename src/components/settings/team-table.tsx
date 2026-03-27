@@ -48,7 +48,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     const router = useRouter();
     const [isLoadingId, setIsLoadingId] = useState<string | null>(null);
 
-    const canManage = ["owner", "admin"].includes(currentUserRole);
+    const canManage = ["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(currentUserRole);
 
     const handleRoleChange = async (memberId: string, newRole: string) => {
         setIsLoadingId(memberId);
@@ -97,9 +97,13 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     };
 
     const getRoleBadgeColor = (role: string) => {
-        switch (role) {
-            case "owner": return "default"; // purple-ish usually default primary
-            case "admin": return "secondary"; // blue-ish
+        switch (role.toLowerCase()) {
+            case "owner":
+            case "org_owner":
+                return "default"; // purple-ish
+            case "admin":
+            case "org_admin":
+                return "secondary"; // blue-ish
             default: return "outline"; // gray
         }
     };

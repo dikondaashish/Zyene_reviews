@@ -645,7 +645,7 @@ export async function createOrganization(
       .insert({
         organization_id: organization.id,
         user_id: user.id,
-        role: "owner",
+        role: "ORG_OWNER",
       });
 
     if (memberError) {
@@ -699,8 +699,8 @@ export async function updateOrganizationName(
       .update({ name, slug, updated_at: new Date().toISOString() })
       .eq("id", organizationId);
     if (error) {
-      console.error("Error updating organization:", error);
-      return { success: false, error: "Failed to update organization name." };
+      console.error("Error updating organization:", error.message, error.details, error.hint);
+      return { success: false, error: `Failed to update organization name: ${error.message}` };
     }
     const { error: stepError } = await supabase
       .from("users")
