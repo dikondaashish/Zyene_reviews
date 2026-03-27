@@ -225,21 +225,25 @@ export async function initializeGoogleAuth(
       console.error("Error fetching Google Business Profile data:", apiError);
     }
 
-    // Store the access token in review_platforms table
+    // Store the access token in review_platforms table.
+    // Use onConflict so the unique constraint (business_id, platform) triggers an UPDATE
+    // instead of a failing INSERT when the record already exists.
     const { error: platformError } = await supabase
       .from("review_platforms")
-      .upsert({
-        business_id: businessId,
-        platform: "google",
-        access_token: accessToken,
-        refresh_token: tokenData.refresh_token || null,
-        token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
-        total_reviews: reviewData.reviewCount,
-        average_rating: reviewData.averageRating,
-        sync_status: "active",
-      })
-      .eq("business_id", businessId)
-      .eq("platform", "google");
+      .upsert(
+        {
+          business_id: businessId,
+          platform: "google",
+          access_token: accessToken,
+          refresh_token: tokenData.refresh_token || null,
+          token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
+          total_reviews: reviewData.reviewCount,
+          average_rating: reviewData.averageRating,
+          sync_status: "active",
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "business_id,platform" }
+      );
 
     if (platformError) {
       console.error("Error storing platform token:", platformError);
@@ -381,17 +385,18 @@ export async function saveNotificationPreferences(
     // Upsert notification preferences
     const { error: preferencesError } = await supabase
       .from("notification_preferences")
-      .upsert({
-        user_id: user.id,
-        business_id: businessId,
-        email_enabled: data.emailAlerts,
-        email_frequency: data.emailFrequency,
-        sms_enabled: data.smsAlerts,
-        sms_phone_number: data.smsPhoneNumber || null,
-        min_rating_threshold: parseInt(data.minRatingThreshold),
-      })
-      .eq("user_id", user.id)
-      .eq("business_id", businessId);
+      .upsert(
+        {
+          user_id: user.id,
+          business_id: businessId,
+          email_enabled: data.emailAlerts,
+          email_frequency: data.emailFrequency,
+          sms_enabled: data.smsAlerts,
+          sms_phone_number: data.smsPhoneNumber || null,
+          min_rating_threshold: parseInt(data.minRatingThreshold),
+        },
+        { onConflict: "user_id,business_id" }
+      );
 
     if (preferencesError) {
       console.error("Error saving notification preferences:", preferencesError);
