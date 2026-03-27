@@ -159,49 +159,85 @@ export async function initializeGoogleAuth(
       };
     }
 
-    // Fetch Google Business Profile data and optionally update business with first location
+    // Fetch Google Business Profile data and optionally update business with first location.
+    // Account list: mybusinessaccountmanagement API (NOT businessinformation)
+    // Location details: mybusinessbusinessinformation API
+    // Review counts: mybusiness API (separate endpoint)
     let reviewData = { reviewCount: 0, averageRating: 0 };
-    let locationInfo: { businessName?: string; address?: string; city?: string; state?: string } | undefined;
+    let locationInfo: { businessName?: string; address?: string; city?: string; state?: string; phone?: string } | undefined;
 
     try {
+      // Step 1: List accounts using the CORRECT Account Management API
       const accountsResponse = await fetch(
-        "https://mybusinessbusinessinformation.googleapis.com/v1/accounts",
+        "https://mybusinessaccountmanagement.googleapis.com/v1/accounts",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
 
+      console.log("[Google API] Accounts response status:", accountsResponse.status);
+
       if (accountsResponse.ok) {
         const accountsData = await accountsResponse.json();
         const accounts = accountsData.accounts || [];
 
+        console.log("[Google API] Found accounts:", accounts.length);
+
         if (accounts.length > 0) {
-          const accountId = accounts[0].name;
+          const accountId = accounts[0].name; // e.g. "accounts/123456"
+
+          // Step 2: List locations using Business Information API with valid readMask fields
           const locationsResponse = await fetch(
-            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,reviewCount,averageRating`,
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,phoneNumbers`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
 
+          console.log("[Google API] Locations response status:", locationsResponse.status);
+
           if (locationsResponse.ok) {
             const locationsData = await locationsResponse.json();
             const locations = locationsData.locations || [];
 
+            console.log("[Google API] Found locations:", locations.length);
+
             if (locations.length > 0) {
               const loc = locations[0];
-              reviewData = {
-                reviewCount: loc.reviewCount || 0,
-                averageRating: loc.averageRating || 0,
-              };
               const addr = loc.storefrontAddress;
+              const phone = loc.phoneNumbers?.primaryPhone || undefined;
+
               locationInfo = {
                 businessName: loc.title || undefined,
-                address: addr?.addressLines?.join(", "),
-                city: addr?.locality,
-                state: addr?.administrativeArea,
+                address: addr?.addressLines?.join(", ") || undefined,
+                city: addr?.locality || undefined,
+                state: addr?.administrativeArea || undefined,
+                phone,
               };
-              // Update business with first location data
+
+              console.log("[Google API] Location info:", JSON.stringify(locationInfo));
+
+              // Step 3: Fetch review summary from My Business API
+              try {
+                const locationName = loc.name; // e.g. "accounts/123/locations/456"
+                if (locationName) {
+                  const reviewsResponse = await fetch(
+                    `https://mybusiness.googleapis.com/v4/${locationName}`,
+                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                  );
+                  if (reviewsResponse.ok) {
+                    const reviewsData = await reviewsResponse.json();
+                    reviewData = {
+                      reviewCount: reviewsData.metrics?.totalSummary?.reviewCount || 0,
+                      averageRating: reviewsData.metrics?.totalSummary?.averageRating || 0,
+                    };
+                  }
+                }
+              } catch (reviewErr) {
+                console.error("[Google API] Could not fetch review count (non-fatal):", reviewErr);
+              }
+
+              // Update business record with location data pulled from Google
               const slug = (loc.title || "")
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "-")
@@ -213,13 +249,20 @@ export async function initializeGoogleAuth(
                   address_line1: addr?.addressLines?.[0] || null,
                   city: addr?.locality || null,
                   state: addr?.administrativeArea || null,
+                  phone: phone || null,
                   updated_at: new Date().toISOString(),
                   ...(slug ? { slug } : {}),
                 })
                 .eq("id", businessId);
             }
+          } else {
+            const locBody = await locationsResponse.text();
+            console.error("[Google API] Locations error body:", locBody);
           }
         }
+      } else {
+        const acctBody = await accountsResponse.text();
+        console.error("[Google API] Accounts error body:", acctBody);
       }
     } catch (apiError) {
       console.error("Error fetching Google Business Profile data:", apiError);

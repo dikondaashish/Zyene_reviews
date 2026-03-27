@@ -128,13 +128,14 @@ export function Step2Form({
           const newAddress = result.locationInfo.address || form.getValues("address");
           const newCity = result.locationInfo.city || form.getValues("city");
           const newState = (result.locationInfo.state as any) || form.getValues("state");
+          const newPhone = (result.locationInfo as any).phone || form.getValues("phone");
           form.reset({
             businessName: newBusinessName,
             locationName: newBusinessName,
             address: newAddress,
             city: newCity,
             state: newState,
-            phone: form.getValues("phone"),
+            phone: newPhone,
           });
           // Propagate updated info to parent so it stays in sync
           onBusinessUpdate?.({
