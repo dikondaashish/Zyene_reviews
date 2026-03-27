@@ -694,10 +694,26 @@ export async function updateOrganizationName(
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    const { error } = await supabase
+
+    let finalSlug = slug;
+    let { error } = await supabase
       .from("organizations")
-      .update({ name, slug, updated_at: new Date().toISOString() })
+      .update({ name, slug: finalSlug, updated_at: new Date().toISOString() })
       .eq("id", organizationId);
+
+    // Handle slug collision (23505 = unique_violation)
+    if (error && error.code === "23505" && (error.message.includes("slug") || error.details?.includes("slug"))) {
+      finalSlug = `${slug}-${Math.random().toString(36).substring(2, 6)}`;
+      console.log(`Slug collision detected for "${slug}". Retrying with "${finalSlug}"`);
+      
+      const { error: retryError } = await supabase
+        .from("organizations")
+        .update({ name, slug: finalSlug, updated_at: new Date().toISOString() })
+        .eq("id", organizationId);
+      
+      error = retryError;
+    }
+
     if (error) {
       console.error("Error updating organization:", error.message, error.details, error.hint);
       return { success: false, error: `Failed to update organization name: ${error.message}` };
