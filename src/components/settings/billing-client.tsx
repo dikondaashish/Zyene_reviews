@@ -128,6 +128,18 @@ export function BillingClient({
     const isPaidPlan = !!currentPlan && currentPlan.price !== null && currentPlan.price > 0;
     const currentPlanName = currentPlan?.name || "No Active Plan";
 
+    // If no active plan, force usage max limits to 0, except for businesses which should be 1.
+    // Also set used to 0 so it clearly shows "0 / 0".
+    const displayUsage = isPaidPlan 
+        ? usage 
+        : {
+            emailRequests: { used: 0, max: 0 },
+            smsRequests: { used: 0, max: 0 },
+            linkRequests: { used: 0, max: 0 },
+            aiReplies: { used: 0, max: 0 },
+            businesses: { used: usage.businesses?.used || 0, max: 1 },
+        };
+
     // Filter plans by selected interval (exclude enterprise)
     const displayPlans = plans.filter(
         (p) => p.interval === interval && p.id !== "enterprise"
@@ -269,27 +281,27 @@ export function BillingClient({
                         </h3>
                         <UsageBar
                             label="Email Requests"
-                            stat={usage.emailRequests}
+                            stat={displayUsage.emailRequests}
                             icon={<Mail className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="SMS Requests"
-                            stat={usage.smsRequests}
+                            stat={displayUsage.smsRequests}
                             icon={<MessageSquare className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="Link Requests"
-                            stat={usage.linkRequests}
+                            stat={displayUsage.linkRequests}
                             icon={<LinkIcon className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="AI Replies"
-                            stat={usage.aiReplies}
+                            stat={displayUsage.aiReplies}
                             icon={<Bot className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
                             label="Locations"
-                            stat={usage.businesses}
+                            stat={displayUsage.businesses}
                             icon={<MapPin className="h-3.5 w-3.5" />}
                         />
                     </div>
