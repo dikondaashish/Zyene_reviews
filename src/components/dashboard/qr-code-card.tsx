@@ -200,7 +200,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
         <Card className="overflow-hidden bg-white shadow-sm border-slate-200/60 border mt-2">
             <CardContent className="p-0 flex flex-col md:flex-row">
                 {/* Left Section: Text Content */}
-                <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
+                <div className="flex-1 p-6 md:py-10 md:pl-16 lg:pl-24 md:pr-8 flex flex-col justify-center">
                     <div className="flex items-start gap-4">
                         <div className="mt-1 flex-shrink-0 text-slate-400">
                             <QrCode className="w-8 h-8" strokeWidth={1.5} />
@@ -228,7 +228,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Middle Action Buttons */}
-                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-slate-200/60 min-w-[200px]">
+                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-slate-200/60 min-w-[180px] md:pr-8 lg:pr-12">
                     <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
                         <Download className="h-3.5 w-3.5 mr-2" />
                         Download
@@ -248,7 +248,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="p-6 md:p-10 flex flex-col items-center justify-center min-w-[320px] bg-white">
+                <div className="p-6 md:py-10 md:pl-8 lg:pl-12 md:pr-16 lg:pr-24 flex flex-col items-center justify-center min-w-[280px] bg-white">
                     <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-transform hover:scale-105 duration-300">
                         {loading ? (
                             <Skeleton className="h-[180px] w-[180px] rounded-xl" />
