@@ -37,6 +37,12 @@ interface Step2Props {
   address?: string;
   state?: string;
   phone?: string;
+  /** OAuth code passed from page.tsx after Google redirects back */
+  pendingGoogleCode?: string | null;
+  /** Called after the pending code has been consumed so the parent can clear it */
+  onGoogleCodeConsumed?: () => void;
+  /** Called when Google returns business info so the parent state stays in sync */
+  onBusinessUpdate?: (info: { name?: string; address_line1?: string; city?: string; state?: string }) => void;
 }
 
 interface GoogleConnectionState {
@@ -56,6 +62,9 @@ export function Step2Form({
   address = "",
   state: stateProp = "",
   phone = "",
+  pendingGoogleCode,
+  onGoogleCodeConsumed,
+  onBusinessUpdate,
 }: Step2Props) {
   const [mounted, setMounted] = useState(false);
   const [googleState, setGoogleState] = useState<GoogleConnectionState>({ status: "idle" });
@@ -75,13 +84,16 @@ export function Step2Form({
 
   useEffect(() => {
     setMounted(true);
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code && googleState.status === "idle") {
-      handleGoogleCallback(code);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
   }, []);
+
+  // Process the OAuth code passed from page.tsx (Google redirected back with ?code=)
+  useEffect(() => {
+    if (pendingGoogleCode && googleState.status === "idle" && mounted) {
+      handleGoogleCallback(pendingGoogleCode);
+      onGoogleCodeConsumed?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingGoogleCode, mounted]);
 
   useEffect(() => {
     form.reset({
@@ -112,13 +124,24 @@ export function Step2Form({
         });
         toast.success("Google Business Profile connected!");
         if (result.locationInfo) {
+          const newBusinessName = result.locationInfo.businessName || form.getValues("businessName");
+          const newAddress = result.locationInfo.address || form.getValues("address");
+          const newCity = result.locationInfo.city || form.getValues("city");
+          const newState = (result.locationInfo.state as any) || form.getValues("state");
           form.reset({
-            businessName: result.locationInfo.businessName || form.getValues("businessName"),
-            locationName: result.locationInfo.businessName || form.getValues("locationName"),
-            address: result.locationInfo.address || form.getValues("address"),
-            city: result.locationInfo.city || form.getValues("city"),
-            state: (result.locationInfo.state as any) || form.getValues("state"),
+            businessName: newBusinessName,
+            locationName: newBusinessName,
+            address: newAddress,
+            city: newCity,
+            state: newState,
             phone: form.getValues("phone"),
+          });
+          // Propagate updated info to parent so it stays in sync
+          onBusinessUpdate?.({
+            name: newBusinessName,
+            address_line1: newAddress,
+            city: newCity,
+            state: newState,
           });
         }
       } else {

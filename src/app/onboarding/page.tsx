@@ -42,6 +42,24 @@ export default function OnboardingPage() {
   const [business, setBusiness] = useState<OnboardingBusiness | null>(null);
   const [googleConnected, setGoogleConnected] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  // Holds the ?code= from Google OAuth redirect so Step2Form can process it immediately
+  const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
+
+  // Detect Google OAuth ?code= redirect BEFORE anything else.
+  // When Google redirects back, the Zustand store resets to step 1 (in-memory).
+  // We detect the code here, jump straight to step 2, and pass it via prop.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      setPendingGoogleCode(code);
+      // Jump to step 2 so the code can be processed there
+      setCurrentStep(2);
+      // Strip the code from the URL immediately to prevent double-processing
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [setCurrentStep]);
 
   // Load user, organization, and business on mount
   useEffect(() => {
@@ -119,6 +137,11 @@ export default function OnboardingPage() {
 
     checkOnboarding();
   }, [user, supabase, router]);
+
+  // Callback so Step2Form can notify us that business info updated from Google
+  const handleBusinessUpdate = (updated: Partial<OnboardingBusiness>) => {
+    setBusiness((prev) => prev ? { ...prev, ...updated } : prev);
+  };
 
   const handleStep1Next = () => {
     // Business created and onboarding_step updated to 2 by server action
@@ -203,6 +226,9 @@ export default function OnboardingPage() {
               address={business.address_line1 ?? ""}
               state={business.state ?? ""}
               phone={business.phone ?? ""}
+              pendingGoogleCode={pendingGoogleCode}
+              onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
+              onBusinessUpdate={handleBusinessUpdate}
               onNext={async () => {
                 setGoogleConnected(true);
                 setCurrentStep(3);
@@ -212,6 +238,11 @@ export default function OnboardingPage() {
               }}
               isLoading={isLoading}
             />
+          )}
+          {currentStep === 2 && !business && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
           )}
           {currentStep === 3 && business && (
             <Step3Form
