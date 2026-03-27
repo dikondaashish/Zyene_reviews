@@ -611,6 +611,15 @@ export default async function DashboardPage() {
                 />
             )}
 
+            {/* QR Code Card */}
+            {business.slug && (
+                <QRCodeCard
+                    businessId={business.id}
+                    businessSlug={business.slug}
+                    businessName={business.name || "Business"}
+                />
+            )}
+
             {/* Stats Cards */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
                 <ProStatCard
@@ -965,15 +974,6 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
-
-            {/* QR Code Card */}
-            {business.slug && (
-                <QRCodeCard
-                    businessId={business.id}
-                    businessSlug={business.slug}
-                    businessName={business.name || "Business"}
-                />
-            )}
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
