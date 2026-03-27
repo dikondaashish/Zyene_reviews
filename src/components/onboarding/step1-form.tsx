@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { CheckCircle2, Loader2, ChevronRight } from "lucide-react";
+import { Building2, Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,36 +82,46 @@ export function Step1Form({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-6"
-    >
-      {/* Removed local progress bar - now in shell */}
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
+          className="inline-flex"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <Building2 className="w-8 h-8 text-primary" />
+          </div>
+        </motion.div>
 
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900">Set up your organization</h2>
-        <p className="text-gray-600 mt-2">
-          Give your organization a name (e.g. your company or brand).
-        </p>
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+            Name your workspace
+          </h2>
+          <p className="text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
+            This is your organization — the umbrella for all your business locations.
+          </p>
+        </div>
       </div>
 
+      {/* Form */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="organizationName"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center gap-2 mb-1">
-                  <Label htmlFor="organizationName" className="font-semibold">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Label htmlFor="organizationName" className="text-sm font-semibold text-foreground">
                     Organization name
                   </Label>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Info className="h-4 w-4 text-slate-400 cursor-help" />
+                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-[250px] p-3 text-xs leading-relaxed">
                         <p>Your <strong>Organization</strong> is the umbrella account that owns one or more business locations. Most users just use their company name here.</p>
@@ -122,9 +132,9 @@ export function Step1Form({
                 <FormControl>
                   <Input
                     id="organizationName"
-                    placeholder="Acme Inc."
+                    placeholder="e.g. Acme Inc."
                     disabled={submitting || isLoading}
-                    className="text-base"
+                    className="h-14 text-base bg-white/60 border-violet-200/60 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
                     {...field}
                   />
                 </FormControl>
@@ -132,10 +142,11 @@ export function Step1Form({
               </FormItem>
             )}
           />
+
           <Button
             type="submit"
             disabled={!form.formState.isValid || submitting || isLoading}
-            className="w-full text-base py-6"
+            className="w-full h-14 text-base font-semibold rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 group cursor-pointer"
           >
             {submitting || isLoading ? (
               <>
@@ -144,13 +155,26 @@ export function Step1Form({
               </>
             ) : (
               <>
-                Next
-                <ChevronRight className="ml-2 h-5 w-5" />
+                Continue
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
               </>
             )}
           </Button>
         </form>
       </Form>
-    </motion.div>
+
+      {/* Tip */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl"
+      >
+        <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          <span className="font-semibold text-foreground">Quick setup</span> — Most users complete onboarding in under 2 minutes. We'll guide you through each step.
+        </p>
+      </motion.div>
+    </div>
   );
 }

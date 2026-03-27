@@ -6,30 +6,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Loader2, ChevronRight } from "lucide-react";
+  Loader2, ArrowRight, LayoutGrid,
+  UtensilsCrossed, Coffee, Scissors, Stethoscope,
+  Dumbbell, Sparkles, BedDouble, ShoppingBag,
+  Car, HeartPulse, MoreHorizontal,
+} from "lucide-react";
 import { stepCategorySchema, type StepCategoryFormData } from "@/lib/validation/onboarding";
 import { updateBusinessCategory } from "@/app/actions/onboarding";
 
 const CATEGORIES = [
-  { value: "restaurant", label: "Restaurant" },
-  { value: "coffee", label: "Coffee / Cafe" },
-  { value: "salon", label: "Salon / Beauty" },
-  { value: "dental", label: "Dental" },
-  { value: "gym", label: "Gym / Fitness" },
-  { value: "spa", label: "Spa" },
-  { value: "hotel", label: "Hotel" },
-  { value: "retail", label: "Retail" },
-  { value: "automotive", label: "Automotive" },
-  { value: "healthcare", label: "Healthcare" },
-  { value: "other", label: "Other" },
+  { value: "restaurant", label: "Restaurant", icon: UtensilsCrossed },
+  { value: "coffee", label: "Coffee / Cafe", icon: Coffee },
+  { value: "salon", label: "Salon / Beauty", icon: Scissors },
+  { value: "dental", label: "Dental", icon: Stethoscope },
+  { value: "gym", label: "Gym / Fitness", icon: Dumbbell },
+  { value: "spa", label: "Spa", icon: Sparkles },
+  { value: "hotel", label: "Hotel", icon: BedDouble },
+  { value: "retail", label: "Retail", icon: ShoppingBag },
+  { value: "automotive", label: "Automotive", icon: Car },
+  { value: "healthcare", label: "Healthcare", icon: HeartPulse },
+  { value: "other", label: "Other", icon: MoreHorizontal },
 ];
 
 interface Step3FormProps {
@@ -73,86 +70,119 @@ export function Step3Form({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-8"
-    >
+    <div className="space-y-7">
+      {/* Header */}
       <div className="text-center space-y-3">
-        <h2 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-          What's your specialty?
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
+          className="inline-flex"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <LayoutGrid className="w-8 h-8 text-primary" />
+          </div>
+        </motion.div>
+
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+          What&apos;s your industry?
         </h2>
-        <p className="text-lg text-slate-600 max-w-sm mx-auto leading-relaxed">
-          Select a category so we can tailor the review collection templates to your specific industry.
+        <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
+          We&apos;ll tailor your review templates and response suggestions to match.
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="space-y-4">
-          <Label className="text-sm font-black text-slate-500 uppercase tracking-widest ml-1">
-            Business category
-          </Label>
-          <Controller
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={(v) => {
-                  field.onChange(v);
-                  form.trigger("category");
-                }}
-                disabled={isLoading}
-              >
-                <SelectTrigger className="h-16 bg-white border-2 border-slate-200 focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all rounded-2xl text-lg shadow-sm">
-                  <SelectValue placeholder="Select your industry..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl border-2 shadow-xl">
-                  <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-1">
-                    {CATEGORIES.map((c) => (
-                      <SelectItem 
-                        key={c.value} 
-                        value={c.value}
-                        className="rounded-xl py-3 px-4 focus:bg-blue-50 focus:text-blue-700 cursor-pointer transition-colors"
+      {/* Category tile grid */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
+        <Controller
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+              {CATEGORIES.map((cat, index) => {
+                const Icon = cat.icon;
+                const isSelected = field.value === cat.value;
+
+                return (
+                  <motion.button
+                    key={cat.value}
+                    type="button"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.03, duration: 0.3 }}
+                    onClick={() => {
+                      field.onChange(cat.value);
+                      form.trigger("category");
+                    }}
+                    disabled={isLoading}
+                    className={`
+                      relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
+                      ${isSelected
+                        ? "border-primary bg-primary/[0.06] ring-2 ring-primary/20 shadow-md shadow-primary/10"
+                        : "border-border/40 bg-white/40 hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-sm"
+                      }
+                    `}
+                  >
+                    {/* Selected checkmark */}
+                    {isSelected && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-sm"
                       >
-                        {c.label}
-                      </SelectItem>
-                    ))}
-                  </div>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {form.formState.errors.category && (
-            <p className="text-sm font-medium text-red-500 flex items-center gap-1.5 ml-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-              {form.formState.errors.category.message}
-            </p>
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </motion.div>
+                    )}
+
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center transition-colors
+                      ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"}
+                    `}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className={`text-xs font-semibold text-center leading-tight ${
+                      isSelected ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    }`}>
+                      {cat.label}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
           )}
-        </div>
+        />
+        {form.formState.errors.category && (
+          <p className="text-sm font-medium text-destructive flex items-center gap-1.5 ml-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
+            {form.formState.errors.category.message}
+          </p>
+        )}
 
         <Button
           type="submit"
           disabled={!selectedCategory || isLoading}
-          className="w-full h-16 shadow-xl shadow-slate-200 rounded-[1.25rem] text-xl font-bold group"
+          className="w-full h-14 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all cursor-pointer group"
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-6 w-6 animate-spin" /> Saving...</>
+            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
           ) : (
             <>
-              Next
-              <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+              Continue
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
             </>
           )}
         </Button>
       </form>
 
-      <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200/60 mt-4">
-        <p className="text-xs text-slate-500 leading-relaxed font-medium">
-          <strong>Tip:</strong> Don't see your category? Choose <strong>Other</strong> and we'll help you set it up later. Your selection helps us provide industry-specific response templates.
+      {/* Tip */}
+      <div className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl">
+        <LayoutGrid className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          <span className="font-semibold text-foreground">Don&apos;t see yours?</span> Pick <strong>Other</strong> and we&apos;ll customize your setup later.
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

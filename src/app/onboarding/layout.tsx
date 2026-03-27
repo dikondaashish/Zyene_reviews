@@ -29,23 +29,29 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="min-h-screen bg-white flex flex-col">
+        <div className="min-h-screen bg-gradient-to-br from-violet-50/80 via-white to-orange-50/30 flex flex-col relative overflow-hidden">
+            {/* Ambient gradient blobs */}
+            <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-violet-200/20 blur-[120px]" />
+            <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-orange-200/15 blur-[100px]" />
+
             {/* Header with logo */}
-            <header className="border-b border-gray-200">
+            <header className="relative z-10 border-b border-violet-100/60 bg-white/50 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center gap-2">
-                        {/* Logo */}
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">ZR</span>
+                    <div className="flex items-center gap-2.5">
+                        {/* Brand logo mark */}
+                        <div className="w-9 h-9 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 ring-1 ring-white/40">
+                            <span className="text-white font-bold text-sm tracking-tight">ZR</span>
                         </div>
-                        <span className="text-lg font-semibold text-gray-900">Zyene Reviews</span>
+                        <span className="text-lg font-bold text-foreground tracking-tight">
+                            Zyene <span className="text-primary">Reviews</span>
+                        </span>
                     </div>
                 </div>
             </header>
 
             {/* Main content */}
-            <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-                <div className="w-full max-w-2xl">
+            <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+                <div className="w-full max-w-xl">
                     {children}
                 </div>
             </main>

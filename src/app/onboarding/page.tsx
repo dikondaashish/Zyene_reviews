@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/client";
 import { useOnboardingStore } from "@/lib/state/onboarding-store";
-import { Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper } from "lucide-react";
 import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
@@ -32,6 +33,13 @@ interface OnboardingUser {
     full_name?: string;
   };
 }
+
+const STEPS = [
+  { label: "Organization", icon: Building2 },
+  { label: "Business", icon: MapPin },
+  { label: "Category", icon: LayoutGrid },
+  { label: "All Set", icon: PartyPopper },
+];
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -150,16 +158,17 @@ export default function OnboardingPage() {
 
   if (loadError) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 text-center px-6">
-        <p className="text-sm font-semibold text-slate-900">Onboarding failed to load</p>
-        <p className="text-sm text-muted-foreground max-w-md">
-          {loadError}
-        </p>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-6">
+        <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center">
+          <svg className="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <p className="text-sm font-semibold text-foreground">Something went wrong</p>
+        <p className="text-sm text-muted-foreground max-w-md">{loadError}</p>
         <button
-          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+          className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
           onClick={() => window.location.reload()}
         >
-          Reload
+          Try again
         </button>
       </div>
     );
@@ -167,106 +176,148 @@ export default function OnboardingPage() {
 
   if (!user || !organization) {
     return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary relative z-10" />
+          </div>
+          <p className="text-sm text-muted-foreground font-medium">Setting things up...</p>
+        </div>
       </div>
     );
   }
 
-  const stepTitles = [
-    "Organization",
-    "Business Profile",
-    "Category",
-    "All Set!"
-  ];
-
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-xl">
-        {/* Progress Header */}
-        <div className="mb-8 space-y-4">
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">
-                Step {currentStep} of 4
-              </p>
-              <h1 className="text-xl font-bold text-foreground">
-                {stepTitles[currentStep - 1]}
-              </h1>
-            </div>
-            {currentStep === 1 && (
-              <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
-                 ⏱️ Takes 2 minutes
-              </span>
-            )}
-          </div>
-          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${(currentStep / 4) * 100}%` }}
-            />
-          </div>
-        </div>
+    <div className="space-y-8">
+      {/* Step indicator — animated dots */}
+      <div className="flex items-center justify-center gap-0">
+        {STEPS.map((step, index) => {
+          const stepNum = index + 1;
+          const isActive = stepNum === currentStep;
+          const isCompleted = stepNum < currentStep;
+          const StepIcon = step.icon;
 
-        {/* Step content */}
-        <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 p-8 md:p-10">
-          {currentStep === 1 && (
-            <Step1Form
-              onNext={handleStep1Next}
-              isLoading={isLoading}
-              organizationId={organization.id}
-              initialOrgName={organization.name}
-            />
-          )}
-          {currentStep === 2 && business && (
-            <Step2Form
-              businessId={business.id}
-              businessName={business.name}
-              city={business.city ?? ""}
-              address={business.address_line1 ?? ""}
-              state={business.state ?? ""}
-              phone={business.phone ?? ""}
-              pendingGoogleCode={pendingGoogleCode}
-              onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
-              onBusinessUpdate={handleBusinessUpdate}
-              onNext={async () => {
-                setGoogleConnected(true);
-                setCurrentStep(3);
-              }}
-              onSkip={async () => {
-                setCurrentStep(3);
-              }}
-              isLoading={isLoading}
-            />
-          )}
-          {currentStep === 2 && !business && (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          return (
+            <div key={step.label} className="flex items-center">
+              <div className="flex flex-col items-center gap-2">
+                <motion.div
+                  className={`
+                    w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
+                    ${isCompleted
+                      ? "bg-primary text-white shadow-lg shadow-primary/25"
+                      : isActive
+                        ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
+                        : "bg-secondary/60 text-muted-foreground"
+                    }
+                  `}
+                  animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  {isCompleted ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <StepIcon className="w-5 h-5" />
+                  )}
+                </motion.div>
+                <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
+                  isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
+                }`}>
+                  {step.label}
+                </span>
+              </div>
+
+              {/* Connector line */}
+              {index < STEPS.length - 1 && (
+                <div className="w-8 sm:w-12 h-[2px] mx-1 sm:mx-2 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
+                  <motion.div
+                    className="h-full bg-primary rounded-full"
+                    initial={false}
+                    animate={{ width: isCompleted ? "100%" : "0%" }}
+                    transition={{ duration: 0.4 }}
+                  />
+                </div>
+              )}
             </div>
-          )}
-          {currentStep === 3 && business && (
-            <Step3Form
-              businessId={business.id}
-              businessName={business.name}
-              city={business.city ?? ""}
-              onNext={async () => setCurrentStep(4)}
-              isLoading={isLoading}
-            />
-          )}
-          {currentStep === 4 && business && user && (
-            <Step4Form
-              businessId={business.id}
-              businessName={business.name}
-              userEmail={user.email || ""}
-              userName={user.user_metadata?.full_name || "Valued Customer"}
-              googleConnected={googleConnected}
-              onNext={() => {
-                reset();
-                router.push("/dashboard");
-              }}
-              isLoading={isLoading}
-            />
-          )}
+          );
+        })}
+      </div>
+
+      {/* Glass card wrapper */}
+      <div className="relative">
+        {/* Card glow */}
+        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-orange-500/5 rounded-[2rem] blur-sm" />
+
+        <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-violet-900/[0.04] border border-white/60 p-7 sm:p-10">
+          <AnimatePresence mode="wait">
+            {currentStep === 1 && (
+              <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <Step1Form
+                  onNext={handleStep1Next}
+                  isLoading={isLoading}
+                  organizationId={organization.id}
+                  initialOrgName={organization.name}
+                />
+              </motion.div>
+            )}
+            {currentStep === 2 && business && (
+              <motion.div key="step-2" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <Step2Form
+                  businessId={business.id}
+                  businessName={business.name}
+                  city={business.city ?? ""}
+                  address={business.address_line1 ?? ""}
+                  state={business.state ?? ""}
+                  phone={business.phone ?? ""}
+                  pendingGoogleCode={pendingGoogleCode}
+                  onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
+                  onBusinessUpdate={handleBusinessUpdate}
+                  onNext={async () => {
+                    setGoogleConnected(true);
+                    setCurrentStep(3);
+                  }}
+                  onSkip={async () => {
+                    setCurrentStep(3);
+                  }}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            )}
+            {currentStep === 2 && !business && (
+              <motion.div key="step-2-loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center py-16">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </motion.div>
+            )}
+            {currentStep === 3 && business && (
+              <motion.div key="step-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <Step3Form
+                  businessId={business.id}
+                  businessName={business.name}
+                  city={business.city ?? ""}
+                  onNext={async () => setCurrentStep(4)}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            )}
+            {currentStep === 4 && business && user && (
+              <motion.div key="step-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <Step4Form
+                  businessId={business.id}
+                  businessName={business.name}
+                  userEmail={user.email || ""}
+                  userName={user.user_metadata?.full_name || "Valued Customer"}
+                  googleConnected={googleConnected}
+                  onNext={() => {
+                    reset();
+                    router.push("/dashboard");
+                  }}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
