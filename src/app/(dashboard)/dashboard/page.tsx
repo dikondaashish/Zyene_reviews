@@ -119,7 +119,12 @@ export default async function DashboardPage() {
         status: "inactive",
     };
 
-    const totalOrgLimit = organization?.max_review_requests_per_month || 5000;
+    // Determine plan status
+    const planStatus = organization?.plan_status || "inactive";
+    const isPaidPlan = planStatus === "active" || planStatus === "trialing";
+
+    // If no plan, set limit to 0 (user request)
+    const totalOrgLimit = isPaidPlan ? (organization?.max_review_requests_per_month || 5000) : 0;
     const businessCount = Math.max(allBusinesses.length, 1);
     const maxRequestsPerMonth = Math.floor(totalOrgLimit / businessCount);
 
@@ -844,14 +849,14 @@ export default async function DashboardPage() {
                         </Card>
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Website clicks</CardTitle>
+                                <CardTitle className="text-sm font-medium">{dict.dashboard.website_clicks}</CardTitle>
                                 <MousePointerClick className="h-4 w-4 text-orange-500" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
                                     {googlePerf.websiteClicks.toLocaleString()}
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-1">Website link taps</p>
+                                <p className="text-xs text-muted-foreground mt-1">{dict.dashboard.website_clicks_desc}</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -864,7 +869,7 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                            Positive Experience
+                            {dict.dashboard.positive_experience}
                         </CardTitle>
                         <ThumbsUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
@@ -878,8 +883,8 @@ export default async function DashboardPage() {
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
                             {hasSentimentData
-                                ? `${negativePercent.toFixed(0)}% negative/mixed`
-                                : "No sentiment data yet"}
+                                ? `${negativePercent.toFixed(0)}% ${dict.dashboard.negative_mixed}`
+                                : dict.dashboard.no_sentiment_data}
                         </p>
                     </CardContent>
                 </Card>
@@ -888,7 +893,7 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                            Engagement Rate
+                            {dict.dashboard.engagement_rate}
                         </CardTitle>
                         <Target className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
@@ -899,8 +904,8 @@ export default async function DashboardPage() {
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
                             {hasEngagementData
-                                ? "Completed the review flow"
-                                : "No requests sent yet"}
+                                ? dict.dashboard.engagement_desc
+                                : dict.dashboard.no_engagement_data}
                         </p>
                     </CardContent>
                 </Card>
@@ -909,22 +914,32 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                            Request Usage
+                            {dict.dashboard.usage_title}
                         </CardTitle>
                         <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className={`text-2xl font-bold ${(requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-red-600" :
-                            (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-yellow-600" : ""
-                            }`}>
-                            {requestsThisMonth} / {maxRequestsPerMonth}
+                        <div className="flex items-center justify-between">
+                            <div className={`text-2xl font-bold ${maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-red-600" :
+                                maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-yellow-600" : ""
+                                }`}>
+                                {requestsThisMonth} / {maxRequestsPerMonth}
+                            </div>
+                            {!isPaidPlan && (
+                                <Link href="/settings/billing">
+                                    <Button variant="outline" size="sm" className="h-7 text-xs border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800">
+                                        <Sparkles className="mr-1 h-3 w-3" />
+                                        {dict.dashboard.upgrade_prompt || "Upgrade"}
+                                    </Button>
+                                </Link>
+                            )}
                         </div>
                         <Progress
-                            value={Math.min((requestsThisMonth / maxRequestsPerMonth) * 100, 100)}
+                            value={maxRequestsPerMonth > 0 ? Math.min((requestsThisMonth / maxRequestsPerMonth) * 100, 100) : 0}
                             className="mt-2 h-2"
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                            This month&apos;s plan usage
+                            {dict.dashboard.usage_desc}
                         </p>
                     </CardContent>
                 </Card>
@@ -933,7 +948,7 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                            New Reviews (30d)
+                            {dict.dashboard.new_reviews_30d}
                         </CardTitle>
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
@@ -942,7 +957,7 @@ export default async function DashboardPage() {
                             {newReviews30d}
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                            Reviews in last 30 days
+                            {dict.dashboard.new_reviews_30d_desc}
                         </p>
                     </CardContent>
                 </Card>
@@ -954,10 +969,10 @@ export default async function DashboardPage() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <TrendingUp className="h-4 w-4" />
-                            Review Trend
+                            {dict.dashboard.review_trend}
                         </CardTitle>
                         <CardDescription>
-                            Reviews received over the last 30 days
+                            {dict.dashboard.review_trend_desc}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -969,10 +984,10 @@ export default async function DashboardPage() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <BarChart3 className="h-4 w-4" />
-                            Rating Distribution
+                            {dict.dashboard.rating_distribution}
                         </CardTitle>
                         <CardDescription>
-                            Breakdown of all review ratings
+                            {dict.dashboard.rating_distribution_desc}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
