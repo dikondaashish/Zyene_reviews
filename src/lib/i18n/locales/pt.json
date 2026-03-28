@@ -31,7 +31,6 @@
     "average_rating": "Avaliação Média",
     "based_on_google": "Baseado no Google",
     "pts": "pts",
-    "average_rating_desc": "Avaliação do Perfil de Empresa do Google",
     "response_rate": "Taxa de Resposta",
     "reviews_responded": "% de avaliações respondidas",
     "no_reviews": "Sem avaliações ainda",
@@ -82,13 +81,7 @@
     "download_short": "Baixar QR",
     "print_short": "Imprimir QR",
     "share_link": "Compartilhar link",
-    "order_now": "Pedir agora",
-    "qr_for": "Código QR para",
-    "tap_view": "Toque para ver",
-    "live_link": "Link ao vivo",
-    "popup_title": "Seu Código QR Direto",
-    "popup_desc": "Os clientes podem escanear para deixar uma avaliação instantaneamente.",
-    "close": "Fechar / Concluído"
+    "order_now": "Pedir agora"
   },
   "billing": {
     "title": "Faturamento",
@@ -126,7 +119,7 @@
       "placeholder": "nome-da-empresa",
       "hint": "Apenas letras minúsculas, números e hifens.",
       "warning_title": "Aviso: Alteração de URL",
-      "warning_desc": "Alterar seu link para %new_url% quebrará seu link atual (%old_url%).",
+      "warning_desc": "Alterar seu link para %new_url% quebrará seu link atual (%old_url%). Os códigos QR ou materiais existentes pararão de funcionar imediatamente.",
       "confirm_change": "Confirmar alteração",
       "already_taken": "Este link já está em uso."
     },
@@ -184,14 +177,11 @@
       "message": "Corpo da mensagem"
     },
     "save_settings": "Salvar Configurações",
-    "cancel": "Cancelar",
     "save_success": "Configurações salvas com sucesso!",
     "save_error": "Falha ao salvar configurações",
     "upload_success": "Imagem enviada!",
     "upload_error": "Falha ao enviar imagem",
     "file_too_large": "Arquivo muito grande (máx. 2 MB)",
-    "section_hint": "Certifique-se de salvar suas alterações em cada seção.",
-    "footer_help": "Precisa de um design personalizado?",
-    "footer_contact": "Entre em contato"
+    "section_hint": "Certifique-se de salvar suas alterações em cada seção."
   }
 }

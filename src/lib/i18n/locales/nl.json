@@ -31,7 +31,6 @@
     "average_rating": "Gemiddelde beoordeling",
     "based_on_google": "Gebaseerd op Google",
     "pts": "ptn",
-    "average_rating_desc": "Google Bedrijfsprofiel beoordeling",
     "response_rate": "Reactiepercentage",
     "reviews_responded": "% beoordelingen beantwoord",
     "no_reviews": "Nog geen beoordelingen",
@@ -82,13 +81,7 @@
     "download_short": "Download QR",
     "print_short": "Print QR",
     "share_link": "Deel link",
-    "order_now": "Bestel nu",
-    "qr_for": "QR-code voor",
-    "tap_view": "Tik om te bekijken",
-    "live_link": "Live link",
-    "popup_title": "Uw Directe QR-code",
-    "popup_desc": "Klanten kunnen dit scannen om direct een beoordeling achter te laten.",
-    "close": "Sluiten / Klaar"
+    "order_now": "Bestel nu"
   },
   "billing": {
     "title": "Facturering",
@@ -126,22 +119,22 @@
       "placeholder": "bedrijfsnaam",
       "hint": "Alleen kleine letters, cijfers en streepjes.",
       "warning_title": "Waarschuwing: URL-wijziging",
-      "warning_desc": "Het wijzigen van uw link naar %new_url% zal uw huidige link (%old_url%) verbreken.",
+      "warning_desc": "Het wijzigen van uw link naar %new_url% zal uw huidige link (%old_url%) verbreken. Bestaande QR-codes of materialen stoppen onmiddellijk met werken.",
       "confirm_change": "Bevestig wijziging",
       "already_taken": "Deze link is al in gebruik."
     },
     "branding": {
       "title": "Merkidentiteit",
       "desc": "Logo- en thema-instellingen voor uw profiel.",
-      "logo_label": "Header Logo",
+      "logo_label": "Header-logo",
       "upload": "Uploaden",
       "max_size": "Max 2MB. PNG/JPG.",
       "color_label": "Merkkleur",
-      "footer_title": "Footer Branding",
-      "footer_name": "Footer Naam",
-      "footer_link": "Footer Link",
-      "hide_branding": "Branding Verbergen",
-      "hide_branding_desc": "Verberg de Zyene footer in uw beoordelingsflow."
+      "footer_title": "Footer-branding",
+      "footer_name": "Footer-naam",
+      "footer_link": "Footer-link",
+      "hide_branding": "Branding verbergen",
+      "hide_branding_desc": "Verberg de Zyene-footer in uw beoordelingsflow."
     },
     "rating": {
       "title": "Beoordelingsscherm",
@@ -157,22 +150,22 @@
       }
     },
     "tags": {
-      "title": "Tag Selectie",
+      "title": "Tag-selectie",
       "heading": "Kop",
       "subheading": "Subkop",
-      "custom_tags_label": "Aangepaste Tags (door komma's gescheiden)",
+      "custom_tags_label": "Aangepaste tags (door komma's gescheiden)",
       "custom_tags_placeholder": "Personeel, Eten, Service, Sfeer..."
     },
     "review_site": {
-      "title": "Recensiesite Integratie",
+      "title": "Recensiesite-integratie",
       "heading": "Kop",
       "subheading": "Subkop",
       "button_text": "Knoptekst",
-      "custom_url": "Aangepaste Recensie-URL",
+      "custom_url": "Aangepaste recensie-URL",
       "custom_url_desc": "Optioneel: Overschrijf de standaard Google-link."
     },
     "feedback": {
-      "title": "Directe Feedback",
+      "title": "Directe feedback",
       "apology": "Excusesbericht",
       "subheading": "Subkop",
       "placeholder": "Tekstvak tijdelijke aanduiding",
@@ -183,15 +176,12 @@
       "heading": "Kop",
       "message": "Berichttekst"
     },
-    "save_settings": "Instellingen Opslaan",
-    "cancel": "Annuleren",
+    "save_settings": "Instellingen opslaan",
     "save_success": "Instellingen succesvol opgeslagen!",
     "save_error": "Opslaan van instellingen mislukt",
     "upload_success": "Afbeelding geüpload!",
     "upload_error": "Uploaden van afbeelding mislukt",
     "file_too_large": "Bestand te groot (max 2MB)",
-    "section_hint": "Zorg ervoor dat u uw wijzigingen in elke sectie opslaat.",
-    "footer_help": "Hulp nodig met een aangepast ontwerp?",
-    "footer_contact": "Neem contact op"
+    "section_hint": "Zorg ervoor dat u uw wijzigingen in elke sectie opslaat."
   }
 }

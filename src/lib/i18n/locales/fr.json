@@ -31,7 +31,6 @@
     "average_rating": "Note moyenne",
     "based_on_google": "Basé sur Google",
     "pts": "pts",
-    "average_rating_desc": "Évaluation du profil d'entreprise Google",
     "response_rate": "Taux de réponse",
     "reviews_responded": "% d'avis répondus",
     "no_reviews": "Aucun avis",
@@ -82,13 +81,7 @@
     "download_short": "Télécharger QR",
     "print_short": "Imprimer QR",
     "share_link": "Partager le lien",
-    "order_now": "Commander maintenant",
-    "qr_for": "Code QR pour",
-    "tap_view": "Appuyez sur l'icône pour voir",
-    "live_link": "Lien en direct",
-    "popup_title": "Votre Code QR Direct",
-    "popup_desc": "Les clients peuvent scanner ceci pour laisser un avis instantanément.",
-    "close": "Fermer / Terminer"
+    "order_now": "Commander maintenant"
   },
   "billing": {
     "title": "Facturation",
@@ -112,21 +105,21 @@
     "title": "Profil Public",
     "tabs": {
       "link": "Lien Public",
-      "branding": "Marque",
+      "branding": "Image de Marque",
       "rating": "Évaluation",
       "tags": "Tags",
       "review_site": "Site d'Avis",
-      "feedback": "Commentaires",
+      "feedback": "Feedback",
       "success": "Succès"
     },
     "link": {
       "title": "Lien Public",
       "desc": "Personnalisez votre lien unique vers la page d'avis.",
-      "label": "Slug de l'URL",
-      "placeholder": "nom-de-entreprise",
+      "label": "Slug d'URL",
+      "placeholder": "nom-de-l-entreprise",
       "hint": "Uniquement des lettres minuscules, des chiffres et des tirets.",
       "warning_title": "Attention : Changement d'URL",
-      "warning_desc": "Changer votre lien en %new_url% cassera votre lien actuel (%old_url%). Les codes QR ou supports existants cesseront de fonctionner immédiatement.",
+      "warning_desc": "Changer votre lien en %new_url% cassera votre lien actuel (%old_url%). Les codes QR ou matériels existants cesseront de fonctionner immédiatement.",
       "confirm_change": "Confirmer le changement",
       "already_taken": "Ce lien est déjà utilisé."
     },
@@ -137,30 +130,30 @@
       "upload": "Télécharger",
       "max_size": "Max 2 Mo. PNG/JPG.",
       "color_label": "Couleur de la Marque",
-      "footer_title": "Branding du Pied de Page",
+      "footer_title": "Image de Marque du Pied de Page",
       "footer_name": "Nom du Pied de Page",
       "footer_link": "Lien du Pied de Page",
-      "hide_branding": "Masquer le Branding",
+      "hide_branding": "Masquer l'Image de Marque",
       "hide_branding_desc": "Masquer le pied de page Zyene de votre flux d'avis."
     },
     "rating": {
       "title": "Écran d'Évaluation",
-      "welcome": "Message d'Accueil",
+      "welcome": "Titre de Bienvenue",
       "subtitle": "Sous-titre",
       "threshold_label": "Seuil d'Étoiles pour les Avis Publics",
-      "threshold_desc": "Les évaluations inférieures à ce seuil seront dirigées vers des commentaires privés.",
+      "threshold_desc": "Les évaluations inférieures à ce seuil seront dirigées vers un feedback privé.",
       "threshold_options": {
-        "1": "1 Étoile & Plus",
-        "3": "3 Étoiles & Plus",
-        "4": "4 Étoiles & Plus (Recommandé)",
-        "5": "5 Étoiles Uniquement"
+        "1": "1 étoile et plus",
+        "3": "3 étoiles et plus",
+        "4": "4 étoiles et plus (Recommandé)",
+        "5": "5 étoiles uniquement"
       }
     },
     "tags": {
       "title": "Sélection de Tags",
       "heading": "Titre",
       "subheading": "Sous-titre",
-      "custom_tags_label": "Tags Personnalisés (Séparés par des Virgules)",
+      "custom_tags_label": "Tags Personnalisés (Separés par des virgules)",
       "custom_tags_placeholder": "Personnel, Nourriture, Service, Ambiance..."
     },
     "review_site": {
@@ -169,29 +162,26 @@
       "subheading": "Sous-titre",
       "button_text": "Texte du Bouton",
       "custom_url": "URL d'Avis Personnalisée",
-      "custom_url_desc": "Facultatif : Outrepasser le lien Google par défaut."
+      "custom_url_desc": "Optionnel : Remplacer le lien Google par défaut."
     },
     "feedback": {
-      "title": "Commentaires Directs",
-      "apology": "Message d'Excuses",
+      "title": "Feedback Direct",
+      "apology": "Titre d'Excuses",
       "subheading": "Sous-titre",
-      "placeholder": "Espace réservé au texte",
+      "placeholder": "Espace réservé pour le texte",
       "button_text": "Texte du Bouton"
     },
     "success": {
       "title": "Écran de Succès",
       "heading": "Titre",
-      "message": "Corps du Message"
+      "message": "Corps du message"
     },
     "save_settings": "Enregistrer les Paramètres",
-    "cancel": "Annuler",
     "save_success": "Paramètres enregistrés avec succès !",
     "save_error": "Échec de l'enregistrement des paramètres",
     "upload_success": "Image téléchargée !",
     "upload_error": "Échec du téléchargement de l'image",
     "file_too_large": "Fichier trop volumineux (max 2 Mo)",
-    "section_hint": "Assurez-vous d'enregistrer vos modifications dans chaque section.",
-    "footer_help": "Besoin d'un design personnalisé ?",
-    "footer_contact": "Contactez notre support"
+    "section_hint": "Assurez-vous d'enregistrer vos modifications dans chaque section."
   }
 }

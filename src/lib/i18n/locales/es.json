@@ -31,7 +31,6 @@
     "average_rating": "Calificación Media",
     "based_on_google": "Basado en Google",
     "pts": "pts",
-    "average_rating_desc": "Calificación del perfil de negocio de Google",
     "response_rate": "Tasa de Respuesta",
     "reviews_responded": "% de reseñas respondidas",
     "no_reviews": "Sin reseñas aún",
@@ -82,13 +81,7 @@
     "download_short": "Descargar QR",
     "print_short": "Imprimir QR",
     "share_link": "Compartir enlace",
-    "order_now": "Pedir ahora",
-    "qr_for": "Código QR para",
-    "tap_view": "Toque el icono para ver",
-    "live_link": "Enlace en vivo",
-    "popup_title": "Su Código QR Directo",
-    "popup_desc": "Los clientes pueden escanear esto para dejar una reseña al instante.",
-    "close": "Cerrar / Terminar"
+    "order_now": "Pedir ahora"
   },
   "billing": {
     "title": "Facturación",
@@ -121,77 +114,74 @@
     },
     "link": {
       "title": "Enlace Público",
-      "desc": "Personaliza tu enlace único para la página de reseñas.",
-      "label": "Slug de la URL",
+      "desc": "Personalice el enlace único de su página de reseñas.",
+      "label": "Slug de URL",
       "placeholder": "nombre-del-negocio",
       "hint": "Solo letras minúsculas, números y guiones.",
       "warning_title": "Advertencia: Cambio de URL",
-      "warning_desc": "Cambiar tu enlace a %new_url% romperá tu enlace actual (%old_url%). Los códigos QR o materiales existentes dejarán de funcionar de inmediato.",
+      "warning_desc": "Cambiar su enlace a %new_url% romperá su enlace actual (%old_url%). Los códigos QR o materiales existentes dejarán de funcionar de inmediato.",
       "confirm_change": "Confirmar Cambio",
       "already_taken": "Este enlace ya está en uso."
     },
     "branding": {
       "title": "Identidad de Marca",
-      "desc": "Configuración del logotipo y tema para tu perfil.",
-      "logo_label": "Logotipo de Encabezado",
+      "desc": "Configuración de logotipo y tema para su perfil.",
+      "logo_label": "Logotipo de Cabecera",
       "upload": "Subir",
       "max_size": "Máx. 2MB. PNG/JPG.",
-      "color_label": "Color de la Marca",
-      "footer_title": "Identidad del Pie de Página",
+      "color_label": "Color de Marca",
+      "footer_title": "Marca del Pie de Página",
       "footer_name": "Nombre del Pie de Página",
       "footer_link": "Enlace del Pie de Página",
       "hide_branding": "Ocultar Marca",
-      "hide_branding_desc": "Ocultar el pie de página de Zyene de tu flujo de reseñas."
+      "hide_branding_desc": "Ocultar el pie de página de Zyene de su flujo de reseñas."
     },
     "rating": {
       "title": "Pantalla de Calificación",
       "welcome": "Encabezado de Bienvenida",
       "subtitle": "Subtítulo",
       "threshold_label": "Umbral de Estrellas para Reseñas Públicas",
-      "threshold_desc": "Las calificaciones inferiores a esta se dirigirán a comentarios privados.",
+      "threshold_desc": "Las calificaciones por debajo de esto se dirigirán a comentarios privados.",
       "threshold_options": {
-        "1": "1 Estrella o más",
-        "3": "3 Estrellas o más",
-        "4": "4 Estrellas o más (Recomendado)",
-        "5": "Solo 5 Estrellas"
+        "1": "1 estrella y más",
+        "3": "3 estrellas y más",
+        "4": "4 estrellas y más (Recomendado)",
+        "5": "Solo 5 estrellas"
       }
     },
     "tags": {
       "title": "Selección de Etiquetas",
-      "heading": "Título",
-      "subheading": "Subtítulo",
+      "heading": "Encabezado",
+      "subheading": "Subencabezado",
       "custom_tags_label": "Etiquetas Personalizadas (Separadas por comas)",
       "custom_tags_placeholder": "Personal, Comida, Servicio, Ambiente..."
     },
     "review_site": {
       "title": "Integración del Sitio de Reseñas",
-      "heading": "Título",
-      "subheading": "Subtítulo",
+      "heading": "Encabezado",
+      "subheading": "Subencabezado",
       "button_text": "Texto del Botón",
-      "custom_url": "URL de Reseñas Personalizada",
-      "custom_url_desc": "Opcional: Reemplazar el enlace de Google predeterminado."
+      "custom_url": "URL de Reseña Personalizada",
+      "custom_url_desc": "Opcional: Sobrescribir el enlace predeterminado de Google."
     },
     "feedback": {
       "title": "Comentarios Directos",
-      "apology": "Mensaje de Disculpa",
-      "subheading": "Subtítulo",
+      "apology": "Encabezado de Disculpa",
+      "subheading": "Subencabezado",
       "placeholder": "Marcador de posición del área de texto",
       "button_text": "Texto del Botón"
     },
     "success": {
       "title": "Pantalla de Éxito",
-      "heading": "Título",
-      "message": "Cuerpo del Mensaje"
+      "heading": "Encabezado",
+      "message": "Cuerpo del mensaje"
     },
-    "save_settings": "Guardar Configuración",
-    "cancel": "Cancelar",
-    "save_success": "¡Configuración guardada con éxito!",
-    "save_error": "Error al guardar la configuración",
+    "save_settings": "Guardar Ajustes",
+    "save_success": "¡Ajustes guardados correctamente!",
+    "save_error": "Error al guardar los ajustes",
     "upload_success": "¡Imagen subida!",
     "upload_error": "Error al subir la imagen",
-    "file_too_large": "Tamaño de archivo demasiado grande (máx. 2 MB)",
-    "section_hint": "Asegúrate de guardar tus cambios en cada sección.",
-    "footer_help": "¿Necesita un diseño personalizado?",
-    "footer_contact": "Contacte a nuestro soporte"
+    "file_too_large": "Tamaño de archivo demasiado grande (máx. 2MB)",
+    "section_hint": "Asegúrese de guardar sus cambios en cada sección."
   }
 }

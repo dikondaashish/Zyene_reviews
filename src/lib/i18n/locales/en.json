@@ -31,7 +31,6 @@
     "average_rating": "Average Rating",
     "based_on_google": "Based on Google",
     "pts": "pts",
-    "average_rating_desc": "Google Business Profile rating",
     "response_rate": "Response Rate",
     "reviews_responded": "% of reviews responded",
     "no_reviews": "No reviews yet",
@@ -82,13 +81,7 @@
     "download_short": "Download QR",
     "print_short": "Print QR",
     "share_link": "Share Link",
-    "order_now": "Order Now",
-    "qr_for": "QR Code for",
-    "tap_view": "Tap icon to view",
-    "live_link": "Live Link",
-    "popup_title": "Your Direct QR Code",
-    "popup_desc": "Customers can scan this to leave a review instantly.",
-    "close": "Close / Done"
+    "order_now": "Order Now"
   },
   "billing": {
     "title": "Billing",
@@ -184,14 +177,11 @@
       "message": "Message Body"
     },
     "save_settings": "Save Settings",
-    "cancel": "Cancel",
     "save_success": "Settings saved successfully!",
     "save_error": "Failed to save settings",
     "upload_success": "Image uploaded!",
     "upload_error": "Failed to upload image",
     "file_too_large": "File size too large (max 2MB)",
-    "section_hint": "Be sure to save your changes in each section.",
-    "footer_help": "Need a custom design?",
-    "footer_contact": "Contact our support"
+    "section_hint": "Be sure to save your changes in each section."
   }
 }

@@ -126,7 +126,7 @@ export default async function DashboardPage() {
     // If no plan, set limit to 0 (user request)
     const totalOrgLimit = isPaidPlan ? (organization?.max_review_requests_per_month || 5000) : 0;
     const businessCount = Math.max(allBusinesses.length, 1);
-    const maxRequestsPerMonth = totalOrgLimit > 0 ? Math.floor(totalOrgLimit / businessCount) : 0;
+    const maxRequestsPerMonth = Math.floor(totalOrgLimit / businessCount);
 
     const googlePlatform = (business as any)?.review_platforms?.find(
         (p: any) => p.platform === "google"
