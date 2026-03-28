@@ -32,7 +32,7 @@ export const aiRateLimit = new Ratelimit({
 // 1 manual sync allowed per 5 minutes per business to prevent API spam
 export const syncRateLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.slidingWindow(1, '5 m'),
+    limiter: Ratelimit.slidingWindow(2, '1 m'),
     analytics: true,
     prefix: '@upstash/ratelimit/sync',
 });

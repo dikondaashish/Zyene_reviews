@@ -115,7 +115,7 @@ export function Step2Form({
   const handleGoogleCallback = async (authCode: string) => {
     setGoogleState({ status: "connecting" });
     try {
-      const result = await initializeGoogleAuth(authCode, businessId);
+      const result = (await initializeGoogleAuth(authCode, businessId)) as any;
       if (result.success) {
         setGoogleState({
           status: "success",

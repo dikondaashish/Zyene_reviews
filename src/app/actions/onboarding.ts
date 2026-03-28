@@ -20,6 +20,11 @@ import {
   type StepNotificationsFormData,
 } from "@/lib/validation/onboarding";
 import { registerNotifications } from "@/services/google/notifications";
+import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
+import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
+import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
+import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
+import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
 
 export async function createBusinessAndAdvanceOnboarding(
   data: Step1FormData,
@@ -326,6 +331,36 @@ export async function initializeGoogleAuth(
         success: false,
         error: "Failed to store connection. Please try again.",
       };
+    }
+
+    // Trigger review sync immediately
+    const { data: platformData } = await supabase
+      .from("review_platforms")
+      .select("id")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .single();
+
+    if (platformData?.id) {
+      console.log(`[Onboarding] Triggering sync for platform ${platformData.id}`);
+      // Initial review sync - wait for this
+      await syncGoogleReviewsForPlatform(platformData.id).catch((e) =>
+        console.error("[Onboarding] Google review sync failed:", e)
+      );
+
+      // Other syncs in the background
+      syncGooglePerformanceForPlatform(platformData.id).catch((e) =>
+        console.error("[Onboarding] Performance sync failed:", e)
+      );
+      syncGooglePhase2ForPlatform(platformData.id).catch((e) =>
+        console.error("[Onboarding] Q&A sync failed:", e)
+      );
+      syncGoogleListingProfileForPlatform(platformData.id).catch((e) =>
+        console.error("[Onboarding] Profile health sync failed:", e)
+      );
+      syncGoogleLodgingForPlatform(platformData.id).catch((e) =>
+        console.error("[Onboarding] Lodging sync failed:", e)
+      );
     }
 
     // NEW: Register for real-time notifications via Pub/Sub

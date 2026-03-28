@@ -11,7 +11,7 @@ export async function POST(request: Request) {
         // Apply Rate Limiting (1 sync per 5 mins per user)
         const { success: rateLimitSuccess } = await syncRateLimit.limit(user.id);
         if (!rateLimitSuccess) {
-            throw new ApiRouteError("Sync rate limit exceeded. Please wait 5 minutes.", {
+            throw new ApiRouteError("Sync rate limit exceeded. Please wait 1 minute.", {
                 status: 429,
                 code: "SYNC_RATE_LIMIT",
             });

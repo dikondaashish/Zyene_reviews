@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     // Apply Rate Limiting (1 sync per 5 mins per user)
     const { success: rateLimitSuccess } = await syncRateLimit.limit(user.id);
     if (!rateLimitSuccess) {
-        return NextResponse.json({ error: "Sync rate limit exceeded. Please wait 5 minutes." }, { status: 429 });
+        return NextResponse.json({ error: "Sync rate limit exceeded. Please wait 1 minute." }, { status: 429 });
     }
 
     try {
