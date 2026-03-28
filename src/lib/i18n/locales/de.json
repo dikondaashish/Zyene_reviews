@@ -31,6 +31,7 @@
     "average_rating": "Durchschnittsbewertung",
     "based_on_google": "Basierend auf Google",
     "pts": "Pkt",
+    "average_rating_desc": "Google Business Profile rating",
     "response_rate": "Antwortrate",
     "reviews_responded": "% beantwortet",
     "no_reviews": "Noch keine Bewertungen",
@@ -81,7 +82,13 @@
     "download_short": "QR herunterladen",
     "print_short": "QR drucken",
     "share_link": "Link teilen",
-    "order_now": "Jetzt bestellen"
+    "order_now": "Jetzt bestellen",
+    "qr_for": "QR Code für",
+    "tap_view": "Tippen zum Ansehen",
+    "live_link": "Live-Link",
+    "popup_title": "Ihr direkter QR-Code",
+    "popup_desc": "Kunden können dies scannen, um sofort eine Bewertung zu hinterlassen.",
+    "close": "Schließen / Fertig"
   },
   "billing": {
     "title": "Abrechnung",
@@ -100,5 +107,91 @@
     "upgrade": "Upgrade",
     "starter_msg": "Starten Sie mit Zyene Reviews",
     "starter_price": "Wählen Sie unten einen Plan aus — ab 19/Monat"
+  },
+  "public_profile": {
+    "title": "Öffentliches Profil",
+    "tabs": {
+      "link": "Öffentlicher Link",
+      "branding": "Branding",
+      "rating": "Bewertung",
+      "tags": "Tags",
+      "review_site": "Bewertungsseite",
+      "feedback": "Feedback",
+      "success": "Erfolg"
+    },
+    "link": {
+      "title": "Öffentlicher Link",
+      "desc": "Personalisieren Sie Ihren Review-Seiten-Link.",
+      "label": "URL-Slug",
+      "placeholder": "unternehmen-name",
+      "hint": "Nur Kleinbuchstaben, Zahlen und Bindestriche.",
+      "warning_title": "Warnung: URL-Änderung",
+      "warning_desc": "Das Ändern Ihres Links zu %new_url% wird Ihren aktuellen Link (%old_url%) unterbrechen.",
+      "confirm_change": "Änderung bestätigen",
+      "already_taken": "Dieser Link ist bereits vergeben."
+    },
+    "branding": {
+      "title": "Markenidentität",
+      "desc": "Logo- und Designeinstellungen für Ihr Profil.",
+      "logo_label": "Header-Logo",
+      "upload": "Hochladen",
+      "max_size": "Max 2MB. PNG/JPG.",
+      "color_label": "Markenfarbe",
+      "footer_title": "Footer-Branding",
+      "footer_name": "Footer-Name",
+      "footer_link": "Footer-Link",
+      "hide_branding": "Branding ausblenden",
+      "hide_branding_desc": "Zyene-Footer im Review-Flow ausblenden."
+    },
+    "rating": {
+      "title": "Bewertungsbildschirm",
+      "welcome": "Willkommensnachricht",
+      "subtitle": "Untertitel",
+      "threshold_label": "Sterne-Schwellenwert für öffentliche Bewertungen",
+      "threshold_desc": "Bewertungen unter diesem Wert werden an privates Feedback weitergeleitet.",
+      "threshold_options": {
+        "1": "1 Stern & mehr",
+        "3": "3 Sterne & mehr",
+        "4": "4 Sterne & mehr (Empfohlen)",
+        "5": "Nur 5 Sterne"
+      }
+    },
+    "tags": {
+      "title": "Tag-Auswahl",
+      "heading": "Überschrift",
+      "subheading": "Unterüberschrift",
+      "custom_tags_label": "Eigene Tags (kommagetrennt)",
+      "custom_tags_placeholder": "Personal, Essen, Service, Ambiente..."
+    },
+    "review_site": {
+      "title": "Integration Bewertungsseite",
+      "heading": "Überschrift",
+      "subheading": "Unterüberschrift",
+      "button_text": "Buttontext",
+      "custom_url": "Eigene Bewertungs-URL",
+      "custom_url_desc": "Optional: Überschreiben des Standard-Google-Links."
+    },
+    "feedback": {
+      "title": "Direktes Feedback",
+      "apology": "Entschuldigungsnachricht",
+      "subheading": "Unterüberschrift",
+      "placeholder": "Text-Platzhalter",
+      "button_text": "Buttontext"
+    },
+    "success": {
+      "title": "Erfolgsbildschirm",
+      "heading": "Überschrift",
+      "message": "Nachrichtentext"
+    },
+    "save_settings": "Einstellungen speichern",
+    "cancel": "Abbrechen",
+    "save_success": "Einstellungen erfolgreich gespeichert!",
+    "save_error": "Speichern fehlgeschlagen",
+    "upload_success": "Bild hochgeladen!",
+    "upload_error": "Upload fehlgeschlagen",
+    "file_too_large": "Datei zu groß (max. 2MB)",
+    "section_hint": "Speichern Sie Ihre Änderungen in jedem Abschnitt.",
+    "footer_help": "Brauchen Sie ein individuelles Design?",
+    "footer_contact": "Support kontaktieren"
   }
 }

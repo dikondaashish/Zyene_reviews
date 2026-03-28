@@ -31,6 +31,7 @@
     "average_rating": "Gemiddelde beoordeling",
     "based_on_google": "Gebaseerd op Google",
     "pts": "ptn",
+    "average_rating_desc": "Google Bedrijfsprofiel beoordeling",
     "response_rate": "Reactiepercentage",
     "reviews_responded": "% beoordelingen beantwoord",
     "no_reviews": "Nog geen beoordelingen",
@@ -81,7 +82,13 @@
     "download_short": "Download QR",
     "print_short": "Print QR",
     "share_link": "Deel link",
-    "order_now": "Bestel nu"
+    "order_now": "Bestel nu",
+    "qr_for": "QR-code voor",
+    "tap_view": "Tik om te bekijken",
+    "live_link": "Live link",
+    "popup_title": "Uw Directe QR-code",
+    "popup_desc": "Klanten kunnen dit scannen om direct een beoordeling achter te laten.",
+    "close": "Sluiten / Klaar"
   },
   "billing": {
     "title": "Facturering",
@@ -100,5 +107,91 @@
     "upgrade": "Upgraden",
     "starter_msg": "Ga aan de slag met Zyene Reviews",
     "starter_price": "Kies hieronder een plan — vanaf 19/maand"
+  },
+  "public_profile": {
+    "title": "Openbaar Profiel",
+    "tabs": {
+      "link": "Openbare Link",
+      "branding": "Huisstijl",
+      "rating": "Beoordeling",
+      "tags": "Tags",
+      "review_site": "Recensiesite",
+      "feedback": "Feedback",
+      "success": "Succes"
+    },
+    "link": {
+      "title": "Openbare Link",
+      "desc": "Personaliseer uw unieke beoordelingspaginalink.",
+      "label": "URL-slug",
+      "placeholder": "bedrijfsnaam",
+      "hint": "Alleen kleine letters, cijfers en streepjes.",
+      "warning_title": "Waarschuwing: URL-wijziging",
+      "warning_desc": "Het wijzigen van uw link naar %new_url% zal uw huidige link (%old_url%) verbreken.",
+      "confirm_change": "Bevestig wijziging",
+      "already_taken": "Deze link is al in gebruik."
+    },
+    "branding": {
+      "title": "Merkidentiteit",
+      "desc": "Logo- en thema-instellingen voor uw profiel.",
+      "logo_label": "Header Logo",
+      "upload": "Uploaden",
+      "max_size": "Max 2MB. PNG/JPG.",
+      "color_label": "Merkkleur",
+      "footer_title": "Footer Branding",
+      "footer_name": "Footer Naam",
+      "footer_link": "Footer Link",
+      "hide_branding": "Branding Verbergen",
+      "hide_branding_desc": "Verberg de Zyene footer in uw beoordelingsflow."
+    },
+    "rating": {
+      "title": "Beoordelingsscherm",
+      "welcome": "Welkomstbericht",
+      "subtitle": "Subtitel",
+      "threshold_label": "Sterrendrempel voor openbare beoordelingen",
+      "threshold_desc": "Beoordelingen onder dit niveau worden doorgestuurd naar privéfeedback.",
+      "threshold_options": {
+        "1": "1 ster & meer",
+        "3": "3 sterren & meer",
+        "4": "4 sterren & meer (Aanbevolen)",
+        "5": "Alleen 5 sterren"
+      }
+    },
+    "tags": {
+      "title": "Tag Selectie",
+      "heading": "Kop",
+      "subheading": "Subkop",
+      "custom_tags_label": "Aangepaste Tags (door komma's gescheiden)",
+      "custom_tags_placeholder": "Personeel, Eten, Service, Sfeer..."
+    },
+    "review_site": {
+      "title": "Recensiesite Integratie",
+      "heading": "Kop",
+      "subheading": "Subkop",
+      "button_text": "Knoptekst",
+      "custom_url": "Aangepaste Recensie-URL",
+      "custom_url_desc": "Optioneel: Overschrijf de standaard Google-link."
+    },
+    "feedback": {
+      "title": "Directe Feedback",
+      "apology": "Excusesbericht",
+      "subheading": "Subkop",
+      "placeholder": "Tekstvak tijdelijke aanduiding",
+      "button_text": "Knoptekst"
+    },
+    "success": {
+      "title": "Successcherm",
+      "heading": "Kop",
+      "message": "Berichttekst"
+    },
+    "save_settings": "Instellingen Opslaan",
+    "cancel": "Annuleren",
+    "save_success": "Instellingen succesvol opgeslagen!",
+    "save_error": "Opslaan van instellingen mislukt",
+    "upload_success": "Afbeelding geüpload!",
+    "upload_error": "Uploaden van afbeelding mislukt",
+    "file_too_large": "Bestand te groot (max 2MB)",
+    "section_hint": "Zorg ervoor dat u uw wijzigingen in elke sectie opslaat.",
+    "footer_help": "Hulp nodig met een aangepast ontwerp?",
+    "footer_contact": "Neem contact op"
   }
 }

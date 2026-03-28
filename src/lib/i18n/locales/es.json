@@ -31,6 +31,7 @@
     "average_rating": "Calificación Media",
     "based_on_google": "Basado en Google",
     "pts": "pts",
+    "average_rating_desc": "Calificación del perfil de negocio de Google",
     "response_rate": "Tasa de Respuesta",
     "reviews_responded": "% de reseñas respondidas",
     "no_reviews": "Sin reseñas aún",
