@@ -121,7 +121,7 @@ export default async function DashboardPage() {
 
     // Determine plan status
     const planStatus = organization?.plan_status || "inactive";
-    const isPaidPlan = planStatus === "active" || planStatus === "trialing";
+    const isPaidPlan = (planStatus === "active" || planStatus === "trialing") && organization?.plan !== "none";
 
     // If no plan, set limit to 0 (user request)
     const totalOrgLimit = isPaidPlan ? (organization?.max_review_requests_per_month || 5000) : 0;
