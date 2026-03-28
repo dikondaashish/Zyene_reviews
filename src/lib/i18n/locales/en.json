@@ -31,6 +31,7 @@
     "average_rating": "Average Rating",
     "based_on_google": "Based on Google",
     "pts": "pts",
+    "average_rating_desc": "Google Business Profile rating",
     "response_rate": "Response Rate",
     "reviews_responded": "% of reviews responded",
     "no_reviews": "No reviews yet",
@@ -81,7 +82,13 @@
     "download_short": "Download QR",
     "print_short": "Print QR",
     "share_link": "Share Link",
-    "order_now": "Order Now"
+    "order_now": "Order Now",
+    "qr_for": "QR Code for",
+    "tap_view": "Tap icon to view",
+    "live_link": "Live Link",
+    "popup_title": "Your Direct QR Code",
+    "popup_desc": "Customers can scan this to leave a review instantly.",
+    "close": "Close / Done"
   },
   "billing": {
     "title": "Billing",
@@ -100,5 +107,91 @@
     "upgrade": "Upgrade",
     "starter_msg": "Get started with Zyene Reviews",
     "starter_price": "Choose a plan below — starting at 19/month"
+  },
+  "public_profile": {
+    "title": "Public Profile",
+    "tabs": {
+      "link": "Public Link",
+      "branding": "Branding",
+      "rating": "Rating",
+      "tags": "Tags",
+      "review_site": "Review Site",
+      "feedback": "Feedback",
+      "success": "Success"
+    },
+    "link": {
+      "title": "Public Link",
+      "desc": "Customize your unique review page link.",
+      "label": "URL Slug",
+      "placeholder": "business-name",
+      "hint": "Only lowercase letters, numbers, and hyphens.",
+      "warning_title": "Warning: URL Change",
+      "warning_desc": "Changing your link to %new_url% will break your current link (%old_url%). Existing QR codes or materials will stop working immediately.",
+      "confirm_change": "Confirm Change",
+      "already_taken": "This link is already taken."
+    },
+    "branding": {
+      "title": "Brand Identity",
+      "desc": "Logo and theme settings for your profile.",
+      "logo_label": "Header Logo",
+      "upload": "Upload",
+      "max_size": "Max 2MB. PNG/JPG.",
+      "color_label": "Brand Color",
+      "footer_title": "Footer Branding",
+      "footer_name": "Footer Name",
+      "footer_link": "Footer Link",
+      "hide_branding": "Hide Branding",
+      "hide_branding_desc": "Hide Zyene footer from your review flow."
+    },
+    "rating": {
+      "title": "Rating Screen",
+      "welcome": "Welcome Heading",
+      "subtitle": "Subtitle",
+      "threshold_label": "Star Threshold for Public Reviews",
+      "threshold_desc": "Ratings below this will be directed to private feedback.",
+      "threshold_options": {
+        "1": "1 Star & Up",
+        "3": "3 Stars & Up",
+        "4": "4 Stars & Up (Recommended)",
+        "5": "5 Stars Only"
+      }
+    },
+    "tags": {
+      "title": "Tags Selection",
+      "heading": "Heading",
+      "subheading": "Subheading",
+      "custom_tags_label": "Custom Tags (Comma Separated)",
+      "custom_tags_placeholder": "Staff, Food, Service, Vibe..."
+    },
+    "review_site": {
+      "title": "Review Site Integration",
+      "heading": "Heading",
+      "subheading": "Subheading",
+      "button_text": "Button Text",
+      "custom_url": "Custom Review URL",
+      "custom_url_desc": "Optional: Override default Google link."
+    },
+    "feedback": {
+      "title": "Direct Feedback",
+      "apology": "Apology Heading",
+      "subheading": "Subheading",
+      "placeholder": "Textarea Placeholder",
+      "button_text": "Button Text"
+    },
+    "success": {
+      "title": "Success Screen",
+      "heading": "Heading",
+      "message": "Message Body"
+    },
+    "save_settings": "Save Settings",
+    "cancel": "Cancel",
+    "save_success": "Settings saved successfully!",
+    "save_error": "Failed to save settings",
+    "upload_success": "Image uploaded!",
+    "upload_error": "Failed to upload image",
+    "file_too_large": "File size too large (max 2MB)",
+    "section_hint": "Be sure to save your changes in each section.",
+    "footer_help": "Need a custom design?",
+    "footer_contact": "Contact our support"
   }
 }

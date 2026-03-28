@@ -1,23 +1,26 @@
 "use client";
- 
+
 import { useState, useEffect, useCallback } from "react";
 import { PublicProfileForm } from "./public-profile-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
-import { QrCode, Download, Printer, Share2, Loader2 } from "lucide-react";
+import { QrCode, Download, Printer, Share2, Loader2, Globe, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
     Dialog,
     DialogContent,
+    DialogTrigger,
 } from "@/components/ui/dialog";
- 
+import { useLanguage } from "@/lib/language-context";
+
 interface PublicProfileEditorProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     business: any;
     initialSlug: string;
 }
- 
+
 export function PublicProfileEditor({ business, initialSlug }: PublicProfileEditorProps) {
+    const { dict } = useLanguage();
     const [previewState, setPreviewState] = useState({
         slug: initialSlug,
         brand_color: business.brand_color || "#0f172a",
@@ -44,19 +47,19 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         footer_logo_url: business.footer_logo_url,
         hide_branding: business.hide_branding,
     });
- 
+
     const handleValuesChange = useCallback((values: any) => {
         setPreviewState(prev => ({ ...prev, ...values }));
     }, []);
- 
+
     const previewUrl = `zyenereviews.com/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
- 
+
     // Share & QR state
     const [qrDialogOpen, setQrDialogOpen] = useState(false);
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
- 
+
     const handleShare = async () => {
         if (typeof navigator !== 'undefined' && navigator.share) {
             try {
@@ -66,12 +69,12 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         }
         try {
             await navigator.clipboard.writeText(fullUrl);
-            toast.success("Link copied to clipboard!");
+            toast.success(dict.qr.share_link || "Link copied!");
         } catch {
             toast.error("Failed to copy link");
         }
     };
- 
+
     const fetchQrCode = useCallback(async () => {
         setQrLoading(true);
         try {
@@ -80,60 +83,60 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
             const data = await res.json();
             setQrDataUrl(data.qrCodeDataUrl);
         } catch {
-            toast.error("Failed to load QR code");
+            toast.error(dict.public_profile.upload_error);
         } finally {
             setQrLoading(false);
         }
-    }, [business.id]);
- 
+    }, [business.id, dict.public_profile.upload_error]);
+
     useEffect(() => {
         if (qrDialogOpen && !qrDataUrl) fetchQrCode();
     }, [qrDialogOpen, qrDataUrl, fetchQrCode]);
- 
+
     const handleDownloadQr = () => {
         if (!qrDataUrl) return;
- 
+
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
- 
+
         const width = 500;
         const height = 650;
         canvas.width = width;
         canvas.height = height;
- 
+
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         // @ts-ignore
         ctx.roundRect(0, 0, width, height, 16);
         ctx.fill();
- 
+
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 2;
         ctx.beginPath();
         // @ts-ignore
         ctx.roundRect(20, 20, width - 40, height - 40, 16);
         ctx.stroke();
- 
+
         ctx.fillStyle = "#000000";
         ctx.font = "bold 32px sans-serif";
         ctx.textAlign = "center";
         ctx.fillText("Leave a Review", width / 2, 90);
- 
+
         const qrImg = new Image();
         qrImg.onload = () => {
             const qrSize = 300;
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(qrImg, (width - qrSize) / 2, 120, qrSize, qrSize);
- 
+
             ctx.fillStyle = "#666666";
             ctx.font = "14px sans-serif";
             ctx.fillText(previewUrl, width / 2, 470);
- 
+
             ctx.fillStyle = "#999999";
             ctx.font = "bold 12px sans-serif";
             ctx.fillText("Powered by Zyene", width / 2, 520);
- 
+
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
             link.download = `${previewState.slug}-qr-code.png`;
@@ -144,7 +147,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         };
         qrImg.src = qrDataUrl;
     };
- 
+
     const handlePrintQr = () => {
         if (!qrDataUrl) return;
         const printWindow = window.open("", "_blank", "width=400,height=600");
@@ -154,7 +157,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         printWindow.focus();
         setTimeout(() => printWindow.print(), 300);
     };
- 
+
     return (
         <div className="flex flex-col xl:flex-row gap-12 items-start pb-20">
             {/* Left Column: Form */}
@@ -164,7 +167,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     onValuesChange={handleValuesChange} 
                 />
             </div>
- 
+
             {/* Right Column: Preview & Share */}
             <div className="hidden xl:flex flex-col gap-8 w-[400px] flex-shrink-0 sticky top-6">
                 <div>
@@ -172,7 +175,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         <span className="text-xs font-bold text-slate-400 tracking-[0.2em] uppercase">LIVE PREVIEW</span>
                         <div className="h-px flex-1 bg-slate-100" />
                     </div>
- 
+
                     {/* Preview Container */}
                     <div className="mx-auto h-[780px] w-full bg-slate-900 rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] relative border-[8px] border-slate-900 ring-4 ring-slate-100/50">
                         {/* Content */}
@@ -210,7 +213,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         </div>
                     </div>
                 </div>
- 
+
                 {/* Share & QR Section */}
                 <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-8 flex gap-8 items-center relative overflow-hidden group">
                     {/* Decorative Background */}
@@ -219,20 +222,20 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     {/* Left: Actions & Icon */}
                     <div className="flex flex-col gap-4 shrink-0 relative">
                         <div className="grid grid-cols-2 gap-2">
-                            <button onClick={handleDownloadQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Download">
+                            <button onClick={handleDownloadQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title={dict.qr.download_short || "Download"}>
                                 <Download className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
                             </button>
-                            <button onClick={handlePrintQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Print">
+                            <button onClick={handlePrintQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title={dict.qr.print_short || "Print"}>
                                 <Printer className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
                             </button>
-                            <button onClick={() => toast.info("Coming soon!")} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Order QR Now">
-                                <QrCode className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
+                            <button onClick={() => toast.info("Coming soon!")} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title={dict.qr.order_now}>
+                                <ShoppingBag className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
                             </button>
-                            <button onClick={handleShare} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Share link">
+                            <button onClick={handleShare} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title={dict.qr.share_link}>
                                 <Share2 className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
                             </button>
                         </div>
- 
+
                         <div className="flex flex-col items-center">
                             <button 
                                 onClick={() => setQrDialogOpen(true)}
@@ -243,22 +246,22 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                     <div className="h-1 w-1 bg-white rounded-full animate-ping" />
                                 </div>
                             </button>
-                            <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tight text-center">QR Code for {business.name}</span>
-                            <span className="text-[9px] text-slate-300 mt-0.5 text-center">Tap icon to view</span>
+                            <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tight text-center">{dict.qr.qr_for} {business.name}</span>
+                            <span className="text-[9px] text-slate-300 mt-0.5 text-center">{dict.qr.tap_view}</span>
                         </div>
                     </div>
- 
+
                     {/* Right: Info */}
                     <div className="flex-1 flex flex-col justify-center min-w-0">
                         <div className="space-y-1">
-                            <h4 className="font-bold text-slate-900 text-lg leading-tight">{business.name}</h4>
-                            <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest">Your Review Portal</p>
+                            <h4 className="font-bold text-slate-900 text-lg leading-tight truncate">{business.name}</h4>
+                            <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest">{dict.qr.portal}</p>
                         </div>
-                        <p className="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
-                            Share this with customers to collect reviews and drive orders.
+                        <p className="text-xs text-slate-400 mt-4 leading-relaxed font-medium line-clamp-2">
+                            {dict.qr.description}
                         </p>
                         <div className="mt-6 flex flex-col gap-1">
-                            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Live Link</p>
+                            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">{dict.qr.live_link}</p>
                             <div className="flex items-center gap-2 group/link cursor-pointer" onClick={handleShare}>
                                 <span className="text-sm font-bold text-slate-900 truncate">{previewUrl}</span>
                                 <Share2 className="h-3 w-3 text-slate-300 group-hover/link:text-blue-500 transition-colors" />
@@ -266,7 +269,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         </div>
                     </div>
                 </div>
- 
+
                 {/* QR Code Dialog */}
                 <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
                     <DialogContent className="sm:max-w-md rounded-[2rem] border-0 p-0 overflow-hidden">
@@ -275,10 +278,10 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
                             
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-bold text-white tracking-tight">Your Direct QR Code</h2>
-                                <p className="text-slate-400 text-sm">Customers can scan this to leave a review instantly.</p>
+                                <h2 className="text-2xl font-bold text-white tracking-tight">{dict.qr.popup_title}</h2>
+                                <p className="text-slate-400 text-sm">{dict.qr.popup_desc}</p>
                             </div>
- 
+
                             <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl inline-block border-[6px] border-slate-800">
                                 {qrLoading ? (
                                     <div className="h-[240px] w-[240px] flex items-center justify-center">
@@ -292,27 +295,27 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                     <div className="h-[240px] w-[240px] flex items-center justify-center text-sm text-slate-400">Failed to load</div>
                                 )}
                             </div>
- 
+
                             <div className="flex flex-col items-center gap-4 pt-4">
                                 <p className="text-blue-400 font-mono text-sm font-bold">{previewUrl}</p>
                                 <div className="flex gap-3 w-full">
                                     <Button onClick={handleDownloadQr} className="flex-1 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-2xl h-12 shadow-xl shadow-white/5 transition-all">
-                                        <Download className="h-4 w-4 mr-2" /> Download
+                                        <Download className="h-4 w-4 mr-2" /> {dict.qr.download}
                                     </Button>
                                     <Button onClick={handlePrintQr} variant="outline" className="flex-1 border-slate-700 text-white hover:bg-slate-800 font-bold rounded-2xl h-12 transition-all">
-                                        <Printer className="h-4 w-4 mr-2" /> Print
+                                        <Printer className="h-4 w-4 mr-2" /> {dict.qr.print}
                                     </Button>
                                 </div>
-                                <button onClick={() => setQrDialogOpen(false)} className="text-xs text-slate-500 hover:text-white transition-colors font-medium">Close / Done</button>
+                                <button onClick={() => setQrDialogOpen(false)} className="text-xs text-slate-500 hover:text-white transition-colors font-medium">{dict.qr.close}</button>
                             </div>
                         </div>
                     </DialogContent>
                 </Dialog>
- 
+
                 {/* Footer Message */}
                 <div className="text-center px-4">
                     <p className="text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium">
-                        Need a custom design? <a href="#" className="text-blue-600 hover:underline">Contact our support</a>
+                        {dict.public_profile.footer_help} <a href="#" className="text-blue-600 hover:underline">{dict.public_profile.footer_contact}</a>
                     </p>
                 </div>
             </div>
