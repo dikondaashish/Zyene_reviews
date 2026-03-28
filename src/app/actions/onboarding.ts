@@ -1141,3 +1141,45 @@ export async function createNotificationPreferences(
     };
   }
 }
+
+/**
+ * Trigger background sync for onboarding if Google is connected.
+ * This is meant to be called when the user lands on the onboarding page
+ * to ensure reviews are fetching while they complete the steps.
+ */
+export async function triggerOnboardingSync(businessId: string) {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Unauthorized" };
+
+    // Find if Google is connected for this business
+    const { data: platform } = await supabase
+      .from("review_platforms")
+      .select("*")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .maybeSingle();
+
+    if (!platform) return { success: false, error: "Google not connected" };
+
+    // Trigger primary sync (await it to ensure it starts, or at least kicks off the process)
+    // We don't wait for the full fetch, but we do wait for the initial result
+    await syncGoogleReviewsForPlatform(platform.id);
+
+    // Trigger other data in background
+    syncGooglePerformanceForPlatform(platform.id).catch(console.error);
+    syncGooglePhase2ForPlatform(platform.id).catch(console.error);
+    syncGoogleListingProfileForPlatform(platform.id).catch(console.error);
+    syncGoogleLodgingForPlatform(platform.id).catch(console.error);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error triggering onboarding sync:", error);
+    return { success: false, error: "Failed to trigger sync" };
+  }
+}

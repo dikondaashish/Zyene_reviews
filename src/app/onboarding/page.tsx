@@ -10,6 +10,7 @@ import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4Form } from "@/components/onboarding/step4-form";
+import { triggerOnboardingSync } from "@/app/actions/onboarding";
 
 interface OnboardingOrganization {
   id: string;
@@ -108,7 +109,7 @@ export default function OnboardingPage() {
 
           const { data: biz } = await supabase
             .from("businesses")
-            .select("id, name, city, category, address_line1, state, phone")
+            .select("id, name, city, category, address_line1, state, phone, review_platforms(*)")
             .eq("organization_id", member.organization_id)
             .order("created_at", { ascending: false })
             .limit(1)
@@ -119,6 +120,13 @@ export default function OnboardingPage() {
               ...biz,
               city: biz.city ?? null,
             });
+            const hasGoogle = biz.review_platforms?.some((p: any) => p.platform === "google");
+            setGoogleConnected(hasGoogle);
+            
+            // If Google is already connected, trigger a background sync on login
+            if (hasGoogle) {
+              triggerOnboardingSync(biz.id).catch(console.error);
+            }
           }
         }
       }
@@ -274,6 +282,7 @@ export default function OnboardingPage() {
                   pendingGoogleCode={pendingGoogleCode}
                   onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
                   onBusinessUpdate={handleBusinessUpdate}
+                  initialConnected={googleConnected}
                   onNext={async () => {
                     setGoogleConnected(true);
                     setCurrentStep(3);

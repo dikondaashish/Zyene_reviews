@@ -43,6 +43,8 @@ interface Step2Props {
   onGoogleCodeConsumed?: () => void;
   /** Called when Google returns business info so the parent state stays in sync */
   onBusinessUpdate?: (info: { name?: string; address_line1?: string; city?: string; state?: string; category?: string | null }) => void;
+  /** Initial connection status if already connected */
+  initialConnected?: boolean;
 }
 
 interface GoogleConnectionState {
@@ -65,6 +67,7 @@ export function Step2Form({
   pendingGoogleCode,
   onGoogleCodeConsumed,
   onBusinessUpdate,
+  initialConnected = false,
 }: Step2Props) {
   const [mounted, setMounted] = useState(false);
   const [googleState, setGoogleState] = useState<GoogleConnectionState>({ status: "idle" });
@@ -91,9 +94,11 @@ export function Step2Form({
     if (pendingGoogleCode && googleState.status === "idle" && mounted) {
       handleGoogleCallback(pendingGoogleCode);
       onGoogleCodeConsumed?.();
+    } else if (initialConnected && googleState.status === "idle" && mounted) {
+      setGoogleState({ status: "success" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingGoogleCode, mounted]);
+  }, [pendingGoogleCode, initialConnected, mounted]);
 
   useEffect(() => {
     form.reset({
