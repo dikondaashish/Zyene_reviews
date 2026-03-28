@@ -1,29 +1,22 @@
 "use client";
-
+ 
 import { useState, useEffect, useCallback } from "react";
-import { SlugEditor } from "./slug-editor";
-import { BrandingForm } from "./branding-form";
-
-import { ReviewContentForm } from "./review-content-form";
+import { PublicProfileForm } from "./public-profile-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
-import { cn } from "@/lib/utils/index";
-import { Link as LinkIcon, HelpCircle, QrCode, Check, Download, Printer, Share2, Loader2 } from "lucide-react";
+import { QrCode, Download, Printer, Share2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
 } from "@/components/ui/dialog";
-
+ 
 interface PublicProfileEditorProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     business: any;
     initialSlug: string;
 }
-
+ 
 export function PublicProfileEditor({ business, initialSlug }: PublicProfileEditorProps) {
     const [previewState, setPreviewState] = useState({
         slug: initialSlug,
@@ -51,31 +44,21 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         footer_logo_url: business.footer_logo_url,
         hide_branding: business.hide_branding,
     });
-
+ 
     const handleValuesChange = useCallback((values: any) => {
         setPreviewState(prev => ({ ...prev, ...values }));
     }, []);
-
-    const handleSlugChange = useCallback((slug: string) => {
-        handleValuesChange({ slug });
-    }, [handleValuesChange]);
-
-    const handleLogoChange = useCallback((url: string | null) => {
-        handleValuesChange({ logo_url: url });
-    }, [handleValuesChange]);
-
+ 
     const previewUrl = `zyenereviews.com/${previewState.slug}`;
     const fullUrl = `https://${previewUrl}`;
-
+ 
     // Share & QR state
-    const [copied, setCopied] = useState(false);
     const [qrDialogOpen, setQrDialogOpen] = useState(false);
-    // ... rest of state matches existing ... 
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
-
+ 
     const handleShare = async () => {
-        if (navigator.share) {
+        if (typeof navigator !== 'undefined' && navigator.share) {
             try {
                 await navigator.share({ title: `${business.name} — Leave a Review`, url: fullUrl });
                 return;
@@ -83,14 +66,12 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         }
         try {
             await navigator.clipboard.writeText(fullUrl);
-            setCopied(true);
             toast.success("Link copied to clipboard!");
-            setTimeout(() => setCopied(false), 2000);
         } catch {
             toast.error("Failed to copy link");
         }
     };
-
+ 
     const fetchQrCode = useCallback(async () => {
         setQrLoading(true);
         try {
@@ -104,53 +85,55 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
             setQrLoading(false);
         }
     }, [business.id]);
-
+ 
     useEffect(() => {
         if (qrDialogOpen && !qrDataUrl) fetchQrCode();
     }, [qrDialogOpen, qrDataUrl, fetchQrCode]);
-
+ 
     const handleDownloadQr = () => {
         if (!qrDataUrl) return;
-
+ 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-
+ 
         const width = 500;
         const height = 650;
         canvas.width = width;
         canvas.height = height;
-
+ 
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
+        // @ts-ignore
         ctx.roundRect(0, 0, width, height, 16);
         ctx.fill();
-
+ 
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 2;
         ctx.beginPath();
+        // @ts-ignore
         ctx.roundRect(20, 20, width - 40, height - 40, 16);
         ctx.stroke();
-
+ 
         ctx.fillStyle = "#000000";
         ctx.font = "bold 32px sans-serif";
         ctx.textAlign = "center";
         ctx.fillText("Leave a Review", width / 2, 90);
-
+ 
         const qrImg = new Image();
         qrImg.onload = () => {
             const qrSize = 300;
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(qrImg, (width - qrSize) / 2, 120, qrSize, qrSize);
-
+ 
             ctx.fillStyle = "#666666";
             ctx.font = "14px sans-serif";
             ctx.fillText(previewUrl, width / 2, 470);
-
+ 
             ctx.fillStyle = "#999999";
             ctx.font = "bold 12px sans-serif";
             ctx.fillText("Powered by Zyene", width / 2, 520);
-
+ 
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
             link.download = `${previewState.slug}-qr-code.png`;
@@ -161,7 +144,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         };
         qrImg.src = qrDataUrl;
     };
-
+ 
     const handlePrintQr = () => {
         if (!qrDataUrl) return;
         const printWindow = window.open("", "_blank", "width=400,height=600");
@@ -171,42 +154,27 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         printWindow.focus();
         setTimeout(() => printWindow.print(), 300);
     };
-
+ 
     return (
-        <div className="flex flex-col xl:flex-row gap-12 items-start">
-            {/* Left Column: Forms */}
-            <div className="flex-1 space-y-8 w-full min-w-0">
-                <SlugEditor
-                    businessId={business.id}
-                    initialSlug={initialSlug}
-                    onSlugChange={handleSlugChange}
-                />
-
-                <BrandingForm
-                    business={business}
-                    onValuesChange={handleValuesChange}
-                    onLogoChange={handleLogoChange}
-                />
-
-                <ReviewContentForm
-                    businessId={business.id}
-                    onValuesChange={handleValuesChange}
+        <div className="flex flex-col xl:flex-row gap-12 items-start pb-20">
+            {/* Left Column: Form */}
+            <div className="flex-1 w-full min-w-0">
+                <PublicProfileForm 
+                    business={business} 
+                    onValuesChange={handleValuesChange} 
                 />
             </div>
-
-            {/* Right Column: Preview (Simplified Model) */}
-            <div className="hidden xl:flex flex-col gap-6 w-[380px] flex-shrink-0 sticky top-6">
+ 
+            {/* Right Column: Preview & Share */}
+            <div className="hidden xl:flex flex-col gap-8 w-[400px] flex-shrink-0 sticky top-6">
                 <div>
-                    <div className="flex items-center gap-2 mb-3 justify-start px-2">
-                        <span className="text-xs font-semibold text-muted-foreground/80 tracking-widest uppercase">PREVIEW</span>
-                        <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/50" />
+                    <div className="flex items-center gap-2 mb-4 justify-start px-2">
+                        <span className="text-xs font-bold text-slate-400 tracking-[0.2em] uppercase">LIVE PREVIEW</span>
+                        <div className="h-px flex-1 bg-slate-100" />
                     </div>
-
+ 
                     {/* Preview Container */}
-                    <div className="mx-auto h-[740px] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-900 ring-1 ring-white/10">
-                        {/* Status Bar Area (Mock) */}
-                        <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
-
+                    <div className="mx-auto h-[780px] w-full bg-slate-900 rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] relative border-[8px] border-slate-900 ring-4 ring-slate-100/50">
                         {/* Content */}
                         <div className="h-full w-full overflow-y-auto no-scrollbar bg-slate-900">
                             <PublicReviewFlow
@@ -237,111 +205,115 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 footerLogoUrl={previewState.footer_logo_url}
                                 hideBranding={previewState.hide_branding}
                                 isPreview={true}
-                                className="min-h-full w-full rounded-[2rem]"
+                                className="min-h-full w-full"
                             />
                         </div>
                     </div>
                 </div>
-
-                {/* Shareable Link Section */}
-                <div className="bg-white dark:bg-slate-950 rounded-xl shadow-sm border p-4 flex items-center gap-3">
-                    <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
-                        <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <LinkIcon className="h-5 w-5" />
+ 
+                {/* Share & QR Section */}
+                <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-8 flex gap-8 items-center relative overflow-hidden group">
+                    {/* Decorative Background */}
+                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-blue-50/50 rounded-full blur-3xl group-hover:bg-blue-100/50 transition-colors" />
+                    
+                    {/* Left: Actions & Icon */}
+                    <div className="flex flex-col gap-4 shrink-0 relative">
+                        <div className="grid grid-cols-2 gap-2">
+                            <button onClick={handleDownloadQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Download">
+                                <Download className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
+                            </button>
+                            <button onClick={handlePrintQr} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Print">
+                                <Printer className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
+                            </button>
+                            <button onClick={() => toast.info("Coming soon!")} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Order QR Now">
+                                <QrCode className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
+                            </button>
+                            <button onClick={handleShare} className="p-3 bg-slate-50 hover:bg-white border hover:border-blue-200 rounded-2xl flex items-center justify-center transition-all hover:shadow-md group/btn" title="Share link">
+                                <Share2 className="h-4 w-4 text-slate-400 group-hover/btn:text-blue-600" />
+                            </button>
                         </div>
-                        <div className="min-w-0 flex flex-col">
-                            <div className="flex items-center gap-1.5">
-                                <span className="font-semibold text-sm truncate">Shareable Link</span>
-                                <HelpCircle className="h-3 w-3 text-muted-foreground" />
-                            </div>
-                            <p className="text-xs text-muted-foreground truncate font-mono">
-                                {previewUrl}
-                            </p>
+ 
+                        <div className="flex flex-col items-center">
+                            <button 
+                                onClick={() => setQrDialogOpen(true)}
+                                className="h-16 w-16 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all text-white relative group/qr"
+                            >
+                                <QrCode className="h-8 w-8" />
+                                <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+                                    <div className="h-1 w-1 bg-white rounded-full animate-ping" />
+                                </div>
+                            </button>
+                            <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tight text-center">QR Code for {business.name}</span>
+                            <span className="text-[9px] text-slate-300 mt-0.5 text-center">Tap icon to view</span>
                         </div>
                     </div>
-                    <Button
-                        size="sm"
-                        className={cn(
-                            "shrink-0 font-semibold px-5 transition-all",
-                            copied
-                                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
-                        )}
-                        onClick={handleShare}
-                    >
-                        {copied ? (
-                            <><Check className="h-3.5 w-3.5 mr-1.5" />COPIED</>
-                        ) : (
-                            "SHARE"
-                        )}
-                    </Button>
-                    <button
-                        onClick={() => setQrDialogOpen(true)}
-                        className="h-10 w-10 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center shrink-0 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm"
-                        aria-label="Show QR Code"
-                    >
-                        <QrCode className="h-5 w-5 text-slate-600 dark:text-slate-400" />
-                    </button>
+ 
+                    {/* Right: Info */}
+                    <div className="flex-1 flex flex-col justify-center min-w-0">
+                        <div className="space-y-1">
+                            <h4 className="font-bold text-slate-900 text-lg leading-tight">{business.name}</h4>
+                            <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest">Your Review Portal</p>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-4 leading-relaxed font-medium">
+                            Share this with customers to collect reviews and drive orders.
+                        </p>
+                        <div className="mt-6 flex flex-col gap-1">
+                            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Live Link</p>
+                            <div className="flex items-center gap-2 group/link cursor-pointer" onClick={handleShare}>
+                                <span className="text-sm font-bold text-slate-900 truncate">{previewUrl}</span>
+                                <Share2 className="h-3 w-3 text-slate-300 group-hover/link:text-blue-500 transition-colors" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
+ 
                 {/* QR Code Dialog */}
                 <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle className="flex items-center gap-2">
-                                <QrCode className="h-5 w-5" />
-                                QR Code
-                            </DialogTitle>
-                            <DialogDescription>
-                                Scan this QR code to open your review page.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="flex flex-col items-center gap-5 py-4">
-                            <div className="bg-white p-4 rounded-xl border shadow-sm">
+                    <DialogContent className="sm:max-w-md rounded-[2rem] border-0 p-0 overflow-hidden">
+                        <div className="bg-slate-900 p-10 text-center space-y-8 relative">
+                            {/* Decorative elements for popup */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
+                            
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-bold text-white tracking-tight">Your Direct QR Code</h2>
+                                <p className="text-slate-400 text-sm">Customers can scan this to leave a review instantly.</p>
+                            </div>
+ 
+                            <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl inline-block border-[6px] border-slate-800">
                                 {qrLoading ? (
-                                    <div className="h-[200px] w-[200px] flex items-center justify-center">
-                                        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+                                    <div className="h-[240px] w-[240px] flex items-center justify-center">
+                                        <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
                                     </div>
                                 ) : qrDataUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        src={qrDataUrl}
-                                        alt="QR Code"
-                                        className="h-[200px] w-[200px] rounded-lg"
-                                    />
+                                    <picture>
+                                        <img src={qrDataUrl} alt="QR Code" className="h-[240px] w-[240px] rounded-2xl" />
+                                    </picture>
                                 ) : (
-                                    <div className="h-[200px] w-[200px] flex items-center justify-center text-sm text-muted-foreground">
-                                        Failed to load
-                                    </div>
+                                    <div className="h-[240px] w-[240px] flex items-center justify-center text-sm text-slate-400">Failed to load</div>
                                 )}
                             </div>
-                            <p className="text-sm text-muted-foreground font-mono">{previewUrl}</p>
-                            <div className="grid grid-cols-3 gap-2 w-full">
-                                <Button variant="outline" size="sm" onClick={handleDownloadQr} disabled={!qrDataUrl} className="text-xs">
-                                    <Download className="h-3.5 w-3.5 mr-1.5" />
-                                    Download
-                                </Button>
-                                <Button variant="outline" size="sm" onClick={handlePrintQr} disabled={!qrDataUrl} className="text-xs">
-                                    <Printer className="h-3.5 w-3.5 mr-1.5" />
-                                    Print
-                                </Button>
-                                <Button variant="outline" size="sm" onClick={handleShare} className="text-xs">
-                                    <Share2 className="h-3.5 w-3.5 mr-1.5" />
-                                    Share
-                                </Button>
+ 
+                            <div className="flex flex-col items-center gap-4 pt-4">
+                                <p className="text-blue-400 font-mono text-sm font-bold">{previewUrl}</p>
+                                <div className="flex gap-3 w-full">
+                                    <Button onClick={handleDownloadQr} className="flex-1 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-2xl h-12 shadow-xl shadow-white/5 transition-all">
+                                        <Download className="h-4 w-4 mr-2" /> Download
+                                    </Button>
+                                    <Button onClick={handlePrintQr} variant="outline" className="flex-1 border-slate-700 text-white hover:bg-slate-800 font-bold rounded-2xl h-12 transition-all">
+                                        <Printer className="h-4 w-4 mr-2" /> Print
+                                    </Button>
+                                </div>
+                                <button onClick={() => setQrDialogOpen(false)} className="text-xs text-slate-500 hover:text-white transition-colors font-medium">Close / Done</button>
                             </div>
                         </div>
                     </DialogContent>
                 </Dialog>
-
-                {/* Footer */}
+ 
+                {/* Footer Message */}
                 <div className="text-center px-4">
-                    <p className="text-xs text-muted-foreground items-center justify-center flex gap-1">
-                        Want to customize more?
+                    <p className="text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium">
+                        Need a custom design? <a href="#" className="text-blue-600 hover:underline">Contact our support</a>
                     </p>
-                    <a href="#" className="text-xs text-blue-600 hover:underline font-medium mt-1 block">
-                        Contact sales
-                    </a>
                 </div>
             </div>
         </div>
