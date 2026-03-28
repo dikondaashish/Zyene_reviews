@@ -308,14 +308,18 @@ export async function initializeGoogleAuth(
     // Store the access token in review_platforms table.
     // Use onConflict so the unique constraint (business_id, platform) triggers an UPDATE
     // instead of a failing INSERT when the record already exists.
+    // Encrypt tokens before storing
+    const { data: encAccess } = await supabase.rpc("encrypt_token", { plain_text: accessToken || "" });
+    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plain_text: tokenData.refresh_token || "" });
+
     const { error: platformError } = await supabase
       .from("review_platforms")
       .upsert(
         {
           business_id: businessId,
           platform: "google",
-          access_token: accessToken,
-          refresh_token: tokenData.refresh_token || null,
+          access_token: encAccess,
+          refresh_token: encRefresh || null,
           token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
           total_reviews: reviewData.reviewCount,
           average_rating: reviewData.averageRating,
