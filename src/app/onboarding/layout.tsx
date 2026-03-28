@@ -29,7 +29,7 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-violet-50/80 via-white to-orange-50/30 flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-[#f5f5f4] flex flex-col relative overflow-hidden">
             {/* Ambient gradient blobs */}
             <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-violet-200/20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-orange-200/15 blur-[100px]" />
@@ -39,11 +39,11 @@ export default async function OnboardingLayout({
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
                         {/* Brand logo mark */}
-                        <div className="w-9 h-9 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 ring-1 ring-white/40">
-                            <span className="text-white font-bold text-sm tracking-tight">ZR</span>
+                        <div className="w-9 h-9 bg-gradient-to-br from-[oklch(0.7_0.22_60)] to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20 ring-1 ring-white/40">
+                            <span className="text-white font-bold text-sm tracking-tight text-white">ZR</span>
                         </div>
-                        <span className="text-lg font-bold text-foreground tracking-tight">
-                            Zyene <span className="text-primary">Reviews</span>
+                        <span className="text-lg font-bold text-[#262626] tracking-tight">
+                            Zyene <span className="text-[oklch(0.7_0.22_60)]">Reviews</span>
                         </span>
                     </div>
                 </div>

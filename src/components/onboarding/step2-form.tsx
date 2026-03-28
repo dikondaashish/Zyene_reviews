@@ -242,8 +242,8 @@ export function Step2Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <Link2 className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
+            <Link2 className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
           </div>
         </motion.div>
         <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
@@ -283,8 +283,8 @@ export function Step2Form({
           {googleState.status === "connecting" && (
             <div className="flex flex-col items-center justify-center gap-4 py-6">
               <div className="relative">
-                <div className="absolute inset-0 bg-primary/10 blur-xl rounded-full animate-pulse" />
-                <Loader2 className="h-10 w-10 animate-spin text-primary relative z-10" />
+                <div className="absolute inset-0 bg-[oklch(0.7_0.22_60)]/10 blur-xl rounded-full animate-pulse" />
+                <Loader2 className="h-10 w-10 animate-spin text-[oklch(0.7_0.22_60)] relative z-10" />
               </div>
               <p className="text-sm font-semibold text-foreground animate-pulse">Fetching your business details...</p>
             </div>
@@ -366,7 +366,7 @@ export function Step2Form({
               {...form.register("businessName")}
               placeholder="e.g. Acme Restaurant"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-violet-200/50 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
             />
           </div>
           <div className="space-y-1.5">
@@ -375,7 +375,7 @@ export function Step2Form({
               {...form.register("address")}
               placeholder="123 Main St"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-violet-200/50 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
             />
           </div>
         </div>
@@ -387,7 +387,7 @@ export function Step2Form({
               {...form.register("city")}
               placeholder="San Francisco"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-violet-200/50 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
             />
           </div>
           <div className="space-y-1.5">
@@ -413,7 +413,7 @@ export function Step2Form({
               {...form.register("phone")}
               placeholder="(555) 555-5555"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-violet-200/50 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
             />
           </div>
         </div>
@@ -423,7 +423,7 @@ export function Step2Form({
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full h-14 mt-2 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all cursor-pointer group"
+            className="w-full h-14 mt-2 font-semibold cta-button shadow-none"
           >
             {advancing || isLoading ? (
               <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
@@ -441,7 +441,7 @@ export function Step2Form({
             type="button"
             onClick={handleSkip}
             disabled={advancing}
-            className="text-xs font-semibold text-muted-foreground/60 hover:text-primary transition-colors tracking-wide cursor-pointer hover:underline underline-offset-4"
+            className="text-xs font-semibold text-muted-foreground/60 hover:text-orange-500 transition-colors tracking-wide cursor-pointer hover:underline underline-offset-4"
           >
             I&apos;ll connect later
           </button>

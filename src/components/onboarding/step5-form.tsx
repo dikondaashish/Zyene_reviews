@@ -81,9 +81,9 @@ export function Step5Form({
         className="inline-flex"
       >
         <div className="relative">
-          <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping opacity-40" />
-          <div className="relative w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20">
-            <Sparkles className="h-10 w-10 text-primary" />
+          <div className="absolute inset-0 bg-orange-500/15 rounded-full animate-ping opacity-40" />
+          <div className="relative w-20 h-20 bg-gradient-to-br from-orange-500/10 to-orange-500/5 rounded-full flex items-center justify-center ring-1 ring-orange-500/20">
+            <Sparkles className="h-10 w-10 text-orange-500" />
           </div>
         </div>
       </motion.div>
@@ -128,10 +128,10 @@ export function Step5Form({
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.3 }}
-          className="flex items-center gap-3 p-3.5 bg-primary/[0.04] rounded-xl border border-primary/10"
+          className="flex items-center gap-3 p-3.5 bg-orange-500/[0.04] rounded-xl border border-orange-500/10"
         >
-          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-            <Star className="h-4 w-4 text-primary" />
+          <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
+            <Star className="h-4 w-4 text-orange-500" />
           </div>
           <p className="text-xs text-muted-foreground">
             <strong className="text-foreground">Next:</strong> Send your first review request from the dashboard.

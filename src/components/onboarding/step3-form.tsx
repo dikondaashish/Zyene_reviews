@@ -91,8 +91,8 @@ export function Step3Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <LayoutGrid className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
+            <LayoutGrid className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
           </div>
         </motion.div>
 
@@ -142,8 +142,8 @@ export function Step3Form({
                     className={`
                       relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
                       ${isSelected
-                        ? "border-primary bg-primary/[0.06] ring-2 ring-primary/20 shadow-md shadow-primary/10"
-                        : "border-border/40 bg-white/40 hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-sm"
+                        ? "border-orange-500 bg-orange-500/[0.06] ring-2 ring-orange-500/20 shadow-md shadow-orange-500/10"
+                        : "border-border/40 bg-white/40 hover:border-orange-500/30 hover:bg-orange-500/[0.02] hover:shadow-sm"
                       }
                     `}
                   >
@@ -152,7 +152,7 @@ export function Step3Form({
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-sm"
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shadow-sm"
                       >
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -162,12 +162,12 @@ export function Step3Form({
 
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center transition-colors
-                      ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"}
+                      ${isSelected ? "bg-orange-500/15 text-orange-500" : "bg-secondary/60 text-muted-foreground group-hover:text-orange-500/70"}
                     `}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <span className={`text-xs font-semibold text-center leading-tight ${
-                      isSelected ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                      isSelected ? "text-orange-600" : "text-muted-foreground group-hover:text-foreground"
                     }`}>
                       {cat.label}
                     </span>
@@ -187,7 +187,7 @@ export function Step3Form({
         <Button
           type="submit"
           disabled={!selectedCategory || isLoading}
-          className="w-full h-14 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all cursor-pointer group"
+          className="w-full h-14 font-semibold cta-button shadow-none"
         >
           {isLoading ? (
             <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
@@ -201,8 +201,8 @@ export function Step3Form({
       </form>
 
       {/* Tip */}
-      <div className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl">
-        <LayoutGrid className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+      <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.22_60)]/[0.04] border border-[oklch(0.7_0.22_60)]/10 rounded-2xl">
+        <LayoutGrid className="w-4 h-4 text-[oklch(0.7_0.22_60)] mt-0.5 shrink-0" />
         <p className="text-xs text-muted-foreground leading-relaxed">
           <span className="font-semibold text-foreground">Don&apos;t see yours?</span> Pick <strong>Other</strong> and we&apos;ll customize your setup later.
         </p>

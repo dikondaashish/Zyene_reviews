@@ -215,9 +215,9 @@ export default function OnboardingPage() {
                   className={`
                     w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
                     ${isCompleted
-                      ? "bg-primary text-white shadow-lg shadow-primary/25"
+                      ? "bg-[oklch(0.7_0.22_60)] text-white shadow-lg shadow-orange-500/25"
                       : isActive
-                        ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
+                        ? "bg-[oklch(0.7_0.22_60)]/10 text-[oklch(0.7_0.22_60)] ring-2 ring-[oklch(0.7_0.22_60)]/30 shadow-sm"
                         : "bg-secondary/60 text-muted-foreground"
                     }
                   `}
@@ -233,7 +233,7 @@ export default function OnboardingPage() {
                   )}
                 </motion.div>
                 <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
-                  isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
+                  isActive ? "text-[oklch(0.7_0.22_60)]" : isCompleted ? "text-orange-500/70" : "text-muted-foreground"
                 }`}>
                   {step.label}
                 </span>
@@ -243,7 +243,7 @@ export default function OnboardingPage() {
               {index < STEPS.length - 1 && (
                 <div className="w-8 sm:w-12 h-[2px] mx-1 sm:mx-2 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
                   <motion.div
-                    className="h-full bg-primary rounded-full"
+                    className="h-full bg-[oklch(0.7_0.22_60)] rounded-full"
                     initial={false}
                     animate={{ width: isCompleted ? "100%" : "0%" }}
                     transition={{ duration: 0.4 }}
@@ -258,9 +258,9 @@ export default function OnboardingPage() {
       {/* Glass card wrapper */}
       <div className="relative">
         {/* Card glow */}
-        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-orange-500/5 rounded-[2rem] blur-sm" />
+        <div className="absolute -inset-1 bg-gradient-to-br from-orange-500/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
 
-        <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-violet-900/[0.04] border border-white/60 p-7 sm:p-10">
+        <div className="relative pro-card p-7 sm:p-10">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>

@@ -91,8 +91,8 @@ export function Step1Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <Building2 className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
+            <Building2 className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
           </div>
         </motion.div>
 
@@ -134,7 +134,7 @@ export function Step1Form({
                     id="organizationName"
                     placeholder="e.g. Acme Inc."
                     disabled={submitting || isLoading}
-                    className="h-14 text-base bg-white/60 border-violet-200/60 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
+                    className="h-14 text-base bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
                     {...field}
                   />
                 </FormControl>
@@ -146,7 +146,7 @@ export function Step1Form({
           <Button
             type="submit"
             disabled={!form.formState.isValid || submitting || isLoading}
-            className="w-full h-14 text-base font-semibold rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 group cursor-pointer"
+            className="w-full h-14 text-base font-semibold cta-button shadow-none"
           >
             {submitting || isLoading ? (
               <>
@@ -168,9 +168,9 @@ export function Step1Form({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl"
+        className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.22_60)]/[0.04] border border-[oklch(0.7_0.22_60)]/10 rounded-2xl"
       >
-        <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+        <Sparkles className="w-4 h-4 text-[oklch(0.7_0.22_60)] mt-0.5 shrink-0" />
         <p className="text-xs text-muted-foreground leading-relaxed">
           <span className="font-semibold text-foreground">Quick setup</span> — Most users complete onboarding in under 2 minutes. We'll guide you through each step.
         </p>

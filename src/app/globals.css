@@ -144,14 +144,16 @@
     }
   }
 
+  .pro-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-2xl shadow-indigo-500/5 rounded-3xl;
+  }
+
   .cta-button {
-    @apply bg-[var(--cta)] text-[var(--cta-foreground)] hover:opacity-90 
-           transition-all duration-300 ease-out px-6 py-2.5 rounded-xl font-semibold;
+    @apply bg-[oklch(0.7_0.22_60)] text-white hover:bg-[oklch(0.65_0.2_60)] 
+           transition-all duration-300 ease-out px-6 py-2.5 rounded-2xl font-semibold 
+           shadow-lg shadow-orange-500/20 active:scale-[0.98];
     &:hover {
-      @apply -translate-y-1 shadow-2xl shadow-primary/20;
-    }
-    &:active {
-      @apply translate-y-0 shadow-md;
+      @apply -translate-y-0.5 shadow-xl shadow-orange-500/30;
     }
   }
 }

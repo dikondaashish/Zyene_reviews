@@ -52,9 +52,9 @@ const PLANS = [
     ],
     isPopular: true,
     icon: Sparkles,
-    color: "text-primary",
-    bgColor: "bg-primary/5",
-    borderColor: "border-primary"
+    color: "text-orange-600",
+    bgColor: "bg-orange-500/10",
+    borderColor: "border-orange-500"
   },
   {
     id: "professional_monthly",
@@ -124,8 +124,8 @@ export function Step4SubscriptionForm({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <Gem className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
+            <Gem className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
           </div>
         </motion.div>
 
@@ -140,7 +140,7 @@ export function Step4SubscriptionForm({
           <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs font-semibold text-primary"
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-500/5 border border-orange-500/20 rounded-full text-xs font-semibold text-orange-600"
           >
             <Sparkles className="w-3.5 h-3.5" />
             Connected profile detected: Pro plan recommended
@@ -164,14 +164,14 @@ export function Step4SubscriptionForm({
               className={`
                 relative flex flex-col p-5 rounded-2xl border-2 transition-all cursor-pointer group
                 ${isSelected 
-                  ? `${plan.borderColor} ${plan.bgColor} ring-2 ring-primary/10 shadow-lg` 
-                  : "border-border/40 bg-white/40 hover:border-primary/30 hover:bg-white"
+                  ? `${plan.borderColor} ${plan.bgColor} ring-2 ring-orange-500/10 shadow-lg` 
+                  : "border-border/40 bg-white/40 hover:border-orange-500/30 hover:bg-white"
                 }
               `}
             >
               {plan.isPopular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-primary text-white border-none px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                  <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider">
                     Most Popular
                   </Badge>
                 </div>
@@ -212,12 +212,12 @@ export function Step4SubscriptionForm({
 
               <div className="mt-auto pt-4">
                 {isSelected ? (
-                  <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-primary">
+                  <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-orange-600">
                     <Check className="w-4 h-4" />
                     Selected
                   </div>
                 ) : (
-                  <div className="text-xs font-semibold text-center text-muted-foreground group-hover:text-primary transition-colors">
+                  <div className="text-xs font-semibold text-center text-muted-foreground group-hover:text-orange-500 transition-colors">
                     Select Plan
                   </div>
                 )}
@@ -232,7 +232,7 @@ export function Step4SubscriptionForm({
         <Button
           onClick={() => onSubmit(selectedPlan)}
           disabled={isLoading}
-          className="w-full h-14 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all cursor-pointer group"
+          className="w-full h-14 font-semibold cta-button shadow-none"
         >
           {isLoading ? (
             <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
