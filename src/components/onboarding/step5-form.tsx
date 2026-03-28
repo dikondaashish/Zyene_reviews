@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Loader2, Star, ArrowRight, CheckCircle2, Sparkles, Rocket } from "lucide-react";
 
-interface Step4FormProps {
+interface Step5FormProps {
   businessId: string;
   businessName: string;
   userEmail: string;
@@ -15,7 +15,7 @@ interface Step4FormProps {
   isLoading?: boolean;
 }
 
-export function Step4Form({
+export function Step5Form({
   businessId,
   businessName,
   userEmail,
@@ -23,7 +23,7 @@ export function Step4Form({
   googleConnected,
   onNext,
   isLoading = false,
-}: Step4FormProps) {
+}: Step5FormProps) {
   const [mounted, setMounted] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const firstName = userName.split(" ")[0];

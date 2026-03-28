@@ -11,6 +11,7 @@ import {
   stepBusinessLocationSchema,
   stepCategorySchema,
   stepNotificationsSchema,
+  stepPlanSchema,
   type Step1FormData,
   type Step3FormData,
   type Step4FormData,
@@ -18,7 +19,9 @@ import {
   type StepBusinessLocationFormData,
   type StepCategoryFormData,
   type StepNotificationsFormData,
+  type StepPlanFormData,
 } from "@/lib/validation/onboarding";
+import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { registerNotifications } from "@/services/google/notifications";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -433,7 +436,7 @@ export async function updateOnboardingStep(
       .from("users")
       .update({
         onboarding_step: step,
-        onboarding_completed: step === 4,
+        onboarding_completed: step === 5,
       } as any)
       .eq("id", user.id);
 
@@ -524,7 +527,7 @@ export async function saveNotificationPreferences(
     const { error: updateError } = await supabase
       .from("users")
       .update({
-        onboarding_step: 4,
+        onboarding_step: 5,
         onboarding_completed: true,
       } as any)
       .eq("id", user.id);
@@ -662,7 +665,7 @@ export async function completeOnboarding(businessId: string) {
     const { error } = await supabase
       .from("users")
       .update({
-        onboarding_step: 4,
+        onboarding_step: 5,
         onboarding_completed: true,
       } as any)
       .eq("id", user.id);
@@ -1033,6 +1036,18 @@ export async function updateBusinessCategory(
       };
     }
 
+    // Update onboarding step to 4 (Plan Selection)
+    const { error: stepError } = await supabase
+      .from("users")
+      .update({
+        onboarding_step: 4,
+      } as any)
+      .eq("id", user.id);
+
+    if (stepError) {
+      console.error("Error updating onboarding step:", stepError);
+    }
+
     // Invalidate business context cache
     const cacheKey = `user_businesses:${user.id}`;
     await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
@@ -1185,5 +1200,99 @@ export async function triggerOnboardingSync(businessId: string) {
   } catch (error) {
     console.error("Error triggering onboarding sync:", error);
     return { success: false, error: "Failed to trigger sync" };
+  }
+}
+
+/**
+ * Step 4: Save Plan Selection
+ * Updates organization plan and advances user step.
+ */
+export async function savePlanSelection(
+  organizationId: string,
+  data: StepPlanFormData
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get authenticated user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return {
+        success: false,
+        error: "You are not authenticated.",
+      };
+    }
+
+    // Validate input
+    const validationResult = stepPlanSchema.safeParse(data);
+    if (!validationResult.success) {
+      const firstError = Object.values(validationResult.error.flatten().fieldErrors)[0]?.[0];
+      return {
+        success: false,
+        error: firstError || "Validation failed",
+      };
+    }
+
+    // Get limits for the selected plan
+    const planConfig = PLAN_MAP[data.plan];
+    const limits = planConfig?.limits || UNSUBSCRIBED_LIMITS;
+
+    // Update organization plan and limits
+    const { error: orgError } = await supabase
+      .from("organizations")
+      .update({
+        plan: data.plan,
+        plan_status: data.plan === "none" ? "active" : "trialing", // Trialing for paid plans
+        max_businesses: limits.maxLocations,
+        max_review_requests_per_month:
+          limits.emailRequestsPerMonth +
+          limits.smsRequestsPerMonth +
+          limits.linkRequestsPerMonth,
+        max_ai_replies_per_month: limits.aiRepliesPerMonth,
+        max_email_requests_per_month: limits.emailRequestsPerMonth,
+        max_sms_requests_per_month: limits.smsRequestsPerMonth,
+        max_link_requests_per_month: limits.linkRequestsPerMonth,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", organizationId);
+
+    if (orgError) {
+      console.error("Error saving plan selection:", orgError);
+      return {
+        success: false,
+        error: "Failed to save plan. Please try again.",
+      };
+    }
+
+    // Update onboarding step to 5 (Completion)
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({
+        onboarding_step: 5,
+      } as any)
+      .eq("id", user.id);
+
+    if (updateError) {
+      console.error("Error updating onboarding step:", updateError);
+      return {
+        success: false,
+        error: "Failed to save progress. Please try again.",
+      };
+    }
+
+    revalidatePath("/onboarding");
+
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in savePlanSelection:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
 }

@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/client";
 import { useOnboardingStore } from "@/lib/state/onboarding-store";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper } from "lucide-react";
 import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
-import { Step4Form } from "@/components/onboarding/step4-form";
+import { Step4SubscriptionForm } from "@/components/onboarding/step4-subscription-form";
+import { Step5Form } from "@/components/onboarding/step5-form";
 import { triggerOnboardingSync } from "@/app/actions/onboarding";
+import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper, Gem } from "lucide-react";
 
 interface OnboardingOrganization {
   id: string;
@@ -39,6 +40,7 @@ const STEPS = [
   { label: "Organization", icon: Building2 },
   { label: "Business", icon: MapPin },
   { label: "Category", icon: LayoutGrid },
+  { label: "Plan", icon: Gem },
   { label: "All Set", icon: PartyPopper },
 ];
 
@@ -311,9 +313,19 @@ export default function OnboardingPage() {
                 />
               </motion.div>
             )}
-            {currentStep === 4 && business && user && (
+            {currentStep === 4 && organization && (
               <motion.div key="step-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <Step4Form
+                <Step4SubscriptionForm
+                  organizationId={organization.id}
+                  isGoogleConnected={googleConnected}
+                  onNext={() => setCurrentStep(5)}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            )}
+            {currentStep === 5 && business && user && (
+              <motion.div key="step-5" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <Step5Form
                   businessId={business.id}
                   businessName={business.name}
                   userEmail={user.email || ""}
