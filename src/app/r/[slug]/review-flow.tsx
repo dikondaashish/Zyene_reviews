@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
@@ -295,6 +295,11 @@ export function PublicReviewFlow({
         }
     };
 
+    const handleNegativeFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        void handleSubmitFeedback();
+    };
+
     // ─── Shared card wrapper ────────────────────────────────────────────
 
     const CardWrapper = ({ children, contentClassName }: { children: React.ReactNode; contentClassName?: string }) => (
@@ -395,7 +400,10 @@ export function PublicReviewFlow({
         const selectedRating = RATINGS.find((r) => r.value === rating);
         return (
             <CardWrapper>
-                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+                <form
+                    className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
+                    onSubmit={handleNegativeFormSubmit}
+                >
                     {/* Header with emoji */}
                     <div className="flex items-center gap-4">
                         <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
@@ -434,6 +442,11 @@ export function PublicReviewFlow({
                                 className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                    }
+                                }}
                             />
                         </div>
                     </div>
@@ -441,6 +454,7 @@ export function PublicReviewFlow({
                     {/* Action buttons */}
                     <div className="space-y-3 pt-2">
                         <button
+                            type="submit"
                             className={cn(
                                 "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
                                 "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
@@ -448,7 +462,6 @@ export function PublicReviewFlow({
                                 "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                                 "flex items-center justify-center gap-2"
                             )}
-                            onClick={handleSubmitFeedback}
                             disabled={isSubmitting || !feedback.trim()}
                         >
                             {isSubmitting ? (
@@ -461,6 +474,7 @@ export function PublicReviewFlow({
 
                         <div className="flex items-center justify-between px-1">
                             <button
+                                type="button"
                                 className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
                                 onClick={() => {
                                     setRating(null);
@@ -482,7 +496,7 @@ export function PublicReviewFlow({
                             )}
                         </div>
                     </div>
-                </div>
+                </form>
             </CardWrapper>
         );
     }
