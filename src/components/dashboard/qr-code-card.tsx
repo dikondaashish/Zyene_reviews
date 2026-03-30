@@ -261,7 +261,12 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
                                 <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 group-hover:shadow-md duration-300 h-[228px] w-[228px]">
-                                    <QrCode className="h-[140px] w-[140px] text-slate-800" strokeWidth={1} />
+                                    <img
+                                        src="/mobile-app-download.svg"
+                                        alt="Mobile app download"
+                                        className="h-[140px] w-[140px] object-contain"
+                                        draggable={false}
+                                    />
                                 </div>
                                 <p className="text-[13px] text-slate-900 font-medium text-center group-hover:text-blue-600 transition-colors">
                                     {dict.qr.tap_icon}
