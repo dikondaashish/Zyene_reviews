@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-    Check,
+    CheckCircle2,
     CreditCard,
     ExternalLink,
     Loader2,
@@ -29,6 +29,8 @@ import {
     Sparkles,
     ArrowRight,
 } from "lucide-react";
+import * as PricingCard from "@/components/ui/pricing-card";
+import { cn } from "@/lib/utils/index";
 import { toast } from "sonner";
 import type { Plan } from "@/services/stripe/plans";
 import { useLanguage } from "@/lib/language-context";
@@ -355,187 +357,206 @@ export function BillingClient({
             </Card>
 
             {/* ─── Plan Picker ─── */}
-            <div id="plan-picker">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold">
-                        {isPaidPlan ? "Change Plan" : "Choose a Plan"}
-                    </h2>
+            <div id="plan-picker" className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8">
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.2]"
+                    style={{
+                        backgroundImage:
+                            "radial-gradient(rgba(0,0,0,0.06) 0.8px, transparent 0.8px)",
+                        backgroundSize: "14px 14px",
+                        maskImage:
+                            "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,1), rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 72%)",
+                    }}
+                />
+                <div
+                    aria-hidden="true"
+                    className={cn(
+                        "pointer-events-none absolute -top-1/2 left-1/2 h-[min(120vmin,720px)] w-[min(120vmin,720px)] -translate-x-1/2 rounded-full",
+                        "bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12),transparent_55%)]",
+                        "blur-[32px]",
+                    )}
+                />
 
-                    {/* Monthly / Yearly Toggle */}
-                    <div className="bg-slate-100 p-1 rounded-lg inline-flex items-center">
-                        <button
-                            onClick={() => setInterval("month")}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${interval === "month"
-                                ? "bg-white text-slate-900 shadow-sm"
-                                : "text-slate-500 hover:text-slate-900"
-                                }`}
-                        >
-                            Monthly
-                        </button>
-                        <button
-                            onClick={() => setInterval("year")}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${interval === "year"
-                                ? "bg-white text-slate-900 shadow-sm"
-                                : "text-slate-500 hover:text-slate-900"
-                                }`}
-                        >
-                            Yearly
-                            <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
-                                Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
-                            </Badge>
-                        </button>
-                    </div>
-                </div>
+                <div className="relative z-10">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+                        <h2 className="text-xl font-semibold">
+                            {isPaidPlan ? "Change Plan" : "Choose a Plan"}
+                        </h2>
 
-                <div className="grid gap-6 md:grid-cols-3">
-                    {/* Starter / Professional cards */}
-                    {displayPlans.map((plan) => {
-                        const isCurrentPlan = currentPlan?.id === plan.id;
-                        const isPro = plan.name === "Professional";
-
-                        return (
-                            <Card
-                                key={plan.id}
-                                className={`relative flex flex-col ${isPro
-                                    ? "border-blue-500 border-2 shadow-lg"
-                                    : "border-slate-200"
+                        <div className="bg-muted/80 p-1 rounded-lg inline-flex items-center border border-border/60">
+                            <button
+                                type="button"
+                                onClick={() => setInterval("month")}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${interval === "month"
+                                    ? "bg-background text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
-                                {isPro && (
-                                    <div className="absolute -top-3 right-4">
-                                        <Badge className="bg-blue-600 text-white">
-                                            Most Popular
-                                        </Badge>
-                                    </div>
-                                )}
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        {isPro ? (
-                                            <Crown className="h-5 w-5 text-blue-500" />
-                                        ) : (
-                                            <Zap className="h-5 w-5 text-blue-500" />
-                                        )}
-                                        {plan.name}
-                                    </CardTitle>
-                                    <CardDescription>
-                                        {isPro
-                                            ? "For growing multi-location businesses"
-                                            : "Perfect for single-location businesses"}
-                                    </CardDescription>
-                                    <div className="flex items-baseline gap-2 pt-2">
-                                        {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
-                                            <span className="text-lg line-through text-gray-400">
-                                                ${plan.originalPrice}
-                                            </span>
-                                        )}
-                                        <span className="text-3xl font-bold">
-                                            ${plan.price}
-                                        </span>
-                                        <span className="text-muted-foreground">
-                                            {intervalLabel}
-                                        </span>
-                                    </div>
-                                    {!isPaidPlan && (
-                                        <p className="text-sm text-green-600 font-medium mt-1">
-                                            7-day free trial included
-                                        </p>
-                                    )}
-                                </CardHeader>
-                                <CardContent className="flex-1">
-                                    <ul className="space-y-2.5 text-sm">
-                                        {plan.features.map((feature) => (
-                                            <li
-                                                key={feature}
-                                                className="flex items-start gap-2"
-                                            >
-                                                <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                                <CardFooter>
-                                    {isCurrentPlan ? (
-                                        <Button
-                                            variant="outline"
-                                            className="w-full"
-                                            disabled
-                                        >
-                                            Current Plan
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            className={`w-full ${isPro
-                                                ? "bg-blue-600 hover:bg-blue-700"
-                                                : ""
-                                                }`}
-                                            onClick={() =>
-                                                handleSubscribe(plan.stripePriceId!)
-                                            }
-                                            disabled={
-                                                !plan.stripePriceId ||
-                                                loadingPlan === plan.stripePriceId
-                                            }
-                                        >
-                                            {loadingPlan === plan.stripePriceId ? (
-                                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                            ) : null}
-                                            {isPaidPlan
-                                                ? `Switch to ${plan.name}`
-                                                : "Start Free Trial"}
-                                        </Button>
-                                    )}
-                                </CardFooter>
-                            </Card>
-                        );
-                    })}
+                                Monthly
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setInterval("year")}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${interval === "year"
+                                    ? "bg-background text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:text-foreground"
+                                    }`}
+                            >
+                                Yearly
+                                <Badge variant="secondary" className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900">
+                                    Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
+                                </Badge>
+                            </button>
+                        </div>
+                    </div>
 
-                    {/* Enterprise Card */}
-                    {enterprisePlan && (
-                        <Card className="relative flex flex-col border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Building2 className="h-5 w-5 text-slate-600" />
-                                    Enterprise
-                                </CardTitle>
-                                <CardDescription>
-                                    For large organizations with custom needs
-                                </CardDescription>
-                                <div className="pt-2">
-                                    <span className="text-3xl font-bold">
-                                        Custom
-                                    </span>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="flex-1">
-                                <ul className="space-y-2.5 text-sm">
-                                    {enterprisePlan.features.map((feature) => (
-                                        <li
-                                            key={feature}
-                                            className="flex items-start gap-2"
-                                        >
-                                            <Check className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
-                                            {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </CardContent>
-                            <CardFooter>
-                                <a
-                                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
-                                    className="w-full"
+                    <div className="grid gap-6 md:grid-cols-3">
+                        {displayPlans.map((plan) => {
+                            const isCurrentPlan = currentPlan?.id === plan.id;
+                            const isPro = plan.name === "Professional";
+
+                            return (
+                                <PricingCard.Card
+                                    key={plan.id}
+                                    className={cn(
+                                        "relative flex w-full max-w-none flex-col",
+                                        isPro &&
+                                            "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
+                                        isCurrentPlan && "ring-2 ring-primary/60",
+                                    )}
                                 >
-                                    <Button
-                                        variant="outline"
-                                        className="w-full gap-2"
+                                    {isPro && (
+                                        <div className="absolute -top-2 right-3 z-20">
+                                            <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
+                                                Most Popular
+                                            </Badge>
+                                        </div>
+                                    )}
+                                    <PricingCard.Header className="relative z-10">
+                                        <PricingCard.Plan>
+                                            <PricingCard.PlanName>
+                                                {isPro ? (
+                                                    <Crown className="text-orange-500" aria-hidden />
+                                                ) : (
+                                                    <Zap className="text-orange-500" aria-hidden />
+                                                )}
+                                                <span className="text-foreground">{plan.name}</span>
+                                            </PricingCard.PlanName>
+                                            <PricingCard.Badge>
+                                                {isPro
+                                                    ? "Multi-location"
+                                                    : "Single location"}
+                                            </PricingCard.Badge>
+                                        </PricingCard.Plan>
+                                        <PricingCard.Description className="mb-3">
+                                            {isPro
+                                                ? "For growing multi-location businesses."
+                                                : "Perfect for single-location businesses."}
+                                        </PricingCard.Description>
+                                        <PricingCard.Price>
+                                            {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
+                                                <PricingCard.OriginalPrice>
+                                                    ${plan.originalPrice}
+                                                </PricingCard.OriginalPrice>
+                                            )}
+                                            <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
+                                            <PricingCard.Period>{intervalLabel}</PricingCard.Period>
+                                        </PricingCard.Price>
+                                        {!isPaidPlan && (
+                                            <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
+                                                7-day free trial included
+                                            </p>
+                                        )}
+                                        {isCurrentPlan ? (
+                                            <Button variant="outline" className="w-full font-semibold" disabled>
+                                                Current Plan
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                className={cn(
+                                                    "w-full font-semibold text-white",
+                                                    "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
+                                                    "hover:from-orange-600 hover:to-orange-700",
+                                                )}
+                                                onClick={() => handleSubscribe(plan.stripePriceId!)}
+                                                disabled={
+                                                    !plan.stripePriceId ||
+                                                    loadingPlan === plan.stripePriceId
+                                                }
+                                            >
+                                                {loadingPlan === plan.stripePriceId ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : null}
+                                                {isPaidPlan
+                                                    ? `Switch to ${plan.name}`
+                                                    : "Start Free Trial"}
+                                            </Button>
+                                        )}
+                                    </PricingCard.Header>
+                                    <PricingCard.Body>
+                                        <PricingCard.List>
+                                            {plan.features.map((feature) => (
+                                                <PricingCard.ListItem key={feature}>
+                                                    <span className="mt-0.5 shrink-0">
+                                                        <CheckCircle2
+                                                            className="h-4 w-4 text-emerald-500"
+                                                            aria-hidden
+                                                        />
+                                                    </span>
+                                                    <span>{feature}</span>
+                                                </PricingCard.ListItem>
+                                            ))}
+                                        </PricingCard.List>
+                                    </PricingCard.Body>
+                                </PricingCard.Card>
+                            );
+                        })}
+
+                        {enterprisePlan && (
+                            <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed">
+                                <PricingCard.Header className="relative z-10">
+                                    <PricingCard.Plan>
+                                        <PricingCard.PlanName>
+                                            <Building2 className="text-muted-foreground" aria-hidden />
+                                            <span className="text-foreground">Enterprise</span>
+                                        </PricingCard.PlanName>
+                                        <PricingCard.Badge>Custom</PricingCard.Badge>
+                                    </PricingCard.Plan>
+                                    <PricingCard.Description className="mb-3">
+                                        For large organizations with custom needs.
+                                    </PricingCard.Description>
+                                    <PricingCard.Price>
+                                        <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
+                                    </PricingCard.Price>
+                                    <a
+                                        href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
+                                        className="block w-full"
                                     >
-                                        <Mail className="h-4 w-4" />
-                                        Contact Sales
-                                    </Button>
-                                </a>
-                            </CardFooter>
-                        </Card>
-                    )}
+                                        <Button variant="outline" className="w-full gap-2 font-semibold">
+                                            <Mail className="h-4 w-4" />
+                                            Contact Sales
+                                        </Button>
+                                    </a>
+                                </PricingCard.Header>
+                                <PricingCard.Body>
+                                    <PricingCard.List>
+                                        {enterprisePlan.features.map((feature) => (
+                                            <PricingCard.ListItem key={feature}>
+                                                <span className="mt-0.5 shrink-0">
+                                                    <CheckCircle2
+                                                        className="h-4 w-4 text-emerald-500"
+                                                        aria-hidden
+                                                    />
+                                                </span>
+                                                <span>{feature}</span>
+                                            </PricingCard.ListItem>
+                                        ))}
+                                    </PricingCard.List>
+                                </PricingCard.Body>
+                            </PricingCard.Card>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
