@@ -67,9 +67,12 @@ export default async function RequestPage({
     }
 
     // Access Control 1: Subscription Check
-    // If plan is 'none' OR status is not 'active'
+    // Paid plans are valid when active or trialing.
     const org = business.organization as any;
-    const hasActiveSubscription = org?.plan && org.plan !== "none" && org.plan_status === "active";
+    const hasActiveSubscription =
+        org?.plan &&
+        org.plan !== "none" &&
+        ["active", "trialing"].includes(org.plan_status);
 
     if (!hasActiveSubscription) {
         return <AccessError type="subscription" businessName={business.name} />;
