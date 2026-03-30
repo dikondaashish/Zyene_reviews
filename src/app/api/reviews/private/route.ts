@@ -3,12 +3,18 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { z } from "zod";
 
-const privateFeedbackSchema = z.object({
-    review_request_id: z.string().uuid(),
-    rating: z.number().int().min(1).max(5),
-    content: z.string().max(5000).optional().default(""),
-    customer_email: z.string().email().optional().nullable(),
-});
+const privateFeedbackSchema = z
+    .object({
+        review_request_id: z.string().uuid().optional().nullable(),
+        business_id: z.string().uuid().optional().nullable(),
+        rating: z.number().int().min(1).max(5),
+        content: z.string().max(5000).optional().default(""),
+        customer_email: z.string().email().optional().nullable(),
+    })
+    .refine(
+        (data) => Boolean(data.review_request_id || data.business_id),
+        { message: "Either review_request_id or business_id is required" }
+    );
 
 export async function POST(request: Request) {
     try {
@@ -17,34 +23,41 @@ export async function POST(request: Request) {
         if (!parsed.success) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
         }
-        const { review_request_id, rating, content, customer_email } = parsed.data;
+        const { review_request_id, business_id: bodyBusinessId, rating, content, customer_email } = parsed.data;
 
         // Validation
-        if (!review_request_id || !rating) {
+        if (!rating) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const supabase = createAdminClient();
-        const { data: reviewRequest, error: requestErr } = await supabase
-            .from("review_requests")
-            .select("id, business_id")
-            .eq("id", review_request_id)
-            .maybeSingle();
+        let business_id = bodyBusinessId || null;
 
-        if (requestErr || !reviewRequest?.business_id) {
-            return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
+        if (review_request_id) {
+            const { data: reviewRequest, error: requestErr } = await supabase
+                .from("review_requests")
+                .select("id, business_id")
+                .eq("id", review_request_id)
+                .maybeSingle();
+
+            if (requestErr || !reviewRequest?.business_id) {
+                return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
+            }
+            business_id = reviewRequest.business_id;
         }
-        const business_id = reviewRequest.business_id;
+
+        if (!business_id) {
+            return NextResponse.json({ error: "Business not found" }, { status: 404 });
+        }
 
         // 1. Insert Private Feedback
         const { data: feedback, error } = await supabase
             .from("private_feedback")
             .insert({
                 business_id,
-                review_request_id,
+                review_request_id: review_request_id || null,
                 rating,
                 content,
-                customer_email: customer_email || null,
                 created_at: new Date().toISOString(),
             })
             .select()
