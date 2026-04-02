@@ -250,53 +250,53 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
     }
 
     return (
-        <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <Tabs defaultValue="rating" className="w-full">
                         {/* ── Tab Navigation ── */}
-                        <div className="border-b bg-slate-50/80 px-6 pt-5 pb-0">
-                            <h3 className="text-lg font-semibold text-slate-900 mb-1">Review Flow Content</h3>
-                            <p className="text-sm text-slate-500 mb-4">Customize every step of your customer review experience.</p>
+                        <div className="border-b bg-muted/40 px-6 pt-5 pb-0">
+                            <h3 className="text-lg font-semibold text-foreground mb-1">Review Flow Content</h3>
+                            <p className="text-sm text-muted-foreground mb-4">Customize every step of your customer review experience.</p>
                             <TabsList className="h-auto p-0 bg-transparent gap-0 w-full justify-start rounded-none border-0">
                                 <TabsTrigger
                                     value="rating"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <Star className="h-3.5 w-3.5 mr-1.5" />
                                     Rating
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="tags"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <Tag className="h-3.5 w-3.5 mr-1.5" />
                                     Tags
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="google"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <Globe className="h-3.5 w-3.5 mr-1.5" />
                                     Review Site
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="feedback"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                                     Feedback
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="success"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                                     Success
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="branding"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-slate-500 data-[state=active]:text-blue-600 hover:text-slate-700 transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
                                 >
                                     <Palette className="h-3.5 w-3.5 mr-1.5" />
                                     Branding
@@ -309,8 +309,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Rating Screen Tab */}
                             <TabsContent value="rating" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Rating Screen</h4>
-                                    <p className="text-sm text-slate-500">The first screen customers see when they open the review link.</p>
+                                    <h4 className="font-semibold text-foreground">Rating Screen</h4>
+                                    <p className="text-sm text-muted-foreground">The first screen customers see when they open the review link.</p>
                                 </div>
                                 <div className="space-y-4">
                                     <FormField
@@ -320,7 +320,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Welcome Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="How was your experience?" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="How was your experience?" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -333,14 +333,14 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Subtitle</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Your feedback means a lot to us!" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Your feedback means a lot to us!" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
 
-                                    <div className="pt-2 border-t border-slate-100">
+                                    <div className="pt-2 border-t border-border">
                                         <FormField
                                             control={form.control}
                                             name="min_stars_for_google"
@@ -352,7 +352,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                                         value={String(field.value)}
                                                     >
                                                         <FormControl>
-                                                            <SelectTrigger className="bg-slate-50/50 focus:bg-white transition-colors">
+                                                            <SelectTrigger className="bg-muted/30 focus:bg-background transition-colors">
                                                                 <SelectValue placeholder="Select stars" />
                                                             </SelectTrigger>
                                                         </FormControl>
@@ -380,8 +380,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Tags Screen Tab */}
                             <TabsContent value="tags" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Tags Selection</h4>
-                                    <p className="text-sm text-slate-500">Screen shown after a positive rating (4-5 stars).</p>
+                                    <h4 className="font-semibold text-foreground">Tags Selection</h4>
+                                    <p className="text-sm text-muted-foreground">Screen shown after a positive rating (4-5 stars).</p>
                                 </div>
                                 <div className="space-y-4">
                                     <FormField
@@ -391,7 +391,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="What did you like most?" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="What did you like most?" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -404,7 +404,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Subheading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Tap to select what stood out" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Tap to select what stood out" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -419,7 +419,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                                 <FormControl>
                                                     <Textarea
                                                         placeholder="Professional, Friendly, Fast Service, Great Value"
-                                                        className="min-h-[80px] bg-slate-50/50 focus:bg-white transition-colors resize-none"
+                                                        className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -436,8 +436,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Google Screen Tab */}
                             <TabsContent value="google" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Public Review Request</h4>
-                                    <p className="text-sm text-slate-500">Screen encouraging users to post their review on your chosen platform.</p>
+                                    <h4 className="font-semibold text-foreground">Public Review Request</h4>
+                                    <p className="text-sm text-muted-foreground">Screen encouraging users to post their review on your chosen platform.</p>
                                 </div>
                                 <div className="space-y-4">
                                     <FormField
@@ -447,7 +447,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Would you post this on Google?" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Would you post this on Google?" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -460,7 +460,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Subheading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Tap to edit, or post as-is" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Tap to edit, or post as-is" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -473,7 +473,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Button Text</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Copy & Go to Google" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Copy & Go to Google" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -486,7 +486,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Custom Review Site Link</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="https://g.page/r/..." {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="https://g.page/r/..." {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormDescription>
                                                     Optional: Override the default Review Site link.
@@ -501,8 +501,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Feedback Screen Tab */}
                             <TabsContent value="feedback" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Negative Feedback</h4>
-                                    <p className="text-sm text-slate-500">Private feedback form shown for lower ratings (1-3 stars).</p>
+                                    <h4 className="font-semibold text-foreground">Negative Feedback</h4>
+                                    <p className="text-sm text-muted-foreground">Private feedback form shown for lower ratings (1-3 stars).</p>
                                 </div>
                                 <div className="space-y-4">
                                     <FormField
@@ -512,7 +512,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Apology / Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Sorry about that" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Sorry about that" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -525,7 +525,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Subheading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Share your feedback directly with the owner." {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Share your feedback directly with the owner." {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -538,7 +538,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Textarea Placeholder</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Tell us what happened..." {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Tell us what happened..." {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -551,7 +551,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Button Text</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Send Feedback" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Send Feedback" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -563,8 +563,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Success Screen Tab */}
                             <TabsContent value="success" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Success / Thank You</h4>
-                                    <p className="text-sm text-slate-500">Final screen shown after completion.</p>
+                                    <h4 className="font-semibold text-foreground">Success / Thank You</h4>
+                                    <p className="text-sm text-muted-foreground">Final screen shown after completion.</p>
                                 </div>
                                 <div className="space-y-4">
                                     <FormField
@@ -574,7 +574,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Thank You!" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Thank You!" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -589,7 +589,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                                 <FormControl>
                                                     <Textarea
                                                         placeholder="Your feedback means the world to us."
-                                                        className="min-h-[80px] bg-slate-50/50 focus:bg-white transition-colors resize-none"
+                                                        className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -603,8 +603,8 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                             {/* Branding Screen Tab */}
                             <TabsContent value="branding" className="space-y-5 mt-0">
                                 <div className="space-y-1">
-                                    <h4 className="font-semibold text-slate-900">Footer & Branding</h4>
-                                    <p className="text-sm text-slate-500">Customize the footer appearance.</p>
+                                    <h4 className="font-semibold text-foreground">Footer & Branding</h4>
+                                    <p className="text-sm text-muted-foreground">Customize the footer appearance.</p>
                                 </div>
                                 <div className="space-y-5">
                                     <FormField
@@ -614,7 +614,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Company Name</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Zyene" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="Zyene" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormDescription>
                                                     Appears after &quot;Powered by...&quot;.
@@ -630,7 +630,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                             <FormItem>
                                                 <FormLabel>Link URL</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="https://zyene.com" {...field} className="bg-slate-50/50 focus:bg-white transition-colors" />
+                                                    <Input placeholder="https://zyene.com" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormDescription>
                                                     Where should the footer link to?
@@ -642,21 +642,21 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
 
                                     {/* Footer Logo Section */}
                                     <div className="space-y-3">
-                                        <FormLabel className="text-sm font-medium text-slate-700">Footer Logo (Small)</FormLabel>
+                                        <FormLabel className="text-sm font-medium text-foreground">Footer Logo (Small)</FormLabel>
                                         <div className="flex items-center gap-4">
-                                            <div className="relative h-12 w-12 rounded-lg border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
+                                            <div className="relative h-12 w-12 rounded-lg border border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0">
                                                 {uploadingFooterLogo ? (
-                                                    <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                                                 ) : form.watch("footer_logo_url") ? (
                                                     // eslint-disable-next-line @next/next/no-img-element
                                                     <img src={form.watch("footer_logo_url")!} alt="Footer Logo" className="object-contain h-full w-full p-1" />
                                                 ) : (
-                                                    <Upload className="h-4 w-4 text-slate-300" />
+                                                    <Upload className="h-4 w-4 text-muted-foreground/40" />
                                                 )}
                                             </div>
                                             <div className="flex gap-2">
                                                 <div className="relative">
-                                                    <Button variant="outline" size="sm" type="button" className="relative h-9 px-3 border-slate-200 bg-white" disabled={uploadingFooterLogo}>
+                                                    <Button variant="outline" size="sm" type="button" className="relative h-9 px-3 border-border bg-card" disabled={uploadingFooterLogo}>
                                                         <Upload className="mr-2 h-3.5 w-3.5" />
                                                         Upload
                                                         <input
@@ -673,7 +673,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                                         variant="ghost"
                                                         size="sm"
                                                         type="button"
-                                                        className="h-9 px-3 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                                                        className="h-9 px-3 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
                                                         onClick={removeFooterLogo}
                                                         disabled={uploadingFooterLogo}
                                                     >
@@ -682,7 +682,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                                 )}
                                             </div>
                                         </div>
-                                        <p className="text-xs text-slate-500">
+                                        <p className="text-xs text-muted-foreground">
                                             Shows between &quot;Powered by&quot; and Company Name. Best size: 64x64px.
                                         </p>
                                     </div>
@@ -692,7 +692,7 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                                         control={form.control}
                                         name="hide_branding"
                                         render={({ field }) => (
-                                            <FormItem className="flex flex-row items-center justify-between rounded-lg border border-slate-200 p-4 bg-slate-50/50">
+                                            <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4 bg-muted/30">
                                                 <div className="space-y-0.5">
                                                     <FormLabel className="text-sm font-medium">Hide Branding</FormLabel>
                                                     <FormDescription className="text-xs">
@@ -713,11 +713,11 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         </div>
 
                         {/* ── Save Button ── */}
-                        <div className="border-t bg-slate-50/60 px-6 py-4 flex justify-end">
+                        <div className="border-t bg-muted/30 px-6 py-4 flex justify-end">
                             <Button
                                 type="submit"
                                 disabled={isSaving}
-                                className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 h-10 shadow-sm transition-all active:scale-[0.98]"
+                                className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 shadow-sm transition-all active:scale-[0.98]"
                             >
                                 {isSaving ? (
                                     <>

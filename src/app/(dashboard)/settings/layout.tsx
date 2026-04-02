@@ -85,7 +85,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             </nav>
 
             {/* Settings Content */}
-            <div className="flex-1 min-w-0 max-w-4xl">{children}</div>
+            <div className="flex-1 min-w-0">{children}</div>
         </div>
     );
 }

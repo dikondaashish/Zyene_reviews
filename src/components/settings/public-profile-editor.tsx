@@ -70,7 +70,6 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     // Share & QR state
     const [copied, setCopied] = useState(false);
     const [qrDialogOpen, setQrDialogOpen] = useState(false);
-    // ... rest of state matches existing ... 
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
 
@@ -173,9 +172,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     };
 
     return (
-        <div className="flex flex-col xl:flex-row gap-12 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-8 items-start">
             {/* Left Column: Forms */}
-            <div className="flex-1 space-y-8 w-full min-w-0">
+            <div className="space-y-8 w-full min-w-0 order-2 xl:order-1">
                 <SlugEditor
                     businessId={business.id}
                     initialSlug={initialSlug}
@@ -194,16 +193,16 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 />
             </div>
 
-            {/* Right Column: Preview (Simplified Model) */}
-            <div className="hidden xl:flex flex-col gap-6 w-[380px] flex-shrink-0 sticky top-6">
+            {/* Right Column: Preview (Sticky on xl+) */}
+            <div className="hidden xl:flex flex-col gap-5 sticky top-6 order-1 xl:order-2">
                 <div>
-                    <div className="flex items-center gap-2 mb-3 justify-start px-2">
+                    <div className="flex items-center gap-2 mb-3 justify-start px-1">
                         <span className="text-xs font-semibold text-muted-foreground/80 tracking-widest uppercase">PREVIEW</span>
                         <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/50" />
                     </div>
 
                     {/* Preview Container */}
-                    <div className="mx-auto h-[740px] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-900 ring-1 ring-white/10">
+                    <div className="mx-auto h-[700px] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-900 ring-1 ring-white/10">
                         {/* Status Bar Area (Mock) */}
                         <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
 
@@ -244,14 +243,14 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 </div>
 
                 {/* Shareable Link Section */}
-                <div className="bg-white dark:bg-slate-950 rounded-xl shadow-sm border p-4 flex items-center gap-3">
+                <div className="bg-card rounded-xl shadow-sm border p-4 flex items-center gap-3">
                     <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
-                        <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="h-10 w-10 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex items-center justify-center flex-shrink-0">
                             <LinkIcon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0 flex flex-col">
                             <div className="flex items-center gap-1.5">
-                                <span className="font-semibold text-sm truncate">Shareable Link</span>
+                                <span className="font-semibold text-sm truncate text-foreground">Shareable Link</span>
                                 <HelpCircle className="h-3 w-3 text-muted-foreground" />
                             </div>
                             <p className="text-xs text-muted-foreground truncate font-mono">
@@ -265,7 +264,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             "shrink-0 font-semibold px-5 transition-all",
                             copied
                                 ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
+                                : "bg-orange-500 hover:bg-orange-600 text-white"
                         )}
                         onClick={handleShare}
                     >
@@ -277,10 +276,10 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     </Button>
                     <button
                         onClick={() => setQrDialogOpen(true)}
-                        className="h-10 w-10 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center shrink-0 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm"
+                        className="h-10 w-10 rounded-lg border border-border bg-card flex items-center justify-center shrink-0 hover:bg-muted transition-colors shadow-sm"
                         aria-label="Show QR Code"
                     >
-                        <QrCode className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                        <QrCode className="h-5 w-5 text-muted-foreground" />
                     </button>
                 </div>
 
@@ -300,7 +299,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             <div className="bg-white p-4 rounded-xl border shadow-sm">
                                 {qrLoading ? (
                                     <div className="h-[200px] w-[200px] flex items-center justify-center">
-                                        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+                                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                                     </div>
                                 ) : qrDataUrl ? (
                                     // eslint-disable-next-line @next/next/no-img-element
@@ -333,16 +332,6 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         </div>
                     </DialogContent>
                 </Dialog>
-
-                {/* Footer */}
-                <div className="text-center px-4">
-                    <p className="text-xs text-muted-foreground items-center justify-center flex gap-1">
-                        Want to customize more?
-                    </p>
-                    <a href="#" className="text-xs text-blue-600 hover:underline font-medium mt-1 block">
-                        Contact sales
-                    </a>
-                </div>
             </div>
         </div>
     );

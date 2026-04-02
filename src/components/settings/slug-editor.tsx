@@ -138,9 +138,9 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
     };
 
     return (
-        <div className="rounded-xl border bg-white p-6 shadow-sm space-y-6">
+        <div className="rounded-xl border bg-card p-6 shadow-sm space-y-6">
             <div>
-                <h3 className="text-xl font-semibold text-slate-900">Public Link</h3>
+                <h3 className="text-xl font-semibold text-foreground">Public Link</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                     Customize your unique review page link.
                 </p>
@@ -156,13 +156,13 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                 <FormLabel>Your Link</FormLabel>
                                 <div className="flex items-center gap-2">
                                     <div className="flex-1 relative">
-                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground text-sm">
                                             zyenereviews.com/
                                         </div>
                                         <Input
                                             placeholder="your-business-name"
                                             {...field}
-                                            className="pl-20 pr-10" // Space for prefix and status icon
+                                            className="pl-[9.5rem] pr-10 bg-muted/30 focus:bg-background transition-colors"
                                             onChange={(e) => field.onChange(sanitizeSlug(e.target.value))}
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -174,7 +174,7 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                     <Button
                                         type="submit"
                                         disabled={!form.formState.isValid || isChecking || isAvailable === false || watchedSlug === initialSlug || isSaving}
-                                        className="bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-sm"
+                                        className="bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-sm"
                                     >
                                         Save
                                     </Button>

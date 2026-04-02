@@ -151,11 +151,11 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     };
 
     return (
-        <div className="rounded-xl border bg-white p-6 shadow-sm space-y-8">
+        <div className="rounded-xl border bg-card p-6 shadow-sm space-y-8">
             <Form {...form}>
                 <div className="space-y-1">
-                    <h3 className="text-xl font-semibold text-slate-900">Brand Identity</h3>
-                    <p className="text-sm text-slate-500">
+                    <h3 className="text-xl font-semibold text-foreground">Brand Identity</h3>
+                    <p className="text-sm text-muted-foreground">
                         Customize your review page to match your brand's look and feel.
                     </p>
                 </div>
@@ -163,18 +163,18 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                 <div className="grid grid-cols-1 gap-8">
                     {/* Logo Section */}
                     <div className="space-y-4">
-                        <FormLabel className="text-base font-medium text-slate-900">Logo</FormLabel>
+                        <FormLabel className="text-base font-medium text-foreground">Logo</FormLabel>
                         <div className="flex flex-col sm:flex-row gap-6 items-start">
-                            <div className="relative h-28 w-28 rounded-2xl border-2 border-slate-100 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                            <div className="relative h-28 w-28 rounded-2xl border-2 border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
                                 {uploadingLogo ? (
-                                    <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+                                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                                 ) : logoUrl ? (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={logoUrl} alt="Business Logo" className="object-cover h-full w-full" />
                                 ) : (
                                     <div className="text-center p-2">
-                                        <Upload className="h-6 w-6 text-slate-300 mx-auto mb-1" />
-                                        <span className="text-xs text-slate-400 font-medium">No Logo</span>
+                                        <Upload className="h-6 w-6 text-muted-foreground/40 mx-auto mb-1" />
+                                        <span className="text-xs text-muted-foreground font-medium">No Logo</span>
                                     </div>
                                 )}
                             </div>
@@ -182,7 +182,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                             <div className="flex-1 space-y-3 pt-1">
                                 <div className="flex flex-wrap gap-3">
                                     <div className="relative">
-                                        <Button variant="outline" size="sm" type="button" className="relative h-9 px-4 border-slate-200 hover:bg-slate-50 hover:text-slate-900 font-medium bg-white shadow-sm" disabled={uploadingLogo}>
+                                        <Button variant="outline" size="sm" type="button" className="relative h-9 px-4 border-border hover:bg-muted font-medium bg-card shadow-sm" disabled={uploadingLogo}>
                                             <Upload className="mr-2 h-3.5 w-3.5" />
                                             Upload Logo
                                             <input
@@ -199,7 +199,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                             variant="ghost"
                                             size="sm"
                                             type="button"
-                                            className="h-9 px-3 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                                            className="h-9 px-3 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
                                             onClick={removeLogo}
                                             disabled={uploadingLogo}
                                         >
@@ -208,7 +208,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                         </Button>
                                     )}
                                 </div>
-                                <p className="text-xs text-slate-500 leading-relaxed">
+                                <p className="text-xs text-muted-foreground leading-relaxed">
                                     Upload your business logo. Recommended size: 512x512px.<br />
                                     Supported formats: PNG, JPG, WebP. Max 2MB.
                                 </p>
@@ -217,17 +217,17 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                     </div>
 
                     {/* Color Section */}
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                    <div className="space-y-4 pt-4 border-t border-border">
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="brand_color"
                                 render={({ field }) => (
                                     <FormItem className="space-y-3">
-                                        <FormLabel className="text-base font-medium text-slate-900">Brand Color</FormLabel>
+                                        <FormLabel className="text-base font-medium text-foreground">Brand Color</FormLabel>
                                         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                             <div className="flex gap-3 items-center w-full sm:w-auto">
-                                                <div className="relative h-11 w-11 rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-blue-500">
+                                                <div className="relative h-11 w-11 rounded-xl border border-border shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-orange-500">
                                                     <div
                                                         className="absolute inset-0"
                                                         style={{ backgroundColor: field.value }}
@@ -242,11 +242,11 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                                     <Input
                                                         {...field}
                                                         placeholder="#0f172a"
-                                                        className="font-mono h-11 border-slate-200 bg-slate-50 focus:bg-white transition-all"
+                                                        className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
                                                     />
                                                 </div>
                                             </div>
-                                            <p className="text-xs text-slate-500 flex-1">
+                                            <p className="text-xs text-muted-foreground flex-1">
                                                 This color will be used for buttons, links, and accents throughout your public review page.
                                             </p>
                                         </div>
@@ -259,7 +259,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95"
+                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95"
                                 >
                                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Save Brand Settings
