@@ -38,7 +38,7 @@ export default function AboutPage() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                            <div className="h-12 w-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center shrink-0">
                                 <Users className="h-6 w-6" />
                             </div>
                             <div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0">
+                            <div className="h-12 w-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center shrink-0">
                                 <Mail className="h-6 w-6" />
                             </div>
                             <div>

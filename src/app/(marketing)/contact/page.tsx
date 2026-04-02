@@ -36,7 +36,7 @@ export default function ContactPage() {
 
                         <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                                <div className="h-10 w-10 bg-orange-50 text-orange-600 rounded-lg flex items-center justify-center">
                                     <Clock className="h-5 w-5" />
                                 </div>
                                 <h3 className="font-semibold text-slate-900">Business Hours</h3>
@@ -69,7 +69,7 @@ export default function ContactPage() {
 
                         <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+                                <div className="h-10 w-10 bg-orange-50 text-orange-600 rounded-lg flex items-center justify-center">
                                     <HelpCircle className="h-5 w-5" />
                                 </div>
                                 <h3 className="font-semibold text-slate-900">Help Center</h3>

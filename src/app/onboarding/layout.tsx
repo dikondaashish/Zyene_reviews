@@ -31,11 +31,11 @@ export default async function OnboardingLayout({
     return (
         <div className="min-h-screen bg-[#f5f5f4] flex flex-col relative overflow-hidden">
             {/* Ambient gradient blobs */}
-            <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-violet-200/20 blur-[120px]" />
+            <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-orange-200/20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-orange-200/15 blur-[100px]" />
 
             {/* Header with logo */}
-            <header className="relative z-10 border-b border-violet-100/60 bg-white/50 backdrop-blur-xl">
+            <header className="relative z-10 border-b border-orange-100/60 bg-white/50 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
                         {/* Brand logo mark */}

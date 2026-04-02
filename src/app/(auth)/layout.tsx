@@ -18,7 +18,7 @@ export default function AuthLayout({
 
                 {/* Gradient orbs */}
                 <div className="absolute top-1/4 -left-20 w-80 h-80 bg-orange-500/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-1/4 right-0 w-60 h-60 bg-blue-500/15 rounded-full blur-[80px]" />
+                <div className="absolute bottom-1/4 right-0 w-60 h-60 bg-orange-500/15 rounded-full blur-[80px]" />
 
                 {/* Logo */}
                 <div className="relative z-10">
@@ -56,8 +56,8 @@ export default function AuthLayout({
                             </div>
                         </div>
                         <div className="flex items-center gap-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl px-5 py-4 max-w-md">
-                            <div className="h-10 w-10 bg-blue-500/15 rounded-xl flex items-center justify-center shrink-0">
-                                <BarChart3 className="h-5 w-5 text-blue-400" />
+                            <div className="h-10 w-10 bg-orange-500/15 rounded-xl flex items-center justify-center shrink-0">
+                                <BarChart3 className="h-5 w-5 text-orange-400" />
                             </div>
                             <div>
                                 <p className="text-white font-medium text-sm">Real-Time Dashboard</p>

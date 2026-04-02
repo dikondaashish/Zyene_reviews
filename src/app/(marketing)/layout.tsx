@@ -26,17 +26,17 @@ export default function MarketingLayout({
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
-                        <Link href="#features" className="hover:text-blue-600 transition-colors">
+                        <Link href="#features" className="hover:text-orange-600 transition-colors">
                             Features
                         </Link>
-                        <Link href="#pricing" className="hover:text-blue-600 transition-colors">
+                        <Link href="#pricing" className="hover:text-orange-600 transition-colors">
                             Pricing
                         </Link>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-blue-600 transition-colors">
+                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-orange-600 transition-colors">
                             Log In
                         </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="bg-orange-600 hover:bg-orange-700 text-white rounded-full px-6">
+                            <Button className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-full px-6">
                                 Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
@@ -82,7 +82,7 @@ export default function MarketingLayout({
                             Log In
                         </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white rounded-full">
+                            <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white rounded-full">
                                 Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
@@ -113,26 +113,26 @@ export default function MarketingLayout({
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Product</h3>
                             <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/#features" className="hover:text-blue-600">Features</Link></li>
-                                <li><Link href="/#pricing" className="hover:text-blue-600">Pricing</Link></li>
-                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-blue-600">Log In</Link></li>
+                                <li><Link href="/#features" className="hover:text-orange-600">Features</Link></li>
+                                <li><Link href="/#pricing" className="hover:text-orange-600">Pricing</Link></li>
+                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-orange-600">Log In</Link></li>
                             </ul>
                         </div>
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
                             <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/about" className="hover:text-blue-600">About Us</Link></li>
-                                <li><Link href="/contact" className="hover:text-blue-600">Contact</Link></li>
-                                <li><Link href="/help" className="hover:text-blue-600">Help Center</Link></li>
-                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600">System Status</a></li>
+                                <li><Link href="/about" className="hover:text-orange-600">About Us</Link></li>
+                                <li><Link href="/contact" className="hover:text-orange-600">Contact</Link></li>
+                                <li><Link href="/help" className="hover:text-orange-600">Help Center</Link></li>
+                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-600">System Status</a></li>
                             </ul>
                         </div>
                         <div>
                             <h3 className="font-semibold text-slate-900 mb-3">Legal</h3>
                             <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/privacy" className="hover:text-blue-600">Privacy Policy</Link></li>
-                                <li><Link href="/terms" className="hover:text-blue-600">Terms of Service</Link></li>
-                                <li><Link href="/data-retention" className="hover:text-blue-600">Data Retention</Link></li>
+                                <li><Link href="/privacy" className="hover:text-orange-600">Privacy Policy</Link></li>
+                                <li><Link href="/terms" className="hover:text-orange-600">Terms of Service</Link></li>
+                                <li><Link href="/data-retention" className="hover:text-orange-600">Data Retention</Link></li>
                             </ul>
                         </div>
                     </div>

@@ -19,7 +19,7 @@ export default function DataRetentionPage() {
 
                 <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-200">
                     <div className="mb-10 text-center">
-                        <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <Database className="w-8 h-8" />
                         </div>
                         <h1 className="text-4xl font-bold tracking-tight mb-4 text-slate-900">Data Retention Policy</h1>
@@ -33,12 +33,12 @@ export default function DataRetentionPage() {
 
                         <div className="grid sm:grid-cols-2 gap-6 my-10 not-prose">
                             <div className="p-6 border rounded-2xl bg-slate-50 border-slate-200">
-                                <Clock className="w-8 h-8 text-blue-600 mb-4" />
+                                <Clock className="w-8 h-8 text-orange-600 mb-4" />
                                 <h3 className="text-lg font-bold mb-2 text-slate-900">Aggressive Retention Limits</h3>
                                 <p className="text-sm text-slate-600">We do not store review data indefinitely. Cached reviews are purged after 2 years unless actively synced.</p>
                             </div>
                             <div className="p-6 border rounded-2xl bg-slate-50 border-slate-200">
-                                <Shield className="w-8 h-8 text-blue-600 mb-4" />
+                                <Shield className="w-8 h-8 text-orange-600 mb-4" />
                                 <h3 className="text-lg font-bold mb-2 text-slate-900">Anonymization</h3>
                                 <p className="text-sm text-slate-600">Customer PII (email, phone) attached to review requests are anonymized 90 days after the campaign completes.</p>
                             </div>
@@ -87,10 +87,10 @@ export default function DataRetentionPage() {
                             You have the right to request the deletion of all your organizational data at any time. When you exercise this right, we will securely erase your account, campaigns, and synced reviews from our active databases within 30 days. Backups are rotated and purged automatically within 60 days.
                         </p>
 
-                        <div className="mt-12 p-6 bg-blue-50 text-blue-900 rounded-2xl border border-blue-100 text-center not-prose">
+                        <div className="mt-12 p-6 bg-orange-50 text-orange-900 rounded-2xl border border-orange-100 text-center not-prose">
                             <h3 className="font-semibold mb-2">Have a question about your data?</h3>
                             <p className="text-sm opacity-90 mb-4">Contact our Data Protection Officer for inquiries.</p>
-                            <a href="mailto:privacy@zyenereviews.com" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Email Privacy Team</a>
+                            <a href="mailto:privacy@zyenereviews.com" className="inline-block bg-[#f97316] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#ea580c] transition">Email Privacy Team</a>
                         </div>
                     </div>
                 </div>

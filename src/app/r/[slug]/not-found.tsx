@@ -17,7 +17,7 @@ export default function NotFound() {
                     <p>If you are the owner, please check your business slug in the dashboard.</p>
                 </div>
                 <div className="mt-6">
-                    <Link href="/" className="text-blue-600 hover:underline font-medium">
+                    <Link href="/" className="text-orange-600 hover:text-orange-700 hover:underline font-medium">
                         Go to Home
                     </Link>
                 </div>
