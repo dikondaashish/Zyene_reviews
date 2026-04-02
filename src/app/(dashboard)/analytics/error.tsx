@@ -16,7 +16,7 @@ export default function AnalyticsError({
     }, [error]);
 
     return (
-        <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center animate-in fade-in duration-500 bg-white m-6">
+        <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center animate-in fade-in duration-500 bg-card m-6">
             <div className="rounded-full bg-red-100 p-3">
                 <AlertCircle className="h-8 w-8 text-red-600" />
             </div>

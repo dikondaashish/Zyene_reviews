@@ -21,7 +21,7 @@ import {
     Target,
     Send,
     Calendar,
-    Sparkles,
+
     Trophy,
     Eye,
     Phone,
@@ -78,10 +78,10 @@ function Stars({ rating }: { rating: number }) {
 function SentimentBadge({ sentiment }: { sentiment: string | null }) {
     if (!sentiment) return null;
     const colors: Record<string, string> = {
-        positive: "bg-green-100 text-green-700",
-        negative: "bg-red-100 text-red-700",
-        neutral: "bg-gray-100 text-gray-700",
-        mixed: "bg-yellow-100 text-yellow-700",
+        positive: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+        negative: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+        neutral: "bg-muted text-muted-foreground",
+        mixed: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
     };
     return (
         <span
@@ -585,8 +585,8 @@ export default async function DashboardPage() {
                             {dict.dashboard.title}
                         </h1>
                         {useDemoData && (
-                            <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5">
-                                <Sparkles className="w-3 h-3" />
+                            <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5">
+                                <Eye className="w-3 h-3" />
                                 {dict.dashboard.demo_badge}
                             </Badge>
                         )}
@@ -838,7 +838,7 @@ export default async function DashboardPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Direction requests</CardTitle>
-                                <Navigation2 className="h-4 w-4 text-violet-500" />
+                                <Navigation2 className="h-4 w-4 text-[#f97316]" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
@@ -927,8 +927,8 @@ export default async function DashboardPage() {
                             </div>
                             {!isPaidPlan && (
                                 <Link href="/settings/billing">
-                                    <Button variant="outline" size="sm" className="h-7 text-xs border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800">
-                                        <Sparkles className="mr-1 h-3 w-3" />
+                                    <Button variant="outline" size="sm" className="h-7 text-xs border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800 dark:bg-orange-950/30 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-900/40">
+                                        <ArrowRight className="mr-1 h-3 w-3" />
                                         {dict.dashboard.upgrade_prompt || "Upgrade"}
                                     </Button>
                                 </Link>
@@ -1004,7 +1004,7 @@ export default async function DashboardPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Sparkles className="h-4 w-4 text-primary" />
+                                    <Star className="h-4 w-4 text-[#f97316]" />
                                     Review Spotlight
                                 </CardTitle>
                                 <CardDescription>
@@ -1104,7 +1104,7 @@ export default async function DashboardPage() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-10 text-center space-y-2">
-                                <div className="rounded-full bg-green-50 p-3">
+                                <div className="rounded-full bg-green-500/10 p-3">
                                     <CheckCircle className="h-6 w-6 text-green-500" />
                                 </div>
                                 <p className="font-medium text-sm">

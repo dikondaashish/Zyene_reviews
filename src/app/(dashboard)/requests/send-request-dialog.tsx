@@ -213,7 +213,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                         name="channel"
                                         render={({ field }) => (
                                             <div className="flex items-center gap-4">
-                                                <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-pointer transition-all ${field.value === 'sms' ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-input hover:bg-slate-50'}`}>
+                                                <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-pointer transition-all ${field.value === 'sms' ? 'border-orange-500 bg-orange-500/5 ring-1 ring-orange-500' : 'border-input hover:bg-muted/50'}`}>
                                                     <input
                                                         type="radio"
                                                         className="sr-only"
@@ -227,8 +227,8 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-not-allowed opacity-60 bg-slate-50`}>
-                                                                <span className="font-medium text-sm text-slate-500">Email</span>
+                                                            <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-not-allowed opacity-60 bg-muted/50`}>
+                                                                <span className="font-medium text-sm text-muted-foreground">Email</span>
                                                             </label>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
@@ -290,7 +290,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                         {linkCopied ? (
                                             <Check className="h-4 w-4 text-green-500" />
                                         ) : (
-                                            <Copy className="h-4 w-4 text-slate-500" />
+                                            <Copy className="h-4 w-4 text-muted-foreground" />
                                         )}
                                     </button>
                                 </div>
@@ -305,8 +305,8 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                             className="h-[160px] w-[160px] rounded-lg"
                                         />
                                     ) : (
-                                        <div className="h-[160px] w-[160px] flex items-center justify-center bg-slate-50 rounded-lg border border-dashed">
-                                            <QrCode className="h-8 w-8 text-slate-300" />
+                                        <div className="h-[160px] w-[160px] flex items-center justify-center bg-muted/30 rounded-lg border border-dashed">
+                                            <QrCode className="h-8 w-8 text-muted-foreground/40" />
                                         </div>
                                     )}
                                 </div>

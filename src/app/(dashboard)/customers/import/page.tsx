@@ -161,9 +161,9 @@ export default function ImportCustomersPage() {
                             className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-12 text-center hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer"
                             onClick={() => fileInputRef.current?.click()}
                         >
-                            <UploadCloud className="mx-auto h-12 w-12 text-slate-400 mb-4" />
-                            <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">Click to upload CSV</h3>
-                            <p className="text-sm text-slate-500 mt-2">or drag and drop your file here</p>
+                            <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                            <h3 className="text-lg font-medium text-foreground">Click to upload CSV</h3>
+                            <p className="text-sm text-muted-foreground mt-2">or drag and drop your file here</p>
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -185,7 +185,7 @@ export default function ImportCustomersPage() {
                                 Match your CSV columns to the customer fields in Zyene Reviews.
                             </CardDescription>
                         </div>
-                        <div className="flex items-center gap-2 text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full font-medium border border-blue-200">
+                        <div className="flex items-center gap-2 text-sm bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 px-3 py-1.5 rounded-full font-medium border border-orange-200 dark:border-orange-900/30">
                             <FileText className="h-4 w-4" />
                             {csvData.length} total rows
                         </div>
@@ -199,21 +199,21 @@ export default function ImportCustomersPage() {
                         <div className="space-y-4 border rounded-lg p-4 bg-slate-50/50">
                             {REQUIRED_FIELDS.map((field) => (
                                 <div key={field} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                    <div className="font-medium text-slate-700">
+                                    <div className="font-medium text-foreground">
                                         {FIELD_LABELS[field]}
                                         {(field === "email" || field === "phone") && (
-                                            <span className="text-xs text-slate-400 ml-2 font-normal">(Required one)</span>
+                                            <span className="text-xs text-muted-foreground ml-2 font-normal">(Required one)</span>
                                         )}
                                     </div>
                                     <Select
                                         value={mapping[field]}
                                         onValueChange={(val) => setMapping(prev => ({ ...prev, [field]: val === "skip" ? "" : val }))}
                                     >
-                                        <SelectTrigger className="bg-white">
+                                        <SelectTrigger className="bg-card">
                                             <SelectValue placeholder="Skip this field" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="skip" className="text-slate-400 italic">Skip this field</SelectItem>
+                                            <SelectItem value="skip" className="text-muted-foreground italic">Skip this field</SelectItem>
                                             {csvHeaders.map(header => (
                                                 <SelectItem key={header} value={header}>{header}</SelectItem>
                                             ))}
@@ -224,14 +224,14 @@ export default function ImportCustomersPage() {
                         </div>
 
                         <div className="bg-slate-50 border rounded-lg p-4 space-y-2">
-                            <h4 className="text-sm font-semibold text-slate-700">Data Preview (First row)</h4>
+                            <h4 className="text-sm font-semibold text-foreground">Data Preview (First row)</h4>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mt-3">
                                 {REQUIRED_FIELDS.map(field => {
                                     const mappedHeader = mapping[field];
                                     const sampleValue = mappedHeader && csvData[0] ? csvData[0][mappedHeader] : "---";
                                     return (
-                                        <div key={field} className="bg-white p-2.5 rounded border border-slate-200 shadow-sm">
-                                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-1">{FIELD_LABELS[field]}</p>
+                                        <div key={field} className="bg-card p-2.5 rounded border shadow-sm">
+                                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">{FIELD_LABELS[field]}</p>
                                             <p className="font-medium truncate" title={sampleValue}>{sampleValue}</p>
                                         </div>
                                     );
@@ -254,7 +254,7 @@ export default function ImportCustomersPage() {
             {step === "importing" && (
                 <Card>
                     <CardContent className="py-12 flex flex-col items-center justify-center">
-                        <Loader2 className="h-12 w-12 text-blue-600 animate-spin mb-4" />
+                        <Loader2 className="h-12 w-12 text-orange-500 animate-spin mb-4" />
                         <h3 className="text-xl font-semibold">Importing Customers...</h3>
                         <p className="text-muted-foreground mt-2">Please wait while we process your file. This may take a minute.</p>
                     </CardContent>
@@ -267,17 +267,17 @@ export default function ImportCustomersPage() {
                         <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                             <CheckCircle2 className="h-8 w-8 text-green-600" />
                         </div>
-                        <h3 className="text-2xl font-bold text-slate-900">Import Complete!</h3>
+                        <h3 className="text-2xl font-bold text-foreground">Import Complete!</h3>
 
-                        <div className="flex items-center justify-center gap-6 mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100 w-full max-w-sm">
+                        <div className="flex items-center justify-center gap-6 mt-6 p-4 bg-muted/50 rounded-xl border w-full max-w-sm">
                             <div className="text-center">
-                                <p className="text-3xl font-bold text-slate-900">{importResults.success}</p>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Imported</p>
+                                <p className="text-3xl font-bold text-foreground">{importResults.success}</p>
+                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Imported</p>
                             </div>
-                            <div className="w-px h-10 bg-slate-200"></div>
+                            <div className="w-px h-10 bg-border"></div>
                             <div className="text-center">
-                                <p className="text-3xl font-bold text-slate-900">{importResults.failed}</p>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Failed/Skipped</p>
+                                <p className="text-3xl font-bold text-foreground">{importResults.failed}</p>
+                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Failed/Skipped</p>
                             </div>
                         </div>
 

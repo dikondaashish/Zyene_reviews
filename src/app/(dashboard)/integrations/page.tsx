@@ -53,8 +53,8 @@ function SectionHeader({
     return (
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                    <Icon className="h-4 w-4 text-primary" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10">
+                    <Icon className="h-4 w-4 text-[#f97316]" />
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold tracking-tight">
@@ -171,7 +171,7 @@ export default async function IntegrationsPage() {
                 {connectedCount > 0 && (
                     <div className="flex items-center gap-3 flex-wrap">
                         <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
-                            <Puzzle className="h-4 w-4 text-primary" />
+                            <Puzzle className="h-4 w-4 text-[#f97316]" />
                             <span className="text-sm font-medium">
                                 {`${connectedCount} platform${connectedCount !== 1 ? "s" : ""} connected`}
                             </span>

@@ -4,12 +4,11 @@ import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card"
 import { ReviewsFilters } from "@/components/reviews/reviews-filters";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MessageSquare, Lock, Download } from "lucide-react";
+import { MessageSquare, Lock, Download, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles } from "lucide-react";
 import { ReviewManagement } from "@/components/reviews/review-management";
 
 export default async function ReviewsPage(props: {
@@ -136,12 +135,12 @@ export default async function ReviewsPage(props: {
                     <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
                         Reviews
                         <div className="flex items-center gap-2">
-                            <span className="text-sm font-normal text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
+                            <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                                 {count || 0}
                             </span>
                             {isDemo && (
-                                <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
-                                    <Sparkles className="w-3 h-3" />
+                                <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
+                                    <Eye className="w-3 h-3" />
                                     Interactive Demo
                                 </Badge>
                             )}
@@ -162,14 +161,14 @@ export default async function ReviewsPage(props: {
 
             {/* Tab Switcher */}
             <div className="flex items-center">
-                <div className="bg-slate-100 p-1 rounded-lg inline-flex">
+                <div className="bg-muted p-1 rounded-lg inline-flex">
                     <Link href="/reviews?type=public">
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${type === 'public' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === 'public' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                             Public Reviews ({publicCount || 0})
                         </div>
                     </Link>
                     <Link href="/reviews?type=private">
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${type === 'private' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${type === 'private' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                             Private Feedback ({privateCount || 0})
                             <Lock className="w-3 h-3" />
                         </div>
@@ -184,11 +183,11 @@ export default async function ReviewsPage(props: {
                     {reviews && reviews.length > 0 ? (
                         <ReviewManagement reviews={reviews} businessId={businessId} />
                     ) : (
-                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
-                            <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                <MessageSquare className="h-6 w-6 text-gray-400" />
+                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
+                            <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mb-4">
+                                <MessageSquare className="h-6 w-6 text-muted-foreground" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900">
+                            <h3 className="text-lg font-medium text-foreground">
                                 {publicCount === 0 ? "No reviews synced yet" : "No reviews found"}
                             </h3>
                             <p className="text-muted-foreground max-w-sm mt-1 mb-6">
@@ -208,11 +207,11 @@ export default async function ReviewsPage(props: {
                             <PrivateFeedbackCard key={feedback.id} feedback={feedback} />
                         ))
                     ) : (
-                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
-                            <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
-                                <Lock className="h-6 w-6 text-red-200" />
+                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
+                            <div className="h-12 w-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+                                <Lock className="h-6 w-6 text-destructive/40" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900">No private feedback yet</h3>
+                            <h3 className="text-lg font-medium text-foreground">No private feedback yet</h3>
                             <p className="text-muted-foreground max-w-sm mt-1">
                                 Negative feedback (1-3 stars) from your review flow will appear here privately.
                             </p>

@@ -78,8 +78,8 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
                                         className={cn(
                                             "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap",
                                             isActive || isParentActive
-                                                ? "bg-white text-foreground shadow-sm border border-border/50"
-                                                : "text-muted-foreground hover:text-foreground hover:bg-white/60"
+                                                ? "bg-card text-foreground shadow-sm border border-border/50"
+                                                : "text-muted-foreground hover:text-foreground hover:bg-card/60"
                                         )}
                                     >
                                         <Icon className="h-4 w-4 shrink-0" />
@@ -97,8 +97,8 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
                                                         className={cn(
                                                             "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors whitespace-nowrap border-l-2 ml-2",
                                                             childActive
-                                                                ? "border-blue-600 text-blue-700 bg-blue-50 font-medium"
-                                                                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-white/60"
+                                                                ? "border-orange-500 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 font-medium"
+                                                                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-card/60"
                                                         )}
                                                     >
                                                         <ChildIcon className="h-3.5 w-3.5 shrink-0" />

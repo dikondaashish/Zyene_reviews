@@ -1,6 +1,7 @@
 
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
     Card,
     CardContent,
@@ -128,10 +129,10 @@ export default async function RequestsPage({
         if (reviewLeft) return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-200"><Star className="w-3 h-3 mr-1 fill-yellow-500 text-yellow-500" /> Review Left</Badge>;
 
         switch (status) {
-            case "queued": return <Badge variant="secondary" className="bg-gray-100 text-gray-600">Queued</Badge>;
+            case "queued": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
             case "sent": return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200">Sent</Badge>;
             case "delivered": return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Delivered</Badge>;
-            case "clicked": return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-purple-200">Clicked</Badge>;
+            case "clicked": return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800">Clicked</Badge>;
             case "failed": return <Badge variant="destructive">Failed</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
         }
@@ -163,19 +164,19 @@ export default async function RequestsPage({
 
             {/* STATS */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                <Card>
+                <Card className="border-l-4 border-l-orange-500 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
-                        <Send className="h-4 w-4 text-muted-foreground" />
+                        <Send className="h-4 w-4 text-[#f97316]" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{totalSent}</div>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="border-l-4 border-l-emerald-500 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
-                        <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{deliveryRate.toFixed(1)}%</div>
@@ -184,10 +185,10 @@ export default async function RequestsPage({
                         </p>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="border-l-4 border-l-amber-500 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
-                        <MousePointerClick className="h-4 w-4 text-muted-foreground" />
+                        <MousePointerClick className="h-4 w-4 text-amber-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{clickRate.toFixed(1)}%</div>
@@ -196,10 +197,10 @@ export default async function RequestsPage({
                         </p>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="border-l-4 border-l-yellow-500 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Review Conversion</CardTitle>
-                        <Star className="h-4 w-4 text-muted-foreground" />
+                        <Star className="h-4 w-4 text-yellow-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{conversionRate.toFixed(1)}%</div>
@@ -211,7 +212,7 @@ export default async function RequestsPage({
             </div>
 
             {/* LIST */}
-            <div className="rounded-md border bg-white">
+            <div className="rounded-md border bg-card">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -225,13 +226,13 @@ export default async function RequestsPage({
                     <TableBody>
                         {requests && requests.length > 0 ? (
                             requests.map((req) => (
-                                <TableRow key={req.id}>
+                                <TableRow key={req.id} className="hover:bg-muted/50 transition-colors">
                                     <TableCell className="font-medium">{req.customer_name || "Guest"}</TableCell>
                                     <TableCell>{req.customer_phone}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center">
-                                            {req.channel === 'sms' ? <MessageSquare className="w-3 h-3 mr-2 text-slate-500" /> : <Mail className="w-3 h-3 mr-2 text-slate-500" />}
-                                            <span className="uppercase text-xs font-medium text-slate-500">{req.channel}</span>
+                                            {req.channel === 'sms' ? <MessageSquare className="w-3 h-3 mr-2 text-muted-foreground" /> : <Mail className="w-3 h-3 mr-2 text-muted-foreground" />}
+                                            <span className="uppercase text-xs font-medium text-muted-foreground">{req.channel}</span>
                                         </div>
                                     </TableCell>
                                     <TableCell>
@@ -254,11 +255,12 @@ export default async function RequestsPage({
             </div>
             {/* Simple Pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
-                <Button variant="outline" size="sm" disabled={page <= 1}>
-                    Previous
+                <Button variant="outline" size="sm" disabled={page <= 1} asChild>
+                    {page > 1 ? <Link href={`/requests?page=${page - 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Previous</Link> : <span>Previous</span>}
                 </Button>
-                <Button variant="outline" size="sm" disabled={!requests || requests.length < pageSize}>
-                    Next
+                <span className="text-sm text-muted-foreground">Page {page}</span>
+                <Button variant="outline" size="sm" disabled={!requests || requests.length < pageSize} asChild>
+                    {requests && requests.length >= pageSize ? <Link href={`/requests?page=${page + 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Next</Link> : <span>Next</span>}
                 </Button>
             </div>
         </div>

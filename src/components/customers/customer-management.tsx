@@ -126,12 +126,12 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="p-2 bg-blue-50 rounded-xl">
-                            <Users className="h-5 w-5 text-blue-600" />
+                        <div className="p-2 bg-orange-500/10 rounded-xl">
+                            <Users className="h-5 w-5 text-[#f97316]" />
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Customers</h1>
+                        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Customers</h1>
                     </div>
-                    <p className="text-gray-500 text-lg font-medium">
+                    <p className="text-muted-foreground text-lg font-medium">
                         Manage your customer database and trigger review campaigns.
                     </p>
                 </div>
@@ -140,50 +140,51 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     <Button 
                         variant="outline" 
                         onClick={() => setIsImportModalOpen(true)}
-                        className="rounded-2xl border-gray-200 h-11 px-5 font-semibold text-gray-600 hover:bg-gray-50 transition-all flex items-center gap-2"
+                        className="rounded-2xl border-border h-11 px-5 font-semibold text-muted-foreground hover:bg-muted/50 transition-all flex items-center gap-2 cursor-pointer"
                     >
                         <Upload className="h-4 w-4" />
                         Import CSV
                     </Button>
                     <Button 
                         onClick={() => setIsAddModalOpen(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl h-11 px-6 font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                        className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-2xl h-11 px-6 font-bold shadow-lg shadow-orange-500/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
                     >
                         <UserPlus className="h-4.5 w-4.5" />
                         Add Customer
+                    </Button>
                     </Button>
                 </div>
             </div>
 
             {/* Quick Stats / Overview Banner */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-blue-600" />
+                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-orange-500/10 flex items-center justify-center">
+                        <Users className="h-6 w-6 text-[#f97316]" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Customers</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{customers.length}</h3>
+                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Customers</p>
+                        <h3 className="text-2xl font-bold text-foreground">{customers.length}</h3>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-green-50 flex items-center justify-center">
-                        <RefreshCcw className="h-6 w-6 text-green-600" />
+                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+                        <RefreshCcw className="h-6 w-6 text-emerald-600" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Requests Total</p>
-                        <h3 className="text-2xl font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Requests Total</p>
+                        <h3 className="text-2xl font-bold text-foreground">
                             {customers.reduce((acc, curr) => acc + (curr.total_requests_sent || 0), 0)}
                         </h3>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-purple-50 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-purple-600" />
+                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                        <Users className="h-6 w-6 text-amber-600" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Loyal Customers</p>
-                        <h3 className="text-2xl font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Loyal Customers</p>
+                        <h3 className="text-2xl font-bold text-foreground">
                             {customers.filter(c => (c.visit_count || 0) >= 2).length}
                         </h3>
                     </div>
@@ -200,9 +201,9 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
             {/* Main Table Content */}
             {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border border-gray-50 shadow-sm">
-                    <RefreshCcw className="h-10 w-10 text-blue-500 animate-spin mb-4" />
-                    <p className="text-gray-400 font-medium">Loading your customers...</p>
+                <div className="flex flex-col items-center justify-center h-64 bg-card rounded-3xl border shadow-sm">
+                    <RefreshCcw className="h-10 w-10 text-[#f97316] animate-spin mb-4" />
+                    <p className="text-muted-foreground font-medium">Loading your customers...</p>
                 </div>
             ) : (
                 <CustomerTable 

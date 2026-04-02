@@ -69,7 +69,7 @@ export default function AddBusinessPage() {
             <div>
                 <Link
                     href="/businesses"
-                    className="text-sm text-muted-foreground hover:text-slate-900 flex items-center gap-1"
+                    className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back to Businesses
@@ -80,8 +80,8 @@ export default function AddBusinessPage() {
             <div className="max-w-lg mx-auto w-full">
                 <Card>
                     <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                            <Store className="h-6 w-6 text-blue-600" />
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
+                            <Store className="h-6 w-6 text-[#f97316]" />
                         </div>
                         <CardTitle className="text-2xl">Add a Business</CardTitle>
                         <CardDescription>
@@ -92,7 +92,7 @@ export default function AddBusinessPage() {
                     <CardContent className="flex flex-col gap-4">
                         <Button
                             size="lg"
-                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            className="w-full bg-orange-600 hover:bg-orange-700"
                             onClick={handleConnectGoogle}
                         >
                             Connect Google Business Profile

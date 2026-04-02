@@ -77,7 +77,7 @@ function ChannelBadge({ channel }: { channel: string }) {
         email: {
             label: "Email",
             icon: Mail,
-            color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+            color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
         },
     };
     const config_item = config[channel] || config.email;
@@ -157,7 +157,7 @@ export default async function ReviewRequestsPage(props: {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                         Review Requests
-                        <span className="text-sm font-normal text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
+                        <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                             {totalSent || 0}
                         </span>
                     </h1>
@@ -238,13 +238,13 @@ export default async function ReviewRequestsPage(props: {
 
                     {/* Tabs */}
                     <div>
-                        <div className="bg-slate-100 dark:bg-slate-900 p-1 rounded-lg inline-flex">
+                        <div className="bg-muted p-1 rounded-lg inline-flex">
                             <Link href={getTabUrl("all")}>
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "all"
-                                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 shadow-sm"
-                                            : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                            ? "bg-background text-foreground shadow-sm"
+                                            : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
                                     All ({totalSent})
@@ -254,8 +254,8 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "pending"
-                                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 shadow-sm"
-                                            : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                            ? "bg-background text-foreground shadow-sm"
+                                            : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
                                     Pending ({totalSent - totalOpened})
@@ -265,8 +265,8 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "opened"
-                                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 shadow-sm"
-                                            : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                            ? "bg-background text-foreground shadow-sm"
+                                            : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
                                     Opened ({totalOpened - totalClicked})
@@ -276,8 +276,8 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "clicked"
-                                            ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 shadow-sm"
-                                            : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                            ? "bg-background text-foreground shadow-sm"
+                                            : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
                                     Clicked ({totalClicked - totalConverted})

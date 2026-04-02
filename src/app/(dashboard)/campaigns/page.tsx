@@ -56,9 +56,9 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 };
 
 const channelConfig: Record<string, { label: string; icon: any; color: string }> = {
-    sms: { label: "SMS", icon: MessageSquare, color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" },
-    email: { label: "Email", icon: Mail, color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-    both: { label: "SMS + Email", icon: MessageSquare, color: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300" },
+    sms: { label: "SMS", icon: MessageSquare, color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" },
+    email: { label: "Email", icon: Mail, color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
+    both: { label: "SMS + Email", icon: MessageSquare, color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" },
 };
 
 export default function CampaignsPage() {
@@ -179,21 +179,21 @@ export default function CampaignsPage() {
 
             {/* Empty State */}
             {!loading && campaigns.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-white to-orange-50/30 rounded-3xl border border-orange-100 shadow-sm relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-orange-50/30 dark:to-orange-950/10 rounded-3xl border border-orange-100 dark:border-orange-900/30 shadow-sm relative overflow-hidden">
                     {/* Decorative Background Elements */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-100/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-100/10 dark:bg-teal-900/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="w-24 h-24 bg-gradient-to-tr from-orange-500 to-orange-400 rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-orange-200 rotate-3 transform transition-transform hover:rotate-0 duration-500">
                             <Megaphone className="h-12 w-12 text-white" />
                         </div>
                         
-                        <h3 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                        <h3 className="text-3xl font-bold text-foreground mb-4 tracking-tight">
                             Your first review is just one campaign away
                         </h3>
                         
-                        <p className="text-lg text-gray-500 mb-10 leading-relaxed">
+                        <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
                             Automate your review requests and watch your reputation grow. Set up a campaign in minutes and let Zyene do the heavy lifting.
                         </p>
 
@@ -210,7 +210,7 @@ export default function CampaignsPage() {
                         <div className="mt-16 w-full max-w-4xl">
                             <div className="flex items-center justify-center gap-2 mb-8">
                                 <div className="h-px w-8 bg-orange-200"></div>
-                                <span className="text-orange-900 font-semibold uppercase tracking-wider text-xs">Or Quick Start with a Template</span>
+                                <span className="text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider text-xs">Or Quick Start with a Template</span>
                                 <div className="h-px w-8 bg-orange-200"></div>
                             </div>
                             
@@ -221,7 +221,7 @@ export default function CampaignsPage() {
                             </div>
                         </div>
 
-                        <div className="mt-12 flex items-center gap-8 text-sm text-gray-400">
+                        <div className="mt-12 flex items-center gap-8 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
                                 Automated SMS/Email
@@ -231,7 +231,7 @@ export default function CampaignsPage() {
                                 Smart Triggers
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
                                 Real-time Tracking
                             </div>
                         </div>

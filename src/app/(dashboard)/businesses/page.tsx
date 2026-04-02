@@ -71,7 +71,7 @@ export default async function BusinessesPage() {
                         return (
                             <div
                                 key={business.id}
-                                className={`border rounded-xl bg-white overflow-hidden transition-shadow ${isActive ? "ring-2 ring-blue-500 border-blue-200 shadow-sm" : "hover:shadow-md"
+                                className={`border rounded-xl bg-card overflow-hidden transition-all cursor-pointer ${isActive ? "ring-2 ring-orange-500 border-orange-300 dark:border-orange-900/50 shadow-sm" : "hover:shadow-md"
                                     }`}
                             >
                                 <form
@@ -81,12 +81,12 @@ export default async function BusinessesPage() {
                                         redirect("/dashboard");
                                     }}
                                 >
-                                    <button type="submit" className="w-full text-left p-5 flex flex-col gap-3 hover:bg-slate-50/50 transition-colors">
+                                    <button type="submit" className="w-full text-left p-5 flex flex-col gap-3 hover:bg-muted/50 transition-colors cursor-pointer">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-blue-100" : "bg-blue-50"
+                                                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-orange-500/15" : "bg-orange-500/10"
                                                     }`}>
-                                                    <Building2 className={`h-5 w-5 ${isActive ? "text-blue-700" : "text-blue-600"
+                                                    <Building2 className={`h-5 w-5 ${isActive ? "text-orange-600" : "text-[#f97316]"
                                                         }`} />
                                                 </div>
                                                 <div>
@@ -112,7 +112,7 @@ export default async function BusinessesPage() {
                                                     {business.status}
                                                 </Badge>
                                                 {isActive && (
-                                                    <span className="text-[10px] text-blue-600 font-medium">
+                                                    <span className="text-[10px] text-orange-600 dark:text-orange-400 font-medium">
                                                         Active
                                                     </span>
                                                 )}
@@ -137,18 +137,18 @@ export default async function BusinessesPage() {
                                             {isConnected ? (
                                                 <>
                                                     <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                                                    <span className="text-green-700">Google Business Profile connected</span>
+                                                    <span className="text-green-700 dark:text-green-400">Google Business Profile connected</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
-                                                    <span className="text-amber-700">Google not connected</span>
+                                                    <span className="text-amber-700 dark:text-amber-400">Google not connected</span>
                                                 </>
                                             )}
                                         </div>
                                     </button>
                                 </form>
-                                <div className="flex items-center justify-between border-t bg-slate-50/70 px-4 py-2">
+                                <div className="flex items-center justify-between border-t bg-muted/50 px-4 py-2">
                                     <span className="text-[11px] text-muted-foreground">Click card to switch active business</span>
                                     <DeleteBusinessButton
                                         businessId={business.id}
@@ -161,11 +161,11 @@ export default async function BusinessesPage() {
                     })}
                 </div>
             ) : (
-                <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-gray-50/50 border-dashed">
-                    <div className="h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                        <Building2 className="h-6 w-6 text-blue-400" />
+                <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
+                    <div className="h-12 w-12 bg-orange-500/10 rounded-full flex items-center justify-center mb-4">
+                        <Building2 className="h-6 w-6 text-[#f97316]" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className="text-lg font-medium text-foreground">
                         No businesses yet
                     </h3>
                     <p className="text-muted-foreground max-w-sm mt-1 mb-6">
