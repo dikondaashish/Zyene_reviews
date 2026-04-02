@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { nanoid } from "nanoid";
-import { listAccounts, listLocations } from "@/services/google/business-profile";
+import { listAccounts, listLocations, FULL_LOCATION_READ_MASK } from "@/services/google/business-profile";
 import { redis } from "@/lib/db/redis";
 
 function safeNextPath(raw: string | null): string {
@@ -85,6 +85,36 @@ export async function GET(request: Request) {
                 let googleReviewUrl: string | null = null;
                 let locationName: string | null = null;
 
+                // Location details for the business record
+                let bizPhone: string | null = null;
+                let bizAddress: string | null = null;
+                let bizCity: string | null = null;
+                let bizState: string | null = null;
+                let bizZip: string | null = null;
+                let bizWebsite: string | null = null;
+                let bizCategory = "uncategorized";
+
+                // Map Google category to internal key
+                const CATEGORY_MAP: Record<string, string> = {
+                    restaurant: "restaurant", dining: "restaurant", food: "restaurant", eatery: "restaurant",
+                    pizza: "restaurant", sushi: "restaurant", burger: "restaurant", grill: "restaurant",
+                    bistro: "restaurant", steakhouse: "restaurant", bakery: "restaurant",
+                    cafe: "coffee", coffee: "coffee", "coffee shop": "coffee", tea: "coffee",
+                    salon: "salon", beauty: "salon", barber: "salon", "hair salon": "salon",
+                    "nail salon": "salon", cosmetics: "salon",
+                    dentist: "dental", dental: "dental", orthodontist: "dental",
+                    gym: "gym", fitness: "gym", "yoga studio": "gym", "pilates studio": "gym",
+                    "personal trainer": "gym", crossfit: "gym",
+                    spa: "spa", massage: "spa", wellness: "spa",
+                    hotel: "hotel", motel: "hotel", resort: "hotel", inn: "hotel", "bed and breakfast": "hotel",
+                    retail: "retail", store: "retail", shop: "retail", boutique: "retail", market: "retail",
+                    auto: "automotive", automotive: "automotive", "car dealer": "automotive",
+                    "car repair": "automotive", mechanic: "automotive", "auto repair": "automotive",
+                    doctor: "healthcare", hospital: "healthcare", clinic: "healthcare",
+                    medical: "healthcare", healthcare: "healthcare", pharmacy: "healthcare",
+                    veterinarian: "healthcare", chiropractor: "healthcare",
+                };
+
                 try {
                     if (finalAccessToken) {
                         const accounts = await listAccounts(finalAccessToken);
@@ -92,9 +122,9 @@ export async function GET(request: Request) {
                             const account = accounts[0];
                             googleAccountId = account.name.split("/")[1];
 
-                            const locations = await listLocations(finalAccessToken, account.name);
+                            const locations = await listLocations(finalAccessToken, account.name, FULL_LOCATION_READ_MASK);
                             if (locations.length > 0) {
-                                const location = locations[0];
+                                const location = locations[0] as any;
                                 googleLocationId = location.name.split("/").pop() || null;
                                 externalId = googleLocationId;
                                 locationName = location.title || null;
@@ -102,6 +132,22 @@ export async function GET(request: Request) {
                                 googleReviewUrl = location.metadata?.newReviewUri || location.metadata?.mapsUri || null;
                                 if (location.metadata?.placeId) {
                                     googleReviewUrl = `https://search.google.com/local/writereview?placeid=${location.metadata.placeId}`;
+                                }
+
+                                // Extract full details from the same API response (no extra call)
+                                bizPhone = location.phoneNumbers?.primaryPhone || null;
+                                bizAddress = location.storefrontAddress?.addressLines?.join(", ") || null;
+                                bizCity = location.storefrontAddress?.locality || null;
+                                bizState = location.storefrontAddress?.administrativeArea || null;
+                                bizZip = location.storefrontAddress?.postalCode || null;
+                                bizWebsite = location.websiteUri || null;
+
+                                const googleCat = (location.categories?.primaryCategory?.displayName || "").toLowerCase();
+                                for (const [keyword, value] of Object.entries(CATEGORY_MAP)) {
+                                    if (googleCat.includes(keyword)) {
+                                        bizCategory = value;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -115,6 +161,9 @@ export async function GET(request: Request) {
                 const newBizName = locationName || `${data.user.user_metadata?.full_name || "New"}'s Business`;
                 const newBizSlug = `${newBizName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
 
+                // Use the Google OAuth email as support email
+                const supportEmail = data.user.email || null;
+
                 const { data: newBusiness, error: newBizError } = await admin
                     .from("businesses")
                     .insert({
@@ -123,9 +172,16 @@ export async function GET(request: Request) {
                         slug: newBizSlug,
                         country: "US",
                         timezone: "UTC",
-                        category: "uncategorized",
+                        category: bizCategory,
                         status: "active",
                         google_review_url: googleReviewUrl,
+                        email: supportEmail,
+                        phone: bizPhone,
+                        address_line1: bizAddress,
+                        city: bizCity,
+                        state: bizState,
+                        zip: bizZip,
+                        website: bizWebsite,
                     })
                     .select("id")
                     .single();

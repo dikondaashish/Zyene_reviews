@@ -126,9 +126,13 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
 }
 
 
-export async function listLocations(accessToken: string, accountName: string): Promise<GoogleLocation[]> {
+/** Extended readMask for when you need full location details (address, phone, etc.) */
+export const FULL_LOCATION_READ_MASK = "name,title,storeCode,metadata,storefrontAddress,phoneNumbers,categories,websiteUri,profile";
+
+export async function listLocations(accessToken: string, accountName: string, readMask?: string): Promise<GoogleLocation[]> {
     // accountName format: accounts/{accountId}
-    const response = await fetchWithRetry(`${BASE_URL_INFO}/${accountName}/locations?readMask=name,title,storeCode,metadata`, {
+    const mask = readMask || "name,title,storeCode,metadata";
+    const response = await fetchWithRetry(`${BASE_URL_INFO}/${accountName}/locations?readMask=${encodeURIComponent(mask)}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
     });
 

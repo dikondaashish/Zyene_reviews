@@ -237,9 +237,9 @@ export async function initializeGoogleAuth(
         if (accounts.length > 0) {
           const accountId = accounts[0].name; // e.g. "accounts/123456"
 
-          // Step 2: List locations using Business Information API with valid readMask fields
+          // Step 2: List locations using Business Information API with extended readMask
           const locationsResponse = await fetch(
-            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=title,storefrontAddress,phoneNumbers,categories`,
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=${encodeURIComponent("title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata")}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
@@ -332,7 +332,10 @@ export async function initializeGoogleAuth(
                   address_line1: addr?.addressLines?.[0] || null,
                   city: addr?.locality || null,
                   state: addr?.administrativeArea || null,
+                  zip: addr?.postalCode || null,
                   phone: phone || null,
+                  website: loc.websiteUri || null,
+                  email: user.email || null,
                   category: mappedCategory || "other",
                   updated_at: new Date().toISOString(),
                   ...(slug ? { slug } : {}),

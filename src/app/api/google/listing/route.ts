@@ -62,6 +62,29 @@ export async function GET(request: NextRequest) {
         const loc = await getGoogleLocation(accessToken, platform.google_location_id);
         const profileHealth = computeProfileHealth(loc);
 
+        // Persist the fetched Google data back to the businesses table
+        // so Business Information form stays in sync
+        try {
+            await supabase
+                .from("businesses")
+                .update({
+                    phone: loc.phoneNumbers?.primaryPhone || null,
+                    address_line1: loc.storefrontAddress?.addressLines?.join(", ") || null,
+                    city: loc.storefrontAddress?.locality || null,
+                    state: loc.storefrontAddress?.administrativeArea || null,
+                    zip: loc.storefrontAddress?.postalCode || null,
+                    website: loc.websiteUri || null,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", businessId);
+        } catch (persistErr) {
+            // Non-fatal: log but don't fail the reload
+            console.error("[Google Listing] Failed to persist data to businesses table:", persistErr);
+        }
+
+        // Also trigger the background listing profile sync to update health score
+        syncGoogleListingProfileForPlatform(platform.id).catch(console.error);
+
         return apiOk({
             listing: publicListingPayload(loc),
             profileHealth,

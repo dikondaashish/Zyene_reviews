@@ -60,7 +60,7 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
             state: business.state || "",
             zip: business.zip || "",
             timezone: business.timezone || "America/New_York",
-            category: business.category || "Restaurant",
+            category: business.category || "other",
         },
     });
 
@@ -226,12 +226,17 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Restaurant">Restaurant</SelectItem>
-                                        <SelectItem value="Cafe">Cafe</SelectItem>
-                                        <SelectItem value="Bar">Bar</SelectItem>
-                                        <SelectItem value="Retail">Retail</SelectItem>
-                                        <SelectItem value="Service">Service</SelectItem>
-                                        <SelectItem value="Other">Other</SelectItem>
+                                        <SelectItem value="restaurant">Restaurant</SelectItem>
+                                        <SelectItem value="coffee">Cafe / Coffee</SelectItem>
+                                        <SelectItem value="salon">Salon / Beauty</SelectItem>
+                                        <SelectItem value="dental">Dental</SelectItem>
+                                        <SelectItem value="gym">Gym / Fitness</SelectItem>
+                                        <SelectItem value="spa">Spa / Wellness</SelectItem>
+                                        <SelectItem value="hotel">Hotel / Lodging</SelectItem>
+                                        <SelectItem value="retail">Retail</SelectItem>
+                                        <SelectItem value="automotive">Automotive</SelectItem>
+                                        <SelectItem value="healthcare">Healthcare</SelectItem>
+                                        <SelectItem value="other">Other</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

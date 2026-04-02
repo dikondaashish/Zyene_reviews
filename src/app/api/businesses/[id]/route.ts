@@ -11,12 +11,15 @@ const businessPatchSchema = z
         timezone: z.string().min(1).max(80).optional(),
         country: z.string().min(2).max(2).optional(),
         phone: z.string().max(30).optional().nullable(),
+        email: z.string().email().max(255).optional().nullable().or(z.literal("")),
         website: z.string().url().max(500).optional().nullable(),
         logo_url: z.string().url().max(1000).optional().nullable(),
         address: z.string().max(1000).optional().nullable(),
+        address_line1: z.string().max(1000).optional().nullable(),
         city: z.string().max(120).optional().nullable(),
         state: z.string().max(120).optional().nullable(),
         postal_code: z.string().max(20).optional().nullable(),
+        zip: z.string().max(20).optional().nullable(),
     })
     .strict();
 
