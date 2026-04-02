@@ -199,7 +199,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className={`space-y-8 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-2xl"}`}>
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
