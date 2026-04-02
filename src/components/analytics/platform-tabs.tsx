@@ -27,7 +27,7 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
             id: "all", 
             name: "All Platforms", 
             icon: <LayoutGrid className="w-4 h-4" />,
-            color: "text-blue-400"
+            color: "text-orange-500"
         },
         { 
             id: "zyene", 
@@ -65,7 +65,7 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 p-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-2 p-1 bg-muted/40 backdrop-blur-md border border-border/50 rounded-2xl w-fit overflow-x-auto no-scrollbar">
                 {availablePlatforms.map((platform) => {
                     const isActive = activePlatform === platform.id;
                     return (
@@ -76,13 +76,13 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
                                 "relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                                 isActive 
                                     ? "text-white shadow-lg" 
-                                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                             )}
                         >
                             {isActive && (
                                 <motion.div
                                     layoutId="active-platform"
-                                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/20 rounded-xl -z-10"
+                                    className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-500/10 border border-orange-500/20 rounded-xl -z-10"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}

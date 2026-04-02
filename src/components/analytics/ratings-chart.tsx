@@ -43,8 +43,8 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                 <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
@@ -79,19 +79,19 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                         labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}
                         formatter={(value: any) => [
-                            <span key="val" className="text-primary">{typeof value === 'number' ? value.toFixed(1) : value} ★</span>,
+                            <span key="val" className="text-orange-600">{typeof value === 'number' ? value.toFixed(1) : value} ★</span>,
                             "Avg Rating"
                         ]}
                     />
                     <ReferenceLine 
                         y={overallAvg} 
-                        stroke="hsl(var(--primary))" 
+                        stroke="#f97316" 
                         strokeDasharray="4 4" 
                         strokeWidth={1.5}
                         label={{ 
                             value: `Avg: ${overallAvg.toFixed(1)}`, 
                             position: 'insideTopRight', 
-                            fill: "hsl(var(--primary))", 
+                            fill: "#f97316", 
                             fontSize: 10,
                             fontWeight: 700,
                             offset: 10
@@ -100,7 +100,7 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                     <Area
                         type="monotone"
                         dataKey="rating"
-                        stroke="hsl(var(--primary))"
+                        stroke="#f97316"
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorRating)"

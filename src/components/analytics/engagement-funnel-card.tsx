@@ -18,9 +18,9 @@ export function EngagementFunnelCard({
     directionRequests
 }: EngagementFunnelCardProps) {
     const funnelSteps = [
-        { label: "Profile views", value: profileViews, icon: Eye, color: "bg-blue-500" },
+        { label: "Profile views", value: profileViews, icon: Eye, color: "bg-orange-500" },
         { label: "Website clicks", value: websiteClicks, icon: MousePointer2, color: "bg-orange-500" },
-        { label: "Direction requests", value: directionRequests, icon: MapPin, color: "bg-violet-500" },
+        { label: "Direction requests", value: directionRequests, icon: MapPin, color: "bg-amber-500" },
         { label: "Call clicks", value: callClicks, icon: Phone, color: "bg-emerald-500" },
     ];
 

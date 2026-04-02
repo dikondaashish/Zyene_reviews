@@ -33,14 +33,14 @@ export function AnalyticsFilters() {
                         key={range.value}
                         onClick={() => setRange(range.value)}
                         className={cn(
-                            "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                            isActive ? "text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                            "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                            isActive ? "text-white shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                         )}
                     >
                         {isActive && (
                             <motion.div
                                 layoutId="active-range"
-                                className="absolute inset-0 bg-primary rounded-[6px] shadow-sm"
+                                className="absolute inset-0 bg-[#f97316] rounded-[6px] shadow-sm"
                                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                             />
                         )}

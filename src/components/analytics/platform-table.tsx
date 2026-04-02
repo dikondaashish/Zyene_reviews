@@ -70,7 +70,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                 </TableCell>
                                 <TableCell className="text-right font-medium tabular-nums">{row.reviews.toLocaleString()}</TableCell>
                                 <TableCell className="text-right font-bold tabular-nums">
-                                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary/5 text-primary border border-primary/10">
+                                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-500/5 text-orange-600 dark:text-orange-400 border border-orange-500/10">
                                         {row.avgRating.toFixed(1)} 
                                         <span className="text-[10px]">★</span>
                                     </div>

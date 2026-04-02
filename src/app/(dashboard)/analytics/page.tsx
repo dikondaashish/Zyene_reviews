@@ -244,29 +244,29 @@ export default async function AnalyticsPage({
     return (
         <div className="flex flex-1 flex-col gap-8 p-4 md:p-8 overflow-x-hidden relative text-foreground">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
             {/* Header / Nav Section */}
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="text-4xl font-extrabold tracking-tight flex items-center gap-3 text-white">
-                            <Gauge className="w-9 h-9 text-primary" />
+                        <h1 className="text-4xl font-extrabold tracking-tight flex items-center gap-3">
+                            <Gauge className="w-9 h-9 text-[#f97316]" />
                             Analytics
                             {isDemo && (
-                                <Badge variant="outline" className="border-indigo-500/30 bg-indigo-500/10 text-indigo-400 flex items-center gap-1.5 px-3 font-bold tracking-tight">
+                                <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center gap-1.5 px-3 font-bold tracking-tight">
                                     <Sparkles className="w-3.5 h-3.5" />
                                     Demo
                                 </Badge>
                             )}
                         </h1>
                         <p className="text-slate-400 font-medium">
-                            Real-time performance metrics for <span className="text-white font-bold">{business?.name || "your business"}</span>
+                            Real-time performance metrics for <span className="font-bold">{business?.name || "your business"}</span>
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 bg-white/5 p-1 rounded-xl border border-white/10 backdrop-blur-md">
+                    <div className="flex items-center gap-3 bg-muted/40 p-1 rounded-xl border border-border/50 backdrop-blur-md">
                         <ReportGenerator 
                             businessName={business?.name} 
                             dateRange={rangeLabel} 
@@ -275,7 +275,7 @@ export default async function AnalyticsPage({
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 border-y border-white/5">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 border-y border-border/30">
                     <PlatformTabs 
                         platforms={connectedPlatforms} 
                         activePlatform={platform}
@@ -326,30 +326,30 @@ export default async function AnalyticsPage({
 
                 {/* 2. Primary Trends - Bento Row */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <Card className="lg:col-span-2 bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10">
+                    <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="space-y-1">
-                                <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
-                                    <Gauge className="w-5 h-5 text-primary" />
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Gauge className="w-5 h-5 text-[#f97316]" />
                                     Rating Trend
                                 </CardTitle>
-                                <p className="text-xs text-slate-400 font-medium">Average score fluctuations daily</p>
+                                <p className="text-xs text-muted-foreground font-medium">Average score fluctuations daily</p>
                             </div>
-                            <Badge variant="secondary" className="font-bold bg-primary/10 text-primary border-primary/20">Avg: {avgRating.toFixed(1)}</Badge>
+                            <Badge variant="secondary" className="font-bold bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20">Avg: {avgRating.toFixed(1)}</Badge>
                         </CardHeader>
                         <CardContent className="pl-0 pb-6">
                             <RatingsChart data={trendData} overallAvg={avgRating} />
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10">
+                    <Card className="bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20">
                         <CardHeader>
                             <div className="space-y-1">
-                                <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
-                                    <Sparkles className="w-5 h-5 text-primary" />
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-[#f97316]" />
                                     Sentiment Breakdown
                                 </CardTitle>
-                                <p className="text-xs text-slate-400 font-medium">AI-analyzed review emotional tone</p>
+                                <p className="text-xs text-muted-foreground font-medium">AI-analyzed review emotional tone</p>
                             </div>
                         </CardHeader>
                         <CardContent className="pb-6">
@@ -360,14 +360,14 @@ export default async function AnalyticsPage({
 
                 {/* 3. Volume & Themes - Bento Row */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-                    <Card className="lg:col-span-3 bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10">
+                    <Card className="lg:col-span-3 bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20">
                         <CardHeader>
                             <div className="space-y-1">
-                                <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
-                                    <Globe className="w-5 h-5 text-primary" />
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Globe className="w-5 h-5 text-[#f97316]" />
                                     Review Volume
                                 </CardTitle>
-                                <p className="text-xs text-slate-400 font-medium">Total review count across distribution channels</p>
+                                <p className="text-xs text-muted-foreground font-medium">Total review count across distribution channels</p>
                             </div>
                         </CardHeader>
                         <CardContent className="pl-0 pb-6">
@@ -375,14 +375,14 @@ export default async function AnalyticsPage({
                         </CardContent>
                     </Card>
 
-                    <Card className="lg:col-span-2 bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10">
+                    <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20">
                         <CardHeader>
                             <div className="space-y-1">
-                                <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
-                                    <Sparkles className="w-5 h-5 text-orange-400" />
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-[#f97316]" />
                                     Common Themes
                                 </CardTitle>
-                                <p className="text-xs text-slate-400 font-medium">Key topics frequently mentioned in reviews</p>
+                                <p className="text-xs text-muted-foreground font-medium">Key topics frequently mentioned in reviews</p>
                             </div>
                         </CardHeader>
                         <CardContent className="pb-6">
@@ -395,20 +395,20 @@ export default async function AnalyticsPage({
                 {(platform === "all" || platform === "google") && isGoogleConnected && (
                     <div className="space-y-6">
                         <div className="flex items-center gap-3 mt-4">
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
                             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Google Business Insights</h2>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <Card className="lg:col-span-2 bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10 overflow-hidden">
+                            <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20 overflow-hidden">
                                 <CardHeader className="pb-2">
                                     <div className="space-y-1">
-                                        <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
-                                            <MousePointer2 className="w-5 h-5 text-blue-500" />
+                                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                            <MousePointer2 className="w-5 h-5 text-[#f97316]" />
                                             Listing Performance
                                         </CardTitle>
-                                        <p className="text-xs text-slate-400 font-medium">Daily metrics from Google Business Profile Performance ({rangeLabel})</p>
+                                        <p className="text-xs text-muted-foreground font-medium">Daily metrics from Google Business Profile Performance ({rangeLabel})</p>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pl-0 pb-6">
@@ -426,16 +426,16 @@ export default async function AnalyticsPage({
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                              {/* Search Keywords */}
-                             <Card className="lg:col-span-2 bg-white/5 border-white/10 backdrop-blur-md overflow-hidden group hover:border-primary/30 transition-all duration-500">
+                             <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md overflow-hidden group hover:border-orange-500/30 transition-all duration-500">
                                 <CardHeader className="flex flex-row items-center justify-between">
                                     <div className="space-y-1">
-                                        <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
-                                            <Search className="w-5 h-5 text-blue-400" />
+                                        <CardTitle className="text-xl font-bold flex items-center gap-2">
+                                            <Search className="w-5 h-5 text-[#f97316]" />
                                             Search Keywords
                                         </CardTitle>
-                                        <p className="text-xs text-slate-400 font-medium">Monthly impressions per keyword from local discovery</p>
+                                        <p className="text-xs text-muted-foreground font-medium">Monthly impressions per keyword from local discovery</p>
                                     </div>
-                                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                                    <Badge variant="secondary" className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20">
                                         Top {(searchKeywords || []).length} Keywords
                                     </Badge>
                                 </CardHeader>
@@ -444,24 +444,24 @@ export default async function AnalyticsPage({
                                         {(searchKeywords || []).slice(0, 10).map((k: any, i: number) => (
                                             <div key={i} className="flex items-center justify-between group/item">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-bold text-slate-500 group-hover/item:bg-primary/20 group-hover/item:text-primary transition-colors">
+                                                    <div className="w-6 h-6 rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover/item:bg-orange-500/20 group-hover/item:text-orange-600 transition-colors">
                                                         {i + 1}
                                                     </div>
-                                                    <span className="text-sm text-slate-200 group-hover/item:text-white transition-colors">{k.keyword}</span>
+                                                    <span className="text-sm text-foreground/70 group-hover/item:text-foreground transition-colors">{k.keyword}</span>
                                                 </div>
                                                 <div className="flex items-center gap-4">
-                                                    <div className="h-1.5 w-32 bg-white/5 rounded-full overflow-hidden hidden sm:block">
+                                                    <div className="h-1.5 w-32 bg-muted/40 rounded-full overflow-hidden hidden sm:block">
                                                         <div 
-                                                            className="h-full bg-primary/40 group-hover/item:bg-primary transition-all duration-1000"
+                                                            className="h-full bg-orange-500/40 group-hover/item:bg-[#f97316] transition-all duration-1000"
                                                             style={{ width: `${Math.min(100, (Number(k.impressions) / Math.max(...searchKeywords.map(sk => Number(sk.impressions)))) * 100)}%` }}
                                                         />
                                                     </div>
-                                                    <span className="text-sm font-mono font-bold text-slate-400 group-hover/item:text-primary transition-colors">{Number(k.impressions).toLocaleString()}</span>
+                                                    <span className="text-sm font-mono font-bold text-muted-foreground group-hover/item:text-orange-600 transition-colors">{Number(k.impressions).toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         ))}
                                         {(!searchKeywords || searchKeywords.length === 0) && (
-                                            <div className="flex flex-col items-center justify-center py-12 text-slate-500 space-y-2">
+                                            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
                                                 <Search className="w-10 h-10 opacity-20" />
                                                 <p className="text-sm">No keyword data available for this selection</p>
                                             </div>
@@ -471,36 +471,36 @@ export default async function AnalyticsPage({
                             </Card>
 
                             {/* Discovery Split */}
-                            <Card className="bg-white/5 border-white/10 backdrop-blur-md shadow-sm transition-all hover:border-primary/10 flex flex-col">
+                            <Card className="bg-card/60 border-border/50 backdrop-blur-md shadow-sm transition-all hover:border-orange-500/20 flex flex-col">
                                 <CardHeader>
                                     <div className="space-y-1">
-                                        <CardTitle className="text-lg font-bold text-white">Discovery Type</CardTitle>
-                                        <p className="text-xs text-slate-400 font-medium">Business name vs categories</p>
+                                        <CardTitle className="text-lg font-bold">Discovery Type</CardTitle>
+                                        <p className="text-xs text-muted-foreground font-medium">Business name vs categories</p>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-center space-y-8 pb-10 px-8">
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end">
                                             <div className="space-y-1">
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Discovery</p>
-                                                <p className="text-xs text-slate-300">Found via category/service</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Discovery</p>
+                                                <p className="text-xs text-muted-foreground">Found via category/service</p>
                                             </div>
-                                            <p className="text-3xl font-black text-primary">{discoverySplit.discoveryPct}%</p>
+                                            <p className="text-3xl font-black text-[#f97316]">{discoverySplit.discoveryPct}%</p>
                                         </div>
-                                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                                            <div className="h-full bg-primary rounded-full" style={{ width: `${discoverySplit.discoveryPct}%` }} />
+                                        <div className="h-2 w-full bg-muted/40 rounded-full overflow-hidden">
+                                            <div className="h-full bg-[#f97316] rounded-full" style={{ width: `${discoverySplit.discoveryPct}%` }} />
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-end">
                                             <div className="space-y-1">
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Branded</p>
-                                                <p className="text-xs text-slate-300">Found via business name</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Branded</p>
+                                                <p className="text-xs text-muted-foreground">Found via business name</p>
                                             </div>
                                             <p className="text-2xl font-black text-slate-500">{discoverySplit.directPct}%</p>
                                         </div>
-                                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                                        <div className="h-2 w-full bg-muted/40 rounded-full overflow-hidden">
                                             <div className="h-full bg-slate-700 rounded-full" style={{ width: `${discoverySplit.directPct}%` }} />
                                         </div>
                                     </div>
@@ -515,7 +515,7 @@ export default async function AnalyticsPage({
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
                             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Platform Comparison</h2>
-                            <div className="h-[1px] flex-1 bg-white/5" />
+                            <div className="h-[1px] flex-1 bg-border/30" />
                         </div>
                         <PlatformTable data={platformData} />
                     </div>

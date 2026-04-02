@@ -85,7 +85,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="profileViews" 
                         name="Profile views" 
-                        stroke="#3b82f6" 
+                        stroke="#f97316" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
@@ -95,7 +95,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="websiteClicks" 
                         name="Website clicks" 
-                        stroke="#f97316" 
+                        stroke="#ea580c" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
@@ -115,7 +115,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="directions" 
                         name="Directions" 
-                        stroke="#8b5cf6" 
+                        stroke="#f59e0b" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
