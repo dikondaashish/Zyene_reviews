@@ -21,9 +21,9 @@ import { ExportDataButton } from "@/components/analytics/export-data-button";
 import { ReportGenerator } from "@/components/analytics/report-generator";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Download, FileJson, Search, Gauge, Globe, MousePointer2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { EngagementFunnelCard } from "@/components/analytics/engagement-funnel-card";
 
 // Helper with comparison support
 function getPeriods(range: string) {
@@ -141,7 +141,7 @@ export default async function AnalyticsPage({
     const responseRateDelta = getDelta(responseRate, prevResponseRate);
     const requestsDelta = getDelta(requestsCount, prevRequestsCount);
 
-    // Trend & Volume Data (Group current currentReviews by Date)
+    // Trend & Volume Data
     const dateMap = new Map<string, { date: string; ratingSum: number; count: number; positive: number; neutral: number; negative: number }>();
 
     currentReviews.forEach((r) => {
@@ -181,10 +181,10 @@ export default async function AnalyticsPage({
     });
 
     const sentimentData = [
-        { name: "Positive", value: sentimentCounts.positive, color: "#22c55e" },
+        { name: "Positive", value: sentimentCounts.positive, color: "#10b981" },
         { name: "Neutral", value: sentimentCounts.neutral, color: "#94a3b8" },
-        { name: "Negative", value: sentimentCounts.negative, color: "#ef4444" },
-        { name: "Mixed", value: sentimentCounts.mixed, color: "#eab308" },
+        { name: "Negative", value: sentimentCounts.negative, color: "#f43f5e" },
+        { name: "Mixed", value: sentimentCounts.mixed, color: "#f59e0b" },
     ].filter(d => d.value > 0);
 
     // Theme Data
@@ -239,236 +239,288 @@ export default async function AnalyticsPage({
         },
     ];
 
-    const funnelMax = Math.max(
-        perfTotals?.profileViews ?? 0,
-        perfTotals?.websiteClicks ?? 0,
-        perfTotals?.callClicks ?? 0,
-        perfTotals?.directionRequests ?? 0,
-        1
-    );
+    const rangeLabel = range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months";
 
     return (
-        <div className="flex flex-1 flex-col gap-6 p-6 overflow-hidden">
+        <div className="flex flex-1 flex-col gap-8 p-4 md:p-8 overflow-x-hidden relative">
+            {/* Premium background decorative elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+
             <MilestoneCelebration currentCount={totalReviews} type="reviews" isDemo={isDemo} />
             <MilestoneCelebration currentCount={avgRating} type="rating" isDemo={isDemo} />
 
             {isDemo && <DemoModeBanner className="mb-2" />}
 
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+            {/* Header Section */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="space-y-1">
+                    <h1 className="text-4xl font-extrabold tracking-tight flex items-center gap-3">
                         Analytics
                         {isDemo && (
-                            <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
-                                <Sparkles className="w-3 h-3" />
+                            <Badge variant="outline" className="border-indigo-200 bg-indigo-50/50 text-indigo-600 dark:bg-indigo-950/20 dark:border-indigo-900/50 flex items-center gap-1.5 px-3 py-1 font-bold tracking-tight">
+                                <Sparkles className="w-3.5 h-3.5" />
                                 Interactive Demo
                             </Badge>
                         )}
                     </h1>
-                    <div className="flex items-center gap-2">
+                    <p className="text-muted-foreground font-medium">
+                        Real-time performance metrics for <span className="text-foreground font-bold">{business?.name || "your business"}</span>
+                    </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                    <div className="flex items-center gap-2 bg-background/50 backdrop-blur-md p-1.5 rounded-xl border shadow-sm">
                         <ReportGenerator 
                             businessName={business?.name} 
-                            dateRange={range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months"} 
+                            dateRange={rangeLabel} 
                         />
                         <ExportDataButton businessId={businessId} range={range} />
                     </div>
+                    <AnalyticsFilters />
                 </div>
-                <AnalyticsFilters />
             </div>
 
-            <div id="analytics-content" className="flex flex-col gap-6 w-full bg-background p-1">
+            <div id="analytics-content" className="flex flex-col gap-8 w-full relative">
+                
+                {/* 1. Key Metrics - Bento Row */}
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <StatsCard 
+                        title="New Reviews"
+                        value={totalReviews}
+                        description="In selected period"
+                        trend={{ value: reviewsDelta, label: "vs last period" }}
+                        isDemo={isDemo}
+                    />
+                    <StatsCard 
+                        title="Average Rating"
+                        value={avgRating.toFixed(1)}
+                        description={`Based on ${totalReviews} reviews`}
+                        trend={{ value: ratingDelta, label: "vs last period" }}
+                        isDemo={isDemo}
+                    />
+                    <StatsCard 
+                        title="Response Rate"
+                        value={`${responseRate.toFixed(0)}%`}
+                        description={`${respondedCount} responded`}
+                        trend={{ value: responseRateDelta, label: "vs last period" }}
+                        isDemo={isDemo}
+                    />
+                    <StatsCard 
+                        title="Requests Sent"
+                        value={requestsCount}
+                        description="Review invitations"
+                        trend={{ value: requestsDelta, label: "vs last period" }}
+                        isDemo={isDemo}
+                    />
+                </div>
 
-            {/* Stats Row */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatsCard 
-                    title="New Reviews"
-                    value={totalReviews}
-                    description="In selected period"
-                    trend={{ value: reviewsDelta, label: "vs last period" }}
-                    isDemo={isDemo}
-                />
-                <StatsCard 
-                    title="Average Rating"
-                    value={avgRating.toFixed(1)}
-                    description={`Based on ${totalReviews} reviews`}
-                    trend={{ value: ratingDelta, label: "vs last period" }}
-                    isDemo={isDemo}
-                />
-                <StatsCard 
-                    title="Response Rate"
-                    value={`${responseRate.toFixed(0)}%`}
-                    description={`${respondedCount} responded`}
-                    trend={{ value: responseRateDelta, label: "vs last period" }}
-                    isDemo={isDemo}
-                />
-                <StatsCard 
-                    title="Requests Sent"
-                    value={requestsCount}
-                    description="Review invitations"
-                    trend={{ value: requestsDelta, label: "vs last period" }}
-                    isDemo={isDemo}
-                />
-            </div>
-
-            {/* Main Charts */}
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card className="col-span-1">
-                    <CardHeader>
-                        <CardTitle>Rating Trend</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-0">
-                        <RatingsChart data={trendData} overallAvg={avgRating} />
-                    </CardContent>
-                </Card>
-                <Card className="col-span-1">
-                    <CardHeader>
-                        <CardTitle>Review Volume</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-0">
-                        <VolumeChart data={trendData} />
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Secondary Charts */}
-            <div className="grid gap-4 md:grid-cols-7">
-                <Card className="col-span-4 md:col-span-3">
-                    <CardHeader>
-                        <CardTitle>Sentiment Breakdown</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <SentimentChart data={sentimentData} />
-                    </CardContent>
-                </Card>
-                <Card className="col-span-4">
-                    <CardHeader>
-                        <CardTitle>Common Themes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ThemeChart data={themeData} />
-                    </CardContent>
-                </Card>
-            </div>
-
-            {isGoogleConnected && (
-                <>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Google listing performance</CardTitle>
-                            <p className="text-sm text-muted-foreground font-normal">
-                                Daily metrics from Google Business Profile Performance (selected period)
-                            </p>
-                        </CardHeader>
-                        <CardContent>
-                            <GooglePerformanceProfileChart data={perfSeries} />
-                        </CardContent>
-                    </Card>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Search keywords</CardTitle>
-                                <p className="text-sm text-muted-foreground font-normal">
-                                    Monthly impressions per keyword (most recent months first)
-                                </p>
-                            </CardHeader>
-                            <CardContent>
-                                {searchKeywords.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground">
-                                        No keyword data yet. Run Sync on the dashboard or wait for the daily job.
-                                    </p>
-                                ) : (
-                                    <ul className="divide-y rounded-md border max-h-[280px] overflow-y-auto">
-                                        {searchKeywords.slice(0, 25).map((k) => (
-                                            <li
-                                                key={`${k.monthStart}-${k.keyword}`}
-                                                className="flex justify-between gap-2 px-3 py-2 text-sm"
-                                            >
-                                                <span className="truncate" title={k.keyword}>
-                                                    {k.keyword}
-                                                </span>
-                                                <span className="tabular-nums text-muted-foreground shrink-0">
-                                                    {k.impressions.toLocaleString()}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Discovery vs branded (estimate)</CardTitle>
-                                <p className="text-sm text-muted-foreground font-normal">
-                                    Uses your business name vs search terms — refine in a later release
-                                </p>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                                        Discovery-style terms
-                                    </p>
-                                    <p className="text-3xl font-bold">{discoverySplit.discoveryPct}%</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                                        Branded / name match
-                                    </p>
-                                    <p className="text-2xl font-semibold text-muted-foreground">
-                                        {discoverySplit.directPct}%
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Engagement funnel</CardTitle>
-                            <p className="text-sm text-muted-foreground font-normal">
-                                Relative volume across Google listing actions (selected period)
-                            </p>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                                {(
-                                    [
-                                        ["Profile views", perfTotals?.profileViews ?? 0],
-                                        ["Website clicks", perfTotals?.websiteClicks ?? 0],
-                                        ["Call clicks", perfTotals?.callClicks ?? 0],
-                                        ["Direction requests", perfTotals?.directionRequests ?? 0],
-                                    ] as const
-                                ).map(([label, val]) => (
-                                    <div key={label} className="space-y-2">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">{label}</span>
-                                            <span className="font-medium tabular-nums">
-                                                {val.toLocaleString()}
-                                            </span>
-                                        </div>
-                                        <Progress
-                                            value={Math.min(100, (val / funnelMax) * 100)}
-                                            className="h-2"
-                                        />
-                                    </div>
-                                ))}
+                {/* 2. Primary Trends - Bento Row */}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <Card className="lg:col-span-2 border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <div className="space-y-1">
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Gauge className="w-5 h-5 text-primary" />
+                                    Rating Trend
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground font-medium">Average score fluctuations daily</p>
                             </div>
+                            <Badge variant="secondary" className="font-bold">Avg: {avgRating.toFixed(1)}</Badge>
+                        </CardHeader>
+                        <CardContent className="pl-0 pb-6">
+                            <RatingsChart data={trendData} overallAvg={avgRating} />
                         </CardContent>
                     </Card>
-                </>
-            )}
 
-            {/* Platform Table */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Platform Performance</CardTitle>
-                </CardHeader>
-                <CardContent>
+                    <Card className="border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10">
+                        <CardHeader>
+                            <div className="space-y-1">
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <FileJson className="w-5 h-5 text-primary" />
+                                    Sentiment Breakdown
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground font-medium">AI-analyzed review emotional tone</p>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pb-6">
+                            <SentimentChart data={sentimentData} />
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* 3. Volume & Themes - Bento Row */}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+                    <Card className="lg:col-span-3 border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10">
+                        <CardHeader>
+                            <div className="space-y-1">
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Globe className="w-5 h-5 text-primary" />
+                                    Review Volume
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground font-medium">Total review count across distribution channels</p>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pl-0 pb-6">
+                            <VolumeChart data={trendData} />
+                        </CardContent>
+                    </Card>
+
+                    <Card className="lg:col-span-2 border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10">
+                        <CardHeader>
+                            <div className="space-y-1">
+                                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-primary" />
+                                    Common Themes
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground font-medium">Key topics frequently mentioned in reviews</p>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pb-6">
+                            <ThemeChart data={themeData} />
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* 4. Google Specific Metrics - Deluxe Insights */}
+                {isGoogleConnected && (
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3 mt-4">
+                            <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+                            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">Google Business Insights</h2>
+                            <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+                        </div>
+
+                        <Card className="border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10">
+                            <CardHeader className="pb-2">
+                                <div className="space-y-1">
+                                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                        <MousePointer2 className="w-5 h-5 text-blue-500" />
+                                        Listing Performance
+                                    </CardTitle>
+                                    <p className="text-xs text-muted-foreground font-medium">Daily metrics from Google Business Profile Performance ({rangeLabel})</p>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pl-0 pb-6">
+                                <GooglePerformanceProfileChart data={perfSeries} />
+                            </CardContent>
+                        </Card>
+
+                        <div className="grid gap-6 md:grid-cols-3">
+                            {/* Search Keywords */}
+                            <Card className="md:col-span-2 border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10 h-full">
+                                <CardHeader className="pb-4">
+                                    <div className="space-y-1">
+                                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                                            <Search className="w-5 h-5 text-orange-500" />
+                                            Search Keywords
+                                        </CardTitle>
+                                        <p className="text-xs text-muted-foreground font-medium">Monthly impressions per keyword from local discovery</p>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    {searchKeywords.length === 0 ? (
+                                        <div className="flex h-[280px] items-center justify-center border border-dashed rounded-xl bg-muted/5">
+                                            <p className="text-sm text-muted-foreground font-medium italic">
+                                                No keyword data yet. Sync dashboard or wait 24h.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="rounded-xl border bg-card/30 overflow-hidden">
+                                            <ul className="divide-y max-h-[320px] overflow-y-auto">
+                                                {searchKeywords.slice(0, 15).map((k, idx) => (
+                                                    <li
+                                                        key={`${k.monthStart}-${k.keyword}`}
+                                                        className="flex items-center justify-between gap-4 px-4 py-3 text-sm transition-colors hover:bg-muted/30"
+                                                    >
+                                                        <div className="flex items-center gap-3 truncate">
+                                                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-[10px] font-black text-primary shrink-0">{idx + 1}</span>
+                                                            <span className="font-bold truncate" title={k.keyword}>
+                                                                {k.keyword}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden hidden sm:block">
+                                                                <div 
+                                                                    className="h-full bg-primary/40 rounded-full" 
+                                                                    style={{ width: `${Math.min(100, (k.impressions / (searchKeywords[0]?.impressions || 1)) * 100)}%` }}
+                                                                />
+                                                            </div>
+                                                            <span className="tabular-nums font-black text-foreground shrink-0 min-w-[3rem] text-right">
+                                                                {k.impressions.toLocaleString()}
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+
+                            {/* Discovery Type */}
+                            <Card className="border-2 border-transparent bg-background/60 backdrop-blur-xl shadow-sm transition-all hover:border-primary/10 h-full flex flex-col">
+                                <CardHeader>
+                                    <div className="space-y-1">
+                                        <CardTitle className="text-lg font-bold">Discovery Type</CardTitle>
+                                        <p className="text-xs text-muted-foreground font-medium">Business name vs categories</p>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="flex-1 flex flex-col justify-center space-y-8 pb-10 px-8">
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-end">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                                Discovery
+                                            </p>
+                                            <p className="text-3xl font-black text-primary">{discoverySplit.discoveryPct}%</p>
+                                        </div>
+                                        <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                                            <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${discoverySplit.discoveryPct}%` }} />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-end">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                                Branded
+                                            </p>
+                                            <p className="text-2xl font-black text-muted-foreground/50">{discoverySplit.directPct}%</p>
+                                        </div>
+                                        <div className="h-2 w-full bg-muted/50 rounded-full overflow-hidden">
+                                            <div className="h-full bg-muted-foreground/20 rounded-full transition-all duration-1000" style={{ width: `${discoverySplit.directPct}%` }} />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Engagement Funnel - Functional Component */}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">Engagement Funnel</h3>
+                                <div className="h-[1px] flex-1 bg-border/50" />
+                            </div>
+                            <EngagementFunnelCard 
+                                profileViews={perfTotals?.profileViews ?? 0}
+                                websiteClicks={perfTotals?.websiteClicks ?? 0}
+                                callClicks={perfTotals?.callClicks ?? 0}
+                                directionRequests={perfTotals?.directionRequests ?? 0}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* 5. Platform Performance Table */}
+                <div className="space-y-4 mt-4">
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">Platform Comparison</h2>
+                        <div className="h-[1px] flex-1 bg-border/50" />
+                    </div>
                     <PlatformTable data={platformData} />
-                </CardContent>
-            </Card>
+                </div>
             </div>
         </div>
     );
 }
+
 

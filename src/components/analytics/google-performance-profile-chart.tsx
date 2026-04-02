@@ -22,7 +22,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
 
     if (data.length === 0) {
         return (
-            <div className="flex h-[280px] items-center justify-center text-muted-foreground text-sm">
+            <div className="flex h-[280px] items-center justify-center text-muted-foreground border border-dashed rounded-xl bg-muted/5 text-sm">
                 No Google listing metrics for this period yet. Sync Google or wait for the daily job.
             </div>
         );
@@ -32,30 +32,97 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
         return <div className="h-[280px] w-full" />;
     }
 
-    const chartData = data.map((d) => ({
+    // Sort data by date just in case
+    const sortedData = [...data].sort((a, b) => a.date.localeCompare(b.date));
+
+    const chartData = sortedData.map((d) => ({
         ...d,
-        label: d.date.slice(5),
+        label: d.date.slice(5), // MM-DD
     }));
 
     return (
-        <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} className="text-muted-foreground" />
-                <YAxis tick={{ fontSize: 11 }} className="text-muted-foreground" />
-                <Tooltip
-                    contentStyle={{ borderRadius: 8 }}
-                    labelFormatter={(_, payload) => {
-                        const p = payload?.[0]?.payload as DailyMetricPoint & { label?: string };
-                        return p?.date ?? "";
-                    }}
-                />
-                <Legend />
-                <Line type="monotone" dataKey="profileViews" name="Profile views" stroke="#2563eb" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="websiteClicks" name="Website clicks" stroke="#ea580c" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="calls" name="Calls" stroke="#16a34a" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="directions" name="Directions" stroke="#7c3aed" strokeWidth={2} dot={false} />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className="w-full h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                    <XAxis 
+                        dataKey="label" 
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }} 
+                        tickLine={false}
+                        axisLine={false}
+                        minTickGap={30}
+                        dy={10}
+                    />
+                    <YAxis 
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }} 
+                        tickLine={false}
+                        axisLine={false}
+                    />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "12px",
+                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                            padding: "8px 12px",
+                        }}
+                        labelClassName="font-bold text-xs mb-1"
+                        labelFormatter={(label, payload) => {
+                            const p = payload?.[0]?.payload as DailyMetricPoint & { label?: string };
+                            if (!p?.date) return label;
+                            return new Date(p.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                        }}
+                        itemStyle={{ fontSize: '11px', fontWeight: 600, padding: '2px 0' }}
+                    />
+                    <Legend 
+                        verticalAlign="top" 
+                        align="right" 
+                        iconType="circle" 
+                        iconSize={8}
+                        wrapperStyle={{ paddingBottom: '20px', fontSize: '11px', fontWeight: 500 }}
+                    />
+                    <Line 
+                        type="monotone" 
+                        dataKey="profileViews" 
+                        name="Profile views" 
+                        stroke="#3b82f6" 
+                        strokeWidth={3} 
+                        dot={false} 
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        animationDuration={1500}
+                    />
+                    <Line 
+                        type="monotone" 
+                        dataKey="websiteClicks" 
+                        name="Website clicks" 
+                        stroke="#f97316" 
+                        strokeWidth={3} 
+                        dot={false} 
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        animationDuration={1500}
+                    />
+                    <Line 
+                        type="monotone" 
+                        dataKey="calls" 
+                        name="Calls" 
+                        stroke="#10b981" 
+                        strokeWidth={3} 
+                        dot={false} 
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        animationDuration={1500}
+                    />
+                    <Line 
+                        type="monotone" 
+                        dataKey="directions" 
+                        name="Directions" 
+                        stroke="#8b5cf6" 
+                        strokeWidth={3} 
+                        dot={false} 
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        animationDuration={1500}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -6,7 +5,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip,
     ResponsiveContainer,
     Cell
@@ -21,42 +19,70 @@ interface ThemeDataPoint {
 export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
     if (data.length === 0) {
         return (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground">
-                No theme data available
+            <div className="flex h-[320px] items-center justify-center border border-dashed rounded-xl bg-muted/5">
+                <p className="text-sm text-muted-foreground font-medium italic">
+                    No theme data detected in reviews yet.
+                </p>
             </div>
         );
     }
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-                layout="vertical"
-                data={data}
-                margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
-            >
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="hsl(var(--border))" />
-                <XAxis type="number" hide />
-                <YAxis
-                    dataKey="theme"
-                    type="category"
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
-                    width={100}
-                    tickFormatter={(value) => value.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                />
-                <Tooltip
-                    cursor={{ fill: "hsl(var(--muted)/0.3)" }}
-                    contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                    }}
-                />
-                <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={20}>
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.sentimentScore >= 0 ? "#22c55e" : "#ef4444"} />
-                    ))}
-                </Bar>
-            </BarChart>
-        </ResponsiveContainer>
+        <div className="w-full h-[320px] pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                    layout="vertical"
+                    data={data}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                    <XAxis type="number" hide />
+                    <YAxis
+                        dataKey="theme"
+                        type="category"
+                        tick={{ fontSize: 11, fontWeight: 700, fill: "hsl(var(--muted-foreground))" }}
+                        width={90}
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(value) => value.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                    />
+                    <Tooltip
+                        cursor={{ fill: "hsl(var(--muted)/0.2)", radius: 4 }}
+                        content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                                const data = payload[0].payload as ThemeDataPoint;
+                                return (
+                                    <div className="rounded-lg border bg-background/90 backdrop-blur-md p-3 shadow-xl ring-1 ring-black/5">
+                                        <div className="flex flex-col gap-1.5">
+                                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                                                {data.theme.replace(/_/g, " ")}
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <div className={`h-2 w-2 rounded-full ${data.sentimentScore >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                                                <p className="text-sm font-bold text-foreground">
+                                                    {data.count} {data.count === 1 ? 'mention' : 'mentions'}
+                                                </p>
+                                            </div>
+                                            <p className={`text-[10px] font-bold ${data.sentimentScore >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                {data.sentimentScore >= 0 ? 'Positive Sentiment' : 'Negative Sentiment'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        }}
+                    />
+                    <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={24} minPointSize={2}>
+                        {data.map((entry, index) => (
+                            <Cell 
+                                key={`cell-${index}`} 
+                                fill={entry.sentimentScore >= 0 ? "#10b981" : "#f43f5e"} 
+                                fillOpacity={0.8}
+                            />
+                        ))}
+                    </Bar>
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

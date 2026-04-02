@@ -2,10 +2,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import {
-    LineChart,
-    Line,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -29,7 +28,7 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
 
     if (data.length === 0) {
         return (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground">
+            <div className="flex h-[300px] items-center justify-center text-muted-foreground border border-dashed rounded-xl bg-muted/5">
                 No rating data for this period
             </div>
         );
@@ -39,49 +38,77 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
     }
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => {
-                        const d = new Date(value);
-                        return `${d.getMonth() + 1}/${d.getDate()}`;
-                    }}
-                    minTickGap={30}
-                />
-                <YAxis
-                    domain={[0, 5]}
-                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-                    tickLine={false}
-                    axisLine={false}
-                    tickCount={6}
-                />
-                <Tooltip
-                    contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "8px",
-                    }}
-                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
-                    formatter={(value: any) => [
-                        typeof value === 'number' ? value.toFixed(1) : value,
-                        "Avg Rating"
-                    ]}
-                />
-                <ReferenceLine y={overallAvg} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" label={{ value: `Avg: ${overallAvg.toFixed(1)}`, position: 'insideTopRight', fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-                <Line
-                    type="monotone"
-                    dataKey="rating"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{ r: 4 }}
-                />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className="w-full h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                        <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                    <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => {
+                            const d = new Date(value);
+                            return `${d.getMonth() + 1}/${d.getDate()}`;
+                        }}
+                        minTickGap={40}
+                        dy={10}
+                    />
+                    <YAxis
+                        domain={[0, 5]}
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tickLine={false}
+                        axisLine={false}
+                        tickCount={6}
+                    />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "12px",
+                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                            padding: "8px 12px",
+                        }}
+                        labelClassName="font-bold text-xs mb-1"
+                        labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                        itemStyle={{ fontSize: '11px', fontWeight: 600 }}
+                        formatter={(value: any) => [
+                            <span key="val" className="text-primary">{typeof value === 'number' ? value.toFixed(1) : value} ★</span>,
+                            "Avg Rating"
+                        ]}
+                    />
+                    <ReferenceLine 
+                        y={overallAvg} 
+                        stroke="hsl(var(--primary))" 
+                        strokeDasharray="4 4" 
+                        strokeWidth={1.5}
+                        label={{ 
+                            value: `Avg: ${overallAvg.toFixed(1)}`, 
+                            position: 'insideTopRight', 
+                            fill: "hsl(var(--primary))", 
+                            fontSize: 10,
+                            fontWeight: 700,
+                            offset: 10
+                        }} 
+                    />
+                    <Area
+                        type="monotone"
+                        dataKey="rating"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
+                        fillOpacity={1}
+                        fill="url(#colorRating)"
+                        animationDuration={1500}
+                        activeDot={{ r: 5, strokeWidth: 2, stroke: "white" }}
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
+        </div>
     );
 }
