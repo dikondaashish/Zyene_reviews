@@ -258,45 +258,45 @@ export function ReviewContentForm({ businessId, onValuesChange }: { businessId: 
                         <div className="border-b bg-muted/40 px-6 pt-5 pb-0">
                             <h3 className="text-lg font-semibold text-foreground mb-1">Review Flow Content</h3>
                             <p className="text-sm text-muted-foreground mb-4">Customize every step of your customer review experience.</p>
-                            <TabsList className="h-auto p-0 bg-transparent gap-0 w-full justify-start rounded-none border-0">
+                            <TabsList className="h-auto p-0 bg-transparent gap-0 w-full justify-start rounded-none border-0 overflow-x-auto flex-nowrap no-scrollbar">
                                 <TabsTrigger
                                     value="rating"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Star className="h-3.5 w-3.5 mr-1.5" />
                                     Rating
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="tags"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Tag className="h-3.5 w-3.5 mr-1.5" />
                                     Tags
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="google"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Globe className="h-3.5 w-3.5 mr-1.5" />
                                     Review Site
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="feedback"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                                     Feedback
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="success"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                                     Success
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="branding"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Palette className="h-3.5 w-3.5 mr-1.5" />
                                     Branding
