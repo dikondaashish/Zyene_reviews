@@ -127,26 +127,36 @@ export function Step4SubscriptionForm({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
             <h3 className="text-xl font-semibold text-left">Choose a Plan</h3>
 
-            <div className="bg-muted/80 p-1 rounded-lg inline-flex items-center border border-border/60 self-start sm:self-auto">
+            <div
+              className="inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
+              role="tablist"
+              aria-label="Billing interval"
+            >
               <button
                 type="button"
+                role="tab"
+                aria-selected={interval === "month"}
                 onClick={() => setInterval("month")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={cn(
+                  "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                   interval === "month"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                    ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
+                    : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                )}
               >
                 Monthly
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={interval === "year"}
                 onClick={() => setInterval("year")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                className={cn(
+                  "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                   interval === "year"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                    ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
+                    : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                )}
               >
                 Yearly
                 <Badge

@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Loader2, Star, ArrowRight, CheckCircle2, Sparkles, Rocket } from "lucide-react";
+import { completeOnboarding } from "@/app/actions/onboarding";
 
 interface Step5FormProps {
   businessId: string;
@@ -46,22 +48,24 @@ export function Step5Form({
   useEffect(() => {
     setMounted(true);
     fireConfetti();
+  }, []);
 
-    // Mark onboarding as completed in the background
-    const markComplete = async () => {
-      setIsCompleting(true);
-      try {
-        const { completeOnboarding } = await import("@/app/actions/onboarding");
-        await completeOnboarding(businessId);
-      } catch (error) {
-        console.error("Failed to complete onboarding:", error);
-      } finally {
-        setIsCompleting(false);
+  const handleGoToDashboard = async () => {
+    setIsCompleting(true);
+    try {
+      const result = await completeOnboarding(businessId);
+      if (!result.success) {
+        toast.error(result.error || "Could not finish setup. Please try again.");
+        return;
       }
-    };
-
-    markComplete();
-  }, [businessId]);
+      onNext();
+    } catch (error) {
+      console.error("Failed to complete onboarding:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsCompleting(false);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -147,7 +151,7 @@ export function Step5Form({
         className="pt-2"
       >
         <Button
-          onClick={onNext}
+          onClick={handleGoToDashboard}
           disabled={isLoading || isCompleting}
           className="cta-button w-full h-14 text-base shadow-xl shadow-orange-200/30 group cursor-pointer"
         >
