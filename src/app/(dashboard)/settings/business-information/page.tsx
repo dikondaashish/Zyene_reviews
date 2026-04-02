@@ -36,6 +36,9 @@ export default async function BusinessInformationPage() {
     const isGoogleConnected = !!business.review_platforms?.find(
         (p: { platform?: string }) => p.platform === "google"
     );
+    
+    // Only show Lodging APIs for businesses in the hospitality sector
+    const isLodgingBusiness = business.category === "hotel";
 
     let placeLinks: {
         id: string;
@@ -92,7 +95,7 @@ export default async function BusinessInformationPage() {
                 </div>
             )}
 
-            {isGoogleConnected && (
+            {isGoogleConnected && isLodgingBusiness && (
                 <div className="rounded-lg border bg-card shadow-sm">
                     <div className="border-b px-6 py-4">
                         <h4 className="text-sm font-semibold">Hotel & lodging (Google)</h4>

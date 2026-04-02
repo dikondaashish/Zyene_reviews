@@ -320,11 +320,18 @@ export async function initializeGoogleAuth(
                 console.error("[Google API] Could not fetch review count (non-fatal):", reviewErr);
               }
 
+              // Extract the ideal Review write URL
+              let googleReviewUrl = loc.metadata?.newReviewUri || loc.metadata?.mapsUri || null;
+              if (loc.metadata?.placeId) {
+                  googleReviewUrl = `https://search.google.com/local/writereview?placeid=${loc.metadata.placeId}`;
+              }
+
               // Update business record with location data pulled from Google
               const slug = (loc.title || "")
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-+|-+$/g, "");
+                
               await supabase
                 .from("businesses")
                 .update({
@@ -337,6 +344,7 @@ export async function initializeGoogleAuth(
                   website: loc.websiteUri || null,
                   email: user.email || null,
                   category: mappedCategory || "other",
+                  google_review_url: googleReviewUrl,
                   updated_at: new Date().toISOString(),
                   ...(slug ? { slug } : {}),
                 })
