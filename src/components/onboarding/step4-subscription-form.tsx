@@ -148,8 +148,8 @@ export function Step4SubscriptionForm({
         )}
       </div>
 
-      {/* Pricing Grid */}
-      <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/15 p-4 sm:p-6">
+      {/* Pricing Grid — full width of parent; gaps scale up on large screens */}
+      <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/15 p-4 sm:p-6 lg:p-8">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.3]"
@@ -169,7 +169,7 @@ export function Step4SubscriptionForm({
             "blur-[28px]",
           )}
         />
-        <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="relative z-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6 xl:gap-8">
           {PLANS.map((plan, index) => {
             const Icon = plan.icon;
             const isSelected = selectedPlan === plan.id;
@@ -207,8 +207,8 @@ export function Step4SubscriptionForm({
                       </Badge>
                     </div>
                   )}
-                  <PricingCard.Header className="relative z-10 mb-3 p-3">
-                    <PricingCard.Plan>
+                  <PricingCard.Header className="relative z-10 mb-3 p-3 md:p-4">
+                    <PricingCard.Plan className="mb-3 sm:mb-4">
                       <PricingCard.PlanName>
                         <Icon className="text-orange-500" aria-hidden />
                         <span className="text-foreground">{plan.name}</span>
@@ -217,7 +217,7 @@ export function Step4SubscriptionForm({
                       {plan.id === "none" ? "Forever" : plan.interval === "year" ? "Yearly" : "Monthly"}
                       </PricingCard.Badge>
                     </PricingCard.Plan>
-                    <PricingCard.Description className="mb-2 text-[11px] leading-tight">
+                    <PricingCard.Description className="mb-2 text-[11px] leading-tight md:text-sm md:leading-snug">
                       {plan.description}
                     </PricingCard.Description>
                     <PricingCard.Price>
@@ -237,10 +237,13 @@ export function Step4SubscriptionForm({
                       )}
                     </div>
                   </PricingCard.Header>
-                  <PricingCard.Body className="space-y-3 p-2">
-                    <PricingCard.List className="space-y-2">
+                  <PricingCard.Body className="space-y-3 p-2 md:p-3">
+                    <PricingCard.List className="space-y-2 md:space-y-2.5">
                       {plan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature} className="text-xs gap-2">
+                        <PricingCard.ListItem
+                          key={feature}
+                          className="gap-2 text-xs md:text-sm md:leading-snug"
+                        >
                           <span className="mt-0.5 shrink-0">
                             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
                           </span>

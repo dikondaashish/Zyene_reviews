@@ -199,7 +199,11 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className={`space-y-8 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-2xl"}`}>
+    <div
+      className={`space-y-8 mx-auto w-full ${
+        currentStep === 4 ? "max-w-full" : "max-w-2xl"
+      }`}
+    >
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
@@ -260,7 +264,13 @@ export default function OnboardingPage() {
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-orange-500/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
 
-        <div className="relative pro-card p-7 sm:p-10">
+        <div
+          className={
+            currentStep === 4
+              ? "relative pro-card p-5 sm:p-6 lg:p-8 xl:p-10"
+              : "relative pro-card p-7 sm:p-10"
+          }
+        >
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
