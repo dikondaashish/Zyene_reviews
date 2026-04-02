@@ -214,7 +214,7 @@ export function Step4SubscriptionForm({
                         <span className="text-foreground">{plan.name}</span>
                       </PricingCard.PlanName>
                       <PricingCard.Badge>
-                        {plan.interval === "month" ? "Monthly" : "Free"}
+                      {plan.id === "none" ? "Forever" : plan.interval === "year" ? "Yearly" : "Monthly"}
                       </PricingCard.Badge>
                     </PricingCard.Plan>
                     <PricingCard.Description className="mb-3">{plan.description}</PricingCard.Description>

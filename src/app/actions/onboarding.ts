@@ -266,6 +266,7 @@ export async function initializeGoogleAuth(
                   );
                   if (reviewsResponse.ok) {
                     const reviewsData = await reviewsResponse.json();
+                    // metrics.totalSummary is often missing on v4 Location GET; DB totals after sync are authoritative.
                     reviewData = {
                       reviewCount: reviewsData.metrics?.totalSummary?.reviewCount || 0,
                       averageRating: reviewsData.metrics?.totalSummary?.averageRating || 0,
@@ -368,6 +369,24 @@ export async function initializeGoogleAuth(
       syncGoogleLodgingForPlatform(platformData.id).catch((e) =>
         console.error("[Onboarding] Lodging sync failed:", e)
       );
+    }
+
+    // Google v4 Location GET often returns no metrics (shows 0). After sync, totals are authoritative in DB.
+    const { data: platformAfterSync } = await supabase
+      .from("review_platforms")
+      .select("total_reviews, average_rating")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .maybeSingle();
+
+    if (platformAfterSync) {
+      reviewData = {
+        reviewCount: platformAfterSync.total_reviews ?? reviewData.reviewCount,
+        averageRating:
+          typeof platformAfterSync.average_rating === "number"
+            ? platformAfterSync.average_rating
+            : reviewData.averageRating,
+      };
     }
 
     // NEW: Register for real-time notifications via Pub/Sub

@@ -303,7 +303,7 @@ export function Step2Form({
                 <div className="text-center space-y-1">
                   <p className="font-bold text-lg text-emerald-700">Profile Connected</p>
                   <p className="text-sm text-emerald-600/80">
-                    {googleState.reviewCount != null
+                    {googleState.reviewCount != null && googleState.reviewCount > 0
                       ? `Found ${googleState.reviewCount} review${googleState.reviewCount !== 1 ? "s" : ""}`
                       : "Business profile linked"}
                   </p>
