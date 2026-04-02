@@ -144,7 +144,7 @@ export default async function IntegrationsPage() {
         googlePlatform,
         yelpPlatform,
         facebookPlatform,
-    ].filter((p) => p && p.sync_status === "active");
+    ].filter((p) => !!p);
     const connectedCount = connectedPlatforms.length;
 
     const totalReviews = connectedPlatforms.reduce(

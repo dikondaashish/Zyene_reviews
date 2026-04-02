@@ -9,8 +9,9 @@ export async function POST(req: NextRequest) {
     try {
         const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
         if (sharedSecret) {
-            const provided = req.headers.get("x-webhook-secret");
-            if (provided !== sharedSecret) {
+            const urlSecret = req.nextUrl.searchParams.get("secret");
+            const headerSecret = req.headers.get("x-webhook-secret");
+            if (urlSecret !== sharedSecret && headerSecret !== sharedSecret) {
                 return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
             }
         } else if (process.env.NODE_ENV === "production") {

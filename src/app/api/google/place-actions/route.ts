@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
             .select("id, google_location_id, platform")
             .eq("business_id", businessId)
             .eq("platform", "google")
-            .eq("sync_status", "active")
             .maybeSingle();
 
         if (error || !platform?.google_location_id) {
@@ -79,7 +78,6 @@ export async function POST(request: Request) {
             .select("id, google_location_id")
             .eq("business_id", businessId)
             .eq("platform", "google")
-            .eq("sync_status", "active")
             .maybeSingle();
 
         if (error || !platform?.google_location_id) {

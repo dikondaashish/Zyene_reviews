@@ -47,7 +47,6 @@ export async function GET(request: NextRequest) {
             .select("id, google_location_id, platform, google_profile_health_score, google_listing_synced_at")
             .eq("business_id", businessId)
             .eq("platform", "google")
-            .eq("sync_status", "active")
             .maybeSingle();
 
         if (error || !platform?.google_location_id) {
@@ -127,7 +126,6 @@ export async function PATCH(request: Request) {
             .select("id, google_location_id, platform")
             .eq("business_id", businessId)
             .eq("platform", "google")
-            .eq("sync_status", "active")
             .maybeSingle();
 
         if (error || !platform?.google_location_id) {
