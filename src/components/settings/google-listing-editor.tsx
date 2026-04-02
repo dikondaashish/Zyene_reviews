@@ -33,6 +33,7 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
         score: number;
         checks: ProfileHealthCheck[];
     } | null>(null);
+    const [notConnected, setNotConnected] = useState(false);
     const [meta, setMeta] = useState<{
         primaryCategoryDisplay: string;
         mapsUri: string;
@@ -41,10 +42,19 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
 
     const load = useCallback(async () => {
         setLoading(true);
+        setNotConnected(false);
         try {
             const res = await fetch(`/api/google/listing?businessId=${encodeURIComponent(businessId)}`);
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Failed to load listing");
+            
+            if (!res.ok) {
+                if (res.status === 404 || data.code === "GOOGLE_NOT_CONNECTED") {
+                    setNotConnected(true);
+                    return; // Fail gracefully
+                }
+                throw new Error(data.error || "Failed to load listing");
+            }
+            
             const L = data.listing;
             const next: ListingForm = {
                 title: L.title || "",
@@ -124,6 +134,25 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
             <div className="flex items-center gap-2 text-sm text-muted-foreground py-8">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Loading listing from Google…
+            </div>
+        );
+    }
+
+    if (notConnected) {
+        return (
+            <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center space-y-3">
+                <div className="mx-auto h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-950/30 flex items-center justify-center">
+                    <CheckCircle2 className="h-6 w-6 text-orange-600 dark:text-orange-400 opacity-50" />
+                </div>
+                <div className="space-y-1">
+                    <h3 className="text-sm font-medium text-foreground">Google not connected</h3>
+                    <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                        Connect your Google Business Profile to edit your live listing details directly from this dashboard.
+                    </p>
+                </div>
+                <Button variant="outline" className="mt-2 bg-background shadow-sm" asChild>
+                    <a href="/settings/general">Go to Integrations</a>
+                </Button>
             </div>
         );
     }
