@@ -91,11 +91,20 @@ export function Step2Form({
 
   // Process the OAuth code passed from page.tsx (Google redirected back with ?code=)
   useEffect(() => {
-    if (pendingGoogleCode && googleState.status === "idle" && mounted) {
+    if (!mounted || googleState.status !== "idle") return;
+
+    // Already linked in DB: do not exchange a stale ?code= (bookmark/refresh) — avoids invalid_grant
+    if (initialConnected) {
+      setGoogleState({ status: "success" });
+      if (pendingGoogleCode) {
+        onGoogleCodeConsumed?.();
+      }
+      return;
+    }
+
+    if (pendingGoogleCode) {
       handleGoogleCallback(pendingGoogleCode);
       onGoogleCodeConsumed?.();
-    } else if (initialConnected && googleState.status === "idle" && mounted) {
-      setGoogleState({ status: "success" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingGoogleCode, initialConnected, mounted]);
@@ -120,7 +129,9 @@ export function Step2Form({
   const handleGoogleCallback = async (authCode: string) => {
     setGoogleState({ status: "connecting" });
     try {
-      const result = (await initializeGoogleAuth(authCode, businessId)) as any;
+      const redirectUri =
+        typeof window !== "undefined" ? `${window.location.origin}/onboarding` : undefined;
+      const result = (await initializeGoogleAuth(authCode, businessId, redirectUri)) as any;
       if (result.success) {
         setGoogleState({
           status: "success",

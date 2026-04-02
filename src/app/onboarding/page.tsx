@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/client";
 import { useOnboardingStore } from "@/lib/state/onboarding-store";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { Step1Form } from "@/components/onboarding/step1-form";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4SubscriptionForm } from "@/components/onboarding/step4-subscription-form";
 import { Step5Form } from "@/components/onboarding/step5-form";
-import { triggerOnboardingSync } from "@/app/actions/onboarding";
+import { triggerOnboardingSync, finalizeOnboardingStripeCheckout } from "@/app/actions/onboarding";
 import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper, Gem } from "lucide-react";
 
 interface OnboardingOrganization {
@@ -55,6 +56,12 @@ export default function OnboardingPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   // Holds the ?code= from Google OAuth redirect so Step2Form can process it immediately
   const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
+  const [checkoutVerifying, setCheckoutVerifying] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const p = new URLSearchParams(window.location.search);
+    if (p.get("checkout_success") !== "1") return false;
+    return Boolean(p.get("session_id")) || p.get("plan_switched") === "1";
+  });
 
   // Detect Google OAuth ?code= redirect BEFORE anything else.
   // When Google redirects back, the Zustand store resets to step 1 (in-memory).
@@ -70,6 +77,68 @@ export default function OnboardingPage() {
       // Strip the code from the URL immediately to prevent double-processing
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+  }, [setCurrentStep]);
+
+  // Stripe Checkout return: verify session (auth via cookie), then advance to step 5 only on success
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const checkoutSuccess = params.get("checkout_success");
+    const sessionId = params.get("session_id");
+    const planSwitched = params.get("plan_switched");
+    const canceled = params.get("checkout_canceled");
+
+    const cleanUrl = () =>
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+    if (canceled === "1") {
+      toast.info("Checkout canceled", {
+        description: "You can choose a plan whenever you're ready.",
+      });
+      setCurrentStep(4);
+      cleanUrl();
+      return;
+    }
+
+    if (checkoutSuccess !== "1") return;
+
+    if (sessionId) {
+      setCheckoutVerifying(true);
+      finalizeOnboardingStripeCheckout({ sessionId })
+        .then((r) => {
+          if (r.success) {
+            toast.success("Subscription started!");
+            setCurrentStep(5);
+          } else {
+            toast.error(r.error || "Could not verify checkout");
+          }
+        })
+        .finally(() => {
+          setCheckoutVerifying(false);
+          cleanUrl();
+        });
+      return;
+    }
+
+    if (planSwitched === "1") {
+      setCheckoutVerifying(true);
+      finalizeOnboardingStripeCheckout({ planSwitchedOnly: true })
+        .then((r) => {
+          if (r.success) {
+            toast.success("Plan updated!");
+            setCurrentStep(5);
+          } else {
+            toast.error(r.error || "Could not confirm your subscription");
+          }
+        })
+        .finally(() => {
+          setCheckoutVerifying(false);
+          cleanUrl();
+        });
+      return;
+    }
+
+    cleanUrl();
   }, [setCurrentStep]);
 
   // Load user, organization, and business on mount
@@ -184,6 +253,17 @@ export default function OnboardingPage() {
     );
   }
 
+  if (checkoutVerifying) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground font-medium">Confirming your subscription…</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user || !organization) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -199,11 +279,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div
-      className={`space-y-8 mx-auto w-full ${
-        currentStep === 4 ? "max-w-full" : "max-w-2xl"
-      }`}
-    >
+    <div className={`space-y-8 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-2xl"}`}>
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
@@ -264,13 +340,7 @@ export default function OnboardingPage() {
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-orange-500/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
 
-        <div
-          className={
-            currentStep === 4
-              ? "relative pro-card p-5 sm:p-6 lg:p-8 xl:p-10"
-              : "relative pro-card p-7 sm:p-10"
-          }
-        >
+        <div className="relative pro-card p-7 sm:p-10">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>

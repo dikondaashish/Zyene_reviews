@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redis } from "@/lib/db/redis";
@@ -21,6 +22,7 @@ import {
   type StepNotificationsFormData,
   type StepPlanFormData,
 } from "@/lib/validation/onboarding";
+import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { registerNotifications } from "@/services/google/notifications";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
@@ -115,9 +117,48 @@ export async function createBusinessAndAdvanceOnboarding(
   }
 }
 
+/**
+ * Token exchange must use the same redirect_uri as the authorize URL (browser uses
+ * window.location.origin). NEXT_PUBLIC_APP_URL alone can drift from the live host
+ * (e.g. apex vs app subdomain), which makes Google reject the exchange.
+ * When the client sends redirectUri, we accept it only if its host matches this request.
+ */
+async function resolveGoogleOAuthRedirectUri(clientRedirectUri?: string): Promise<string> {
+  const envBase = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(
+    /\/$/,
+    ""
+  );
+  const fallback = `${envBase}/onboarding`;
+
+  const headerList = await headers();
+  const rawHost = headerList.get("x-forwarded-host") || headerList.get("host");
+  const requestHost = rawHost?.split(",")[0]?.trim() ?? "";
+
+  const trimmed = clientRedirectUri?.trim();
+  if (!trimmed) {
+    return fallback;
+  }
+
+  try {
+    const u = new URL(trimmed);
+    const path = u.pathname.replace(/\/$/, "") || "/";
+    if (path !== "/onboarding") {
+      return fallback;
+    }
+    if (requestHost && u.host === requestHost) {
+      return `${u.origin}/onboarding`;
+    }
+  } catch {
+    /* use fallback */
+  }
+
+  return fallback;
+}
+
 export async function initializeGoogleAuth(
   authCode: string,
-  businessId: string
+  businessId: string,
+  clientRedirectUri?: string
 ) {
   try {
     const supabase = await createClient();
@@ -134,6 +175,8 @@ export async function initializeGoogleAuth(
       };
     }
 
+    const redirectUri = await resolveGoogleOAuthRedirectUri(clientRedirectUri);
+
     // Exchange auth code for access token
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
@@ -144,7 +187,7 @@ export async function initializeGoogleAuth(
         code: authCode,
         client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
         client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
-        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/onboarding`,
+        redirect_uri: redirectUri,
         grant_type: "authorization_code",
       }),
     });
@@ -1313,5 +1356,84 @@ export async function savePlanSelection(
       success: false,
       error: "An unexpected error occurred. Please try again.",
     };
+  }
+}
+
+/**
+ * After Stripe Checkout redirects back to onboarding, verify the session belongs to
+ * the user's org (subscription is created; plan limits are synced via webhook).
+ */
+export async function finalizeOnboardingStripeCheckout(params: {
+  sessionId?: string;
+  planSwitchedOnly?: boolean;
+}) {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, error: "You are not authenticated." };
+    }
+
+    const { data: member } = await supabase
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!member?.organization_id) {
+      return { success: false, error: "No organization found." };
+    }
+
+    const orgId = member.organization_id as string;
+
+    if (params.planSwitchedOnly) {
+      const { data: org } = await supabase
+        .from("organizations")
+        .select("stripe_subscription_id")
+        .eq("id", orgId)
+        .single();
+
+      if (!org?.stripe_subscription_id) {
+        return { success: false, error: "Subscription not found yet. Please refresh." };
+      }
+    } else if (params.sessionId) {
+      const session = await stripe.checkout.sessions.retrieve(params.sessionId);
+
+      if (session.status !== "complete") {
+        return { success: false, error: "Checkout is not complete." };
+      }
+
+      if (session.metadata?.organization_id !== orgId) {
+        return { success: false, error: "This checkout does not belong to your organization." };
+      }
+
+      const subscriptionId = session.subscription as string | null;
+      if (!subscriptionId) {
+        return { success: false, error: "No subscription on this checkout session." };
+      }
+    } else {
+      return { success: false, error: "Invalid request." };
+    }
+
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ onboarding_step: 5 } as any)
+      .eq("id", user.id);
+
+    if (updateError) {
+      console.error("finalizeOnboardingStripeCheckout:", updateError);
+      return { success: false, error: "Failed to update onboarding progress." };
+    }
+
+    revalidatePath("/onboarding");
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("finalizeOnboardingStripeCheckout:", error);
+    return { success: false, error: "Could not verify checkout. Please try again." };
   }
 }

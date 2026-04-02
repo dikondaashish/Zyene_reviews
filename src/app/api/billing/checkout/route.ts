@@ -17,11 +17,20 @@ export async function POST(request: Request) {
     }
 
     try {
-        const { priceId } = await request.json();
+        const body = await request.json();
+        const priceIdRaw = body.priceId as string | undefined;
+        const planId = body.planId as string | undefined;
+        const source = body.source === "onboarding" ? "onboarding" : "billing";
+
+        let priceId = priceIdRaw;
+        if (!priceId && planId && typeof planId === "string") {
+            const plan = PLANS.find((p) => p.id === planId);
+            priceId = plan?.stripePriceId || undefined;
+        }
 
         if (!priceId || typeof priceId !== "string") {
             return NextResponse.json(
-                { error: "priceId is required" },
+                { error: "priceId or a valid planId is required" },
                 { status: 400 }
             );
         }
@@ -103,6 +112,11 @@ export async function POST(request: Request) {
             ? `http://${rootDomain}`
             : `https://app.${rootDomain}`;
 
+        const billingSuccessUrl = `${dashboardUrl}/settings/billing?success=true`;
+        const billingCancelUrl = `${dashboardUrl}/settings/billing?canceled=true`;
+        const onboardingSuccessUrl = `${dashboardUrl}/onboarding?checkout_success=1&session_id={CHECKOUT_SESSION_ID}`;
+        const onboardingCancelUrl = `${dashboardUrl}/onboarding?checkout_canceled=1`;
+
         // ── Guard: If already subscribed, update plan instead of creating a new subscription ──
         if (org.stripe_subscription_id) {
             try {
@@ -118,8 +132,13 @@ export async function POST(request: Request) {
                         proration_behavior: "create_prorations",
                     });
 
+                    const switchedReturnUrl =
+                        source === "onboarding"
+                            ? `${dashboardUrl}/onboarding?checkout_success=1&plan_switched=1`
+                            : billingSuccessUrl;
+
                     return NextResponse.json({
-                        url: `${dashboardUrl}/settings/billing?success=true`,
+                        url: switchedReturnUrl,
                         switched: true,
                     });
                 }
@@ -146,12 +165,15 @@ export async function POST(request: Request) {
             couponId = process.env.STRIPE_NEW_PRO_CUSTOMER_COUPON_ID;
         }
 
+        const successUrl = source === "onboarding" ? onboardingSuccessUrl : billingSuccessUrl;
+        const cancelUrl = source === "onboarding" ? onboardingCancelUrl : billingCancelUrl;
+
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomerId,
             mode: "subscription",
             line_items: [{ price: priceId, quantity: 1 }],
-            success_url: `${dashboardUrl}/settings/billing?success=true`,
-            cancel_url: `${dashboardUrl}/settings/billing?canceled=true`,
+            success_url: successUrl,
+            cancel_url: cancelUrl,
             ...(couponId
                 ? { discounts: [{ coupon: couponId }] }
                 : { allow_promotion_codes: true }),

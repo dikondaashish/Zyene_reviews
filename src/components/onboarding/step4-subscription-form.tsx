@@ -1,73 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
-  Check,
   CheckCircle2,
   Loader2,
-  ArrowRight,
-  Gem,
-  ShieldCheck,
+  Crown,
   Zap,
-  Sparkles,
+  Building2,
+  Mail,
 } from "lucide-react";
+import * as PricingCard from "@/components/ui/pricing-card";
 import { savePlanSelection } from "@/app/actions/onboarding";
 import { cn } from "@/lib/utils/index";
-
-const PLANS = [
-  {
-    id: "none",
-    name: "Free",
-    price: "$0",
-    interval: "forever",
-    description: "Perfect for exploring the platform",
-    features: [
-      "10 AI review responses/mo",
-      "1 Google Business profile",
-      "Basic analytics dashboard",
-      "Standard email support",
-    ],
-    icon: Zap,
-  },
-  {
-    id: "starter_monthly",
-    name: "Pro",
-    price: "$29.99",
-    interval: "month",
-    description: "For growing businesses",
-    features: [
-      "Unlimited review sync",
-      "500 AI review responses/mo",
-      "Email & SMS notifications",
-      "Response wait-time alerts",
-      "Priority chat support",
-    ],
-    isPopular: true,
-    icon: Sparkles,
-  },
-  {
-    id: "professional_monthly",
-    name: "Business",
-    price: "$59.99",
-    interval: "month",
-    description: "For multi-location scaling",
-    features: [
-      "Everything in Pro, plus:",
-      "3 Business locations",
-      "3,000 AI review responses/mo",
-      "White-label PDF reports",
-      "Custom response templates",
-      "Dedicated account manager",
-    ],
-    icon: ShieldCheck,
-  },
-] as const;
+import { PLANS, type Plan } from "@/services/stripe/plans";
 
 interface Step4SubscriptionFormProps {
   organizationId: string;
+  /** Passed from onboarding page when Google is linked; reserved for future UX hints */
   isGoogleConnected?: boolean;
   onNext: () => void;
   isLoading?: boolean;
@@ -75,24 +27,69 @@ interface Step4SubscriptionFormProps {
 
 export function Step4SubscriptionForm({
   organizationId,
-  isGoogleConnected = false,
+  isGoogleConnected: _isGoogleConnected,
   onNext,
   isLoading: externalIsLoading = false,
 }: Step4SubscriptionFormProps) {
-  const [isLoading, setIsLoading] = useState(externalIsLoading);
-  const [selectedPlan, setSelectedPlan] = useState<string>("starter_monthly");
+  void _isGoogleConnected;
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [interval, setInterval] = useState<"month" | "year">("month");
 
-  const onSubmit = async (planId: string) => {
+  useEffect(() => {
+    setIsLoading(externalIsLoading);
+  }, [externalIsLoading]);
+
+  const displayPlans = PLANS.filter(
+    (p) => p.interval === interval && p.id !== "enterprise"
+  );
+  const enterprisePlan = PLANS.find((p) => p.id === "enterprise");
+
+  const monthlyStarterPrice = PLANS.find((p) => p.id === "starter_monthly")?.price ?? 0;
+  const yearlyStarterPrice = PLANS.find((p) => p.id === "starter_yearly")?.price ?? 0;
+  const yearlySavings =
+    monthlyStarterPrice > 0
+      ? Math.round((1 - yearlyStarterPrice / (monthlyStarterPrice * 12)) * 100)
+      : 0;
+
+  const intervalLabel = interval === "month" ? "/mo" : "/yr";
+
+  const onSubscribe = async (plan: Plan) => {
+    setLoadingPlan(plan.id);
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId: plan.id, source: "onboarding" }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(typeof data.error === "string" ? data.error : "Failed to start checkout");
+      }
+
+      if (data.url && typeof data.url === "string") {
+        window.location.href = data.url;
+        return;
+      }
+
+      throw new Error("No checkout URL returned");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Something went wrong. Please try again.";
+      toast.error(message);
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
+  const handleSkip = async () => {
     setIsLoading(true);
     try {
-      const result = await savePlanSelection(organizationId, {
-        plan: planId as (typeof PLANS)[number]["id"],
-      });
+      const result = await savePlanSelection(organizationId, { plan: "none" });
       if (result.success) {
-        toast.success(`Plan updated to ${PLANS.find((p) => p.id === planId)?.name}!`);
         onNext();
       } else {
-        toast.error(result.error || "Failed to save plan");
+        toast.error(result.error || "Failed to continue");
       }
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -101,209 +98,206 @@ export function Step4SubscriptionForm({
     }
   };
 
-  const handleSkip = () => {
-    onSubmit("none");
-  };
+  const busy = isLoading || loadingPlan !== null;
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
-          className="inline-flex"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
-            <Gem className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
-          </div>
-        </motion.div>
+      <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.2]"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(0,0,0,0.06) 0.8px, transparent 0.8px)",
+            backgroundSize: "14px 14px",
+            maskImage:
+              "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,1), rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 72%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute -top-1/2 left-1/2 h-[min(120vmin,720px)] w-[min(120vmin,720px)] -translate-x-1/2 rounded-full",
+            "bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12),transparent_55%)]",
+            "blur-[32px]",
+          )}
+        />
 
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-          Choose your plan
-        </h2>
-        <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed text-sm sm:text-base">
-          Unlock advanced AI features and unlimited sync to grow your reputation.
-        </p>
+        <div className="relative z-10">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+            <h3 className="text-xl font-semibold text-left">Choose a Plan</h3>
 
-        {isGoogleConnected && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 border border-orange-200/80 rounded-full text-xs font-semibold text-orange-700 shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" aria-hidden />
-            Connected profile detected: Pro plan recommended
-          </motion.div>
-        )}
-      </div>
-
-      {/* Pricing grid — reference layout: white cards, muted header, green vs orange feature checks */}
-      <div className="rounded-3xl border border-slate-200/80 bg-slate-50/50 p-4 sm:p-6 lg:p-8 shadow-inner">
-        <div className="grid grid-cols-1 gap-5 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-          {PLANS.map((plan, index) => {
-            const Icon = plan.icon;
-            const isSelected = selectedPlan === plan.id;
-            const isPopular = "isPopular" in plan && plan.isPopular;
-
-            return (
-              <motion.div
-                key={plan.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.06, duration: 0.35 }}
-                className="min-w-0"
+            <div className="bg-muted/80 p-1 rounded-lg inline-flex items-center border border-border/60 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setInterval("month")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  interval === "month"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlan(plan.id)}
+                Monthly
+              </button>
+              <button
+                type="button"
+                onClick={() => setInterval("year")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                  interval === "year"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Yearly
+                <Badge
+                  variant="secondary"
+                  className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900"
+                >
+                  Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
+                </Badge>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {displayPlans.map((plan) => {
+              const isPro = plan.name === "Professional";
+
+              return (
+                <PricingCard.Card
+                  key={plan.id}
                   className={cn(
-                    "relative w-full text-left rounded-2xl border bg-white shadow-md shadow-slate-200/40 overflow-hidden transition-all duration-200",
-                    "hover:shadow-lg hover:border-slate-300/90",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40 focus-visible:ring-offset-2",
-                    isPopular &&
-                      "ring-2 ring-orange-500 border-orange-400/90 shadow-orange-500/15",
-                    !isPopular && isSelected && "ring-2 ring-orange-400/70 border-orange-200",
-                    !isPopular && !isSelected && "border-slate-200/90",
+                    "relative flex w-full max-w-none flex-col h-full",
+                    isPro &&
+                      "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
                   )}
                 >
-                  {isPopular && (
-                    <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2">
-                      <span className="inline-block rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-md">
+                  {isPro && (
+                    <div className="absolute -top-2 right-3 z-20">
+                      <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
                         Most Popular
-                      </span>
+                      </Badge>
                     </div>
                   )}
-
-                  {/* Top: plan + price (muted panel) */}
-                  <div
-                    className={cn(
-                      "px-4 pb-4 pt-6 sm:px-5 sm:pb-5 sm:pt-7",
-                      isPopular ? "bg-orange-50/40 pt-8" : "bg-slate-50/80",
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Icon
-                          className={cn(
-                            "h-5 w-5 shrink-0",
-                            isPopular ? "text-orange-500" : "text-orange-500",
-                          )}
-                          aria-hidden
-                        />
-                        <span className="font-semibold text-slate-900 truncate">
-                          {plan.name}
-                        </span>
-                      </div>
-                      <span className="shrink-0 rounded-full border border-slate-200/90 bg-white px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
-                        {plan.id === "none" ? "Forever" : "Monthly"}
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-[12px] leading-snug text-muted-foreground">
-                      {plan.description}
+                  <PricingCard.Header className="relative z-10 mb-3 p-3">
+                    <PricingCard.Plan>
+                      <PricingCard.PlanName>
+                        {isPro ? (
+                          <Crown className="text-orange-500" aria-hidden />
+                        ) : (
+                          <Zap className="text-orange-500" aria-hidden />
+                        )}
+                        <span className="text-foreground">{plan.name}</span>
+                      </PricingCard.PlanName>
+                      <PricingCard.Badge>
+                        {isPro ? "Multi-location" : "Single location"}
+                      </PricingCard.Badge>
+                    </PricingCard.Plan>
+                    <PricingCard.Description className="mb-2 text-[11px] leading-tight">
+                      {isPro
+                        ? "For growing multi-location businesses."
+                        : "Perfect for single-location businesses."}
+                    </PricingCard.Description>
+                    <PricingCard.Price>
+                      {plan.originalPrice != null &&
+                        plan.originalPrice > (plan.price || 0) && (
+                          <PricingCard.OriginalPrice>
+                            ${plan.originalPrice}
+                          </PricingCard.OriginalPrice>
+                        )}
+                      <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
+                      <PricingCard.Period>{intervalLabel}</PricingCard.Period>
+                    </PricingCard.Price>
+                    <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
+                      7-day free trial included
                     </p>
-
-                    <div className="mt-3 flex flex-wrap items-baseline gap-1">
-                      <span className="text-2xl font-extrabold tracking-tight text-slate-900">
-                        {plan.price}
-                      </span>
-                      {plan.interval === "month" && (
-                        <span className="text-sm text-slate-500">/ mo</span>
-                      )}
-                    </div>
-
-                    {/* Selection pill */}
-                    <div
+                    <Button
                       className={cn(
-                        "mt-4 flex h-10 items-center justify-center rounded-full border text-sm font-semibold transition-colors",
-                        isSelected
-                          ? "border-orange-200 bg-orange-50 text-orange-700"
-                          : "border-slate-200 bg-white text-slate-500",
+                        "w-full font-semibold text-white",
+                        "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
+                        "hover:from-orange-600 hover:to-orange-700",
                       )}
+                      onClick={() => onSubscribe(plan)}
+                      disabled={loadingPlan === plan.id || busy}
                     >
-                      {isSelected ? (
-                        <span className="inline-flex items-center gap-1.5">
-                          <Check className="h-4 w-4 text-orange-600" aria-hidden />
-                          Selected
-                        </span>
-                      ) : (
-                        <span>Tap to select</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Bottom: features (white, separated) */}
-                  <div className="border-t border-slate-100 bg-white px-4 py-4 sm:px-5">
-                    <ul className="space-y-2.5">
+                      {loadingPlan === plan.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : null}
+                      Start Free Trial
+                    </Button>
+                  </PricingCard.Header>
+                  <PricingCard.Body className="space-y-3 p-2">
+                    <PricingCard.List className="space-y-2">
                       {plan.features.map((feature) => (
-                        <li
-                          key={feature}
-                          className="flex items-start gap-2.5 text-[12px] leading-snug text-slate-600"
-                        >
-                          <CheckCircle2
-                            className={cn(
-                              "mt-0.5 h-4 w-4 shrink-0",
-                              isPopular ? "text-orange-500" : "text-emerald-500",
-                            )}
-                            aria-hidden
-                          />
+                        <PricingCard.ListItem key={feature} className="text-xs gap-2">
+                          <span className="mt-0.5 shrink-0">
+                            <CheckCircle2
+                              className="h-3.5 w-3.5 text-emerald-500"
+                              aria-hidden
+                            />
+                          </span>
                           <span>{feature}</span>
-                        </li>
+                        </PricingCard.ListItem>
                       ))}
-                    </ul>
-                  </div>
-                </button>
-              </motion.div>
-            );
-          })}
+                    </PricingCard.List>
+                  </PricingCard.Body>
+                </PricingCard.Card>
+              );
+            })}
+
+            {enterprisePlan && (
+              <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed">
+                <PricingCard.Header className="relative z-10">
+                  <PricingCard.Plan>
+                    <PricingCard.PlanName>
+                      <Building2 className="text-muted-foreground" aria-hidden />
+                      <span className="text-foreground">Enterprise</span>
+                    </PricingCard.PlanName>
+                    <PricingCard.Badge>Custom</PricingCard.Badge>
+                  </PricingCard.Plan>
+                  <PricingCard.Description className="mb-3">
+                    For large organizations with custom needs.
+                  </PricingCard.Description>
+                  <PricingCard.Price>
+                    <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
+                  </PricingCard.Price>
+                  <a
+                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
+                    className="block w-full"
+                  >
+                    <Button variant="outline" className="w-full gap-2 font-semibold" type="button">
+                      <Mail className="h-4 w-4" />
+                      Contact Sales
+                    </Button>
+                  </a>
+                </PricingCard.Header>
+                <PricingCard.Body>
+                  <PricingCard.List>
+                    {enterprisePlan.features.map((feature) => (
+                      <PricingCard.ListItem key={feature}>
+                        <span className="mt-0.5 shrink-0">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden />
+                        </span>
+                        <span>{feature}</span>
+                      </PricingCard.ListItem>
+                    ))}
+                  </PricingCard.List>
+                </PricingCard.Body>
+              </PricingCard.Card>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="space-y-4 pt-2">
-        <Button
-          onClick={() => onSubmit(selectedPlan)}
-          disabled={isLoading}
-          className="w-full h-14 font-semibold cta-button shadow-none"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...
-            </>
-          ) : (
-            <>
-              {selectedPlan === "none" ? "Start with Free" : "Start 7-Day Free Trial"}
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
-            </>
-          )}
-        </Button>
-
+      <div className="flex justify-center">
         <button
           type="button"
           onClick={handleSkip}
-          disabled={isLoading}
-          className="w-full py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+          disabled={busy}
+          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
         >
           Skip for now
         </button>
-      </div>
-
-      {/* Social proof */}
-      <div className="flex items-center justify-center gap-6 px-4 py-3 border border-dashed border-border/50 rounded-2xl bg-secondary/20">
-        <div className="flex -space-x-2">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="w-6 h-6 rounded-full border-2 border-white bg-slate-200"
-            />
-          ))}
-        </div>
-        <p className="text-[10px] text-muted-foreground">
-          Join <span className="text-foreground font-semibold">1,200+</span>{" "}
-          businesses managing reviews with AI
-        </p>
       </div>
     </div>
   );
