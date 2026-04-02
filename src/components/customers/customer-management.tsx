@@ -152,7 +152,6 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         <UserPlus className="h-4.5 w-4.5" />
                         Add Customer
                     </Button>
-                    </Button>
                 </div>
             </div>
 
