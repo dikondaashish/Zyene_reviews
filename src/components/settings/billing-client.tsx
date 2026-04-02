@@ -411,7 +411,7 @@ export function BillingClient({
                         </div>
                     </div>
 
-                    <div className="grid gap-6 md:grid-cols-3">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {displayPlans.map((plan) => {
                             const isCurrentPlan = currentPlan?.id === plan.id;
                             const isPro = plan.name === "Professional";
@@ -420,7 +420,7 @@ export function BillingClient({
                                 <PricingCard.Card
                                     key={plan.id}
                                     className={cn(
-                                        "relative flex w-full max-w-none flex-col",
+                                        "relative flex w-full max-w-none flex-col h-full",
                                         isPro &&
                                             "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
                                         isCurrentPlan && "ring-2 ring-primary/60",
@@ -433,7 +433,7 @@ export function BillingClient({
                                             </Badge>
                                         </div>
                                     )}
-                                    <PricingCard.Header className="relative z-10">
+                                    <PricingCard.Header className="relative z-10 mb-3 p-3">
                                         <PricingCard.Plan>
                                             <PricingCard.PlanName>
                                                 {isPro ? (
@@ -449,7 +449,7 @@ export function BillingClient({
                                                     : "Single location"}
                                             </PricingCard.Badge>
                                         </PricingCard.Plan>
-                                        <PricingCard.Description className="mb-3">
+                                        <PricingCard.Description className="mb-2 text-[11px] leading-tight">
                                             {isPro
                                                 ? "For growing multi-location businesses."
                                                 : "Perfect for single-location businesses."}
@@ -494,13 +494,16 @@ export function BillingClient({
                                             </Button>
                                         )}
                                     </PricingCard.Header>
-                                    <PricingCard.Body>
-                                        <PricingCard.List>
+                                    <PricingCard.Body className="space-y-3 p-2">
+                                        <PricingCard.List className="space-y-2">
                                             {plan.features.map((feature) => (
-                                                <PricingCard.ListItem key={feature}>
+                                                <PricingCard.ListItem
+                                                    key={feature}
+                                                    className="text-xs gap-2"
+                                                >
                                                     <span className="mt-0.5 shrink-0">
                                                         <CheckCircle2
-                                                            className="h-4 w-4 text-emerald-500"
+                                                            className="h-3.5 w-3.5 text-emerald-500"
                                                             aria-hidden
                                                         />
                                                     </span>

@@ -169,7 +169,7 @@ export function Step4SubscriptionForm({
             "blur-[28px]",
           )}
         />
-        <div className="relative z-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {PLANS.map((plan, index) => {
             const Icon = plan.icon;
             const isSelected = selectedPlan === plan.id;
@@ -194,7 +194,7 @@ export function Step4SubscriptionForm({
                     }
                   }}
                   className={cn(
-                    "w-full max-w-none cursor-pointer transition-shadow",
+                    "w-full max-w-none cursor-pointer transition-shadow h-full",
                     isPopular &&
                       "ring-2 ring-orange-500/45 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.22)]",
                     isSelected && "ring-2 ring-orange-500/70 shadow-lg",
@@ -207,7 +207,7 @@ export function Step4SubscriptionForm({
                       </Badge>
                     </div>
                   )}
-                  <PricingCard.Header className="relative z-10">
+                  <PricingCard.Header className="relative z-10 mb-3 p-3">
                     <PricingCard.Plan>
                       <PricingCard.PlanName>
                         <Icon className="text-orange-500" aria-hidden />
@@ -217,7 +217,9 @@ export function Step4SubscriptionForm({
                       {plan.id === "none" ? "Forever" : plan.interval === "year" ? "Yearly" : "Monthly"}
                       </PricingCard.Badge>
                     </PricingCard.Plan>
-                    <PricingCard.Description className="mb-3">{plan.description}</PricingCard.Description>
+                    <PricingCard.Description className="mb-2 text-[11px] leading-tight">
+                      {plan.description}
+                    </PricingCard.Description>
                     <PricingCard.Price>
                       <PricingCard.MainPrice className="text-2xl">{plan.price}</PricingCard.MainPrice>
                       {plan.interval === "month" && (
@@ -235,12 +237,12 @@ export function Step4SubscriptionForm({
                       )}
                     </div>
                   </PricingCard.Header>
-                  <PricingCard.Body>
-                    <PricingCard.List>
+                  <PricingCard.Body className="space-y-3 p-2">
+                    <PricingCard.List className="space-y-2">
                       {plan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature}>
+                        <PricingCard.ListItem key={feature} className="text-xs gap-2">
                           <span className="mt-0.5 shrink-0">
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden />
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
                           </span>
                           <span>{feature}</span>
                         </PricingCard.ListItem>
