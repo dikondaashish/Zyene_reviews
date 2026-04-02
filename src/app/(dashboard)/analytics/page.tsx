@@ -25,6 +25,7 @@ import { Sparkles, Search, Gauge, Globe, MousePointer2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { EngagementFunnelCard } from "@/components/analytics/engagement-funnel-card";
 import { PlatformTabs } from "@/components/analytics/platform-tabs";
+import { ZyenePlatformAnalytics } from "@/components/analytics/zyene-platform-analytics";
 
 // Helper with comparison support
 function getPeriods(range: string) {
@@ -102,17 +103,32 @@ export default async function AnalyticsPage({
     }
 
     // 2. Fetch Review Requests (current + previous)
-    let requestsQuery = supabase
+    // For Zyene platform, we fetch all columns for rich analytics
+    const requestsQuery = supabase
         .from("review_requests")
-        .select("created_at")
+        .select("*")
         .eq("business_id", businessId)
         .gte("created_at", previousStart.toISOString());
 
-    const [{ data: allReviews }, { data: allRequests }, { data: reviewPlatforms }] = await Promise.all([
+    // 3. Fetch Private Feedback (only when Zyene platform selected)
+    const privateFeedbackQuery = platform === "zyene"
+        ? supabase
+              .from("private_feedback")
+              .select("id,rating,content,created_at")
+              .eq("business_id", businessId)
+              .gte("created_at", currentStart.toISOString())
+              .order("created_at", { ascending: false })
+              .limit(50)
+        : null;
+
+    const [{ data: allReviews }, { data: allRequests }, { data: reviewPlatforms }, privateFeedbackResult] = await Promise.all([
         reviewsQuery,
         requestsQuery,
         supabase.from("review_platforms").select("platform").eq("business_id", businessId),
+        privateFeedbackQuery ?? Promise.resolve({ data: null }),
     ]);
+
+    const privateFeedback = (privateFeedbackResult as any)?.data || [];
 
     const connectedPlatforms = (reviewPlatforms || []).map(p => p.platform);
 
@@ -291,7 +307,17 @@ export default async function AnalyticsPage({
             {isDemo && <DemoModeBanner className="mb-2" />}
 
             <div id="analytics-content" className="flex flex-col gap-8 w-full relative">
-                
+
+                {/* ─── OWN PLATFORM (ZYENE) ANALYTICS ─── */}
+                {platform === "zyene" ? (
+                    <ZyenePlatformAnalytics
+                        requests={(allRequests || []) as any}
+                        previousRequests={previousRequests as any}
+                        privateFeedback={privateFeedback}
+                        dateRange={rangeLabel}
+                    />
+                ) : (
+                    <>
                 {/* 1. Key Metrics - Bento Row */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <StatsCard 
@@ -519,6 +545,8 @@ export default async function AnalyticsPage({
                         </div>
                         <PlatformTable data={platformData} />
                     </div>
+                )}
+                    </>
                 )}
             </div>
         </div>
