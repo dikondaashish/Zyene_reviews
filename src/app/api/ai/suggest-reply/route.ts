@@ -51,28 +51,14 @@ export async function POST(request: Request) {
 
     if (error || !review) return NextResponse.json({ error: "Review not found" }, { status: 404 });
 
-    // Fetch org plan limits
+    // Extract org info for limit check and business name
     const reviewTyped = review as unknown as ReviewWithBusiness;
     const orgId = reviewTyped.businesses?.organization_id;
     if (!orgId) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 
-    const { data: org, error: orgError } = await supabase
-        .from("organizations")
-        .select("plan, ai_replies_used_this_month")
-        .eq("id", orgId)
-        .single();
-
-    if (orgError || !org) {
-        return NextResponse.json({ error: "Organization not found" }, { status: 404 });
-    }
-
-    const planLimits: Record<string, number> = {
-        free: 0, starter: 50, growth: 200,
-        agency_starter: 500, agency_pro: 1000, agency_scale: 9999,
-    };
-
-    const limit = planLimits[(org as unknown as OrgWithPlan).plan] ?? 0;
-    if ((org as unknown as OrgWithPlan).ai_replies_used_this_month >= limit) {
+    // Check AI reply limits using the centralized limit checker
+    const aiLimitCheck = await checkLimit(orgId, "ai_replies");
+    if (!aiLimitCheck.allowed) {
         return NextResponse.json(
             { error: "Monthly AI reply limit reached. Please upgrade your plan." },
             { status: 403 }
