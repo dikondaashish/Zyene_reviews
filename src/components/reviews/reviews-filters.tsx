@@ -28,7 +28,7 @@ export function ReviewsFilters() {
     return (
         <div className="bg-white p-1 rounded-lg border shadow-sm flex flex-col sm:flex-row gap-2 sm:items-center justify-between sticky top-0 z-10">
             <div className="flex items-center overflow-x-auto no-scrollbar">
-                <Tabs defaultValue={searchParams.get("status") || "all"} onValueChange={(val) => updateFilter("status", val)} className="w-full sm:w-auto">
+                <Tabs value={searchParams.get("status") || "all"} onValueChange={(val) => updateFilter("status", val)} className="w-full sm:w-auto">
                     <TabsList className="bg-transparent h-9 p-0">
                         <TabsTrigger value="all" className="data-[state=active]:bg-gray-100 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-gray-200 rounded-md h-8 text-xs px-3">All</TabsTrigger>
                         <TabsTrigger value="needs_response" className="data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-yellow-100 rounded-md h-8 text-xs px-3">Needs Response</TabsTrigger>
@@ -39,11 +39,11 @@ export function ReviewsFilters() {
             </div>
 
             <div className="flex items-center gap-2 p-1 border-t sm:border-t-0 pt-2 sm:pt-0">
-                <Select defaultValue={searchParams.get("rating") || "all"} onValueChange={(val) => updateFilter("rating", val)}>
+                <Select value={searchParams.get("rating") || "all"} onValueChange={(val) => updateFilter("rating", val)}>
                     <SelectTrigger className="h-8 w-[110px] text-xs border-dashed focus:ring-0">
                         <div className="flex items-center text-muted-foreground">
                             <Filter className="w-3 h-3 mr-2" />
-                            <span className="text-gray-900 truncate">{searchParams.get("rating") ? `${searchParams.get("rating")} Stars` : "Rating"}</span>
+                            <span className="text-gray-900 truncate">{searchParams.get("rating") && searchParams.get("rating") !== "all" ? `${searchParams.get("rating")} Stars` : "Rating"}</span>
                         </div>
                     </SelectTrigger>
                     <SelectContent>
@@ -56,7 +56,7 @@ export function ReviewsFilters() {
                     </SelectContent>
                 </Select>
 
-                <Select defaultValue={searchParams.get("sort") || "newest"} onValueChange={(val) => updateFilter("sort", val)}>
+                <Select value={searchParams.get("sort") || "newest"} onValueChange={(val) => updateFilter("sort", val)}>
                     <SelectTrigger className="h-8 w-[130px] text-xs border-dashed focus:ring-0">
                         <div className="flex items-center text-muted-foreground">
                             <SlidersHorizontal className="w-3 h-3 mr-2" />
