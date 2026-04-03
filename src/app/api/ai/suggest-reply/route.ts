@@ -73,7 +73,7 @@ export async function POST(request: Request) {
             .replace("{text}", review.text || "");
 
         const response = await anthropic.messages.create({
-            model: "claude-opus-4-6-20260301",
+            model: "claude-opus-4-6",
             max_tokens: 1000,
             messages: [{ role: "user", content: prompt }]
         });
