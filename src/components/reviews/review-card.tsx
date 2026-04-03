@@ -20,7 +20,8 @@ interface Review {
     business_id: string;
     author_name: string;
     rating: number;
-    content: string;
+    content?: string;
+    text?: string;
     published_at: string;
     response_status: 'pending' | 'responded' | 'ignored';
     response_text?: string;
@@ -141,6 +142,8 @@ export function ReviewCard({
         );
     };
 
+        const displayContent = review.text || review.content || "";
+
     return (
         <div className={cn(
             "bg-white rounded-xl border p-4 shadow-sm hover:shadow-md transition-all duration-300 relative group",
@@ -205,8 +208,8 @@ export function ReviewCard({
             {/* Content & Themes */}
             <div className="space-y-2">
                 <div className="text-sm text-slate-600 leading-relaxed">
-                    <p className={cn(!isExpanded && "line-clamp-3")}>{review.content}</p>
-                    {review.content && review.content.length > 200 && (
+                    <p className={cn(!isExpanded && "line-clamp-3")}>{displayContent}</p>
+                    {displayContent.length > 200 && (
                         <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-600 text-xs font-medium mt-1 hover:underline focus:outline-none">
                             {isExpanded ? "Show less" : "Read more"}
                         </button>
