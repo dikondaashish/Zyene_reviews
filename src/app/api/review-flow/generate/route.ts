@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
         try {
             const message = await anthropic.messages.create({
-                model: "claude-haiku-4-5-20251001",
+                model: "claude-opus-4-6-20260301",
                 max_tokens: 256,
                 system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer.",
                 messages: [

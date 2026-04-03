@@ -14,7 +14,7 @@ export async function analyzeReview(review: any) {
         // Using standard model ID for reliability, user requested custom IDs might be placeholders
         // Falling back to known working models
         const response = await anthropic.messages.create({
-            model: "claude-haiku-4-5-20251001",
+            model: "claude-opus-4-6-20260301",
             max_tokens: 1000,
             messages: [{ role: "user", content: prompt }]
         });
