@@ -169,7 +169,7 @@ export function Step4SubscriptionForm({
             </div>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both">
             {displayPlans.map((plan) => {
               const isPro = plan.name === "Professional";
 
@@ -178,8 +178,9 @@ export function Step4SubscriptionForm({
                   key={plan.id}
                   className={cn(
                     "relative flex w-full max-w-none flex-col h-full",
+                    "transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-stone-300 dark:hover:border-stone-700",
                     isPro &&
-                      "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
+                      "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)] hover:shadow-[0_30px_60px_-15px_rgba(249,115,22,0.45)] hover:ring-orange-500/70",
                   )}
                 >
                   {isPro && (
@@ -256,7 +257,7 @@ export function Step4SubscriptionForm({
             })}
 
             {enterprisePlan && (
-              <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed">
+              <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-solid hover:border-stone-300 dark:hover:border-stone-600">
                 <PricingCard.Header className="relative z-10">
                   <PricingCard.Plan>
                     <PricingCard.PlanName>
