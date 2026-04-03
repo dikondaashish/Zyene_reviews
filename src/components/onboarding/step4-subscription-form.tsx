@@ -223,9 +223,9 @@ export function Step4SubscriptionForm({
                     </p>
                     <Button
                       className={cn(
-                        "w-full font-semibold text-white",
-                        "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
-                        "hover:from-orange-600 hover:to-orange-700",
+                        "w-full font-semibold text-white transition-all duration-300",
+                        "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(249,115,22,0.25)]",
+                        "hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(249,115,22,0.4)] hover:brightness-110 active:translate-y-0 active:shadow-md",
                       )}
                       onClick={() => onSubscribe(plan)}
                       disabled={loadingPlan === plan.id || busy}
@@ -275,7 +275,11 @@ export function Step4SubscriptionForm({
                     href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
                     className="block w-full"
                   >
-                    <Button variant="outline" className="w-full gap-2 font-semibold" type="button">
+                    <Button 
+                      variant="outline" 
+                      className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800" 
+                      type="button"
+                    >
                       <Mail className="h-4 w-4" />
                       Contact Sales
                     </Button>
