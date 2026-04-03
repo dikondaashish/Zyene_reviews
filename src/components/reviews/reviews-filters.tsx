@@ -40,34 +40,34 @@ export function ReviewsFilters() {
 
             <div className="flex items-center gap-2 p-1 border-t sm:border-t-0 pt-2 sm:pt-0">
                 <Select value={searchParams.get("rating") || "all"} onValueChange={(val) => updateFilter("rating", val)}>
-                    <SelectTrigger className="h-8 w-[110px] text-xs border-dashed focus:ring-0">
-                        <div className="flex items-center text-muted-foreground">
-                            <Filter className="w-3 h-3 mr-2" />
-                            <span className="text-gray-900 truncate">{searchParams.get("rating") && searchParams.get("rating") !== "all" ? `${searchParams.get("rating")} Stars` : "Rating"}</span>
+                    <SelectTrigger className="h-8 w-[130px] text-xs border-dashed focus:ring-0">
+                        <div className="flex items-center pointer-events-none">
+                            <Filter className="w-3 h-3 mr-2 text-muted-foreground" />
+                            <SelectValue placeholder="Rating" />
                         </div>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Stars</SelectItem>
-                        <SelectItem value="5">5 Stars</SelectItem>
-                        <SelectItem value="4">4 Stars</SelectItem>
-                        <SelectItem value="3">3 Stars</SelectItem>
-                        <SelectItem value="2">2 Stars</SelectItem>
-                        <SelectItem value="1">1 Star</SelectItem>
+                        <SelectItem value="5">⭐ 5 Stars</SelectItem>
+                        <SelectItem value="4">⭐ 4 Stars</SelectItem>
+                        <SelectItem value="3">⭐ 3 Stars</SelectItem>
+                        <SelectItem value="2">⭐ 2 Stars</SelectItem>
+                        <SelectItem value="1">⭐ 1 Star</SelectItem>
                     </SelectContent>
                 </Select>
 
                 <Select value={searchParams.get("sort") || "newest"} onValueChange={(val) => updateFilter("sort", val)}>
-                    <SelectTrigger className="h-8 w-[130px] text-xs border-dashed focus:ring-0">
-                        <div className="flex items-center text-muted-foreground">
-                            <SlidersHorizontal className="w-3 h-3 mr-2" />
-                            <span className="text-gray-900 truncate">Sort</span>
+                    <SelectTrigger className="h-8 w-[150px] text-xs border-dashed focus:ring-0">
+                        <div className="flex items-center pointer-events-none">
+                            <SlidersHorizontal className="w-3 h-3 mr-2 text-muted-foreground" />
+                            <SelectValue placeholder="Sort" />
                         </div>
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="newest">Newest First</SelectItem>
-                        <SelectItem value="oldest">Oldest First</SelectItem>
-                        <SelectItem value="highest">Highest Rating</SelectItem>
-                        <SelectItem value="lowest">Lowest Rating</SelectItem>
+                        <SelectItem value="newest">Latest Reviews</SelectItem>
+                        <SelectItem value="oldest">Oldest Reviews</SelectItem>
+                        <SelectItem value="highest">Highest Rated</SelectItem>
+                        <SelectItem value="lowest">Lowest Rated</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

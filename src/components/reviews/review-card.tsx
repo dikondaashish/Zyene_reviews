@@ -22,7 +22,9 @@ interface Review {
     rating: number;
     content?: string;
     text?: string;
-    published_at: string;
+    published_at?: string;
+    review_date?: string;
+    created_at?: string;
     response_status: 'pending' | 'responded' | 'ignored';
     response_text?: string;
     responded_at?: string;
@@ -173,7 +175,11 @@ export function ReviewCard({
                         <div className="font-semibold text-sm text-gray-900 line-clamp-1">{review.author_name || "Anonymous"}</div>
                         <div className="flex items-center gap-2 mt-0.5">
                             {renderStars(review.rating)}
-                            <TimeAgo date={review.published_at} className="text-xs text-slate-400" fallback="" />
+                            {(review.review_date || review.published_at || review.created_at) && (
+                                <span className="text-xs text-slate-400">
+                                    {new Date(review.review_date || review.published_at || review.created_at || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </span>
+                            )}
                             <span className="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide border border-blue-100">{review.platform || 'Google'}</span>
                         </div>
                     </div>
@@ -233,7 +239,11 @@ export function ReviewCard({
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 mb-1">
                         <CornerDownRight className="w-3 h-3 text-slate-400" />
                         Your Response
-                        {review.responded_at && <TimeAgo date={review.responded_at} className="text-slate-400 font-normal ml-auto text-[10px]" />}
+                        {review.responded_at && (
+                            <span className="text-slate-400 font-normal ml-auto text-[10px]">
+                                {new Date(review.responded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </span>
+                        )}
                     </div>
                     <p className="text-slate-600">{review.response_text}</p>
                 </div>
