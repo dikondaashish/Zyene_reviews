@@ -208,7 +208,12 @@ export function parseGoogle403Error(errorBody: string) {
     return parseGoogleReviewsApiError(errorBody, 403);
 }
 
-export async function listReviews(accessToken: string, accountId: string, locationId: string): Promise<GoogleReview[]> {
+export async function listReviews(
+    accessToken: string, 
+    accountId: string, 
+    locationId: string,
+    pageToken?: string
+): Promise<{ reviews: GoogleReview[], averageRating?: number, totalReviewCount?: number, nextPageToken?: string }> {
     // URL: https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews
     // Note: accountId and locationId are raw IDs, not "accounts/{id}"
     // But listLocations returns "locations/{locationId}" or "accounts/{accountId}/locations/{locationId}"?
@@ -216,7 +221,10 @@ export async function listReviews(accessToken: string, accountId: string, locati
     // Actually, v4 API takes `accounts/{accountId}/locations/{locationId}/reviews` as PATH.
     // Let's verify format.
 
-    const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews`;
+    let url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews`;
+    if (pageToken) {
+        url += `?pageToken=${encodeURIComponent(pageToken)}`;
+    }
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -253,7 +261,12 @@ export async function listReviews(accessToken: string, accountId: string, locati
     }
 
     const data = await response.json();
-    return data.reviews || [];
+    return {
+        reviews: data.reviews || [],
+        averageRating: data.averageRating,
+        totalReviewCount: data.totalReviewCount,
+        nextPageToken: data.nextPageToken
+    };
 }
 
 export async function replyToReview(

@@ -45,7 +45,7 @@
 
 /* ── Tooltip Header ──────────────────────────── */
 .tour-tooltip-header {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+    background: linear-gradient(135deg, #f97316 0%, #c2410c 50%, #9a3412 100%);
     padding: 18px 20px 14px;
     position: relative;
     overflow: hidden;
@@ -169,13 +169,13 @@
 }
 
 .tour-tooltip-dot.active {
-    background: #3b82f6;
+    background: #f97316;
     width: 20px;
     border-radius: 4px;
 }
 
 .tour-tooltip-dot.completed {
-    background: #93c5fd;
+    background: #fdba74;
 }
 
 .tour-tooltip-actions {
@@ -218,14 +218,14 @@
 }
 
 .tour-btn-next {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     color: #ffffff;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
 .tour-btn-next:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
     transform: translateY(-1px);
 }
 
@@ -320,12 +320,12 @@
 .tour-spotlight-ring {
     position: fixed;
     z-index: 9998;
-    border: 2px solid rgba(59, 130, 246, 0.5);
+    border: 2px solid rgba(249, 115, 22, 0.5);
     border-radius: 12px;
     pointer-events: none;
     animation: tour-spotlight-pulse 2s ease-in-out infinite;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
 }
 
 /* ── Responsive ──────────────────────────────── */

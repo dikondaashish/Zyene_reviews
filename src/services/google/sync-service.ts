@@ -219,9 +219,34 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         // 3. Request Smoothing
         await new Promise(resolve => setTimeout(resolve, 700));
 
-        // 4. Call reviews.list directly
+        // 4. Call reviews.list with pagination loop
         console.log(`[Sync] Fetching reviews for Account: ${googleAccountId}, Location: ${googleLocationId}`);
-        const googleReviews = await listReviews(accessToken!, googleAccountId!, googleLocationId!);
+        
+        let pageToken: string | undefined = undefined;
+        const googleReviews: any[] = [];
+        let apiTotalReviews: number | undefined = undefined;
+        let apiAverageRating: number | undefined = undefined;
+        let pageCount = 0;
+        const MAX_PAGES = 40; // Hard cap at ~2000 reviews to prevent function timeouts
+        
+        do {
+            const apiResp = await listReviews(accessToken!, googleAccountId!, googleLocationId!, pageToken);
+            googleReviews.push(...apiResp.reviews);
+            
+            // Only extract total stats natively from Google during the very first page grab
+            if (pageCount === 0) {
+                apiTotalReviews = apiResp.totalReviewCount;
+                apiAverageRating = apiResp.averageRating;
+            }
+
+            pageToken = apiResp.nextPageToken;
+            pageCount++;
+            
+            // Slight delay between pagination fetches to respect general API velocity limits
+            if (pageToken && pageCount < MAX_PAGES) {
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        } while (pageToken && pageCount < MAX_PAGES);
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
@@ -230,8 +255,11 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         let alertsCount = 0;
         let lastUpsertError: unknown = null;
 
+        // Vercel Timeout Protection: If fetching massive historical batches, skip instant AI execution
+        const isMassiveSync = googleReviews.length > 50;
+
         for (const review of googleReviews) {
-            const stats = await processGoogleReview(admin, platform, review);
+            const stats = await processGoogleReview(admin, platform, review, isMassiveSync);
             if (stats.upserted) {
                 syncedCount++;
             } else if (stats.error) {
@@ -259,17 +287,18 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             );
         }
 
-        // 4. Update Platform Stats
-        const { count, data: reviews } = await admin
+        // 5. Update Platform Stats
+        const { count, data: dbReviews } = await admin
             .from("reviews")
             .select("rating", { count: 'exact' })
             .eq("business_id", platform.business_id)
             .eq("platform", "google");
 
-        const totalReviews = count || 0;
-        const avgRating = reviews && reviews.length > 0
-            ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length
-            : 0;
+        // Prefer Google's exact native stats. Fallback to our DB count if omitted.
+        const totalReviews = apiTotalReviews ?? count ?? 0;
+        const avgRating = apiAverageRating ?? (dbReviews && dbReviews.length > 0
+            ? dbReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / dbReviews.length
+            : 0);
 
         await admin.from("review_platforms").update({
             total_reviews: totalReviews,
@@ -332,7 +361,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 /**
  * Processes a single Google Review: Upserts to DB, Triggers AI Analysis, Sends Alerts.
  */
-export async function processGoogleReview(admin: any, platform: any, review: any) {
+export async function processGoogleReview(admin: any, platform: any, review: any, skipAnalysis: boolean = false) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
 
@@ -368,14 +397,18 @@ export async function processGoogleReview(admin: any, platform: any, review: any
         upsertedOk = true;
         // Trigger AI Analysis if text exists and not already analyzed
         if (upserted && !upserted.sentiment && upserted.text) {
-            console.log(`[AI] Analyzing review ${upserted.id}...`);
-            analyzed = true;
-            const result = await analyzeReview(upserted);
+            if (!skipAnalysis) {
+                console.log(`[AI] Analyzing review ${upserted.id}...`);
+                analyzed = true;
+                const result = await analyzeReview(upserted);
 
-            // Send Alert if Urgent
-            if (result) {
-                await sendReviewAlert({ ...upserted, ...result });
-                alerted = true;
+                // Send Alert if Urgent
+                if (result) {
+                    await sendReviewAlert({ ...upserted, ...result });
+                    alerted = true;
+                }
+            } else {
+                console.log(`[AI] Bypassed analysis for historical/bulk sync: ${upserted.id}`);
             }
         }
     }
