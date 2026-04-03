@@ -224,7 +224,7 @@ export function Step4SubscriptionForm({
                     </p>
                     <Button
                       className={cn(
-                        "w-full font-semibold text-white transition-all duration-300",
+                        "relative z-20 w-full font-semibold text-white transition-all duration-300 cursor-pointer",
                         "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(249,115,22,0.25)]",
                         "hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(249,115,22,0.4)] hover:brightness-110 active:translate-y-0 active:shadow-md",
                       )}
@@ -273,12 +273,14 @@ export function Step4SubscriptionForm({
                     <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                   </PricingCard.Price>
                   <a
-                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
-                    className="block w-full"
+                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full relative z-20 cursor-pointer"
                   >
                     <Button 
                       variant="outline" 
-                      className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800" 
+                      className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer" 
                       type="button"
                     >
                       <Mail className="h-4 w-4" />
