@@ -102,6 +102,7 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
                 throw new Error("Empty AI response");
             }
 
+            console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Claude Opus 4.6 (Primary)`);
             return NextResponse.json({ reviewText });
         } catch (aiError) {
             console.error("Primary AI (Claude) generation failed for review flow:", aiError);
@@ -131,6 +132,7 @@ Review Content:`;
                 const backupReviewText = await generateContentWithFallback(backupPrompt, false);
                 
                 if (backupReviewText && backupReviewText.trim().length > 10) {
+                    console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Gemini 3.1 Pro (Backup Layer 2)`);
                     return NextResponse.json({ reviewText: backupReviewText.trim() });
                 }
             } catch (backupError) {
@@ -138,6 +140,7 @@ Review Content:`;
             }
 
             // Layer 3: Hardcoded Smart Fallback (Last Resort)
+            console.warn(`[AI FALLBACK] Both AI layers failed. Using Smart Template for ${businessName}.`);
             const fallbackText = `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Hope to see you again soon!`;
 
             return NextResponse.json({ reviewText: fallbackText });
