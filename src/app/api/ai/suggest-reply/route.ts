@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { nextResponseForGoogleAiError } from "@/lib/ai/google-ai-route-error";
 import { REPLY_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -92,11 +93,11 @@ export async function POST(request: Request) {
 
         return NextResponse.json(result);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("AI Reply Suggestion Failed:", error);
-        return NextResponse.json(
-            { error: "Failed to generate AI reply. Please try again." },
-            { status: 500 }
+        return nextResponseForGoogleAiError(
+            error,
+            "Failed to generate AI reply. Please try again."
         );
     }
 }

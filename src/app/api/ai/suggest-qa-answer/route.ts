@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { nextResponseForGoogleAiError } from "@/lib/ai/google-ai-route-error";
 import { QA_ANSWER_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -110,6 +111,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ answer: result.answer || content.trim() });
     } catch (e: unknown) {
         console.error("[suggest-qa-answer]", e);
-        return NextResponse.json({ error: "Failed to generate suggestion" }, { status: 500 });
+        return nextResponseForGoogleAiError(e, "Failed to generate suggestion");
     }
 }
