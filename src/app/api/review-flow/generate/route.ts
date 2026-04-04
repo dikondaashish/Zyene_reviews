@@ -1,4 +1,4 @@
-import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { anthropic } from "@/services/ai/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -68,9 +68,14 @@ export async function POST(request: Request) {
         }
 
         try {
-            const systemPrompt = "You are a customer writing a short, natural Google review. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.";
-            
-            const mainPrompt = `Task: Write a Google review for ${businessName}, a ${businessCategory} business. The customer gave ${rating} stars and especially liked: ${tagsString}.
+            const message = await anthropic.messages.create({
+                model: "claude-opus-4-6",
+                max_tokens: 256,
+                system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.",
+                messages: [
+                    {
+                        role: "user",
+                        content: `Task: Write a Google review for ${businessName}, a ${businessCategory} business. The customer gave ${rating} stars and especially liked: ${tagsString}.
 
 Context (Last 5 reviews for this business - DO NOT COPY):
 ${recentReviewsContext || "None available."}
@@ -84,18 +89,19 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 - SEO/AEO Optimization: Naturally include "${businessName}" or relevant keywords like "${businessCategory}" in the text.
 - Answer Engine Friendly: Use clear, direct sentences for AI search engines to feature as snippets.
 - Sound like a real person, not marketing. ONE exclamation mark max.
-- Mention specific things the customer liked naturally.
+- Mention specific things the customer liked naturally.`,
+                    },
+                ],
+            });
 
-Review Content:`;
+            const textBlock = message.content.find((b) => b.type === "text");
+            const reviewText = textBlock?.text?.trim();
 
-            const fullPrompt = `${systemPrompt}\n\n${mainPrompt}`;
-            const reviewText = await generateContentWithFallback(fullPrompt, false);
-
-            if (!reviewText || reviewText.trim().length * 1.5 < 10) {
-                throw new Error("Empty or too short AI response");
+            if (!reviewText) {
+                throw new Error("Empty AI response");
             }
 
-            return NextResponse.json({ reviewText: reviewText.trim() });
+            return NextResponse.json({ reviewText });
         } catch (aiError) {
             console.error("AI generation failed for review flow:", aiError);
 
