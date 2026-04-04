@@ -4,11 +4,13 @@ import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 
 const requestSchema = z.object({
+    businessId: z.string().optional(),
     businessName: z.string().min(1),
     businessCategory: z.string().min(1),
     rating: z.number().int().min(4).max(5),
     selectedTags: z.array(z.string()).min(1).max(10),
 });
+import { createAdminClient } from "@/lib/db/supabase/admin";
 
 export async function POST(request: Request) {
     try {
@@ -39,30 +41,57 @@ export async function POST(request: Request) {
             );
         }
 
-        const { businessName, businessCategory, rating, selectedTags } = parsed.data;
+        const { businessId, businessName, businessCategory, rating, selectedTags } = parsed.data;
         const tagsString = selectedTags.join(", ");
+
+        // 1. Fetch Top 5 Recent Reviews Context
+        let recentReviewsContext = "";
+        if (businessId) {
+            try {
+                const supabase = createAdminClient();
+                const { data: reviews } = await supabase
+                    .from("reviews")
+                    .select("text")
+                    .eq("business_id", businessId)
+                    .not("text", "is", null)
+                    .order("review_date", { ascending: false })
+                    .limit(5);
+
+                if (reviews && reviews.length > 0) {
+                    recentReviewsContext = reviews
+                        .map((r, i) => `Previous Review ${i + 1}: "${r.text}"`)
+                        .join("\n\n");
+                }
+            } catch (err) {
+                console.error("Failed to fetch context reviews:", err);
+            }
+        }
 
         try {
             const message = await anthropic.messages.create({
                 model: "claude-opus-4-6",
                 max_tokens: 256,
-                system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization).",
+                system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.",
                 messages: [
                     {
                         role: "user",
                         content: `Write a Google review for ${businessName}, a ${businessCategory} business. The customer gave ${rating} stars and especially liked: ${tagsString}.
 
-Rules:
+Here are the last 5 reviews written for this specific business (DO NOT COPY ANY OF THE CONTENT, PHRASES, OR STYLES FROM THESE):
+${recentReviewsContext || "None available."}
+
+Rules for a NATURAL, HUMAN-WRITTEN review:
 - First person as the customer
 - 2-3 sentences maximum
+- **Strictly NO icons or emojis**
+- **Strictly NO starting with 'I'**
+- **Strictly NO 'highly recommend'**
 - **SEO/AEO Optimization**: Naturally include "${businessName}" or relevant keywords like "${businessCategory}" in the text.
 - **Answer Engine Friendly**: Use clear, direct sentences that are easy for AI search engines to parse and feature as snippets.
 - Sound like a real person, not marketing
 - Mention the specific things they liked naturally
 - Warm and genuine tone
 - Maximum ONE exclamation mark
-- Do NOT start with 'I'
-- Do NOT use 'highly recommend'
 - Vary sentence structure`,
                     },
                 ],
@@ -78,7 +107,7 @@ Rules:
             return NextResponse.json({ reviewText });
         } catch (aiError) {
             console.error("AI generation failed for review flow:", aiError);
-            
+
             // Log full error for Vertex AI debugging
             if (typeof aiError === 'object' && aiError !== null) {
                 console.error("Vertex AI Error Details:", JSON.stringify(aiError, null, 2));
