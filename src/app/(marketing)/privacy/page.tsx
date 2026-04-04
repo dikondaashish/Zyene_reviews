@@ -8,7 +8,11 @@ export default function PrivacyPolicyPage() {
                     <p className="text-sm text-slate-500 mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 
                     <p>
-                        Zyene Reviews, a product of The Budget Wheels LLC ("we," "our," or "us") respects your privacy and is committed to protecting it through this Privacy Policy.
+                        Zyene Reviews, a product of{" "}
+                        <a href="https://zyene.com" target="_blank" rel="noopener noreferrer">
+                            Zyene, Inc
+                        </a>{" "}
+                        (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) respects your privacy and is committed to protecting it through this Privacy Policy.
                         This Privacy Policy governs your access to and use of zyenereviews.com, app.zyenereviews.com, and any related
                         software, applications, or services (collectively, the "Services").
                     </p>

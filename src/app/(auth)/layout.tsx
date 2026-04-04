@@ -79,7 +79,16 @@ export default function AuthLayout({
                 {/* Footer */}
                 <div className="relative z-10">
                     <p className="text-slate-500 text-sm">
-                        © {new Date().getFullYear()} The Budget Wheels LLC. All rights reserved.
+                        © {new Date().getFullYear()}{" "}
+                        <a
+                            href="https://zyene.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-slate-400 hover:text-orange-400 transition-colors underline-offset-2 hover:underline"
+                        >
+                            Zyene, Inc.
+                        </a>{" "}
+                        All rights reserved.
                     </p>
                 </div>
             </div>

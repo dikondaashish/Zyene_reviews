@@ -8,7 +8,11 @@ export default function TermsOfServicePage() {
                     <p className="text-sm text-slate-500 mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 
                     <p>
-                        Welcome to Zyene Reviews, a product of The Budget Wheels LLC. These Terms of Service ("Terms") govern your access to and use of our
+                        Welcome to Zyene Reviews, a product of{" "}
+                        <a href="https://zyene.com" target="_blank" rel="noopener noreferrer">
+                            Zyene, Inc
+                        </a>
+                        . These Terms of Service (&quot;Terms&quot;) govern your access to and use of our
                         reputation management platform, websites, and services (collectively, the "Services").
                         Please read these Terms carefully before using the Services.
                     </p>
@@ -73,7 +77,15 @@ export default function TermsOfServicePage() {
 
                     <h2 className="text-2xl font-semibold mt-10 mb-4">9. Intellectual Property</h2>
                     <p>
-                        The Services, including its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of The Budget Wheels LLC and its licensors. The Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of The Budget Wheels LLC.
+                        The Services, including its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of{" "}
+                        <a href="https://zyene.com" target="_blank" rel="noopener noreferrer">
+                            Zyene, Inc
+                        </a>{" "}
+                        and its licensors. The Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of{" "}
+                        <a href="https://zyene.com" target="_blank" rel="noopener noreferrer">
+                            Zyene, Inc
+                        </a>
+                        .
                     </p>
 
                     <h2 className="text-2xl font-semibold mt-10 mb-4">10. Customer Data Ownership</h2>

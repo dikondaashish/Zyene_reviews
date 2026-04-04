@@ -106,7 +106,16 @@ export default function MarketingLayout({
                                 Review management software for local businesses.
                             </p>
                             <p className="text-sm text-slate-400 mb-4">
-                                © {new Date().getFullYear()} The Budget Wheels LLC. All rights reserved.
+                                © {new Date().getFullYear()}{" "}
+                                <a
+                                    href="https://zyene.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-slate-500 hover:text-orange-600 transition-colors underline-offset-2 hover:underline"
+                                >
+                                    Zyene, Inc.
+                                </a>{" "}
+                                All rights reserved.
                             </p>
                             <iframe src="https://status.zyenereviews.com/badge?theme=light" width="250" height="30" frameBorder="0" scrolling="no" style={{ colorScheme: "normal" }}></iframe>
                         </div>
