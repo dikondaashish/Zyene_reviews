@@ -1,7 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
-import { analyzeReview } from "@/services/ai/analysis";
-import { sendReviewAlert } from "@/lib/notifications/review-alert";
+
+import { inngest } from "@/services/inngest/client";
 
 export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
@@ -251,22 +251,33 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
         let syncedCount = 0;
-        let analyzedCount = 0;
-        let alertsCount = 0;
         let lastUpsertError: unknown = null;
-
-        // Vercel Timeout Protection: If fetching massive historical batches, skip instant AI execution
-        const isMassiveSync = googleReviews.length > 50;
+        const reviewIdsToAnalyze: string[] = [];
 
         for (const review of googleReviews) {
-            const stats = await processGoogleReview(admin, platform, review, isMassiveSync);
+            const stats = await processGoogleReview(admin, platform, review);
             if (stats.upserted) {
                 syncedCount++;
+                if (stats.id && stats.needsAnalysis) {
+                    reviewIdsToAnalyze.push(stats.id);
+                }
             } else if (stats.error) {
                 lastUpsertError = stats.error;
             }
-            if (stats.analyzed) analyzedCount++;
-            if (stats.alerted) alertsCount++;
+        }
+
+        // 5. Trigger Batch AI Analysis (Drip Feed)
+        if (reviewIdsToAnalyze.length > 0) {
+            console.log(`[Sync] Queueing ${reviewIdsToAnalyze.length} reviews for background analysis in batches of 5`);
+            
+            // Chunk into groups of 5
+            for (let i = 0; i < reviewIdsToAnalyze.length; i += 5) {
+                const chunk = reviewIdsToAnalyze.slice(i, i + 5);
+                await inngest.send({
+                    name: "review/analyze.batch",
+                    data: { reviewIds: chunk }
+                });
+            }
         }
 
         // If we fetched reviews but failed to write them, surface a clear error.
@@ -338,8 +349,8 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             success: true,
             total: syncedCount,
             fetched: googleReviews.length,
-            analyzed: analyzedCount,
-            alerts: alertsCount
+            analyzed: 0,
+            alerts: 0
         };
 
     } catch (error: any) {
@@ -359,9 +370,9 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 }
 
 /**
- * Processes a single Google Review: Upserts to DB, Triggers AI Analysis, Sends Alerts.
+ * Processes a single Google Review: Upserts to DB.
  */
-export async function processGoogleReview(admin: any, platform: any, review: any, skipAnalysis: boolean = false) {
+export async function processGoogleReview(admin: any, platform: any, review: any) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
 
@@ -384,34 +395,21 @@ export async function processGoogleReview(admin: any, platform: any, review: any
     const { data: upserted, error: upsertError } = await admin
         .from("reviews")
         .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
-        .select()
+        .select("id, sentiment, text")
         .single();
 
-    let analyzed = false;
-    let alerted = false;
     let upsertedOk = false;
+    let needsAnalysis = false;
 
     if (upsertError) {
         console.error("Upsert Error:", upsertError);
     } else {
         upsertedOk = true;
-        // Trigger AI Analysis if text exists and not already analyzed
+        // Mark for analysis if text exists and not already analyzed
         if (upserted && !upserted.sentiment && upserted.text) {
-            if (!skipAnalysis) {
-                console.log(`[AI] Analyzing review ${upserted.id}...`);
-                analyzed = true;
-                const result = await analyzeReview(upserted);
-
-                // Send Alert if Urgent
-                if (result) {
-                    await sendReviewAlert({ ...upserted, ...result });
-                    alerted = true;
-                }
-            } else {
-                console.log(`[AI] Bypassed analysis for historical/bulk sync: ${upserted.id}`);
-            }
+            needsAnalysis = true;
         }
     }
 
-    return { upserted: upsertedOk, analyzed, alerted, error: upsertError };
+    return { upserted: upsertedOk, id: upserted?.id, needsAnalysis, error: upsertError };
 }

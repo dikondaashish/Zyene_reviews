@@ -1,4 +1,4 @@
-import { anthropic } from "./client";
+import { generateContentWithFallback } from "@/lib/ai/google-client";
 import { SENTIMENT_PROMPT } from "./prompts";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -11,15 +11,7 @@ export async function analyzeReview(review: any) {
             .replace("{rating}", (review.rating || 0).toString())
             .replace("{text}", text);
 
-        // Using standard model ID for reliability, user requested custom IDs might be placeholders
-        // Falling back to known working models
-        const response = await anthropic.messages.create({
-            model: "claude-opus-4-6",
-            max_tokens: 1000,
-            messages: [{ role: "user", content: prompt }]
-        });
-
-        const content = response.content[0].type === 'text' ? response.content[0].text : "";
+        const content = await generateContentWithFallback(prompt, true);
 
         // Extract JSON from potential markdown text
         const jsonMatch = content.match(/\{[\s\S]*\}/);

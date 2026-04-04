@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { anthropic } from "@/services/ai/client";
+import { generateContentWithFallback } from "@/lib/ai/google-client";
 import { QA_ANSWER_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -94,13 +94,7 @@ export async function POST(request: Request) {
     );
 
     try {
-        const response = await anthropic.messages.create({
-            model: "claude-opus-4-6",
-            max_tokens: 800,
-            messages: [{ role: "user", content: prompt }],
-        });
-
-        const content = response.content[0].type === "text" ? response.content[0].text : "";
+        const content = await generateContentWithFallback(prompt, true);
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         const jsonStr = jsonMatch ? jsonMatch[0] : content;
 

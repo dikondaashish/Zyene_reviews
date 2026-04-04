@@ -13,8 +13,15 @@ type CampaignSendEvent = {
     };
 };
 
+type AnalysisBatchEvent = {
+    data: {
+        reviewIds: string[];
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
+    "review/analyze.batch": AnalysisBatchEvent;
 };
 
 // Create a client to send and receive events

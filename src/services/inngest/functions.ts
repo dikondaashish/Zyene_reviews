@@ -1,6 +1,9 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
+import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { BATCH_REVIEWS_PROMPT } from "@/services/ai/prompts";
+import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 // This background job runs for EACH contact asynchronously
 export const processCampaignContact = inngest.createFunction(
@@ -169,5 +172,83 @@ export const processCampaignContact = inngest.createFunction(
         }
 
         return { status: "completed", sendResult };
+    }
+);
+
+// This background job analyzes reviews in batches of 5 using Gemini
+export const processReviewAnalysisBatch = inngest.createFunction(
+    {
+        id: "process-review-analysis-batch",
+        name: "Process Review Analysis Batch",
+        concurrency: {
+            limit: 5, // Process 5 batches at once max to stay within Gemini rate limits
+        }
+    },
+    { event: "review/analyze.batch" },
+    async ({ event, step }) => {
+        const { reviewIds } = event.data;
+        const supabase = createAdminClient();
+
+        // 1. Fetch the reviews from Supabase
+        const reviews = await step.run("fetch-reviews", async () => {
+            const { data, error } = await supabase
+                .from("reviews")
+                .select("id, rating, text")
+                .in("id", reviewIds);
+            if (error) throw new Error(`Failed to fetch reviews: ${error.message}`);
+            return data;
+        });
+
+        if (!reviews || reviews.length === 0) return { status: "no_reviews_found" };
+
+        // 2. Format for AI
+        const reviewsForAi = reviews.map(r => ({
+            id: r.id,
+            rating: r.rating,
+            text: r.text || ""
+        }));
+
+        const prompt = BATCH_REVIEWS_PROMPT.replace("{reviews_json}", JSON.stringify(reviewsForAi, null, 2));
+
+        // 3. Call Gemini with Fallback
+        const aiResults = await step.run("call-gemini-batch", async () => {
+            const content = await generateContentWithFallback(prompt, true);
+            
+            // Extract JSON array
+            const jsonMatch = content.match(/\[[\s\S]*\]/);
+            const jsonStr = jsonMatch ? jsonMatch[0] : content;
+            
+            try {
+                return JSON.parse(jsonStr);
+            } catch (err) {
+                console.error("[Batch Analysis] Failed to parse AI JSON:", content);
+                throw new Error("AI returned invalid JSON array");
+            }
+        });
+
+        // 4. Update reviews in Supabase
+        await step.run("update-reviews-batch", async () => {
+            for (const result of aiResults) {
+                await supabase
+                    .from("reviews")
+                    .update({
+                        sentiment: result.sentiment,
+                        urgency_score: result.urgency,
+                        themes: result.themes,
+                        ai_summary: result.summary,
+                    })
+                    .eq("id", result.reviewId);
+                
+                // Trigger alert if urgency is high (>= 7)
+                if (result.urgency >= 7) {
+                    const reviewObj = reviews.find(r => r.id === result.reviewId);
+                    if (reviewObj) {
+                        await sendReviewAlert({ ...reviewObj, ...result });
+                    }
+                }
+            }
+        });
+
+        return { status: "completed", processed: aiResults.length };
     }
 );
