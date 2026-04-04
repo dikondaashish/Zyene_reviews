@@ -1,4 +1,4 @@
-import { anthropic } from "@/services/ai/client";
+import { anthropic } from "@/lib/ai/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -75,11 +75,15 @@ Rules:
 
             return NextResponse.json({ reviewText });
         } catch (aiError) {
-            console.error("AI generation failed, using fallback:", aiError);
+            console.error("AI generation failed for review flow:", aiError);
+            
+            // Log full error for Vertex AI debugging
+            if (typeof aiError === 'object' && aiError !== null) {
+                console.error("Vertex AI Error Details:", JSON.stringify(aiError, null, 2));
+            }
 
-            // Fallback template
-            const firstTag = selectedTags[0] || "experience";
-            const fallbackText = `Great experience at ${businessName}! Really loved the ${firstTag.toLowerCase()}. Would definitely come back.`;
+            // Enhanced fallback that mentions the tags
+            const fallbackText = `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Hope to see you again soon!`;
 
             return NextResponse.json({ reviewText: fallbackText });
         }
