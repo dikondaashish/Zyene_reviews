@@ -20,6 +20,7 @@ export async function proxy(request: NextRequest) {
             `https://auth.${rootDomain}`,
             `https://app.${rootDomain}`,
             `https://${rootDomain}`,
+            `https://www.${rootDomain}`,
         ];
 
         if (allowedOrigins.includes(origin)) {
@@ -135,6 +136,7 @@ export async function proxy(request: NextRequest) {
                 `https://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
                 `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
                 `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
             ];
 
             if (

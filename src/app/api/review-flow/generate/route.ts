@@ -83,11 +83,11 @@ ${recentReviewsContext || "None available."}
 Rules for a NATURAL, HUMAN-WRITTEN review:
 - First person as the customer
 - 2-3 sentences maximum
-- **Strictly NO icons or emojis**
-- **Strictly NO starting with 'I'**
-- **Strictly NO 'highly recommend'**
-- **SEO/AEO Optimization**: Naturally include "${businessName}" or relevant keywords like "${businessCategory}" in the text.
-- **Answer Engine Friendly**: Use clear, direct sentences that are easy for AI search engines to parse and feature as snippets.
+- Strictly NO icons or emojis
+- Strictly NO starting with 'I'
+- Strictly NO 'highly recommend'
+- SEO/AEO Optimization: Naturally include "${businessName}" or relevant keywords like "${businessCategory}" in the text.
+- Answer Engine Friendly: Use clear, direct sentences that are easy for AI search engines to parse and feature as snippets.
 - Sound like a real person, not marketing
 - Mention the specific things they liked naturally
 - Warm and genuine tone

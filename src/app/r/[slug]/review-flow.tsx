@@ -166,6 +166,7 @@ export function PublicReviewFlow({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    businessId,
                     businessName,
                     businessCategory: categoryKey,
                     rating,
