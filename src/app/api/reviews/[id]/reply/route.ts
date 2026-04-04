@@ -26,11 +26,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .select(`
                 *,
                 businesses!inner(
-                    organization_members!inner(user_id)
+                    organizations!inner(
+                        organization_members!inner(user_id)
+                    )
                 )
             `)
             .eq("id", id)
-            .eq("businesses.organization_members.user_id", user.id)
+            .eq("businesses.organizations.organization_members.user_id", user.id)
             .single();
 
         if (reviewError || !review) {
