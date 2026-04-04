@@ -46,7 +46,7 @@ export async function POST(request: Request) {
             const message = await anthropic.messages.create({
                 model: "claude-opus-4-6",
                 max_tokens: 256,
-                system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer.",
+                system: "You write short, natural Google reviews on behalf of customers. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization).",
                 messages: [
                     {
                         role: "user",
@@ -55,6 +55,8 @@ export async function POST(request: Request) {
 Rules:
 - First person as the customer
 - 2-3 sentences maximum
+- **SEO/AEO Optimization**: Naturally include "${businessName}" or relevant keywords like "${businessCategory}" in the text.
+- **Answer Engine Friendly**: Use clear, direct sentences that are easy for AI search engines to parse and feature as snippets.
 - Sound like a real person, not marketing
 - Mention the specific things they liked naturally
 - Warm and genuine tone
