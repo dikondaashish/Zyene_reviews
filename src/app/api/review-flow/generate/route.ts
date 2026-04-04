@@ -1,4 +1,5 @@
 import { anthropic } from "@/services/ai/client";
+import { generateContentWithFallback } from "@/lib/ai/google-client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -103,14 +104,40 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 
             return NextResponse.json({ reviewText });
         } catch (aiError) {
-            console.error("AI generation failed for review flow:", aiError);
+            console.error("Primary AI (Claude) generation failed for review flow:", aiError);
+            
+            // Layer 2: Attempt with Gemini Backup
+            try {
+                const systemPrompt = "You are a customer writing a short, natural Google review. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.";
+                
+                const backupPrompt = `${systemPrompt}
 
-            // Log full error for Vertex AI debugging
-            if (typeof aiError === 'object' && aiError !== null) {
-                console.error("Vertex AI Error Details:", JSON.stringify(aiError, null, 2));
+Task: Write a Google review for ${businessName}, a ${businessCategory} business. The customer gave ${rating} stars and especially liked: ${tagsString}.
+
+Context (Last 5 reviews for this business - DO NOT COPY):
+${recentReviewsContext || "None available."}
+
+Rules for a NATURAL, HUMAN-WRITTEN review:
+- First person perspective as the customer
+- 2-3 sentences max
+- Strictly NO icons or emojis
+- Strictly NO starting with 'I'
+- SEO/AEO Optimization: Naturally include "${businessName}" or relevant keywords like "${businessCategory}".
+- Sound like a real person, not marketing. ONE exclamation mark max.
+- Mention specific things the customer liked naturally.
+
+Review Content:`;
+
+                const backupReviewText = await generateContentWithFallback(backupPrompt, false);
+                
+                if (backupReviewText && backupReviewText.trim().length > 10) {
+                    return NextResponse.json({ reviewText: backupReviewText.trim() });
+                }
+            } catch (backupError) {
+                console.error("Secondary AI (Gemini) fallback failed too:", backupError);
             }
 
-            // Enhanced fallback that mentions the tags
+            // Layer 3: Hardcoded Smart Fallback (Last Resort)
             const fallbackText = `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Hope to see you again soon!`;
 
             return NextResponse.json({ reviewText: fallbackText });
