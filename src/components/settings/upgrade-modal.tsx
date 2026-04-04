@@ -1,0 +1,221 @@
+"use client";
+
+import { useState } from "react";
+import { Loader2, CheckCircle2, Zap, Crown, Building2, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import * as PricingCard from "@/components/ui/pricing-card";
+import { PLANS } from "@/services/stripe/plans";
+import { cn } from "@/lib/utils/index";
+
+export function UpgradeModal({
+    isOpen,
+    onClose,
+    title = "Upgrade Your Plan",
+    description = "You've reached your usage limit. Please upgrade to continue.",
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    title?: string;
+    description?: string;
+}) {
+    const [interval, setInterval] = useState<"month" | "year">("month");
+    const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+    // Exclude enterprise for the main cards
+    const displayPlans = PLANS.filter((p) => p.interval === interval && p.id !== "enterprise");
+    const enterprisePlan = PLANS.find((p) => p.id === "enterprise");
+
+    const intervalLabel = interval === "month" ? "/mo" : "/yr";
+    const monthlyStarterPrice = PLANS.find((p) => p.id === "starter_monthly")?.price ?? 0;
+    const yearlyStarterPrice = PLANS.find((p) => p.id === "starter_yearly")?.price ?? 0;
+    const yearlySavings =
+        monthlyStarterPrice > 0 ? Math.round((1 - yearlyStarterPrice / (monthlyStarterPrice * 12)) * 100) : 0;
+
+    async function handleSubscribe(priceId: string) {
+        setLoadingPlan(priceId);
+        try {
+            const res = await fetch("/api/billing/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ priceId }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.error || "Checkout failed");
+
+            if (data.switched) {
+                toast.success("Plan switched!", {
+                    description: "Your subscription has been updated. Changes take effect immediately.",
+                });
+                onClose();
+            } else if (data.url) {
+                window.location.href = data.url;
+            }
+        } catch (error: any) {
+            toast.error(error.message || "Failed to start checkout");
+        } finally {
+            setLoadingPlan(null);
+        }
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl">{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
+                </DialogHeader>
+
+                <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-4 md:p-6 mt-4">
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.2]"
+                        style={{
+                            backgroundImage: "radial-gradient(rgba(0,0,0,0.06) 0.8px, transparent 0.8px)",
+                            backgroundSize: "14px 14px",
+                            maskImage:
+                                "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,1), rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 72%)",
+                        }}
+                    />
+
+                    <div className="relative z-10">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center mb-6">
+                            <div
+                                className="inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80"
+                                role="tablist"
+                            >
+                                <button
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={interval === "month"}
+                                    onClick={() => setInterval("month")}
+                                    className={cn(
+                                        "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
+                                        interval === "month"
+                                            ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
+                                            : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                    )}
+                                >
+                                    Monthly
+                                </button>
+                                <button
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={interval === "year"}
+                                    onClick={() => setInterval("year")}
+                                    className={cn(
+                                        "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
+                                        interval === "year"
+                                            ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
+                                            : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                    )}
+                                >
+                                    Yearly
+                                    <Badge
+                                        variant="secondary"
+                                        className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900"
+                                    >
+                                        Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
+                                    </Badge>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {displayPlans.map((plan) => {
+                                const isPro = plan.name === "Professional";
+
+                                return (
+                                    <PricingCard.Card
+                                        key={plan.id}
+                                        className={cn(
+                                            "relative flex w-full max-w-none flex-col h-full",
+                                            isPro &&
+                                                "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]"
+                                        )}
+                                    >
+                                        {isPro && (
+                                            <div className="absolute -top-2 right-3 z-20">
+                                                <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
+                                                    Most Popular
+                                                </Badge>
+                                            </div>
+                                        )}
+                                        <PricingCard.Header className="relative z-10 mb-3 p-3">
+                                            <PricingCard.Plan>
+                                                <PricingCard.PlanName>
+                                                    {isPro ? (
+                                                        <Crown className="text-orange-500" aria-hidden />
+                                                    ) : (
+                                                        <Zap className="text-orange-500" aria-hidden />
+                                                    )}
+                                                    <span className="text-foreground">{plan.name}</span>
+                                                </PricingCard.PlanName>
+                                                <PricingCard.Badge>
+                                                    {isPro ? "Multi-location" : "Single location"}
+                                                </PricingCard.Badge>
+                                            </PricingCard.Plan>
+                                            <PricingCard.Description className="mb-2 text-[11px] leading-tight">
+                                                {isPro
+                                                    ? "For growing multi-location businesses."
+                                                    : "Perfect for single-location businesses."}
+                                            </PricingCard.Description>
+                                            <PricingCard.Price>
+                                                {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
+                                                    <PricingCard.OriginalPrice>
+                                                        ${plan.originalPrice}
+                                                    </PricingCard.OriginalPrice>
+                                                )}
+                                                <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
+                                                <PricingCard.Period>{intervalLabel}</PricingCard.Period>
+                                            </PricingCard.Price>
+                                            
+                                            <Button
+                                                className={cn(
+                                                    "w-full font-semibold text-white",
+                                                    "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
+                                                    "hover:from-orange-600 hover:to-orange-700"
+                                                )}
+                                                onClick={() => handleSubscribe(plan.stripePriceId!)}
+                                                disabled={!plan.stripePriceId || loadingPlan === plan.stripePriceId}
+                                            >
+                                                {loadingPlan === plan.stripePriceId ? (
+                                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                ) : null}
+                                                Upgrade to {plan.name}
+                                            </Button>
+                                        </PricingCard.Header>
+                                        <PricingCard.Body className="space-y-3 p-2">
+                                            <PricingCard.List className="space-y-2">
+                                                {plan.features.map((feature) => (
+                                                    <PricingCard.ListItem key={feature} className="text-xs gap-2">
+                                                        <span className="mt-0.5 shrink-0">
+                                                            <CheckCircle2
+                                                                className="h-3.5 w-3.5 text-emerald-500"
+                                                                aria-hidden
+                                                            />
+                                                        </span>
+                                                        <span>{feature}</span>
+                                                    </PricingCard.ListItem>
+                                                ))}
+                                            </PricingCard.List>
+                                        </PricingCard.Body>
+                                    </PricingCard.Card>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}

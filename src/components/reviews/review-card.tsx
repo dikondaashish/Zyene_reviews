@@ -14,6 +14,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UpgradeModal } from "@/components/settings/upgrade-modal";
 
 interface Review {
     id: string;
@@ -55,6 +56,7 @@ export function ReviewCard({
     const [isSuggesting, setIsSuggesting] = useState(false);
     const [suggestions, setSuggestions] = useState<ReplySuggestion[]>([]);
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     const router = useRouter();
 
@@ -75,7 +77,11 @@ export function ReviewCard({
             setSuggestions([]); // Clear suggestions
             router.refresh();
         } catch (e: any) {
-            toast.error(e.message);
+            if (e.message?.includes("Monthly AI reply limit reached") || e.message?.includes("upgrade your plan")) {
+                setShowUpgradeModal(true);
+            } else {
+                toast.error(e.message);
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -97,7 +103,11 @@ export function ReviewCard({
                 setSuggestions(data.replies);
             }
         } catch (e: any) {
-            toast.error(e.message);
+            if (e.message?.includes("Monthly AI reply limit reached") || e.message?.includes("upgrade your plan")) {
+                setShowUpgradeModal(true);
+            } else {
+                toast.error(e.message);
+            }
         } finally {
             setIsSuggesting(false);
         }
@@ -368,6 +378,13 @@ export function ReviewCard({
                     </div>
                 </div>
             )}
+
+            <UpgradeModal 
+                isOpen={showUpgradeModal} 
+                onClose={() => setShowUpgradeModal(false)} 
+                title="Upgrade Your Plan"
+                description="You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
+            />
         </div>
     )
 }
