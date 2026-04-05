@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     try {
         const parsed = replySchema.safeParse(await request.json());
         if (!parsed.success) {
-            return apiError(parsed.error.errors[0].message, { status: 400 });
+            return apiError(parsed.error.issues[0].message, { status: 400 });
         }
         const { text } = parsed.data;
 
@@ -66,7 +66,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         // TODO: Store account_id in review_platforms to optimize this.
         const accounts = await listAccounts(accessToken!);
         // Prioritize ORGANIZATION type if multiple, else first.
-        const account = accounts.find((a: any) => a.type === "ORGANIZATION") || accounts[0];
+        const account = accounts.find((a) => a.type === "ORGANIZATION") || accounts[0];
 
         if (!account) throw new Error("No Google Business Account found");
 

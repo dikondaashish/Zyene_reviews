@@ -1,14 +1,25 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { analyzeReview } from "@/services/ai/analysis";
-import { NextResponse } from "next/server";
+import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const analyzeSchema = z.object({
+    reviewId: z.string().uuid(),
+});
 
 export async function POST(request: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/ai/analyze");
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
 
-    const { reviewId } = await request.json();
-    if (!reviewId) return NextResponse.json({ error: "Review ID required" }, { status: 400 });
+    const parsed = analyzeSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError("Invalid request payload", { status: 400, details: requestId });
+    }
+
+    const { reviewId } = parsed.data;
 
     const { data: review } = await supabase
         .from("reviews")
@@ -16,9 +27,10 @@ export async function POST(request: Request) {
         .eq("id", reviewId)
         .single();
 
-    if (!review) return NextResponse.json({ error: "Review not found" }, { status: 404 });
+    if (!review) return apiError("Review not found", { status: 404, details: requestId });
 
     const result = await analyzeReview(review);
+    logger.info({ userId: user.id, reviewId }, "Review analysis completed");
 
-    return NextResponse.json({ success: true, analysis: result });
+    return apiOk({ analysis: result, requestId });
 }

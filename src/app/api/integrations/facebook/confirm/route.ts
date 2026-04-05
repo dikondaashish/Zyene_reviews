@@ -1,11 +1,17 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { NextResponse } from "next/server";
 import { getPageDetails } from "@/services/facebook/adapter";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { cookies } from "next/headers";
 import * as Sentry from "@sentry/nextjs";
 import type { MemberOrgContext } from "@/types/member-context";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const confirmSchema = z.object({
+    pageId: z.string().min(1).max(200),
+});
 
 /**
  * POST: Confirm Facebook page connection.
@@ -13,48 +19,42 @@ import type { MemberOrgContext } from "@/types/member-context";
  * saves the selected page to review_platforms, and triggers initial sync.
  */
 export async function POST(req: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/integrations/facebook/confirm");
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     try {
-        const { pageId } = await req.json();
-
-        if (!pageId) {
-            return NextResponse.json(
-                { error: "Page ID is required" },
-                { status: 400 }
-            );
+        const parsed = confirmSchema.safeParse(await req.json());
+        if (!parsed.success) {
+            return apiError("Page ID is required", { status: 400, details: requestId });
         }
+        const { pageId } = parsed.data;
 
         // Read connect data from cookie
         const cookieStore = await cookies();
         const fbDataRaw = cookieStore.get("fb_connect_data")?.value;
 
         if (!fbDataRaw) {
-            return NextResponse.json(
-                {
-                    error: "Facebook connection data expired. Please reconnect.",
-                },
-                { status: 400 }
-            );
+            return apiError("Facebook connection data expired. Please reconnect.", { status: 400, details: requestId });
         }
 
-        const fbData = JSON.parse(fbDataRaw);
+        const fbData = JSON.parse(fbDataRaw) as {
+            businessId: string;
+            tokenExpiresIn?: number;
+            pages: Array<{ pageId: string; pageName: string; pageAccessToken: string }>;
+        };
         const selectedPage = fbData.pages.find(
-            (p: any) => p.pageId === pageId
+            (p) => p.pageId === pageId
         );
 
         if (!selectedPage) {
-            return NextResponse.json(
-                { error: "Selected page not found" },
-                { status: 400 }
-            );
+            return apiError("Selected page not found", { status: 400, details: requestId });
         }
 
         const businessId = fbData.businessId;
@@ -71,10 +71,7 @@ export async function POST(req: Request) {
         const ownsBusiness = businesses.some((b) => b.id === businessId);
 
         if (!ownsBusiness) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 403 }
-            );
+            return apiError("Unauthorized", { status: 403, details: requestId });
         }
 
         // Get page details for metadata
@@ -120,16 +117,14 @@ export async function POST(req: Request) {
         if (error) {
             console.error("[Facebook Confirm] Upsert error:", error);
             Sentry.captureException(error, { tags: { route: "facebook-confirm", step: "upsert_platform" } });
-            return NextResponse.json(
-                { error: "Failed to save Facebook connection" },
-                { status: 500 }
-            );
+            return apiError("Failed to save Facebook connection", { status: 500, details: requestId });
         }
 
         // Clear the cookie
-        const response = NextResponse.json({
+        const response = apiOk({
             success: true,
             platform,
+            requestId,
             page: {
                 name: selectedPage.pageName,
                 rating: pageDetails.overallStarRating,
@@ -145,7 +140,7 @@ export async function POST(req: Request) {
         // Trigger initial sync in the background
         try {
             await syncFacebookReviewsForPlatform(platform.id);
-        } catch (syncError: any) {
+        } catch (syncError: unknown) {
             console.error(
                 "[Facebook Confirm] Initial sync error:",
                 syncError
@@ -154,13 +149,12 @@ export async function POST(req: Request) {
             // Connection saved, sync will retry on next cron
         }
 
+        logger.info({ userId: user.id, platformId: platform.id, pageId }, "Facebook page confirmed");
+
         return response;
     } catch (error: unknown) {
         console.error("[Facebook Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "facebook-confirm" } });
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        return apiError("Internal Server Error", { status: 500, details: requestId });
     }
 }

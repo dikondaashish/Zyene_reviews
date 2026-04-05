@@ -7,6 +7,11 @@ import {
     parseKeywordImpressions,
     type DateParts,
 } from "./performance";
+import {
+    PERFORMANCE_DAILY_DAYS,
+    PERFORMANCE_KEYWORD_MONTHS,
+    PERFORMANCE_METRICS_BATCH_SIZE,
+} from "./constants";
 import * as Sentry from "@sentry/nextjs";
 
 export interface PerformanceSyncResult {
@@ -30,8 +35,8 @@ export async function syncGooglePerformanceForPlatform(
     platformId: string,
     options?: { dailyDays?: number; keywordMonths?: number }
 ): Promise<PerformanceSyncResult> {
-    const dailyDays = options?.dailyDays ?? 30;
-    const keywordMonths = options?.keywordMonths ?? 3;
+    const dailyDays = options?.dailyDays ?? PERFORMANCE_DAILY_DAYS;
+    const keywordMonths = options?.keywordMonths ?? PERFORMANCE_KEYWORD_MONTHS;
 
     const admin = createAdminClient();
 
@@ -76,9 +81,8 @@ export async function syncGooglePerformanceForPlatform(
         }));
 
         let dailyUpserted = 0;
-        const BATCH = 200;
-        for (let i = 0; i < dailyRows.length; i += BATCH) {
-            const chunk = dailyRows.slice(i, i + BATCH);
+        for (let i = 0; i < dailyRows.length; i += PERFORMANCE_METRICS_BATCH_SIZE) {
+            const chunk = dailyRows.slice(i, i + PERFORMANCE_METRICS_BATCH_SIZE);
             if (chunk.length === 0) continue;
             const { error } = await admin.from("google_performance_metrics").upsert(chunk, {
                 onConflict: "review_platform_id,metric_date,metric_key,dimension_key",

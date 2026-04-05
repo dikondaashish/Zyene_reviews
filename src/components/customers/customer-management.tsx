@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { 
     Plus, 
     Upload, 
@@ -21,6 +21,11 @@ interface CustomerManagementProps {
     businessId: string;
     initialCustomers: Customer[];
 }
+
+type BulkActionPayload = {
+    tags?: string[];
+    mode?: "add" | "remove";
+};
 
 export function CustomerManagement({ businessId, initialCustomers }: CustomerManagementProps) {
     const [customers, setCustomers] = useState<Customer[]>(initialCustomers);
@@ -70,7 +75,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
         }
     }, [search, segment, tags, initialCustomers, fetchCustomers]);
 
-    const handleBulkAction = async (action: "delete" | "tag" | "request", data?: any) => {
+    const handleBulkAction = async (action: "delete" | "tag" | "request", data?: BulkActionPayload) => {
         if (!businessId || selectedIds.length === 0) return;
 
         const promise = fetch("/api/customers/bulk", {
@@ -119,7 +124,19 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
         }
     };
 
-    const availableTags = Array.from(new Set(customers.flatMap(c => c.tags || []))).slice(0, 10);
+    const availableTags = useMemo(
+        () => Array.from(new Set(customers.flatMap((c) => c.tags || []))).slice(0, 10),
+        [customers]
+    );
+
+    const customerStats = useMemo(
+        () => ({
+            totalCustomers: customers.length,
+            totalRequests: customers.reduce((acc, curr) => acc + (curr.total_requests_sent || 0), 0),
+            loyalCustomers: customers.filter((c) => (c.visit_count || 0) >= 2).length,
+        }),
+        [customers]
+    );
 
     return (
         <div className="animate-in fade-in duration-500">
@@ -164,7 +181,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Customers</p>
-                        <h3 className="text-2xl font-bold text-foreground">{customers.length}</h3>
+                        <h3 className="text-2xl font-bold text-foreground">{customerStats.totalCustomers}</h3>
                     </div>
                 </div>
                 <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
@@ -174,7 +191,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     <div>
                         <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Requests Total</p>
                         <h3 className="text-2xl font-bold text-foreground">
-                            {customers.reduce((acc, curr) => acc + (curr.total_requests_sent || 0), 0)}
+                            {customerStats.totalRequests}
                         </h3>
                     </div>
                 </div>
@@ -185,7 +202,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     <div>
                         <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Loyal Customers</p>
                         <h3 className="text-2xl font-bold text-foreground">
-                            {customers.filter(c => (c.visit_count || 0) >= 2).length}
+                            {customerStats.loyalCustomers}
                         </h3>
                     </div>
                 </div>

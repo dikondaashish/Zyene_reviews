@@ -11,6 +11,29 @@ import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+
+const patchListingSchema = z.object({
+    businessId: z.string().uuid(),
+    title: z.string().trim().min(1).max(200).optional(),
+    websiteUri: z.string().trim().max(500).optional(),
+    primaryPhone: z.string().trim().max(30).optional(),
+    description: z.string().max(2000).optional(),
+}).superRefine((value, ctx) => {
+    const hasField =
+        value.title !== undefined ||
+        value.websiteUri !== undefined ||
+        value.primaryPhone !== undefined ||
+        value.description !== undefined;
+
+    if (!hasField) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "No updatable fields provided",
+        });
+    }
+});
 
 function publicListingPayload(loc: Awaited<ReturnType<typeof getGoogleLocation>>) {
     return {
@@ -102,19 +125,14 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: Request) {
     try {
+        const { requestId } = createRequestLogger("PATCH /api/google/listing");
         const { supabase, user } = await requireUser();
-        const body = (await request.json()) as {
-            businessId?: string;
-            title?: string;
-            websiteUri?: string;
-            primaryPhone?: string;
-            description?: string;
-        };
-
-        const businessId = body.businessId;
-        if (!businessId) {
-            throw new ApiRouteError("businessId required", { status: 400, code: "MISSING_BUSINESS_ID" });
+        const parsed = patchListingSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "Invalid payload", { status: 400, details: requestId });
         }
+
+        const { businessId, title, websiteUri, primaryPhone, description } = parsed.data;
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
@@ -133,24 +151,24 @@ export async function PATCH(request: Request) {
         }
 
         const requested =
-            body.title !== undefined ||
-            body.websiteUri !== undefined ||
-            body.primaryPhone !== undefined ||
-            body.description !== undefined;
+            title !== undefined ||
+            websiteUri !== undefined ||
+            primaryPhone !== undefined ||
+            description !== undefined;
         if (!requested) {
             throw new ApiRouteError("No updatable fields provided", { status: 400, code: "NO_FIELDS" });
         }
 
         const input: PatchListingInput = {};
-        if (typeof body.title === "string") {
-            const t = body.title.trim();
+        if (typeof title === "string") {
+            const t = title.trim();
             if (!t) {
                 throw new ApiRouteError("Title cannot be empty", { status: 400, code: "INVALID_TITLE" });
             }
             input.title = t;
         }
-        if (typeof body.websiteUri === "string") {
-            const w = body.websiteUri.trim();
+        if (typeof websiteUri === "string") {
+            const w = websiteUri.trim();
             if (w) {
                 if (!/^https?:\/\//i.test(w)) {
                     throw new ApiRouteError("Website must start with http:// or https://", {
@@ -161,14 +179,14 @@ export async function PATCH(request: Request) {
                 input.websiteUri = w;
             }
         }
-        if (typeof body.primaryPhone === "string") {
-            const p = body.primaryPhone.trim();
+        if (typeof primaryPhone === "string") {
+            const p = primaryPhone.trim();
             if (p) {
                 input.primaryPhone = p;
             }
         }
-        if (typeof body.description === "string") {
-            input.description = body.description.trim();
+        if (typeof description === "string") {
+            input.description = description.trim();
         }
 
         if (Object.keys(input).length === 0) {

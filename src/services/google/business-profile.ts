@@ -46,6 +46,21 @@ const BASE_URL_ACCOUNT = "https://mybusinessaccountmanagement.googleapis.com/v1"
 const BASE_URL_INFO = "https://mybusinessbusinessinformation.googleapis.com/v1";
 const BASE_URL_REVIEWS = "https://mybusiness.googleapis.com/v4";
 
+type GoogleApiError = Error & {
+    code?: string;
+    statusCode?: number;
+    activationUrl?: string;
+    userMessage?: string;
+};
+
+function createGoogleApiError(message: string, code?: string): GoogleApiError {
+    const error = new Error(message) as GoogleApiError;
+    if (code) {
+        error.code = code;
+    }
+    return error;
+}
+
 export async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
         const response = await fetch(url, options);
@@ -114,8 +129,7 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
+            const error = createGoogleApiError("Google API Rate Limit Exceeded", "RATE_LIMIT");
             throw error;
         }
         throw new Error(`Failed to list accounts: ${response.status} ${response.statusText}`);
@@ -138,8 +152,7 @@ export async function listLocations(accessToken: string, accountName: string, re
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
+            const error = createGoogleApiError("Google API Rate Limit Exceeded", "RATE_LIMIT");
             throw error;
         }
         throw new Error(`Failed to list locations: ${response.status} ${response.statusText}`);
@@ -235,8 +248,7 @@ export async function listReviews(
         console.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
 
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = "RATE_LIMIT";
+            const error = createGoogleApiError("Google API Rate Limit Exceeded", "RATE_LIMIT");
             throw error;
         }
         // 403: SERVICE_DISABLED, quota/access, or scope
@@ -248,7 +260,7 @@ export async function listReviews(
                     : parsed.kind === "gbp_access_pending"
                       ? "GOOGLE_GBP_ACCESS_PENDING"
                       : "GOOGLE_REVIEWS_FORBIDDEN";
-            const err: any = new Error(
+            const err = createGoogleApiError(
                 `${code}: ${parsed.userMessage}${parsed.activationUrl ? ` ${parsed.activationUrl}` : ""}`
             );
             err.code = code;
@@ -306,8 +318,7 @@ export async function getReview(accessToken: string, reviewName: string): Promis
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
+            const error = createGoogleApiError("Google API Rate Limit Exceeded", "RATE_LIMIT");
             throw error;
         }
         const errorBody = await response.text();

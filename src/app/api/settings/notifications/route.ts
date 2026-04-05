@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const parsed = notificationPreferencesSchema.safeParse(await request.json());
     if (!parsed.success) {
-        return apiError(parsed.error.errors[0].message, { status: 400 });
+           return apiError(parsed.error.issues[0].message, { status: 400 });
     }
     const body = parsed.data;
 

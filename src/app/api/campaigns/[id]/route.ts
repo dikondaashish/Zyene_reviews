@@ -1,9 +1,34 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
+
+const patchCampaignSchema = z.object({
+    name: z.string().min(1).max(150).optional(),
+    status: z.enum(["draft", "active", "paused", "processing", "completed", "archived"]).optional(),
+    trigger_type: z.string().max(50).optional(),
+    channel: z.enum(["sms", "email", "both"]).optional(),
+    sms_template: z.string().max(5000).optional(),
+    email_subject: z.string().max(255).optional(),
+    email_template: z.string().max(20000).optional(),
+    delay_minutes: z.number().int().min(0).max(7 * 24 * 60).optional(),
+    follow_up_enabled: z.boolean().optional(),
+    follow_up_delay_hours: z.number().int().min(0).max(30 * 24).optional(),
+    follow_up_template: z.string().max(5000).optional(),
+}).superRefine((value, ctx) => {
+    if (Object.keys(value).length === 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "No valid fields to update",
+        });
+    }
+});
 
 // Helper: verify ownership of a campaign
-async function verifyCampaignOwnership(supabase: any, userId: string, campaignId: string) {
+async function verifyCampaignOwnership(supabase: SupabaseClient, userId: string, campaignId: string) {
     const { data: campaignById } = await supabase
         .from("campaigns")
         .select("id, business_id")
@@ -29,6 +54,7 @@ export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { requestId } = createRequestLogger("GET /api/campaigns/[id]");
     const supabase = await createClient();
     const { id: campaignId } = await params;
 
@@ -37,12 +63,12 @@ export async function GET(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     const campaign = await verifyCampaignOwnership(supabase, user.id, campaignId);
     if (!campaign) {
-        return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+        return apiError("Campaign not found", { status: 404, details: requestId });
     }
 
     // Also fetch associated review_requests for the contacts table
@@ -52,7 +78,7 @@ export async function GET(
         .eq("campaign_id", campaignId)
         .order("created_at", { ascending: false });
 
-    return NextResponse.json({ campaign, requests: requests || [] });
+    return apiOk({ campaign, requests: requests || [], requestId });
 }
 
 // PATCH /api/campaigns/[id] — update campaign
@@ -60,6 +86,7 @@ export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { requestId } = createRequestLogger("PATCH /api/campaigns/[id]");
     const supabase = await createClient();
     const { id: campaignId } = await params;
 
@@ -68,22 +95,31 @@ export async function PATCH(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     const campaign = await verifyCampaignOwnership(supabase, user.id, campaignId);
     if (!campaign) {
-        return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+        return apiError("Campaign not found", { status: 404, details: requestId });
     }
 
-    const body = await request.json();
+    const parsed = patchCampaignSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError(parsed.error.issues[0]?.message || "Invalid campaign payload", {
+            status: 400,
+            details: requestId,
+        });
+    }
+
+    const body = parsed.data;
 
     // Force email verification for active campaigns
     if (body.status === "active" && !user.email_confirmed_at) {
-        return NextResponse.json(
-            { error: "Email verification required", code: "EMAIL_NOT_VERIFIED" },
-            { status: 403 }
-        );
+        return apiError("Email verification required", {
+            status: 403,
+            code: "EMAIL_NOT_VERIFIED",
+            details: requestId,
+        });
     }
 
     // Only allow safe fields to update
@@ -93,15 +129,16 @@ export async function PATCH(
         "delay_minutes", "follow_up_enabled", "follow_up_delay_hours", "follow_up_template",
     ];
 
-    const updates: Record<string, any> = {};
+    const updates: Record<string, string | number | boolean | null> = {};
     for (const key of allowedFields) {
-        if (body[key] !== undefined) {
-            updates[key] = body[key];
+        if (body[key as keyof typeof body] !== undefined) {
+            const value = body[key as keyof typeof body];
+            updates[key] = value ?? null;
         }
     }
 
     if (Object.keys(updates).length === 0) {
-        return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+        return apiError("No valid fields to update", { status: 400, details: requestId });
     }
 
     const { data: updated, error } = await supabase
@@ -113,10 +150,10 @@ export async function PATCH(
 
     if (error) {
         console.error("Campaign update error:", error);
-        return NextResponse.json({ error: "Failed to update campaign" }, { status: 500 });
+        return apiError("Failed to update campaign", { status: 500, details: requestId });
     }
 
-    return NextResponse.json({ campaign: updated });
+    return apiOk({ campaign: updated, requestId });
 }
 
 // DELETE /api/campaigns/[id] — delete campaign
@@ -124,6 +161,7 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { requestId } = createRequestLogger("DELETE /api/campaigns/[id]");
     const supabase = await createClient();
     const { id: campaignId } = await params;
 
@@ -132,12 +170,12 @@ export async function DELETE(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     const campaign = await verifyCampaignOwnership(supabase, user.id, campaignId);
     if (!campaign) {
-        return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+        return apiError("Campaign not found", { status: 404, details: requestId });
     }
 
     const { error } = await supabase
@@ -147,8 +185,8 @@ export async function DELETE(
 
     if (error) {
         console.error("Campaign delete error:", error);
-        return NextResponse.json({ error: "Failed to delete campaign" }, { status: 500 });
+        return apiError("Failed to delete campaign", { status: 500, details: requestId });
     }
 
-    return NextResponse.json({ success: true });
+    return apiOk({ success: true, requestId });
 }

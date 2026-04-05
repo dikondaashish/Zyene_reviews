@@ -2,6 +2,11 @@ import { createClient } from "@/lib/db/supabase/server";
 import { type NextRequest } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const updateStatusSchema = z.object({
+    status: z.enum(["pending", "responded", "ignored"]),
+});
 
 export async function PATCH(
     request: NextRequest,
@@ -16,10 +21,11 @@ export async function PATCH(
             return apiError("Unauthorized", { status: 401 });
         }
 
-        const { status } = await request.json();
-        if (!status || !['pending', 'responded', 'ignored'].includes(status)) {
+        const parsed = updateStatusSchema.safeParse(await request.json());
+        if (!parsed.success) {
             return apiError("Invalid status", { status: 400 });
         }
+        const { status } = parsed.data;
 
         // 1. Fetch Review to get Business ID
         const { data: review, error: fetchError } = await supabase

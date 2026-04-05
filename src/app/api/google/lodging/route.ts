@@ -8,6 +8,12 @@ import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const patchLodgingSchema = z.object({
+    businessId: z.string().uuid(),
+    patches: z.record(z.string(), z.unknown()),
+});
 
 export async function GET(request: NextRequest) {
     try {
@@ -75,11 +81,15 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: Request) {
     try {
         const { supabase, user } = await requireUser();
-        const body = (await request.json()) as { businessId?: string; patches?: LodgingPatches };
-        const businessId = body.businessId;
-        const patches = body.patches;
+        const parsed = patchLodgingSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "Invalid payload", { status: 400 });
+        }
 
-        if (!businessId || !patches || typeof patches !== "object") {
+        const businessId = parsed.data.businessId;
+        const patches = parsed.data.patches as LodgingPatches;
+
+        if (!patches || typeof patches !== "object") {
             throw new ApiRouteError("businessId and patches required", {
                 status: 400,
                 code: "INVALID_PAYLOAD",

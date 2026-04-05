@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getBusiness } from "./adapter";
-import { analyzeReview } from "@/services/ai/analysis";
+import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
 export interface YelpSyncResult {

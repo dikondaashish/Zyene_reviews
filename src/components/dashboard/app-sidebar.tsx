@@ -42,13 +42,105 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
+type NavItem = {
+    title: string
+    url: string
+    icon: React.ComponentType<{ className?: string }>
+    tourTarget?: string
+}
+
+function navButtonClass(isActive: boolean) {
+    return `
+        transition-all duration-150
+        ${isActive
+            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500"
+            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        }
+    `
+}
+
+function MainNavItems({ items, pathname }: { items: NavItem[]; pathname: string }) {
+    return (
+        <SidebarMenu>
+            {items.map((item) => {
+                const isActive = pathname === item.url || pathname.startsWith(item.url + "/")
+                return (
+                    <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
+                        <SidebarMenuButton
+                            asChild
+                            tooltip={item.title}
+                            className={navButtonClass(isActive)}
+                        >
+                            <Link href={item.url}>
+                                <item.icon className={isActive ? "text-orange-600" : ""} />
+                                <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                )
+            })}
+        </SidebarMenu>
+    )
+}
+
+function SettingsNavItems({
+    items,
+    pathname,
+    isSettingsActive,
+    settingsLabel,
+}: {
+    items: NavItem[]
+    pathname: string
+    isSettingsActive: boolean
+    settingsLabel: string
+}) {
+    return (
+        <SidebarMenu>
+            <Collapsible defaultOpen={isSettingsActive} className="group/collapsible">
+                <SidebarMenuItem data-tour-target="tour-settings-nav">
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                            className={navButtonClass(isSettingsActive)}
+                            tooltip={settingsLabel}
+                        >
+                            <Settings className={isSettingsActive ? "text-orange-600" : ""} />
+                            <span className={isSettingsActive ? "font-semibold" : ""}>{settingsLabel}</span>
+                            <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub>
+                            {items.map((item) => {
+                                const isActive = pathname === item.url
+                                return (
+                                    <SidebarMenuSubItem key={item.title}>
+                                        <SidebarMenuSubButton
+                                            asChild
+                                            className={navButtonClass(isActive)}
+                                        >
+                                            <Link href={item.url}>
+                                                <item.icon className={`h-4 w-4 ${isActive ? "text-orange-600" : ""}`} />
+                                                <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                )
+                            })}
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </SidebarMenuItem>
+            </Collapsible>
+        </SidebarMenu>
+    )
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname()
     const { dict } = useLanguage()
     const isSettingsActive = pathname.startsWith("/settings")
 
-    // Menu items.
-    const items = [
+    // Memoize menu metadata so child renders only depend on pathname/language changes.
+    const items = React.useMemo<NavItem[]>(() => [
         {
             title: dict.nav.dashboard,
             url: "/dashboard",
@@ -101,9 +193,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/integrations",
             icon: Plug,
         },
-    ]
+    ], [dict])
 
-    const settingsItems = [
+    const settingsItems = React.useMemo<NavItem[]>(() => [
         {
             title: dict.nav.general,
             url: "/settings",
@@ -129,7 +221,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/settings/team",
             icon: Users,
         },
-    ]
+    ], [dict])
 
     return (
         <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border">
@@ -152,82 +244,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
 
             <SidebarContent data-tour-target="tour-sidebar">
-                <SidebarMenu>
-                    {items.map((item) => {
-                        const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
-                        return (
-                            <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
-                                <SidebarMenuButton
-                                    asChild
-                                    tooltip={item.title}
-                                    className={`
-                                        transition-all duration-150
-                                        ${isActive 
-                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
-                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                                        }
-                                    `}
-                                >
-                                    <Link href={item.url}>
-                                        <item.icon className={isActive ? "text-orange-600" : ""} />
-                                        <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        );
-                    })}
-                </SidebarMenu>
+                <MainNavItems items={items} pathname={pathname} />
             </SidebarContent>
 
             <SidebarFooter>
-                <SidebarMenu>
-                    <Collapsible defaultOpen={isSettingsActive} className="group/collapsible">
-                        <SidebarMenuItem data-tour-target="tour-settings-nav">
-                            <CollapsibleTrigger asChild>
-                                <SidebarMenuButton
-                                    className={`
-                                        transition-all duration-150
-                                        ${isSettingsActive 
-                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
-                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                                        }
-                                    `}
-                                    tooltip={dict.nav.settings}
-                                >
-                                    <Settings className={isSettingsActive ? "text-orange-600" : ""} />
-                                    <span className={isSettingsActive ? "font-semibold" : ""}>{dict.nav.settings}</span>
-                                    <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                </SidebarMenuButton>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent>
-                                <SidebarMenuSub>
-                                    {settingsItems.map((item) => {
-                                        const isActive = pathname === item.url;
-                                        return (
-                                            <SidebarMenuSubItem key={item.title}>
-                                                <SidebarMenuSubButton
-                                                    asChild
-                                                    className={`
-                                                        transition-all duration-150
-                                                        ${isActive 
-                                                            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500" 
-                                                            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                                                        }
-                                                    `}
-                                                >
-                                                    <Link href={item.url}>
-                                                        <item.icon className={`h-4 w-4 ${isActive ? "text-orange-600" : ""}`} />
-                                                        <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
-                                                    </Link>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        );
-                                    })}
-                                </SidebarMenuSub>
-                            </CollapsibleContent>
-                        </SidebarMenuItem>
-                    </Collapsible>
-                </SidebarMenu>
+                <SettingsNavItems
+                    items={settingsItems}
+                    pathname={pathname}
+                    isSettingsActive={isSettingsActive}
+                    settingsLabel={dict.nav.settings}
+                />
             </SidebarFooter>
 
             <SidebarRail />

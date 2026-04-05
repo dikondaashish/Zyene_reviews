@@ -3,11 +3,24 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Global Next.js middleware:
- * 1. Refreshes Supabase auth session on every request (prevents stale cookies)
- * 2. Redirects unauthenticated users away from protected /dashboard routes
+ * 1. Refreshes Supabase auth session on every protected request.
+ * 2. Redirects unauthenticated users away from /dashboard/* to /login.
+ * 3. Passes through API/auth/_next/static routes.
  */
 export async function middleware(request: NextRequest) {
     let supabaseResponse = NextResponse.next({ request });
+
+    const { pathname } = request.nextUrl;
+
+    const isApiRoute = pathname.startsWith("/api/");
+    const isAuthRoute = pathname.startsWith("/auth/");
+    const isNextRoute = pathname.startsWith("/_next/");
+    const isHealthRoute = pathname === "/api/health";
+    const isStaticFile = /\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml|woff|woff2|ttf|eot)$/.test(pathname);
+
+    if (isApiRoute || isAuthRoute || isNextRoute || isHealthRoute || isStaticFile) {
+        return supabaseResponse;
+    }
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -30,37 +43,18 @@ export async function middleware(request: NextRequest) {
         }
     );
 
-    // Refresh the session — this must happen before any auth check
+    // Refresh the session before auth checks.
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
-    const { pathname } = request.nextUrl;
-
-    // Protect dashboard routes — redirect to login if unauthenticated
     if (!user && pathname.startsWith("/dashboard")) {
-        const rootDomain =
-            process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-        const loginUrl = rootDomain.includes("localhost")
-            ? new URL("/login", request.url)
-            : new URL(`https://auth.${rootDomain}`);
-        return NextResponse.redirect(loginUrl);
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return supabaseResponse;
 }
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization)
-         * - favicon.ico (favicon file)
-         * - public folder assets
-         * - API routes (they handle their own auth)
-         * - monitoring (Sentry tunnel)
-         */
-        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api/|monitoring).*)",
-    ],
+    matcher: ["/:path*"],
 };

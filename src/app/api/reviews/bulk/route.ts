@@ -3,23 +3,27 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const bulkUpdateSchema = z.object({
+    ids: z.array(z.string().uuid()).min(1).max(500),
+    businessId: z.string().uuid(),
+    status: z.enum(["pending", "responded", "ignored"]),
+});
 
 export async function POST(request: NextRequest) {
     try {
         const { supabase, user } = await requireUser();
 
-        const { ids, businessId, status } = await request.json();
-
-        if (!ids || !Array.isArray(ids) || ids.length === 0 || !businessId || !status) {
+        const parsed = bulkUpdateSchema.safeParse(await request.json());
+        if (!parsed.success) {
             throw new ApiRouteError("Missing required fields", {
                 status: 400,
                 code: "INVALID_PAYLOAD",
             });
         }
 
-        if (!['pending', 'responded', 'ignored'].includes(status)) {
-            throw new ApiRouteError("Invalid status", { status: 400, code: "INVALID_STATUS" });
-        }
+        const { ids, businessId, status } = parsed.data;
 
         // 1. Verify Access
         const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);

@@ -18,8 +18,8 @@ export async function PATCH(request: Request) {
     }
 
     const parsed = updateProfileSchema.safeParse(await request.json());
-    if (!parsed.success) {
-        return apiError(parsed.error.errors[0].message, { status: 400 });
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0].message, { status: 400 });
     }
     const body = parsed.data;
 

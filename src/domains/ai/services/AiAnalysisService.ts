@@ -1,5 +1,5 @@
-import { generateContentWithFallback } from "@/lib/ai/vertex-client";
-import { SENTIMENT_PROMPT } from "./prompts";
+import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { Schema, Type as SchemaType } from "@google/genai";
 
@@ -14,7 +14,21 @@ const sentimentSchema: Schema = {
     required: ["sentiment", "urgency", "themes", "summary"]
 };
 
-export async function analyzeReview(review: any) {
+type ReviewForAnalysis = {
+    id: string;
+    rating?: number | null;
+    content?: string | null;
+    text?: string | null;
+};
+
+type SentimentAnalysisResult = {
+    sentiment: string;
+    urgency: number;
+    themes: string[];
+    summary: string;
+};
+
+export async function analyzeReview(review: ReviewForAnalysis): Promise<SentimentAnalysisResult | null | undefined> {
     if (!review.content && !review.text) return;
 
     try {
@@ -28,7 +42,7 @@ export async function analyzeReview(review: any) {
             schema: sentimentSchema
         });
 
-        const result = JSON.parse(content);
+        const result = JSON.parse(content) as SentimentAnalysisResult;
 
         const admin = createAdminClient();
         await admin.from("reviews").update({

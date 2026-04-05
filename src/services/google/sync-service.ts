@@ -1,7 +1,88 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
+import { refreshGoogleToken, listAccounts, listLocations, listReviews, type GoogleReview } from "./business-profile";
+import {
+    AI_ANALYSIS_BATCH_SIZE,
+    MAX_REVIEW_PAGES,
+    PAGINATION_DELAY_MS,
+    REQUEST_SMOOTHING_DELAY_MS,
+    SYNC_COOLDOWN_MS,
+    TOKEN_EXPIRY_BUFFER_MS,
+} from "./constants";
 
 import { inngest } from "@/services/inngest/client";
+
+type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
+type AdminClient = ReturnType<typeof createAdminClient>;
+type ReviewPlatformRef = { id: string; business_id: string };
+
+function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): SyncError {
+    const error = new Error(message) as SyncError;
+    error.code = code;
+    return error;
+}
+
+function enforceSyncCooldown(platform: { last_synced_at?: string | null; sync_status?: string | null }) {
+    if (!platform.last_synced_at) {
+        return;
+    }
+
+    const lastSync = new Date(platform.last_synced_at);
+    const now = new Date();
+    const diff = now.getTime() - lastSync.getTime();
+
+    if (platform.sync_status !== "running" && diff < SYNC_COOLDOWN_MS) {
+        throw createSyncError("Please wait before syncing again.", "RATE_LIMIT");
+    }
+}
+
+async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
+    const { data: lockAcquired, error: lockError } = await admin.rpc("acquire_platform_lock", {
+        p_id: platformId,
+    });
+
+    if (lockError || !lockAcquired) {
+        console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
+        if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
+        if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
+        throw createSyncError("Sync already in progress.", "CONFLICT");
+    }
+}
+
+async function fetchGoogleReviewsPaginated(
+    accessToken: string,
+    googleAccountId: string,
+    googleLocationId: string
+): Promise<{
+    googleReviews: GoogleReview[];
+    apiTotalReviews?: number;
+    apiAverageRating?: number;
+}> {
+    let pageToken: string | undefined = undefined;
+    const googleReviews: GoogleReview[] = [];
+    let apiTotalReviews: number | undefined = undefined;
+    let apiAverageRating: number | undefined = undefined;
+    let pageCount = 0;
+
+    do {
+        const apiResp = await listReviews(accessToken, googleAccountId, googleLocationId, pageToken);
+        googleReviews.push(...apiResp.reviews);
+
+        // Capture totals from first page payload only.
+        if (pageCount === 0) {
+            apiTotalReviews = apiResp.totalReviewCount;
+            apiAverageRating = apiResp.averageRating;
+        }
+
+        pageToken = apiResp.nextPageToken;
+        pageCount++;
+
+        if (pageToken && pageCount < MAX_REVIEW_PAGES) {
+            await new Promise((resolve) => setTimeout(resolve, PAGINATION_DELAY_MS));
+        }
+    } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+    return { googleReviews, apiTotalReviews, apiAverageRating };
+}
 
 export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
@@ -53,7 +134,7 @@ export async function getValidGoogleToken(platformId: string) {
     // 3. Check Token Expiry (Buffer: 5 minutes)
     const now = new Date();
     const expiry = platformWithTokens.token_expires_at ? new Date(platformWithTokens.token_expires_at) : null;
-    const isExpired = !expiry || (expiry.getTime() - now.getTime() < 5 * 60 * 1000);
+    const isExpired = !expiry || (expiry.getTime() - now.getTime() < TOKEN_EXPIRY_BUFFER_MS);
 
     if (isExpired) {
         console.log(`[Token] Expired for platform ${platformId}. Refreshing...`);
@@ -130,25 +211,8 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     // DEBUG LOG BEFORE LOCK ATTEMPT
     console.log(`[Sync] Debug Platform ${platformId}: status=${platform.sync_status}, updated_at=${platform.updated_at}, last_synced_at=${platform.last_synced_at}`);
 
-    // Check Cooldown FIRST (cheap check)
-    if (platform.last_synced_at) {
-        const lastSync = new Date(platform.last_synced_at);
-        const now = new Date();
-        const diff = now.getTime() - lastSync.getTime();
-        // Only enforce cooldown if status is NOT running (if running, we might be overriding stale lock)
-        // Wait, if status is running, we want to allow override if stale.
-        // If status is idle, we check cooldown.
-        // The user requirements didn't explicitly change cooldown logic, but standard behavior is: 
-        // Cooldown applies to preventing frequent SUCCESSFUL syncs.
-        // Stale lock override applies to stuck RUNNING syncs.
-
-        if (platform.sync_status !== 'running' && diff < 2 * 60 * 1000) { // 2 minutes
-            // Throw specific error object that API route can parse
-            const error: any = new Error("Please wait before syncing again.");
-            error.code = "RATE_LIMIT";
-            throw error;
-        }
-    }
+    // Check cooldown first to avoid unnecessary lock contention.
+    enforceSyncCooldown(platform);
 
     // ATOMIC LOCK ACQUISITION
     // Condition: 
@@ -160,19 +224,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     // We use a Postgres Function to guarantee atomic logic execution without client-side query building issues.
     console.log(`[Sync] Attempting Lock RPC for ${platformId}`);
 
-    const { data: lockAcquired, error: lockError } = await admin.rpc('acquire_platform_lock', {
-        p_id: platformId
-    });
-
-    if (lockError || !lockAcquired) {
-        console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
-        if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
-        if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
-
-        const error: any = new Error("Sync already in progress.");
-        error.code = "CONFLICT";
-        throw error;
-    }
+    await acquireSyncLockOrThrow(admin, platformId);
 
     console.log(`[Sync] Lock Acquired for platform ${platformId}`);
 
@@ -217,36 +269,15 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         }
 
         // 3. Request Smoothing
-        await new Promise(resolve => setTimeout(resolve, 700));
+        await new Promise(resolve => setTimeout(resolve, REQUEST_SMOOTHING_DELAY_MS));
 
         // 4. Call reviews.list with pagination loop
         console.log(`[Sync] Fetching reviews for Account: ${googleAccountId}, Location: ${googleLocationId}`);
-        
-        let pageToken: string | undefined = undefined;
-        const googleReviews: any[] = [];
-        let apiTotalReviews: number | undefined = undefined;
-        let apiAverageRating: number | undefined = undefined;
-        let pageCount = 0;
-        const MAX_PAGES = 40; // Hard cap at ~2000 reviews to prevent function timeouts
-        
-        do {
-            const apiResp = await listReviews(accessToken!, googleAccountId!, googleLocationId!, pageToken);
-            googleReviews.push(...apiResp.reviews);
-            
-            // Only extract total stats natively from Google during the very first page grab
-            if (pageCount === 0) {
-                apiTotalReviews = apiResp.totalReviewCount;
-                apiAverageRating = apiResp.averageRating;
-            }
-
-            pageToken = apiResp.nextPageToken;
-            pageCount++;
-            
-            // Slight delay between pagination fetches to respect general API velocity limits
-            if (pageToken && pageCount < MAX_PAGES) {
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-        } while (pageToken && pageCount < MAX_PAGES);
+        const { googleReviews, apiTotalReviews, apiAverageRating } = await fetchGoogleReviewsPaginated(
+            accessToken!,
+            googleAccountId!,
+            googleLocationId!
+        );
 
         console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
 
@@ -268,11 +299,11 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         // 5. Trigger Batch AI Analysis (Drip Feed)
         if (reviewIdsToAnalyze.length > 0) {
-            console.log(`[Sync] Queueing ${reviewIdsToAnalyze.length} reviews for background analysis in batches of 5`);
+            console.log(`[Sync] Queueing ${reviewIdsToAnalyze.length} reviews for background analysis in batches of ${AI_ANALYSIS_BATCH_SIZE}`);
             
-            // Chunk into groups of 5
-            for (let i = 0; i < reviewIdsToAnalyze.length; i += 5) {
-                const chunk = reviewIdsToAnalyze.slice(i, i + 5);
+            // Chunk into configured AI analysis batch size.
+            for (let i = 0; i < reviewIdsToAnalyze.length; i += AI_ANALYSIS_BATCH_SIZE) {
+                const chunk = reviewIdsToAnalyze.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
                 await inngest.send({
                     name: "review/analyze.batch",
                     data: { reviewIds: chunk }
@@ -325,7 +356,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             .eq("id", platform.business_id)
             .single();
 
-        const updateData: any = {
+        const updateData: {
+            total_reviews: number;
+            average_rating: number;
+        } = {
             total_reviews: totalReviews,
             average_rating: parseFloat(avgRating.toFixed(1))
         };
@@ -372,7 +406,11 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 /**
  * Processes a single Google Review: Upserts to DB.
  */
-export async function processGoogleReview(admin: any, platform: any, review: any) {
+export async function processGoogleReview(
+    admin: AdminClient,
+    platform: ReviewPlatformRef,
+    review: GoogleReview
+) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
 

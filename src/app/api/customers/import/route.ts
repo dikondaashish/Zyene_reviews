@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         const parsed = importSchema.safeParse(body);
         if (!parsed.success) {
             return NextResponse.json(
-                { error: parsed.error.errors[0]?.message || "Invalid import data" },
+                { error: parsed.error.issues[0]?.message || "Invalid import data" },
                 { status: 400 }
             );
         }
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         const businessId = resolvedBusinessId;
 
         // 2. Prepare payload for insertion
-        const insertPayload = customers.map((c: any) => ({
+        const insertPayload = customers.map((c) => ({
             business_id: businessId,
             first_name: c.first_name || null,
             last_name: c.last_name || null,

@@ -69,8 +69,13 @@ export async function POST() {
         // Verify the Stripe customer exists before creating portal session
         try {
             await stripe.customers.retrieve(org.stripe_customer_id);
-        } catch (custError: any) {
-            if (custError?.code === "resource_missing") {
+        } catch (custError: unknown) {
+            const stripeErrorCode =
+                typeof custError === "object" && custError !== null && "code" in custError
+                    ? (custError as { code?: string }).code
+                    : undefined;
+
+            if (stripeErrorCode === "resource_missing") {
                 // Stale customer ID — clear it from DB
                 console.warn(`Stale Stripe customer ID ${org.stripe_customer_id} for org ${member.organization_id}, clearing...`);
                 await admin

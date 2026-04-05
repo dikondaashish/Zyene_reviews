@@ -1,34 +1,49 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback, nextResponseForVertexAiError } from "@/lib/ai/vertex-client";
-import { QA_ANSWER_PROMPT } from "@/services/ai/prompts";
-import { NextResponse } from "next/server";
-import { qaSchema } from "@/lib/ai/schemas";
+import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
+import { QA_ANSWER_PROMPT } from "@/domains/ai/prompts";
+import { qaSchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const requestSchema = z.object({
+    questionId: z.string().uuid(),
+});
 
 interface OrgRow {
     plan: string;
     ai_replies_used_this_month: number;
 }
 
+interface BusinessRow {
+    organization_id: string;
+    knowledge_base: string | null;
+    name: string | null;
+}
+
 export async function POST(request: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/ai/suggest-qa-answer");
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     const { success: rateOk } = await aiRateLimit.limit(user.id);
     if (!rateOk) {
-        return NextResponse.json({ error: "AI rate limit exceeded. Please wait a minute." }, { status: 429 });
+        return apiError("AI rate limit exceeded. Please wait a minute.", { status: 429, details: requestId });
     }
 
-    const { questionId } = await request.json();
-    if (!questionId) {
-        return NextResponse.json({ error: "questionId required" }, { status: 400 });
+    const parsed = requestSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError("questionId is required", { status: 400, details: requestId });
     }
+
+    const { questionId } = parsed.data;
 
     const { data: row, error } = await supabase
         .from("gbp_questions")
@@ -37,13 +52,13 @@ export async function POST(request: Request) {
         .single();
 
     if (error || !row) {
-        return NextResponse.json({ error: "Question not found" }, { status: 404 });
+        return apiError("Question not found", { status: 404, details: requestId });
     }
 
     const businessId = row.business_id as string;
     const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
     if (!allowed) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        return apiError("Forbidden", { status: 403, details: requestId });
     }
 
     const { data: biz, error: bizErr } = await supabase
@@ -53,10 +68,10 @@ export async function POST(request: Request) {
         .single();
 
     if (bizErr || !biz?.organization_id) {
-        return NextResponse.json({ error: "Business not found" }, { status: 404 });
+        return apiError("Business not found", { status: 404, details: requestId });
     }
 
-    const bizTyped = biz as any;
+    const bizTyped = biz as unknown as BusinessRow;
     const orgId = bizTyped.organization_id as string;
 
     const { data: org, error: orgErr } = await supabase
@@ -66,7 +81,7 @@ export async function POST(request: Request) {
         .single();
 
     if (orgErr || !org) {
-        return NextResponse.json({ error: "Organization not found" }, { status: 404 });
+        return apiError("Organization not found", { status: 404, details: requestId });
     }
 
     const planLimits: Record<string, number> = {
@@ -81,10 +96,7 @@ export async function POST(request: Request) {
     const orgTyped = org as unknown as OrgRow;
     const limit = planLimits[orgTyped.plan] ?? 0;
     if (orgTyped.ai_replies_used_this_month >= limit) {
-        return NextResponse.json(
-            { error: "Monthly AI reply limit reached. Please upgrade your plan." },
-            { status: 403 }
-        );
+        return apiError("Monthly AI reply limit reached. Please upgrade your plan.", { status: 403, details: requestId });
     }
 
     const knowledgeBase = (bizTyped.knowledge_base as string) || "No special knowledge base provided.";
@@ -108,12 +120,13 @@ export async function POST(request: Request) {
         try {
             result = JSON.parse(content) as { answer?: string };
         } catch {
-            return NextResponse.json({ answer: content.trim() }, { status: 200 });
+            return apiOk({ answer: content.trim(), requestId }, { status: 200 });
         }
 
         await supabase.rpc("increment_ai_replies_used", { org_id: orgId });
+        logger.info({ userId: user.id, questionId }, "AI QA answer generated");
 
-        return NextResponse.json({ answer: result.answer || content.trim() });
+        return apiOk({ answer: result.answer || content.trim(), requestId });
     } catch (error) {
         return nextResponseForVertexAiError(error, "Failed to suggest answer.");
     }

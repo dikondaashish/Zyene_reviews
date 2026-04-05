@@ -1,10 +1,10 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
-import { generateContentWithFallback } from "../../lib/ai/vertex-client";
-import { BATCH_REVIEWS_PROMPT } from "@/services/ai/prompts";
+import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
-import { batchSchema } from "../../lib/ai/schemas";
+import { batchSchema } from "@/domains/ai/schemas/ResponseSchemas";
 
 // This background job runs for EACH contact asynchronously
 export const processCampaignContact = inngest.createFunction(

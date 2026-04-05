@@ -3,24 +3,31 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { upsertQuestionAnswer } from "@/services/google/qanda";
 import { syncGbpQuestionsForPlatform } from "@/services/google/phase2-sync";
-import { NextResponse } from "next/server";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const answerSchema = z.object({
+    questionId: z.string().uuid(),
+    text: z.string().trim().min(1).max(5000),
+});
 
 export async function POST(request: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/google/qa/answer");
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
-    const body = await request.json();
-    const questionId = body.questionId as string | undefined;
-    const answerText = typeof body.text === "string" ? body.text.trim() : "";
-
-    if (!questionId || !answerText) {
-        return NextResponse.json({ error: "questionId and text are required" }, { status: 400 });
+    const parsed = answerSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError("questionId and text are required", { status: 400, details: requestId });
     }
+
+    const { questionId, text: answerText } = parsed.data;
 
     const { data: row, error } = await supabase
         .from("gbp_questions")
@@ -29,13 +36,13 @@ export async function POST(request: Request) {
         .single();
 
     if (error || !row) {
-        return NextResponse.json({ error: "Question not found" }, { status: 404 });
+        return apiError("Question not found", { status: 404, details: requestId });
     }
 
     const businessId = row.business_id as string;
     const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
     if (!allowed) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        return apiError("Forbidden", { status: 403, details: requestId });
     }
 
     const { data: platform, error: platErr } = await supabase
@@ -45,7 +52,7 @@ export async function POST(request: Request) {
         .single();
 
     if (platErr || !platform || platform.platform !== "google") {
-        return NextResponse.json({ error: "Invalid platform" }, { status: 400 });
+        return apiError("Invalid platform", { status: 400, details: requestId });
     }
 
     const googleQuestionName = row.google_question_name as string;
@@ -53,16 +60,17 @@ export async function POST(request: Request) {
     try {
         const { accessToken } = await getValidGoogleToken(platform.id);
         if (!accessToken) {
-            return NextResponse.json({ error: "Google token unavailable" }, { status: 401 });
+            return apiError("Google token unavailable", { status: 401, details: requestId });
         }
 
         await upsertQuestionAnswer(accessToken, googleQuestionName, answerText);
         await syncGbpQuestionsForPlatform(platform.id);
+        logger.info({ userId: user.id, questionId, platformId: platform.id }, "Google QA answer upserted");
 
-        return NextResponse.json({ success: true });
+        return apiOk({ requestId });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         console.error("[QA answer]", msg);
-        return NextResponse.json({ error: msg }, { status: 400 });
+        return apiError(msg, { status: 400, details: requestId });
     }
 }

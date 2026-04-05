@@ -2,10 +2,26 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { PLANS } from "@/services/stripe/plans";
-import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const checkoutSchema = z.object({
+    priceId: z.string().min(1).max(120).optional(),
+    planId: z.string().min(1).max(60).optional(),
+    source: z.enum(["onboarding", "billing"]).optional(),
+}).superRefine((value, ctx) => {
+    if (!value.priceId && !value.planId) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "priceId or a valid planId is required",
+        });
+    }
+});
 
 export async function POST(request: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/billing/checkout");
     const supabase = await createClient();
 
     const {
@@ -13,14 +29,20 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     try {
-        const body = await request.json();
-        const priceIdRaw = body.priceId as string | undefined;
-        const planId = body.planId as string | undefined;
-        const source = body.source === "onboarding" ? "onboarding" : "billing";
+        const parsed = checkoutSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "priceId or a valid planId is required", {
+                status: 400,
+                details: requestId,
+            });
+        }
+
+        const { priceId: priceIdRaw, planId, source: sourceRaw } = parsed.data;
+        const source = sourceRaw === "onboarding" ? "onboarding" : "billing";
 
         let priceId = priceIdRaw;
         if (!priceId && planId && typeof planId === "string") {
@@ -29,10 +51,7 @@ export async function POST(request: Request) {
         }
 
         if (!priceId || typeof priceId !== "string") {
-            return NextResponse.json(
-                { error: "priceId or a valid planId is required" },
-                { status: 400 }
-            );
+            return apiError("priceId or a valid planId is required", { status: 400, details: requestId });
         }
 
         // Security: Validate priceId against known plans to prevent spoofing
@@ -41,10 +60,7 @@ export async function POST(request: Request) {
             .filter(Boolean);
 
         if (!validPriceIds.includes(priceId)) {
-            return NextResponse.json(
-                { error: "Invalid plan selected" },
-                { status: 400 }
-            );
+            return apiError("Invalid plan selected", { status: 400, details: requestId });
         }
 
         // Get user's organization
@@ -66,25 +82,22 @@ export async function POST(request: Request) {
             .single();
 
         if (!member) {
-            return NextResponse.json(
-                { error: "No organization found" },
-                { status: 404 }
-            );
+            return apiError("No organization found", { status: 404, details: requestId });
         }
 
         // Security: Only owners, admins, and managers can manage billing
         const memberTyped = member as unknown as OrgMemberWithRole;
         const memberRole = memberTyped.role;
         if (!memberRole || !["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(memberRole)) {
-            return NextResponse.json(
-                { error: "You don't have permission to manage billing. Contact your organization owner." },
-                { status: 403 }
-            );
+            return apiError("You don't have permission to manage billing. Contact your organization owner.", {
+                status: 403,
+                details: requestId,
+            });
         }
 
         const org = memberTyped.organizations;
         if (!org) {
-            return NextResponse.json({ error: "Organization details not found" }, { status: 404 });
+            return apiError("Organization details not found", { status: 404, details: requestId });
         }
         let stripeCustomerId = org.stripe_customer_id;
 
@@ -136,15 +149,18 @@ export async function POST(request: Request) {
                         source === "onboarding"
                             ? `${dashboardUrl}/onboarding?checkout_success=1&plan_switched=1`
                             : billingSuccessUrl;
+                    logger.info({ userId: user.id, organizationId: member.organization_id, switched: true }, "Stripe subscription switched in-place");
 
-                    return NextResponse.json({
+                    return apiOk({
                         url: switchedReturnUrl,
                         switched: true,
+                        requestId,
                     });
                 }
-            } catch (subError: any) {
+            } catch (subError: unknown) {
                 // If subscription retrieval fails (deleted, etc.), fall through to new checkout
-                console.warn("Could not update existing subscription, creating new checkout:", subError.message);
+                const message = subError instanceof Error ? subError.message : String(subError);
+                console.warn("Could not update existing subscription, creating new checkout:", message);
             }
         }
 
@@ -190,13 +206,11 @@ export async function POST(request: Request) {
             },
         });
 
-        return NextResponse.json({ url: session.url });
+        logger.info({ userId: user.id, organizationId: member.organization_id, source }, "Stripe checkout session created");
+        return apiOk({ url: session.url, requestId });
     } catch (error: unknown) {
         console.error("Checkout Error:", error);
         Sentry.captureException(error, { tags: { route: "billing-checkout" } });
-        return NextResponse.json(
-            { error: "Failed to create checkout session. Please try again." },
-            { status: 500 }
-        );
+        return apiError("Failed to create checkout session. Please try again.", { status: 500, details: requestId });
     }
 }

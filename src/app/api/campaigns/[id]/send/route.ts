@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { NextResponse } from "next/server";
 import { z } from "zod";
 import { campaignRateLimit } from "@/lib/auth/rate-limit";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
 
 const sendSchema = z.object({
     contacts: z.array(
@@ -29,23 +29,20 @@ export async function POST(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
     // Apply Rate Limiting (5 campaigns/min per user)
     const { success: rateLimitSuccess } = await campaignRateLimit.limit(user.id);
     if (!rateLimitSuccess) {
-        return NextResponse.json({ error: "Rate limit exceeded. Try again later." }, { status: 429 });
+        return apiError("Rate limit exceeded. Try again later.", { status: 429 });
     }
 
     // Parse body
     const body = await request.json();
     const parsed = sendSchema.safeParse(body);
     if (!parsed.success) {
-        return NextResponse.json(
-            { error: "Invalid data", details: parsed.error.flatten() },
-            { status: 400 }
-        );
+        return apiError("Invalid data", { status: 400, details: JSON.stringify(parsed.error.flatten()) });
     }
 
     const { data: campaign } = await supabase
@@ -55,15 +52,15 @@ export async function POST(
         .maybeSingle();
 
     if (!campaign?.business_id) {
-        return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
+        return apiError("Campaign not found", { status: 404 });
     }
     const canAccess = await userCanAccessBusiness(supabase, user.id, campaign.business_id);
     if (!canAccess) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        return apiError("Forbidden", { status: 403 });
     }
 
     if (campaign.status !== "active") {
-        return NextResponse.json({ error: "Campaign is not active. Activate it first." }, { status: 400 });
+        return apiError("Campaign is not active. Activate it first.", { status: 400 });
     }
 
     // ── INNGEST BACKGROUND JOBS ──
@@ -93,10 +90,10 @@ export async function POST(
 
     } catch (e) {
         console.error("Failed to enqueue campaign events:", e);
-        return NextResponse.json({ error: "Failed to queue campaign" }, { status: 500 });
+        return apiError("Failed to queue campaign", { status: 500 });
     }
 
-    return NextResponse.json({
+    return apiOk({
         success: true,
         message: `Queued ${eventsToEnqueue.length} contacts for background processing`,
         queuedCount: eventsToEnqueue.length

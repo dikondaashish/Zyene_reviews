@@ -10,6 +10,18 @@ import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const createPlaceActionSchema = z.object({
+    businessId: z.string().uuid(),
+    placeActionType: z.string().min(1).max(120),
+    uri: z.string().trim().url().max(500),
+    isPreferred: z.boolean().optional(),
+});
+
+const deletePlaceActionSchema = z.object({
+    linkId: z.string().uuid(),
+});
 
 export async function GET(request: NextRequest) {
     try {
@@ -55,11 +67,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
     try {
         const { supabase, user } = await requireUser();
-        const body = await request.json();
-        const businessId = body.businessId as string | undefined;
-        const placeActionType = body.placeActionType as string | undefined;
-        const uri = typeof body.uri === "string" ? body.uri.trim() : "";
-        const isPreferred = Boolean(body.isPreferred);
+        const parsed = createPlaceActionSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "Invalid payload", { status: 400 });
+        }
+
+        const { businessId, placeActionType, uri, isPreferred = false } = parsed.data;
 
         if (!businessId || !placeActionType || !uri) {
             throw new ApiRouteError("businessId, placeActionType, and uri are required", {
@@ -110,8 +123,12 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
     try {
         const { supabase, user } = await requireUser();
-        const body = await request.json();
-        const linkId = body.linkId as string | undefined;
+        const parsed = deletePlaceActionSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "linkId required", { status: 400 });
+        }
+
+        const { linkId } = parsed.data;
         if (!linkId) {
             throw new ApiRouteError("linkId required", { status: 400, code: "MISSING_LINK_ID" });
         }

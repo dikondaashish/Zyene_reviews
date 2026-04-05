@@ -1,4 +1,5 @@
 import type { GoogleLocationFull } from "./listing-information";
+import { HEALTH_CHECK_WEIGHT, MIN_DESCRIPTION_LENGTH, MIN_PHONE_LENGTH } from "./constants";
 
 export interface ProfileHealthCheck {
     id: string;
@@ -11,8 +12,6 @@ export interface ProfileHealthResult {
     score: number;
     checks: ProfileHealthCheck[];
 }
-
-const WEIGHT = 20;
 
 /**
  * Simple 0–100 completeness score from Google Location fields (5 × 20).
@@ -36,7 +35,10 @@ export function computeProfileHealth(loc: GoogleLocationFull | null | undefined)
         hint: "Add your site so customers can book or learn more.",
     });
 
-    const phoneOk = !!(loc?.phoneNumbers?.primaryPhone && String(loc.phoneNumbers.primaryPhone).trim().length >= 7);
+    const phoneOk = !!(
+        loc?.phoneNumbers?.primaryPhone &&
+        String(loc.phoneNumbers.primaryPhone).trim().length >= MIN_PHONE_LENGTH
+    );
     checks.push({
         id: "phone",
         label: "Primary phone",
@@ -45,10 +47,10 @@ export function computeProfileHealth(loc: GoogleLocationFull | null | undefined)
     });
 
     const desc = loc?.profile?.description?.trim() || "";
-    const descOk = desc.length >= 40;
+    const descOk = desc.length >= MIN_DESCRIPTION_LENGTH;
     checks.push({
         id: "description",
-        label: "Listing description (40+ characters)",
+        label: `Listing description (${MIN_DESCRIPTION_LENGTH}+ characters)`,
         ok: descOk,
         hint: "Describe services and what makes you different.",
     });
@@ -61,7 +63,7 @@ export function computeProfileHealth(loc: GoogleLocationFull | null | undefined)
         hint: "Add regular hours so Google shows when you are open.",
     });
 
-    const score = checks.filter((c) => c.ok).length * WEIGHT;
+    const score = checks.filter((c) => c.ok).length * HEALTH_CHECK_WEIGHT;
 
     return { score, checks };
 }

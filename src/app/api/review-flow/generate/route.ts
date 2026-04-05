@@ -1,5 +1,5 @@
-import { anthropic } from "@/services/ai/client";
-import { generateContentWithFallback } from "@/lib/ai/vertex-client";
+import { anthropic } from "@/domains/ai/adapters/AnthropicAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";

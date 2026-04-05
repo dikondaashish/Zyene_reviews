@@ -3,6 +3,7 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { type NextRequest } from "next/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
 
 const createCustomerSchema = z.object({
     businessId: z.string().uuid(),
@@ -14,33 +15,68 @@ const createCustomerSchema = z.object({
     notes: z.string().max(2000).optional(),
 });
 
+const deleteCustomerSchema = z.object({
+    id: z.string().uuid(),
+    businessId: z.string().uuid(),
+});
+
+const patchCustomerSchema = z.object({
+    id: z.string().uuid(),
+    businessId: z.string().uuid(),
+    firstName: z.string().max(100).optional(),
+    lastName: z.string().max(100).optional(),
+    first_name: z.string().max(100).optional(),
+    last_name: z.string().max(100).optional(),
+    email: z.string().email().max(255).optional(),
+    phone: z.string().max(30).optional(),
+    tags: z.array(z.string().max(50)).optional(),
+    notes: z.string().max(2000).nullable().optional(),
+}).superRefine((value, ctx) => {
+    const hasUpdateField =
+        value.firstName !== undefined ||
+        value.lastName !== undefined ||
+        value.first_name !== undefined ||
+        value.last_name !== undefined ||
+        value.email !== undefined ||
+        value.phone !== undefined ||
+        value.tags !== undefined ||
+        value.notes !== undefined;
+
+    if (!hasUpdateField) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "No valid fields to update",
+        });
+    }
+});
+
 export async function POST(request: NextRequest) {
+    const { requestId } = createRequestLogger("POST /api/customers");
     try {
         const supabase = await createClient();
 
         // Auth check
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-            return apiError("Unauthorized", { status: 401 });
+            return apiError("Unauthorized", { status: 401, details: requestId });
         }
 
         const parsed = createCustomerSchema.safeParse(await request.json());
         if (!parsed.success) {
-            return apiError(parsed.error.errors[0].message, { status: 400 });
+            return apiError(parsed.error.issues[0].message, { status: 400, details: requestId });
         }
         const { businessId, firstName, lastName, email, phone, tags, notes } = parsed.data;
 
         // Validate input
         if (!email && !firstName && !phone) {
-            return apiError("Business ID and at least one contact method (email, phone, or name) are required", { status: 400 });
+            return apiError("Business ID and at least one contact method (email, phone, or name) are required", { status: 400, details: requestId });
         }
 
         // Verify user has access to this business
-        const { userCanAccessBusiness } = await import("@/lib/db/supabase/verify-business-access");
         const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
 
         if (!hasAccess) {
-            return apiError("You don't have access to this business", { status: 403 });
+            return apiError("You don't have access to this business", { status: 403, details: requestId });
         }
 
         // Insert customer with conflict resolution (upsert)
@@ -64,14 +100,14 @@ export async function POST(request: NextRequest) {
 
         if (error) {
             console.error("Supabase error:", error);
-            return apiError(error.message || "Failed to save customer", { status: 400 });
+            return apiError(error.message || "Failed to save customer", { status: 400, details: requestId });
         }
 
         return apiOk(data, { status: 201 });
     } catch (error: unknown) {
         console.error("Error saving customer:", error);
         const message = error instanceof Error ? error.message : "Failed to save customer";
-        return apiError(message, { status: 500 });
+        return apiError(message, { status: 500, details: requestId });
     }
 }
 
@@ -157,20 +193,22 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+    const { requestId } = createRequestLogger("DELETE /api/customers");
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return apiError("Unauthorized", { status: 401 });
+        if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
 
-        const { id, businessId } = await request.json();
-
-        if (!id || !businessId) {
-            return apiError("ID and Business ID are required", { status: 400 });
+        const parsed = deleteCustomerSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError("ID and Business ID are required", { status: 400, details: requestId });
         }
+
+        const { id, businessId } = parsed.data;
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
-            return apiError("You don't have access to this business", { status: 403 });
+            return apiError("You don't have access to this business", { status: 403, details: requestId });
         }
 
         const { error } = await supabase
@@ -184,30 +222,63 @@ export async function DELETE(request: NextRequest) {
         return apiOk({ deleted: true });
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
-        return apiError(message, { status: 500 });
+        return apiError(message, { status: 500, details: requestId });
     }
 }
 
 export async function PATCH(request: NextRequest) {
+    const { requestId } = createRequestLogger("PATCH /api/customers");
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return apiError("Unauthorized", { status: 401 });
+        if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
 
-        const { id, businessId, ...updates } = await request.json();
-
-        if (!id || !businessId) {
-            return apiError("ID and Business ID are required", { status: 400 });
+        const parsed = patchCustomerSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            const message = parsed.error.issues[0]?.message || "ID and Business ID are required";
+            return apiError(message, { status: 400, details: requestId });
         }
+
+        const {
+            id,
+            businessId,
+            firstName,
+            lastName,
+            first_name,
+            last_name,
+            email,
+            phone,
+            tags,
+            notes,
+        } = parsed.data;
+
+        const updates: {
+            first_name?: string;
+            last_name?: string;
+            email?: string;
+            phone?: string;
+            tags?: string[];
+            notes?: string | null;
+            updated_at: string;
+        } = {
+            updated_at: new Date().toISOString(),
+        };
+
+        if (firstName !== undefined || first_name !== undefined) updates.first_name = firstName ?? first_name;
+        if (lastName !== undefined || last_name !== undefined) updates.last_name = lastName ?? last_name;
+        if (email !== undefined) updates.email = email;
+        if (phone !== undefined) updates.phone = phone;
+        if (tags !== undefined) updates.tags = tags;
+        if (notes !== undefined) updates.notes = notes;
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
-            return apiError("You don't have access to this business", { status: 403 });
+            return apiError("You don't have access to this business", { status: 403, details: requestId });
         }
 
         const { data, error } = await supabase
             .from("customers")
-            .update({ ...updates, updated_at: new Date().toISOString() })
+            .update(updates)
             .eq("id", id)
             .eq("business_id", businessId)
             .select()
@@ -218,6 +289,6 @@ export async function PATCH(request: NextRequest) {
         return apiOk(data);
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
-        return apiError(message, { status: 500 });
+        return apiError(message, { status: 500, details: requestId });
     }
 }

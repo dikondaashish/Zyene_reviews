@@ -8,6 +8,15 @@ import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const selectLocationSchema = z.object({
+    businessId: z.string().uuid(),
+    accountName: z.string().min(1).max(150).refine((v) => v.startsWith("accounts/"), {
+        message: "accountName must be in accounts/{id} format",
+    }),
+    locationName: z.string().min(1).max(200),
+});
 
 function buildGoogleReviewUrl(location: { metadata?: { placeId?: string; newReviewUri?: string; mapsUri?: string } }) {
     if (location.metadata?.placeId) {
@@ -101,19 +110,20 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
     try {
         const { supabase, user } = await requireUser();
-        const body = (await request.json()) as {
-            businessId?: string;
-            accountName?: string; // accounts/{id}
-            locationName?: string; // locations/{id} or accounts/{id}/locations/{id}
-        };
-        if (!body.businessId || !body.accountName || !body.locationName) {
+        const parsed = selectLocationSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.issues[0]?.message || "Invalid payload", { status: 400 });
+        }
+
+        const { businessId, accountName, locationName } = parsed.data;
+        if (!businessId || !accountName || !locationName) {
             throw new ApiRouteError("businessId, accountName, and locationName required", {
                 status: 400,
                 code: "INVALID_PAYLOAD",
             });
         }
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, body.businessId);
+        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
@@ -121,7 +131,7 @@ export async function POST(request: Request) {
         const { data: platform, error: platErr } = await supabase
             .from("review_platforms")
             .select("id, business_id, platform")
-            .eq("business_id", body.businessId)
+            .eq("business_id", businessId)
             .eq("platform", "google")
             .maybeSingle();
 
@@ -134,11 +144,10 @@ export async function POST(request: Request) {
             throw new ApiRouteError("Token unavailable", { status: 401, code: "TOKEN_UNAVAILABLE" });
         }
 
-        const accountName = body.accountName;
         const rawAccountId = accountName.replace(/^accounts\//, "");
 
         const locs = await listLocations(accessToken, accountName);
-        const match = locs.find((l) => l.name === body.locationName || l.name.endsWith(`/${body.locationName}`));
+        const match = locs.find((l) => l.name === locationName || l.name.endsWith(`/${locationName}`));
         if (!match) {
             throw new ApiRouteError("Location not found for this account", {
                 status: 404,
@@ -147,7 +156,7 @@ export async function POST(request: Request) {
         }
 
         const rawLocationId = match.name.split("/").pop() || null;
-        const externalUrl = buildGoogleReviewUrl(match as any);
+        const externalUrl = buildGoogleReviewUrl(match);
 
         const admin = createAdminClient();
 

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const parsed = bulkActionSchema.safeParse(body);
         if (!parsed.success) {
-            return NextResponse.json({ error: parsed.error.errors[0]?.message || "Invalid request" }, { status: 400 });
+            return NextResponse.json({ error: parsed.error.issues[0]?.message || "Invalid request" }, { status: 400 });
         }
         const { ids, businessId, action, data: actionData } = parsed.data;
 

@@ -1,29 +1,35 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
 import { getBusiness, getReviews } from "@/services/yelp/adapter";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import * as Sentry from "@sentry/nextjs";
 import type { MemberOrgContext } from "@/types/member-context";
+import { z } from "zod";
+import { createRequestLogger } from "@/lib/logger";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
+
+const confirmSchema = z.object({
+    yelpBusinessId: z.string().min(1).max(200),
+    businessId: z.string().uuid(),
+});
 
 export async function POST(req: Request) {
+    const { logger, requestId } = createRequestLogger("POST /api/integrations/yelp/confirm");
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
     try {
-        const { yelpBusinessId, businessId } = await req.json();
-
-        if (!yelpBusinessId || !businessId) {
-            return NextResponse.json(
-                { error: "Yelp business ID and business ID are required" },
-                { status: 400 }
-            );
+        const parsed = confirmSchema.safeParse(await req.json());
+        if (!parsed.success) {
+            return apiError("Yelp business ID and business ID are required", { status: 400, details: requestId });
         }
+
+        const { yelpBusinessId, businessId } = parsed.data;
 
         // Verify user owns this business
         const { data: member } = await supabase
@@ -37,10 +43,7 @@ export async function POST(req: Request) {
         const ownsBusiness = businesses.some((b) => b.id === businessId);
 
         if (!ownsBusiness) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 403 }
-            );
+            return apiError("Unauthorized", { status: 403, details: requestId });
         }
 
         // Get Yelp business details for metadata
@@ -67,33 +70,32 @@ export async function POST(req: Request) {
         if (error) {
             console.error("[Yelp Confirm] Upsert error:", error);
             Sentry.captureException(error, { tags: { route: "yelp-confirm", step: "upsert_platform" } });
-            return NextResponse.json(
-                { error: "Failed to save Yelp connection" },
-                { status: 500 }
-            );
+            return apiError("Failed to save Yelp connection", { status: 500, details: requestId });
         }
 
         // Trigger initial sync
         try {
             const syncResult = await syncYelpReviewsForPlatform(platform.id);
-            return NextResponse.json({
+            logger.info({ userId: user.id, businessId, yelpBusinessId, platformId: platform.id }, "Yelp business confirmed");
+            return apiOk({
                 success: true,
                 platform,
                 syncResult,
+                requestId,
                 business: {
                     name: yelpBusiness.name,
                     rating: yelpBusiness.rating,
                     reviewCount: yelpBusiness.reviewCount,
                 },
             });
-        } catch (syncError: any) {
-            // Connection saved but sync failed — user can retry
-            console.error("[Yelp Confirm] Initial sync error:", syncError);
+        } catch (syncError: unknown) {
+            // Connection saved but sync failed — user can retry.
             Sentry.captureException(syncError, { tags: { route: "yelp-confirm", step: "initial_sync" } });
-            return NextResponse.json({
+            return apiOk({
                 success: true,
                 platform,
                 syncResult: null,
+                requestId,
                 warning: "Connected but initial sync failed. It will retry automatically.",
                 business: {
                     name: yelpBusiness.name,
@@ -105,9 +107,6 @@ export async function POST(req: Request) {
     } catch (error: unknown) {
         console.error("[Yelp Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "yelp-confirm" } });
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        return apiError("Internal Server Error", { status: 500, details: requestId });
     }
 }
