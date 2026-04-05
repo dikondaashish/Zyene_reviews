@@ -3,7 +3,19 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { type NextRequest, NextResponse } from "next/server";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
+import { requestRateLimit } from "@/lib/auth/rate-limit";
 import * as Sentry from "@sentry/nextjs";
+import { z } from "zod";
+
+const bulkActionSchema = z.object({
+    ids: z.array(z.string().uuid()).min(1).max(500),
+    businessId: z.string().uuid(),
+    action: z.enum(["delete", "tag", "request"]),
+    data: z.object({
+        tags: z.array(z.string().max(80)).max(20).optional(),
+        mode: z.enum(["add", "remove"]).optional(),
+    }).optional(),
+});
 
 export async function POST(request: NextRequest) {
     try {
@@ -11,11 +23,18 @@ export async function POST(request: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-        const { ids, businessId, action, data: actionData } = await request.json();
-
-        if (!ids || !Array.isArray(ids) || ids.length === 0 || !businessId || !action) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        // Rate limit bulk operations
+        const { success: rateLimitOk } = await requestRateLimit.limit(`bulk:${user.id}`);
+        if (!rateLimitOk) {
+            return NextResponse.json({ error: "Too many requests. Please wait." }, { status: 429 });
         }
+
+        const body = await request.json();
+        const parsed = bulkActionSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json({ error: parsed.error.errors[0]?.message || "Invalid request" }, { status: 400 });
+        }
+        const { ids, businessId, action, data: actionData } = parsed.data;
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
@@ -164,9 +183,10 @@ export async function POST(request: NextRequest) {
             default:
                 return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Bulk API Error:", error);
         Sentry.captureException(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

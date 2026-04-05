@@ -80,7 +80,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, feedback });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Private Feedback API Error:", error);
         return NextResponse.json({ error: "Failed to submit feedback" }, { status: 500 });
     }

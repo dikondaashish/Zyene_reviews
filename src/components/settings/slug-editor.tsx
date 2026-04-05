@@ -129,8 +129,9 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
 
             toast.success("Link updated successfully!");
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsSaving(false);
             setPendingSlug(null);

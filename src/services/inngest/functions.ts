@@ -1,9 +1,10 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
-import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { generateContentWithFallback } from "../../lib/ai/vertex-client";
 import { BATCH_REVIEWS_PROMPT } from "@/services/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { batchSchema } from "../../lib/ai/schemas";
 
 // This background job runs for EACH contact asynchronously
 export const processCampaignContact = inngest.createFunction(
@@ -175,7 +176,7 @@ export const processCampaignContact = inngest.createFunction(
     }
 );
 
-// This background job analyzes reviews in batches of 5 using Gemini
+// This background job analyzes reviews in dynamic batches using Gemini
 export const processReviewAnalysisBatch = inngest.createFunction(
     {
         id: "process-review-analysis-batch",
@@ -208,21 +209,21 @@ export const processReviewAnalysisBatch = inngest.createFunction(
             text: r.text || ""
         }));
 
-        const prompt = BATCH_REVIEWS_PROMPT.replace("{reviews_json}", JSON.stringify(reviewsForAi, null, 2));
+        const prompt = BATCH_REVIEWS_PROMPT
+            .replace(/\{count\}/g, reviewsForAi.length.toString())
+            .replace("{reviews_json}", JSON.stringify(reviewsForAi, null, 2));
 
         // 3. Call Gemini with Fallback
         const aiResults = await step.run("call-gemini-batch", async () => {
-            const content = await generateContentWithFallback(prompt, true);
-            
-            // Extract JSON array
-            const jsonMatch = content.match(/\[[\s\S]*\]/);
-            const jsonStr = jsonMatch ? jsonMatch[0] : content;
+            // Schema enforcement shifted to registry
+
+            const content = await generateContentWithFallback(prompt, { requireJson: true, schema: batchSchema });
             
             try {
-                return JSON.parse(jsonStr);
+                return JSON.parse(content);
             } catch (err) {
-                console.error("[Batch Analysis] Failed to parse AI JSON:", content);
-                throw new Error("AI returned invalid JSON array");
+                console.error("[Batch Analysis] Failed to parse AI JSON inside schema step:", content);
+                throw new Error("AI returned invalid JSON array despite schema enforcement");
             }
         });
 

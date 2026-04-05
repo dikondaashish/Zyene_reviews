@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@/lib/validation/onboarding";
+import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@/lib/validations/onboarding";
 import { updateOnboardingStep, initializeGoogleAuth, updateBusinessAndLocation } from "@/app/actions/onboarding";
 
 const US_STATES = [

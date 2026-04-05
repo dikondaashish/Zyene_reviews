@@ -11,6 +11,7 @@ import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-c
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
+import { ErrorBoundary } from "@/components/errors/error-boundary";
 
 export default async function DashboardLayout({
     children,
@@ -58,7 +59,7 @@ export default async function DashboardLayout({
                 <VerificationBanner user={user} />
                 <TrialBanner organization={organization} />
                 <DashboardLayoutClient header={headerContent}>
-                    {children}
+                    <ErrorBoundary>{children}</ErrorBoundary>
                 </DashboardLayoutClient>
             </SidebarInset>
             <MobileSidebarFAB />

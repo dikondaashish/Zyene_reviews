@@ -1,6 +1,6 @@
 
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
 
 const roleSchema = z.enum(["owner", "admin", "member", "ORG_OWNER", "ORG_ADMIN"]);
@@ -15,13 +15,13 @@ export async function PATCH(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
     const { id } = await params;
     const parsed = roleSchema.safeParse((await request.json())?.role);
     if (!parsed.success) {
-        return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+        return apiError("Invalid role", { status: 400 });
     }
     const role = parsed.data;
 
@@ -35,7 +35,7 @@ export async function PATCH(
         .single();
 
     if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        return apiError("Forbidden", { status: 403 });
     }
 
     const { data: targetMember } = await supabase
@@ -45,13 +45,13 @@ export async function PATCH(
         .eq("organization_id", requester.organization_id)
         .maybeSingle();
     if (!targetMember) {
-        return NextResponse.json({ error: "Member not found" }, { status: 404 });
+        return apiError("Member not found", { status: 404 });
     }
     if (!["owner", "ORG_OWNER"].includes(requester.role) && ["owner", "ORG_OWNER"].includes(role)) {
-        return NextResponse.json({ error: "Only owners can assign owner role" }, { status: 403 });
+        return apiError("Only owners can assign owner role", { status: 403 });
     }
     if (["owner", "ORG_OWNER"].includes(targetMember.role) && !["owner", "ORG_OWNER"].includes(requester.role)) {
-        return NextResponse.json({ error: "Only owners can modify owner role" }, { status: 403 });
+        return apiError("Only owners can modify owner role", { status: 403 });
     }
 
     // Determine target type?
@@ -65,10 +65,10 @@ export async function PATCH(
         .eq("organization_id", requester.organization_id); // Security check
 
     if (updateError) {
-        return NextResponse.json({ error: updateError.message }, { status: 500 });
+        return apiError(updateError.message, { status: 500 });
     }
 
-    return NextResponse.json({ success: true });
+    return apiOk({ updated: true });
 }
 
 export async function DELETE(
@@ -81,7 +81,7 @@ export async function DELETE(
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
     const { id } = await params;
@@ -96,7 +96,7 @@ export async function DELETE(
         .single();
 
     if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        return apiError("Forbidden", { status: 403 });
     }
 
     if (type === "invite") {
@@ -106,7 +106,7 @@ export async function DELETE(
             .eq("id", id)
             .eq("organization_id", requester.organization_id);
 
-        if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        if (error) return apiError("Internal Server Error", { status: 500 });
 
     } else {
         const { data: targetMember } = await supabase
@@ -116,13 +116,13 @@ export async function DELETE(
             .eq("organization_id", requester.organization_id)
             .maybeSingle();
         if (!targetMember) {
-            return NextResponse.json({ error: "Member not found" }, { status: 404 });
+            return apiError("Member not found", { status: 404 });
         }
         if (targetMember.user_id === user.id) {
-            return NextResponse.json({ error: "You cannot remove yourself" }, { status: 400 });
+            return apiError("You cannot remove yourself", { status: 400 });
         }
         if (["owner", "ORG_OWNER"].includes(targetMember.role)) {
-            return NextResponse.json({ error: "Owner cannot be removed" }, { status: 403 });
+            return apiError("Owner cannot be removed", { status: 403 });
         }
         const { error } = await supabase
             .from("organization_members")
@@ -130,8 +130,8 @@ export async function DELETE(
             .eq("id", id)
             .eq("organization_id", requester.organization_id);
 
-        if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        if (error) return apiError("Internal Server Error", { status: 500 });
     }
 
-    return NextResponse.json({ success: true });
+    return apiOk({ deleted: true });
 }

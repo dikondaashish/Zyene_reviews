@@ -1,12 +1,27 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const notificationPreferencesSchema = z.object({
+    business_id: z.string().uuid(),
+    sms_enabled: z.boolean(),
+    email_enabled: z.boolean(),
+    digest_enabled: z.boolean(),
+    min_urgency_score: z.number().int().min(1).max(10).optional(),
+    quiet_hours_start: z.string().max(5).optional(),
+    quiet_hours_end: z.string().max(5).optional(),
+});
 
 export async function POST(request: Request) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user) return apiError("Unauthorized", { status: 401 });
 
-    const body = await request.json();
+    const parsed = notificationPreferencesSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError(parsed.error.errors[0].message, { status: 400 });
+    }
+    const body = parsed.data;
 
     // Upsert preferences
     const { error } = await supabase
@@ -22,7 +37,7 @@ export async function POST(request: Request) {
             quiet_hours_end: body.quiet_hours_end || "08:00",
         });
 
-    if (error) return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    if (error) return apiError("Internal Server Error", { status: 500 });
 
-    return NextResponse.json({ success: true });
+    return apiOk({ saved: true });
 }

@@ -174,8 +174,8 @@ export function BillingClient({
                 // New subscription — redirect to Stripe checkout
                 window.location.href = data.url;
             }
-        } catch (error: any) {
-            toast.error(error.message || "Failed to start checkout");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to start checkout");
         } finally {
             setLoadingPlan(null);
         }
@@ -191,8 +191,8 @@ export function BillingClient({
 
             if (!res.ok) throw new Error(data.error);
             if (data.url) window.location.href = data.url;
-        } catch (error: any) {
-            toast.error(error.message || "Failed to open billing portal");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to open billing portal");
         } finally {
             setLoadingPortal(false);
         }

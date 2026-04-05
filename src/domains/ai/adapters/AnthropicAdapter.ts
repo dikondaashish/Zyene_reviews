@@ -8,8 +8,8 @@ import AnthropicVertex from '@anthropic-ai/vertex-sdk';
 // a direct Anthropic API key.
 //
 // Required env vars:
-//   GOOGLE_CLOUD_PROJECT   – GCP project ID (e.g. "zyene-reviews")
-//   GOOGLE_CLOUD_REGION    – Vertex AI region (e.g. "us-east5")
+//   GCP_PROJECT_ID         – GCP project ID (e.g. "zyene-reviews")
+//   GCP_REGION             – Vertex AI region (e.g. "us-central1")
 //
 // Authentication (pick one):
 //   Option A (local dev): Set GOOGLE_APPLICATION_CREDENTIALS to
@@ -40,7 +40,11 @@ if (process.env.GOOGLE_VERTEX_CREDENTIALS && !process.env.GOOGLE_APPLICATION_CRE
     }
 }
 
+const region = process.env.GCP_REGION || 'us-central1';
+
 export const anthropic = new AnthropicVertex({
-    projectId: process.env.GOOGLE_CLOUD_PROJECT || 'zyene-reviews',
-    region: process.env.GOOGLE_CLOUD_REGION || 'us-east5',
+    projectId: process.env.GCP_PROJECT_ID || 'zyene-reviews',
+    // Claude on Vertex does not currently support the 'global' region.
+    // We fallback to a stable region if 'global' is specified project-wide.
+    region: region === 'global' ? 'us-east5' : region,
 });

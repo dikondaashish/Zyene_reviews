@@ -2,9 +2,17 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
-import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/auth/rate-limit";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const sendRequestSchema = z.object({
+    customerName: z.string().max(200).optional(),
+    customerPhone: z.string().max(30),
+    channel: z.string().max(20).optional(),
+    businessId: z.string().uuid(),
+});
 
 export async function POST(request: Request) {
     try {
@@ -16,21 +24,20 @@ export async function POST(request: Request) {
         } = await supabase.auth.getUser();
 
         if (!user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return apiError("Unauthorized", { status: 401 });
         }
 
         // Apply Rate Limiting (10 requests/min per user)
         const { success: rateLimitSuccess } = await requestRateLimit.limit(user.id);
         if (!rateLimitSuccess) {
-            return new NextResponse("Rate limit exceeded. Try again later.", { status: 429 });
+            return apiError("Rate limit exceeded. Try again later.", { status: 429 });
         }
 
-        const body = await request.json();
-        const { customerName, customerPhone, channel, businessId } = body;
-
-        if (!customerPhone || !businessId) {
-            return new NextResponse("Missing required fields", { status: 400 });
+        const parsed = sendRequestSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.errors[0].message, { status: 400 });
         }
+        const { customerName, customerPhone, channel, businessId } = parsed.data;
 
         // 1. Verify ownership & Get Business Config
         const { data: business, error: businessError } = await supabase
@@ -50,7 +57,7 @@ export async function POST(request: Request) {
         if (businessError || !business) {
             console.error("Business fetch error:", businessError);
             if (businessError) Sentry.captureException(businessError, { tags: { route: "requests-send", step: "fetch_business" } });
-            return new NextResponse("Business not found or access denied", { status: 403 });
+            return apiError("Business not found or access denied", { status: 403 });
         }
 
         const orgId = business.organizations?.id;
@@ -59,7 +66,7 @@ export async function POST(request: Request) {
         if (orgId) {
             const { allowed } = await checkLimit(orgId, "review_requests");
             if (!allowed) {
-                return new NextResponse("You've reached your monthly limit. Upgrade your plan.", { status: 403 });
+                return apiError("You've reached your monthly limit. Upgrade your plan.", { status: 403 });
             }
         }
 
@@ -84,7 +91,7 @@ export async function POST(request: Request) {
             const diffDays = (now.getTime() - lastSent.getTime()) / (1000 * 3600 * 24);
 
             if (diffDays < frequencyCapDays) {
-                return new NextResponse(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, { status: 400 });
+                return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, { status: 400 });
             }
         }
 
@@ -97,7 +104,7 @@ export async function POST(request: Request) {
             .single();
 
         if (optOut) {
-            return new NextResponse("Customer has opted out", { status: 400 });
+            return apiError("Customer has opted out", { status: 400 });
         }
 
         // 5. Generate Review Link — insert first to get requestId for the link
@@ -117,7 +124,7 @@ export async function POST(request: Request) {
         if (insertError) {
             console.error("Insert Request Error:", insertError);
             Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_request" } });
-            return new NextResponse("Failed to create request record", { status: 500 });
+            return apiError("Failed to create request record", { status: 500 });
         }
 
         const requestId = requestRecord.id;
@@ -164,17 +171,14 @@ export async function POST(request: Request) {
         });
 
         if (sendStatus === "failed") {
-            return new NextResponse(`Failed to send SMS: ${errorMessage}`, { status: 500 });
+            return apiError(`Failed to send SMS: ${errorMessage}`, { status: 500 });
         }
 
-        return NextResponse.json(requestRecord);
+        return apiOk(requestRecord);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Request API Error:", error);
         Sentry.captureException(error, { tags: { route: "requests-send" } });
-        return NextResponse.json(
-            { error: "An unexpected error occurred. Please try again." },
-            { status: 500 }
-        );
+        return apiError("An unexpected error occurred. Please try again.", { status: 500 });
     }
 }

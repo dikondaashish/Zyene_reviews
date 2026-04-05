@@ -129,8 +129,9 @@ export default function ImportCustomersPage() {
             setStep("success");
             toast.success(`Successfully imported ${data.successCount} customers!`);
 
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
             setStep("map");
         } finally {
             setIsUploading(false);

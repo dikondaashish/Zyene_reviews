@@ -76,11 +76,12 @@ export function ReviewCard({
             setReplyText("");
             setSuggestions([]); // Clear suggestions
             router.refresh();
-        } catch (e: any) {
-            if (e.message?.includes("Monthly AI reply limit reached") || e.message?.includes("upgrade your plan")) {
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : "An unexpected error occurred";
+            if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
                 setShowUpgradeModal(true);
             } else {
-                toast.error(e.message);
+                toast.error(message);
             }
         } finally {
             setIsSubmitting(false);
@@ -102,11 +103,12 @@ export function ReviewCard({
             if (data.replies) {
                 setSuggestions(data.replies);
             }
-        } catch (e: any) {
-            if (e.message?.includes("Monthly AI reply limit reached") || e.message?.includes("upgrade your plan")) {
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : "An unexpected error occurred";
+            if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
                 setShowUpgradeModal(true);
             } else {
-                toast.error(e.message);
+                toast.error(message);
             }
         } finally {
             setIsSuggesting(false);
@@ -123,8 +125,9 @@ export function ReviewCard({
             if (!res.ok) throw new Error("Failed to update status");
             toast.success(`Review ${status === 'ignored' ? 'ignored' : 'moved to pending'}`);
             router.refresh();
-        } catch (e: any) {
-            toast.error(e.message);
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsUpdatingStatus(false);
         }

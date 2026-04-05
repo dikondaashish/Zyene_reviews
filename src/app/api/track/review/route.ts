@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ success: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Tracking error:", error);
         return NextResponse.json({ error: "Failed to track review" }, { status: 500 });
     }

@@ -60,8 +60,8 @@ export function UpgradeModal({
             } else if (data.url) {
                 window.location.href = data.url;
             }
-        } catch (error: any) {
-            toast.error(error.message || "Failed to start checkout");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to start checkout");
         } finally {
             setLoadingPlan(null);
         }

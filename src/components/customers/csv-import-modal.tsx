@@ -115,8 +115,8 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
             resetState();
             await onSuccess?.();
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to import customers");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to import customers");
         } finally {
             setIsLoading(false);
         }

@@ -61,8 +61,8 @@ export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormP
 
             toast.success("Settings updated successfully");
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to update settings");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to update settings");
         } finally {
             setIsLoading(false);
         }

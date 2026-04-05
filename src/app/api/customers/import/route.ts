@@ -3,6 +3,18 @@ import { createClient } from "@/lib/db/supabase/server";
 import * as Sentry from "@sentry/nextjs";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { requestRateLimit } from "@/lib/auth/rate-limit";
+import { z } from "zod";
+
+const importSchema = z.object({
+    customers: z.array(z.object({
+        first_name: z.string().max(100).optional(),
+        last_name: z.string().max(100).optional(),
+        email: z.string().email().max(255).optional(),
+        phone: z.string().max(30).optional(),
+    })).min(1, "At least one customer required").max(5000, "Maximum 5000 customers per import"),
+    businessId: z.string().uuid().optional(),
+});
 
 export async function POST(req: Request) {
     const supabase = await createClient();
@@ -16,14 +28,21 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { customers, businessId: requestedBusinessId } = await req.json();
+        // Rate limit: prevent import abuse
+        const { success: rateLimitOk } = await requestRateLimit.limit(`import:${user.id}`);
+        if (!rateLimitOk) {
+            return NextResponse.json({ error: "Too many imports. Please wait." }, { status: 429 });
+        }
 
-        if (!customers || !Array.isArray(customers) || customers.length === 0) {
+        const body = await req.json();
+        const parsed = importSchema.safeParse(body);
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: "No customers provided" },
+                { error: parsed.error.errors[0]?.message || "Invalid import data" },
                 { status: 400 }
             );
         }
+        const { customers, businessId: requestedBusinessId } = parsed.data;
 
         // 1. Resolve business (explicit businessId takes precedence, then active business context)
         const activeCtx = await getActiveBusinessId();
@@ -84,7 +103,7 @@ export async function POST(req: Request) {
             totalAttempted: insertPayload.length
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[Customers Import] Unexpected error:", error);
         Sentry.captureException(error);
         return NextResponse.json(

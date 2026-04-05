@@ -155,7 +155,7 @@ export async function POST(req: Request) {
         }
 
         return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[Facebook Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "facebook-confirm" } });
         return NextResponse.json(

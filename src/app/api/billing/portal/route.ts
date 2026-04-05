@@ -92,7 +92,7 @@ export async function POST() {
         });
 
         return NextResponse.json({ url: session.url });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Portal Error:", error);
         Sentry.captureException(error, { tags: { route: "billing-portal" } });
         return NextResponse.json(

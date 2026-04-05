@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
 
 export async function PATCH(
     request: NextRequest,
@@ -12,12 +13,12 @@ export async function PATCH(
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return apiError("Unauthorized", { status: 401 });
         }
 
         const { status } = await request.json();
         if (!status || !['pending', 'responded', 'ignored'].includes(status)) {
-            return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+            return apiError("Invalid status", { status: 400 });
         }
 
         // 1. Fetch Review to get Business ID
@@ -28,13 +29,13 @@ export async function PATCH(
             .single();
 
         if (fetchError || !review) {
-            return NextResponse.json({ error: "Review not found" }, { status: 404 });
+            return apiError("Review not found", { status: 404 });
         }
 
         // 2. Verify Access
         const hasAccess = await userCanAccessBusiness(supabase, user.id, review.business_id);
         if (!hasAccess) {
-            return NextResponse.json({ error: "Access denied" }, { status: 403 });
+            return apiError("Access denied", { status: 403 });
         }
 
         // 3. Update Status
@@ -47,9 +48,10 @@ export async function PATCH(
 
         if (updateError) throw updateError;
 
-        return NextResponse.json(data);
-    } catch (error: any) {
+        return apiOk(data);
+    } catch (error: unknown) {
         console.error("Review PATCH Error:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return apiError(message, { status: 500 });
     }
 }

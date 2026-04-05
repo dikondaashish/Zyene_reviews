@@ -2,7 +2,12 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { replyToReview, listAccounts } from "@/services/google/business-profile";
 import { getValidGoogleToken } from "@/services/google/sync-service";
-import { NextResponse } from "next/server";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const replySchema = z.object({
+    text: z.string().min(1, "Reply text is required").max(4096),
+});
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -11,14 +16,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // 1. Auth Check
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
     try {
-        const { text } = await request.json();
-        if (!text || typeof text !== 'string') {
-            return NextResponse.json({ error: "Reply text is required" }, { status: 400 });
+        const parsed = replySchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.errors[0].message, { status: 400 });
         }
+        const { text } = parsed.data;
 
         // 2. Fetch Review & Verify Ownership
         const { data: review, error: reviewError } = await supabase
@@ -37,16 +43,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         if (reviewError || !review) {
             console.error("Review Fetch Error or Not Found:", reviewError);
-            return NextResponse.json({ error: "Review not found or unauthorized" }, { status: 404 });
+            return apiError("Review not found or unauthorized", { status: 404 });
         }
 
         // 3. Validate Platform
         if (review.platform !== 'google') {
-            return NextResponse.json({ error: "Only Google reviews supported currently" }, { status: 400 });
+            return apiError("Only Google reviews supported currently", { status: 400 });
         }
 
         if (!review.platform_id) {
-            return NextResponse.json({ error: "Review is missing platform connection" }, { status: 500 });
+            return apiError("Review is missing platform connection", { status: 500 });
         }
 
         // 4. Get Valid Token (handles refresh)
@@ -83,10 +89,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         if (updateError) throw updateError;
 
-        return NextResponse.json({ success: true });
+        return apiOk({ replied: true });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Reply API Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return apiError("Internal Server Error", { status: 500 });
     }
 }

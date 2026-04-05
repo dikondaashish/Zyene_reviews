@@ -1,4 +1,4 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
 import { analyzeReview } from "@/lib/ai/analysis";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
@@ -283,7 +283,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             alerts: alertsCount
         };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(`[Sync] Implementation Error:`, error);
         // Error status will be handled by finally block (reset to idle)
         throw error;

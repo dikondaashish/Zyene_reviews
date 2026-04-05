@@ -26,9 +26,9 @@ export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {
                 },
             })
             if (error) throw error
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.error("Failed to initiate Google connection", {
-                description: error.message
+                description: error instanceof Error ? error.message : undefined
             })
         }
     }

@@ -1,6 +1,18 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const createCustomerSchema = z.object({
+    businessId: z.string().uuid(),
+    firstName: z.string().max(100).optional(),
+    lastName: z.string().max(100).optional(),
+    email: z.string().email().max(255).optional(),
+    phone: z.string().max(30).optional(),
+    tags: z.array(z.string().max(50)).optional(),
+    notes: z.string().max(2000).optional(),
+});
 
 export async function POST(request: NextRequest) {
     try {
@@ -9,17 +21,18 @@ export async function POST(request: NextRequest) {
         // Auth check
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return apiError("Unauthorized", { status: 401 });
         }
 
-        const { businessId, firstName, lastName, email, phone, tags, notes } = await request.json();
+        const parsed = createCustomerSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError(parsed.error.errors[0].message, { status: 400 });
+        }
+        const { businessId, firstName, lastName, email, phone, tags, notes } = parsed.data;
 
         // Validate input
-        if (!businessId || (!email && !firstName && !phone)) {
-            return NextResponse.json(
-                { error: "Business ID and at least one contact method (email, phone, or name) are required" },
-                { status: 400 }
-            );
+        if (!email && !firstName && !phone) {
+            return apiError("Business ID and at least one contact method (email, phone, or name) are required", { status: 400 });
         }
 
         // Verify user has access to this business
@@ -27,10 +40,7 @@ export async function POST(request: NextRequest) {
         const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
 
         if (!hasAccess) {
-            return NextResponse.json(
-                { error: "You don't have access to this business" },
-                { status: 403 }
-            );
+            return apiError("You don't have access to this business", { status: 403 });
         }
 
         // Insert customer with conflict resolution (upsert)
@@ -54,19 +64,14 @@ export async function POST(request: NextRequest) {
 
         if (error) {
             console.error("Supabase error:", error);
-            return NextResponse.json(
-                { error: error.message || "Failed to save customer" },
-                { status: 400 }
-            );
+            return apiError(error.message || "Failed to save customer", { status: 400 });
         }
 
-        return NextResponse.json(data, { status: 201 });
-    } catch (error: any) {
+        return apiOk(data, { status: 201 });
+    } catch (error: unknown) {
         console.error("Error saving customer:", error);
-        return NextResponse.json(
-            { error: error.message || "Failed to save customer" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message : "Failed to save customer";
+        return apiError(message, { status: 500 });
     }
 }
 
@@ -74,7 +79,7 @@ export async function GET(request: NextRequest) {
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!user) return apiError("Unauthorized", { status: 401 });
 
         const searchParams = request.nextUrl.searchParams;
         const businessId = searchParams.get("businessId");
@@ -85,15 +90,12 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get("limit") || "50");
 
         if (!businessId) {
-            return NextResponse.json({ error: "Business ID is required" }, { status: 400 });
+            return apiError("Business ID is required", { status: 400 });
         }
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
-            return NextResponse.json(
-                { error: "You don't have access to this business" },
-                { status: 403 }
-            );
+            return apiError("You don't have access to this business", { status: 403 });
         }
 
         let query = supabase
@@ -101,9 +103,10 @@ export async function GET(request: NextRequest) {
             .select("*", { count: "exact" })
             .eq("business_id", businessId);
 
-        // Text Search
+        // Text Search — sanitize to prevent PostgREST filter injection
         if (search) {
-            query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`);
+            const sanitized = search.replace(/[%_\\]/g, "\\$&").slice(0, 100);
+            query = query.or(`first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,phone.ilike.%${sanitized}%`);
         }
 
         // Tag Filtering
@@ -140,15 +143,16 @@ export async function GET(request: NextRequest) {
 
         if (error) throw error;
 
-        return NextResponse.json({
+        return apiOk({
             customers: data,
             total: count,
             page,
             limit
         });
 
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return apiError(message, { status: 500 });
     }
 }
 
@@ -156,20 +160,17 @@ export async function DELETE(request: NextRequest) {
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!user) return apiError("Unauthorized", { status: 401 });
 
         const { id, businessId } = await request.json();
 
         if (!id || !businessId) {
-            return NextResponse.json({ error: "ID and Business ID are required" }, { status: 400 });
+            return apiError("ID and Business ID are required", { status: 400 });
         }
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
-            return NextResponse.json(
-                { error: "You don't have access to this business" },
-                { status: 403 }
-            );
+            return apiError("You don't have access to this business", { status: 403 });
         }
 
         const { error } = await supabase
@@ -180,9 +181,10 @@ export async function DELETE(request: NextRequest) {
 
         if (error) throw error;
 
-        return NextResponse.json({ success: true });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return apiOk({ deleted: true });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return apiError(message, { status: 500 });
     }
 }
 
@@ -190,20 +192,17 @@ export async function PATCH(request: NextRequest) {
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (!user) return apiError("Unauthorized", { status: 401 });
 
         const { id, businessId, ...updates } = await request.json();
 
         if (!id || !businessId) {
-            return NextResponse.json({ error: "ID and Business ID are required" }, { status: 400 });
+            return apiError("ID and Business ID are required", { status: 400 });
         }
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
-            return NextResponse.json(
-                { error: "You don't have access to this business" },
-                { status: 403 }
-            );
+            return apiError("You don't have access to this business", { status: 403 });
         }
 
         const { data, error } = await supabase
@@ -216,8 +215,9 @@ export async function PATCH(request: NextRequest) {
 
         if (error) throw error;
 
-        return NextResponse.json(data);
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return apiOk(data);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unexpected error occurred";
+        return apiError(message, { status: 500 });
     }
 }

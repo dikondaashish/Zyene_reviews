@@ -49,11 +49,11 @@ export async function POST(request: Request) {
 
         return NextResponse.json(result);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Facebook Sync Error:", error);
-        
+
         let status = 500;
-        let message = error.message || "Failed to sync reviews";
+        let message = error instanceof Error ? error.message : "Failed to sync reviews";
         
         if (message === "Business not found" || message === "Facebook platform not connected") {
             status = 404;

@@ -5,13 +5,9 @@ import { NextResponse } from "next/server";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 
 export async function GET(request: Request) {
+    // Verify Cron Secret — always required
     const authHeader = request.headers.get("authorization");
-    if (
-        process.env.NODE_ENV === "development" &&
-        process.env.ALLOW_INSECURE_CRON === "true"
-    ) {
-        // allow through for local dev only
-    } else if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -111,7 +107,7 @@ export async function GET(request: Request) {
             followUpsSent: totalFollowUpsSent
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[Cron] Follow-up job failed:", error);
         // Heartbeat fail ping
         await fetch("https://uptime.betterstack.com/api/v1/heartbeat/qaTkuG86YMyWVZNXgeBDtGWc/fail").catch(() => { });

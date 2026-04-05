@@ -127,7 +127,7 @@ export async function addCompetitor(
             success: true,
             data,
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Unexpected error adding competitor:", error);
         return {
             success: false,
@@ -189,7 +189,7 @@ export async function deleteCompetitor(
 
         revalidatePath("/competitors");
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Unexpected error deleting competitor:", error);
         return {
             success: false,

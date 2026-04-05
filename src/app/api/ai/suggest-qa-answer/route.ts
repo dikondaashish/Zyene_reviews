@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback } from "@/lib/ai/google-client";
-import { nextResponseForGoogleAiError } from "@/lib/ai/google-ai-route-error";
+import { generateContentWithFallback, nextResponseForVertexAiError } from "@/lib/ai/vertex-client";
 import { QA_ANSWER_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
+import { qaSchema } from "@/lib/ai/schemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
     const { data: biz, error: bizErr } = await supabase
         .from("businesses")
-        .select("name, organization_id")
+        .select("*")
         .eq("id", businessId)
         .single();
 
@@ -56,7 +56,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
-    const orgId = biz.organization_id as string;
+    const bizTyped = biz as any;
+    const orgId = bizTyped.organization_id as string;
 
     const { data: org, error: orgErr } = await supabase
         .from("organizations")
@@ -86,22 +87,26 @@ export async function POST(request: Request) {
         );
     }
 
-    const businessName = (biz.name as string) || "our business";
+    const knowledgeBase = (bizTyped.knowledge_base as string) || "No special knowledge base provided.";
+    const businessName = (bizTyped.name as string) || "our business";
     const qText = (row.question_text as string) || "";
 
-    const prompt = QA_ANSWER_PROMPT.replace("{business_name}", businessName).replace(
-        "{question_text}",
-        qText.replace(/"/g, '\\"')
-    );
+    const prompt = QA_ANSWER_PROMPT
+        .replace("{business_name}", businessName)
+        .replace("{question_text}", qText.replace(/"/g, '\\"'))
+        .replace("{knowledge_base}", knowledgeBase);
 
     try {
-        const content = await generateContentWithFallback(prompt, true);
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        const jsonStr = jsonMatch ? jsonMatch[0] : content;
-
+        const isPremium = orgTyped.plan === "growth" || String(orgTyped.plan).includes("agency");
+        const content = await generateContentWithFallback(prompt, { 
+            requireJson: true, 
+            schema: qaSchema, 
+            isPremium,
+            enableGrounding: true
+        });
         let result: { answer?: string };
         try {
-            result = JSON.parse(jsonStr) as { answer?: string };
+            result = JSON.parse(content) as { answer?: string };
         } catch {
             return NextResponse.json({ answer: content.trim() }, { status: 200 });
         }
@@ -109,8 +114,7 @@ export async function POST(request: Request) {
         await supabase.rpc("increment_ai_replies_used", { org_id: orgId });
 
         return NextResponse.json({ answer: result.answer || content.trim() });
-    } catch (e: unknown) {
-        console.error("[suggest-qa-answer]", e);
-        return nextResponseForGoogleAiError(e, "Failed to generate suggestion");
+    } catch (error) {
+        return nextResponseForVertexAiError(error, "Failed to suggest answer.");
     }
 }

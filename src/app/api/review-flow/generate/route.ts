@@ -1,5 +1,5 @@
 import { anthropic } from "@/services/ai/client";
-import { generateContentWithFallback } from "@/lib/ai/google-client";
+import { generateContentWithFallback } from "@/lib/ai/vertex-client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
@@ -129,10 +129,10 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 
 Review Content:`;
 
-                const backupReviewText = await generateContentWithFallback(backupPrompt, false);
+                const backupReviewText = await generateContentWithFallback(backupPrompt, { requireJson: false });
                 
                 if (backupReviewText && backupReviewText.trim().length > 10) {
-                    console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Gemini 3.1 Pro (Backup Layer 2)`);
+                    console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Gemini 3 Flash Preview (Backup Layer 2)`);
                     return NextResponse.json({ reviewText: backupReviewText.trim() });
                 }
             } catch (backupError) {

@@ -84,8 +84,9 @@ export async function sendReviewRequest({
         }
 
         return results;
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("Error in sendReviewRequest:", err);
-        return { ...results, error: err.message };
+        const message = err instanceof Error ? err.message : "An unexpected error occurred";
+        return { ...results, error: message };
     }
 }

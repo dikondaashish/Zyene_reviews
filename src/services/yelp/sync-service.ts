@@ -133,7 +133,7 @@ export async function syncYelpReviewsForPlatform(
             analyzed: analyzedCount,
             alerts: alertsCount,
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(`[Yelp Sync] Error for platform ${platformId}:`, error);
         await admin
             .from("review_platforms")

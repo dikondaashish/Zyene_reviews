@@ -53,8 +53,9 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             
             if (data.error) throw new Error(data.error);
             setCustomers(data.customers || []);
-        } catch (error: any) {
-            toast.error("Failed to fetch customers: " + error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error("Failed to fetch customers: " + message);
         } finally {
             setIsLoading(false);
         }

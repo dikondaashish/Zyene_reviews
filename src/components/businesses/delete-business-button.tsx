@@ -52,8 +52,8 @@ export function DeleteBusinessButton({
             setOpen(false);
             setConfirmName("");
             router.refresh();
-        } catch (e: any) {
-            toast.error("Failed to delete business", { description: e?.message || "Please try again." });
+        } catch (e: unknown) {
+            toast.error("Failed to delete business", { description: e instanceof Error ? e.message : "Please try again." });
         } finally {
             setIsDeleting(false);
         }

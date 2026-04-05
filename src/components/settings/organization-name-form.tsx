@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/db/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
@@ -45,9 +45,9 @@ export function OrganizationNameForm({ organization }: OrganizationNameFormProps
 
             toast.success("Organization name updated")
             router.refresh()
-        } catch (err: any) {
+        } catch (err: unknown) {
             toast.error("Failed to update organization name", {
-                description: err.message
+                description: err instanceof Error ? err.message : undefined
             })
         } finally {
             setSaving(false)

@@ -89,7 +89,7 @@ export async function GET(request: Request) {
         });
 
         return response;
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("[Facebook Callback] Token exchange failed:", err);
         return NextResponse.redirect(
             new URL("/integrations?fb_error=token_failed", request.url)

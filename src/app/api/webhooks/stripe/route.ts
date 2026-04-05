@@ -29,8 +29,9 @@ export async function POST(request: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
-    } catch (err: any) {
-        console.error("Webhook signature verification failed:", err.message);
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "An unexpected error occurred";
+        console.error("Webhook signature verification failed:", message);
         Sentry.captureException(err, { tags: { route: "stripe-webhook", error_type: "signature_verification" } });
         return NextResponse.json(
             { error: "Invalid webhook signature" },
@@ -187,7 +188,7 @@ export async function POST(request: Request) {
             default:
                 console.log(`Unhandled event type: ${event.type}`);
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Webhook processing error:", error);
         Sentry.captureException(error, {
             tags: { route: "stripe-webhook", event_type: event.type },

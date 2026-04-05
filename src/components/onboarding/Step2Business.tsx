@@ -86,9 +86,9 @@ export function Step2Business({
       trackOnboardingStepCompleted(2);
       toast.success("Business created successfully!");
       onSuccess(result.business!.id, result.business!.name);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
-      trackOnboardingStepError(2, error?.message || "Unexpected error");
+      trackOnboardingStepError(2, error instanceof Error ? error.message : "Unexpected error");
       toast.error("An unexpected error occurred");
       setIsLoading(false);
     }

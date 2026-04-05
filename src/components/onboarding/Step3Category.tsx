@@ -82,9 +82,9 @@ export function Step3Category({
       trackOnboardingStepCompleted(3);
       toast.success("Category updated successfully!");
       onSuccess();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
-      trackOnboardingStepError(3, error?.message || "Unexpected error");
+      trackOnboardingStepError(3, error instanceof Error ? error.message : "Unexpected error");
       toast.error("An unexpected error occurred");
       setIsLoading(false);
     }

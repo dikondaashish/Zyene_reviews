@@ -1,5 +1,5 @@
-import { twilioClient, TWILIO_PHONE_NUMBER } from "./client";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getTwilioClient, TWILIO_PHONE_NUMBER } from "./client";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 
 export async function sendSMS(to: string, body: string) {
     if (!TWILIO_PHONE_NUMBER) {
@@ -21,7 +21,7 @@ export async function sendSMS(to: string, body: string) {
             return { sent: false, error: "Recipient opted out" };
         }
 
-        await twilioClient.messages.create({
+        await getTwilioClient().messages.create({
             body,
             from: TWILIO_PHONE_NUMBER,
             to,

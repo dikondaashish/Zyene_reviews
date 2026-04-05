@@ -102,7 +102,7 @@ export async function POST(req: Request) {
                 },
             });
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[Yelp Confirm] Error:", error);
         Sentry.captureException(error, { tags: { route: "yelp-confirm" } });
         return NextResponse.json(

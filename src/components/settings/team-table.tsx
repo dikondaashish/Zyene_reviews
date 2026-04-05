@@ -62,8 +62,9 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
             if (!response.ok) throw new Error("Failed to update role");
             toast.success("Role updated");
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsLoadingId(null);
         }
@@ -80,8 +81,9 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
             if (!response.ok) throw new Error("Failed to remove member");
             toast.success("Member removed");
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsLoadingId(null);
         }

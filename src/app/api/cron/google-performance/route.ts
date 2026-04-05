@@ -15,13 +15,9 @@ import * as Sentry from "@sentry/nextjs";
  * Schedule in Vercel: e.g. `0 3 * * *` (03:00 UTC) with `Authorization: Bearer CRON_SECRET`.
  */
 export async function GET(request: Request) {
+    // Verify Cron Secret — always required
     const authHeader = request.headers.get("authorization");
-    if (
-        process.env.NODE_ENV === "development" &&
-        process.env.ALLOW_INSECURE_CRON === "true"
-    ) {
-        // dev only
-    } else if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

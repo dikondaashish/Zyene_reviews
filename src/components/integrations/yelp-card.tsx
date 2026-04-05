@@ -94,8 +94,9 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
             if (data.businesses?.length === 0) {
                 toast.info("No businesses found. Try different search terms.");
             }
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsSearching(false);
         }
@@ -121,8 +122,9 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
             setShowConnect(false);
             setSearchResults([]);
             router.refresh();
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setIsConfirming(null);
         }
@@ -141,7 +143,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
 
             toast.success("Yelp disconnected");
             router.refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.error("Failed to disconnect");
         }
     };
@@ -210,7 +212,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
 
                                 toast.success("Sync triggered");
                                 router.refresh();
-                            } catch (err: any) {
+                            } catch (err: unknown) {
                                 console.error("[Yelp Sync] Error:", err);
                                 toast.error("Sync failed");
                             } finally {

@@ -12,7 +12,7 @@ import {
   Dumbbell, Sparkles, BedDouble, ShoppingBag,
   Car, HeartPulse, MoreHorizontal,
 } from "lucide-react";
-import { stepCategorySchema, type StepCategoryFormData } from "@/lib/validation/onboarding";
+import { stepCategorySchema, type StepCategoryFormData } from "@/lib/validations/onboarding";
 import { updateBusinessCategory } from "@/app/actions/onboarding";
 
 const CATEGORIES = [

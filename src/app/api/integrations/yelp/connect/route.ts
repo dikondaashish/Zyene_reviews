@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         const results = await searchBusiness(businessName, location);
 
         return NextResponse.json({ businesses: results });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[Yelp Connect] Search error:", error);
         return NextResponse.json(
             { error: "Internal Server Error" },

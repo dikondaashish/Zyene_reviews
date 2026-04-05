@@ -109,9 +109,9 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
             // but for simplicity we rely on next navigation or manual reload.
             // Actually let's do router.refresh() using useRouter
             window.location.reload(); // Brute force refresh for now to see list
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.error("Failed to send", {
-                description: error.message || "Something went wrong.",
+                description: error instanceof Error ? error.message : "Something went wrong.",
             });
         } finally {
             setIsLoading(false);

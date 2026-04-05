@@ -61,9 +61,9 @@ export function Step1Organization({ onSuccess }: Step1OrganizationProps) {
       trackOnboardingStepCompleted(1);
       toast.success("Organization created successfully!");
       onSuccess(result.organization!.id, result.organization!.name);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
-      trackOnboardingStepError(1, error?.message || "Unexpected error");
+      trackOnboardingStepError(1, error instanceof Error ? error.message : "Unexpected error");
       toast.error("An unexpected error occurred");
       setIsLoading(false);
     }

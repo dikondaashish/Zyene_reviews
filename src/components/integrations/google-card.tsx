@@ -190,8 +190,8 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             toast.success("Google location linked");
             setIsPickingLocation(false);
             router.refresh();
-        } catch (e: any) {
-            toast.error("Failed to save location", { description: e?.message });
+        } catch (e: unknown) {
+            toast.error("Failed to save location", { description: e instanceof Error ? e.message : undefined });
         }
     };
 
@@ -213,9 +213,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             const total = payload?.total ?? (data as { total?: number }).total ?? 0;
             toast.success(`Synced ${total} reviews`);
             router.refresh();
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("[Google Sync] Error:", err);
-            toast.error(err.message || "Failed to start sync");
+            toast.error(err instanceof Error ? err.message : "Failed to start sync");
         } finally {
             setIsSyncing(false);
         }

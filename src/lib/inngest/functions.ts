@@ -1,5 +1,5 @@
 import { inngest } from "./client";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/lib/twilio/send-sms";
 import { sendEmail } from "@/lib/resend/send-email";

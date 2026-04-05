@@ -9,7 +9,7 @@ const eslintConfig = defineConfig([
     rules: {
       // Legacy code currently relies on broad boundary typing and marketing copy text.
       // Keep these visible while unblocking strict error-level linting for critical rules.
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "error",
       "react/no-unescaped-entities": "warn",
     },
   },

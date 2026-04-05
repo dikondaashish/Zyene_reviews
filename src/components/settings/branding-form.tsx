@@ -102,7 +102,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             setLogoUrl(publicUrl);
             onLogoChange?.(publicUrl);
             toast.success("Logo uploaded!");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
             toast.error("Failed to upload logo");
         } finally {

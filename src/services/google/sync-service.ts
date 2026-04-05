@@ -353,7 +353,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             alerts: 0
         };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(`[Sync] Implementation Error:`, error);
         // Error status will be handled by finally block (reset to idle)
         throw error;

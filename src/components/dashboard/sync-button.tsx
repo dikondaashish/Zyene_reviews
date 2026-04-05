@@ -29,8 +29,8 @@ export function SyncButton() {
 
             toast.success(`Synced ${total} reviews!`)
             router.refresh()
-        } catch (error: any) {
-            toast.error("Failed to sync reviews", { description: error?.message })
+        } catch (error: unknown) {
+            toast.error("Failed to sync reviews", { description: error instanceof Error ? error.message : undefined })
         } finally {
             setIsSyncing(false)
         }

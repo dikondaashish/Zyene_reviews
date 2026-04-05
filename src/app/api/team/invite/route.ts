@@ -1,8 +1,8 @@
 
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
 import { sendEmail } from "@/services/resend/send-email";
 import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
 
 const inviteSchema = z.object({
@@ -17,12 +17,12 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
     const parsed = inviteSchema.safeParse(await request.json());
     if (!parsed.success) {
-        return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+        return apiError("Invalid input", { status: 400 });
     }
     const { email, role } = parsed.data;
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         .single();
 
     if (membError || !membership) {
-        return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
+        return apiError("Forbidden: Admins only", { status: 403 });
     }
 
     const organizationId = membership.organization_id;
@@ -63,10 +63,7 @@ export async function POST(request: Request) {
 
     const totalSeats = (currentMemberCount || 0) + (pendingInviteCount || 0);
     if (totalSeats >= maxMembers) {
-        return NextResponse.json(
-            { error: "Team member limit reached. Please upgrade your plan." },
-            { status: 403 }
-        );
+        return apiError("Team member limit reached. Please upgrade your plan.", { status: 403 });
     }
 
     // Insert invitation
@@ -83,9 +80,9 @@ export async function POST(request: Request) {
     if (inviteError) {
         // Handle unique constraint violation (already invited)
         if (inviteError.code === "23505") {
-            return NextResponse.json({ error: "User already invited" }, { status: 400 });
+            return apiError("User already invited", { status: 400 });
         }
-        return NextResponse.json({ error: inviteError.message }, { status: 500 });
+        return apiError(inviteError.message, { status: 500 });
     }
 
     // Send email
@@ -112,5 +109,5 @@ export async function POST(request: Request) {
         // Let's return success but log error. User can re-invite/resend.
     }
 
-    return NextResponse.json({ success: true, invite });
+    return apiOk(invite);
 }

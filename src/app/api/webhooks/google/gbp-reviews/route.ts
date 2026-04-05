@@ -7,16 +7,15 @@ import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
     try {
+        // Verify webhook secret via header only (never URL params — they leak in logs)
         const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
-        if (sharedSecret) {
-            const urlSecret = req.nextUrl.searchParams.get("secret");
-            const headerSecret = req.headers.get("x-webhook-secret");
-            if (urlSecret !== sharedSecret && headerSecret !== sharedSecret) {
-                return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-            }
-        } else if (process.env.NODE_ENV === "production") {
-            console.error("[GBP Webhook] GOOGLE_GBP_WEBHOOK_SECRET is not configured");
+        if (!sharedSecret) {
+            Sentry.captureMessage("GOOGLE_GBP_WEBHOOK_SECRET is not configured", "error");
             return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
+        }
+        const headerSecret = req.headers.get("x-webhook-secret");
+        if (headerSecret !== sharedSecret) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const body = await req.json();
@@ -113,7 +112,7 @@ export async function POST(req: NextRequest) {
 
         return new NextResponse(null, { status: 204 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[GBP Webhook] Unexpected error:", error);
         Sentry.captureException(error, { tags: { route: "webhook-gbp-reviews" } });
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

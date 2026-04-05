@@ -8,14 +8,9 @@ import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
 export async function GET(request: Request) {
-    // Verify Cron Secret — always required (no localhost bypass)
+    // Verify Cron Secret — always required
     const authHeader = request.headers.get("authorization");
-    if (
-        process.env.NODE_ENV === "development" &&
-        process.env.ALLOW_INSECURE_CRON === "true"
-    ) {
-        // allow through for local dev only
-    } else if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -61,7 +56,7 @@ export async function GET(request: Request) {
             totalAnalyzed += stats.analyzed || 0;
             totalAlerts += stats.alerts || 0;
             results.push({ id: platform.id, platform: platform.platform, status: "success", ...stats });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(`[Cron] Sync Failed for ${platform.platform} platform ${platform.id}:`, error);
             Sentry.captureException(error, {
                 tags: { route: "cron-sync-reviews", platform: platform.platform },

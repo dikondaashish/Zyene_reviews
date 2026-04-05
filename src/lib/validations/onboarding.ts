@@ -80,6 +80,13 @@ export const stepNotificationsSchema = z.object({
 
 export type StepNotificationsFormData = z.infer<typeof stepNotificationsSchema>;
 
+// Step 5: Plan Selection
+export const stepPlanSchema = z.object({
+  plan: z.enum(["none", "starter", "pro"]),
+});
+
+export type StepPlanFormData = z.infer<typeof stepPlanSchema>;
+
 // ====================
 // Legacy Schemas (Keep for backward compatibility)
 // ====================

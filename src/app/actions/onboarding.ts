@@ -21,7 +21,7 @@ import {
   type StepCategoryFormData,
   type StepNotificationsFormData,
   type StepPlanFormData,
-} from "@/lib/validation/onboarding";
+} from "@/lib/validations/onboarding";
 import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { registerNotifications } from "@/services/google/notifications";
@@ -108,7 +108,7 @@ export async function createBusinessAndAdvanceOnboarding(
       success: true,
       business,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in createBusinessAndAdvanceOnboarding:", error);
     return {
       success: false,
@@ -476,7 +476,7 @@ export async function initializeGoogleAuth(
       reviewData,
       locationInfo,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in initializeGoogleAuth:", error);
     return {
       success: false,
@@ -526,7 +526,7 @@ export async function updateOnboardingStep(
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in updateOnboardingStep:", error);
     return {
       success: false,
@@ -618,7 +618,7 @@ export async function saveNotificationPreferences(
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in saveNotificationPreferences:", error);
     return {
       success: false,
@@ -709,7 +709,7 @@ export async function sendFirstReviewRequest(
       success: true,
       reviewRequestId: reviewRequest.id,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in sendFirstReviewRequest:", error);
     return {
       success: false,
@@ -757,7 +757,7 @@ export async function completeOnboarding(businessId: string) {
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in completeOnboarding:", error);
     return {
       success: false,
@@ -861,7 +861,7 @@ export async function createOrganization(
         slug: organization.slug,
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in createOrganization:", error);
     return {
       success: false,
@@ -920,7 +920,7 @@ export async function updateOrganizationName(
     if (stepError) console.error("Error updating onboarding step:", stepError);
     revalidatePath("/onboarding");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("updateOrganizationName:", error);
     return { success: false, error: "An unexpected error occurred." };
   }
@@ -963,7 +963,7 @@ export async function updateBusinessAndLocation(
     }
     revalidatePath("/onboarding");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("updateBusinessAndLocation:", error);
     return { success: false, error: "An unexpected error occurred." };
   }
@@ -1051,7 +1051,7 @@ export async function createBusinessWithLocation(
         state: business.state,
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in createBusinessWithLocation:", error);
     return {
       success: false,
@@ -1131,7 +1131,7 @@ export async function updateBusinessCategory(
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in updateBusinessCategory:", error);
     return {
       success: false,
@@ -1225,7 +1225,7 @@ export async function createNotificationPreferences(
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in createNotificationPreferences:", error);
     return {
       success: false,
@@ -1361,7 +1361,7 @@ export async function savePlanSelection(
     return {
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected error in savePlanSelection:", error);
     return {
       success: false,
@@ -1443,7 +1443,7 @@ export async function finalizeOnboardingStripeCheckout(params: {
     revalidatePath("/onboarding");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("finalizeOnboardingStripeCheckout:", error);
     return { success: false, error: "Could not verify checkout. Please try again." };
   }

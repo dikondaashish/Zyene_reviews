@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js Dev Server",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "port": 3000
+    },
+    {
+      "name": "Inngest Dev Server",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dlx", "inngest-cli@latest", "dev"],
+      "port": 8288
+    }
+  ]
+}

@@ -1,15 +1,28 @@
 import twilio from "twilio";
+import type Twilio from "twilio";
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+let _client: ReturnType<typeof twilio> | null = null;
 
-if (!accountSid || !authToken) {
-    console.warn("Twilio credentials missing");
+/**
+ * Lazily initializes the Twilio client on first use.
+ * Throws if credentials are missing when actually needed (not at import time).
+ */
+export function getTwilioClient(): ReturnType<typeof twilio> {
+    if (!_client) {
+        const accountSid = process.env.TWILIO_ACCOUNT_SID;
+        const authToken = process.env.TWILIO_AUTH_TOKEN;
+        if (!accountSid || !authToken) {
+            throw new Error(
+                "Missing TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN. " +
+                    "Check your .env.local file or deployment environment."
+            );
+        }
+        _client = twilio(accountSid, authToken);
+    }
+    return _client;
 }
 
-// Only initialize Twilio if credentials are present to avoid potential build-time crashes
-export const twilioClient = (accountSid && authToken) 
-    ? twilio(accountSid, authToken) 
-    : null as any;
+/** @deprecated Use getTwilioClient() instead — this may be null. */
+export const twilioClient = null as ReturnType<typeof twilio> | null;
 
 export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;

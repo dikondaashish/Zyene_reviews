@@ -191,7 +191,7 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json({ url: session.url });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Checkout Error:", error);
         Sentry.captureException(error, { tags: { route: "billing-checkout" } });
         return NextResponse.json(

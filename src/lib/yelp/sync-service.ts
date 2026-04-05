@@ -1,4 +1,4 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getBusiness } from "./adapter";
 import { analyzeReview } from "@/lib/ai/analysis";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
@@ -133,7 +133,7 @@ export async function syncYelpReviewsForPlatform(
             analyzed: analyzedCount,
             alerts: alertsCount,
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(`[Yelp Sync] Error for platform ${platformId}:`, error);
         await admin
             .from("review_platforms")

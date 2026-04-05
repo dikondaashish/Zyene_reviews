@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback } from "@/lib/ai/google-client";
-import { nextResponseForGoogleAiError } from "@/lib/ai/google-ai-route-error";
+import { generateContentWithFallback, nextResponseForVertexAiError } from "@/lib/ai/vertex-client";
 import { REPLY_PROMPT } from "@/services/ai/prompts";
 import { NextResponse } from "next/server";
+import { replySchema } from "@/lib/ai/schemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { checkLimit } from "@/lib/stripe/check-limits";
 
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
                 organization_id,
                 organizations!inner(
                     id,
+                    plan,
                     organization_members!inner(user_id)
                 )
             )
@@ -73,31 +74,31 @@ export async function POST(request: Request) {
             .replace("{rating}", review.rating.toString())
             .replace("{text}", review.text || "");
 
-        const content = await generateContentWithFallback(prompt, true);
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        const jsonStr = jsonMatch ? jsonMatch[0] : content;
+        const plan = (reviewTyped.businesses as any)?.organizations?.plan;
+        const isPremium = plan === "growth" || String(plan).includes("agency");
 
+        const content = await generateContentWithFallback(prompt, { 
+            requireJson: true, 
+            schema: replySchema, 
+            isPremium
+        });
         let result;
         try {
-            result = JSON.parse(jsonStr);
+            result = JSON.parse(content);
         } catch (err) {
-            console.error("[suggest-reply] AI returned invalid JSON:", content);
+            console.error("[suggest-reply] JSON.parse failed despite schema:", content);
             return NextResponse.json(
-                { reply: content, tone: "professional" },
+                { replies: [{ text: content, tone: "professional" }] },
                 { status: 200 }
             );
         }
 
-        // After successful Claude call, increment the counter atomically:
+        // After successful generative call, increment the counter atomically:
         await supabase.rpc("increment_ai_replies_used", { org_id: orgId });
 
         return NextResponse.json(result);
 
-    } catch (error: unknown) {
-        console.error("AI Reply Suggestion Failed:", error);
-        return nextResponseForGoogleAiError(
-            error,
-            "Failed to generate AI reply. Please try again."
-        );
+    } catch (error) {
+        return nextResponseForVertexAiError(error, "Failed to suggest reply.");
     }
 }

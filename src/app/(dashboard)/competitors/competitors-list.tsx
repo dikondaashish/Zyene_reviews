@@ -78,8 +78,8 @@ export function CompetitorsList({
             } else {
                 toast.error(result.error || "Failed to remove competitor.");
             }
-        } catch (error: any) {
-            toast.error(error.message || "Failed to remove competitor.");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to remove competitor.");
         } finally {
             setIsDeleting(null);
             setDeleteConfirm(null);

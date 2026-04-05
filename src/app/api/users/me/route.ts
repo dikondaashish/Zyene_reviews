@@ -1,6 +1,11 @@
 
 import { createClient } from "@/lib/db/supabase/server";
-import { NextResponse } from "next/server";
+import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { z } from "zod";
+
+const updateProfileSchema = z.object({
+    full_name: z.string().max(200),
+});
 
 export async function PATCH(request: Request) {
     const supabase = await createClient();
@@ -9,10 +14,14 @@ export async function PATCH(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return apiError("Unauthorized", { status: 401 });
     }
 
-    const body = await request.json();
+    const parsed = updateProfileSchema.safeParse(await request.json());
+    if (!parsed.success) {
+        return apiError(parsed.error.errors[0].message, { status: 400 });
+    }
+    const body = parsed.data;
 
     // Update user metadata (full_name)
     const { data, error } = await supabase.auth.updateUser({
@@ -20,17 +29,17 @@ export async function PATCH(request: Request) {
     });
 
     if (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return apiError("Internal Server Error", { status: 500 });
     }
 
     // Also update public.users table if it exists and has name column?
     // Usually auth triggers handle this, or we update it manually.
     // Assuming we might have a users table copy.
     // Let's check if we need to update a users table.
-    // For now, updating auth metadata is standard. 
+    // For now, updating auth metadata is standard.
     // If request included deleting, user.delete() is needed.
 
-    return NextResponse.json({ success: true, user: data.user });
+    return apiOk(data.user);
 }
 
 export async function DELETE(request: Request) {
@@ -45,5 +54,5 @@ export async function DELETE(request: Request) {
     // We will leave this unimplemented or use a service role client if we had one (we do in lib/supabase but usually for admin tasks).
     // For now, let's return 501 Not Implemented or simulated success.
 
-    return NextResponse.json({ error: "Delete account not implemented yet" }, { status: 501 });
+    return apiError("Delete account not implemented yet", { status: 501 });
 }

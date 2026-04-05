@@ -1,4 +1,4 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getPageDetails } from "./adapter";
 import { analyzeReview } from "@/lib/ai/analysis";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
@@ -135,16 +135,17 @@ export async function syncFacebookReviewsForPlatform(
             analyzed: analyzedCount,
             alerts: alertsCount,
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(
             `[Facebook Sync] Error for platform ${platformId}:`,
             error
         );
 
         // Check if it's a token expiry issue
+        const errorMessage = error instanceof Error ? error.message : "";
         const isTokenError =
-            error.message?.includes("190") ||
-            error.message?.includes("access token");
+            errorMessage.includes("190") ||
+            errorMessage.includes("access token");
 
         await admin
             .from("review_platforms")

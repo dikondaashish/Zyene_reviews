@@ -145,8 +145,9 @@ function NewCampaignForm() {
 
             toast.success(status === "active" ? "Campaign launched!" : "Campaign saved as draft");
             router.push("/campaigns");
-        } catch (err: any) {
-            toast.error(err.message);
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            toast.error(message);
         } finally {
             setSaving(false);
         }
