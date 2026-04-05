@@ -367,8 +367,8 @@ export async function initializeGoogleAuth(
     // Use onConflict so the unique constraint (business_id, platform) triggers an UPDATE
     // instead of a failing INSERT when the record already exists.
     // Encrypt tokens before storing
-    const { data: encAccess } = await supabase.rpc("encrypt_token", { plain_text: accessToken || "" });
-    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plain_text: tokenData.refresh_token || "" });
+    const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: accessToken || "" });
+    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plaintext: tokenData.refresh_token || "" });
 
     const { error: platformError } = await supabase
       .from("review_platforms")

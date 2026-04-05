@@ -2,6 +2,10 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
+import type {
+    BusinessContextBusiness,
+    OrganizationMemberWithBusinesses,
+} from "@/types/business-context";
 
 const COOKIE_NAME = "active_business_id";
 
@@ -12,9 +16,9 @@ const COOKIE_NAME = "active_business_id";
  */
 export async function getActiveBusinessId(): Promise<{
     businessId: string | null;
-    business: any | null;
-    organization: any | null;
-    businesses: any[];
+    business: BusinessContextBusiness | null;
+    organization: OrganizationMemberWithBusinesses["organizations"];
+    businesses: BusinessContextBusiness[];
 }> {
     const supabase = await createClient();
 
@@ -28,13 +32,14 @@ export async function getActiveBusinessId(): Promise<{
 
     // ── Redis Caching for Business Context ──
     const cacheKey = `user_businesses:${user.id}`;
-    let memberData: any = null;
+    let memberData: OrganizationMemberWithBusinesses | null = null;
 
     try {
         const { redis } = await import("@/lib/db/redis");
         const cached = await redis.get(cacheKey);
         if (cached) {
-            memberData = typeof cached === "string" ? JSON.parse(cached) : cached;
+            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+            memberData = parsed as OrganizationMemberWithBusinesses;
         }
     } catch (e) {
         console.error("Redis cache error:", e);
@@ -56,7 +61,7 @@ export async function getActiveBusinessId(): Promise<{
             .eq("user_id", user.id)
             .single();
 
-        memberData = data;
+        memberData = data as OrganizationMemberWithBusinesses | null;
 
         if (memberData) {
             try {
@@ -68,15 +73,9 @@ export async function getActiveBusinessId(): Promise<{
         }
     }
 
-    interface MemberDataWithOrg {
-        organizations: Record<string, unknown> & {
-            businesses: Array<Record<string, unknown> & { id: string }>;
-        };
-    }
-    const memberTyped = memberData as unknown as MemberDataWithOrg | null;
-    const organization = memberTyped?.organizations || null;
-    const allBusinesses: any[] = organization?.businesses || [];
-    const businesses = allBusinesses.filter((b: any) => b.status !== "archived");
+    const organization = memberData?.organizations || null;
+    const allBusinesses = organization?.businesses || [];
+    const businesses = allBusinesses.filter((business) => business.status !== "archived");
 
     if (businesses.length === 0) {
         return { businessId: null, business: null, organization, businesses: [] };
@@ -87,8 +86,8 @@ export async function getActiveBusinessId(): Promise<{
     const savedId = cookieStore.get(COOKIE_NAME)?.value;
 
     // Validate that saved ID belongs to this user's org
-    let activeBusiness = savedId
-        ? businesses.find((b: any) => b.id === savedId)
+    let activeBusiness: BusinessContextBusiness | null = savedId
+        ? businesses.find((business) => business.id === savedId) || null
         : null;
 
     // Fallback to first business

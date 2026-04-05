@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import type { BusinessSettingsRecord } from "@/types/components";
 
 // Assuming Checkbox component exists in ui/checkbox, if not I'll fallback to standard HTML input
 // Actually I'll check existence or just write assuming shadcn structure.
@@ -53,7 +54,7 @@ const reviewSettingsSchema = z.object({
 type ReviewSettingsValues = z.infer<typeof reviewSettingsSchema>;
 
 interface ReviewSettingsFormProps {
-    business: any;
+    business: BusinessSettingsRecord;
 }
 
 export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
@@ -61,7 +62,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<ReviewSettingsValues>({
-        resolver: zodResolver(reviewSettingsSchema) as any,
+        resolver: zodResolver(reviewSettingsSchema),
         defaultValues: {
             review_request_delay_minutes: business.review_request_delay_minutes ?? 120,
             review_request_min_amount_cents: (business.review_request_min_amount_cents ?? 1500) / 100, // display as dollars

@@ -3,6 +3,7 @@ import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import type { SyncMemberOrganizationData } from "@/types/api-routes";
 
 export async function POST(request: Request) {
     try {
@@ -36,11 +37,11 @@ export async function POST(request: Request) {
             throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
         }
 
-        const memberTyped = memberData as any;
+        const memberTyped = memberData as SyncMemberOrganizationData;
         const business = memberTyped.organizations?.businesses?.[0];
         if (!business) throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
 
-        const platform = business.review_platforms?.find((p: any) => p.platform === 'yelp');
+        const platform = business.review_platforms?.find((reviewPlatform) => reviewPlatform.platform === "yelp");
         if (!platform) {
             throw new ApiRouteError("Yelp platform not connected", {
                 status: 404,

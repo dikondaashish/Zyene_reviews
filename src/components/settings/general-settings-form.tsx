@@ -7,10 +7,14 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, User, Mail, Building2 } from "lucide-react";
+import type {
+    AppUserSummary,
+    OrganizationSettingsRecord,
+} from "@/types/components";
 
 interface GeneralSettingsFormProps {
-    user: any;
-    organization: any;
+    user: AppUserSummary;
+    organization: OrganizationSettingsRecord | null;
 }
 
 export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormProps) {

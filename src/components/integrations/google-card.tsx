@@ -47,6 +47,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import type {
+    ApiErrorResponse,
+    GoogleLocationSelectorResponse,
+} from "@/types/components";
 
 interface GoogleCardProps {
     platform?: {
@@ -148,9 +152,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
         setIsLoadingLocations(true);
         try {
             const res = await fetch(`/api/google/location-selector?businessId=${encodeURIComponent(businessId)}`);
-            const data = await res.json().catch(() => ({}));
+            const data = (await res.json().catch(() => ({}))) as GoogleLocationSelectorResponse;
             if (!res.ok) {
-                const msg = (data as any)?.error || "Failed to load Google locations";
+                const msg = data.error || "Failed to load Google locations";
                 toast.error("Failed to load Google locations", { description: msg });
                 if (res.status === 401 && /reconnect/i.test(String(msg))) {
                     setIsPickingLocation(false);
@@ -158,7 +162,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 }
                 return;
             }
-            const accs = (data as any)?.data?.accounts || (data as any)?.accounts || [];
+            const accs = data.data?.accounts || data.accounts || [];
             setAccounts(accs);
             if (accs.length > 0) {
                 setSelectedAccount(accs[0].resourceName);
@@ -182,9 +186,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                     locationName: selectedLocation,
                 }),
             });
-            const data = await res.json().catch(() => ({}));
+            const data = (await res.json().catch(() => ({}))) as ApiErrorResponse;
             if (!res.ok) {
-                toast.error("Failed to save location", { description: (data as any)?.error });
+                toast.error("Failed to save location", { description: data.error });
                 return;
             }
             toast.success("Google location linked");

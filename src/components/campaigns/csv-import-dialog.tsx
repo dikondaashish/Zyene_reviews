@@ -21,6 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import type { CsvContactRow } from "@/types/components";
 
 interface CSVImportDialogProps {
     open: boolean;
@@ -31,7 +32,7 @@ interface CSVImportDialogProps {
 
 export function CSVImportDialog({ open, onOpenChange, onImport, isImporting }: CSVImportDialogProps) {
     const [file, setFile] = useState<File | null>(null);
-    const [csvData, setCsvData] = useState<any[]>([]);
+    const [csvData, setCsvData] = useState<CsvContactRow[]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
     const [step, setStep] = useState<"upload" | "mapping">("upload");
     const [mapping, setMapping] = useState({
@@ -59,9 +60,10 @@ export function CSVImportDialog({ open, onOpenChange, onImport, isImporting }: C
             header: true,
             skipEmptyLines: true,
             complete: (results) => {
-                if (results.data.length > 0) {
-                    setCsvData(results.data);
-                    const cols = Object.keys(results.data[0] as object);
+                const parsedRows = results.data as CsvContactRow[];
+                if (parsedRows.length > 0) {
+                    setCsvData(parsedRows);
+                    const cols = Object.keys(parsedRows[0] as object);
                     setHeaders(cols);
 
                     // Auto-map based on common names

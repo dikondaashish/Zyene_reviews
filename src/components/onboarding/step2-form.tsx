@@ -18,6 +18,10 @@ import {
 } from "@/components/ui/select";
 import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@/lib/validations/onboarding";
 import { updateOnboardingStep, initializeGoogleAuth, updateBusinessAndLocation } from "@/app/actions/onboarding";
+import type {
+  OnboardingGoogleInitResult,
+  OnboardingGoogleLocationInfo,
+} from "@/types/components";
 
 const US_STATES = [
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
@@ -131,7 +135,11 @@ export function Step2Form({
     try {
       const redirectUri =
         typeof window !== "undefined" ? `${window.location.origin}/onboarding` : undefined;
-      const result = (await initializeGoogleAuth(authCode, businessId, redirectUri)) as any;
+      const result = (await initializeGoogleAuth(
+        authCode,
+        businessId,
+        redirectUri
+      )) as OnboardingGoogleInitResult;
       if (result.success) {
         setGoogleState({
           status: "success",
@@ -140,11 +148,12 @@ export function Step2Form({
         });
         toast.success("Google Business Profile connected!");
         if (result.locationInfo) {
+          const locationInfo = result.locationInfo as OnboardingGoogleLocationInfo;
           const newBusinessName = result.locationInfo.businessName || form.getValues("businessName");
           const newAddress = result.locationInfo.address || form.getValues("address");
           const newCity = result.locationInfo.city || form.getValues("city");
-          const newState = (result.locationInfo.state as any) || form.getValues("state");
-          const newPhone = (result.locationInfo as any).phone || form.getValues("phone");
+          const newState = locationInfo.state || form.getValues("state");
+          const newPhone = locationInfo.phone || form.getValues("phone");
           form.reset({
             businessName: newBusinessName,
             locationName: newBusinessName,
@@ -159,7 +168,7 @@ export function Step2Form({
             address_line1: newAddress,
             city: newCity,
             state: newState,
-            category: (result.locationInfo as any).category || null,
+            category: locationInfo.category || null,
           });
         }
       } else {

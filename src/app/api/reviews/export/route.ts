@@ -2,6 +2,10 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import type {
+    PrivateFeedbackExportRow,
+    PublicReviewExportRow,
+} from "@/types/api-routes";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
@@ -38,13 +42,14 @@ export async function GET(request: Request) {
             .eq("business_id", business.id)
             .order("created_at", { ascending: false });
 
-        const formatted = (feedback || []).map((f: any) => ({
-            "Date": new Date(f.created_at).toLocaleString(),
-            "Rating": f.rating,
-            "Message": f.message,
-            "Customer Name": f.review_requests?.customer_name || "Anonymous",
-            "Customer Email": f.review_requests?.customer_email || "",
-            "Customer Phone": f.review_requests?.customer_phone || ""
+        const privateRows = (feedback || []) as PrivateFeedbackExportRow[];
+        const formatted = privateRows.map((feedbackRow) => ({
+            "Date": new Date(feedbackRow.created_at).toLocaleString(),
+            "Rating": feedbackRow.rating,
+            "Message": feedbackRow.message,
+            "Customer Name": feedbackRow.review_requests?.customer_name || "Anonymous",
+            "Customer Email": feedbackRow.review_requests?.customer_email || "",
+            "Customer Phone": feedbackRow.review_requests?.customer_phone || ""
         }));
 
         csvData = Papa.unparse(formatted);
@@ -67,14 +72,15 @@ export async function GET(request: Request) {
             .eq("business_id", business.id)
             .order("published_at", { ascending: false });
 
-        const formatted = (reviews || []).map((r: any) => ({
-            "Date": new Date(r.published_at || r.created_at).toLocaleString(),
-            "Rating": r.rating,
-            "Author": r.author_name || "Anonymous",
-            "Platform": r.review_platforms?.platform || "Direct",
-            "Content": r.content || "",
-            "Sentiment": r.sentiment || "",
-            "Response Status": r.response_status || "pending"
+        const publicRows = (reviews || []) as PublicReviewExportRow[];
+        const formatted = publicRows.map((reviewRow) => ({
+            "Date": new Date(reviewRow.published_at || reviewRow.created_at).toLocaleString(),
+            "Rating": reviewRow.rating,
+            "Author": reviewRow.author_name || "Anonymous",
+            "Platform": reviewRow.review_platforms?.platform || "Direct",
+            "Content": reviewRow.content || "",
+            "Sentiment": reviewRow.sentiment || "",
+            "Response Status": reviewRow.response_status || "pending"
         }));
 
         csvData = Papa.unparse(formatted);

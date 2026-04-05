@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2, Mail, User } from "lucide-react";
+import type { AppUserSummary } from "@/types/components";
 
 const profileFormSchema = z.object({
     full_name: z.string().min(2),
@@ -26,7 +27,7 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface ProfileFormProps {
-    user: any;
+    user: AppUserSummary;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {

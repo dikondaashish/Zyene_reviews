@@ -5,8 +5,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
+import type { AppUserSummary } from "@/types/components";
 
-export function VerificationBanner({ user }: { user: any }) {
+export function VerificationBanner({ user }: { user: AppUserSummary }) {
     const [isVisible, setIsVisible] = useState(!user?.email_confirmed_at);
     const [isResending, setIsResending] = useState(false);
 

@@ -5,6 +5,11 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations, FULL_LOCATION_READ_MASK } from "@/services/google/business-profile";
 import { redis } from "@/lib/db/redis";
+import type {
+    AuthMemberOrgContext,
+    GoogleLocationDetails,
+    GooglePlatformUpdatePayload,
+} from "@/types/api-routes";
 
 function safeNextPath(raw: string | null): string {
     const fallback = "/dashboard";
@@ -124,7 +129,7 @@ export async function GET(request: Request) {
 
                             const locations = await listLocations(finalAccessToken, account.name, FULL_LOCATION_READ_MASK);
                             if (locations.length > 0) {
-                                const location = locations[0] as any;
+                                const location = locations[0] as GoogleLocationDetails;
                                 googleLocationId = location.name.split("/").pop() || null;
                                 externalId = googleLocationId;
                                 locationName = location.title || null;
@@ -190,8 +195,8 @@ export async function GET(request: Request) {
                     console.error("Failed to create new business:", newBizError);
                     Sentry.captureException(newBizError, { tags: { route: "auth-callback", step: "create_new_business" } });
                 } else if (newBusiness) {
-                    const { data: encAccess } = await admin.rpc("encrypt_token", { plain_text: finalAccessToken || "" });
-                    const { data: encRefresh } = await admin.rpc("encrypt_token", { plain_text: finalRefreshToken || "" });
+                    const { data: encAccess } = await admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" });
+                    const { data: encRefresh } = await admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" });
 
                     // Link Google platform to the new business
                     await admin.from("review_platforms").insert({
@@ -390,9 +395,6 @@ export async function GET(request: Request) {
                         .eq("user_id", data.user.id)
                         .maybeSingle();
 
-                    interface AuthMemberOrgContext {
-                        organizations: { businesses: Array<{ id: string }> } | null;
-                    }
                     businessId =
                         (memberData as unknown as AuthMemberOrgContext)?.organizations?.businesses?.[0]?.id ?? null;
                 }
@@ -405,11 +407,11 @@ export async function GET(request: Request) {
                         .eq("platform", "google")
                         .single();
 
-                    const { data: encAccess } = await admin.rpc("encrypt_token", { plain_text: finalAccessToken || "" });
-                    const { data: encRefresh } = await admin.rpc("encrypt_token", { plain_text: finalRefreshToken || "" });
+                    const { data: encAccess } = await admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" });
+                    const { data: encRefresh } = await admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" });
 
                     if (platformData) {
-                        const updatePayload: any = {
+                        const updatePayload: GooglePlatformUpdatePayload = {
                             access_token: encAccess,
                             sync_status: "active",
                             updated_at: new Date().toISOString(),

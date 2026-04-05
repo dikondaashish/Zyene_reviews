@@ -39,7 +39,7 @@ export async function syncFacebookReviewsForPlatform(
 
     if (platform.access_token) {
         const { data: decAccess, error: decAccessError } = await admin.rpc("decrypt_token", { 
-            encrypted_text: platform.access_token 
+            ciphertext: platform.access_token 
         });
         if (decAccessError) {
             console.error(`[Facebook Sync] Access token decryption failed for ${platformId}:`, decAccessError);
@@ -50,7 +50,7 @@ export async function syncFacebookReviewsForPlatform(
 
     if (platform.refresh_token) {
         const { data: decRefresh, error: decRefreshError } = await admin.rpc("decrypt_token", { 
-            encrypted_text: platform.refresh_token 
+            ciphertext: platform.refresh_token 
         });
         if (decRefreshError) {
             console.error(`[Facebook Sync] Refresh token decryption failed for ${platformId}:`, decRefreshError);

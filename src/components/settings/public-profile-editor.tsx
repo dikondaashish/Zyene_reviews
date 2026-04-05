@@ -17,15 +17,18 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
+import type {
+    PublicProfileBusinessRecord,
+    PublicProfilePreviewValues,
+} from "@/types/components";
 
 interface PublicProfileEditorProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    business: any;
+    business: PublicProfileBusinessRecord;
     initialSlug: string;
 }
 
 export function PublicProfileEditor({ business, initialSlug }: PublicProfileEditorProps) {
-    const [previewState, setPreviewState] = useState({
+    const [previewState, setPreviewState] = useState<PublicProfilePreviewValues>({
         slug: initialSlug,
         brand_color: business.brand_color || "#0f172a",
         logo_url: business.logo_url,
@@ -52,7 +55,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         hide_branding: business.hide_branding,
     });
 
-    const handleValuesChange = useCallback((values: any) => {
+    const handleValuesChange = useCallback((values: Partial<PublicProfilePreviewValues>) => {
         setPreviewState(prev => ({ ...prev, ...values }));
     }, []);
 

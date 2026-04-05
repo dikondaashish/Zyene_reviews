@@ -5,9 +5,10 @@ import { ReviewCard } from "./review-card";
 import { BulkReviewActionBar } from "./bulk-review-action-bar";
 import { Button } from "@/components/ui/button";
 import { CheckSquare, Square } from "lucide-react";
+import type { ReviewManagementItem } from "@/types/components";
 
 interface ReviewManagementProps {
-    reviews: any[];
+    reviews: ReviewManagementItem[];
     businessId: string;
 }
 

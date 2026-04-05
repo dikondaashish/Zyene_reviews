@@ -31,9 +31,13 @@ import {
     Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import type {
+    FacebookPageOption,
+    IntegrationPlatformSummary,
+} from "@/types/components";
 
 interface FacebookCardProps {
-    platform: any;
+    platform: IntegrationPlatformSummary | null;
     businessId: string;
     businessName: string;
 }
@@ -49,7 +53,7 @@ export function FacebookIntegrationCard({
     const [syncing, setSyncing] = useState(false);
     const [showDisconnect, setShowDisconnect] = useState(false);
     const [showPageSelect, setShowPageSelect] = useState(false);
-    const [pages, setPages] = useState<any[]>([]);
+    const [pages, setPages] = useState<FacebookPageOption[]>([]);
     const [confirmingPage, setConfirmingPage] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
 

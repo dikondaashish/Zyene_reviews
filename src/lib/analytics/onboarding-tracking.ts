@@ -4,6 +4,8 @@
  * This module handles tracking of onboarding steps and user progress.
  */
 
+import type { OnboardingCompletionData } from "@/types/analytics";
+
 // Timer to track how long each step takes
 let stepStartTime: number | null = null;
 
@@ -51,7 +53,7 @@ export function trackOnboardingStepError(step: number, error: string, field?: st
 /**
  * Tracks when the entire onboarding flow is completed
  */
-export function trackOnboardingCompleted(data?: any, source?: string, id?: string) {
+export function trackOnboardingCompleted(data?: OnboardingCompletionData, source?: string, id?: string) {
   console.log(`[Analytics] Onboarding Flow Fully Completed`, { data, source, id });
   
   // example: window.analytics?.track('Onboarding Completed', { data, source, id });

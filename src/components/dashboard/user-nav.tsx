@@ -23,8 +23,9 @@ import { createClient } from "@/lib/db/supabase/client"
 import { useRouter } from "next/navigation"
 import { Globe, LogOut, Settings } from "lucide-react"
 import { useLanguage, SUPPORTED_LOCALES } from "@/lib/language-context"
+import type { AppUserSummary } from "@/types/components"
 
-export function UserNav({ user }: { user: any }) {
+export function UserNav({ user }: { user: AppUserSummary }) {
     const router = useRouter()
     const supabase = createClient()
     const { locale, setLocale, currentLocaleConfig, dict } = useLanguage()

@@ -1,24 +1,5 @@
 import { MessageSquare, Calendar, Zap, Mail, Users } from "lucide-react";
-
-export interface CampaignTemplate {
-    id: string;
-    name: string;
-    description: string;
-    icon: any;
-    color: string;
-    defaultValues: {
-        name: string;
-        channel: "sms" | "email" | "both";
-        trigger_type: "manual_batch" | "scheduled";
-        sms_template: string;
-        email_subject: string;
-        email_template: string;
-        delay_minutes: number;
-        follow_up_enabled: boolean;
-        follow_up_delay_hours: number;
-        follow_up_template: string;
-    };
-}
+import type { CampaignTemplate } from "@/types/campaigns";
 
 export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
     {

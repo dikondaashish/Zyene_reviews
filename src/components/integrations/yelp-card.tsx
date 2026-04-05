@@ -19,6 +19,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import type { IntegrationPlatformSummary } from "@/types/components";
 
 // Yelp Icon
 function YelpIcon({ className }: { className?: string }) {
@@ -44,7 +45,7 @@ interface YelpBusinessResult {
 }
 
 interface YelpCardProps {
-    platform: any | null; // review_platform record
+    platform: IntegrationPlatformSummary | null;
     businessId: string;
     businessName: string;
 }

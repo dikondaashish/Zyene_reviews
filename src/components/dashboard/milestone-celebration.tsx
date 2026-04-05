@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { toast } from "sonner";
+import { toast, type ToastT } from "sonner";
 import { Sparkles, Trophy } from "lucide-react";
 
 interface MilestoneCelebrationProps {
@@ -61,7 +61,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
 
         const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-        const interval: any = setInterval(() => {
+        const interval: ReturnType<typeof setInterval> = setInterval(() => {
             const timeLeft = animationEnd - Date.now();
 
             if (timeLeft <= 0) {
@@ -80,7 +80,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
             ? `Amazing! You've sent ${milestone} review requests! 🚀`
             : `Phenomenal! Your business maintains a ${milestone} star rating! ⭐`;
 
-        toast.custom((t: any) => (
+        toast.custom((t: ToastT) => (
             <div className={`${t.visible ? 'animate-in fade-in zoom-in' : 'animate-out fade-out zoom-out'} max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300`}>
                 <div className="flex-1 p-4">
                     <div className="flex items-start">

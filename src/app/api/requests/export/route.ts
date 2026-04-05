@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import type { ReviewRequestExportRow } from "@/types/api-routes";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
@@ -31,15 +32,16 @@ export async function GET(request: Request) {
         .eq("business_id", business.id)
         .order("created_at", { ascending: false });
 
-    const formatted = (requests || []).map((r: any) => ({
-        "Created At": new Date(r.created_at).toLocaleString(),
-        "Sent At": r.sent_at ? new Date(r.sent_at).toLocaleString() : "",
-        "Name": r.customer_name || "",
-        "Phone": r.customer_phone || "",
-        "Email": r.customer_email || "",
-        "Channel": r.channel,
-        "Status": r.status,
-        "Converted to Review": r.review_left ? "Yes" : "No"
+    const requestRows = (requests || []) as ReviewRequestExportRow[];
+    const formatted = requestRows.map((requestRow) => ({
+        "Created At": new Date(requestRow.created_at).toLocaleString(),
+        "Sent At": requestRow.sent_at ? new Date(requestRow.sent_at).toLocaleString() : "",
+        "Name": requestRow.customer_name || "",
+        "Phone": requestRow.customer_phone || "",
+        "Email": requestRow.customer_email || "",
+        "Channel": requestRow.channel,
+        "Status": requestRow.status,
+        "Converted to Review": requestRow.review_left ? "Yes" : "No"
     }));
 
     const csvData = Papa.unparse(formatted);

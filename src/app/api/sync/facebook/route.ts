@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { NextResponse } from "next/server";
 import { syncRateLimit } from "@/lib/auth/rate-limit";
+import type { SyncMemberOrganizationData } from "@/types/api-routes";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -36,11 +37,11 @@ export async function POST(request: Request) {
 
         if (membError || !memberData) throw new Error("Business not found");
 
-        const memberTyped = memberData as any;
+        const memberTyped = memberData as SyncMemberOrganizationData;
         const business = memberTyped.organizations?.businesses?.[0];
         if (!business) throw new Error("Business record missing");
 
-        const platform = business.review_platforms?.find((p: any) => p.platform === 'facebook');
+        const platform = business.review_platforms?.find((reviewPlatform) => reviewPlatform.platform === "facebook");
         if (!platform) throw new Error("Facebook platform not connected");
 
         // 2. Call Sync Service

@@ -105,7 +105,7 @@ export async function getValidGoogleToken(platformId: string) {
 
     if (platform.access_token) {
         const { data: decAccess, error: decAccessError } = await admin.rpc("decrypt_token", { 
-            encrypted_text: platform.access_token 
+            ciphertext: platform.access_token 
         });
         if (decAccessError) {
             console.error(`[Token] Access token decryption failed for ${platformId}:`, decAccessError);
@@ -116,7 +116,7 @@ export async function getValidGoogleToken(platformId: string) {
 
     if (platform.refresh_token) {
         const { data: decRefresh, error: decRefreshError } = await admin.rpc("decrypt_token", { 
-            encrypted_text: platform.refresh_token 
+            ciphertext: platform.refresh_token 
         });
         if (decRefreshError) {
             console.error(`[Token] Refresh token decryption failed for ${platformId}:`, decRefreshError);
@@ -151,7 +151,7 @@ export async function getValidGoogleToken(platformId: string) {
             
             // NEW: Encrypt the new access token before storing
             const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", { 
-                plain_text: accessToken 
+                plaintext: accessToken 
             });
             
             if (encError) {

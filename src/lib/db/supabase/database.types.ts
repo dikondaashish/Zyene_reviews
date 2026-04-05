@@ -1470,8 +1470,8 @@ export type Database = {
         Args: { customer_ids: string[]; tags_to_remove: string[] }
         Returns: undefined
       }
-      decrypt_token: { Args: { encrypted_text: string }; Returns: string }
-      encrypt_token: { Args: { plain_text: string }; Returns: string }
+      decrypt_token: { Args: { ciphertext: string }; Returns: string }
+      encrypt_token: { Args: { plaintext: string }; Returns: string }
       get_user_business_ids: { Args: never; Returns: string[] }
       get_user_org_ids: { Args: never; Returns: string[] }
       get_user_store_role: {

@@ -2,10 +2,14 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail } from "@/services/resend/send-email";
 import { reviewAlertEmail } from "@/services/resend/templates/review-alert-email";
+import type {
+    NotificationPreference,
+    ReviewAlertPayload,
+} from "@/types/notifications";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-export async function sendReviewAlert(review: any) {
+export async function sendReviewAlert(review: ReviewAlertPayload) {
     // Logic: Urgency >= 7 OR Rating <= 2 -> SMS + Email
     // All other reviews -> Email only (removing the 4-6 restriction so users get notified of all reviews)
 
@@ -51,15 +55,6 @@ export async function sendReviewAlert(review: any) {
         .in("user_id", userIds);
 
     if (!prefs || prefs.length === 0) return;
-
-    interface NotificationPreference {
-        users: { email: string } | null;
-        quiet_hours_start?: string | null;
-        quiet_hours_end?: string | null;
-        sms_enabled?: boolean;
-        phone_number?: string | null;
-        email_enabled?: boolean;
-    }
 
     // 4. Send Alerts
     for (const rawPref of prefs) {

@@ -24,6 +24,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import type { TeamRoleBadgeVariant } from "@/types/components";
 
 interface Member {
     id: string;
@@ -98,7 +99,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
             .slice(0, 2) || "?";
     };
 
-    const getRoleBadgeColor = (role: string) => {
+    const getRoleBadgeColor = (role: string): TeamRoleBadgeVariant => {
         switch (role.toLowerCase()) {
             case "owner":
             case "org_owner":
@@ -143,7 +144,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Badge variant={getRoleBadgeColor(member.role) as any} className="capitalize">
+                                <Badge variant={getRoleBadgeColor(member.role)} className="capitalize">
                                     {member.role}
                                 </Badge>
                             </TableCell>

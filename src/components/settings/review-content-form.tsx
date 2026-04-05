@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
 import { useState, useEffect } from "react";
 import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette } from "lucide-react";
+import type { PublicProfilePreviewValues } from "@/types/components";
 
 const contentSchema = z.object({
     rating_subtitle: z.string().optional(),
@@ -55,7 +56,13 @@ const contentSchema = z.object({
 
 type ContentFormValues = z.infer<typeof contentSchema>;
 
-export function ReviewContentForm({ businessId, onValuesChange }: { businessId: string; onValuesChange?: (values: any) => void }) {
+export function ReviewContentForm({
+    businessId,
+    onValuesChange,
+}: {
+    businessId: string;
+    onValuesChange?: (values: Partial<PublicProfilePreviewValues>) => void;
+}) {
     const supabase = createClient();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);

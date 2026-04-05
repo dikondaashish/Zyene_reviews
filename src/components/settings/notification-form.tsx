@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import type { NotificationPreferenceFormValues } from "@/types/components";
 
 // Schema for Form Interface (what the inputs use)
 const formSchema = z.object({
@@ -33,7 +34,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function NotificationForm({ initialPrefs }: { initialPrefs: any; userId?: string }) {
+export function NotificationForm({ initialPrefs }: { initialPrefs: NotificationPreferenceFormValues; userId?: string }) {
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
 

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { ApiErrorResponse } from "@/types/components";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -41,10 +42,10 @@ export function DeleteBusinessButton({
         setIsDeleting(true);
         try {
             const res = await fetch(`/api/businesses/${businessId}`, { method: "DELETE" });
-            const payload = await res.json().catch(() => ({}));
+            const payload = (await res.json().catch(() => ({}))) as ApiErrorResponse;
             if (!res.ok) {
                 toast.error("Failed to delete business", {
-                    description: (payload as any)?.error || "Please try again.",
+                    description: payload.error || "Please try again.",
                 });
                 return;
             }

@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Clock, Zap, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, isPast, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
+import type { TrialOrganizationSummary } from "@/types/components";
 
-export function TrialBanner({ organization }: { organization: any }) {
+export function TrialBanner({ organization }: { organization: TrialOrganizationSummary | null }) {
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(true);
     const [mounted, setMounted] = useState(false);

@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import type { BusinessSettingsRecord } from "@/types/components";
 
 const businessFormSchema = z.object({
     name: z.string().min(2, { message: "Business name must be at least 2 characters." }),
@@ -42,7 +43,7 @@ const businessFormSchema = z.object({
 type BusinessFormValues = z.infer<typeof businessFormSchema>;
 
 interface BusinessInfoFormProps {
-    business: any; // Type strictly if possible
+    business: BusinessSettingsRecord;
 }
 
 export function BusinessInfoForm({ business }: BusinessInfoFormProps) {

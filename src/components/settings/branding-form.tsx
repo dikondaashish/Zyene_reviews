@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, Upload, Trash } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
+import type { BusinessUpdatePayload } from "@/types/components";
 
 const brandingSchema = z.object({
     brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, "Invalid hex color code."),
@@ -125,7 +126,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         }
     };
 
-    const updateBusiness = async (updates: any) => {
+    const updateBusiness = async (updates: BusinessUpdatePayload) => {
         const response = await fetch(`/api/businesses/${business.id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },

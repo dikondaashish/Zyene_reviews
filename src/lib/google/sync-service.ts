@@ -2,6 +2,8 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews } from "./business-profile";
 import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { createCodedError } from "@/types/errors";
+import type { BusinessStatsUpdate, PlatformWithTokens } from "@/types/google-sync";
 
 export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
@@ -13,11 +15,6 @@ export async function getValidGoogleToken(platformId: string) {
 
     if (platformError || !platform) throw new Error("Platform not found");
 
-    interface PlatformWithTokens {
-        access_token: string | null;
-        refresh_token: string | null;
-        token_expires_at: string | null;
-    }
     const platformTyped = platform as unknown as PlatformWithTokens;
 
     let accessToken = platformTyped.access_token;
@@ -43,8 +40,18 @@ export async function getValidGoogleToken(platformId: string) {
             // Calculate new expiry (tokens.expires_in is in seconds)
             const newExpiry = new Date(now.getTime() + (tokens.expires_in * 1000));
 
+            // NEW: Encrypt the new access token before storing
+            const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", { 
+                plaintext: accessToken 
+            });
+
+            if (encError) {
+                console.error("[Token] Encryption failed during refresh:", encError);
+                throw new Error("Failed to secure new token");
+            }
+
             await admin.from("review_platforms").update({
-                access_token: accessToken,
+                access_token: encAccess,
                 token_expires_at: newExpiry.toISOString(),
                 sync_status: 'active',
                 updated_at: new Date().toISOString(),
@@ -102,9 +109,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
         if (platform.sync_status !== 'running' && diff < 2 * 60 * 1000) { // 2 minutes
             // Throw specific error object that API route can parse
-            const error: any = new Error("Please wait before syncing again.");
-            error.code = "RATE_LIMIT";
-            throw error;
+            throw createCodedError("Please wait before syncing again.", "RATE_LIMIT");
         }
     }
 
@@ -127,9 +132,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
         if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
 
-        const error: any = new Error("Sync already in progress.");
-        error.code = "CONFLICT";
-        throw error;
+        throw createCodedError("Sync already in progress.", "CONFLICT");
     }
 
     console.log(`[Sync] Lock Acquired for platform ${platformId}`);
@@ -256,7 +259,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             .eq("id", platform.business_id)
             .single();
 
-        const updateData: any = {
+        const updateData: BusinessStatsUpdate = {
             total_reviews: totalReviews,
             average_rating: parseFloat(avgRating.toFixed(1))
         };

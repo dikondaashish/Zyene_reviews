@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getPlanByPriceId, FREE_LIMITS } from "@/services/stripe/plans";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import type { StripeOrganizationUpdatePayload } from "@/types/api-routes";
 
 /**
  * Stripe Webhook handler.
@@ -120,7 +121,7 @@ export async function POST(request: Request) {
                 else if (status === "canceled" || status === "unpaid") planStatus = "canceled";
                 else if (status === "trialing") planStatus = "trialing";
 
-                const updateData: any = {
+                const updateData: StripeOrganizationUpdatePayload = {
                     plan_status: planStatus,
                     stripe_subscription_id: subscription.id,
                 };

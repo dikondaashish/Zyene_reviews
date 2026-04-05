@@ -1,4 +1,6 @@
 
+import { createCodedError } from "@/types/errors";
+
 export interface GoogleTokenResponse {
     access_token: string;
     expires_in: number;
@@ -109,9 +111,7 @@ export async function listAccounts(accessToken: string): Promise<GoogleAccount[]
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
-            throw error;
+            throw createCodedError("Google API Rate Limit Exceeded", "RATE_LIMIT");
         }
         throw new Error(`Failed to list accounts: ${response.status} ${response.statusText}`);
     }
@@ -129,9 +129,7 @@ export async function listLocations(accessToken: string, accountName: string): P
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
-            throw error;
+            throw createCodedError("Google API Rate Limit Exceeded", "RATE_LIMIT");
         }
         throw new Error(`Failed to list locations: ${response.status} ${response.statusText}`);
     }
@@ -156,9 +154,7 @@ export async function listReviews(accessToken: string, accountId: string, locati
 
     if (!response.ok) {
         if (response.status === 429) {
-            const error: any = new Error("Google API Rate Limit Exceeded");
-            error.code = 'RATE_LIMIT';
-            throw error;
+            throw createCodedError("Google API Rate Limit Exceeded", "RATE_LIMIT");
         }
         throw new Error(`Failed to list reviews: ${response.status} ${response.statusText}`);
     }

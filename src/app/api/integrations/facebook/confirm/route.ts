@@ -95,6 +95,9 @@ export async function POST(req: Request) {
             Date.now() + (fbData.tokenExpiresIn || 5184000) * 1000
         );
 
+        // Encrypt tokens before storing
+        const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: selectedPage.pageAccessToken });
+        
         const { data: platform, error } = await supabase
             .from("review_platforms")
             .upsert(
@@ -103,7 +106,7 @@ export async function POST(req: Request) {
                     platform: "facebook",
                     external_id: selectedPage.pageId,
                     external_url: pageDetails.link,
-                    access_token: selectedPage.pageAccessToken,
+                    access_token: encAccess,
                     token_expires_at: tokenExpiry.toISOString(),
                     sync_status: "active",
                     total_reviews: pageDetails.ratingCount,
