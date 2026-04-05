@@ -33,23 +33,23 @@ export function CookieBanner() {
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-5 duration-500">
-            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border rounded-xl bg-background shadow-lg shadow-black/5">
+            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-slate-200 rounded-xl bg-white shadow-lg shadow-black/5">
                 <div className="flex items-start sm:items-center gap-4">
-                    <div className="hidden sm:flex p-2 bg-primary/10 rounded-full">
-                        <Cookie className="h-6 w-6 text-primary" />
+                    <div className="hidden sm:flex p-2 bg-orange-100 rounded-full">
+                        <Cookie className="h-6 w-6 text-orange-600" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-foreground">We value your privacy</p>
-                        <p className="text-xs text-muted-foreground mt-1 max-w-[500px]">
-                            We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+                        <p className="text-sm font-semibold text-slate-900">We value your privacy</p>
+                        <p className="text-xs text-slate-500 mt-1 max-w-[500px]">
+                            We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking &quot;Accept All&quot;, you consent to our use of cookies.
                         </p>
                     </div>
                 </div>
                 <div className="flex gap-2 shrink-0 self-end sm:self-center">
-                    <Button variant="ghost" size="sm" onClick={declineCookies}>
+                    <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100" onClick={declineCookies}>
                         Decline
                     </Button>
-                    <Button size="sm" onClick={acceptCookies}>
+                    <Button size="sm" className="bg-[#f97316] hover:bg-[#ea580c] text-white" onClick={acceptCookies}>
                         Accept All
                     </Button>
                 </div>

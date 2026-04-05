@@ -4,13 +4,21 @@ import { NextResponse, type NextRequest } from "next/server";
 /**
  * Global Next.js middleware:
  * 1. Refreshes Supabase auth session on every protected request.
- * 2. Redirects unauthenticated users away from /dashboard/* to /login.
- * 3. Passes through API/auth/_next/static routes.
+ * 2. Subdomain routing: app.* → dashboard, auth.* → auth routes.
+ * 3. Redirects unauthenticated users away from /dashboard/* to login.
+ * 4. Passes through API/auth/_next/static routes.
  */
 export async function middleware(request: NextRequest) {
     let supabaseResponse = NextResponse.next({ request });
 
     const { pathname } = request.nextUrl;
+    const hostname = request.headers.get("host") || "";
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+
+    // Extract subdomain (e.g. "app" from "app.zyenereviews.com")
+    const subdomain = hostname.replace(`.${rootDomain}`, "").replace(`:${rootDomain.split(":")[1] || ""}`, "");
+    const isAppSubdomain = subdomain === "app";
+    const isAuthSubdomain = subdomain === "auth";
 
     const isApiRoute = pathname.startsWith("/api/");
     const isAuthRoute = pathname.startsWith("/auth/");
@@ -48,8 +56,31 @@ export async function middleware(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
+    const protocol = rootDomain.includes("localhost") ? "http" : "https";
+
+    // App subdomain: require auth and redirect root to /dashboard
+    if (isAppSubdomain) {
+        if (!user) {
+            return NextResponse.redirect(`${protocol}://auth.${rootDomain}/login`);
+        }
+        if (pathname === "/") {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+    }
+
+    // Auth subdomain: redirect authenticated users to app
+    if (isAuthSubdomain && user) {
+        if (pathname === "/login" || pathname === "/signup" || pathname === "/") {
+            return NextResponse.redirect(`${protocol}://app.${rootDomain}/dashboard`);
+        }
+    }
+
+    // Fallback: protect /dashboard/* routes
     if (!user && pathname.startsWith("/dashboard")) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        if (rootDomain.includes("localhost")) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+        return NextResponse.redirect(`${protocol}://auth.${rootDomain}/login`);
     }
 
     return supabaseResponse;
