@@ -1,8 +1,6 @@
--- ============================================================
--- Migration: Add Encrypted Token Columns & RPC Functions
--- ============================================================
+-- 20260405164000_add_encrypted_columns.sql
 
--- 1. Enable pgcrypto
+-- 1. Enable pgcrypto (idempotent)
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 2. Add columns to integrations
@@ -16,7 +14,7 @@ ALTER TABLE review_platforms
   ADD COLUMN IF NOT EXISTS refresh_token_encrypted TEXT;
 
 -- 4. Create/Refine RPC Functions
--- Using 'app.token_encryption_key' as requested by user
+-- Fetches key from internal.vault_config (Free Tier Workaround)
 CREATE OR REPLACE FUNCTION encrypt_token(plaintext TEXT)
 RETURNS TEXT
 LANGUAGE plpgsql
@@ -26,7 +24,8 @@ AS $$
 DECLARE
   encryption_key TEXT;
 BEGIN
-  encryption_key := current_setting('app.token_encryption_key', true);
+  -- Fetch from private vault table
+  SELECT key_val INTO encryption_key FROM internal.vault_config WHERE id = 'primary';
 
   IF encryption_key IS NULL OR length(encryption_key) < 32 THEN
     RAISE EXCEPTION 'token_encryption_key is missing or too short (min 32 chars)';
@@ -49,7 +48,8 @@ AS $$
 DECLARE
   encryption_key TEXT;
 BEGIN
-  encryption_key := current_setting('app.token_encryption_key', true);
+  -- Fetch from private vault table
+  SELECT key_val INTO encryption_key FROM internal.vault_config WHERE id = 'primary';
 
   IF encryption_key IS NULL THEN
     RAISE EXCEPTION 'token_encryption_key is not configured';
@@ -74,3 +74,4 @@ REVOKE EXECUTE ON FUNCTION encrypt_token(TEXT) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION decrypt_token(TEXT) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION encrypt_token(TEXT) TO service_role;
 GRANT EXECUTE ON FUNCTION decrypt_token(TEXT) TO service_role;
+

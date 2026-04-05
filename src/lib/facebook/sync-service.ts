@@ -24,7 +24,7 @@ export async function syncFacebookReviewsForPlatform(
     // 1. Get platform record
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
+        .select("*")
         .eq("id", platformId)
         .single();
 
@@ -32,8 +32,13 @@ export async function syncFacebookReviewsForPlatform(
         throw new Error(`Facebook platform not found: ${platformId}`);
     }
 
+    // Decrypt tokens via RPC
+    const { data: decAccess } = await admin.rpc("decrypt_token", { ciphertext: platform.access_token || "" });
+    const { data: decRefresh } = await admin.rpc("decrypt_token", { ciphertext: platform.refresh_token || "" });
+
     const pageId = platform.external_id;
-    const pageAccessToken = platform.access_token;
+    const pageAccessToken = decAccess;
+
 
     if (!pageId || !pageAccessToken) {
         throw new Error(

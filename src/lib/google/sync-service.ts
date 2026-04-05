@@ -9,20 +9,23 @@ export async function getValidGoogleToken(platformId: string) {
     const admin = createAdminClient();
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
-        .select("*, access_token:decrypt_token(access_token), refresh_token:decrypt_token(refresh_token)")
+        .select("*")
         .eq("id", platformId)
         .single();
 
     if (platformError || !platform) throw new Error("Platform not found");
 
-    const platformTyped = platform as unknown as PlatformWithTokens;
+    // Decrypt tokens via RPC
+    const { data: decAccess } = await admin.rpc("decrypt_token", { ciphertext: platform.access_token || "" });
+    const { data: decRefresh } = await admin.rpc("decrypt_token", { ciphertext: platform.refresh_token || "" });
 
-    let accessToken = platformTyped.access_token;
-    const refreshToken = platformTyped.refresh_token;
+    let accessToken = decAccess;
+    const refreshToken = decRefresh;
 
     // Check Token Expiry (Buffer: 5 minutes)
     const now = new Date();
-    const expiry = platformTyped.token_expires_at ? new Date(platformTyped.token_expires_at) : null;
+    const expiry = platform.token_expires_at ? new Date(platform.token_expires_at) : null;
+
     const isExpired = !expiry || (expiry.getTime() - now.getTime() < 5 * 60 * 1000);
 
     if (isExpired) {

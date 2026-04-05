@@ -1,23 +1,15 @@
--- ============================================================
--- Migration: Backfill existing plaintext tokens (Batched)
--- ============================================================
+-- 20260405164200_backfill_encrypted_tokens.sql
 
--- Function to backfill a table in batches
-CREATE OR REPLACE FUNCTION backfill_tokens(table_name TEXT, batch_size INT DEFAULT 100)
+-- 1. Create a helper function to backfill tokens in batches
+-- This handles both integrations and review_platforms tables
+CREATE OR REPLACE FUNCTION backfill_tokens(t_name TEXT, batch_size INT DEFAULT 100)
 RETURNS VOID
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
-  rows_updated  INT;
-  encryption_key TEXT;
+  rows_updated INT;
 BEGIN
-  encryption_key := current_setting('app.token_encryption_key', true);
-
-  IF encryption_key IS NULL OR length(encryption_key) < 32 THEN
-    RAISE EXCEPTION 'token_encryption_key is missing or too short (min 32 chars)';
-  END IF;
-
   LOOP
     EXECUTE format('
       UPDATE %I
@@ -38,27 +30,27 @@ BEGIN
            OR (refresh_token IS NOT NULL AND refresh_token_encrypted IS NULL)
         ORDER BY id
         LIMIT %L
-      )', table_name, table_name, batch_size);
+      )', t_name, t_name, batch_size);
 
     GET DIAGNOSTICS rows_updated = ROW_COUNT;
     EXIT WHEN rows_updated = 0;
 
-    RAISE NOTICE 'Backfilled % rows in table %', rows_updated, table_name;
-    PERFORM pg_sleep(0.01); -- small pause
+    RAISE NOTICE 'Backfilled % rows in table %', rows_updated, t_name;
+    PERFORM pg_sleep(0.01); -- prevent blocking
   END LOOP;
 END;
 $$;
 
--- Run backfill for both tables
+-- 2. Run backfill for both tables
 DO $$ BEGIN
   PERFORM backfill_tokens('integrations');
   PERFORM backfill_tokens('review_platforms');
 END $$;
 
--- Drop backfill helper function once finished
+-- 3. Cleanup: Drop helper function
 DROP FUNCTION IF EXISTS backfill_tokens(TEXT, INT);
 
--- Verification
+-- 4. Verification queries
 SELECT
   'integrations' AS table_name,
   COUNT(*) FILTER (WHERE access_token IS NOT NULL AND access_token_encrypted IS NULL) AS access_pending,
@@ -70,3 +62,4 @@ SELECT
   COUNT(*) FILTER (WHERE access_token IS NOT NULL AND access_token_encrypted IS NULL) AS access_pending,
   COUNT(*) FILTER (WHERE refresh_token IS NOT NULL AND refresh_token_encrypted IS NULL) AS refresh_pending
 FROM review_platforms;
+
