@@ -63,7 +63,7 @@ export function ReviewManagement({ reviews, businessId }: ReviewManagementProps)
                 {reviews.map((review) => (
                     <ReviewCard
                         key={review.id}
-                        review={review}
+                        review={review as any}
                         isSelected={selectedIds.has(review.id)}
                         onSelect={toggleSelect}
                     />

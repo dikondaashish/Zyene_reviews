@@ -31,8 +31,8 @@ type BrandingFormValues = z.infer<typeof brandingSchema>;
 interface BrandingFormProps {
     business: {
         id: string;
-        brand_color?: string;
-        logo_url?: string;
+        brand_color?: string | null;
+        logo_url?: string | null;
     };
     onValuesChange?: (values: Partial<BrandingFormValues>) => void;
     onLogoChange?: (url: string | null) => void;

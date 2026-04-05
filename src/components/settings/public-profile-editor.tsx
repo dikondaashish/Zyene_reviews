@@ -33,26 +33,26 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         brand_color: business.brand_color || "#0f172a",
         logo_url: business.logo_url,
         min_stars_for_google: business.min_stars_for_google || 4,
-        welcome_message: business.welcome_message,
-        apology_message: business.apology_message,
-        rating_subtitle: business.rating_subtitle,
-        tags_heading: business.tags_heading,
-        tags_subheading: business.tags_subheading,
+        welcome_message: business.welcome_message ?? undefined,
+        apology_message: business.apology_message ?? undefined,
+        rating_subtitle: business.rating_subtitle ?? undefined,
+        tags_heading: business.tags_heading ?? undefined,
+        tags_subheading: business.tags_subheading ?? undefined,
         custom_tags: business.custom_tags,
-        google_heading: business.google_heading,
-        google_subheading: business.google_subheading,
-        google_button_text: business.google_button_text,
-        google_review_url: business.google_review_url,
-        negative_subheading: business.negative_subheading,
-        negative_textarea_placeholder: business.negative_textarea_placeholder,
-        negative_button_text: business.negative_button_text,
-        thank_you_heading: business.thank_you_heading,
-        thank_you_message: business.thank_you_message,
-        footer_text: business.footer_text,
-        footer_company_name: business.footer_company_name,
-        footer_link: business.footer_link,
+        google_heading: business.google_heading ?? undefined,
+        google_subheading: business.google_subheading ?? undefined,
+        google_button_text: business.google_button_text ?? undefined,
+        google_review_url: business.google_review_url ?? undefined,
+        negative_subheading: business.negative_subheading ?? undefined,
+        negative_textarea_placeholder: business.negative_textarea_placeholder ?? undefined,
+        negative_button_text: business.negative_button_text ?? undefined,
+        thank_you_heading: business.thank_you_heading ?? undefined,
+        thank_you_message: business.thank_you_message ?? undefined,
+        footer_text: business.footer_text ?? undefined,
+        footer_company_name: business.footer_company_name ?? undefined,
+        footer_link: business.footer_link ?? undefined,
         footer_logo_url: business.footer_logo_url,
-        hide_branding: business.hide_branding,
+        hide_branding: business.hide_branding ?? false,
     });
 
     const handleValuesChange = useCallback((values: Partial<PublicProfilePreviewValues>) => {
@@ -214,16 +214,16 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             <PublicReviewFlow
                                 businessId={business.id}
                                 businessName={business.name}
-                                businessCategory={business.category}
+                                businessCategory={business.category || ""}
                                 brandColor={previewState.brand_color}
-                                logoUrl={previewState.logo_url}
+                                logoUrl={previewState.logo_url ?? undefined}
                                 minStars={previewState.min_stars_for_google}
                                 welcomeMsg={previewState.welcome_message}
                                 apologyMsg={previewState.apology_message}
                                 ratingSubtitle={previewState.rating_subtitle}
                                 tagsHeading={previewState.tags_heading}
                                 tagsSubheading={previewState.tags_subheading}
-                                customTags={previewState.custom_tags}
+                                customTags={previewState.custom_tags ?? undefined}
                                 googleHeading={previewState.google_heading}
                                 googleSubheading={previewState.google_subheading}
                                 googleButtonText={previewState.google_button_text}
@@ -236,7 +236,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 footerText={previewState.footer_text}
                                 footerCompanyName={previewState.footer_company_name}
                                 footerLink={previewState.footer_link}
-                                footerLogoUrl={previewState.footer_logo_url}
+                                footerLogoUrl={previewState.footer_logo_url ?? undefined}
                                 hideBranding={previewState.hide_branding}
                                 isPreview={true}
                                 className="min-h-full w-full rounded-[2rem]"
