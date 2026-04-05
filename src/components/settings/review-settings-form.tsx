@@ -26,9 +26,9 @@ import type { BusinessSettingsRecord } from "@/types/components";
 // Actually I'll check existence or just write assuming shadcn structure.
 
 const reviewSettingsSchema = z.object({
-    review_request_delay_minutes: z.coerce.number().min(0),
-    review_request_min_amount_cents: z.coerce.number().min(0), // entered as dollars, converted? or just cents? User asked for cents default $15
-    review_request_frequency_cap_days: z.coerce.number().min(1),
+    review_request_delay_minutes: z.number().min(0),
+    review_request_min_amount_cents: z.number().min(0),
+    review_request_frequency_cap_days: z.number().min(1),
     review_request_sms_enabled: z.boolean(),
     review_request_email_enabled: z.boolean(),
     // quiet hours start/end omitted for brevity/complexity in this pass unless requested strictly, valid request asked for it.
@@ -113,7 +113,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
                             <FormItem>
                                 <FormLabel>Delay (minutes)</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                                 </FormControl>
                                 <FormDescription>Time after payment to send request</FormDescription>
                                 <FormMessage />
@@ -127,7 +127,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
                             <FormItem>
                                 <FormLabel>Min Transaction ($)</FormLabel>
                                 <FormControl>
-                                    <Input type="number" step="0.01" {...field} />
+                                    <Input type="number" step="0.01" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                                 </FormControl>
                                 <FormDescription>Minimum spend to trigger request</FormDescription>
                                 <FormMessage />
@@ -141,7 +141,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
                             <FormItem>
                                 <FormLabel>Frequency Cap (days)</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                                 </FormControl>
                                 <FormDescription>Example: Don't ask same customer twice in 30 days</FormDescription>
                                 <FormMessage />
