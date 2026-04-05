@@ -32,7 +32,13 @@ export default async function GeneralSettingsPage() {
             </div>
 
             {/* Combined Profile & Organization Settings Form */}
-            <GeneralSettingsForm user={user} organization={organization} />
+            <GeneralSettingsForm 
+                user={user} 
+                organization={organization ? {
+                    ...organization,
+                    name: organization.name || "Your Organization"
+                } as any : null} 
+            />
 
             {/* Product Tour */}
             <RestartTourSection />

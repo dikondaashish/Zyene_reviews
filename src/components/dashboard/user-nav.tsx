@@ -42,8 +42,8 @@ export function UserNav({ user }: { user: AppUserSummary }) {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email} />
-                        <AvatarFallback>{user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                        <AvatarImage src={user?.user_metadata?.avatar_url ?? undefined} alt={user?.email ?? undefined} />
+                        <AvatarFallback>{user?.email?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>

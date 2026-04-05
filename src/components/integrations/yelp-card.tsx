@@ -183,7 +183,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                             </div>
                             <p className="text-xs font-medium text-slate-900 mt-1">
                                 {!mounted ? "..." : (platform.last_synced_at
-                                    ? new Date(platform.last_synced_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+                                    ? new Date(platform.last_synced_at as string).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
                                     : "Never")}
                             </p>
                         </div>

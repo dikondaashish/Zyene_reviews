@@ -1,5 +1,6 @@
 import { MessageSquare, Calendar, Zap, Mail, Users } from "lucide-react";
 import type { CampaignTemplate } from "@/types/campaigns";
+export type { CampaignTemplate };
 
 export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
     {

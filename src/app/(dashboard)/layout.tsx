@@ -39,9 +39,16 @@ export default async function DashboardLayout({
     const headerContent = (
         <div className="flex-1 flex items-center justify-between">
             <div className="flex items-center gap-2">
-                <OrganizationDisplay organization={organization} />
+                <OrganizationDisplay organization={organization ? { 
+                    id: organization.id, 
+                    name: organization.name || "Your Organization" 
+                } : null} />
                 <BusinessSwitcher
-                    businesses={businesses}
+                    businesses={businesses.map(b => ({
+                        id: b.id,
+                        name: b.name || "Business",
+                        status: b.status || "active"
+                    }))}
                     activeBusinessId={activeBusinessId}
                 />
             </div>

@@ -80,8 +80,8 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
             ? `Amazing! You've sent ${milestone} review requests! 🚀`
             : `Phenomenal! Your business maintains a ${milestone} star rating! ⭐`;
 
-        toast.custom((t: ToastT) => (
-            <div className={`${t.visible ? 'animate-in fade-in zoom-in' : 'animate-out fade-out zoom-out'} max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300`}>
+        toast.custom((id) => (
+            <div className="animate-in fade-in zoom-in max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300">
                 <div className="flex-1 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
@@ -102,7 +102,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
                 <div className="flex border-l border-muted/50">
                     <button
                         type="button"
-                        onClick={() => toast.dismiss(t.id)}
+                        onClick={() => toast.dismiss(id)}
                         className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus:outline-none cursor-pointer active:bg-primary/10 whitespace-nowrap"
                     >
                         Awesome!

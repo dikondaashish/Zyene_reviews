@@ -31,7 +31,7 @@ export async function GET(request: Request) {
             .select(`
                 id,
                 rating,
-                message,
+                content,
                 created_at,
                 review_requests (
                     customer_name,
@@ -46,31 +46,33 @@ export async function GET(request: Request) {
         const formatted = privateRows.map((feedbackRow) => ({
             "Date": new Date(feedbackRow.created_at).toLocaleString(),
             "Rating": feedbackRow.rating,
-            "Message": feedbackRow.message,
+            "Feedback": feedbackRow.content || "No details provided.",
             "Customer Name": feedbackRow.review_requests?.customer_name || "Anonymous",
             "Customer Email": feedbackRow.review_requests?.customer_email || "",
             "Customer Phone": feedbackRow.review_requests?.customer_phone || ""
         }));
 
         csvData = Papa.unparse(formatted);
-        filename = `${business.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_private_feedback.csv`;
+        const name = business.name || "business";
+        filename = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_private_feedback.csv`;
     } else {
         const { data: reviews } = await supabase
             .from("reviews")
             .select(`
                 id,
                 rating,
-                content,
+                content:text,
                 author_name,
                 sentiment,
-                published_at,
+                published_at:review_date,
+                created_at,
                 response_status,
                 review_platforms (
                     platform
                 )
             `)
             .eq("business_id", business.id)
-            .order("published_at", { ascending: false });
+            .order("review_date", { ascending: false });
 
         const publicRows = (reviews || []) as PublicReviewExportRow[];
         const formatted = publicRows.map((reviewRow) => ({
@@ -84,7 +86,8 @@ export async function GET(request: Request) {
         }));
 
         csvData = Papa.unparse(formatted);
-        filename = `${business.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_public_reviews.csv`;
+        const name = business.name || "business";
+        filename = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_public_reviews.csv`;
     }
 
     return new NextResponse(csvData, {

@@ -59,7 +59,8 @@ export async function GET(request: Request) {
 
     // Generate CSV
     const csvData = Papa.unparse(trendRows);
-    const filename = `${business.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_analytics_${range}.csv`;
+    const businessName = business.name || "business";
+    const filename = `${businessName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_analytics_${range}.csv`;
 
     return new NextResponse(csvData, {
         status: 200,

@@ -345,7 +345,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 <span className="text-xs font-medium uppercase tracking-wide">Last Synced</span>
                             </div>
                             <p className="text-sm font-semibold mt-1">
-                                {!mounted ? "..." : (platform?.last_synced_at ? timeAgo(platform.last_synced_at) : "Never")}
+                                {!mounted ? "..." : (platform?.last_synced_at ? timeAgo(platform.last_synced_at as string) : "Never")}
                             </p>
                         </div>
                     </div>

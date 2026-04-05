@@ -34,7 +34,10 @@ export default async function PublicProfilePage() {
             </div>
             <Separator />
 
-            <PublicProfileEditor business={business} initialSlug={business.slug} />
+            <PublicProfileEditor 
+                business={business as any} 
+                initialSlug={business.slug || ""} 
+            />
         </div>
     );
 }

@@ -16,6 +16,12 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
     const resendVerification = async () => {
         setIsResending(true);
         const supabase = createClient();
+        if (!user.email) {
+            toast.error("User email not found");
+            setIsResending(false);
+            return;
+        }
+
         const { error } = await supabase.auth.resend({
             type: "signup",
             email: user.email,

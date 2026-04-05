@@ -227,9 +227,9 @@ export function FacebookIntegrationCard({
                             <div className="rounded-lg bg-white dark:bg-gray-900 p-2 shadow-sm">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <Clock className="h-3.5 w-3.5 text-gray-500" />
-                                    {!mounted ? "..." : (lastSynced
+                                    {!mounted ? "..." : (platform?.last_synced_at
                                         ? new Date(
-                                            platform.last_synced_at
+                                            platform.last_synced_at as string
                                         ).toLocaleDateString()
                                         : "Never")}
                                 </div>
@@ -340,7 +340,7 @@ export function FacebookIntegrationCard({
                         <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
                         <div>
                             <p className="font-medium text-red-700 dark:text-red-400">
-                                {platform.sync_status ===
+                                {platform?.sync_status ===
                                     "error_token_expired"
                                     ? "Access token expired"
                                     : "Sync error"}

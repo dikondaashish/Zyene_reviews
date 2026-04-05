@@ -50,7 +50,7 @@ export interface ReviewRequestExportRow {
 export interface PrivateFeedbackExportRow {
     created_at: string;
     rating: number | null;
-    message?: string | null;
+    content?: string | null;
     review_requests?: {
         customer_name?: string | null;
         customer_email?: string | null;
@@ -60,7 +60,7 @@ export interface PrivateFeedbackExportRow {
 
 export interface PublicReviewExportRow {
     published_at?: string | null;
-    created_at?: string | null;
+    created_at: string;
     rating: number | null;
     author_name?: string | null;
     content?: string | null;

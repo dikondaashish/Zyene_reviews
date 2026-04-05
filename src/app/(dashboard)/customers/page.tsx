@@ -27,7 +27,7 @@ export default async function CustomersPage() {
     return (
         <div className="max-w-[1200px] mx-auto py-10 px-6">
             <CustomerManagement 
-                businessId={businessId} 
+                businessId={businessId as string} 
                 initialCustomers={initialCustomers || []} 
             />
         </div>

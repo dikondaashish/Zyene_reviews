@@ -284,7 +284,7 @@ export default async function AnalyticsPage({
 
                     <div className="flex items-center gap-3 bg-muted/40 p-1 rounded-xl border border-border/50 backdrop-blur-md">
                         <ReportGenerator 
-                            businessName={business?.name} 
+                            businessName={business?.name || undefined} 
                             dateRange={rangeLabel} 
                         />
                         <ExportDataButton businessId={businessId as string} range={range} />

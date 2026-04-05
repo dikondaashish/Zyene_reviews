@@ -78,8 +78,8 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                         labelClassName="font-bold text-xs mb-1"
                         labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}
-                        formatter={(value: number | string) => [
-                            <span key="val" className="text-orange-600">{typeof value === 'number' ? value.toFixed(1) : value} ★</span>,
+                        formatter={(value: any) => [
+                            <span key="val" className="text-orange-600">{Number(value).toFixed(1)} ★</span>,
                             "Avg Rating"
                         ]}
                     />

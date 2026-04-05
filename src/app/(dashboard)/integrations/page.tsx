@@ -203,17 +203,17 @@ export default async function IntegrationsPage() {
                     <GoogleIntegrationCard
                         platform={googlePlatform}
                         businessId={business.id}
-                        businessName={business.name}
+                        businessName={business.name || ""}
                     />
                     <YelpIntegrationCard
                         platform={yelpPlatform}
                         businessId={business.id}
-                        businessName={business.name}
+                        businessName={business.name || ""}
                     />
                     <FacebookIntegrationCard
                         platform={facebookPlatform}
                         businessId={business.id}
-                        businessName={business.name}
+                        businessName={business.name || ""}
                     />
                     <PlaceholderCard
                         name="TripAdvisor"
@@ -297,7 +297,7 @@ export default async function IntegrationsPage() {
                     icon={MonitorPlay}
                 />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-                    <WidgetCard businessSlug={business.slug} />
+                    <WidgetCard businessSlug={business.slug || ""} />
                 </div>
             </section>
         </div>

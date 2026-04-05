@@ -154,8 +154,8 @@ export default async function RequestsPage({
                     </Button>
                     <SendRequestDialog
                         businessId={business.id}
-                        businessSlug={business.slug}
-                        businessName={business.name}
+                        businessSlug={business.slug || ""}
+                        businessName={business.name || ""}
                         initialCustomer={initialCustomer}
                         autoOpen={!!initialCustomer}
                     />

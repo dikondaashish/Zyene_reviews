@@ -45,7 +45,8 @@ export async function GET(request: Request) {
     }));
 
     const csvData = Papa.unparse(formatted);
-    const filename = `${business.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_review_requests.csv`;
+    const businessName = business.name || "business";
+    const filename = `${businessName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_review_requests.csv`;
 
     return new NextResponse(csvData, {
         status: 200,

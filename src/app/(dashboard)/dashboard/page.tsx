@@ -112,11 +112,13 @@ export default async function DashboardPage() {
     const { business: activeBiz, organization, businesses: allBusinesses } = await getActiveBusinessId();
 
     const business = activeBiz || {
-        id: null,
+        id: "",
+        name: "Your Business",
+        slug: "",
+        status: "inactive",
         total_reviews: 0,
         average_rating: 0,
         review_request_frequency_cap_days: 0,
-        status: "inactive",
     };
 
     // Determine plan status
@@ -352,8 +354,9 @@ export default async function DashboardPage() {
             // ── Process results ──
 
             // 1. Response Rate
-            if (business.total_reviews > 0) {
-                responseRate = ((respondedResult.count || 0) / business.total_reviews) * 100;
+            const totalReviewsCount = business.total_reviews ?? 0;
+            if (totalReviewsCount > 0) {
+                responseRate = ((respondedResult.count || 0) / totalReviewsCount) * 100;
             }
 
             // 2. Pending
@@ -481,8 +484,9 @@ export default async function DashboardPage() {
 
     // ── Computed Stats ──────────────────────────────────────────
 
+    const currentReviewsCount = business.total_reviews ?? 0;
     const responseRateLabel =
-        business.total_reviews > 0
+        currentReviewsCount > 0
             ? `${responseRate.toFixed(1)}${dict.dashboard.reviews_responded}`
             : dict.dashboard.no_reviews;
 
@@ -572,7 +576,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="flex flex-col gap-6 w-full">
-            <MilestoneCelebration currentCount={reviewsCount} type="reviews" isDemo={useDemoData} scopeKey={business.id} />
+            <MilestoneCelebration currentCount={business.total_reviews ?? 0} type="reviews" isDemo={useDemoData} scopeKey={business.id || "default"} />
             
             {/* Demo Mode Banner */}
             {useDemoData && <DemoModeBanner className="mb-2" />}
@@ -635,7 +639,7 @@ export default async function DashboardPage() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
                 <ProStatCard
                     title={dict.dashboard.total_reviews}
-                    value={business.total_reviews}
+                    value={business.total_reviews ?? 0}
                     iconName="reviews"
                     description={!isGoogleConnected ? dict.dashboard.connect_google : dict.dashboard.from_google}
                     trend={totalReviewsTrend}
@@ -644,7 +648,7 @@ export default async function DashboardPage() {
                 />
                 <ProStatCard
                     title={dict.dashboard.average_rating}
-                    value={Number(business.average_rating)}
+                    value={Number(business.average_rating ?? 0)}
                     iconName="rating"
                     precision={1}
                     description={dict.dashboard.based_on_google}

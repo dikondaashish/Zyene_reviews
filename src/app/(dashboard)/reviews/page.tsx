@@ -181,7 +181,7 @@ export default async function ReviewsPage(props: {
                 <>
                     <ReviewsFilters />
                     {reviews && reviews.length > 0 ? (
-                        <ReviewManagement reviews={reviews} businessId={businessId} />
+                        <ReviewManagement reviews={reviews} businessId={businessId as string} />
                     ) : (
                         <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
                             <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mb-4">
