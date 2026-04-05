@@ -1,7 +1,7 @@
 export interface ReviewAlertPayload {
     id: string;
     business_id: string;
-    author_name: string;
+    author_name?: string | null;
     text?: string | null;
     rating?: number | null;
     urgency_score?: number | null;
