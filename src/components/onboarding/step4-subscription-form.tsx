@@ -13,6 +13,7 @@ import {
   Mail,
 } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { savePlanSelection } from "@/app/actions/onboarding";
 import { cn } from "@/lib/utils/index";
 import { PLANS, type Plan } from "@/services/stripe/plans";
@@ -21,6 +22,7 @@ interface Step4SubscriptionFormProps {
   organizationId: string;
   /** Passed from onboarding page when Google is linked; reserved for future UX hints */
   isGoogleConnected?: boolean;
+  isCancelled?: boolean;
   onNext: () => void;
   isLoading?: boolean;
 }
@@ -28,6 +30,7 @@ interface Step4SubscriptionFormProps {
 export function Step4SubscriptionForm({
   organizationId,
   isGoogleConnected: _isGoogleConnected,
+  isCancelled = false,
   onNext,
   isLoading: externalIsLoading = false,
 }: Step4SubscriptionFormProps) {
@@ -124,6 +127,16 @@ export function Step4SubscriptionForm({
         />
 
         <div className="relative z-10">
+          {isCancelled && (
+            <Alert className="mb-6 bg-orange-50/50 border-orange-200 dark:bg-orange-950/20 dark:border-orange-900/50">
+              <Zap className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              <AlertTitle className="text-orange-800 dark:text-orange-300">Payment not completed</AlertTitle>
+              <AlertDescription className="text-orange-700/80 dark:text-orange-400/70">
+                It looks like the checkout process wasn't finished. You can try again or choose a different plan.
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
             <h3 className="text-xl font-semibold text-left">Choose a Plan</h3>
 

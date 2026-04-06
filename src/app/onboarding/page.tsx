@@ -56,6 +56,7 @@ export default function OnboardingPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   // Holds the ?code= from Google OAuth redirect so Step2Form can process it immediately
   const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
+  const [showPaymentCancelled, setShowPaymentCancelled] = useState(false);
   const [checkoutVerifying, setCheckoutVerifying] = useState(() => {
     if (typeof window === "undefined") return false;
     const p = new URLSearchParams(window.location.search);
@@ -92,9 +93,7 @@ export default function OnboardingPage() {
       window.history.replaceState({}, document.title, window.location.pathname);
 
     if (canceled === "1") {
-      toast.info("Checkout canceled", {
-        description: "You can choose a plan whenever you're ready.",
-      });
+      setShowPaymentCancelled(true);
       setCurrentStep(4);
       cleanUrl();
       return;
@@ -414,6 +413,7 @@ export default function OnboardingPage() {
                 <Step4SubscriptionForm
                   organizationId={organization.id}
                   isGoogleConnected={googleConnected}
+                  isCancelled={showPaymentCancelled}
                   onNext={() => setCurrentStep(5)}
                   isLoading={isLoading}
                 />
