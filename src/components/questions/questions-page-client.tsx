@@ -99,7 +99,7 @@ export function QuestionsPageClient({
 
     const handleSuggest = async () => {
         if (!activeId || isDemo) {
-            toast.message("Connect Google Business Profile to use AI suggestions.");
+            toast.message("Connect Google Business Profile to use smart suggestions.");
             return;
         }
         setSuggesting(true);
@@ -259,7 +259,7 @@ export function QuestionsPageClient({
                             disabled={suggesting || !activeId}
                         >
                             <Sparkles className="h-3.5 w-3.5" />
-                            {suggesting ? "Suggesting…" : "Suggest with AI"}
+                            {suggesting ? "Suggesting…" : "Suggest Answer"}
                         </Button>
                     </div>
                     <DialogFooter className="gap-2 sm:gap-0">

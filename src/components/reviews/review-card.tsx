@@ -55,7 +55,7 @@ export function ReviewCard({
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-    // AI tone state
+    // Smart suggestion state
     const [activeTone, setActiveTone] = useState<Tone | null>(null);
     const [loadingTone, setLoadingTone] = useState<Tone | null>(null);
     const [toneCache, setToneCache] = useState<Partial<Record<Tone, string>>>({});
@@ -312,7 +312,7 @@ export function ReviewCard({
                                             onClick={() => !activeTone && handleToneClick("professional")}
                                         >
                                             <Sparkles className="w-3.5 h-3.5 mr-2" />
-                                            AI Suggest Reply
+                                            Suggest Reply
                                         </Button>
                                     </>
                                 ) : (
@@ -331,7 +331,7 @@ export function ReviewCard({
                                             onClick={() => handleToneClick("professional")}
                                         >
                                             <Sparkles className="w-3.5 h-3.5 mr-2" />
-                                            AI Suggest Reply
+                                            Suggest Reply
                                         </Button>
                                     </div>
                                 )}
@@ -380,7 +380,7 @@ export function ReviewCard({
                         <div className="flex items-center gap-3 mb-4">
                             <div className="flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-violet-500" />
-                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">AI Tone</span>
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Reply Tone</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 {TONES.map((tone) => (
@@ -411,7 +411,7 @@ export function ReviewCard({
                     )}
 
                     <Textarea
-                        placeholder="Write a response or click a tone above for an AI draft..."
+                        placeholder="Write a response or click a tone above for a suggested draft..."
                         className="min-h-[120px] mb-4 bg-white text-sm resize-none focus-visible:ring-blue-500 border-slate-200 shadow-sm focus:border-blue-500 placeholder:text-slate-400"
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
@@ -440,7 +440,7 @@ export function ReviewCard({
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
                 title="Upgrade Your Plan"
-                description="You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
+                description="You've reached your monthly reply limit. Please upgrade your plan to continue using advanced reply features."
             />
         </div>
     );
