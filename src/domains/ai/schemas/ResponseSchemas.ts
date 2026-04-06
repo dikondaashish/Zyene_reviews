@@ -12,6 +12,17 @@ export const replySchema: Schema = {
     required: ["replies"]
 };
 
+export const singleReplySchema: Schema = {
+    type: SchemaType.OBJECT,
+    properties: {
+        reply: {
+            type: SchemaType.STRING,
+            description: "A single reply to the customer review in the requested tone.",
+        },
+    },
+    required: ["reply"],
+};
+
 export const qaSchema: Schema = {
     type: SchemaType.OBJECT,
     properties: {

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { TimeAgo } from "@/components/ui/time-ago";
-import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
@@ -35,10 +34,8 @@ interface Review {
     themes?: string[];
 }
 
-interface ReplySuggestion {
-    tone: string;
-    text: string;
-}
+const TONES = ["professional", "friendly", "concise"] as const;
+type Tone = typeof TONES[number];
 
 export function ReviewCard({
     review,
@@ -55,10 +52,13 @@ export function ReviewCard({
     const [replyText, setReplyText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isSuggesting, setIsSuggesting] = useState(false);
-    const [suggestions, setSuggestions] = useState<ReplySuggestion[]>([]);
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    // AI tone state
+    const [activeTone, setActiveTone] = useState<Tone | null>(null);
+    const [loadingTone, setLoadingTone] = useState<Tone | null>(null);
+    const [toneCache, setToneCache] = useState<Partial<Record<Tone, string>>>({});
 
     const router = useRouter();
 
@@ -76,7 +76,8 @@ export function ReviewCard({
             toast.success("Reply posted successfully");
             setIsReplying(false);
             setReplyText("");
-            setSuggestions([]);
+            setActiveTone(null);
+            setToneCache({});
             onRefresh ? onRefresh() : router.refresh();
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
@@ -90,30 +91,31 @@ export function ReviewCard({
         }
     };
 
-    const handleSuggestReply = async () => {
-        setIsSuggesting(true);
-        if (!isReplying) setIsReplying(true); // Open reply box if closed
+    const handleToneClick = useCallback(async (tone: Tone) => {
+        // If already cached, just switch
+        if (toneCache[tone]) {
+            setActiveTone(tone);
+            setReplyText(toneCache[tone]);
+            return;
+        }
+
+        if (!isReplying) setIsReplying(true);
+        setActiveTone(tone);
+        setLoadingTone(tone);
 
         try {
-            const res = await fetch(`/api/ai/suggest-reply`, {
+            const res = await fetch("/api/ai/suggest-reply", {
                 method: "POST",
-                body: JSON.stringify({ reviewId: review.id }),
+                body: JSON.stringify({ reviewId: review.id, tone }),
             });
             const json = await res.json();
-            if (!res.ok) throw new Error(json.error || "Failed to get suggestions");
+            if (!res.ok) throw new Error(json.error || "Failed to get suggestion");
 
-            // apiOk wraps as { success, data: { replies, ... } }
             const payload = json.data || json;
-            if (payload.replies) {
-                // Normalize: schema returns string[], but UI expects { tone, text }[]
-                const tones = ["professional", "friendly", "empathetic"];
-                const normalized = payload.replies.map((item: string | ReplySuggestion, i: number) =>
-                    typeof item === "string"
-                        ? { tone: tones[i] || "professional", text: item }
-                        : item
-                );
-                setSuggestions(normalized);
-            }
+            const reply = payload.reply || "";
+
+            setToneCache((prev) => ({ ...prev, [tone]: reply }));
+            setReplyText(reply);
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
@@ -122,9 +124,9 @@ export function ReviewCard({
                 toast.error(message);
             }
         } finally {
-            setIsSuggesting(false);
+            setLoadingTone(null);
         }
-    };
+    }, [isReplying, toneCache, review.id]);
 
     const handleUpdateStatus = async (status: 'pending' | 'ignored') => {
         setIsUpdatingStatus(true);
@@ -142,11 +144,6 @@ export function ReviewCard({
         } finally {
             setIsUpdatingStatus(false);
         }
-    };
-
-    const applySuggestion = (text: string) => {
-        setReplyText(text);
-        // Maybe scroll to textarea?
     };
 
     const getStatusBadge = (status: string) => {
@@ -168,7 +165,7 @@ export function ReviewCard({
         );
     };
 
-        const displayContent = review.text || review.content || "";
+    const displayContent = review.text || review.content || "";
 
     return (
         <div className={cn(
@@ -293,31 +290,21 @@ export function ReviewCard({
                                 </span>
                             </div>
                         ) : (
-                            <>
-                                <Button
-                                    size="sm"
-                                    variant={isReplying ? "secondary" : "default"}
-                                    className={cn("h-8 text-xs font-medium px-4", !isReplying && "bg-blue-600 hover:bg-blue-700 text-white shadow-sm")}
-                                    onClick={() => setIsReplying(!isReplying)}
-                                >
-                                    <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                                    {isReplying ? "Cancel Reply" : "Reply"}
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-8 text-xs font-medium px-3 text-violet-600 border-violet-100 bg-violet-50 hover:bg-violet-100 hover:text-violet-700"
-                                    onClick={handleSuggestReply}
-                                    disabled={isSuggesting}
-                                >
-                                    {isSuggesting ? (
-                                        <Sparkles className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                                    ) : (
-                                        <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                                    )}
-                                    AI Suggest Reply
-                                </Button>
-                            </>
+                            <Button
+                                size="sm"
+                                variant={isReplying ? "secondary" : "default"}
+                                className={cn("h-8 text-xs font-medium px-4", !isReplying && "bg-blue-600 hover:bg-blue-700 text-white shadow-sm")}
+                                onClick={() => {
+                                    setIsReplying(!isReplying);
+                                    if (isReplying) {
+                                        setActiveTone(null);
+                                        setReplyText("");
+                                    }
+                                }}
+                            >
+                                <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
+                                {isReplying ? "Cancel Reply" : "Reply"}
+                            </Button>
                         )}
                     </>
                 )}
@@ -331,7 +318,7 @@ export function ReviewCard({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                             {review.response_status === 'ignored' ? (
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                     className="text-xs cursor-pointer"
                                     onClick={() => handleUpdateStatus('pending')}
                                     disabled={isUpdatingStatus}
@@ -339,7 +326,7 @@ export function ReviewCard({
                                     Move to Pending
                                 </DropdownMenuItem>
                             ) : (
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                     className="text-xs cursor-pointer"
                                     onClick={() => handleUpdateStatus('ignored')}
                                     disabled={isUpdatingStatus}
@@ -353,39 +340,50 @@ export function ReviewCard({
                 </div>
             </div>
 
-            {/* Reply Area with AI Suggestions */}
+            {/* Reply Area with Tone Tabs */}
             {isReplying && review.response_status !== 'responded' && (
                 <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mt-3 animate-in slide-in-from-top-2 duration-200">
 
-                    {/* Suggestions Display */}
-                    {suggestions.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 animate-in fade-in slide-in-from-bottom-2">
-                            {suggestions.map((suggestion, idx) => (
-                                <div
-                                    key={idx}
-                                    onClick={() => applySuggestion(suggestion.text)}
-                                    className="bg-white p-3 rounded border border-slate-200 hover:border-blue-300 hover:shadow-sm cursor-pointer transition-all group"
+                    {/* Tone Selector Tabs */}
+                    {review.platform !== 'yelp' && (
+                        <div className="flex items-center gap-2 mb-3">
+                            <Sparkles className="w-3.5 h-3.5 text-violet-500" />
+                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mr-1">AI Tone</span>
+                            {TONES.map((tone) => (
+                                <button
+                                    key={tone}
+                                    onClick={() => handleToneClick(tone)}
+                                    disabled={loadingTone !== null}
+                                    className={cn(
+                                        "px-3 py-1.5 rounded-full text-xs font-medium transition-all border capitalize",
+                                        activeTone === tone
+                                            ? "bg-[#f97316] text-white border-[#f97316] shadow-sm"
+                                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                                        loadingTone !== null && loadingTone !== tone && "opacity-50 cursor-not-allowed"
+                                    )}
                                 >
-                                    <div className="text-[10px] font-bold text-slate-500 uppercase mb-1 tracking-wider group-hover:text-blue-600">
-                                        {suggestion.tone.replace('_', ' ')}
-                                    </div>
-                                    <p className="text-xs text-slate-700 line-clamp-3 group-hover:text-slate-900">
-                                        {suggestion.text}
-                                    </p>
-                                </div>
+                                    {loadingTone === tone ? (
+                                        <span className="flex items-center gap-1.5">
+                                            <Loader2 className="w-3 h-3 animate-spin" />
+                                            {tone}
+                                        </span>
+                                    ) : (
+                                        tone
+                                    )}
+                                </button>
                             ))}
                         </div>
                     )}
 
                     <Textarea
-                        placeholder="Write a professional response..."
+                        placeholder="Write a response or click a tone above for an AI draft..."
                         className="min-h-[100px] mb-3 bg-white text-sm resize-none focus-visible:ring-blue-500"
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         autoFocus
                     />
                     <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => setIsReplying(false)} className="text-slate-500 hover:text-slate-700">Cancel</Button>
+                        <Button variant="ghost" size="sm" onClick={() => { setIsReplying(false); setActiveTone(null); setReplyText(""); }} className="text-slate-500 hover:text-slate-700">Cancel</Button>
                         <Button size="sm" onClick={handleSubmit} disabled={isSubmitting || !replyText.trim()} className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
                             {isSubmitting ? "Posting..." : "Post Reply"}
                         </Button>
@@ -393,12 +391,12 @@ export function ReviewCard({
                 </div>
             )}
 
-            <UpgradeModal 
-                isOpen={showUpgradeModal} 
-                onClose={() => setShowUpgradeModal(false)} 
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
                 title="Upgrade Your Plan"
                 description="You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
             />
         </div>
-    )
+    );
 }
