@@ -1,4 +1,5 @@
 import { fetchWithRetry } from "./business-profile";
+import type { Json } from "@/lib/db/supabase/database.types";
 
 const BASE = "https://mybusinessqanda.googleapis.com/v1";
 
@@ -101,7 +102,7 @@ export function questionToRow(
     google_update_time: string | null;
     total_answer_count: number;
     has_merchant_answer: boolean;
-    top_answers: unknown;
+    top_answers: Json;
     updated_at: string;
 } {
     const name = q.name || "";
@@ -117,7 +118,7 @@ export function questionToRow(
         google_update_time: q.updateTime ? new Date(q.updateTime).toISOString() : null,
         total_answer_count: q.totalAnswerCount ?? (q.topAnswers?.length ?? 0),
         has_merchant_answer: hasMerchantAnswer(q),
-        top_answers: q.topAnswers ?? [],
+        top_answers: (q.topAnswers ?? []) as Json,
         updated_at: new Date().toISOString(),
     };
 }
