@@ -68,8 +68,8 @@ export function Step4SubscriptionForm({
         throw new Error(typeof data.error === "string" ? data.error : "Failed to start checkout");
       }
 
-      if (data.url && typeof data.url === "string") {
-        window.location.href = data.url;
+      if (data.data?.url && typeof data.data.url === "string") {
+        window.location.href = data.data.url;
         return;
       }
 
@@ -272,21 +272,19 @@ export function Step4SubscriptionForm({
                   <PricingCard.Price>
                     <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                   </PricingCard.Price>
-                  <a
-                    href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full relative z-20 cursor-pointer"
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800"
                   >
-                    <Button 
-                      variant="outline" 
-                      className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer" 
-                      type="button"
+                    <a
+                      href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
+                      className="flex items-center justify-center"
                     >
                       <Mail className="h-4 w-4" />
                       Contact Sales
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </PricingCard.Header>
                 <PricingCard.Body>
                   <PricingCard.List>

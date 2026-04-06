@@ -34,6 +34,7 @@ interface Step3FormProps {
   businessName: string;
   city: string;
   initialCategory?: string;
+  isGoogleConnected?: boolean;
   onNext: () => void;
   isLoading?: boolean;
 }
@@ -41,6 +42,7 @@ interface Step3FormProps {
 export function Step3Form({
   businessId,
   initialCategory,
+  isGoogleConnected = false,
   onNext,
   isLoading: externalIsLoading = false,
 }: Step3FormProps) {
@@ -102,7 +104,7 @@ export function Step3Form({
         <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
           We&apos;ll tailor your review templates and response suggestions to match.
         </p>
-        {initialCategory && (
+        {initialCategory && isGoogleConnected && (
           <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}

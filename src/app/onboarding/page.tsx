@@ -388,6 +388,7 @@ export default function OnboardingPage() {
                   businessName={business.name}
                   city={business.city ?? ""}
                   initialCategory={business.category ?? undefined}
+                  isGoogleConnected={googleConnected}
                   onNext={async () => setCurrentStep(4)}
                   isLoading={isLoading}
                 />
