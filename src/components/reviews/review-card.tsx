@@ -273,7 +273,7 @@ export function ReviewCard({
             {/* Actions */}
             <div className="flex items-center gap-2 pt-2 border-t border-slate-50 mt-1">
                 {review.response_status !== 'responded' && (
-                    <>
+                    <div className="flex items-center gap-2">
                         {review.platform === 'yelp' ? (
                             <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-1.5">
                                 <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
@@ -290,23 +290,44 @@ export function ReviewCard({
                                 </span>
                             </div>
                         ) : (
-                            <Button
-                                size="sm"
-                                variant={isReplying ? "secondary" : "default"}
-                                className={cn("h-8 text-xs font-medium px-4", !isReplying && "bg-blue-600 hover:bg-blue-700 text-white shadow-sm")}
-                                onClick={() => {
-                                    setIsReplying(!isReplying);
-                                    if (isReplying) {
-                                        setActiveTone(null);
-                                        setReplyText("");
-                                    }
-                                }}
-                            >
-                                <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-                                {isReplying ? "Cancel Reply" : "Reply"}
-                            </Button>
+                            <>
+                                {isReplying ? (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="h-9 text-xs font-semibold px-4 border-slate-200 text-slate-600 hover:bg-slate-50"
+                                            onClick={() => {
+                                                setIsReplying(false);
+                                                setActiveTone(null);
+                                                setReplyText("");
+                                            }}
+                                        >
+                                            <MessageSquare className="w-3.5 h-3.5 mr-2" />
+                                            Cancel Reply
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            className="h-9 text-xs font-semibold px-4 bg-[#f5f3ff] hover:bg-[#ede9fe] text-[#7c3aed] border border-[#ddd6fe] shadow-none"
+                                            onClick={() => !activeTone && handleToneClick("professional")}
+                                        >
+                                            <Sparkles className="w-3.5 h-3.5 mr-2" />
+                                            AI Suggest Reply
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Button
+                                        size="sm"
+                                        className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                                        onClick={() => setIsReplying(true)}
+                                    >
+                                        <MessageSquare className="w-3.5 h-3.5 mr-2" />
+                                        Reply
+                                    </Button>
+                                )}
+                            </>
                         )}
-                    </>
+                    </div>
                 )}
 
                 <div className="ml-auto">
@@ -342,49 +363,63 @@ export function ReviewCard({
 
             {/* Reply Area with Tone Tabs */}
             {isReplying && review.response_status !== 'responded' && (
-                <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mt-3 animate-in slide-in-from-top-2 duration-200">
+                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 mt-4 animate-in slide-in-from-top-2 duration-200">
 
                     {/* Tone Selector Tabs */}
                     {review.platform !== 'yelp' && (
-                        <div className="flex items-center gap-2 mb-3">
-                            <Sparkles className="w-3.5 h-3.5 text-violet-500" />
-                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mr-1">AI Tone</span>
-                            {TONES.map((tone) => (
-                                <button
-                                    key={tone}
-                                    onClick={() => handleToneClick(tone)}
-                                    disabled={loadingTone !== null}
-                                    className={cn(
-                                        "px-3 py-1.5 rounded-full text-xs font-medium transition-all border capitalize",
-                                        activeTone === tone
-                                            ? "bg-[#f97316] text-white border-[#f97316] shadow-sm"
-                                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50",
-                                        loadingTone !== null && loadingTone !== tone && "opacity-50 cursor-not-allowed"
-                                    )}
-                                >
-                                    {loadingTone === tone ? (
-                                        <span className="flex items-center gap-1.5">
-                                            <Loader2 className="w-3 h-3 animate-spin" />
-                                            {tone}
-                                        </span>
-                                    ) : (
-                                        tone
-                                    )}
-                                </button>
-                            ))}
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-violet-500" />
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">AI Tone</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {TONES.map((tone) => (
+                                    <button
+                                        key={tone}
+                                        onClick={() => handleToneClick(tone)}
+                                        disabled={loadingTone !== null}
+                                        className={cn(
+                                            "px-4 py-1.5 rounded-full text-xs font-semibold transition-all border capitalize",
+                                            activeTone === tone
+                                                ? "bg-[#f97316] text-white border-[#f97316] shadow-sm"
+                                                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                                            loadingTone !== null && loadingTone !== tone && "opacity-50 cursor-not-allowed"
+                                        )}
+                                    >
+                                        {loadingTone === tone ? (
+                                            <span className="flex items-center gap-2">
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                                {tone}
+                                            </span>
+                                        ) : (
+                                            tone
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
 
                     <Textarea
                         placeholder="Write a response or click a tone above for an AI draft..."
-                        className="min-h-[100px] mb-3 bg-white text-sm resize-none focus-visible:ring-blue-500"
+                        className="min-h-[120px] mb-4 bg-white text-sm resize-none focus-visible:ring-blue-500 border-slate-200 shadow-sm focus:border-blue-500 placeholder:text-slate-400"
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         autoFocus
                     />
-                    <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => { setIsReplying(false); setActiveTone(null); setReplyText(""); }} className="text-slate-500 hover:text-slate-700">Cancel</Button>
-                        <Button size="sm" onClick={handleSubmit} disabled={isSubmitting || !replyText.trim()} className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                    <div className="flex justify-end items-center gap-3">
+                        <button
+                            onClick={() => { setIsReplying(false); setActiveTone(null); setReplyText(""); }}
+                            className="text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <Button
+                            size="sm"
+                            onClick={handleSubmit}
+                            disabled={isSubmitting || !replyText.trim()}
+                            className="bg-[#93c5fd] hover:bg-blue-400 text-white shadow-none px-6 font-semibold rounded-lg"
+                        >
                             {isSubmitting ? "Posting..." : "Post Reply"}
                         </Button>
                     </div>
