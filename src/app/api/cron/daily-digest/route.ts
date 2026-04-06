@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { sendEmail } from "@/services/resend/send-email";
+import { inngest } from "@/services/inngest/client";
 import { dailyDigestEmail } from "@/services/resend/templates/daily-digest-email";
 
 export async function GET(request: Request) {
@@ -21,21 +21,14 @@ export async function GET(request: Request) {
             .from("reviews")
             .select(`
                 id,
-                rating,
-                text,
-                author_name,
-                sentiment,
-                created_at,
                 business_id,
                 businesses (
                     id,
                     name,
-                    organization_id,
-                    slug
+                    organization_id
                 )
             `)
-            .gte("created_at", yesterday.toISOString())
-            .order("created_at", { ascending: false });
+            .gte("created_at", yesterday.toISOString());
 
         if (reviewError) {
             // Heartbeat fail
@@ -44,120 +37,40 @@ export async function GET(request: Request) {
         }
 
         if (!recentReviews || recentReviews.length === 0) {
-            // Still a success, just nothing to do
+            // Success, just no reviews
             await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
             return NextResponse.json({ message: "No new reviews found" });
         }
 
-        // Group reviews by business
-        type Review = {
-            id: string;
-            rating: number;
-            text: string | null;
-            author_name: string | null;
-            sentiment: string | null;
-            created_at: string;
-            business_id: string;
-            businesses: {
-                id: string;
-                name: string;
-                organization_id: string;
-                slug: string;
-            };
-        };
-
-        const businessMap = new Map<string, Review[]>();
-        (recentReviews as unknown as Review[]).forEach((review) => {
-            if (!review.businesses) return;
-            const bid = review.business_id;
-            if (!businessMap.has(bid)) {
-                businessMap.set(bid, []);
+        // Group by business to find which businesses need digests
+        const businessIds = Array.from(new Set(recentReviews.map(r => r.business_id)));
+        const businessDataMap = new Map();
+        recentReviews.forEach(r => {
+            if (r.businesses && !businessDataMap.has(r.business_id)) {
+                businessDataMap.set(r.business_id, r.businesses);
             }
-            businessMap.get(bid)!.push(review);
         });
 
-        let emailsSent = 0;
-
-        for (const [businessId, reviews] of businessMap.entries()) {
-            const business = reviews[0].businesses;
-
-            // 2. Get Pending Count for this business (all time pending)
-            const { count: pendingCount } = await admin
-                .from("reviews")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", businessId)
-                .is("response_text", null);
-
-            // 3. Stats for Digest
-            const totalNew = reviews.length;
-            const avgRating = reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / totalNew;
-            const digestItems = reviews.slice(0, 5).map((r) => ({
-                rating: r.rating,
-                authorName: r.author_name || "Anonymous",
-                text: r.text || "",
-                sentiment: r.sentiment as "positive" | "negative" | "neutral"
-            }));
-
-            // 4. Get Recruitpients (Org Members with Digest Enabled)
-            const { data: members } = await admin
-                .from("organization_members")
-                .select("user_id")
-                .eq("organization_id", business.organization_id);
-
-            if (members && members.length > 0) {
-                const userIds = members.map(m => m.user_id);
-
-                const { data: prefs } = await admin
-                    .from("notification_preferences")
-                    .select("*, users(email)")
-                    .in("user_id", userIds);
-
-                interface DigestRecipient {
-                    digest_enabled?: boolean;
-                    users: { email: string } | null;
-                }
-
-                const recipients = prefs?.filter(p => {
-                    const pTyped = p as unknown as DigestRecipient;
-                    const digestEnabled = pTyped.digest_enabled !== false; // Default true
-                    const hasEmail = pTyped.users?.email;
-                    return digestEnabled && hasEmail;
-                }) || [];
-
-                // 5. Build & Send Email
-                if (recipients.length > 0) {
-                    const emailHtml = dailyDigestEmail({
-                        businessName: business.name,
-                        reviews: digestItems,
-                        totalNew,
-                        avgRating,
-                        pendingCount: pendingCount || 0,
-                        dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-                        settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
-                    });
-
-                    await Promise.all(recipients.map(recipient => {
-                        const rTyped = recipient as unknown as DigestRecipient;
-                        const email = rTyped.users!.email;
-                        return sendEmail({
-                            to: email,
-                            subject: `Daily Review Summary for ${business.name}`,
-                            html: emailHtml
-                        });
-                    }));
-
-                    emailsSent += recipients.length;
-                }
+        // Dispatch Digest Generation via Inngest
+        const events = Array.from(businessDataMap.values()).map(b => ({
+            name: "business/digest.dispatch" as const,
+            data: {
+                businessId: b.id,
+                businessName: b.name,
+                organizationId: b.organization_id
             }
-        }
+        }));
+
+        await inngest.send(events);
 
         // Heartbeat success ping!
+        // We ping success because the DISPATCHER has successfully fanned out the work.
         await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
 
         return NextResponse.json({
-            message: "Daily digest processed",
-            businessesProcessed: businessMap.size,
-            emailsSent
+            success: true,
+            businessesEnqueued: businessDataMap.size,
+            message: "Daily digest generation fanned out"
         });
 
     } catch (error: unknown) {

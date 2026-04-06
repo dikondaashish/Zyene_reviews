@@ -1,8 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 export const dynamic = "force-dynamic";
-
 import { NextResponse } from "next/server";
-import { sendReviewRequest } from "@/lib/notifications/review-request";
+import { inngest } from "@/services/inngest/client";
 
 export async function GET(request: Request) {
     // Verify Cron Secret — always required
@@ -29,7 +28,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: true, processed: 0, message: "No active follow-up campaigns found" });
         }
 
-        let totalFollowUpsSent = 0;
+        let totalEnqueued = 0;
 
         for (const campaign of campaigns) {
             if (!campaign.businesses) continue;
@@ -39,72 +38,40 @@ export async function GET(request: Request) {
             cutoffTime.setHours(cutoffTime.getHours() - delayHours);
 
             // 2. Find eligible review requests for this campaign
-            // Eligible: status='delivered', review_left=false, is_follow_up_sent=false, sent_at < cutoffTime
             const { data: eligibleRequests, error: requestError } = await admin
                 .from("review_requests")
-                .select("id, customer_name, customer_email, customer_phone")
+                .select("id")
                 .eq("campaign_id", campaign.id)
                 .eq("status", "delivered")
                 .eq("review_left", false)
                 .eq("is_follow_up_sent", false)
                 .lt("sent_at", cutoffTime.toISOString())
-                .limit(50); // Process in batches
-
-            if (requestError) {
-                console.error(`[Cron] Error fetching requests for campaign ${campaign.id}:`, requestError);
-                continue;
-            }
+                .limit(100); // 100 per campaign per run
 
             if (!eligibleRequests || eligibleRequests.length === 0) continue;
 
-            // 3. Dispatch follow-ups
-            for (const req of eligibleRequests) {
-                const contactMethods = [];
-                if (campaign.channel === "email" || campaign.channel === "both") {
-                    if (req.customer_email) contactMethods.push("email");
-                }
-                if (campaign.channel === "sms" || campaign.channel === "both") {
-                    if (req.customer_phone) contactMethods.push("sms");
-                }
+            // 3. Dispatch follow-ups via Inngest
+            await inngest.send(
+                eligibleRequests.map((req) => ({
+                    name: "campaign/follow-up.dispatch",
+                    data: {
+                        requestId: req.id,
+                        campaignId: campaign.id,
+                    },
+                }))
+            );
 
-                try {
-                    const business = Array.isArray(campaign.businesses) ? campaign.businesses[0] : campaign.businesses;
-                    if (!business) continue;
-
-                    await sendReviewRequest({
-                        businessId: business.id,
-                        businessName: business.name,
-                        customerName: req.customer_name || "Customer",
-                        contactMethods: contactMethods as ("email" | "sms")[],
-                        customerEmail: req.customer_email,
-                        customerPhone: req.customer_phone,
-                        template: campaign.follow_up_template || undefined,
-                        isFollowUp: true
-                    });
-
-                    // Update request status
-                    await admin
-                        .from("review_requests")
-                        .update({
-                            is_follow_up_sent: true,
-                            follow_up_sent_at: new Date().toISOString()
-                        })
-                        .eq("id", req.id);
-
-                    totalFollowUpsSent++;
-                } catch (sendError) {
-                    console.error(`[Cron] Failed to send follow-up to request ${req.id}:`, sendError);
-                }
-            }
+            totalEnqueued += eligibleRequests.length;
         }
 
         // Heartbeat success ping!
+        // We ping success because the DISPATCHER has successfully fanned out the work.
         await fetch("https://uptime.betterstack.com/api/v1/heartbeat/qaTkuG86YMyWVZNXgeBDtGWc").catch(() => { });
 
         return NextResponse.json({
             success: true,
             campaignsProcessed: campaigns.length,
-            followUpsSent: totalFollowUpsSent
+            followUpsEnqueued: totalEnqueued
         });
 
     } catch (error: unknown) {

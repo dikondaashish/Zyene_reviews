@@ -32,11 +32,28 @@ type SyncPlatformEvent = {
     };
 };
 
+type FollowUpDispatchEvent = {
+    data: {
+        requestId: string;
+        campaignId: string;
+    };
+};
+
+type DigestDispatchEvent = {
+    data: {
+        organizationId: string;
+        businessId: string;
+        businessName: string;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
     "google/sync.reviews": SyncGoogleReviewsEvent;
     "review/sync.platform": SyncPlatformEvent;
+    "campaign/follow-up.dispatch": FollowUpDispatchEvent;
+    "business/digest.dispatch": DigestDispatchEvent;
 };
 
 // Create a client to send and receive events
