@@ -24,6 +24,7 @@ function safeNextPath(raw: string | null): string {
 export async function GET(request: Request) {
     try {
         const { searchParams, origin } = new URL(request.url);
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zyenereviews.com";
         const code = searchParams.get("code");
         const next = safeNextPath(searchParams.get("next"));
         const biz = searchParams.get("biz");
@@ -242,11 +243,7 @@ export async function GET(request: Request) {
                             if (!verifyError) {
                                 console.log(`✅ Session restored for ${originalUser.user.email}`);
                                 // Session is now set — redirect to businesses page
-                                if (rootDomain.includes("localhost")) {
-                                    return NextResponse.redirect(`http://${rootDomain}/businesses`);
-                                } else {
-                                    return NextResponse.redirect(`https://app.${rootDomain}/businesses`);
-                                }
+                                return NextResponse.redirect(`${appUrl}/businesses`);
                             } else {
                                 console.error("Failed to verify magic link:", verifyError);
                                 Sentry.captureException(verifyError, { tags: { route: "auth-callback", step: "verify_magic_link" } });
@@ -255,21 +252,11 @@ export async function GET(request: Request) {
                     }
 
                     // Fallback: redirect to login if auto-restore failed
-                    const rootDomain2 = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-                    if (rootDomain2.includes("localhost")) {
-                        return NextResponse.redirect(`http://${rootDomain2}/login?message=business_added`);
-                    } else {
-                        return NextResponse.redirect(`https://auth.${rootDomain2}/login?message=business_added`);
-                    }
+                    return NextResponse.redirect(`${appUrl}/login?message=business_added`);
                 }
 
                 // Same Google account — redirect straight to businesses page
-                const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-                if (rootDomain.includes("localhost")) {
-                    return NextResponse.redirect(`http://${rootDomain}/businesses`);
-                } else {
-                    return NextResponse.redirect(`https://app.${rootDomain}/businesses`);
-                }
+                return NextResponse.redirect(`${appUrl}/businesses`);
             }
 
             // ─── NORMAL AUTH FLOW (not "Add Business") ──────────
@@ -344,10 +331,7 @@ export async function GET(request: Request) {
 
                 const { sendEmail } = await import("@/services/resend/send-email");
                 const { welcomeEmail } = await import("@/services/resend/templates/welcome-email");
-                const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-                const loginUrl = rootDomain.includes("localhost")
-                    ? `${process.env.NEXT_PUBLIC_APP_URL}/login`
-                    : `https://auth.${rootDomain}/login`;
+                const loginUrl = `${appUrl}/login`;
 
                 sendEmail({
                     to: email,
@@ -359,10 +343,7 @@ export async function GET(request: Request) {
                 });
 
                 // New users go to onboarding on app subdomain
-                if (rootDomain.includes("localhost")) {
-                    return NextResponse.redirect(`http://${rootDomain}/onboarding`);
-                }
-                return NextResponse.redirect(`https://app.${rootDomain}/onboarding`);
+                return NextResponse.redirect(`${appUrl}/onboarding`);
             }
 
             // ─── EXISTING USER LOGIN ────────────────────────────
@@ -447,13 +428,8 @@ export async function GET(request: Request) {
                 }
             }
 
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-            const appBase = rootDomain.includes("localhost")
-                ? `http://${rootDomain}`
-                : `https://app.${rootDomain}`;
-
             // Preserve the caller intent (e.g. integrations page -> /dashboard/integrations).
-            return NextResponse.redirect(`${appBase}${next}`);
+            return NextResponse.redirect(`${appUrl}${next}`);
         }
         return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
     } catch (error) {

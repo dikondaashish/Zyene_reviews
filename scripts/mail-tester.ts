@@ -17,7 +17,7 @@ async function runTest() {
     console.log(`🚀 Starting Mail Test for: ${targetEmail}`);
     console.log('---');
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = 'https://zyenereviews.com';
 
     const tests = [
         {

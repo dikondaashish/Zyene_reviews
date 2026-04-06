@@ -86,13 +86,8 @@ export async function POST(request: Request) {
     }
 
     // Send email
-    // Link format: app.zyenereviews.com/signup?invite=TOKEN
-    // Or login page if they have account?
-    // For now: signup
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-    const inviteLink = rootDomain.includes("localhost")
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/signup?invite=${invite.token}`
-        : `https://auth.${rootDomain}/signup?invite=${invite.token}`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zyenereviews.com";
+    const inviteLink = `${appUrl}/signup?invite=${invite.token}`;
 
     const inviterName = membershipTyped.users?.full_name || "A team member";
     const orgName = membershipTyped.organizations?.name || "Zyene";
