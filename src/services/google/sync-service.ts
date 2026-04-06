@@ -175,13 +175,21 @@ export async function getValidGoogleToken(platformId: string) {
                 accessToken, 
                 platform: { ...platformWithTokens, access_token: accessToken, token_expires_at: newExpiry.toISOString() } 
             };
-        } catch (error) {
+        } catch (error: any) {
             console.error(`[Token] Refresh failed:`, error);
+            
+            const errorMsg = error?.message || "";
+            const isRevoked = errorMsg.includes("invalid_grant");
+            
             await admin.from("review_platforms").update({
-                sync_status: 'error_refresh_failed',
+                sync_status: isRevoked ? 'error_token_revoked' : 'error_refresh_failed',
                 updated_at: new Date().toISOString()
             }).eq("id", platformId);
-            throw new Error("Failed to refresh token");
+
+            if (isRevoked) {
+                throw new Error("Google connection expired. Please reconnect your account in Settings.");
+            }
+            throw new Error("Failed to refresh Google token. Please try again later.");
         }
     }
 
@@ -387,7 +395,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             alerts: 0
         };
 
-    } catch (error: unknown) {
+    } catch (error: any) {
         console.error(`[Sync] Implementation Error:`, error);
         // Error status will be handled by finally block (reset to idle)
         throw error;

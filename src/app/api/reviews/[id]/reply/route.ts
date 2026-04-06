@@ -91,8 +91,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         return apiOk({ replied: true });
 
-    } catch (error: unknown) {
+    } catch (error: any) {
         console.error("Reply API Error:", error);
-        return apiError("Internal Server Error", { status: 500 });
+        
+        const message = error?.message || "Internal Server Error";
+        
+        // Handle specific connection/auth errors gracefully
+        if (message.includes("Google connection expired") || message.includes("reconnect") || message.includes("invalid_grant")) {
+            return apiError("Google connection expired. Please reconnect your account.", { status: 401 });
+        }
+        
+        if (message.includes("rate limit") || message.includes("Quota")) {
+            return apiError("Google API quota exceeded. Please wait a few minutes.", { status: 429 });
+        }
+
+        return apiError(message, { status: 500 });
     }
 }
