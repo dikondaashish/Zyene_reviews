@@ -18,10 +18,11 @@ export function reviewAlertEmail({
     dashboardUrl,
     settingsUrl,
 }: ReviewAlertProps): string {
+    const starLabel = "★".repeat(rating) + "☆".repeat(5 - rating);
     const starColor = rating >= 4 ? "#16a34a" : rating === 3 ? "#ca8a04" : "#dc2626";
-    const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+    
     const urgencyBadge = urgencyScore >= 7
-        ? `<span style="background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px;">High Urgency (${urgencyScore}/10)</span>`
+        ? `<div style="margin-top: 12px; display: inline-block; background-color: #fee2e2; color: #991b1b; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">High Priority Action Needed</div>`
         : "";
 
     return `
@@ -29,39 +30,74 @@ export function reviewAlertEmail({
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Review for ${businessName}</title>
 </head>
-<body style="font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; color: #334155; margin: 0; padding: 0; background-color: #f8fafc;">
-    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 8px; margin-top: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <h1 style="font-size: 20px; font-weight: bold; color: #0f172a; margin-top: 0; margin-bottom: 24px;">
-            New Review for ${businessName}
-        </h1>
-        
-        <div style="margin-bottom: 24px;">
-            <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                <span style="color: ${starColor}; font-size: 24px; letter-spacing: 2px; margin-right: 8px;">${stars}</span>
-                ${urgencyBadge}
-            </div>
-            <div style="font-weight: 600; color: #0f172a;">${authorName}</div>
-        </div>
+<body style="margin: 0; padding: 0; background-color: #fcfbfa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; min-height: 100vh;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <table width="100%" max-width="600" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e4e4e7;">
+                        <td style="padding: 32px 40px 48px;">
+                            <!-- Logo Header -->
+                            <div style="margin-bottom: 32px; text-align: center;">
+                                <img src="https://zyenereviews.com/logo.png" alt="Zyene Reviews" width="160" style="display: block; margin: 0 auto; outline: none; border: none; text-decoration: none;">
+                            </div>
+                            <!-- Header -->
+                            <div style="margin-bottom: 24px;">
+                                <span style="display: inline-block; background-color: #f4f4f5; color: #18181b; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    New Review Alert
+                                </span>
+                                ${urgencyBadge}
+                            </div>
 
-        <div style="background-color: #f1f5f9; padding: 20px; border-radius: 6px; margin-bottom: 32px; font-style: italic; color: #475569;">
-            "${reviewText}"
-        </div>
+                            <h1 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: #18181b; letter-spacing: -0.025em;">
+                                Fresh feedback for ${businessName}
+                            </h1>
+                            <p style="margin: 0 0 32px; font-size: 16px; color: #52525b;">
+                                <strong>${authorName}</strong> just posted a new review on Google. Here's what they had to say:
+                            </p>
 
-        <div style="text-align: center; margin-bottom: 32px;">
-            <a href="${dashboardUrl}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
-                Reply to this Review →
-            </a>
-        </div>
+                            <!-- Review Card -->
+                            <div style="background-color: #fcfbfa; border: 1px solid #f4f4f5; border-radius: 8px; padding: 24px; margin-bottom: 32px;">
+                                <div style="margin-bottom: 12px; font-size: 24px; color: ${starColor}; letter-spacing: 2px;">
+                                    ${starLabel}
+                                </div>
+                                <div style="font-size: 16px; line-height: 1.6; color: #18181b; font-style: italic;">
+                                    "${reviewText}"
+                                </div>
+                            </div>
 
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 32px 0;">
+                            <!-- CTA -->
+                            <div style="margin-bottom: 40px;">
+                                <a href="${dashboardUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #27272a;">
+                                    Reply to this Review
+                                </a>
+                            </div>
 
-        <div style="font-size: 12px; color: #64748b; text-align: center;">
-            You're receiving this because you have review alerts enabled.<br>
-            <a href="${settingsUrl}" style="color: #64748b; text-decoration: underline;">Manage Notification Settings</a>
-        </div>
-    </div>
+                            <!-- Footer Section -->
+                            <div style="padding-top: 32px; border-top: 1px solid #f4f4f5;">
+                                <p style="margin: 0 0 12px; font-size: 14px; color: #71717a;">
+                                    Tip: Replying within 24 hours can boost your ranking and customer trust.
+                                </p>
+                                <p style="margin: 0; font-size: 12px; color: #a1a1aa;">
+                                    <a href="${settingsUrl}" style="color: #71717a; text-decoration: underline;">Manage Notification Settings</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 40px; text-align: center;">
+                            <div style="font-size: 12px; color: #a1a1aa;">
+                                © ${new Date().getFullYear()} Zyene Inc. <br>
+                                <a href="#" style="color: #71717a; text-decoration: underline;">Unsubscribe</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
     `;

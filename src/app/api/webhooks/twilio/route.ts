@@ -35,11 +35,11 @@ export async function POST(request: Request) {
         if (Body === "STOP" || Body === "STOPALL" || Body === "UNSUBSCRIBE" || Body === "CANCEL" || Body === "END" || Body === "QUIT") {
             // Add to Opt Out
             await admin.from("sms_opt_outs").upsert({ phone_number: From });
-            replyText = "You have been unsubscribed from Zyene Ratings alerts. No further messages will be sent.";
+            replyText = "You have been unsubscribed from Zyene Reviews alerts. No further messages will be sent.";
         } else if (Body === "START" || Body === "YES" || Body === "UNSTOP") {
             // Remove from Opt Out
             await admin.from("sms_opt_outs").delete().eq("phone_number", From);
-            replyText = "You have been re-subscribed to Zyene Ratings alerts.";
+            replyText = "You have been re-subscribed to Zyene Reviews alerts.";
         } else {
             // Unknown command
             replyText = "Unknown command. Reply STOP to unsubscribe or START to resubscribe.";

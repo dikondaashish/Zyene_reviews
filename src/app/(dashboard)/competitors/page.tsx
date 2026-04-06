@@ -4,7 +4,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { CompetitorsList } from "./competitors-list";
 
 export const metadata = {
-    title: "Competitors - Zyene Ratings",
+    title: "Competitors - Zyene Reviews",
     description: "Monitor your competitors' ratings and performance.",
 };
 

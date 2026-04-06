@@ -28,15 +28,17 @@ export function dailyDigestEmail({
     const reviewRows = reviews.map(review => {
         const starColor = review.rating >= 4 ? "#16a34a" : review.rating === 3 ? "#ca8a04" : "#dc2626";
         const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
-        const snippet = review.text.length > 80 ? review.text.substring(0, 80) + "..." : review.text;
+        const snippet = review.text.length > 100 ? review.text.substring(0, 100) + "..." : review.text;
 
         return `
-            <div style="border-bottom: 1px solid #e2e8f0; padding: 12px 0;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="font-weight: 600; color: #334155; font-size: 14px;">${review.authorName}</span>
-                    <span style="color: ${starColor}; font-size: 14px; letter-spacing: 1px;">${stars}</span>
-                </div>
-                <div style="font-size: 14px; color: #64748b;">${snippet}</div>
+            <div style="border-bottom: 1px solid #f4f4f5; padding: 16px 0;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                    <tr>
+                        <td style="font-size: 15px; font-weight: 600; color: #18181b;">${review.authorName}</td>
+                        <td align="right" style="font-size: 14px; color: ${starColor}; letter-spacing: 1px;">${stars}</td>
+                    </tr>
+                </table>
+                <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #52525b; font-style: italic;">"${snippet}"</p>
             </div>
         `;
     }).join("");
@@ -46,47 +48,86 @@ export function dailyDigestEmail({
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Daily Digest for ${businessName}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Digest - ${businessName}</title>
 </head>
-<body style="font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; color: #334155; margin: 0; padding: 0; background-color: #f8fafc;">
-    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 8px; margin-top: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <h1 style="font-size: 20px; font-weight: bold; color: #0f172a; margin-top: 0; margin-bottom: 8px;">
-            Daily Summary
-        </h1>
-        <p style="color: #64748b; margin-top: 0; margin-bottom: 24px;">for ${businessName}</p>
-        
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; background-color: #f8fafc; padding: 16px; border-radius: 8px;">
-            <div style="text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #0f172a;">${totalNew}</div>
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">New Reviews</div>
-            </div>
-            <div style="text-align: center; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
-                <div style="font-size: 24px; font-weight: bold; color: #0f172a;">${avgRating.toFixed(1)}</div>
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Avg Rating</div>
-            </div>
-            <div style="text-align: center;">
-                <div style="font-size: 24px; font-weight: bold; color: #dc2626;">${pendingCount}</div>
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Pending</div>
-            </div>
-        </div>
+<body style="margin: 0; padding: 0; background-color: #fcfbfa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; min-height: 100vh;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <table width="100%" max-width="600" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e4e4e7;">
+                        <td style="padding: 32px 40px 48px;">
+                            <!-- Logo Header -->
+                            <div style="margin-bottom: 32px; text-align: center;">
+                                <img src="https://zyenereviews.com/logo.png" alt="Zyene Reviews" width="160" style="display: block; margin: 0 auto; outline: none; border: none; text-decoration: none;">
+                            </div>
+                            <!-- Header -->
+                            <div style="margin-bottom: 24px;">
+                                <span style="display: inline-block; background-color: #f4f4f5; color: #18181b; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Daily Digest
+                                </span>
+                            </div>
 
-        <div style="margin-bottom: 32px;">
-            <div style="font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Latest Reviews</div>
-            ${reviews.length > 0 ? reviewRows : '<div style="color: #64748b; font-style: italic; padding: 12px 0;">No new reviews today.</div>'}
-        </div>
+                            <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #18181b; letter-spacing: -0.025em;">
+                                Your Daily Summary
+                            </h1>
+                            <p style="margin: 0 0 32px; font-size: 16px; color: #52525b;">
+                                for ${businessName}
+                            </p>
 
-        <div style="text-align: center; margin-bottom: 32px;">
-            <a href="${dashboardUrl}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
-                View Dashboard →
-            </a>
-        </div>
+                            <!-- Metric Grid (Table-based for email support) -->
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; border: 1px solid #f4f4f5; border-radius: 8px; margin-bottom: 32px;">
+                                <tr>
+                                    <td align="center" style="padding: 20px; border-right: 1px solid #f4f4f5;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #18181b;">${totalNew}</div>
+                                        <div style="font-size: 11px; font-weight: 600; color: #71717a; text-transform: uppercase; margin-top: 4px;">New</div>
+                                    </td>
+                                    <td align="center" style="padding: 20px; border-right: 1px solid #f4f4f5;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #18181b;">${avgRating.toFixed(1)}</div>
+                                        <div style="font-size: 11px; font-weight: 600; color: #71717a; text-transform: uppercase; margin-top: 4px;">Rating</div>
+                                    </td>
+                                    <td align="center" style="padding: 20px;">
+                                        <div style="font-size: 24px; font-weight: 700; color: ${pendingCount > 0 ? '#dc2626' : '#18181b'};">${pendingCount}</div>
+                                        <div style="font-size: 11px; font-weight: 600; color: #71717a; text-transform: uppercase; margin-top: 4px;">Pending</div>
+                                    </td>
+                                </tr>
+                            </table>
 
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 32px 0;">
+                            <!-- Latest Reviews -->
+                            <div style="margin-bottom: 32px;">
+                                <h3 style="margin: 0 0 16px; font-size: 14px; font-weight: 600; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Latest Reviews
+                                </h3>
+                                ${reviews.length > 0 ? reviewRows : '<p style="color: #a1a1aa; font-style: italic; font-size: 14px;">No new reviews today.</p>'}
+                            </div>
 
-        <div style="font-size: 12px; color: #64748b; text-align: center;">
-            <a href="${settingsUrl}" style="color: #64748b; text-decoration: underline;">Unsubscribe from Daily Digest</a>
-        </div>
-    </div>
+                            <!-- CTA -->
+                            <div style="margin-bottom: 40px; text-align: center;">
+                                <a href="${dashboardUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #27272a;">
+                                    View Full Dashboard
+                                </a>
+                            </div>
+
+                            <!-- Footer Section -->
+                            <div style="padding-top: 32px; border-top: 1px solid #f4f4f5; text-align: center;">
+                                <p style="margin: 0; font-size: 12px; color: #a1a1aa;">
+                                    Tip: Constant engagement with your recent reviews improves SEO visibility.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 40px; text-align: center;">
+                            <div style="font-size: 12px; color: #a1a1aa;">
+                                © ${new Date().getFullYear()} Zyene Inc. <br>
+                                <a href="${settingsUrl}" style="color: #71717a; text-decoration: underline;">Manage Notification Settings</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
     `;

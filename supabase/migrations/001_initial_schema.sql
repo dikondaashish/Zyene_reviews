@@ -1,5 +1,5 @@
 -- ============================================================
--- Zyene Ratings — Initial Database Schema
+-- Zyene Reviews — Initial Database Schema
 -- Migration: 001_initial_schema
 -- ============================================================
 
