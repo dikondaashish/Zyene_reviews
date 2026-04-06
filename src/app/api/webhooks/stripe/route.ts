@@ -5,6 +5,11 @@ import { getPlanByPriceId, FREE_LIMITS } from "@/services/stripe/plans";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import type { StripeOrganizationUpdatePayload } from "@/types/api-routes";
+import { sendEmail } from "@/services/resend/send-email";
+import { subscriptionSuccessEmail } from "@/services/resend/templates/subscription-success-email";
+import { paymentSuccessEmail } from "@/services/resend/templates/payment-success-email";
+import { paymentFailedEmail } from "@/services/resend/templates/payment-failed-email";
+import { subscriptionCanceledEmail } from "@/services/resend/templates/subscription-canceled-email";
 
 /**
  * Stripe Webhook handler.
@@ -106,6 +111,32 @@ export async function POST(request: Request) {
                     .eq("id", organizationId);
 
                 console.log(`✅ Organization ${organizationId} upgraded to ${planId}`);
+
+                // Send Success Email
+                try {
+                    const customerEmail = session.customer_details?.email;
+                    const customerName = session.customer_details?.name || "there";
+
+                    if (customerEmail) {
+                        const isTrial = subscription.status === "trialing";
+                        const planName = plan?.name || "Starter";
+                        const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/dashboard`;
+
+                        await sendEmail({
+                            to: customerEmail,
+                            subject: isTrial ? `Your ${planName} trial has started!` : `Welcome to the ${planName} plan!`,
+                            html: subscriptionSuccessEmail({
+                                userName: customerName,
+                                planName,
+                                isTrial,
+                                dashboardUrl,
+                            }),
+                        });
+                    }
+                } catch (emailErr) {
+                    console.error("Error sending subscription success email:", emailErr);
+                    Sentry.captureException(emailErr, { extra: { organizationId, eventType: "checkout.session.completed" } });
+                }
                 break;
             }
 
@@ -151,7 +182,7 @@ export async function POST(request: Request) {
             }
 
             case "customer.subscription.deleted": {
-                const subscription = event.data.object as Stripe.Subscription;
+                const subscription = event.data.object as any;
                 const customerId = subscription.customer as string;
 
                 await supabase
@@ -170,6 +201,28 @@ export async function POST(request: Request) {
                     .eq("stripe_customer_id", customerId);
 
                 console.log(`❌ Subscription canceled for customer ${customerId}`);
+
+                // Send Cancellation Email
+                try {
+                    const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+                    if (customer && !customer.deleted && customer.email) {
+                        const endDate = subscription.current_period_end 
+                            ? new Date(subscription.current_period_end * 1000).toLocaleDateString()
+                            : "the end of your billing period";
+
+                        await sendEmail({
+                            to: customer.email,
+                            subject: "Subscription Canceled - We're sorry to see you go",
+                            html: subscriptionCanceledEmail({
+                                userName: customer.name || "there",
+                                endDate,
+                                rejoinUrl: `${process.env.NEXT_PUBLIC_APP_URL || ''}/settings/billing`,
+                            }),
+                        });
+                    }
+                } catch (emailErr) {
+                    console.error("Error sending cancellation email:", emailErr);
+                }
                 break;
             }
 
@@ -183,6 +236,54 @@ export async function POST(request: Request) {
                     .eq("stripe_customer_id", customerId);
 
                 console.log(`⚠️ Payment failed for customer ${customerId}`);
+
+                // Send Payment Failed Email
+                try {
+                    if (invoice.customer_email) {
+                        await sendEmail({
+                            to: invoice.customer_email,
+                            subject: "Payment Failed - Action Required",
+                            html: paymentFailedEmail({
+                                userName: invoice.customer_name || "there",
+                                amount: new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: (invoice.currency || 'usd').toUpperCase(),
+                                }).format((invoice.amount_due || 0) / 100),
+                                updateCardUrl: `${process.env.NEXT_PUBLIC_APP_URL || ''}/settings/billing`,
+                            }),
+                        });
+                    }
+                } catch (emailErr) {
+                    console.error("Error sending payment failed email:", emailErr);
+                }
+                break;
+            }
+
+            case "invoice.payment_succeeded": {
+                const invoice = event.data.object as Stripe.Invoice;
+                
+                // Only send for recurring subscription payments (not for the very first one which is handled by checkout.session.completed)
+                if (invoice.billing_reason === "subscription_cycle") {
+                    try {
+                        if (invoice.customer_email) {
+                            await sendEmail({
+                                to: invoice.customer_email,
+                                subject: "Payment Successful - Zyene Reviews",
+                                html: paymentSuccessEmail({
+                                    userName: invoice.customer_name || "there",
+                                    amount: new Intl.NumberFormat("en-US", {
+                                        style: "currency",
+                                        currency: (invoice.currency || 'usd').toUpperCase(),
+                                    }).format((invoice.amount_paid || 0) / 100),
+                                    date: new Date().toLocaleDateString(),
+                                    invoiceUrl: invoice.hosted_invoice_url || `${process.env.NEXT_PUBLIC_APP_URL || ''}/settings/billing`,
+                                }),
+                            });
+                        }
+                    } catch (emailErr) {
+                        console.error("Error sending payment success email:", emailErr);
+                    }
+                }
                 break;
             }
 
@@ -191,10 +292,12 @@ export async function POST(request: Request) {
         }
     } catch (error: unknown) {
         console.error("Webhook processing error:", error);
-        Sentry.captureException(error, {
-            tags: { route: "stripe-webhook", event_type: event.type },
-            extra: { event_id: event.id },
-        });
+        if (event) {
+            Sentry.captureException(error, {
+                tags: { route: "stripe-webhook", event_type: event.type },
+                extra: { event_id: event.id },
+            });
+        }
         // Return 500 so Stripe retries this event
         return NextResponse.json(
             { error: "Webhook processing failed" },
