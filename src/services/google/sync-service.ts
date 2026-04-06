@@ -342,7 +342,8 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             .from("reviews")
             .select("rating", { count: 'exact' })
             .eq("business_id", platform.business_id)
-            .eq("platform", "google");
+            .eq("platform", "google")
+            .eq("is_visible", true);
 
         // Prefer Google's exact native stats. Fallback to our DB count if omitted.
         const totalReviews = apiTotalReviews ?? count ?? 0;
@@ -436,6 +437,7 @@ export async function processGoogleReview(
         response_text: review.reviewReply?.comment || null,
         responded_at: review.reviewReply?.updateTime || null,
         response_source: review.reviewReply ? 'google' : null,
+        is_visible: true,
     };
 
     const { data: upserted, error: upsertError } = await admin

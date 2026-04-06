@@ -15,7 +15,14 @@ export async function disconnectGoogle(platformId: string) {
         throw new Error("Unauthorized");
     }
 
-    // Delete the platform row. RLS policy enforces ownership via business → org membership.
+    // 1. Hide the reviews (orphan them) rather than deleting
+    // This allows for delta-syncs on reconnect and data preservation
+    await supabase
+        .from("reviews")
+        .update({ is_visible: false })
+        .eq("platform_id", platformId);
+
+    // 2. Delete the platform row.
     const { error, count } = await supabase
         .from("review_platforms")
         .delete({ count: "exact" })
@@ -33,7 +40,5 @@ export async function disconnectGoogle(platformId: string) {
 
     // Revalidate the integrations page cache
     revalidatePath("/(dashboard)/integrations", "page");
-
-    // Redirect to onboarding since GBP is no longer connected
-    redirect("/onboarding");
+    revalidatePath("/(dashboard)/reviews", "page");
 }

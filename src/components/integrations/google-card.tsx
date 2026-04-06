@@ -203,7 +203,11 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
         if (!platform) return;
         setIsSyncing(true);
         try {
-            const res = await fetch("/api/sync/google", { method: "POST" });
+            const res = await fetch("/api/sync/google", { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ businessId })
+            });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
                 const msg = (data as { error?: string }).error || "Sync failed";

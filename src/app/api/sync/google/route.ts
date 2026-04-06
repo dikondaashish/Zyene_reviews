@@ -23,11 +23,18 @@ export async function POST(request: Request) {
             });
         }
 
-        // 1. Get Google Platform ID
-        const { data: memberData, error: membError } = await supabase
+        // 1. Resolve Target Business & Platform
+        let businessId: string | undefined;
+        try {
+            const body = await request.json();
+            businessId = body.businessId;
+        } catch {
+            /* no body */
+        }
+
+        let query = supabase
             .from("organization_members")
             .select(`
-                organization_id,
                 organizations (
                     businesses (
                         id,
@@ -35,27 +42,29 @@ export async function POST(request: Request) {
                     )
                 )
             `)
-            .eq("user_id", user.id)
-            .single();
+            .eq("user_id", user.id);
 
-        interface GoogleSyncContext {
-            organizations: {
-                businesses: Array<{
-                    id: string;
-                    review_platforms: Array<{ id: string; platform: string }>;
-                }>;
-            } | null;
+        if (businessId) {
+            query = query.eq("organizations.businesses.id", businessId);
         }
+
+        const { data: memberData, error: membError } = await query.single();
 
         if (membError || !memberData) {
             throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
         }
 
-        const memberTyped = memberData as unknown as GoogleSyncContext;
-        const business = memberTyped.organizations?.businesses?.[0];
+        const memberTyped = memberData as any;
+        const businesses = memberTyped.organizations?.businesses || [];
+        
+        // Match the specific businessId if provided, else take first.
+        const business = businessId 
+            ? businesses.find((b: any) => b.id === businessId)
+            : businesses[0];
+
         if (!business) throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
 
-        const platform = business.review_platforms?.find((p) => p.platform === 'google');
+        const platform = business.review_platforms?.find((p: any) => p.platform === 'google');
         if (!platform) {
             throw new ApiRouteError("Google platform not connected", {
                 status: 404,

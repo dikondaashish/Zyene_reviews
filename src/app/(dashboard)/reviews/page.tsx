@@ -42,7 +42,8 @@ export default async function ReviewsPage(props: {
         supabase
             .from("reviews")
             .select("*", { count: "exact", head: true })
-            .eq("business_id", businessId),
+            .eq("business_id", businessId)
+            .eq("is_visible", true),
         supabase
             .from("private_feedback")
             .select("*", { count: "exact", head: true })
@@ -73,7 +74,8 @@ export default async function ReviewsPage(props: {
         let query = supabase
             .from("reviews")
             .select("*", { count: "exact" })
-            .eq("business_id", businessId);
+            .eq("business_id", businessId)
+            .eq("is_visible", true);
 
         const statusRaw = searchParams.status || "all";
         const statusMap: Record<string, string> = {
@@ -138,7 +140,7 @@ export default async function ReviewsPage(props: {
                             Export CSV
                         </a>
                     </Button>
-                    <SyncButton />
+                    <SyncButton businessId={businessId as string} />
                 </div>
             </div>
 

@@ -6,14 +6,18 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
-export function SyncButton() {
+export function SyncButton({ businessId }: { businessId?: string }) {
     const [isSyncing, setIsSyncing] = useState(false)
     const router = useRouter()
 
     const handleSync = async () => {
         setIsSyncing(true)
         try {
-            const res = await fetch("/api/sync/google", { method: "POST" })
+            const res = await fetch("/api/sync/google", { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ businessId })
+            })
             const data = await res.json()
             const payload = (data as { data?: { total?: number } })?.data
             const total = payload?.total ?? (data as { total?: number }).total ?? 0

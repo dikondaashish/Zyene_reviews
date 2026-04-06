@@ -472,7 +472,7 @@ export type Database = {
           event_type?: string
           id?: string
           metadata?: Json
-          organization_id: string
+          organization_id?: string
           user_id?: string | null
         }
         Relationships: [
@@ -495,6 +495,228 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gbp_place_action_links: {
+        Row: {
+          business_id: string
+          created_at: string
+          google_link_name: string
+          id: string
+          is_broken: boolean
+          is_preferred: boolean
+          last_link_check_at: string | null
+          place_action_type: string
+          review_platform_id: string
+          updated_at: string
+          uri: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          google_link_name: string
+          id?: string
+          is_broken?: boolean
+          is_preferred?: boolean
+          last_link_check_at?: string | null
+          place_action_type: string
+          review_platform_id: string
+          updated_at?: string
+          uri: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          google_link_name?: string
+          id?: string
+          is_broken?: boolean
+          is_preferred?: boolean
+          last_link_check_at?: string | null
+          place_action_type?: string
+          review_platform_id?: string
+          updated_at?: string
+          uri?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gbp_place_action_links_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gbp_place_action_links_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gbp_questions: {
+        Row: {
+          author_display_name: string | null
+          author_type: string | null
+          business_id: string
+          created_at: string
+          google_create_time: string | null
+          google_question_name: string
+          google_update_time: string | null
+          has_merchant_answer: boolean
+          id: string
+          question_text: string
+          review_platform_id: string
+          top_answers: Json
+          total_answer_count: number
+          updated_at: string
+          upvote_count: number
+        }
+        Insert: {
+          author_display_name?: string | null
+          author_type?: string | null
+          business_id: string
+          created_at?: string
+          google_create_time?: string | null
+          google_question_name: string
+          google_update_time?: string | null
+          has_merchant_answer?: boolean
+          id?: string
+          question_text: string
+          review_platform_id: string
+          top_answers?: Json
+          total_answer_count?: number
+          updated_at?: string
+          upvote_count?: number
+        }
+        Update: {
+          author_display_name?: string | null
+          author_type?: string | null
+          business_id?: string
+          created_at?: string
+          google_create_time?: string | null
+          google_question_name?: string
+          google_update_time?: string | null
+          has_merchant_answer?: boolean
+          id?: string
+          question_text?: string
+          review_platform_id?: string
+          top_answers?: Json
+          total_answer_count?: number
+          updated_at?: string
+          upvote_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gbp_questions_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gbp_questions_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_performance_metrics: {
+        Row: {
+          business_id: string
+          created_at: string
+          dimension_key: string
+          id: string
+          metric_date: string
+          metric_key: string
+          review_platform_id: string
+          value: number
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          dimension_key?: string
+          id?: string
+          metric_date: string
+          metric_key: string
+          review_platform_id: string
+          value?: number
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          dimension_key?: string
+          id?: string
+          metric_date?: string
+          metric_key?: string
+          review_platform_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_performance_metrics_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_performance_metrics_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_search_keyword_monthly: {
+        Row: {
+          business_id: string
+          id: string
+          impressions: number
+          is_threshold: boolean
+          keyword: string
+          month_start: string
+          review_platform_id: string
+          synced_at: string
+        }
+        Insert: {
+          business_id: string
+          id?: string
+          impressions?: number
+          is_threshold?: boolean
+          keyword: string
+          month_start: string
+          review_platform_id: string
+          synced_at?: string
+        }
+        Update: {
+          business_id?: string
+          id?: string
+          impressions?: number
+          is_threshold?: boolean
+          keyword?: string
+          month_start?: string
+          review_platform_id?: string
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_search_keyword_monthly_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_search_keyword_monthly_review_platform_id_fkey"
+            columns: ["review_platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
             referencedColumns: ["id"]
           },
         ]
@@ -905,8 +1127,8 @@ export type Database = {
           external_id: string | null
           external_url: string | null
           google_account_id: string | null
-          google_location_id: string | null
           google_listing_synced_at: string | null
+          google_location_id: string | null
           google_lodging_available: boolean | null
           google_lodging_health_score: number | null
           google_lodging_synced_at: string | null
@@ -931,8 +1153,8 @@ export type Database = {
           external_id?: string | null
           external_url?: string | null
           google_account_id?: string | null
-          google_location_id?: string | null
           google_listing_synced_at?: string | null
+          google_location_id?: string | null
           google_lodging_available?: boolean | null
           google_lodging_health_score?: number | null
           google_lodging_synced_at?: string | null
@@ -944,9 +1166,9 @@ export type Database = {
           last_synced_at?: string | null
           platform: string
           refresh_token?: string | null
-          sync_status: string
+          sync_status?: string
           token_expires_at?: string | null
-          total_reviews: number
+          total_reviews?: number
           updated_at?: string | null
         }
         Update: {
@@ -957,8 +1179,8 @@ export type Database = {
           external_id?: string | null
           external_url?: string | null
           google_account_id?: string | null
-          google_location_id?: string | null
           google_listing_synced_at?: string | null
+          google_location_id?: string | null
           google_lodging_available?: boolean | null
           google_lodging_health_score?: number | null
           google_lodging_synced_at?: string | null
@@ -985,228 +1207,6 @@ export type Database = {
           },
         ]
       }
-      google_performance_metrics: {
-        Row: {
-          id: string
-          review_platform_id: string
-          business_id: string
-          metric_date: string
-          metric_key: string
-          dimension_key: string
-          value: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          review_platform_id: string
-          business_id: string
-          metric_date: string
-          metric_key: string
-          dimension_key?: string
-          value?: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          review_platform_id?: string
-          business_id?: string
-          metric_date?: string
-          metric_key?: string
-          dimension_key?: string
-          value?: number
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "google_performance_metrics_review_platform_id_fkey"
-            columns: ["review_platform_id"]
-            isOneToOne: false
-            referencedRelation: "review_platforms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "google_performance_metrics_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      google_search_keyword_monthly: {
-        Row: {
-          id: string
-          review_platform_id: string
-          business_id: string
-          month_start: string
-          keyword: string
-          impressions: number
-          is_threshold: boolean
-          synced_at: string
-        }
-        Insert: {
-          id?: string
-          review_platform_id: string
-          business_id: string
-          month_start: string
-          keyword: string
-          impressions?: number
-          is_threshold?: boolean
-          synced_at?: string
-        }
-        Update: {
-          id?: string
-          review_platform_id?: string
-          business_id?: string
-          month_start?: string
-          keyword?: string
-          impressions?: number
-          is_threshold?: boolean
-          synced_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "google_search_keyword_monthly_review_platform_id_fkey"
-            columns: ["review_platform_id"]
-            isOneToOne: false
-            referencedRelation: "review_platforms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "google_search_keyword_monthly_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      gbp_place_action_links: {
-        Row: {
-          id: string
-          review_platform_id: string
-          business_id: string
-          google_link_name: string
-          place_action_type: string
-          uri: string
-          is_preferred: boolean
-          is_broken: boolean
-          last_link_check_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          review_platform_id: string
-          business_id: string
-          google_link_name: string
-          place_action_type: string
-          uri: string
-          is_preferred?: boolean
-          is_broken?: boolean
-          last_link_check_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          review_platform_id?: string
-          business_id?: string
-          google_link_name?: string
-          place_action_type?: string
-          uri?: string
-          is_preferred?: boolean
-          is_broken?: boolean
-          last_link_check_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "gbp_place_action_links_review_platform_id_fkey"
-            columns: ["review_platform_id"]
-            isOneToOne: false
-            referencedRelation: "review_platforms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "gbp_place_action_links_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      gbp_questions: {
-        Row: {
-          id: string
-          review_platform_id: string
-          business_id: string
-          google_question_name: string
-          question_text: string
-          author_display_name: string | null
-          author_type: string | null
-          upvote_count: number
-          google_create_time: string | null
-          google_update_time: string | null
-          total_answer_count: number
-          has_merchant_answer: boolean
-          top_answers: unknown
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          review_platform_id: string
-          business_id: string
-          google_question_name: string
-          question_text: string
-          author_display_name?: string | null
-          author_type?: string | null
-          upvote_count?: number
-          google_create_time?: string | null
-          google_update_time?: string | null
-          total_answer_count?: number
-          has_merchant_answer?: boolean
-          top_answers?: unknown
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          review_platform_id?: string
-          business_id?: string
-          google_question_name?: string
-          question_text?: string
-          author_display_name?: string | null
-          author_type?: string | null
-          upvote_count?: number
-          google_create_time?: string | null
-          google_update_time?: string | null
-          total_answer_count?: number
-          has_merchant_answer?: boolean
-          top_answers?: unknown
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "gbp_questions_review_platform_id_fkey"
-            columns: ["review_platform_id"]
-            isOneToOne: false
-            referencedRelation: "review_platforms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "gbp_questions_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       review_requests: {
         Row: {
           ai_review_text: string | null
@@ -1221,8 +1221,6 @@ export type Database = {
           customer_phone: string | null
           delivered_at: string | null
           error_message: string | null
-          follow_up_delay_hours: number
-          follow_up_enabled: boolean
           follow_up_sent_at: string | null
           id: string
           is_follow_up_sent: boolean | null
@@ -1249,8 +1247,6 @@ export type Database = {
           customer_phone?: string | null
           delivered_at?: string | null
           error_message?: string | null
-          follow_up_delay_hours?: number
-          follow_up_enabled?: boolean
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
@@ -1277,8 +1273,6 @@ export type Database = {
           customer_phone?: string | null
           delivered_at?: string | null
           error_message?: string | null
-          follow_up_delay_hours?: number
-          follow_up_enabled?: boolean
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
@@ -1321,6 +1315,7 @@ export type Database = {
           external_id: string | null
           external_url: string | null
           id: string
+          is_visible: boolean | null
           platform: string
           platform_id: string | null
           rating: number
@@ -1345,6 +1340,7 @@ export type Database = {
           external_id?: string | null
           external_url?: string | null
           id?: string
+          is_visible?: boolean | null
           platform: string
           platform_id?: string | null
           rating: number
@@ -1369,6 +1365,7 @@ export type Database = {
           external_id?: string | null
           external_url?: string | null
           id?: string
+          is_visible?: boolean | null
           platform?: string
           platform_id?: string | null
           rating?: number
@@ -1444,7 +1441,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
-          email?: string
+          email?: string | null
           full_name?: string | null
           has_completed_tour?: boolean
           id?: string
@@ -1500,126 +1497,3 @@ export type Database = {
     }
   }
 }
-
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
-
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
-
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  public: {
-    Enums: {},
-  },
-} as const
