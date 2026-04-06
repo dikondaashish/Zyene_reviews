@@ -249,10 +249,16 @@ export function BillingClient({
                             </CardDescription>
                         </div>
                         <Badge
-                            variant={isPaidPlan ? "default" : "secondary"}
-                            className="text-sm px-3 py-1"
+                            variant={isPaidPlan ? (planStatus === "trialing" ? "secondary" : "default") : "secondary"}
+                            className={cn(
+                                "text-sm px-3 py-1",
+                                planStatus === "trialing" && "bg-blue-50 text-blue-700 border-blue-200"
+                            )}
                         >
-                            {isPaidPlan ? currentPlan?.name : dict.billing.no_active_plan}
+                            {isPaidPlan 
+                                ? (planStatus === "trialing" ? `${currentPlan?.name} (Trial)` : currentPlan?.name)
+                                : dict.billing.no_active_plan
+                            }
                         </Badge>
                     </div>
                 </CardHeader>
