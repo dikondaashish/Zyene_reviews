@@ -99,11 +99,13 @@ export function ReviewCard({
                 method: "POST",
                 body: JSON.stringify({ reviewId: review.id }),
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Failed to get suggestions");
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || "Failed to get suggestions");
 
-            if (data.replies) {
-                setSuggestions(data.replies);
+            // apiOk wraps as { success, data: { replies, ... } }
+            const payload = json.data || json;
+            if (payload.replies) {
+                setSuggestions(payload.replies);
             }
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
