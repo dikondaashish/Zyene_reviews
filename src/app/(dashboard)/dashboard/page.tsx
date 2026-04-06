@@ -56,7 +56,7 @@ import {
 } from "@/services/google/performance-queries";
 import { ProStatCard } from "@/components/dashboard/pro-stat-card";
 import { AnimatedReviewCards } from "@/components/ui/animated-review-card";
-import { AiInsightsCard } from "@/components/dashboard/ai-insights-card";
+import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -1001,8 +1001,8 @@ export default async function DashboardPage() {
                 </Card>
             </div>
 
-            {/* AI Review Insights */}
-            <AiInsightsCard />
+            {/* Smart Review Insights */}
+            <SmartInsightsCard />
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
