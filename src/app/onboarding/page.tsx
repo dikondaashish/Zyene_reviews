@@ -143,6 +143,17 @@ export default function OnboardingPage() {
     cleanUrl();
   }, [setCurrentStep]);
 
+  // Handle Chrome "Back" button detection using SessionStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const pending = sessionStorage.getItem("zyene_payment_pending");
+    if (pending === "true") {
+      console.log("[Onboarding] Detected return from Stripe via Back button");
+      setShowPaymentCancelled(true);
+      sessionStorage.removeItem("zyene_payment_pending");
+    }
+  }, []);
+
   // Load user, organization, and business on mount
   useEffect(() => {
     const loadUserAndOrg = async () => {

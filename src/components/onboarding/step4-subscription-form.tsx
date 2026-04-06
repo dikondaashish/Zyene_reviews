@@ -72,6 +72,7 @@ export function Step4SubscriptionForm({
       }
 
       if (data.data?.url && typeof data.data.url === "string") {
+        sessionStorage.setItem("zyene_payment_pending", "true");
         window.location.href = data.data.url;
         return;
       }
