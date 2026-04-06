@@ -7,9 +7,17 @@ export async function proxy(request: NextRequest) {
         request,
     });
 
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-    const hostname = request.headers.get("host")!;
     const { pathname } = request.nextUrl;
+    const hostname = request.headers.get("host")!;
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+
+    // --- WEBHOOK EXEMPTION ---
+    // Ensure all webhook endpoints are served immediately and never redirected.
+    if (pathname.startsWith("/api/webhooks") || pathname.startsWith("/api/inngest")) {
+        return NextResponse.next({
+            request: { headers: request.headers },
+        });
+    }
 
     // --- CORS PREFLIGHT HANDLER ---
     // OPTIONS preflight requests must NEVER be redirected.
