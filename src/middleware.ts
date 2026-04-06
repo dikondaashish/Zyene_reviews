@@ -24,9 +24,14 @@ export async function middleware(request: NextRequest) {
     const isAuthRoute = pathname.startsWith("/auth/");
     const isNextRoute = pathname.startsWith("/_next/");
     const isHealthRoute = pathname === "/api/health";
-    const isStaticFile = /\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml|woff|woff2|ttf|eot)$/.test(pathname);
+    
+    // Explicitly bypass manifest and other common root assets
+    const isPublicRootAsset = /^\/(?:manifest\.json|manifest\.webmanifest|favicon\.ico|robots\.txt|sitemap\.xml)$/.test(pathname);
+    
+    // Check for other common static file extensions
+    const isStaticFile = /\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml|woff|woff2|ttf|eot|json)$/.test(pathname);
 
-    if (isApiRoute || isAuthRoute || isNextRoute || isHealthRoute || isStaticFile) {
+    if (isApiRoute || isAuthRoute || isNextRoute || isHealthRoute || isStaticFile || isPublicRootAsset) {
         return supabaseResponse;
     }
 

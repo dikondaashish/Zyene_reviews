@@ -1,0 +1,381 @@
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+import { globalApiRateLimit } from "@/lib/auth/rate-limit";
+
+export async function proxy(request: NextRequest) {
+    let supabaseResponse = NextResponse.next({
+        request,
+    });
+
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const hostname = request.headers.get("host")!;
+    const { pathname } = request.nextUrl;
+
+    // --- CORS PREFLIGHT HANDLER ---
+    // OPTIONS preflight requests must NEVER be redirected.
+    // Return 204 with proper CORS headers for cross-subdomain requests.
+    if (request.method === "OPTIONS") {
+        const origin = request.headers.get("origin") || "";
+        const allowedOrigins = [
+            `https://auth.${rootDomain}`,
+            `https://app.${rootDomain}`,
+            `https://${rootDomain}`,
+            `https://www.${rootDomain}`,
+        ];
+
+        if (allowedOrigins.includes(origin)) {
+            return new NextResponse(null, {
+                status: 204,
+                headers: {
+                    "Access-Control-Allow-Origin": origin,
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+                    // Next.js can send multiple internal prefetch/RSC headers across subdomains.
+                    // Include all that we may see in preflight requests.
+                    "Access-Control-Allow-Headers":
+                        "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, next-router-segment-prefetch",
+                    "Access-Control-Allow-Credentials": "true",
+                    "Access-Control-Max-Age": "86400",
+                },
+            });
+        }
+
+        return new NextResponse(null, { status: 204 });
+    }
+
+    const cookieOptions = {
+        domain: rootDomain.includes("localhost") ? "localhost" : `.${rootDomain.split(":")[0]}`,
+        path: "/",
+        sameSite: "lax" as const,
+        secure: process.env.NODE_ENV === "production",
+    };
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll();
+                },
+                setAll(cookiesToSet) {
+                    cookiesToSet.forEach(({ name, value }) =>
+                        request.cookies.set(name, value)
+                    );
+                    supabaseResponse = NextResponse.next({
+                        request,
+                    });
+                    cookiesToSet.forEach(({ name, value, options }) =>
+                        supabaseResponse.cookies.set(name, value, {
+                            ...options,
+                            ...cookieOptions,
+                        })
+                    );
+                },
+            },
+        }
+    );
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    // Helper to add CORS headers to cross-subdomain responses
+    const addCorsHeaders = (response: NextResponse) => {
+        const origin = request.headers.get("origin") || "";
+        const allowedOrigins = [
+            `https://auth.${rootDomain}`,
+            `https://app.${rootDomain}`,
+            `https://${rootDomain}`,
+        ];
+        if (allowedOrigins.includes(origin)) {
+            response.headers.set("Access-Control-Allow-Origin", origin);
+            response.headers.set("Access-Control-Allow-Credentials", "true");
+        }
+        return response;
+    };
+
+    const createResponse = (response: NextResponse) => {
+        supabaseResponse.cookies.getAll().forEach((cookie) => {
+            response.cookies.set(cookie);
+        });
+        return response;
+    };
+
+    // --- GLOBAL API RATE LIMITING (DDoS Protection) ---
+    if (pathname.startsWith("/api")) {
+        // Whitelist webhook and background job endpoints from global rate limiting
+        const whitelistedPaths = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        const isWhitelisted = whitelistedPaths.some(p => pathname.startsWith(p));
+
+        if (!isWhitelisted) {
+            const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+                || request.headers.get("x-real-ip")
+                || "anonymous";
+
+            try {
+                const { success } = await globalApiRateLimit.limit(ip);
+                if (!success) {
+                    return NextResponse.json(
+                        { error: "Too many requests. Please slow down." },
+                        { status: 429 }
+                    );
+                }
+            } catch (e) {
+                // If Redis is down, fail open (don't block legitimate traffic)
+                console.error("Global rate limit check failed:", e);
+            }
+        }
+
+        // CSRF Protection: Validate Origin on mutating requests
+        const csrfWhitelisted = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        const isCsrfWhitelisted = csrfWhitelisted.some(p => pathname.startsWith(p));
+
+        if (!isCsrfWhitelisted) {
+            const origin = request.headers.get("origin");
+            const allowedOrigins = [
+                `https://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                `https://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            ];
+
+            if (
+                ["POST", "PUT", "DELETE", "PATCH"].includes(request.method) &&
+                !allowedOrigins.includes(origin ?? "")
+            ) {
+                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            }
+        }
+
+        return supabaseResponse;
+    }
+
+    if (pathname.includes(".")) {
+        return supabaseResponse;
+    }
+
+    // --- AUTH SUBDOMAIN (auth.domain) ---
+    if (hostname === `auth.${rootDomain}`) {
+        if (user && pathname === "/") {
+            const targetUrl = `https://app.${rootDomain}`;
+
+            // RSC client-side navigations use fetch requests.
+            // A cross-origin redirect in response to a fetch triggers a CORS error.
+            // Detect RSC requests and respond with a full-page redirect via
+            // x-middleware-redirect header so the Next.js client router navigates properly.
+            const isRSC = request.headers.get("rsc") === "1"
+                || request.headers.get("next-router-state-tree")
+                || request.nextUrl.searchParams.has("_rsc");
+
+            if (isRSC) {
+                const res = new NextResponse(null, {
+                    status: 200,
+                    headers: {
+                        "x-middleware-redirect": targetUrl,
+                        "Location": targetUrl,
+                    },
+                });
+                addCorsHeaders(res);
+                supabaseResponse.cookies.getAll().forEach((cookie) => {
+                    res.cookies.set(cookie);
+                });
+                return res;
+            }
+
+            // Non-RSC navigations are allowed to redirect, but we must still attach
+            // CORS headers so the browser doesn't block the redirected fetch.
+            const redirectRes = createResponse(
+                NextResponse.redirect(new URL(targetUrl, request.url))
+            );
+            addCorsHeaders(redirectRes);
+            return redirectRes;
+        }
+        // Rewrite root to /login
+        if (pathname === "/") {
+            return createResponse(
+                NextResponse.rewrite(new URL("/login", request.url))
+            );
+        }
+        // Pass other paths (e.g. /signup, /forgot-password)
+        return addCorsHeaders(supabaseResponse);
+    }
+
+    // --- APP SUBDOMAIN (app.domain) ---
+    if (hostname === `app.${rootDomain}`) {
+        if (!user) {
+            // For RSC/fetch requests from auth subdomain, don't redirect (causes CORS error)
+            const isRSC = request.headers.get("rsc") === "1"
+                || request.headers.get("next-router-state-tree")
+                || request.nextUrl.searchParams.has("_rsc");
+            const origin = request.headers.get("origin") || "";
+
+            if (isRSC && origin === `https://auth.${rootDomain}`) {
+                const res = new NextResponse(
+                    JSON.stringify({ redirect: `https://auth.${rootDomain}` }),
+                    { status: 401 }
+                );
+                addCorsHeaders(res);
+                return res;
+            }
+
+            return createResponse(
+                NextResponse.redirect(
+                    new URL(`https://auth.${rootDomain}`, request.url)
+                )
+            );
+        }
+
+        try {
+            const { data } = await supabase
+                .from("users")
+                .select("onboarding_completed")
+                .eq("id", user.id)
+                .single();
+
+            // First-time users must complete onboarding before visiting app pages.
+            if (!pathname.startsWith("/onboarding") && data && !data.onboarding_completed) {
+                return createResponse(
+                    NextResponse.redirect(new URL("/onboarding", request.url))
+                );
+            }
+
+            // Returning users should never revisit onboarding.
+            if (pathname.startsWith("/onboarding") && data?.onboarding_completed) {
+                return createResponse(
+                    NextResponse.redirect(new URL("/", request.url))
+                );
+            }
+        } catch (error) {
+            // If check fails, allow the request to proceed
+            console.error("Onboarding status check failed:", error);
+        }
+
+        // Redirect /dashboard to / for clean URL
+        if (pathname === "/dashboard") {
+            return createResponse(
+                NextResponse.redirect(new URL("/", request.url))
+            );
+        }
+
+        // Rewrite root to /dashboard
+        if (pathname === "/") {
+            return createResponse(
+                NextResponse.rewrite(new URL("/dashboard", request.url))
+            );
+        }
+
+        // Pass strictly dashboard paths? Or allow all?
+        // For now allow all, but redirect logic handles unauth.
+        return supabaseResponse;
+    }
+
+    // --- ROOT DOMAIN (domain) ---
+    if (hostname === rootDomain || hostname === `www.${rootDomain}`) {
+        // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
+        if (rootDomain.includes("localhost")) {
+            // Allow public review requests route
+            if (pathname.startsWith("/r/")) {
+                return supabaseResponse;
+            }
+
+            // Allow onboarding path only for first-time users.
+            if (pathname.startsWith("/onboarding")) {
+                if (!user) {
+                    return createResponse(NextResponse.redirect(new URL("/login", request.url)));
+                }
+
+                try {
+                    const { data } = await supabase
+                        .from("users")
+                        .select("onboarding_completed")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (data?.onboarding_completed) {
+                        return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
+                    }
+                } catch (error) {
+                    console.error("Onboarding status check failed:", error);
+                }
+
+                return supabaseResponse;
+            }
+
+            // If accessing /dashboard and not logged in -> redirect /login
+            if (pathname.startsWith("/dashboard") && !user) {
+                return createResponse(NextResponse.redirect(new URL("/login", request.url)));
+            }
+
+            // Check onboarding status for dashboard access
+            if (pathname.startsWith("/dashboard") && user) {
+                try {
+                    const { data } = await supabase
+                        .from("users")
+                        .select("onboarding_completed")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (data && !data.onboarding_completed) {
+                        return createResponse(
+                            NextResponse.redirect(new URL("/onboarding", request.url))
+                        );
+                    }
+                } catch (error) {
+                    // If check fails, allow the request to proceed
+                    console.error("Onboarding status check failed:", error);
+                }
+            }
+
+            // If accessing /login and logged in -> redirect /dashboard
+            if ((pathname === "/login" || pathname === "/") && user) {
+                return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
+            }
+            return supabaseResponse;
+        }
+
+        // Production Root Domain Logic
+
+        // 1. Landing page -> pass
+        if (pathname === "/") return supabaseResponse;
+
+        // 2. Reserved prefixes that should NOT be rewritten
+        const reservedPrefixes = [
+            "/api",
+            "/_next",
+            "/static",
+            "/favicon.ico",
+            "/login",
+            "/signup",
+            "/forgot-password",
+            "/privacy",
+            "/terms",
+            "/data-retention",
+            "/help",
+            "/about",
+            "/contact",
+            "/r/", // Keep legacy paths working
+            "/w/", // Embeddable widgets
+        ];
+
+        const isReserved = reservedPrefixes.some(prefix => pathname.startsWith(prefix));
+
+        // 3. Rewrite business slugs to /r/[slug]
+        if (!isReserved && !pathname.includes(".")) {
+            console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
+            return createResponse(
+                NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
+            );
+        }
+
+        console.log(`[Middleware] Passing ${hostname}${pathname} (No rewrite)`);
+        return supabaseResponse;
+    }
+
+    return supabaseResponse;
+}
+
+export const config = {
+    matcher: [
+        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    ],
+};
