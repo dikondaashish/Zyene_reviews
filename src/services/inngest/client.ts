@@ -19,9 +19,16 @@ type AnalysisBatchEvent = {
     };
 };
 
+type SyncGoogleReviewsEvent = {
+    data: {
+        platformId: string;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
+    "google/sync.reviews": SyncGoogleReviewsEvent;
 };
 
 // Create a client to send and receive events

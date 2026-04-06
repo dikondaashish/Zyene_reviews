@@ -5,8 +5,16 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { batchSchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { 
+    syncGoogleReviewsForPlatform, 
+    prepareGoogleSync, 
+    syncGoogleReviewsPage, 
+    finalizeGoogleSync 
+} from "@/services/google/sync-service";
+import { MAX_REVIEW_PAGES } from "@/services/google/constants";
 
 // This background job runs for EACH contact asynchronously
+// ... (rest of the file remains the same until syncGoogleReviews)
 export const processCampaignContact = inngest.createFunction(
     {
         id: "process-campaign-contact",
@@ -251,5 +259,55 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         });
 
         return { status: "completed", processed: aiResults.length };
+    }
+);
+
+// This function handles the background sync for Google reviews with chunking
+export const syncGoogleReviews = inngest.createFunction(
+    {
+        id: "sync-google-reviews",
+        name: "Sync Google Reviews",
+        concurrency: {
+            limit: 10,
+        },
+    },
+    { event: "google/sync.reviews" },
+    async ({ event, step }) => {
+        const { platformId } = event.data;
+
+        // 1. Setup Context (Lock, IDs, Token)
+        const context = await step.run("setup-context", async () => {
+            return await prepareGoogleSync(platformId);
+        });
+
+        let pageToken: string | undefined = undefined;
+        let totalSynced = 0;
+        let lastResp: { total: number, avgRating: number } | null = null;
+        let pageCount = 0;
+
+        // 2. Paginated Sync (Each page is a Step)
+        do {
+            const result = await step.run(`sync-page-${pageCount + 1}`, async () => {
+                return await syncGoogleReviewsPage(context, pageToken);
+            });
+
+            pageToken = result.nextPageToken;
+            totalSynced += result.synced;
+            lastResp = { total: result.total, avgRating: result.avgRating };
+            pageCount++;
+
+        } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+        // 3. Finalize
+        await step.run("finalize-sync", async () => {
+            await finalizeGoogleSync(
+                platformId, 
+                context.platform.business_id, 
+                lastResp?.total, 
+                lastResp?.avgRating
+            );
+        });
+
+        return { status: "completed", pages: pageCount, synced: totalSynced };
     }
 );

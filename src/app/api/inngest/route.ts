@@ -1,6 +1,6 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/services/inngest/client";
-import { processCampaignContact, processReviewAnalysisBatch } from "@/services/inngest/functions";
+import { processCampaignContact, processReviewAnalysisBatch, syncGoogleReviews } from "@/services/inngest/functions";
 
 // Create an API that serves zero-downtime background jobs
 export const { GET, POST, PUT } = serve({
@@ -8,5 +8,6 @@ export const { GET, POST, PUT } = serve({
     functions: [
         processCampaignContact,
         processReviewAnalysisBatch,
+        syncGoogleReviews,
     ],
 });

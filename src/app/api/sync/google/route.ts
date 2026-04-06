@@ -5,6 +5,7 @@ import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sy
 import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
 import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { redis } from "@/lib/db/redis";
+import { inngest } from "@/services/inngest/client";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
@@ -25,9 +26,11 @@ export async function POST(request: Request) {
 
         // 1. Resolve Target Business & Platform
         let businessId: string | undefined;
+        let force = false;
         try {
             const body = await request.json();
             businessId = body.businessId;
+            force = !!body.force;
         } catch {
             /* no body */
         }
@@ -71,32 +74,23 @@ export async function POST(request: Request) {
                 code: "GOOGLE_PLATFORM_NOT_CONNECTED",
             });
         }
-
-        // 2. Call Sync Service
-        console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
-        const result = await syncGoogleReviewsForPlatform(platform.id);
-
-        // Invalidate cached business context so dashboard/integrations reflect new totals immediately.
-        try {
-            await redis.del(`user_businesses:${user.id}`);
-        } catch (e) {
-            console.error("[Manual Sync] Failed to clear business cache:", e);
+        
+        if (force) {
+            console.log(`[Manual Sync] Force reset requested for platform ${platform.id}`);
+            await supabase
+                .from("review_platforms")
+                .update({ sync_status: 'idle', locked_until: null })
+                .eq("id", platform.id);
         }
 
-        syncGooglePerformanceForPlatform(platform.id).catch((e) => {
-            console.error("[Manual Sync] Google Performance sync failed (non-fatal):", e);
-        });
-        syncGooglePhase2ForPlatform(platform.id).catch((e) => {
-            console.error("[Manual Sync] Google Q&A / place actions sync failed (non-fatal):", e);
-        });
-        syncGoogleListingProfileForPlatform(platform.id).catch((e) => {
-            console.error("[Manual Sync] Google listing / profile health sync failed (non-fatal):", e);
-        });
-        syncGoogleLodgingForPlatform(platform.id).catch((e) => {
-            console.error("[Manual Sync] Google lodging sync failed (non-fatal):", e);
+        // 2. Trigger Background Sync
+        console.log(`[Manual Sync] Triggering background job for platform ${platform.id}`);
+        await inngest.send({
+            name: "google/sync.reviews",
+            data: { platformId: platform.id }
         });
 
-        return apiOk(result);
+        return apiOk({ message: "Sync started in background" });
 
     } catch (error: unknown) {
         console.error("Sync Error:", error);

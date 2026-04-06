@@ -21,7 +21,20 @@ function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): Sync
     return error;
 }
 
-function enforceSyncCooldown(platform: { last_synced_at?: string | null; sync_status?: string | null }) {
+export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
+    const { data: lockAcquired, error: lockError } = await admin.rpc("acquire_platform_lock", {
+        p_id: platformId,
+    });
+
+    if (lockError || !lockAcquired) {
+        console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
+        if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
+        if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
+        throw createSyncError("Sync already in progress.", "CONFLICT");
+    }
+}
+
+export function enforceSyncCooldown(platform: { last_synced_at?: string | null; sync_status?: string | null }) {
     if (!platform.last_synced_at) {
         return;
     }
@@ -32,19 +45,6 @@ function enforceSyncCooldown(platform: { last_synced_at?: string | null; sync_st
 
     if (platform.sync_status !== "running" && diff < SYNC_COOLDOWN_MS) {
         throw createSyncError("Please wait before syncing again.", "RATE_LIMIT");
-    }
-}
-
-async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
-    const { data: lockAcquired, error: lockError } = await admin.rpc("acquire_platform_lock", {
-        p_id: platformId,
-    });
-
-    if (lockError || !lockAcquired) {
-        console.warn(`[Sync] Lock Rejected for platform ${platformId}`);
-        if (lockError) console.warn(`[Sync] RPC Error:`, lockError);
-        if (!lockAcquired) console.warn(`[Sync] Lock returned false (Already running or locked)`);
-        throw createSyncError("Sync already in progress.", "CONFLICT");
     }
 }
 
@@ -196,6 +196,12 @@ export async function getValidGoogleToken(platformId: string) {
     return { accessToken, platform: platformWithTokens };
 }
 
+
+/**
+ * Phase 2: Refactored sync for Inngest Step Functions.
+ * This decomposes the monolithic sync into smaller, step-capable primitives.
+ */
+
 export interface SyncResult {
     success: boolean;
     total: number;
@@ -204,10 +210,20 @@ export interface SyncResult {
     alerts: number;
 }
 
-export async function syncGoogleReviewsForPlatform(platformId: string): Promise<SyncResult> {
+export interface GoogleSyncContext {
+    platform: any;
+    accessToken: string;
+    googleAccountId: string;
+    googleLocationId: string;
+}
+
+/**
+ * Step 1: Pre-sync check and acquire lock.
+ */
+export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncContext> {
     const admin = createAdminClient();
 
-    // 0. FETCH PLATFORM & CHECK LOCK/COOLDOWN
+    // 1. Fetch Platform
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
         .select("*")
@@ -216,199 +232,189 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
 
     if (platformError || !platform) throw new Error("Platform not found");
 
-    // DEBUG LOG BEFORE LOCK ATTEMPT
-    console.log(`[Sync] Debug Platform ${platformId}: status=${platform.sync_status}, updated_at=${platform.updated_at}, last_synced_at=${platform.last_synced_at}`);
-
-    // Check cooldown first to avoid unnecessary lock contention.
+    // 2. Cooldown
     enforceSyncCooldown(platform);
 
-    // ATOMIC LOCK ACQUISITION
-    // Condition: 
-    // 1. sync_status != 'running' (Idle/Error/Active)
-    // 2. OR updated_at IS NULL (First run after migration)
-    // 3. OR sync_status = 'running' but stale (> 10 mins)
-
-    // ATOMIC LOCK ACQUISITION (VIA RPC)
-    // We use a Postgres Function to guarantee atomic logic execution without client-side query building issues.
-    console.log(`[Sync] Attempting Lock RPC for ${platformId}`);
-
+    // 3. Acquire Lock
     await acquireSyncLockOrThrow(admin, platformId);
 
-    console.log(`[Sync] Lock Acquired for platform ${platformId}`);
-
     try {
-        // 1. Get Valid Token (this refreshes if needed)
+        // 4. Token & IDs
         const { accessToken, platform: validPlatform } = await getValidGoogleToken(platformId);
 
-        // 2. Resolve IDs (Backfill if missing)
         let googleAccountId = validPlatform.google_account_id;
         let googleLocationId = validPlatform.google_location_id;
 
-        // If missing, we MUST fetch them (Backward compatibility / First run before auth fix)
         if (!googleAccountId || !googleLocationId) {
-            console.log("[Sync] IDs missing. Fetching hierarchy to backfill...");
+            console.log("[Sync] Refilled IDs missing. Fetching hierarchy...");
             const accounts = await listAccounts(accessToken!);
             if (accounts.length === 0) throw new Error("No Google Accounts found");
             const account = accounts[0];
             googleAccountId = account.name.split("/")[1];
 
             const locations = await listLocations(accessToken!, account.name);
-
             let locationDetails = null;
-            // Match by external_id if possible
             if (validPlatform.external_id) {
-                // external_id is usually raw ID, e.g. "12345"
-                // location.name is "locations/12345"
                 locationDetails = locations.find(l => l.name.endsWith(`/${validPlatform.external_id}`));
             }
             if (!locationDetails) {
-                if (locations.length === 0) throw new Error("No Locations found for this account");
+                if (locations.length === 0) throw new Error("No Locations found");
                 locationDetails = locations[0];
             }
-            googleLocationId = locationDetails.name.split("/").pop() ?? null; // locations/{id} -> id
+            googleLocationId = locationDetails.name.split("/").pop() ?? null;
 
-            // Update DB with backfilled IDs
             await admin.from("review_platforms").update({
                 google_account_id: googleAccountId,
                 google_location_id: googleLocationId,
+                external_id: googleLocationId
             }).eq("id", platformId);
-
-            console.log(`[Sync] Backfilled IDs: Account=${googleAccountId}, Location=${googleLocationId}`);
-        }
-
-        // 3. Request Smoothing
-        await new Promise(resolve => setTimeout(resolve, REQUEST_SMOOTHING_DELAY_MS));
-
-        // 4. Call reviews.list with pagination loop
-        console.log(`[Sync] Fetching reviews for Account: ${googleAccountId}, Location: ${googleLocationId}`);
-        const { googleReviews, apiTotalReviews, apiAverageRating } = await fetchGoogleReviewsPaginated(
-            accessToken!,
-            googleAccountId!,
-            googleLocationId!
-        );
-
-        console.log(`[Sync] Fetched ${googleReviews.length} reviews`);
-
-        let syncedCount = 0;
-        let lastUpsertError: unknown = null;
-        const reviewIdsToAnalyze: string[] = [];
-
-        for (const review of googleReviews) {
-            const stats = await processGoogleReview(admin, platform, review);
-            if (stats.upserted) {
-                syncedCount++;
-                if (stats.id && stats.needsAnalysis) {
-                    reviewIdsToAnalyze.push(stats.id);
-                }
-            } else if (stats.error) {
-                lastUpsertError = stats.error;
-            }
-        }
-
-        // 5. Trigger Batch AI Analysis (Drip Feed)
-        if (reviewIdsToAnalyze.length > 0) {
-            console.log(`[Sync] Queueing ${reviewIdsToAnalyze.length} reviews for background analysis in batches of ${AI_ANALYSIS_BATCH_SIZE}`);
-            
-            // Chunk into configured AI analysis batch size.
-            for (let i = 0; i < reviewIdsToAnalyze.length; i += AI_ANALYSIS_BATCH_SIZE) {
-                const chunk = reviewIdsToAnalyze.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
-                await inngest.send({
-                    name: "review/analyze.batch",
-                    data: { reviewIds: chunk }
-                });
-            }
-        }
-
-        // If we fetched reviews but failed to write them, surface a clear error.
-        if (googleReviews.length > 0 && syncedCount === 0) {
-            const msg = (() => {
-                if (!lastUpsertError) return "Unknown upsert failure";
-                if (lastUpsertError instanceof Error) return lastUpsertError.message;
-                try {
-                    return JSON.stringify(lastUpsertError);
-                } catch {
-                    return String(lastUpsertError);
-                }
-            })();
-            throw new Error(
-                "Failed to write Google reviews to the database. " +
-                    "Check that Vercel has SUPABASE_SERVICE_ROLE_KEY set (server env) and that RLS policies allow inserts. " +
-                    `Last error: ${msg}`
-            );
-        }
-
-        // 5. Update Platform Stats
-        const { count, data: dbReviews } = await admin
-            .from("reviews")
-            .select("rating", { count: 'exact' })
-            .eq("business_id", platform.business_id)
-            .eq("platform", "google")
-            .eq("is_visible", true);
-
-        // Prefer Google's exact native stats. Fallback to our DB count if omitted.
-        const totalReviews = apiTotalReviews ?? count ?? 0;
-        const avgRating = apiAverageRating ?? (dbReviews && dbReviews.length > 0
-            ? dbReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / dbReviews.length
-            : 0);
-
-        await admin.from("review_platforms").update({
-            total_reviews: totalReviews,
-            average_rating: parseFloat(avgRating.toFixed(1)),
-            // sync_status is updated in finally
-            external_id: googleLocationId, // Ensure external_id matches
-        }).eq("id", platformId);
-
-        // Fetch current business to check if URL is already set
-        const { data: currentBusiness } = await admin
-            .from("businesses")
-            .select("google_review_url")
-            .eq("id", platform.business_id)
-            .single();
-
-        const updateData: {
-            total_reviews: number;
-            average_rating: number;
-        } = {
-            total_reviews: totalReviews,
-            average_rating: parseFloat(avgRating.toFixed(1))
-        };
-
-        // Note: URL finding requires location details. We skipped listLocations in optimized flow!
-        // So we can only update URL if we already have it or if we did backfill.
-        // Or we assume URL doesn't need constant update.
-        // User didn't ask to preserve URL logic, but it's good to keep.
-        // However, without location object, we can't extract URL.
-        // That's fine. URL is usually static.
-        // If backfill happened, we could have extracted it.
-        // I will omit URL update here for optimized flow to save API calls.
-
-        try {
-            await admin.from("businesses").update(updateData).eq("id", platform.business_id);
-        } catch (busError) {
-            console.error("[Sync] Failed to update business stats:", busError);
         }
 
         return {
+            platform: validPlatform,
+            accessToken: accessToken!,
+            googleAccountId: googleAccountId!,
+            googleLocationId: googleLocationId!
+        };
+    } catch (err) {
+        // Cleanup lock if setup fails
+        await admin.from("review_platforms").update({ sync_status: 'idle', locked_until: null }).eq("id", platformId);
+        throw err;
+    }
+}
+
+/**
+ * Step 2: Fetch and process a SINGLE page of reviews.
+ */
+export async function syncGoogleReviewsPage(
+    context: GoogleSyncContext,
+    pageToken?: string
+): Promise<{ 
+    nextPageToken?: string, 
+    synced: number, 
+    total: number, 
+    avgRating: number 
+}> {
+    const admin = createAdminClient();
+
+    const apiResp = await listReviews(
+        context.accessToken, 
+        context.googleAccountId, 
+        context.googleLocationId, 
+        pageToken
+    );
+
+    let syncedCount = 0;
+    const reviewIdsToAnalyze: string[] = [];
+
+    for (const review of apiResp.reviews) {
+        const stats = await processGoogleReview(admin, context.platform, review);
+        if (stats.upserted) {
+            syncedCount++;
+            if (stats.id && stats.needsAnalysis) {
+                reviewIdsToAnalyze.push(stats.id);
+            }
+        }
+    }
+
+    // Trigger AI Analysis for this page's chunk
+    if (reviewIdsToAnalyze.length > 0) {
+        for (let i = 0; i < reviewIdsToAnalyze.length; i += AI_ANALYSIS_BATCH_SIZE) {
+            const chunk = reviewIdsToAnalyze.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
+            await inngest.send({
+                name: "review/analyze.batch",
+                data: { reviewIds: chunk }
+            });
+        }
+    }
+
+    return {
+        nextPageToken: apiResp.nextPageToken,
+        synced: syncedCount,
+        total: apiResp.totalReviewCount || 0,
+        avgRating: apiResp.averageRating || 0
+    };
+}
+
+/**
+ * Step 3: Finalize sync (Update stats, clear lock).
+ */
+export async function finalizeGoogleSync(
+    platformId: string, 
+    businessId: string, 
+    finalTotal?: number, 
+    finalAvg?: number
+) {
+    const admin = createAdminClient();
+
+    // 1. Fetch exact visible count for platform
+    const { count } = await admin
+        .from("reviews")
+        .select("id", { count: 'exact', head: true })
+        .eq("business_id", businessId)
+        .eq("platform", "google")
+        .eq("is_visible", true);
+
+    const updateData = {
+        total_reviews: finalTotal ?? count ?? 0,
+        average_rating: parseFloat((finalAvg ?? 0).toFixed(1)),
+        sync_status: 'idle',
+        last_synced_at: new Date().toISOString(),
+        locked_until: null
+    };
+
+    await admin.from("review_platforms").update(updateData).eq("id", platformId);
+    
+    // Update business summary
+    try {
+        await admin.from("businesses").update({
+            total_reviews: updateData.total_reviews,
+            average_rating: updateData.average_rating
+        }).eq("id", businessId);
+    } catch (e) {
+        console.error("[Sync] Finalize failed for business summary update:", e);
+    }
+}
+
+/**
+ * Compatibility wrapper for existing manual sync (Synchronous).
+ * We keep this but internally it now uses the new decomposed steps.
+ */
+export async function syncGoogleReviewsForPlatform(platformId: string): Promise<SyncResult> {
+    const context = await prepareGoogleSync(platformId);
+    
+    try {
+        let pageToken: string | undefined = undefined;
+        let totalSynced = 0;
+        let lastResp = null;
+        let pageCount = 0;
+
+        do {
+            lastResp = await syncGoogleReviewsPage(context, pageToken);
+            pageToken = lastResp.nextPageToken;
+            totalSynced += lastResp.synced;
+            pageCount++;
+            
+            if (pageToken && pageCount < MAX_REVIEW_PAGES) {
+                await new Promise(r => setTimeout(r, PAGINATION_DELAY_MS));
+            }
+        } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+        await finalizeGoogleSync(platformId, context.platform.business_id, lastResp?.total, lastResp?.avgRating);
+
+        return {
             success: true,
-            total: syncedCount,
-            fetched: googleReviews.length,
+            total: totalSynced,
+            fetched: totalSynced, // For compatibility
             analyzed: 0,
             alerts: 0
         };
-
-    } catch (error: any) {
-        console.error(`[Sync] Implementation Error:`, error);
-        // Error status will be handled by finally block (reset to idle)
+    } catch (error) {
+        console.error("[Sync] Error in compatibility wrapper:", error);
+        // Release lock on error
+        const admin = createAdminClient();
+        await admin.from("review_platforms").update({ sync_status: 'idle', locked_until: null }).eq("id", platformId);
         throw error;
-    } finally {
-        // UNLOCK ONLY
-        // Do NOT touch updated_at (it tracks lock acquisition time)
-        console.log(`[Sync] Releasing Lock for platform ${platformId}`);
-
-        await admin.from("review_platforms").update({
-            sync_status: 'idle',
-            last_synced_at: new Date().toISOString() // We update last_synced_at on finish (success or fail)
-        }).eq("id", platformId);
     }
 }
 
