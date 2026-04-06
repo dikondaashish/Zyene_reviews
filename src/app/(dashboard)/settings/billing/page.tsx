@@ -42,11 +42,11 @@ export default async function BillingPage() {
     }
 
     // Get usage stats (per-channel)
-    const [emailRequests, smsRequests, linkRequests, aiReplies, businesses] = await Promise.all([
+    const [emailRequests, smsRequests, linkRequests, smartReplies, businesses] = await Promise.all([
         checkLimit(org.id, "email_requests"),
         checkLimit(org.id, "sms_requests"),
         checkLimit(org.id, "link_requests"),
-        checkLimit(org.id, "ai_replies"),
+        checkLimit(org.id, "smart_replies"),
         checkLimit(org.id, "businesses"),
     ]);
 
@@ -63,7 +63,7 @@ export default async function BillingPage() {
                 emailRequests: { used: emailRequests.current, max: emailRequests.max },
                 smsRequests: { used: smsRequests.current, max: smsRequests.max },
                 linkRequests: { used: linkRequests.current, max: linkRequests.max },
-                aiReplies: { used: aiReplies.current, max: aiReplies.max },
+                smartReplies: { used: smartReplies.current, max: smartReplies.max },
                 businesses: { used: businesses.current, max: businesses.max },
             }}
             plans={PLANS}

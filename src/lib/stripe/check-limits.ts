@@ -12,7 +12,7 @@ type LimitType =
     | "email_requests"
     | "sms_requests"
     | "link_requests"
-    | "ai_replies"
+    | "smart_replies"
     | "businesses";
 
 /**
@@ -57,7 +57,7 @@ export async function checkLimit(
             // Generic total — sum of all channel limits or fallback
             max = org.max_review_requests_per_month ?? 100;
             break;
-        case "ai_replies":
+        case "smart_replies":
             max = org.max_ai_replies_per_month ?? 0;
             break;
         default:
@@ -98,7 +98,7 @@ export async function checkLimit(
             return { allowed: max > 0, current: 0, max, remaining: calculatedMax };
         }
 
-        if (limitType === "ai_replies") {
+        if (limitType === "smart_replies") {
             const { count } = await supabase
                 .from("reviews")
                 .select("*", { count: "exact", head: true })

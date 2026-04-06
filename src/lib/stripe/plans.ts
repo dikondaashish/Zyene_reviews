@@ -7,7 +7,7 @@ export interface PlanLimits {
     emailRequestsPerMonth: number;  // -1 = unlimited
     smsRequestsPerMonth: number;    // -1 = unlimited
     linkRequestsPerMonth: number;   // -1 = unlimited
-    aiRepliesPerMonth: number;      // -1 = unlimited
+    smartRepliesPerMonth: number;   // -1 = unlimited
     teamMembers: number;            // -1 = unlimited
     perLocation?: boolean;          // if true, multiply limits by location count
 }
@@ -32,24 +32,13 @@ const STARTER_LIMITS: PlanLimits = {
     emailRequestsPerMonth: 2500,
     smsRequestsPerMonth: 2500,
     linkRequestsPerMonth: 5000,
-    aiRepliesPerMonth: -1,
+    smartRepliesPerMonth: -1,
     teamMembers: 5,
 };
 
 const STARTER_FEATURES = [
     "Easy to use dashboard",
-    "SEO optimized AI reviews",
-    "1 Location",
-    "2,500 email requests/month",
-    "2,500 SMS requests/month",
-    "5,000 review link requests/month",
-    "Campaign automation",
-    "Link analytics",
-    "Customizable review page",
-    "Private feedback capture",
-    "Employee & product tracking",
-    "Google, Yelp, Facebook integration",
-    "AI-powered replies",
+    "Smart response assistant",
 ];
 
 const PRO_LIMITS: PlanLimits = {
@@ -57,7 +46,7 @@ const PRO_LIMITS: PlanLimits = {
     emailRequestsPerMonth: 3000,
     smsRequestsPerMonth: 3000,
     linkRequestsPerMonth: 6000,
-    aiRepliesPerMonth: -1,
+    smartRepliesPerMonth: -1,
     teamMembers: 15,
     perLocation: true,
 };
@@ -76,7 +65,7 @@ const ENTERPRISE_LIMITS: PlanLimits = {
     emailRequestsPerMonth: -1,
     smsRequestsPerMonth: -1,
     linkRequestsPerMonth: -1,
-    aiRepliesPerMonth: -1,
+    smartRepliesPerMonth: -1,
     teamMembers: -1,
 };
 
@@ -175,7 +164,7 @@ export const UNSUBSCRIBED_LIMITS: PlanLimits = {
     emailRequestsPerMonth: 10,
     smsRequestsPerMonth: 0,
     linkRequestsPerMonth: 25,
-    aiRepliesPerMonth: 0,
+    smartRepliesPerMonth: 0,
     teamMembers: 1,
 };
 

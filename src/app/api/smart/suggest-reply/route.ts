@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     if (!orgId) return apiError("Organization not found", { status: 404, details: requestId });
 
     // Check AI reply limits using the centralized limit checker
-    const aiLimitCheck = await checkLimit(orgId, "ai_replies");
+    const aiLimitCheck = await checkLimit(orgId, "smart_replies");
     if (!aiLimitCheck.allowed) {
         return apiError("Monthly AI reply limit reached. Please upgrade your plan.", {
             status: 403,

@@ -1324,7 +1324,7 @@ export async function savePlanSelection(
           limits.emailRequestsPerMonth +
           limits.smsRequestsPerMonth +
           limits.linkRequestsPerMonth,
-        max_ai_replies_per_month: limits.aiRepliesPerMonth,
+        max_ai_replies_per_month: limits.smartRepliesPerMonth,
         max_email_requests_per_month: limits.emailRequestsPerMonth,
         max_sms_requests_per_month: limits.smsRequestsPerMonth,
         max_link_requests_per_month: limits.linkRequestsPerMonth,

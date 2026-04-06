@@ -85,7 +85,7 @@ export async function POST(request: Request) {
                     emailRequestsPerMonth: 2500,
                     smsRequestsPerMonth: 2500,
                     linkRequestsPerMonth: 5000,
-                    aiRepliesPerMonth: -1,
+                    smartRepliesPerMonth: -1,
                     teamMembers: 5,
                 };
 
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
                         plan_status: "active",
                         max_businesses: limits.maxLocations,
                         max_review_requests_per_month: limits.emailRequestsPerMonth + limits.smsRequestsPerMonth + limits.linkRequestsPerMonth,
-                        max_ai_replies_per_month: limits.aiRepliesPerMonth,
+                        max_ai_replies_per_month: limits.smartRepliesPerMonth,
                         max_email_requests_per_month: limits.emailRequestsPerMonth,
                         max_sms_requests_per_month: limits.smsRequestsPerMonth,
                         max_link_requests_per_month: limits.linkRequestsPerMonth,
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
                         updateData.max_businesses = plan.limits.maxLocations;
                         updateData.max_review_requests_per_month =
                             plan.limits.emailRequestsPerMonth + plan.limits.smsRequestsPerMonth + plan.limits.linkRequestsPerMonth;
-                        updateData.max_ai_replies_per_month = plan.limits.aiRepliesPerMonth;
+                        updateData.max_ai_replies_per_month = plan.limits.smartRepliesPerMonth;
                         updateData.max_email_requests_per_month = plan.limits.emailRequestsPerMonth;
                         updateData.max_sms_requests_per_month = plan.limits.smsRequestsPerMonth;
                         updateData.max_link_requests_per_month = plan.limits.linkRequestsPerMonth;
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
                         stripe_subscription_id: null,
                         max_businesses: FREE_LIMITS.maxLocations,
                         max_review_requests_per_month: FREE_LIMITS.emailRequestsPerMonth + FREE_LIMITS.smsRequestsPerMonth + FREE_LIMITS.linkRequestsPerMonth,
-                        max_ai_replies_per_month: FREE_LIMITS.aiRepliesPerMonth,
+                        max_ai_replies_per_month: FREE_LIMITS.smartRepliesPerMonth,
                         max_email_requests_per_month: FREE_LIMITS.emailRequestsPerMonth,
                         max_sms_requests_per_month: FREE_LIMITS.smsRequestsPerMonth,
                         max_link_requests_per_month: FREE_LIMITS.linkRequestsPerMonth,
