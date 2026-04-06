@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Copy, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,8 +8,13 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 
 export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     const [copied, setCopied] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    const embedUrl = typeof window !== "undefined"
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const embedUrl = mounted
         ? `${window.location.protocol}//${window.location.host}/w/${businessSlug}`
         : `https://zyenereviews.com/w/${businessSlug}`;
 
@@ -45,13 +50,14 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                 <div className="space-y-2 mt-auto">
                     <div className="relative group/code">
                         <pre className="p-3 bg-slate-950 text-slate-50 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono relative">
-                            {embedCode}
+                            {mounted ? embedCode : "Loading embed code..."}
                         </pre>
                         <Button
                             variant="secondary"
                             size="sm"
                             className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity"
                             onClick={handleCopy}
+                            disabled={!mounted}
                         >
                             {copied ? <Check className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />}
                             {copied ? "Copied" : "Copy"}

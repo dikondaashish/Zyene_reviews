@@ -177,9 +177,6 @@ export function FacebookIntegrationCard({
         }
     }
 
-    const lastSynced = platform?.last_synced_at
-        ? new Date(platform.last_synced_at).toLocaleString()
-        : null;
 
     // ── Connected state ──
     if (isConnected) {
