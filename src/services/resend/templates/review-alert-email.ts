@@ -20,7 +20,7 @@ export function reviewAlertEmail({
 }: ReviewAlertProps): string {
     const starLabel = "★".repeat(rating) + "☆".repeat(5 - rating);
     const starColor = rating >= 4 ? "#16a34a" : rating === 3 ? "#ca8a04" : "#dc2626";
-    
+
     const urgencyBadge = urgencyScore >= 7
         ? `<div style="margin-top: 12px; display: inline-block; background-color: #fee2e2; color: #991b1b; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">High Priority Action Needed</div>`
         : "";
@@ -89,7 +89,7 @@ export function reviewAlertEmail({
                     <tr>
                         <td style="padding: 0 40px 40px; text-align: center;">
                             <div style="font-size: 12px; color: #a1a1aa;">
-                                © ${new Date().getFullYear()} Zyene Reviews Inc. <br>
+                                © ${new Date().getFullYear()} Zyene Inc. <br>
                                 <a href="#" style="color: #71717a; text-decoration: underline;">Unsubscribe</a>
                             </div>
                         </td>

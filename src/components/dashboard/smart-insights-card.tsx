@@ -10,7 +10,7 @@ interface InsightsData {
     message?: string;
 }
 
-export function SmartInsightsCard() {
+export function AiInsightsCard() {
     const [data, setData] = useState<InsightsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -18,7 +18,7 @@ export function SmartInsightsCard() {
     useEffect(() => {
         async function fetchInsights() {
             try {
-                const res = await fetch("/api/smart/insights");
+                const res = await fetch("/api/ai/insights");
                 if (!res.ok) throw new Error("Failed to fetch");
                 const json = await res.json();
                 // apiOk wraps as { success, data: { ... } }
@@ -41,7 +41,7 @@ export function SmartInsightsCard() {
                         <Sparkles className="h-5 w-5 text-blue-500" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-base text-slate-900">Smart Review Insights</h3>
+                        <h3 className="font-semibold text-base text-slate-900">AI Review Insights</h3>
                         <p className="text-sm text-slate-400">Analyzing your reviews...</p>
                     </div>
                 </div>
@@ -63,14 +63,14 @@ export function SmartInsightsCard() {
                         <Sparkles className="h-5 w-5 text-blue-500" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-base text-slate-900">Smart Review Insights</h3>
+                        <h3 className="font-semibold text-base text-slate-900">AI Review Insights</h3>
                         <p className="text-sm text-slate-400">
                             {data.reviewCount} reviews analyzed · all time
                         </p>
                     </div>
                 </div>
                 <span className="text-xs font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-1 rounded-md">
-                    Smart
+                    AI
                 </span>
             </div>
 
