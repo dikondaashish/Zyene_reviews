@@ -57,6 +57,7 @@ export default function OnboardingPage() {
   // Holds the ?code= from Google OAuth redirect so Step2Form can process it immediately
   const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
   const [showPaymentCancelled, setShowPaymentCancelled] = useState(false);
+  const [isStepResolved, setIsStepResolved] = useState(false);
   const [checkoutVerifying, setCheckoutVerifying] = useState(() => {
     if (typeof window === "undefined") return false;
     const p = new URLSearchParams(window.location.search);
@@ -72,10 +73,10 @@ export default function OnboardingPage() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     if (code) {
+      console.log("[Onboarding] Detected Google OAuth code, jumping to Step 2");
       setPendingGoogleCode(code);
-      // Jump to step 2 so the code can be processed there
       setCurrentStep(2);
-      // Strip the code from the URL immediately to prevent double-processing
+      setIsStepResolved(true);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [setCurrentStep]);
@@ -93,8 +94,10 @@ export default function OnboardingPage() {
       window.history.replaceState({}, document.title, window.location.pathname);
 
     if (canceled === "1") {
+      console.log("[Onboarding] Detected checkout cancellation, jumping to Step 4");
       setShowPaymentCancelled(true);
       setCurrentStep(4);
+      setIsStepResolved(true);
       cleanUrl();
       return;
     }
@@ -143,82 +146,86 @@ export default function OnboardingPage() {
   // Load user, organization, and business on mount
   useEffect(() => {
     const loadUserAndOrg = async () => {
-      setLoadError(null);
-      const {
-        data: { user },
-        error: userErr,
-      } = await supabase.auth.getUser();
+      try {
+        setLoadError(null);
+        const {
+          data: { user },
+          error: userErr,
+        } = await supabase.auth.getUser();
 
-      if (userErr) {
-        setLoadError(userErr.message);
-        return;
-      }
-
-      if (user) {
-        setUser(user);
-
-        const { data: userData } = await supabase
-          .from("users")
-          .select("onboarding_step")
-          .eq("id", user.id)
-          .single();
-
-        if (userData?.onboarding_step) {
-          const params = new URLSearchParams(window.location.search);
-          const hasSpecialRedirect = params.has("code") || params.get("checkout_success") === "1" || params.get("checkout_canceled") === "1";
-          
-          if (!hasSpecialRedirect) {
-            setCurrentStep(userData.onboarding_step);
-          }
-        }
-
-        const { data: member, error: memberErr } = await supabase
-          .from("organization_members")
-          .select("organization_id")
-          .eq("user_id", user.id)
-          // Users can have different role strings; do not hardcode here.
-          .maybeSingle();
-
-        if (memberErr) {
-          setLoadError(memberErr.message);
+        if (userErr) {
+          setLoadError(userErr.message);
           return;
         }
 
-        if (member?.organization_id) {
-          const { data: org } = await supabase
-            .from("organizations")
-            .select("id, name")
-            .eq("id", member.organization_id)
-            .single();
-          if (org) setOrganization(org);
+        if (user) {
+          setUser(user);
 
-          const { data: biz } = await supabase
-            .from("businesses")
-            .select("id, name, city, category, address_line1, state, phone, review_platforms(*)")
-            .eq("organization_id", member.organization_id)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .single();
+          const { data: member, error: memberErr } = await supabase
+            .from("organization_members")
+            .select("organization_id")
+            .eq("user_id", user.id)
+            .maybeSingle();
 
-          if (biz) {
-            setBusiness({
-              ...biz,
-              city: biz.city ?? null,
-            });
-            const hasGoogle = biz.review_platforms?.some((p: any) => p.platform === "google");
-            setGoogleConnected(hasGoogle);
-            
-            // If Google is already connected, trigger a background sync on login
-            if (hasGoogle) {
-              triggerOnboardingSync(biz.id).catch(console.error);
+          if (memberErr) {
+            setLoadError(memberErr.message);
+            return;
+          }
+
+          if (member?.organization_id) {
+            const { data: org } = await supabase
+              .from("organizations")
+              .select("id, name")
+              .eq("id", member.organization_id)
+              .single();
+            if (org) setOrganization(org);
+
+            const { data: biz } = await supabase
+              .from("businesses")
+              .select("id, name, city, category, address_line1, state, phone, review_platforms(*)")
+              .eq("organization_id", member.organization_id)
+              .order("created_at", { ascending: false })
+              .limit(1)
+              .single();
+
+            if (biz) {
+              setBusiness({
+                ...biz,
+                city: biz.city ?? null,
+              });
+              const hasGoogle = biz.review_platforms?.some((p: any) => p.platform === "google");
+              setGoogleConnected(hasGoogle);
+              
+              // If Google is already connected, trigger a background sync on login
+              if (hasGoogle) {
+                triggerOnboardingSync(biz.id).catch(console.error);
+              }
             }
           }
+
+          // Finally, resolve the step if not already done by a redirect
+          if (!isStepResolved) {
+            const { data: userData } = await supabase
+              .from("users")
+              .select("onboarding_step")
+              .eq("id", user.id)
+              .single();
+
+            if (userData?.onboarding_step) {
+              console.log("[Onboarding] Recovered step from database:", userData.onboarding_step);
+              setCurrentStep(userData.onboarding_step);
+            }
+            setIsStepResolved(true);
+          }
         }
+      } catch (err: any) {
+        console.error("[Onboarding] Failed to load initial state:", err);
+        setLoadError(err.message || "Failed to load onboarding state");
       }
     };
 
     loadUserAndOrg();
-  }, [supabase]);
+  }, [supabase, isStepResolved, setCurrentStep]);
 
   // Check if user already completed onboarding
   useEffect(() => {
@@ -278,7 +285,7 @@ export default function OnboardingPage() {
     );
   }
 
-  if (!user || !organization) {
+  if (!user || !organization || !isStepResolved) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
