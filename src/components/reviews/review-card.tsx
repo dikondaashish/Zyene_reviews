@@ -316,14 +316,24 @@ export function ReviewCard({
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button
-                                        size="sm"
-                                        className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-                                        onClick={() => setIsReplying(true)}
-                                    >
-                                        <MessageSquare className="w-3.5 h-3.5 mr-2" />
-                                        Reply
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            size="sm"
+                                            className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                                            onClick={() => setIsReplying(true)}
+                                        >
+                                            <MessageSquare className="w-3.5 h-3.5 mr-2" />
+                                            Reply
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            className="h-9 text-xs font-semibold px-4 bg-[#f5f3ff] hover:bg-[#ede9fe] text-[#7c3aed] border border-[#ddd6fe] shadow-none"
+                                            onClick={() => handleToneClick("professional")}
+                                        >
+                                            <Sparkles className="w-3.5 h-3.5 mr-2" />
+                                            AI Suggest Reply
+                                        </Button>
+                                    </div>
                                 )}
                             </>
                         )}
