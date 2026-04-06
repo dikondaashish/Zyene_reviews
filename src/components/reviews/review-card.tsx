@@ -105,7 +105,14 @@ export function ReviewCard({
             // apiOk wraps as { success, data: { replies, ... } }
             const payload = json.data || json;
             if (payload.replies) {
-                setSuggestions(payload.replies);
+                // Normalize: schema returns string[], but UI expects { tone, text }[]
+                const tones = ["professional", "friendly", "empathetic"];
+                const normalized = payload.replies.map((item: string | ReplySuggestion, i: number) =>
+                    typeof item === "string"
+                        ? { tone: tones[i] || "professional", text: item }
+                        : item
+                );
+                setSuggestions(normalized);
             }
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
