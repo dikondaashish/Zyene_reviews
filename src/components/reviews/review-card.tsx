@@ -40,14 +40,16 @@ interface ReplySuggestion {
     text: string;
 }
 
-export function ReviewCard({ 
-    review, 
-    isSelected = false, 
-    onSelect 
-}: { 
+export function ReviewCard({
+    review,
+    isSelected = false,
+    onSelect,
+    onRefresh,
+}: {
     review: Review;
     isSelected?: boolean;
     onSelect?: (id: string, selected: boolean) => void;
+    onRefresh?: () => void;
 }) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState("");
@@ -74,8 +76,8 @@ export function ReviewCard({
             toast.success("Reply posted successfully");
             setIsReplying(false);
             setReplyText("");
-            setSuggestions([]); // Clear suggestions
-            router.refresh();
+            setSuggestions([]);
+            onRefresh ? onRefresh() : router.refresh();
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
@@ -124,7 +126,7 @@ export function ReviewCard({
             });
             if (!res.ok) throw new Error("Failed to update status");
             toast.success(`Review ${status === 'ignored' ? 'ignored' : 'moved to pending'}`);
-            router.refresh();
+            onRefresh ? onRefresh() : router.refresh();
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             toast.error(message);

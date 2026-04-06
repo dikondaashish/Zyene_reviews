@@ -10,9 +10,10 @@ interface BulkReviewActionBarProps {
     selectedIds: string[];
     onClearSelection: () => void;
     businessId: string;
+    onRefresh?: () => void;
 }
 
-export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId }: BulkReviewActionBarProps) {
+export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId, onRefresh }: BulkReviewActionBarProps) {
     const [isUpdating, setIsUpdating] = useState(false);
     const router = useRouter();
 
@@ -36,7 +37,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId 
             const updatedCount = payload?.count ?? (data as { count?: number }).count ?? selectedIds.length;
             toast.success(`Successfully updated ${updatedCount} reviews`);
             onClearSelection();
-            router.refresh();
+            onRefresh ? onRefresh() : router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
             toast.error(message);

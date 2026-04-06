@@ -10,9 +10,10 @@ import type { ReviewManagementItem } from "@/types/components";
 interface ReviewManagementProps {
     reviews: ReviewManagementItem[];
     businessId: string;
+    onRefresh?: () => void;
 }
 
-export function ReviewManagement({ reviews, businessId }: ReviewManagementProps) {
+export function ReviewManagement({ reviews, businessId, onRefresh }: ReviewManagementProps) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
     const toggleSelect = (id: string, selected: boolean) => {
@@ -66,6 +67,7 @@ export function ReviewManagement({ reviews, businessId }: ReviewManagementProps)
                         review={review as any}
                         isSelected={selectedIds.has(review.id)}
                         onSelect={toggleSelect}
+                        onRefresh={onRefresh}
                     />
                 ))}
             </div>
@@ -74,6 +76,7 @@ export function ReviewManagement({ reviews, businessId }: ReviewManagementProps)
                 selectedIds={Array.from(selectedIds)}
                 onClearSelection={clearSelection}
                 businessId={businessId}
+                onRefresh={onRefresh}
             />
         </div>
     );

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import {
     Select,
     SelectContent,
@@ -11,24 +10,20 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Filter, SlidersHorizontal } from "lucide-react";
 
-export function ReviewsFilters() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const updateFilter = (key: string, value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (value === "all" || !value) params.delete(key);
-        else params.set(key, value);
-
-        if (key !== "page") params.delete("page");
-
-        router.push(`/reviews?${params.toString()}`);
+interface ReviewsFiltersProps {
+    filters: {
+        status: string;
+        rating: string;
+        sort: string;
     };
+    onFilterChange: (key: string, value: string) => void;
+}
 
+export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps) {
     return (
         <div className="bg-white p-1 rounded-lg border shadow-sm flex flex-col sm:flex-row gap-2 sm:items-center justify-between sticky top-0 z-10">
             <div className="flex items-center overflow-x-auto no-scrollbar">
-                <Tabs value={searchParams.get("status") || "all"} onValueChange={(val) => updateFilter("status", val)} className="w-full sm:w-auto">
+                <Tabs value={filters.status || "all"} onValueChange={(val) => onFilterChange("status", val)} className="w-full sm:w-auto">
                     <TabsList className="bg-transparent h-9 p-0">
                         <TabsTrigger value="all" className="data-[state=active]:bg-gray-100 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-gray-200 rounded-md h-8 text-xs px-3">All</TabsTrigger>
                         <TabsTrigger value="needs_response" className="data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-yellow-100 rounded-md h-8 text-xs px-3">Needs Response</TabsTrigger>
@@ -39,7 +34,7 @@ export function ReviewsFilters() {
             </div>
 
             <div className="flex items-center gap-2 p-1 border-t sm:border-t-0 pt-2 sm:pt-0">
-                <Select value={searchParams.get("rating") || "all"} onValueChange={(val) => updateFilter("rating", val)}>
+                <Select value={filters.rating || "all"} onValueChange={(val) => onFilterChange("rating", val)}>
                     <SelectTrigger className="h-8 w-[130px] text-xs border-dashed focus:ring-0">
                         <div className="flex items-center pointer-events-none">
                             <Filter className="w-3 h-3 mr-2 text-muted-foreground" />
@@ -56,7 +51,7 @@ export function ReviewsFilters() {
                     </SelectContent>
                 </Select>
 
-                <Select value={searchParams.get("sort") || "newest"} onValueChange={(val) => updateFilter("sort", val)}>
+                <Select value={filters.sort || "newest"} onValueChange={(val) => onFilterChange("sort", val)}>
                     <SelectTrigger className="h-8 w-[150px] text-xs border-dashed focus:ring-0">
                         <div className="flex items-center pointer-events-none">
                             <SlidersHorizontal className="w-3 h-3 mr-2 text-muted-foreground" />

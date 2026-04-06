@@ -1,15 +1,12 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
-import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card";
-import { ReviewsFilters } from "@/components/reviews/reviews-filters";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { MessageSquare, Lock, Download, Eye } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Badge } from "@/components/ui/badge";
-import { ReviewManagement } from "@/components/reviews/review-management";
+import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -20,7 +17,6 @@ export default async function ReviewsPage(props: {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
 
-    // Get active business from context
     const { businessId, business } = await getActiveBusinessId();
 
     const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
@@ -41,7 +37,7 @@ export default async function ReviewsPage(props: {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    // Always fetch both counts for tab labels
+    // Fetch counts + initial data in parallel
     const [{ count: publicCount }, { count: privateCount }] = await Promise.all([
         supabase
             .from("reviews")
@@ -53,11 +49,10 @@ export default async function ReviewsPage(props: {
             .eq("business_id", businessId),
     ]);
 
-    let reviews = [], count = 0;
-    let totalPages = 0;
+    let reviews: any[] = [];
+    let count = 0;
 
     if (type === "private") {
-        // Fetch Private Feedback
         const { data, count: totalCount } = await supabase
             .from("private_feedback")
             .select(`
@@ -72,21 +67,19 @@ export default async function ReviewsPage(props: {
             .order("created_at", { ascending: false })
             .range(from, to);
 
-        reviews = (data as any) || [];
+        reviews = data || [];
         count = totalCount || 0;
     } else {
-        // Fetch Public Reviews
         let query = supabase
             .from("reviews")
             .select("*", { count: "exact" })
             .eq("business_id", businessId);
 
-        // Filters
         const statusRaw = searchParams.status || "all";
         const statusMap: Record<string, string> = {
             "needs_response": "pending",
             "responded": "responded",
-            "ignored": "ignored"
+            "ignored": "ignored",
         };
 
         if (statusRaw !== "all" && statusMap[statusRaw]) {
@@ -98,10 +91,7 @@ export default async function ReviewsPage(props: {
             query = query.eq("rating", parseInt(rating));
         }
 
-        // Sort
         const sort = searchParams.sort || "newest";
-        // reviews table uses `review_date` (source timestamp) and `created_at` (ingest timestamp).
-        // Prefer `review_date` for user-visible ordering.
         if (sort === "newest") query = query.order("review_date", { ascending: false });
         else if (sort === "oldest") query = query.order("review_date", { ascending: true });
         else if (sort === "lowest") query = query.order("rating", { ascending: true });
@@ -117,14 +107,7 @@ export default async function ReviewsPage(props: {
         count = totalCount || 0;
     }
 
-    totalPages = count ? Math.ceil(count / pageSize) : 0;
-
-    // Helper URLs for Pagination
-    const getPageUrl = (newPage: number) => {
-        const params = new URLSearchParams(searchParams as any);
-        params.set("page", newPage.toString());
-        return `/reviews?${params.toString()}`;
-    };
+    const totalPages = count ? Math.ceil(count / pageSize) : 0;
 
     return (
         <div className="flex flex-col gap-6 h-full">
@@ -159,81 +142,21 @@ export default async function ReviewsPage(props: {
                 </div>
             </div>
 
-            {/* Tab Switcher */}
-            <div className="flex items-center">
-                <div className="bg-muted p-1 rounded-lg inline-flex">
-                    <Link href="/reviews?type=public">
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === 'public' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                            Public Reviews ({publicCount || 0})
-                        </div>
-                    </Link>
-                    <Link href="/reviews?type=private">
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${type === 'private' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
-                            Private Feedback ({privateCount || 0})
-                            <Lock className="w-3 h-3" />
-                        </div>
-                    </Link>
-                </div>
-            </div>
-
-            {/* Content */}
-            {type === "public" ? (
-                <>
-                    <ReviewsFilters />
-                    {reviews && reviews.length > 0 ? (
-                        <ReviewManagement reviews={reviews} businessId={businessId as string} />
-                    ) : (
-                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
-                            <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mb-4">
-                                <MessageSquare className="h-6 w-6 text-muted-foreground" />
-                            </div>
-                            <h3 className="text-lg font-medium text-foreground">
-                                {publicCount === 0 ? "No reviews synced yet" : "No reviews found"}
-                            </h3>
-                            <p className="text-muted-foreground max-w-sm mt-1 mb-6">
-                                {publicCount === 0 
-                                    ? "Connect your Google Business Profile to import and manage your reviews." 
-                                    : "Try adjusting your filters or sync your reviews."}
-                            </p>
-                            <SyncButton />
-                        </div>
-                    )}
-                </>
-            ) : (
-                // Private Feedback List
-                <div className="grid gap-4">
-                    {reviews && reviews.length > 0 ? (
-                        reviews.map((feedback: any) => (
-                            <PrivateFeedbackCard key={feedback.id} feedback={feedback} />
-                        ))
-                    ) : (
-                        <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
-                            <div className="h-12 w-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
-                                <Lock className="h-6 w-6 text-destructive/40" />
-                            </div>
-                            <h3 className="text-lg font-medium text-foreground">No private feedback yet</h3>
-                            <p className="text-muted-foreground max-w-sm mt-1">
-                                Negative feedback (1-3 stars) from your review flow will appear here privately.
-                            </p>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-4 pb-8">
-                    <Button variant="outline" size="sm" disabled={page <= 1} asChild>
-                        {page > 1 ? <Link href={getPageUrl(page - 1)}>Previous</Link> : <span>Previous</span>}
-                    </Button>
-                    <div className="text-sm flex items-center text-muted-foreground">
-                        Page {page} of {totalPages}
-                    </div>
-                    <Button variant="outline" size="sm" disabled={page >= totalPages} asChild>
-                        {page < totalPages ? <Link href={getPageUrl(page + 1)}>Next</Link> : <span>Next</span>}
-                    </Button>
-                </div>
-            )}
+            <ReviewsPageClient
+                businessId={businessId as string}
+                initialReviews={reviews}
+                initialCount={count}
+                initialTotalPages={totalPages}
+                initialPage={page}
+                initialPublicCount={publicCount || 0}
+                initialPrivateCount={privateCount || 0}
+                initialType={type}
+                initialFilters={{
+                    status: searchParams.status || "all",
+                    rating: searchParams.rating || "all",
+                    sort: searchParams.sort || "newest",
+                }}
+            />
         </div>
     );
 }
