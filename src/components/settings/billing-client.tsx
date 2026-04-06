@@ -52,7 +52,7 @@ interface BillingClientProps {
         emailRequests: UsageStat;
         smsRequests: UsageStat;
         linkRequests: UsageStat;
-        aiReplies: UsageStat;
+        smartReplies: UsageStat;
         businesses: UsageStat;
     };
     plans: Plan[];
@@ -142,7 +142,7 @@ export function BillingClient({
             emailRequests: { used: 0, max: 0 },
             smsRequests: { used: 0, max: 0 },
             linkRequests: { used: 0, max: 0 },
-            aiReplies: { used: 0, max: 0 },
+            smartReplies: { used: 0, max: 0 },
             businesses: { used: usage.businesses?.used || 0, max: 1 },
         };
 
@@ -301,8 +301,8 @@ export function BillingClient({
                             icon={<LinkIcon className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label={dict.billing.ai_replies}
-                            stat={displayUsage.aiReplies}
+                            label={dict.billing.smart_replies}
+                            stat={displayUsage.smartReplies}
                             icon={<Bot className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
