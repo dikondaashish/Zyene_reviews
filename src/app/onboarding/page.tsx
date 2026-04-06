@@ -158,6 +158,21 @@ export default function OnboardingPage() {
       if (user) {
         setUser(user);
 
+        const { data: userData } = await supabase
+          .from("users")
+          .select("onboarding_step")
+          .eq("id", user.id)
+          .single();
+
+        if (userData?.onboarding_step) {
+          const params = new URLSearchParams(window.location.search);
+          const hasSpecialRedirect = params.has("code") || params.get("checkout_success") === "1" || params.get("checkout_canceled") === "1";
+          
+          if (!hasSpecialRedirect) {
+            setCurrentStep(userData.onboarding_step);
+          }
+        }
+
         const { data: member, error: memberErr } = await supabase
           .from("organization_members")
           .select("organization_id")
