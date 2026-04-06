@@ -90,12 +90,12 @@ export async function POST(request: Request) {
     const inviteLink = `${appUrl}/signup?invite=${invite.token}`;
 
     const inviterName = membershipTyped.users?.full_name || "A team member";
-    const orgName = membershipTyped.organizations?.name || "Zyene";
+    const orgName = membershipTyped.organizations?.name || "Zyene Reviews";
 
     try {
         await sendEmail({
             to: email,
-            subject: `Join ${orgName} on Zyene`,
+            subject: `Join ${orgName} on Zyene Reviews`,
             html: TeamInviteEmail(inviteLink, inviterName, orgName),
         });
     } catch (emailError) {

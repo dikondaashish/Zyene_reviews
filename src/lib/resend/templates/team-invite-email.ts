@@ -55,7 +55,7 @@ export const TeamInviteEmail = (inviteLink: string, inviterName: string, organiz
                     <tr>
                         <td style="padding: 0 40px 40px; text-align: center;">
                             <div style="font-size: 12px; color: #a1a1aa;">
-                                © ${new Date().getFullYear()} Zyene Inc. <br>
+                                © ${new Date().getFullYear()} Zyene Reviews Inc. <br>
                                 <a href="#" style="color: #71717a; text-decoration: underline;">Unsubscribe</a>
                             </div>
                         </td>

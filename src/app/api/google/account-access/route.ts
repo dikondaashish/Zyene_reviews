@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
             verificationState?: string;
             locationCount: number;
             locations: Array<{ name: string; title: string }>;
-            isLinkedToZyene: boolean;
+            isLinkedToZyeneReviews: boolean;
         }> = [];
 
         const linkedAccountId = platform.google_account_id as string | null;
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
                 verificationState: acc.verificationState,
                 locationCount: locations.length,
                 locations: locations.slice(0, 25),
-                isLinkedToZyene: isLinked,
+                isLinkedToZyeneReviews: isLinked,
             });
         }
 

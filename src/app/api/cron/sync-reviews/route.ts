@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 import { syncGoogleReviewsForPlatform, SyncResult } from "@/services/google/sync-service";
 import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/services/facebook/sync-service";
+import { inngest } from "@/services/inngest/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
@@ -31,49 +32,28 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
-    console.log(`[Cron] Starting sync for ${platforms?.length || 0} platforms`);
+    console.log(`[Cron] Dispatching sync for ${platforms?.length || 0} platforms`);
 
-    const results = [];
-    let totalAnalyzed = 0;
-    let totalAlerts = 0;
-
-    // Process sequentially to respect rate limits
-    for (const platform of platforms || []) {
-        try {
-            let stats: SyncResult | YelpSyncResult | FacebookSyncResult;
-
-            if (platform.platform === "google") {
-                stats = await syncGoogleReviewsForPlatform(platform.id);
-            } else if (platform.platform === "yelp") {
-                stats = await syncYelpReviewsForPlatform(platform.id);
-            } else if (platform.platform === "facebook") {
-                stats = await syncFacebookReviewsForPlatform(platform.id);
-            } else {
-                console.warn(`[Cron] Unknown platform type: ${platform.platform}`);
-                continue;
-            }
-
-            totalAnalyzed += stats.analyzed || 0;
-            totalAlerts += stats.alerts || 0;
-            results.push({ id: platform.id, platform: platform.platform, status: "success", ...stats });
-        } catch (error: unknown) {
-            console.error(`[Cron] Sync Failed for ${platform.platform} platform ${platform.id}:`, error);
-            Sentry.captureException(error, {
-                tags: { route: "cron-sync-reviews", platform: platform.platform },
-                extra: { platform_id: platform.id }
-            });
-            results.push({ id: platform.id, platform: platform.platform, status: "error", error: "Internal Server Error" });
-        }
+    // 1. Dispatch background jobs via Inngest
+    if (platforms && platforms.length > 0) {
+        await inngest.send(
+            platforms.map((p) => ({
+                name: "review/sync.platform",
+                data: {
+                    platformId: p.id,
+                    platformType: p.platform as "google" | "yelp" | "facebook",
+                },
+            }))
+        );
     }
 
-    // Heartbeat success ping!
+    // 2. Heartbeat success ping!
+    // We ping success because the DISPATCHER has successfully fanned out the work.
     await fetch("https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV").catch(() => { });
 
     return NextResponse.json({
         success: true,
-        processed: results.length,
-        totalAnalyzed,
-        totalAlerts,
-        results
+        dispatched: platforms?.length || 0,
+        message: "Background synchronization fanned out"
     });
 }

@@ -25,10 +25,18 @@ type SyncGoogleReviewsEvent = {
     };
 };
 
+type SyncPlatformEvent = {
+    data: {
+        platformId: string;
+        platformType: "google" | "yelp" | "facebook";
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
     "google/sync.reviews": SyncGoogleReviewsEvent;
+    "review/sync.platform": SyncPlatformEvent;
 };
 
 // Create a client to send and receive events

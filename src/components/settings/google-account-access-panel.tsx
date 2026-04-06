@@ -12,7 +12,7 @@ type AccountSummary = {
     verificationState?: string;
     locationCount: number;
     locations: Array<{ name: string; title: string }>;
-    isLinkedToZyene: boolean;
+    isLinkedToZyeneReviews: boolean;
 };
 
 type AdminRow = {
@@ -79,7 +79,7 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
             <div className="space-y-3">
                 <h5 className="text-sm font-medium">Accounts & locations</h5>
                 <p className="text-xs text-muted-foreground">
-                    OAuth token can access these Google Business Profile accounts. The row linked to Zyene is marked.
+                    OAuth token can access these Google Business Profile accounts. The row linked to Zyene Reviews is marked.
                     {linkedLocationId && (
                         <>
                             {" "}
@@ -91,13 +91,13 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
                     {accounts.map((acc) => (
                         <div
                             key={acc.resourceName}
-                            className={`rounded-md border p-3 text-sm ${acc.isLinkedToZyene ? "border-orange-200 bg-orange-50/50" : ""}`}
+                            className={`rounded-md border p-3 text-sm ${acc.isLinkedToZyeneReviews ? "border-orange-200 bg-orange-50/50" : ""}`}
                         >
                             <div className="flex flex-wrap items-center gap-2">
                                 <span className="font-medium">{acc.accountName}</span>
-                                {acc.isLinkedToZyene && (
+                                {acc.isLinkedToZyeneReviews && (
                                     <Badge variant="secondary" className="text-[10px]">
-                                        Linked to Zyene
+                                        Linked to Zyene Reviews
                                     </Badge>
                                 )}
                                 {acc.type && (
