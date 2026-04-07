@@ -128,6 +128,7 @@ export interface PublicProfileBusinessRecord {
     name: string;
     slug?: string;
     brand_color?: string | null;
+    logo_url?: string | null;
     enable_staff_selection?: boolean;
     staff_names?: string[];
     rating_style?: string | null;
