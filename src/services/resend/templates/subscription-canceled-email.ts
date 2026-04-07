@@ -37,33 +37,38 @@ export function subscriptionCanceledEmail({
                                 </div>
                             </div>
 
-                            <!-- Heading -->
-                            <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 700; color: #18181b; text-align: center; letter-spacing: -0.025em;">
-                                Subscription Canceled
-                            </h1>
-                            <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
-                                Hi ${userName}, your subscription has been canceled. You'll still have access to your premium features until the end of your current billing period on **${endDate}**.
-                            </p>
+                             <!-- Heading -->
+                             <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 700; color: #18181b; text-align: center; letter-spacing: -0.025em;">
+                                 We're sad to see you go...
+                             </h1>
+                             <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
+                                 Hi ${userName}, we've loved having you as part of the Zyene Reviews community. This is to confirm your subscription will end on **${endDate}**.
+                             </p>
 
-                            <!-- CTA -->
-                            <div style="text-align: center; margin-bottom: 48px;">
-                                <p style="margin: 0 0 16px; font-size: 15px; color: #71717a;">Changed your mind? You can reactivate your account anytime.</p>
-                                <a href="${rejoinUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 15px; border: 1px solid #27272a;">
-                                    Reactivate Account
-                                </a>
-                            </div>
+                             <!-- Win-back Offer -->
+                             <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 12px; padding: 32px; margin-bottom: 40px; text-align: center;">
+                                 <h3 style="margin: 0 0 12px; font-size: 18px; font-weight: 700; color: #854d0e;">
+                                     Wait! We'd love to have you back.
+                                 </h3>
+                                 <p style="margin: 0 0 24px; font-size: 15px; line-height: 1.5; color: #713f12;">
+                                     If price was the issue, we'd like to help. Come back today and get <strong>25% off your next 3 months</strong> on any plan.
+                                 </p>
+                                 <a href="${rejoinUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                                     Reactivate with 25% Off
+                                 </a>
+                             </div>
 
-                            <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; border: 1px solid #f1f5f9;">
-                                <p style="margin: 0; font-size: 15px; color: #3f3f46; text-align: center;">
-                                    We'd love to know how we can improve. If you have a moment, could you let us know what we could have done better?
-                                </p>
-                            </div>
+                             <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; border: 1px solid #f1f5f9; text-align: center;">
+                                 <p style="margin: 0; font-size: 14px; color: #71717a; line-height: 1.6;">
+                                     <strong>How can we improve?</strong> We're always trying to build a better platform. If you have 30 seconds, we'd love to hear why you decided to leave — just reply to this email!
+                                 </p>
+                             </div>
 
-                            <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid #f4f4f5; text-align: center;">
-                                <p style="margin: 0; font-size: 15px; font-weight: 600; color: #18181b;">
-                                    The Zyene Reviews Team
-                                </p>
-                            </div>
+                             <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid #f4f4f5; text-align: center;">
+                                 <p style="margin: 0 0 8px; font-size: 15px; font-weight: 600; color: #18181b;">
+                                     The Zyene Reviews Team
+                                 </p>
+                             </div>
                         </td>
                     </tr>
                 </table>
