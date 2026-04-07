@@ -87,6 +87,7 @@ export type Database = {
           organization_id: string
           phone: string | null
           rating_subtitle: string | null
+          rating_style: string | null
           review_request_delay_minutes: number
           review_request_email_enabled: boolean
           review_request_frequency_cap_days: number
@@ -137,6 +138,7 @@ export type Database = {
           organization_id: string
           phone?: string | null
           rating_subtitle?: string | null
+          rating_style?: string | null
           review_request_delay_minutes?: number
           review_request_email_enabled?: boolean
           review_request_frequency_cap_days?: number
@@ -187,6 +189,7 @@ export type Database = {
           organization_id?: string
           phone?: string | null
           rating_subtitle?: string | null
+          rating_style?: string | null
           review_request_delay_minutes?: number
           review_request_email_enabled?: boolean
           review_request_frequency_cap_days?: number

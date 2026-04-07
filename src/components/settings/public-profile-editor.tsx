@@ -33,6 +33,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         brand_color: business.brand_color || "#0f172a",
         logo_url: business.logo_url,
         min_stars_for_google: business.min_stars_for_google || 4,
+        rating_style: business.rating_style || "emoji",
         welcome_message: business.welcome_message ?? undefined,
         apology_message: business.apology_message ?? undefined,
         rating_subtitle: business.rating_subtitle ?? undefined,
@@ -218,6 +219,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 brandColor={previewState.brand_color}
                                 logoUrl={previewState.logo_url ?? undefined}
                                 minStars={previewState.min_stars_for_google}
+                                ratingStyle={previewState.rating_style}
                                 welcomeMsg={previewState.welcome_message}
                                 apologyMsg={previewState.apology_message}
                                 ratingSubtitle={previewState.rating_subtitle}

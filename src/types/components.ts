@@ -129,6 +129,7 @@ export interface PublicProfileBusinessRecord {
     slug?: string;
     brand_color?: string | null;
     logo_url?: string | null;
+    rating_style?: string | null;
     min_stars_for_google?: number | null;
     welcome_message?: string | null;
     apology_message?: string | null;
@@ -158,6 +159,7 @@ export interface PublicProfilePreviewValues {
     slug?: string;
     brand_color?: string;
     logo_url?: string | null;
+    rating_style?: string;
     min_stars_for_google?: number;
     welcome_message?: string;
     apology_message?: string;

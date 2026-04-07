@@ -52,6 +52,7 @@ const contentSchema = z.object({
     apology_message: z.string().optional(),
     min_stars_for_google: z.number().min(1).max(5).optional(),
     google_review_url: z.string().optional(),
+    rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional(),
 });
 
 type ContentFormValues = z.infer<typeof contentSchema>;
@@ -91,6 +92,7 @@ export function ReviewContentForm({
             hide_branding: false,
             welcome_message: "",
             apology_message: "",
+            rating_style: "emoji",
         },
     });
 
@@ -189,6 +191,7 @@ export function ReviewContentForm({
                         hide_branding: data.hide_branding || false,
                         welcome_message: data.welcome_message || "How was your experience?",
                         apology_message: data.apology_message || "Sorry about that",
+                        rating_style: (data.rating_style as "emoji" | "stars" | "number" | "slider" | "radio") || "emoji",
                     });
                 }
             } catch (error) {
@@ -348,6 +351,37 @@ export function ReviewContentForm({
                                     />
 
                                     <div className="pt-2 border-t border-border">
+                                        <FormField
+                                            control={form.control}
+                                            name="rating_style"
+                                            render={({ field }) => (
+                                                <FormItem className="mb-4">
+                                                    <FormLabel>Rating Style</FormLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        value={field.value}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger className="bg-muted/30 focus:bg-background transition-colors">
+                                                                <SelectValue placeholder="Select style" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="emoji">Emoji (😍 😊 😐 😟 😠)</SelectItem>
+                                                            <SelectItem value="stars">Stars (★★★★★)</SelectItem>
+                                                            <SelectItem value="number">Number Scale (1 - 5)</SelectItem>
+                                                            <SelectItem value="slider">Slider (Draggable)</SelectItem>
+                                                            <SelectItem value="radio">Radio Buttons (Text-based)</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormDescription>
+                                                        Choose how customers input their rating.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
                                         <FormField
                                             control={form.control}
                                             name="min_stars_for_google"

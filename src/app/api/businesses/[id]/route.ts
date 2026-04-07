@@ -21,6 +21,7 @@ const businessPatchSchema = z
         postal_code: z.string().max(20).optional().nullable(),
         zip: z.string().max(20).optional().nullable(),
         brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i).optional().nullable(),
+        rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional().nullable(),
     })
     .strict();
 

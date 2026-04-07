@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
-import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check, Star } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils/index";
@@ -45,6 +45,7 @@ export interface PublicReviewFlowProps {
     brandColor?: string;
     logoUrl?: string;
     minStars?: number;
+    ratingStyle?: string;
     welcomeMsg?: string; // Main Rating Heading
     apologyMsg?: string; // Main Negative Heading
     ratingSubtitle?: string;
@@ -81,6 +82,7 @@ export function PublicReviewFlow({
     brandColor = "#2563EB", // Default Blue
     logoUrl,
     minStars: minStarsVal,
+    ratingStyle = "emoji",
     welcomeMsg,
     apologyMsg,
     ratingSubtitle,
@@ -538,45 +540,156 @@ export function PublicReviewFlow({
                         </h2>
                     </div>
 
-                    {/* Emoji ratings */}
-                    <div className="grid grid-cols-5 gap-2">
-                        {RATINGS.map((r) => (
-                            <button
-                                key={r.value}
-                                onClick={() => handleRate(r.value)}
-                                onMouseEnter={() => setHoverRating(r.value)}
-                                onMouseLeave={() => setHoverRating(null)}
-                                className={cn(
-                                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
-                                    "border-2 hover:border-blue-300 hover:bg-blue-50/50",
-                                    "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
-                                    rating !== r.value && "active:scale-95",
-                                    hoverRating === r.value && rating !== r.value
-                                        ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
-                                        : rating === r.value
-                                            ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/20 shadow-md scale-105 z-10"
-                                            : "border-slate-200 bg-white"
-                                )}
-                            >
-                                <span className={cn(
-                                    "text-3xl sm:text-4xl transition-all duration-300 ease-out",
-                                    hoverRating === r.value && rating !== r.value && "scale-110",
-                                    rating === r.value && "scale-[1.4] -translate-y-1"
-                                )}>
-                                    {r.emoji}
-                                </span>
-                                <span className={cn(
-                                    "text-[10px] sm:text-xs font-semibold tracking-tight transition-all duration-300",
-                                    hoverRating === r.value || rating === r.value
-                                        ? "text-blue-700"
-                                        : "text-slate-500",
-                                    rating === r.value && "opacity-0"
-                                )}>
-                                    {r.label}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
+                    {/* Rating UI */}
+                    {ratingStyle === "emoji" && (
+                        <div className="grid grid-cols-5 gap-2">
+                            {RATINGS.map((r) => (
+                                <button
+                                    key={r.value}
+                                    onClick={() => handleRate(r.value)}
+                                    onMouseEnter={() => setHoverRating(r.value)}
+                                    onMouseLeave={() => setHoverRating(null)}
+                                    className={cn(
+                                        "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
+                                        "border-2 hover:border-blue-300 hover:bg-blue-50/50",
+                                        "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                        rating !== r.value && "active:scale-95",
+                                        hoverRating === r.value && rating !== r.value
+                                            ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
+                                            : rating === r.value
+                                                ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/20 shadow-md scale-105 z-10"
+                                                : "border-slate-200 bg-white"
+                                    )}
+                                >
+                                    <span className={cn(
+                                        "text-3xl sm:text-4xl transition-all duration-300 ease-out",
+                                        hoverRating === r.value && rating !== r.value && "scale-110",
+                                        rating === r.value && "scale-[1.4] -translate-y-1"
+                                    )}>
+                                        {r.emoji}
+                                    </span>
+                                    <span className={cn(
+                                        "text-[10px] sm:text-xs font-semibold tracking-tight transition-all duration-300",
+                                        hoverRating === r.value || rating === r.value
+                                            ? "text-blue-700"
+                                            : "text-slate-500",
+                                        rating === r.value && "opacity-0"
+                                    )}>
+                                        {r.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {ratingStyle === "stars" && (
+                        <div className="flex justify-center gap-1 sm:gap-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                    key={star}
+                                    onClick={() => handleRate(star)}
+                                    onMouseEnter={() => setHoverRating(star)}
+                                    onMouseLeave={() => setHoverRating(null)}
+                                    className={cn(
+                                        "p-2 transition-transform duration-200 focus:outline-none",
+                                        "hover:scale-110 active:scale-95"
+                                    )}
+                                >
+                                    <Star
+                                        className={cn(
+                                            "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
+                                            (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
+                                                ? "fill-[#F59E0B] text-[#F59E0B]"
+                                                : "fill-slate-100 text-slate-200"
+                                        )}
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {ratingStyle === "number" && (
+                        <div className="flex justify-between w-full max-w-sm mx-auto">
+                            {[1, 2, 3, 4, 5].map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => handleRate(num)}
+                                    onMouseEnter={() => setHoverRating(num)}
+                                    onMouseLeave={() => setHoverRating(null)}
+                                    className={cn(
+                                        "w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-lg sm:text-xl font-bold transition-all duration-200 shadow-sm",
+                                        "border-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                        rating === num
+                                            ? "border-blue-600 bg-blue-600 text-white scale-110 shadow-md ring-4 ring-blue-500/20 z-10"
+                                            : hoverRating === num
+                                                ? "border-blue-400 bg-blue-50 text-blue-700 scale-105"
+                                                : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                                    )}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {ratingStyle === "slider" && (
+                        <div className="w-full space-y-6 pt-4 pb-2 max-w-sm mx-auto">
+                            <input
+                                type="range"
+                                min="1"
+                                max="5"
+                                step="1"
+                                value={rating !== null ? rating : hoverRating !== null ? hoverRating : 5}
+                                onChange={(e) => setHoverRating(parseInt(e.target.value))}
+                                onMouseUp={(e) => {
+                                    const val = parseInt((e.target as HTMLInputElement).value);
+                                    setHoverRating(null);
+                                    handleRate(val);
+                                }}
+                                onTouchEnd={(e) => {
+                                    const val = parseInt((e.target as HTMLInputElement).value);
+                                    setHoverRating(null);
+                                    handleRate(val);
+                                }}
+                                className="w-full cursor-pointer h-3 bg-slate-200 rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all"
+                            />
+                            <div className="flex justify-between text-xs sm:text-sm font-semibold text-slate-500 px-1 uppercase tracking-wider">
+                                <span>POOR</span>
+                                <span>EXCELLENT</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {ratingStyle === "radio" && (
+                        <div className="flex flex-col gap-2.5 max-w-sm mx-auto w-full">
+                            {RATINGS.map((r) => (
+                                <button
+                                    key={r.value}
+                                    onClick={() => handleRate(r.value)}
+                                    className={cn(
+                                        "flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 w-full text-left",
+                                        "focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98]",
+                                        rating === r.value
+                                            ? "border-blue-600 bg-blue-50/80 shadow-sm"
+                                            : "border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
+                                        rating === r.value ? "border-blue-600" : "border-slate-300"
+                                    )}>
+                                        {rating === r.value && <div className="h-3 w-3 rounded-full bg-blue-600 animate-in zoom-in duration-200" />}
+                                    </div>
+                                    <span className={cn(
+                                        "font-medium text-lg",
+                                        rating === r.value ? "text-blue-900" : "text-slate-700"
+                                    )}>
+                                        {r.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </CardWrapper>
         );
