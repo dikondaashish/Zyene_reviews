@@ -62,9 +62,11 @@ type ContentFormValues = z.infer<typeof contentSchema>;
 export function ReviewContentForm({
     businessId,
     onValuesChange,
+    onTabChange,
 }: {
     businessId: string;
     onValuesChange?: (values: Partial<PublicProfilePreviewValues>) => void;
+    onTabChange?: (tab: string) => void;
 }) {
     const supabase = createClient();
     const [isLoading, setIsLoading] = useState(true);
@@ -280,7 +282,11 @@ export function ReviewContentForm({
         <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <Tabs defaultValue="rating" className="w-full">
+                    <Tabs
+                        defaultValue="rating"
+                        className="w-full"
+                        onValueChange={onTabChange}
+                    >
                         {/* ── Tab Navigation ── */}
                         <div className="border-b bg-muted/40 px-6 pt-5 pb-0">
                             <h3 className="text-lg font-semibold text-foreground mb-1">Review Flow Content</h3>

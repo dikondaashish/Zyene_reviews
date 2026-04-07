@@ -58,9 +58,29 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         hide_branding: business.hide_branding ?? false,
     });
 
+    const [activeTab, setActiveTab] = useState("rating");
+
     const handleValuesChange = useCallback((values: Partial<PublicProfilePreviewValues>) => {
         setPreviewState(prev => ({ ...prev, ...values }));
     }, []);
+
+    const handleTabChange = useCallback((tab: string) => {
+        setActiveTab(tab);
+    }, []);
+
+    // Map content tabs to flow steps
+    const getPreviewStep = (tab: string): "rating" | "tags" | "generating" | "review" | "thankyou" | "negative" => {
+        switch (tab) {
+            case "rating": return "rating";
+            case "tags": return "tags";
+            case "google": return "review";
+            case "feedback": return "negative";
+            case "success": return "thankyou";
+            default: return "rating";
+        }
+    };
+    
+    const previewStep = getPreviewStep(activeTab);
 
     const handleSlugChange = useCallback((slug: string) => {
         handleValuesChange({ slug });
@@ -196,6 +216,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 <ReviewContentForm
                     businessId={business.id}
                     onValuesChange={handleValuesChange}
+                    onTabChange={handleTabChange}
                 />
             </div>
 
@@ -245,6 +266,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 footerLogoUrl={previewState.footer_logo_url ?? undefined}
                                 hideBranding={previewState.hide_branding}
                                 isPreview={true}
+                                previewStep={previewStep}
                                 className="min-h-full w-full rounded-[2rem]"
                             />
                         </div>

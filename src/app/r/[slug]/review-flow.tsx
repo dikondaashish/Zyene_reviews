@@ -68,6 +68,7 @@ export interface PublicReviewFlowProps {
     footerLogoUrl?: string;
     hideBranding?: boolean;
     isPreview?: boolean;
+    previewStep?: FlowStep;
     className?: string;
 }
 
@@ -107,6 +108,7 @@ export function PublicReviewFlow({
     footerLogoUrl,
     hideBranding = false,
     isPreview = false,
+    previewStep,
     className,
 }: PublicReviewFlowProps) {
     const minStars = minStarsVal ?? 4;
@@ -124,6 +126,13 @@ export function PublicReviewFlow({
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => setMounted(true), []);
+    
+    // Sync internal step with previewStep when in preview mode
+    useEffect(() => {
+        if (isPreview && previewStep) {
+            setStep(previewStep);
+        }
+    }, [isPreview, previewStep]);
 
     const supabase = createClient();
 
