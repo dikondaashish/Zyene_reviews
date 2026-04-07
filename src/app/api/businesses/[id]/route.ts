@@ -20,6 +20,7 @@ const businessPatchSchema = z
         state: z.string().max(120).optional().nullable(),
         postal_code: z.string().max(20).optional().nullable(),
         zip: z.string().max(20).optional().nullable(),
+        brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i).optional().nullable(),
     })
     .strict();
 
@@ -72,6 +73,15 @@ export async function PATCH(
                 code: "BUSINESS_UPDATE_FAILED",
                 details: error.message,
             });
+        }
+
+        // Invalidate Redis cache for this user
+        try {
+            const { redis } = await import("@/lib/db/redis");
+            const cacheKey = `user_businesses:${user.id}`;
+            await redis.del(cacheKey);
+        } catch (e) {
+            console.error("Failed to delete business cache:", e);
         }
 
         return apiOk(data);
@@ -133,6 +143,15 @@ export async function DELETE(
                 code: "BUSINESS_ARCHIVE_FAILED",
                 details: archiveErr.message,
             });
+        }
+
+        // Invalidate Redis cache for this user
+        try {
+            const { redis } = await import("@/lib/db/redis");
+            const cacheKey = `user_businesses:${user.id}`;
+            await redis.del(cacheKey);
+        } catch (e) {
+            console.error("Failed to delete business cache:", e);
         }
 
         return apiOk({ success: true });
