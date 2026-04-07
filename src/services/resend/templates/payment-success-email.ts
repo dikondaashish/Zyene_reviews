@@ -44,7 +44,7 @@ export function paymentSuccessEmail({
                                 Payment Successful
                             </h1>
                             <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
-                                Hi ${userName}, we've successfully processed your payment of **${amount}** on ${date}. Thank you for your continued support!
+                                Hi ${userName}, we've successfully processed your payment of <strong>${amount}</strong> on ${date}. Thank you for your continued support!
                             </p>
 
                             <!-- CTA -->

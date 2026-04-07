@@ -42,7 +42,7 @@ export function subscriptionCanceledEmail({
                                  We're sad to see you go...
                              </h1>
                              <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
-                                 Hi ${userName}, we've loved having you as part of the Zyene Reviews community. This is to confirm your subscription will end on **${endDate}**.
+                                 Hi ${userName}, we've loved having you as part of the Zyene Reviews community. This is to confirm your subscription will end on <strong>${endDate}</strong>.
                              </p>
 
                              <!-- Win-back Offer -->

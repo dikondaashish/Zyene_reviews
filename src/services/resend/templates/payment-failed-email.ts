@@ -42,7 +42,7 @@ export function paymentFailedEmail({
                                 Payment Failed
                             </h1>
                             <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
-                                Hi ${userName}, we were unable to process your recent payment of **${amount}**. To keep your account active and avoid any service interruptions, please update your payment method.
+                                Hi ${userName}, we were unable to process your recent payment of <strong>${amount}</strong>. To keep your account active and avoid any service interruptions, please update your payment method.
                             </p>
 
                             <!-- CTA -->
