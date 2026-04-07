@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -43,6 +46,20 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const [isLoading, setIsLoading] = useState(false);
     const [logoUrl, setLogoUrl] = useState(business.logo_url);
     const [uploadingLogo, setUploadingLogo] = useState(false);
+    
+    // Crop state
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [crop, setCrop] = useState<Crop>({
+        unit: 'px',
+        width: 256,
+        height: 256,
+        x: 0,
+        y: 0
+    });
+    const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
+    const imgRef = useRef<HTMLImageElement>(null);
+
     const supabase = createClient();
 
     const form = useForm<BrandingFormValues>({
@@ -70,6 +87,49 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         }
     };
 
+    const getCroppedImg = async (
+        image: HTMLImageElement,
+        crop: PixelCrop,
+        fileName: string
+    ): Promise<File> => {
+        const canvas = document.createElement("canvas");
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        
+        // Output at exactly 512x512
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+            throw new Error("No 2d context");
+        }
+
+        ctx.imageSmoothingQuality = "high";
+
+        ctx.drawImage(
+            image,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            crop.width * scaleX,
+            crop.height * scaleY,
+            0,
+            0,
+            512,
+            512
+        );
+
+        return new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    reject(new Error("Canvas is empty"));
+                    return;
+                }
+                resolve(new File([blob], fileName, { type: "image/webp" }));
+            }, "image/webp", 0.95);
+        });
+    };
+
     const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
 
@@ -79,20 +139,50 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             return;
         }
 
+        const validTypes = ["image/jpeg", "image/png", "image/webp"];
+        if (!validTypes.includes(file.type)) {
+            toast.error("Unsupported file format (PNG, JPG, WebP only)");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            setSelectedImage(reader.result?.toString() || null);
+            setCrop({ unit: "px", width: 256, height: 256, x: 0, y: 0 }); // reset crop position
+            setCompletedCrop(null);
+        });
+        reader.readAsDataURL(file);
+        setSelectedFile(file);
+        
+        // Reset input value to allow selecting same file after cancelling
+        e.target.value = '';
+    };
+
+    const handleSaveCrop = async () => {
+        if (!selectedImage || !completedCrop || !imgRef.current || !selectedFile) {
+            toast.error("Please crop your image or click cancel.");
+            return;
+        }
+
         setUploadingLogo(true);
         try {
-            const fileName = `${business.id}-${Date.now()}-${file.name}`;
-            const { error } = await supabase.storage
-                .from("business-logos")
-                .upload(fileName, file);
+            const croppedFile = await getCroppedImg(
+                imgRef.current,
+                completedCrop,
+                `${business.id}-${Date.now()}-logo.webp`
+            );
 
-            if (error) throw error;
+            const { error: uploadError } = await supabase.storage
+                .from("business-logos")
+                .upload(croppedFile.name, croppedFile);
+
+            if (uploadError) throw uploadError;
 
             const { data: { publicUrl } } = supabase.storage
                 .from("business-logos")
-                .getPublicUrl(fileName);
+                .getPublicUrl(croppedFile.name);
 
-            // Save to DB first
+            // Save to DB
             await updateBusiness({ logo_url: publicUrl });
 
             // If successful, delete old logo
@@ -102,10 +192,14 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
 
             setLogoUrl(publicUrl);
             onLogoChange?.(publicUrl);
-            toast.success("Logo uploaded!");
+            
+            // Clean up states
+            setSelectedImage(null);
+            setSelectedFile(null);
+            toast.success("Logo uploaded successfully!");
         } catch (error: unknown) {
             console.error(error);
-            toast.error("Failed to upload logo");
+            toast.error("Failed to save logo. Please try again.");
         } finally {
             setUploadingLogo(false);
         }
@@ -270,6 +364,75 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                     </div>
                 </div>
             </Form>
+
+            {/* Crop Dialog */}
+            <Dialog open={!!selectedImage} onOpenChange={(open) => {
+                if (!open && !uploadingLogo) {
+                    setSelectedImage(null);
+                    setSelectedFile(null);
+                }
+            }}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>Crop your logo</DialogTitle>
+                        <DialogDescription>
+                            Adjust your logo to a perfect square before saving.
+                        </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="flex items-center justify-center p-4 bg-muted/20 border border-border rounded-xl min-h-[300px]">
+                        {selectedImage && (
+                            <ReactCrop
+                                crop={crop}
+                                onChange={(c) => setCrop(c)}
+                                onComplete={(c) => setCompletedCrop(c)}
+                                aspect={1} // Fix to 1:1 square ratio
+                                circularCrop={false}
+                                className="max-h-[400px]"
+                            >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    ref={imgRef}
+                                    src={selectedImage}
+                                    alt="Crop me"
+                                    onLoad={(e) => {
+                                        // Center initial crop
+                                        const { width, height } = e.currentTarget;
+                                        const size = Math.min(width, height, 300);
+                                        const x = (width - size) / 2;
+                                        const y = (height - size) / 2;
+                                        const initialCrop = { unit: 'px' as const, width: size, height: size, x, y };
+                                        setCrop(initialCrop);
+                                        setCompletedCrop(initialCrop);
+                                    }}
+                                    className="max-h-[400px] object-contain"
+                                />
+                            </ReactCrop>
+                        )}
+                    </div>
+                    
+                    <DialogFooter>
+                        <Button 
+                            variant="outline" 
+                            onClick={() => {
+                                setSelectedImage(null);
+                                setSelectedFile(null);
+                            }}
+                            disabled={uploadingLogo}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={handleSaveCrop}
+                            disabled={uploadingLogo || !completedCrop?.width || !completedCrop?.height}
+                            className="bg-orange-500 hover:bg-orange-600 text-white"
+                        >
+                            {uploadingLogo && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {uploadingLogo ? "Saving..." : "Save Crop"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

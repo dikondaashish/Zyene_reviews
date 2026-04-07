@@ -4,6 +4,10 @@ import { TeamInviteEmail } from '../src/services/resend/templates/team-invite-em
 import { reviewAlertEmail } from '../src/services/resend/templates/review-alert-email';
 import { reviewRequestEmail } from '../src/services/resend/templates/review-request-email';
 import { dailyDigestEmail } from '../src/services/resend/templates/daily-digest-email';
+import { subscriptionSuccessEmail } from '../src/services/resend/templates/subscription-success-email';
+import { paymentSuccessEmail } from '../src/services/resend/templates/payment-success-email';
+import { paymentFailedEmail } from '../src/services/resend/templates/payment-failed-email';
+import { subscriptionCanceledEmail } from '../src/services/resend/templates/subscription-canceled-email';
 
 async function runTest() {
     const targetEmail = process.argv[2];
@@ -74,6 +78,44 @@ async function runTest() {
                     { rating: 4, authorName: 'Jane Smith', text: 'Good experience, but a bit pricey.', sentiment: 'neutral' },
                     { rating: 2, authorName: 'Bob Brown', text: 'Disappointed with the wait time.', sentiment: 'negative' }
                 ]
+            })
+        },
+        {
+            name: 'Subscription Success',
+            subject: 'Welcome to the Pro plan!',
+            html: subscriptionSuccessEmail({
+                userName: 'Test User',
+                planName: 'Pro',
+                isTrial: true,
+                dashboardUrl: `${appUrl}/dashboard`
+            })
+        },
+        {
+            name: 'Payment Success',
+            subject: 'Payment Successful - Zyene Reviews',
+            html: paymentSuccessEmail({
+                userName: 'Test User',
+                amount: '$49.00',
+                date: new Date().toLocaleDateString(),
+                invoiceUrl: `${appUrl}/settings/billing`
+            })
+        },
+        {
+            name: 'Payment Failed',
+            subject: 'Payment Failed - Action Required',
+            html: paymentFailedEmail({
+                userName: 'Test User',
+                amount: '$49.00',
+                updateCardUrl: `${appUrl}/settings/billing`
+            })
+        },
+        {
+            name: 'Subscription Canceled',
+            subject: "Subscription Canceled - We're sorry to see you go",
+            html: subscriptionCanceledEmail({
+                userName: 'Test User',
+                endDate: 'December 31, 2026',
+                rejoinUrl: `${appUrl}/settings/billing`
             })
         }
     ];
