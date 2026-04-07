@@ -237,6 +237,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         setIsLoading(true);
         try {
             await updateBusiness(data);
+            form.reset(data);
             toast.success("Branding updated");
         } catch (error) {
             toast.error("Failed to save changes");
@@ -350,11 +351,14 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                 )}
                             />
 
-                            <div className="flex justify-end pt-2">
+                            <div className="flex justify-end pt-2 items-center">
+                                {form.formState.isDirty && (
+                                    <span className="text-sm text-amber-500 mr-4 font-medium hidden sm:inline-block">Unsaved changes</span>
+                                )}
                                 <Button
                                     type="submit"
-                                    disabled={isLoading}
-                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95"
+                                    disabled={isLoading || !form.formState.isDirty}
+                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95 disabled:opacity-50"
                                 >
                                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Save Brand Settings

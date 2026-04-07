@@ -137,11 +137,13 @@ export function PublicReviewFlow({
 
     const handleRate = (stars: number) => {
         setRating(stars);
-        if (stars >= minStars) {
-            setStep("tags");
-        } else {
-            setStep("negative");
-        }
+        setTimeout(() => {
+            if (stars >= minStars) {
+                setStep("tags");
+            } else {
+                setStep("negative");
+            }
+        }, 400); // Delay to show satisfying emoji scale-up animation
     };
 
     const toggleTag = (tag: string) => {
@@ -545,27 +547,30 @@ export function PublicReviewFlow({
                                 onMouseEnter={() => setHoverRating(r.value)}
                                 onMouseLeave={() => setHoverRating(null)}
                                 className={cn(
-                                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200",
+                                    "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
                                     "border-2 hover:border-blue-300 hover:bg-blue-50/50",
-                                    "active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500/50",
-                                    hoverRating === r.value
+                                    "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                    rating !== r.value && "active:scale-95",
+                                    hoverRating === r.value && rating !== r.value
                                         ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
                                         : rating === r.value
-                                            ? "border-blue-500 bg-blue-50 shadow-sm"
+                                            ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/20 shadow-md scale-105 z-10"
                                             : "border-slate-200 bg-white"
                                 )}
                             >
                                 <span className={cn(
-                                    "text-3xl sm:text-4xl transition-transform duration-200",
-                                    hoverRating === r.value && "scale-110"
+                                    "text-3xl sm:text-4xl transition-all duration-300 ease-out",
+                                    hoverRating === r.value && rating !== r.value && "scale-110",
+                                    rating === r.value && "scale-[1.4] -translate-y-1"
                                 )}>
                                     {r.emoji}
                                 </span>
                                 <span className={cn(
-                                    "text-[10px] sm:text-xs font-semibold tracking-tight transition-colors",
+                                    "text-[10px] sm:text-xs font-semibold tracking-tight transition-all duration-300",
                                     hoverRating === r.value || rating === r.value
                                         ? "text-blue-700"
-                                        : "text-slate-500"
+                                        : "text-slate-500",
+                                    rating === r.value && "opacity-0"
                                 )}>
                                     {r.label}
                                 </span>
