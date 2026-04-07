@@ -20,15 +20,22 @@ import AnthropicVertex from '@anthropic-ai/vertex-sdk';
 
 // For Vercel: write inline credentials to a temp file so the
 // Google Auth library can pick them up via ADC.
-if (process.env.GOOGLE_VERTEX_CREDENTIALS && !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+const credJson =
+    process.env.GOOGLE_VERTEX_CREDENTIALS ||
+    // Catch misconfiguration: GOOGLE_APPLICATION_CREDENTIALS set to raw JSON
+    (process.env.GOOGLE_APPLICATION_CREDENTIALS?.trimStart().startsWith('{')
+        ? process.env.GOOGLE_APPLICATION_CREDENTIALS
+        : null);
+
+if (credJson) {
     const fs = require('fs');
     const os = require('os');
     const path = require('path');
 
     try {
         // Support both raw JSON and base64-encoded JSON
-        let creds = process.env.GOOGLE_VERTEX_CREDENTIALS;
-        if (!creds.startsWith('{')) {
+        let creds = credJson;
+        if (!creds.trimStart().startsWith('{')) {
             creds = Buffer.from(creds, 'base64').toString('utf-8');
         }
 
