@@ -179,6 +179,7 @@ export function ReviewContentForm({
 
                 if (data) {
                     form.reset({
+                        min_stars_for_google: data.min_stars_for_google ?? 4,
                         rating_subtitle: data.rating_subtitle || "Your feedback means a lot to us!",
                         tags_heading: data.tags_heading || "What did you like most?",
                         tags_subheading: data.tags_subheading || "Tap to select what stood out",
