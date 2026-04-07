@@ -35,6 +35,8 @@ const contentSchema = z.object({
     tags_heading: z.string().optional(),
     tags_subheading: z.string().optional(),
     custom_tags: z.string().optional(), // Comma-separated string for easier editing
+    enable_staff_selection: z.boolean().optional(),
+    staff_names: z.string().optional(), // Comma-separated
     google_heading: z.string().optional(),
     google_subheading: z.string().optional(),
     google_button_text: z.string().optional(),
@@ -77,6 +79,8 @@ export function ReviewContentForm({
             tags_heading: "",
             tags_subheading: "",
             custom_tags: "",
+            enable_staff_selection: false,
+            staff_names: "",
             google_heading: "",
             google_subheading: "",
             google_button_text: "",
@@ -146,9 +150,14 @@ export function ReviewContentForm({
                     ? value.custom_tags.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
                     : [];
 
+                const staffNamesArray = value.staff_names
+                    ? value.staff_names.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
+                    : [];
+
                 onValuesChange({
                     ...value,
-                    custom_tags: customTagsArray
+                    custom_tags: customTagsArray,
+                    staff_names: staffNamesArray
                 });
             }
         });
@@ -174,6 +183,8 @@ export function ReviewContentForm({
                         tags_heading: data.tags_heading || "What did you like most?",
                         tags_subheading: data.tags_subheading || "Tap to select what stood out",
                         custom_tags: Array.isArray(data.custom_tags) ? data.custom_tags.join(", ") : "",
+                        enable_staff_selection: data.enable_staff_selection ?? false,
+                        staff_names: Array.isArray(data.staff_names) ? data.staff_names.join(", ") : "",
                         google_heading: data.google_heading || "Would you post this on Google?",
                         google_subheading: data.google_subheading || "Tap to edit, or post as-is",
                         google_button_text: data.google_button_text || "Copy & Go to Google",
@@ -212,9 +223,14 @@ export function ReviewContentForm({
                 ? data.custom_tags.split(",").map(t => t.trim()).filter(t => t.length > 0)
                 : null;
 
+            const staffNamesArray = data.staff_names
+                ? data.staff_names.split(",").map(t => t.trim()).filter(t => t.length > 0)
+                : [];
+
             const updateData = {
                 ...data,
                 custom_tags: customTagsArray,
+                staff_names: staffNamesArray,
             };
 
             const { error } = await supabase
@@ -471,6 +487,55 @@ export function ReviewContentForm({
                                             </FormItem>
                                         )}
                                     />
+                                    <div className="pt-4 border-t border-border mt-4">
+                                        <div className="space-y-4">
+                                            <FormField
+                                                control={form.control}
+                                                name="enable_staff_selection"
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-muted/10">
+                                                        <div className="space-y-0.5">
+                                                            <FormLabel className="text-base font-semibold text-slate-800 dark:text-slate-200">
+                                                                Enable Staff Selection
+                                                            </FormLabel>
+                                                            <FormDescription className="text-slate-500">
+                                                                Allow customers to select which staff members helped them.
+                                                            </FormDescription>
+                                                        </div>
+                                                        <FormControl>
+                                                            <Switch
+                                                                checked={field.value}
+                                                                onCheckedChange={field.onChange}
+                                                            />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            {form.watch("enable_staff_selection") && (
+                                                <FormField
+                                                    control={form.control}
+                                                    name="staff_names"
+                                                    render={({ field }) => (
+                                                        <FormItem className="animate-in fade-in slide-in-from-top-2">
+                                                            <FormLabel>Staff Names (Comma Separated)</FormLabel>
+                                                            <FormControl>
+                                                                <Textarea
+                                                                    placeholder="John, Emily, David, Sarah"
+                                                                    className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                            <FormDescription>
+                                                                List the staff members you want to appear in the review flow. Separate names with commas.
+                                                            </FormDescription>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </TabsContent>
 

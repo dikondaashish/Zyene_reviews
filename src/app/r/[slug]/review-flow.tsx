@@ -55,6 +55,8 @@ export interface PublicReviewFlowProps {
     googleHeading?: string;
     googleSubheading?: string;
     googleButtonText?: string;
+    enableStaffSelection?: boolean;
+    staffNames?: string[];
     negativeSubheading?: string; // "Share your feedback directly..."
     negativeTextareaPlaceholder?: string;
     negativeButtonText?: string;
@@ -92,6 +94,8 @@ export function PublicReviewFlow({
     googleHeading,
     googleSubheading,
     googleButtonText,
+    enableStaffSelection = false,
+    staffNames = [],
     negativeSubheading,
     negativeTextareaPlaceholder,
     negativeButtonText,
@@ -110,6 +114,7 @@ export function PublicReviewFlow({
     const [rating, setRating] = useState<number | null>(null);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
     const [reviewText, setReviewText] = useState("");
     const [feedback, setFeedback] = useState("");
     const [customerEmail, setCustomerEmail] = useState("");
@@ -154,6 +159,12 @@ export function PublicReviewFlow({
         );
     };
 
+    const toggleStaff = (name: string) => {
+        setSelectedStaff((prev) =>
+            prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+        );
+    };
+
     const handleGenerateReview = async () => {
         setStep("generating");
 
@@ -175,6 +186,7 @@ export function PublicReviewFlow({
                     businessCategory: categoryKey,
                     rating,
                     selectedTags: selectedTags.map((t) => t.replace(/^[^\s]+\s/, "")), // Strip emojis for AI
+                    selectedStaff,
                 }),
             });
 
@@ -562,9 +574,11 @@ export function PublicReviewFlow({
                                     )}
                                 >
                                     <span className={cn(
-                                        "text-3xl sm:text-4xl transition-all duration-300 ease-out",
-                                        hoverRating === r.value && rating !== r.value && "scale-110",
-                                        rating === r.value && "scale-[1.4] -translate-y-1"
+                                        "text-3xl sm:text-4xl transition-all duration-500",
+                                        hoverRating === r.value && rating !== r.value && "scale-110 ease-out",
+                                        rating === r.value 
+                                            ? "scale-[1.6] sm:scale-[1.8] -translate-y-2 drop-shadow-2xl ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20 relative"
+                                            : "ease-out"
                                     )}>
                                         {r.emoji}
                                     </span>
@@ -651,7 +665,8 @@ export function PublicReviewFlow({
                                     setHoverRating(null);
                                     handleRate(val);
                                 }}
-                                className="w-full cursor-pointer h-3 bg-slate-200 rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all"
+                                className="w-full cursor-pointer h-3 bg-slate-200 rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all touch-none"
+                                style={{ touchAction: "none" }}
                             />
                             <div className="flex justify-between text-xs sm:text-sm font-semibold text-slate-500 px-1 uppercase tracking-wider">
                                 <span>POOR</span>
@@ -753,6 +768,37 @@ export function PublicReviewFlow({
                     >
                         👍 Everything!
                     </button>
+
+                    {/* Staff Selection */}
+                    {enableStaffSelection && staffNames.length > 0 && (
+                        <div className="pt-4 border-t border-slate-100">
+                            <p className="text-center text-sm font-medium text-slate-600 mb-3">
+                                Who served you? (Optional)
+                            </p>
+                            <div className="flex flex-wrap justify-center gap-2.5">
+                                {staffNames.map((name) => (
+                                    <button
+                                        key={name}
+                                        onClick={() => toggleStaff(name)}
+                                        className={cn(
+                                            "flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                                            "border-2 active:scale-95",
+                                            selectedStaff.includes(name)
+                                                ? "text-white scale-105 shadow-md"
+                                                : "bg-white text-slate-600 border-slate-200 hover:bg-gray-50"
+                                        )}
+                                        style={{
+                                            backgroundColor: selectedStaff.includes(name) ? brandColor : undefined,
+                                            borderColor: selectedStaff.includes(name) ? brandColor : undefined
+                                        }}
+                                    >
+                                        <span>👤</span> 
+                                        {name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Continue button */}
                     <div className={cn(

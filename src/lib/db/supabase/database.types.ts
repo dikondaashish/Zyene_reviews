@@ -67,6 +67,7 @@ export type Database = {
           country: string
           created_at: string
           custom_tags: string[] | null
+          enable_staff_selection: boolean
           email: string | null
           footer_company_name: string | null
           footer_link: string | null
@@ -95,6 +96,7 @@ export type Database = {
           review_request_sms_enabled: boolean
           slug: string
           social_links: Json | null
+          staff_names: string[]
           state: string | null
           status: string
           tags_heading: string | null
@@ -118,6 +120,7 @@ export type Database = {
           country?: string
           created_at?: string
           custom_tags?: string[] | null
+          enable_staff_selection?: boolean
           email?: string | null
           footer_company_name?: string | null
           footer_link?: string | null
@@ -146,6 +149,7 @@ export type Database = {
           review_request_sms_enabled?: boolean
           slug: string
           social_links?: Json | null
+          staff_names?: string[]
           state?: string | null
           status?: string
           tags_heading?: string | null
@@ -169,6 +173,7 @@ export type Database = {
           country?: string
           created_at?: string
           custom_tags?: string[] | null
+          enable_staff_selection?: boolean
           email?: string | null
           footer_company_name?: string | null
           footer_link?: string | null
@@ -197,6 +202,7 @@ export type Database = {
           review_request_sms_enabled?: boolean
           slug?: string
           social_links?: Json | null
+          staff_names?: string[]
           state?: string | null
           status?: string
           tags_heading?: string | null

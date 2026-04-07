@@ -34,6 +34,8 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         logo_url: business.logo_url,
         min_stars_for_google: business.min_stars_for_google || 4,
         rating_style: business.rating_style || "emoji",
+        enable_staff_selection: business.enable_staff_selection || false,
+        staff_names: business.staff_names || [],
         welcome_message: business.welcome_message ?? undefined,
         apology_message: business.apology_message ?? undefined,
         rating_subtitle: business.rating_subtitle ?? undefined,
@@ -226,6 +228,8 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 tagsHeading={previewState.tags_heading}
                                 tagsSubheading={previewState.tags_subheading}
                                 customTags={previewState.custom_tags ?? undefined}
+                                enableStaffSelection={previewState.enable_staff_selection}
+                                staffNames={previewState.staff_names}
                                 googleHeading={previewState.google_heading}
                                 googleSubheading={previewState.google_subheading}
                                 googleButtonText={previewState.google_button_text}

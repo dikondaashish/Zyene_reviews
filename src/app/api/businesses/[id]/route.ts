@@ -22,6 +22,8 @@ const businessPatchSchema = z
         zip: z.string().max(20).optional().nullable(),
         brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i).optional().nullable(),
         rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional().nullable(),
+        enable_staff_selection: z.boolean().optional(),
+        staff_names: z.array(z.string()).optional(),
     })
     .strict();
 

@@ -65,7 +65,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const form = useForm<BrandingFormValues>({
         resolver: zodResolver(brandingSchema),
         defaultValues: {
-            brand_color: business.brand_color || "#0f172a",
+            brand_color: (business.brand_color || "#0f172a").toLowerCase(),
         },
     });
 
@@ -228,7 +228,12 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         });
 
         if (!response.ok) {
-            throw new Error("Failed to update");
+            let errorMsg = "Failed to update";
+            try {
+                const data = await response.json();
+                errorMsg = data.error || data.details?.[0]?.message || errorMsg;
+            } catch (e) {}
+            throw new Error(errorMsg);
         }
         router.refresh();
     };
@@ -239,8 +244,8 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             await updateBusiness(data);
             form.reset(data);
             toast.success("Branding updated");
-        } catch (error) {
-            toast.error("Failed to save changes");
+        } catch (error: any) {
+            toast.error(error.message || "Failed to save changes");
         } finally {
             setIsLoading(false);
         }

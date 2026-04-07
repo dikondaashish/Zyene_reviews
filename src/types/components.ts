@@ -128,7 +128,8 @@ export interface PublicProfileBusinessRecord {
     name: string;
     slug?: string;
     brand_color?: string | null;
-    logo_url?: string | null;
+    enable_staff_selection?: boolean;
+    staff_names?: string[];
     rating_style?: string | null;
     min_stars_for_google?: number | null;
     welcome_message?: string | null;
@@ -159,6 +160,8 @@ export interface PublicProfilePreviewValues {
     slug?: string;
     brand_color?: string;
     logo_url?: string | null;
+    enable_staff_selection?: boolean;
+    staff_names?: string[];
     rating_style?: string;
     min_stars_for_google?: number;
     welcome_message?: string;
