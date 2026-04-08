@@ -77,14 +77,25 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                     </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
-                {(businesses.length < maxBusinesses) && (
-                    <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild>
+                    {businesses.length >= maxBusinesses ? (
+                        <Link 
+                            href="/settings/billing?status=limit_reached" 
+                            className="flex items-center justify-between w-full cursor-pointer text-blue-600 font-medium"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Plus className="h-4 w-4" />
+                                Add a Business
+                            </div>
+                            <span className="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Upgrade</span>
+                        </Link>
+                    ) : (
                         <Link href="/businesses/add" className="flex items-center gap-2 cursor-pointer">
                             <Plus className="h-4 w-4" />
                             Add a Business
                         </Link>
-                    </DropdownMenuItem>
-                )}
+                    )}
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

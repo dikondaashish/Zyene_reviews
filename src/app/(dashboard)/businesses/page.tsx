@@ -40,21 +40,13 @@ export default async function BusinessesPage() {
                         Manage your business locations and integrations.
                     </p>
                 </div>
-                {atLimit ? (
-                    <Link href="/settings/billing">
-                        <Button variant="outline" className="gap-2">
-                            <Lock className="h-4 w-4" />
-                            Upgrade to add more locations
-                        </Button>
-                    </Link>
-                ) : (
-                    <Link href="/businesses/add">
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            Add a business
-                        </Button>
-                    </Link>
-                )}
+                <Link href={atLimit ? "/settings/billing?status=limit_reached" : "/businesses/add"}>
+                    <Button className="gap-2" variant={atLimit ? "outline" : "default"}>
+                        {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                        Add a business
+                        {atLimit && <Badge variant="secondary" className="ml-1 bg-blue-100 text-blue-700 border-blue-200">Upgrade</Badge>}
+                    </Button>
+                </Link>
             </div>
 
             {/* Business Cards */}

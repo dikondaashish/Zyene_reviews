@@ -731,7 +731,7 @@ export function PublicReviewFlow({
                     </div>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap justify-center gap-2.5">
+                    <div className="flex flex-wrap justify-center gap-2.5 my-2">
                         {tags.map((tag) => (
                             <button
                                 key={tag}
@@ -770,6 +770,8 @@ export function PublicReviewFlow({
                     >
                         👍 Everything!
                     </button>
+
+                    <div className="h-2" /> {/* Extra spacing */}
 
                     {/* Staff Selection */}
                     {enableStaffSelection && staffNames.length > 0 && (

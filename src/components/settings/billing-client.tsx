@@ -113,19 +113,28 @@ export function BillingClient({
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    // Show toast after checkout redirect
+    // Show toast after checkout redirect or limit reached
     useEffect(() => {
-        if (searchParams.get("success") === "true") {
+        const success = searchParams.get("success");
+        const canceled = searchParams.get("canceled");
+        const status = searchParams.get("status");
+
+        if (success === "true") {
             toast.success("Subscription activated!", {
                 description: "Your plan is now active. Welcome aboard!",
             });
-            // Clean up URL params
             router.replace("/settings/billing");
-        } else if (searchParams.get("canceled") === "true") {
+        } else if (canceled === "true") {
             toast.info("Checkout canceled", {
                 description: "No charges were made. You can subscribe anytime.",
             });
             router.replace("/settings/billing");
+        } else if (status === "limit_reached") {
+            toast.error("Business limit reached", {
+                description: `You've reached the maximum number of businesses for your current plan. Upgrade to add more locations.`,
+                duration: 6000,
+            });
+            // Don't replace immediately so they can see why they landed here
         }
     }, [searchParams, router]);
 

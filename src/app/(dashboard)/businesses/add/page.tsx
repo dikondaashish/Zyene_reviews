@@ -5,7 +5,7 @@ import React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/db/supabase/client"
-import { Store, ArrowLeft } from "lucide-react"
+import { Store, ArrowLeft, Lock } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
 
@@ -25,10 +25,6 @@ export default function AddBusinessPage() {
                 const max = organization.max_businesses || 1
                 if (businesses.length >= max) {
                     setAtLimit(true)
-                    toast.error("Limit reached", {
-                        description: `Your plan allows up to ${max} ${max === 1 ? 'business' : 'businesses'}. Please upgrade to add more.`
-                    })
-                    router.push("/settings/billing")
                 }
             }
             setLoading(false)
@@ -97,7 +93,52 @@ export default function AddBusinessPage() {
         )
     }
 
-    if (atLimit) return null
+    if (atLimit) {
+        return (
+            <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div>
+                    <Link
+                        href="/businesses"
+                        className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to Businesses
+                    </Link>
+                </div>
+
+                <div className="max-w-lg mx-auto w-full">
+                    <Card className="border-orange-200 bg-orange-50/30 overflow-hidden">
+                        <div className="bg-orange-500 h-1.5 w-full" />
+                        <CardHeader className="text-center pt-8">
+                            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 border-2 border-orange-200">
+                                <Lock className="h-7 w-7 text-orange-600" />
+                            </div>
+                            <CardTitle className="text-2xl font-bold text-orange-900">Plan Limit Reached</CardTitle>
+                            <CardDescription className="text-orange-800 font-medium">
+                                Maximum business locations reached for your current plan.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4 text-center pb-8">
+                            <p className="text-sm text-orange-700 leading-relaxed">
+                                You&apos;ve reached the maximum number of business locations allowed on your current plan. 
+                                Upgrade to a higher plan to add more locations and unlock premium features for all your businesses.
+                            </p>
+                            <div className="pt-2">
+                                <Link href="/settings/billing?status=limit_reached">
+                                    <Button
+                                        size="lg"
+                                        className="w-full bg-orange-600 hover:bg-orange-700 shadow-md gap-2"
+                                    >
+                                        Verify Plans & Upgrade
+                                    </Button>
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6 animate-in fade-in duration-500">
