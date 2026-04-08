@@ -328,7 +328,7 @@ export function PublicReviewFlow({
 
     // ─── Shared card wrapper ────────────────────────────────────────────
 
-    const CardWrapper = ({ children, contentClassName }: { children: React.ReactNode; contentClassName?: string }) => (
+    const renderCardWrapper = (children: React.ReactNode, contentClassName?: string) => (
         <div className={cn(
             "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 transition-all duration-500",
             !mounted && "opacity-0",
@@ -398,25 +398,23 @@ export function PublicReviewFlow({
     // ─── Render: Thank You (final) ──────────────────────────────────────
 
     if (step === "thankyou") {
-        return (
-            <CardWrapper>
-                <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
-                    <div className="relative inline-flex">
-                        <div className="h-28 w-28 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
-                            <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
-                        </div>
-                        <div className="absolute -top-1 -right-1 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-md">
-                            ✨
-                        </div>
+        return renderCardWrapper(
+            <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
+                <div className="relative inline-flex">
+                    <div className="h-28 w-28 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                        <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
                     </div>
-                    <div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-2">{thankYouHeading || "Thank You!"}</h2>
-                        <p className="text-slate-500 text-lg leading-relaxed whitespace-pre-line">
-                            {thankYouMessage || "Your feedback means the world to us.\nWe appreciate you taking the time."}
-                        </p>
+                    <div className="absolute -top-1 -right-1 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-md">
+                        ✨
                     </div>
                 </div>
-            </CardWrapper>
+                <div>
+                    <h2 className="text-3xl font-bold text-slate-900 mb-2">{thankYouHeading || "Thank You!"}</h2>
+                    <p className="text-slate-500 text-lg leading-relaxed whitespace-pre-line">
+                        {thankYouMessage || "Your feedback means the world to us.\nWe appreciate you taking the time."}
+                    </p>
+                </div>
+            </div>
         );
     }
 
@@ -424,115 +422,112 @@ export function PublicReviewFlow({
 
     if (step === "negative") {
         const selectedRating = RATINGS.find((r) => r.value === rating);
-        return (
-            <CardWrapper>
-                <form
-                    className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
-                    onSubmit={handleNegativeFormSubmit}
-                >
-                    {/* Header with emoji */}
-                    <div className="flex items-center gap-4">
-                        <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
-                            <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
-                        </div>
-                        <div className="text-left">
-                            <h2 className="text-xl font-bold text-slate-900">
-                                {apologyMsg || "Sorry about that"}
-                            </h2>
-                            <p className="text-slate-500 text-sm leading-snug">
-                                {negativeSubheading || "Share your feedback directly with the owner."}
-                            </p>
-                        </div>
+        return renderCardWrapper(
+            <form
+                className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
+                onSubmit={handleNegativeFormSubmit}
+            >
+                {/* Header with emoji */}
+                <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
+                        <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
                     </div>
+                    <div className="text-left">
+                        <h2 className="text-xl font-bold text-slate-900">
+                            {apologyMsg || "Sorry about that"}
+                        </h2>
+                        <p className="text-slate-500 text-sm leading-snug">
+                            {negativeSubheading || "Share your feedback directly with the owner."}
+                        </p>
+                    </div>
+                </div>
 
-                    {/* Feedback textarea */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">Your feedback</label>
-                        <textarea
-                            placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
-                            className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
-                            value={feedback}
-                            onChange={(e) => setFeedback(e.target.value)}
-                            autoFocus
+                {/* Feedback textarea */}
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700">Your feedback</label>
+                    <textarea
+                        placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
+                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                        autoFocus
+                    />
+                </div>
+
+                {/* Email input */}
+                <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700">Your email <span className="text-slate-400 font-normal">(optional)</span></label>
+                    <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <input
+                            type="email"
+                            placeholder="you@example.com"
+                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                            value={customerEmail}
+                            onChange={(e) => setCustomerEmail(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                }
+                            }}
                         />
                     </div>
+                </div>
 
-                    {/* Email input */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">Your email <span className="text-slate-400 font-normal">(optional)</span></label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                            <input
-                                type="email"
-                                placeholder="you@example.com"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
-                                value={customerEmail}
-                                onChange={(e) => setCustomerEmail(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
+                {/* Action buttons */}
+                <div className="space-y-3 pt-2">
+                    <button
+                        type="submit"
+                        className={cn(
+                            "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
+                            "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                            "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
+                            "flex items-center justify-center gap-2"
+                        )}
+                        disabled={isSubmitting || !feedback.trim()}
+                    >
+                        {isSubmitting ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                            <Send className="h-4 w-4" />
+                        )}
+                        {isSubmitting ? "Sending..." : (negativeButtonText || "Send Feedback")}
+                    </button>
 
-                    {/* Action buttons */}
-                    <div className="space-y-3 pt-2">
+                    <div className="flex items-center justify-between px-1">
                         <button
-                            type="submit"
-                            className={cn(
-                                "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-                                "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
-                                "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
-                                "flex items-center justify-center gap-2"
-                            )}
-                            disabled={isSubmitting || !feedback.trim()}
+                            type="button"
+                            className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                            onClick={() => {
+                                setRating(null);
+                                setStep("rating");
+                            }}
                         >
-                            {isSubmitting ? (
-                                <Loader2 className="h-5 w-5 animate-spin" />
-                            ) : (
-                                <Send className="h-4 w-4" />
-                            )}
-                            {isSubmitting ? "Sending..." : (negativeButtonText || "Send Feedback")}
+                            <ArrowLeft className="h-3.5 w-3.5" />
+                            Back
                         </button>
-
-                        <div className="flex items-center justify-between px-1">
-                            <button
-                                type="button"
-                                className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
-                                onClick={() => {
-                                    setRating(null);
-                                    setStep("rating");
-                                }}
+                        {googleUrl && isPreview && (
+                            <a
+                                href={googleUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-400 text-sm hover:text-slate-600 transition-colors"
                             >
-                                <ArrowLeft className="h-3.5 w-3.5" />
-                                Back
-                            </button>
-                            {googleUrl && isPreview && (
-                                <a
-                                    href={googleUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-slate-400 text-sm hover:text-slate-600 transition-colors"
-                                >
-                                    Go to Google
-                                </a>
-                            )}
-                        </div>
+                                Go to Google
+                            </a>
+                        )}
                     </div>
-                </form>
-            </CardWrapper>
+                </div>
+            </form>
         );
     }
 
     // ─── Render: Star Rating (step 1) ───────────────────────────────────
 
     if (step === "rating") {
-        return (
-            <CardWrapper>
-                <div className="px-8 py-10 space-y-8">
+        return renderCardWrapper(
+            <div className="px-8 py-10 space-y-8">
                     {/* Business avatar */}
                     <div className="flex flex-col items-center gap-4">
                         {logoUrl ? (
@@ -715,16 +710,14 @@ export function PublicReviewFlow({
                         </div>
                     )}
                 </div>
-            </CardWrapper>
         );
     }
 
     // ─── Render: Tag Selection (step 2) ─────────────────────────────────
 
     if (step === "tags") {
-        return (
-            <CardWrapper>
-                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+        return renderCardWrapper(
+            <div className="p-8 pb-32 flex-1 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
@@ -841,16 +834,15 @@ export function PublicReviewFlow({
                         <ArrowLeft className="h-3.5 w-3.5" />
                         Back
                     </button>
-                </div>
-            </CardWrapper>
+                </div>,
+            "overflow-visible min-h-[500px] flex flex-col relative z-20"
         );
     }
 
     // ─── Render: Generating (loading) ───────────────────────────────────
     if (step === "generating") {
-        return (
-            <CardWrapper>
-                <div className="px-8 py-20 text-center space-y-6">
+        return renderCardWrapper(
+            <div className="px-8 py-20 text-center space-y-6">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
@@ -871,15 +863,13 @@ export function PublicReviewFlow({
                         <p className="text-sm text-slate-500 mt-1">Just a moment ✨</p>
                     </div>
                 </div>
-            </CardWrapper>
         );
     }
 
     // ─── Render: AI Review (step 3) ─────────────────────────────────────
     if (step === "review") {
-        return (
-            <CardWrapper>
-                <div className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400">
+        return renderCardWrapper(
+            <div className="px-8 py-10 space-y-8 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
@@ -961,7 +951,6 @@ export function PublicReviewFlow({
                         Back
                     </button>
                 </div>
-            </CardWrapper >
         );
     }
     return null;
