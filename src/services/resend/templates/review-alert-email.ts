@@ -7,6 +7,7 @@ interface ReviewAlertProps {
     urgencyScore: number;
     dashboardUrl: string;
     settingsUrl: string;
+    customerEmail?: string;
 }
 
 export function reviewAlertEmail({
@@ -17,6 +18,7 @@ export function reviewAlertEmail({
     urgencyScore,
     dashboardUrl,
     settingsUrl,
+    customerEmail,
 }: ReviewAlertProps): string {
     const starLabel = "★".repeat(rating) + "☆".repeat(5 - rating);
     const starColor = rating >= 4 ? "#16a34a" : rating === 3 ? "#ca8a04" : "#dc2626";
@@ -69,10 +71,15 @@ export function reviewAlertEmail({
                             </div>
 
                             <!-- CTA -->
-                            <div style="margin-bottom: 40px;">
+                            <div style="margin-bottom: 40px; display: flex; gap: 12px; flex-wrap: wrap;">
                                 <a href="${dashboardUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #27272a;">
-                                    Reply to this Review
+                                    View in Dashboard
                                 </a>
+                                ${customerEmail ? `
+                                <a href="mailto:${customerEmail}?subject=Regarding your recent feedback&body=Hi ${authorName !== customerEmail ? authorName : 'there'},%0D%0A%0D%0ATo help us look into this, could you share a bit more detail?%0D%0A%0D%0A" style="display: inline-block; background-color: #ffffff; color: #18181b; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #e4e4e7;">
+                                    Reply to Customer
+                                </a>
+                                ` : ''}
                             </div>
 
                             <!-- Footer Section -->

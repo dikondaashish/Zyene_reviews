@@ -14,6 +14,17 @@ const sentimentSchema: Schema = {
     required: ["sentiment", "urgency", "themes", "summary"]
 };
 
+const categorySchema: Schema = {
+    type: SchemaType.OBJECT,
+    properties: {
+        category: { 
+            type: SchemaType.STRING, 
+            description: "A short category (2-3 words max). E.g. 'Customer Service', 'Wait Time', 'Product Quality', 'Pricing', or 'Other'" 
+        }
+    },
+    required: ["category"]
+};
+
 type ReviewForAnalysis = {
     id: string;
     rating?: number | null;
@@ -57,5 +68,21 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
     } catch (error) {
         console.error("AI Analysis Failed:", error);
         return null;
+    }
+}
+
+export async function categorizePrivateFeedback(content: string | null | undefined): Promise<string> {
+    if (!content || !content.trim()) return "Other";
+    try {
+        const prompt = `Analyze this private customer feedback and categorize the primary issue into a short phrase (2-3 words max, e.g., 'Customer Service', 'Product Quality', 'Wait Time', 'Pricing', etc.).\n\nFeedback: "${content}"`;
+        const res = await generateContentWithFallback(prompt, {
+            requireJson: true,
+            schema: categorySchema
+        });
+        const parsed = JSON.parse(res);
+        return parsed.category || "Other";
+    } catch (err) {
+        console.error("AI Categorize Failed:", err);
+        return "Other";
     }
 }

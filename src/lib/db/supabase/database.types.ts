@@ -1088,27 +1088,36 @@ export type Database = {
       private_feedback: {
         Row: {
           business_id: string
+          category: string | null
           content: string | null
           created_at: string
+          customer_email: string | null
           id: string
           rating: number
           review_request_id: string | null
+          status: string | null
         }
         Insert: {
           business_id: string
+          category?: string | null
           content?: string | null
           created_at?: string
+          customer_email?: string | null
           id?: string
           rating: number
           review_request_id?: string | null
+          status?: string | null
         }
         Update: {
           business_id?: string
+          category?: string | null
           content?: string | null
           created_at?: string
+          customer_email?: string | null
           id?: string
           rating?: number
           review_request_id?: string | null
+          status?: string | null
         }
         Relationships: [
           {

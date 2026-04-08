@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { categorizePrivateFeedback } from "@/domains/ai/services/AiAnalysisService";
+import { sendEmail } from "@/services/resend/send-email";
+import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
 import { z } from "zod";
 
 const privateFeedbackSchema = z
@@ -36,7 +39,7 @@ export async function POST(request: Request) {
         if (review_request_id) {
             const { data: reviewRequest, error: requestErr } = await supabase
                 .from("review_requests")
-                .select("id, business_id")
+                .select("id, business_id, customer_name, businesses(name)")
                 .eq("id", review_request_id)
                 .maybeSingle();
 
@@ -44,11 +47,24 @@ export async function POST(request: Request) {
                 return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
             }
             business_id = reviewRequest.business_id;
+            const businessData = reviewRequest.businesses as any;
+            var businessName = businessData?.name;
+            var customerName = reviewRequest.customer_name;
         }
 
         if (!business_id) {
-            return NextResponse.json({ error: "Business not found" }, { status: 404 });
+            // Fallback for business name if no review_request_id
+            if (bodyBusinessId) {
+                const { data: biz } = await supabase.from("businesses").select("name").eq("id", bodyBusinessId).maybeSingle();
+                businessName = biz?.name;
+            } else {
+                return NextResponse.json({ error: "Business not found" }, { status: 404 });
+            }
+            business_id = bodyBusinessId || null;
         }
+
+        // AI Categorization
+        const category = await categorizePrivateFeedback(content);
 
         // 1. Insert Private Feedback
         const { data: feedback, error } = await supabase
@@ -58,6 +74,9 @@ export async function POST(request: Request) {
                 review_request_id: review_request_id || null,
                 rating,
                 content,
+                customer_email: customer_email || null,
+                category,
+                status: 'open',
                 created_at: new Date().toISOString(),
             })
             .select()
@@ -77,6 +96,18 @@ export async function POST(request: Request) {
             text: `[PRIVATE FEEDBACK] ${content || "No details provided."}`,
             urgency_score: rating <= 2 ? 8 : 4 // Higher urgency for lower ratings
         }).catch(err => console.error("Failed to send private feedback alert:", err));
+
+        // 3. Automated Apology Email to Customer
+        if (customer_email && businessName) {
+            sendEmail({
+                to: customer_email,
+                subject: `We're sorry about your experience at ${businessName}`,
+                html: recoveryEmailTemplate({
+                    businessName,
+                    customerName: customerName || undefined
+                })
+            }).catch(err => console.error("Failed to send automated recovery email:", err));
+        }
 
         return NextResponse.json({ success: true, feedback });
 
