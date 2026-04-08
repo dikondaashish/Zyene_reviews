@@ -103,7 +103,8 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
                 reviewText: review.text || "No content provided",
                 urgencyScore: urgency,
                 dashboardUrl: `${APP_URL}/dashboard`,
-                settingsUrl: `${APP_URL}/settings/notifications`
+                settingsUrl: `${APP_URL}/settings/notifications`,
+                customerEmail: review.customer_email || undefined
             });
 
             await sendEmail({

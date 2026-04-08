@@ -35,6 +35,8 @@ export async function POST(request: Request) {
 
         const supabase = createAdminClient();
         let business_id = bodyBusinessId || null;
+        let businessName: string | null | undefined;
+        let customerName: string | null | undefined;
 
         if (review_request_id) {
             const { data: reviewRequest, error: requestErr } = await supabase
@@ -48,8 +50,8 @@ export async function POST(request: Request) {
             }
             business_id = reviewRequest.business_id;
             const businessData = reviewRequest.businesses as any;
-            var businessName = businessData?.name;
-            var customerName = reviewRequest.customer_name;
+            businessName = businessData?.name;
+            customerName = reviewRequest.customer_name;
         }
 
         if (!business_id) {
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
             } else {
                 return NextResponse.json({ error: "Business not found" }, { status: 404 });
             }
-            business_id = bodyBusinessId || null;
+            business_id = bodyBusinessId;
         }
 
         // AI Categorization
@@ -94,7 +96,8 @@ export async function POST(request: Request) {
             rating: rating,
             author_name: customer_email || "Anonymous Customer",
             text: `[PRIVATE FEEDBACK] ${content || "No details provided."}`,
-            urgency_score: rating <= 2 ? 8 : 4 // Higher urgency for lower ratings
+            urgency_score: rating <= 2 ? 8 : 4, // Higher urgency for lower ratings
+            customer_email: customer_email || null
         }).catch(err => console.error("Failed to send private feedback alert:", err));
 
         // 3. Automated Apology Email to Customer
