@@ -22,6 +22,7 @@ const privateFeedbackSchema = z
 export async function POST(request: Request) {
     try {
         const body = await request.json();
+        console.log("📩 Received private feedback request:", body);
         const parsed = privateFeedbackSchema.safeParse(body);
         if (!parsed.success) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
@@ -66,7 +67,9 @@ export async function POST(request: Request) {
         }
 
         // AI Categorization
+        console.log("🤖 Categorizing private feedback...");
         const category = await categorizePrivateFeedback(content);
+        console.log("🏷️ Category assigned:", category);
 
         // 1. Insert Private Feedback
         const { data: feedback, error } = await supabase
@@ -83,6 +86,7 @@ export async function POST(request: Request) {
             })
             .select()
             .single();
+        console.log("💾 Feedback saved to database. ID:", feedback?.id);
 
         if (error) {
             console.error("Failed to insert private feedback:", error);
@@ -90,6 +94,7 @@ export async function POST(request: Request) {
         }
 
         // 2. Trigger Email Notification (mimicking a review object)
+        console.log("🔔 Triggering review alert notification...");
         sendReviewAlert({
             id: feedback.id, // Using feedback ID (won't affect reviews table updates)
             business_id: business_id,
@@ -102,6 +107,7 @@ export async function POST(request: Request) {
 
         // 3. Automated Apology Email to Customer
         if (customer_email && businessName) {
+            console.log(`✉️ Sending apology email to customer: ${customer_email}`);
             sendEmail({
                 to: customer_email,
                 subject: `We're sorry about your experience at ${businessName}`,
