@@ -717,7 +717,7 @@ export function PublicReviewFlow({
 
     if (step === "tags") {
         return renderCardWrapper(
-            <div className="p-8 pb-32 flex-1 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="p-8 pb-32 flex-1 flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
