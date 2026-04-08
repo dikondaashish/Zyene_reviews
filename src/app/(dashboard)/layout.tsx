@@ -50,6 +50,7 @@ export default async function DashboardLayout({
                         status: b.status || "active"
                     }))}
                     activeBusinessId={activeBusinessId}
+                    maxBusinesses={organization?.max_businesses || 1}
                 />
             </div>
             <div className="flex items-center gap-2">

@@ -23,9 +23,10 @@ interface BusinessSwitcherProps {
         status: string;
     }[];
     activeBusinessId: string | null;
+    maxBusinesses?: number;
 }
 
-export function BusinessSwitcher({ businesses, activeBusinessId }: BusinessSwitcherProps) {
+export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses = 1 }: BusinessSwitcherProps) {
     const router = useRouter()
     const [switching, setSwitching] = React.useState(false)
 
@@ -76,12 +77,14 @@ export function BusinessSwitcher({ businesses, activeBusinessId }: BusinessSwitc
                     </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/businesses/add" className="flex items-center gap-2 cursor-pointer">
-                        <Plus className="h-4 w-4" />
-                        Add a Business
-                    </Link>
-                </DropdownMenuItem>
+                {(businesses.length < maxBusinesses) && (
+                    <DropdownMenuItem asChild>
+                        <Link href="/businesses/add" className="flex items-center gap-2 cursor-pointer">
+                            <Plus className="h-4 w-4" />
+                            Add a Business
+                        </Link>
+                    </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     )

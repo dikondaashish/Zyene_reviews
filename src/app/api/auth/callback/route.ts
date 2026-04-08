@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations, FULL_LOCATION_READ_MASK } from "@/services/google/business-profile";
 import { redis } from "@/lib/db/redis";
+import { checkLimit } from "@/lib/stripe/check-limits";
 import type {
     AuthMemberOrgContext,
     GoogleLocationDetails,
@@ -60,10 +61,14 @@ export async function GET(request: Request) {
             const admin = createAdminClient();
 
             if (isAddBusinessFlow && addBusinessOrgId) {
+                // Check business limit before proceeding
+                const limitCheck = await checkLimit(addBusinessOrgId, "businesses");
+                if (!limitCheck.allowed) {
+                    console.log(`⚠️ Business limit reached for org ${addBusinessOrgId}. Redirecting to billing.`);
+                    return NextResponse.redirect(`${appUrl}/settings/billing?error=limit_reached`);
+                }
+
                 // ─── ADD BUSINESS FLOW ──────────────────────────
-                // A user was already logged in, clicked "Add a Business",
-                // and connected with a Google account (possibly different from their login email).
-                // We create the new business in their ORIGINAL org (passed via URL param).
 
                 // Ensure the OAuth user has a public.users record (in case it's a new auth user)
                 const { data: existingUser } = await admin

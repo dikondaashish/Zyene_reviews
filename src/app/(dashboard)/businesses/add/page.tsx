@@ -1,5 +1,7 @@
 "use client"
 
+import React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/db/supabase/client"
@@ -7,8 +9,32 @@ import { Store, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
 
+import { useRouter } from "next/navigation"
+import { getActiveBusinessId } from "@/lib/auth/business-context"
+
 export default function AddBusinessPage() {
     const supabase = createClient()
+    const router = useRouter()
+    const [loading, setLoading] = React.useState(true)
+    const [atLimit, setAtLimit] = React.useState(false)
+
+    React.useEffect(() => {
+        async function checkLimit() {
+            const { businesses, organization } = await getActiveBusinessId()
+            if (organization) {
+                const max = organization.max_businesses || 1
+                if (businesses.length >= max) {
+                    setAtLimit(true)
+                    toast.error("Limit reached", {
+                        description: `Your plan allows up to ${max} ${max === 1 ? 'business' : 'businesses'}. Please upgrade to add more.`
+                    })
+                    router.push("/settings/billing")
+                }
+            }
+            setLoading(false)
+        }
+        checkLimit()
+    }, [router])
 
     const handleConnectGoogle = async () => {
         try {
@@ -63,8 +89,18 @@ export default function AddBusinessPage() {
         }
     }
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+            </div>
+        )
+    }
+
+    if (atLimit) return null
+
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 animate-in fade-in duration-500">
             {/* Back Link */}
             <div>
                 <Link
