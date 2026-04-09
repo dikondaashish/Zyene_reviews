@@ -11,7 +11,8 @@ export const processCampaignContact = inngest.createFunction(
         id: "process-campaign-contact",
         name: "Process Campaign Contact",
         concurrency: {
-            limit: 10, // Process 10 SMS per second maximum to avoid Twilio ratelimits
+            // Must stay ≤ plan limit (Inngest hobby = 5) or cloud sync fails for the whole app.
+            limit: 5,
         }
     },
     { event: "campaign/send.contact" },
