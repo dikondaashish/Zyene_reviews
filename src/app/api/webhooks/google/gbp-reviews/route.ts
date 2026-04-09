@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { inngest } from "@/services/inngest/client";
 import { getReview } from "@/services/google/business-profile";
 import { getValidGoogleToken, processGoogleReview } from "@/services/google/sync-service";
 import { extractGoogleLocationIdFromQaPayload, processQaWebhookForLocation } from "@/services/google/webhook-qa";
@@ -7,13 +8,12 @@ import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
     try {
-        // Verify webhook secret via header only (never URL params — they leak in logs)
-        const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
-        if (!sharedSecret) {
-            Sentry.captureMessage("GOOGLE_GBP_WEBHOOK_SECRET is not configured", "error");
-            return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
-        }
+        // LOG: Log basic metadata about incoming request for debugging
         const headerSecret = req.headers.get("x-webhook-secret");
+        const userAgent = req.headers.get("user-agent");
+        
+        console.log(`[GBP Webhook] Incoming request from ${userAgent}. Secret provided: ${!!headerSecret}`);
+
         if (headerSecret !== sharedSecret) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -101,9 +101,16 @@ export async function POST(req: NextRequest) {
 
         // 6. Process the review using the unified sync logic
         // This handles upserting to DB, AI analysis, and alerting
-        const stats = await processGoogleReview(admin, platform, googleReview);
-
         console.log(`[GBP Webhook] Successfully processed review ${googleReview.reviewId}. Stats:`, stats);
+
+        // 7. Trigger AI Analysis & Alerts if needed
+        if (stats.upserted && stats.needsAnalysis && stats.id) {
+            console.log(`[GBP Webhook] Triggering AI analysis for review ${stats.id}`);
+            await inngest.send({
+                name: "review/analyze.batch",
+                data: { reviewIds: [stats.id] }
+            });
+        }
 
         // Update platform last_synced_at timestamp
         await admin.from("review_platforms").update({
