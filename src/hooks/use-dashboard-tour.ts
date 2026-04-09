@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import { getTourStatus, completeTour as completeTourAction, resetTour as resetTourAction } from "@/app/actions/tour";
 
 /**
@@ -11,21 +12,26 @@ export const useDashboardTour = () => {
     const [runTour, setRunTour] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
 
-    // Fetch tour status from backend on mount
+    // Fetch tour status from backend on mount or when navigation/params change
     useEffect(() => {
         let cancelled = false;
 
         const checkTourStatus = async () => {
             try {
+                // If explicitly requested via query param, force run it
+                const forceTour = searchParams.get("tour") === "true";
                 const hasCompleted = await getTourStatus();
-                if (!cancelled && !hasCompleted) {
-                    // Auto-start tour for first-time users after short delay for DOM readiness
+
+                if (!cancelled && (forceTour || !hasCompleted)) {
+                    // Auto-start tour after short delay for DOM readiness
                     setTimeout(() => {
                         if (!cancelled) {
                             setRunTour(true);
                         }
-                    }, 1000);
+                    }, 500);
                 }
             } catch (error) {
                 console.error("Failed to fetch tour status:", error);
@@ -38,7 +44,7 @@ export const useDashboardTour = () => {
 
         checkTourStatus();
         return () => { cancelled = true; };
-    }, []);
+    }, [pathname, searchParams]);
 
     // Mark tour as completed in database
     const completeTour = useCallback(async () => {

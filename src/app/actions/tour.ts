@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/db/supabase/server";
+import { revalidatePath } from "next/cache";
 
 /**
  * Get the tour completion status for the current authenticated user.
@@ -38,6 +39,7 @@ export async function completeTour(): Promise<{ success: boolean }> {
         .update({ has_completed_tour: true, updated_at: new Date().toISOString() })
         .eq("id", user.id);
 
+    revalidatePath("/", "layout");
     return { success: !error };
 }
 
@@ -57,5 +59,6 @@ export async function resetTour(): Promise<{ success: boolean }> {
         .update({ has_completed_tour: false, updated_at: new Date().toISOString() })
         .eq("id", user.id);
 
+    revalidatePath("/", "layout");
     return { success: !error };
 }

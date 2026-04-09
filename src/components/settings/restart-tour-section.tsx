@@ -18,7 +18,7 @@ export function RestartTourSection() {
         setIsLoading(true);
         try {
             await resetTour();
-            router.push("/dashboard");
+            router.push("/dashboard?tour=true");
         } catch (error) {
             console.error("Failed to reset tour:", error);
             setIsLoading(false);
