@@ -6,7 +6,7 @@ interface ReviewDigestItem {
     sentiment?: "positive" | "negative" | "neutral";
 }
 
-interface DailyDigestProps {
+interface WeeklyDigestProps {
     businessName: string;
     reviews: ReviewDigestItem[];
     totalNew: number;
@@ -16,7 +16,7 @@ interface DailyDigestProps {
     settingsUrl: string;
 }
 
-export function dailyDigestEmail({
+export function weeklyDigestEmail({
     businessName,
     reviews,
     totalNew,
@@ -24,7 +24,7 @@ export function dailyDigestEmail({
     pendingCount,
     dashboardUrl,
     settingsUrl,
-}: DailyDigestProps): string {
+}: WeeklyDigestProps): string {
     const reviewRows = reviews.map(review => {
         const starColor = review.rating >= 4 ? "#16a34a" : review.rating === 3 ? "#ca8a04" : "#dc2626";
         const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
@@ -49,7 +49,7 @@ export function dailyDigestEmail({
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Digest - ${businessName}</title>
+    <title>Weekly Digest - ${businessName}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fcfbfa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; min-height: 100vh;">
@@ -64,15 +64,15 @@ export function dailyDigestEmail({
                             <!-- Header -->
                             <div style="margin-bottom: 24px;">
                                 <span style="display: inline-block; background-color: #f4f4f5; color: #18181b; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Daily Digest
+                                    Weekly Digest
                                 </span>
                             </div>
 
                             <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #18181b; letter-spacing: -0.025em;">
-                                Your Daily Summary
+                                Your Weekly Summary
                             </h1>
                             <p style="margin: 0 0 32px; font-size: 16px; color: #52525b;">
-                                for ${businessName}
+                                for ${businessName} · past 7 days
                             </p>
 
                             <!-- Metric Grid (Table-based for email support) -->
@@ -96,9 +96,9 @@ export function dailyDigestEmail({
                             <!-- Latest Reviews -->
                             <div style="margin-bottom: 32px;">
                                 <h3 style="margin: 0 0 16px; font-size: 14px; font-weight: 600; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Latest Reviews
+                                    Recent reviews
                                 </h3>
-                                ${reviews.length > 0 ? reviewRows : '<p style="color: #a1a1aa; font-style: italic; font-size: 14px;">No new reviews today.</p>'}
+                                ${reviews.length > 0 ? reviewRows : '<p style="color: #a1a1aa; font-style: italic; font-size: 14px;">No new reviews this week.</p>'}
                             </div>
 
                             <!-- CTA -->

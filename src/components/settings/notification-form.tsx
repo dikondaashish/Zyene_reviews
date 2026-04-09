@@ -102,16 +102,15 @@ export function NotificationForm({ initialPrefs }: { initialPrefs: NotificationP
                     )}
                 />
 
-                {/* Daily Digest */}
                 <FormField
                     control={form.control}
                     name="digest_enabled"
                     render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                             <div className="space-y-0.5">
-                                <FormLabel className="text-base">Daily Digest</FormLabel>
+                                <FormLabel className="text-base">Weekly digest</FormLabel>
                                 <FormDescription>
-                                    Get a daily summary of all new reviews.
+                                    Get a weekly email with new reviews from the past seven days (typically sent Monday mornings).
                                 </FormDescription>
                             </div>
                             <FormControl>

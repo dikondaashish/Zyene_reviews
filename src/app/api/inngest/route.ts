@@ -1,7 +1,7 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/services/inngest/client";
 import { processCampaignContact, processReviewAnalysisBatch, syncGoogleReviews } from "@/services/inngest/functions";
-import { syncPlatformWorker, dailyDigestWorker, followUpWorker } from "@/services/inngest/sync-worker";
+import { syncPlatformWorker, weeklyDigestWorker, followUpWorker } from "@/services/inngest/sync-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -29,7 +29,7 @@ export const { GET, POST, PUT } = serve({
         processReviewAnalysisBatch,
         syncGoogleReviews,
         syncPlatformWorker,
-        dailyDigestWorker,
+        weeklyDigestWorker,
         followUpWorker,
     ],
     servePath: "/api/inngest",

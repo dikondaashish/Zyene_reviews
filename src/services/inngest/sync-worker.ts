@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
-import { dailyDigestEmail } from "@/services/resend/templates/daily-digest-email";
+import { weeklyDigestEmail } from "@/services/resend/templates/weekly-digest-email";
 import { sendEmail } from "@/services/resend/send-email";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 
@@ -39,18 +39,18 @@ export const syncPlatformWorker = inngest.createFunction(
 );
 
 /**
- * Worker to process daily digest for a single business.
+ * Worker to process weekly digest for a single business (cron fans out one event per business).
  */
-export const dailyDigestWorker = inngest.createFunction(
-  { id: "daily-digest-worker", name: "Send Daily Digest" },
-  { event: "cron/daily-digest.business" },
+export const weeklyDigestWorker = inngest.createFunction(
+  { id: "weekly-digest-worker", name: "Send Weekly Digest" },
+  { event: "cron/weekly-digest.business" },
   async ({ event, step }) => {
     const { businessId } = event.data;
     const admin = createAdminClient();
 
     await step.run("process-digest", async () => {
       const now = new Date();
-      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
       // 1. Fetch Business & Reviews
       const { data: business } = await admin
@@ -65,7 +65,7 @@ export const dailyDigestWorker = inngest.createFunction(
         .from("reviews")
         .select("rating, text, author_name, sentiment")
         .eq("business_id", businessId)
-        .gte("created_at", yesterday.toISOString());
+        .gte("created_at", weekAgo.toISOString());
 
       if (!reviews || reviews.length === 0) return;
 
@@ -107,7 +107,7 @@ export const dailyDigestWorker = inngest.createFunction(
       if (recipients.length === 0) return;
 
       // 4. Send Emails
-      const emailHtml = dailyDigestEmail({
+      const emailHtml = weeklyDigestEmail({
         businessName: business.name,
         reviews: digestItems,
         totalNew,
@@ -121,7 +121,7 @@ export const dailyDigestWorker = inngest.createFunction(
         const rTyped = r as any;
         return sendEmail({
           to: rTyped.users.email,
-          subject: `Daily Review Summary for ${business.name}`,
+          subject: `Weekly review summary for ${business.name}`,
           html: emailHtml
         });
       }));

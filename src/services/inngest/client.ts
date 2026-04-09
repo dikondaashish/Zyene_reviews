@@ -32,7 +32,7 @@ type SyncPlatformEvent = {
     };
 };
 
-type DailyDigestEvent = {
+type WeeklyDigestEvent = {
     data: {
         businessId: string;
     };
@@ -49,7 +49,7 @@ type Events = {
     "review/analyze.batch": AnalysisBatchEvent;
     "google/sync.reviews": SyncGoogleReviewsEvent;
     "review/sync.platform": SyncPlatformEvent;
-    "cron/daily-digest.business": DailyDigestEvent;
+    "cron/weekly-digest.business": WeeklyDigestEvent;
     "cron/follow-up.campaign": FollowUpEvent;
 };
 

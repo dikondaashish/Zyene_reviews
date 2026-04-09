@@ -3,7 +3,7 @@ import { welcomeEmail } from '../src/services/resend/templates/welcome-email';
 import { TeamInviteEmail } from '../src/services/resend/templates/team-invite-email';
 import { reviewAlertEmail } from '../src/services/resend/templates/review-alert-email';
 import { reviewRequestEmail } from '../src/services/resend/templates/review-request-email';
-import { dailyDigestEmail } from '../src/services/resend/templates/daily-digest-email';
+import { weeklyDigestEmail } from '../src/services/resend/templates/weekly-digest-email';
 import { subscriptionSuccessEmail } from '../src/services/resend/templates/subscription-success-email';
 import { paymentSuccessEmail } from '../src/services/resend/templates/payment-success-email';
 import { paymentFailedEmail } from '../src/services/resend/templates/payment-failed-email';
@@ -64,9 +64,9 @@ async function runTest() {
             })
         },
         {
-            name: 'Daily Digest',
-            subject: 'Daily Review Summary for Zyene Reviews',
-            html: dailyDigestEmail({
+            name: 'Weekly Digest',
+            subject: 'Weekly review summary for Zyene Reviews',
+            html: weeklyDigestEmail({
                 businessName: 'Zyene Reviews',
                 totalNew: 12,
                 avgRating: 4.2,
