@@ -6,7 +6,10 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 export default async function NotificationSettingsPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect("/login");
+    if (!user) {
+        redirect("/login");
+        return null; // Satisfy TS compiler
+    }
 
     const { businessId } = await getActiveBusinessId();
     if (!businessId) return <div>No business selected</div>;

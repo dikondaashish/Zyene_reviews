@@ -24,7 +24,7 @@ export const processCampaignContact = inngest.createFunction(
         }
     },
     { event: "campaign/send.contact" },
-    async ({ event, step }) => {
+    async ({ event, step }: { event: { data: { campaignId: string, businessId: string, contact: any } }, step: any }) => {
         const { campaignId, businessId, contact } = event.data;
         const supabase = createAdminClient();
 
@@ -194,7 +194,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         }
     },
     { event: "review/analyze.batch" },
-    async ({ event, step }) => {
+    async ({ event, step }: { event: { data: { reviewIds: string[] } }, step: any }) => {
         const { reviewIds } = event.data;
         const supabase = createAdminClient();
 
@@ -211,7 +211,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         if (!reviews || reviews.length === 0) return { status: "no_reviews_found" };
 
         // 2. Format for AI
-        const reviewsForAi = reviews.map(r => ({
+        const reviewsForAi = reviews.map((r: { id: string, rating: number, text: string | null }) => ({
             id: r.id,
             rating: r.rating,
             text: r.text || ""
@@ -250,7 +250,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                 
                 // Trigger alert if urgency is high (>= 7)
                 if (result.urgency >= 7) {
-                    const reviewObj = reviews.find(r => r.id === result.reviewId);
+                    const reviewObj = reviews.find((r: { id: string }) => r.id === result.reviewId);
                     if (reviewObj) {
                         await sendReviewAlert({ ...reviewObj, ...result });
                     }
@@ -272,7 +272,7 @@ export const syncGoogleReviews = inngest.createFunction(
         },
     },
     { event: "google/sync.reviews" },
-    async ({ event, step }) => {
+    async ({ event, step }: { event: { data: { platformId: string } }, step: any }) => {
         const { platformId } = event.data;
         const supabase = createAdminClient();
 
