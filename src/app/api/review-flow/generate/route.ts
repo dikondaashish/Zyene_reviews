@@ -134,7 +134,7 @@ Review Content:`;
                 const backupReviewText = await generateContentWithFallback(backupPrompt, { requireJson: false });
                 
                 if (backupReviewText && backupReviewText.trim().length > 10) {
-                    console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Gemini 3 Flash (Backup Layer 2)`);
+                    console.info(`[AI SUCCESS] Generated unique review for ${businessName} using Gemini 3 Flash Preview (Backup Layer 2)`);
                     return NextResponse.json({ reviewText: backupReviewText.trim() });
                 }
             } catch (backupError) {

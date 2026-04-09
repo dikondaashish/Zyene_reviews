@@ -1,7 +1,7 @@
 /**
  * Zyene Reviews: AI Analysis Test Script
  * 
- * This script tests the Sentiment Analysis & Categorization engine (Gemini 3 Flash).
+ * This script tests the Sentiment Analysis & Categorization engine (Gemini 1.5 Flash).
  * It simulates three distinct review scenarios to verify accurate sentiment,
  * urgency scoring, and theme identification.
  * 

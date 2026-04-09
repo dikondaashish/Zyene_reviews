@@ -33,9 +33,6 @@ export async function generateContentWithFallback(
 ): Promise<string> {
     const { requireJson = false, schema, isPremium = false, enableGrounding = false } = options;
 
-    // Standardized Model Selection:
-    // - Premium/Pro: gemini-3.1-pro-preview for best-in-class reasoning
-    // - Flash: gemini-3-flash-preview for speed and efficiency
     const modelToUse = isPremium ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview";
 
     // Config configuration
