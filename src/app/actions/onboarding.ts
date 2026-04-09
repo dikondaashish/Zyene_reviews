@@ -228,13 +228,13 @@ export async function initializeGoogleAuth(
 
       console.log("[Google API] Accounts response status:", accountsResponse.status);
 
-      if (accountsResponse.ok) {
-        const accountsData = await accountsResponse.json();
-        const accounts = accountsData.accounts || [];
+        if (accountsResponse.ok) {
+          const accountsData = await accountsResponse.json();
+          const accounts = accountsData.accounts || [];
 
-        console.log("[Google API] Found accounts:", accounts.length);
+          console.log("[Google API] Found accounts:", accounts.length);
 
-        if (accounts.length > 0) {
+          if (accounts.length > 0) {
           const accountId = accounts[0].name; // e.g. "accounts/123456"
 
           // Step 2: List locations using Business Information API with extended readMask
@@ -462,6 +462,8 @@ export async function initializeGoogleAuth(
             await registerNotifications(accessToken, accountName, topicName);
             console.log(`[Google API] Notification registration successful.`);
           }
+        } else {
+          console.warn(`[Google API] Could not retrieve accounts for notification registration (Status: ${accountsResponse.status})`);
         }
       } catch (regError) {
         console.error("[Google API] Failed to register GBP notifications:", regError);
