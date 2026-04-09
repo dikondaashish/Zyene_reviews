@@ -34,7 +34,7 @@ export const qaSchema: Schema = {
     required: ["answer"]
 };
 
-export const batchSchema: Schema = {
+export const batchReplySchema: Schema = {
     type: SchemaType.ARRAY,
     description: "An array of generated replies mapped one-to-one with the input reviews.",
     items: {
@@ -47,5 +47,25 @@ export const batchSchema: Schema = {
             suggested_reply: { type: SchemaType.STRING, description: "A highly personalized reply to the review" }
         },
         required: ["reviewId", "rating", "summary", "sentiment", "suggested_reply"]
+    }
+};
+
+export const batchAnalysisSchema: Schema = {
+    type: SchemaType.ARRAY,
+    description: "An array of analysis results for each review.",
+    items: {
+        type: SchemaType.OBJECT,
+        properties: {
+            reviewId: { type: SchemaType.STRING },
+            sentiment: { type: SchemaType.STRING, description: "positive, negative, neutral, or mixed" },
+            urgency: { type: SchemaType.NUMBER, description: "1-10 urgency score" },
+            themes: { 
+                type: SchemaType.ARRAY, 
+                items: { type: SchemaType.STRING },
+                description: "List of identified themes"
+            },
+            summary: { type: SchemaType.STRING, description: "One sentence summary" }
+        },
+        required: ["reviewId", "sentiment", "urgency", "themes", "summary"]
     }
 };

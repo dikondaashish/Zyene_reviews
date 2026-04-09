@@ -4,7 +4,7 @@ import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
-import { batchSchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { batchAnalysisSchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { 
     syncGoogleReviewsForPlatform, 
     prepareGoogleSync, 
@@ -224,8 +224,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         // 3. Call Gemini with Fallback
         const aiResults = await step.run("call-gemini-batch", async () => {
             // Schema enforcement shifted to registry
-
-            const content = await generateContentWithFallback(prompt, { requireJson: true, schema: batchSchema });
+            const content = await generateContentWithFallback(prompt, { requireJson: true, schema: batchAnalysisSchema });
             
             try {
                 return JSON.parse(content);
