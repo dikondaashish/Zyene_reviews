@@ -54,6 +54,8 @@ export default async function RequestPage({
             footer_link,
             footer_logo_url,
             hide_branding,
+            enable_staff_selection,
+            staff_names,
             organization:organizations (
                 plan,
                 plan_status
@@ -141,6 +143,8 @@ export default async function RequestPage({
                 footerLink={business.footer_link ?? undefined}
                 footerLogoUrl={business.footer_logo_url ?? undefined}
                 hideBranding={business.hide_branding ?? undefined}
+                enableStaffSelection={business.enable_staff_selection ?? undefined}
+                staffNames={(business.staff_names as string[]) ?? undefined}
             />
         </div>
     );
