@@ -33,7 +33,10 @@ export async function generateContentWithFallback(
 ): Promise<string> {
     const { requireJson = false, schema, isPremium = false, enableGrounding = false } = options;
 
-    const modelToUse = isPremium ? "gemini-3.1-pro" : "gemini-3-flash";
+    // Standardized Model Selection:
+    // - Premium/Pro: gemini-3.1-pro-preview for best-in-class reasoning
+    // - Flash: gemini-3-flash-preview for speed and efficiency
+    const modelToUse = isPremium ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview";
 
     // Config configuration
     const config: any = {};
@@ -73,19 +76,19 @@ export async function generateContentWithFallback(
         console.error(`[GEN AI SDK] model=${modelToUse} latency=${latencyMs}ms status=error`, error);
 
         // Fallback Strategy: Pro → Flash
-        if (modelToUse === "gemini-3.1-pro") {
-            console.warn(`[GEN AI SDK] Falling back from gemini-3.1-pro to gemini-3-flash`);
+        if (modelToUse === "gemini-3.1-pro-preview") {
+            console.warn(`[GEN AI SDK] Falling back from gemini-3.1-pro-preview to gemini-3-flash-preview`);
             const fallbackStart = Date.now();
 
             try {
                 const backupResponse = await client.models.generateContent({
-                    model: "gemini-3-flash",
+                    model: "gemini-3-flash-preview",
                     contents: [{ role: "user", parts: [{ text: prompt }] }],
                     config
                 });
 
                 const fallbackLatency = Date.now() - fallbackStart;
-                console.info(`[GEN AI SDK] model=gemini-3-flash(fallback) latency=${fallbackLatency}ms status=success`);
+                console.info(`[GEN AI SDK] model=gemini-3-flash-preview(fallback) latency=${fallbackLatency}ms status=success`);
 
                 return backupResponse.candidates?.[0]?.content?.parts?.[0]?.text || "";
             } catch (fallbackError) {
