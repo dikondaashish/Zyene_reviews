@@ -1,13 +1,60 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function DeleteAccountSection() {
-    const handleDeleteAccount = () => {
-        if (!confirm("Are you sure? This action cannot be undone.")) return;
-        toast.error("Account deletion is not yet available, please contact support.");
+    const [open, setOpen] = useState(false);
+    const [confirmText, setConfirmText] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const isConfirmed = confirmText === "DELETE";
+
+    const handleDeleteAccount = async () => {
+        if (!isConfirmed || isDeleting) return;
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/users/me", {
+                method: "DELETE",
+            });
+
+            if (response.status === 501) {
+                toast.error("Account deletion is not yet available. Please contact customer support.");
+                setOpen(false);
+                setConfirmText("");
+                return;
+            }
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "Failed to delete account");
+            }
+
+            toast.success("Account deleted successfully. Logging out...");
+            // Real deletion would redirect to logout or landing page
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 2000);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to delete account");
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     return (
@@ -25,14 +72,57 @@ export function DeleteAccountSection() {
                         Permanently delete your account and all associated data. This action cannot be undone.
                     </p>
                 </div>
-                <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={handleDeleteAccount}
-                    className="shrink-0"
-                >
-                    Delete Account
-                </Button>
+
+                <AlertDialog open={open} onOpenChange={setOpen}>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm" className="shrink-0">
+                            Delete Account
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action will permanently delete your account, your organization settings, and all data associated with you. This cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <div className="my-4 space-y-2">
+                            <p className="text-xs text-muted-foreground">
+                                To confirm, please type <span className="font-bold text-foreground">DELETE</span> in the box below:
+                            </p>
+                            <Input
+                                value={confirmText}
+                                onChange={(e) => setConfirmText(e.target.value)}
+                                placeholder="Type DELETE to confirm"
+                                className="border-destructive/50 focus-visible:ring-destructive"
+                            />
+                        </div>
+
+                        <AlertDialogFooter>
+                            <AlertDialogCancel disabled={isDeleting} onClick={() => setConfirmText("")}>
+                                Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    void handleDeleteAccount();
+                                }}
+                                disabled={!isConfirmed || isDeleting}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                                {isDeleting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    "Delete Account"
+                                )}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );
