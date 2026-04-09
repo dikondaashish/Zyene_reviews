@@ -307,6 +307,7 @@ export async function syncGoogleReviewsPage(
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];
 
+    let newReviewsCount = 0;
     for (const review of apiResp.reviews) {
         const stats = await processGoogleReview(admin, context.platform, review);
         if (stats.upserted) {
@@ -314,8 +315,13 @@ export async function syncGoogleReviewsPage(
             if (stats.id && stats.needsAnalysis) {
                 reviewIdsToAnalyze.push(stats.id);
             }
+            if (stats.isNew) {
+                newReviewsCount++;
+            }
         }
     }
+
+    console.log(`[Sync] Page synced: ${syncedCount} total reviews processed, ${newReviewsCount} were BRAND NEW. Google reports ${apiResp.totalReviewCount} total.`);
 
     // Trigger AI Analysis for this page's chunk
     if (reviewIdsToAnalyze.length > 0) {
@@ -449,21 +455,28 @@ export async function processGoogleReview(
     const { data: upserted, error: upsertError } = await admin
         .from("reviews")
         .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
-        .select("id, sentiment, text")
+        .select("id, sentiment, text, created_at")
         .single();
 
     let upsertedOk = false;
     let needsAnalysis = false;
+    let isNew = false;
 
     if (upsertError) {
         console.error("Upsert Error:", upsertError);
     } else {
         upsertedOk = true;
+        // If created_at is very recent (within last 10 seconds of upsert), it's brand new
+        const createdAt = upserted?.created_at ? new Date(upserted.created_at) : null;
+        if (createdAt && (Date.now() - createdAt.getTime() < 10000)) {
+            isNew = true;
+        }
+
         // Mark for analysis if text exists and not already analyzed
         if (upserted && !upserted.sentiment && upserted.text) {
             needsAnalysis = true;
         }
     }
 
-    return { upserted: upsertedOk, id: upserted?.id, needsAnalysis, error: upsertError };
+    return { upserted: upsertedOk, id: upserted?.id, needsAnalysis, isNew, error: upsertError };
 }

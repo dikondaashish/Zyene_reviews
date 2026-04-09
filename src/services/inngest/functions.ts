@@ -274,40 +274,59 @@ export const syncGoogleReviews = inngest.createFunction(
     { event: "google/sync.reviews" },
     async ({ event, step }) => {
         const { platformId } = event.data;
+        const supabase = createAdminClient();
 
-        // 1. Setup Context (Lock, IDs, Token)
-        const context = await step.run("setup-context", async () => {
-            return await prepareGoogleSync(platformId);
-        });
-
-        let pageToken: string | undefined = undefined;
-        let totalSynced = 0;
-        let lastResp: { total: number, avgRating: number } | null = null;
-        let pageCount = 0;
-
-        // 2. Paginated Sync (Each page is a Step)
-        do {
-            const result = await step.run(`sync-page-${pageCount + 1}`, async () => {
-                return await syncGoogleReviewsPage(context, pageToken);
+        try {
+            // 1. Setup Context (Lock, IDs, Token)
+            const context = await step.run("setup-context", async () => {
+                return await prepareGoogleSync(platformId);
             });
 
-            pageToken = result.nextPageToken;
-            totalSynced += result.synced;
-            lastResp = { total: result.total, avgRating: result.avgRating };
-            pageCount++;
+            let pageToken: string | undefined = undefined;
+            let totalSynced = 0;
+            let lastResp: { total: number, avgRating: number } | null = null;
+            let pageCount = 0;
 
-        } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+            // 2. Paginated Sync (Each page is a Step)
+            do {
+                const result = await step.run(`sync-page-${pageCount + 1}`, async () => {
+                    return await syncGoogleReviewsPage(context, pageToken);
+                });
 
-        // 3. Finalize
-        await step.run("finalize-sync", async () => {
-            await finalizeGoogleSync(
-                platformId, 
-                context.platform.business_id, 
-                lastResp?.total, 
-                lastResp?.avgRating
-            );
-        });
+                pageToken = result.nextPageToken;
+                totalSynced += result.synced;
+                lastResp = { total: result.total, avgRating: result.avgRating };
+                pageCount++;
 
-        return { status: "completed", pages: pageCount, synced: totalSynced };
+            } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+            // 3. Finalize
+            await step.run("finalize-sync", async () => {
+                await finalizeGoogleSync(
+                    platformId,
+                    context.platform.business_id,
+                    lastResp?.total,
+                    lastResp?.avgRating
+                );
+            });
+
+            return { status: "completed", pages: pageCount, synced: totalSynced };
+        } catch (error: any) {
+            console.error(`[Inngest] Sync failed for platform ${platformId}:`, error);
+
+            // Update status to error in DB so it's not stuck as "running"
+            await step.run("mark-as-error", async () => {
+                await supabase
+                    .from("review_platforms")
+                    .update({
+                        sync_status: "error",
+                        locked_until: null, // Release lock
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq("id", platformId);
+            });
+
+            throw error; // Rethrow for Inngest retries if needed
+        }
     }
 );
