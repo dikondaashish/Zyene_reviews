@@ -3,6 +3,24 @@ import { inngest } from "@/services/inngest/client";
 import { processCampaignContact, processReviewAnalysisBatch, syncGoogleReviews } from "@/services/inngest/functions";
 import { syncPlatformWorker, dailyDigestWorker, followUpWorker } from "@/services/inngest/sync-worker";
 
+/**
+ * Inngest registers the callback URL it will use to invoke functions. On Vercel,
+ * inferred host can be *.vercel.app while users browse app.example.com; deployment
+ * protection bypass is often tied to the custom domain. Force the public origin
+ * via INNGEST_SERVE_HOST or NEXT_PUBLIC_APP_URL (production only).
+ */
+function inngestServeHost(): string | undefined {
+    const explicit = process.env.INNGEST_SERVE_HOST?.trim();
+    if (explicit) return explicit.replace(/\/$/, "");
+    if (process.env.VERCEL_ENV === "production") {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+        if (appUrl) return appUrl.replace(/\/$/, "");
+    }
+    return undefined;
+}
+
+const serveHost = inngestServeHost();
+
 // Create an API that serves zero-downtime background jobs
 export const { GET, POST, PUT } = serve({
     client: inngest,
@@ -14,4 +32,7 @@ export const { GET, POST, PUT } = serve({
         dailyDigestWorker,
         followUpWorker,
     ],
+    servePath: "/api/inngest",
+    ...(serveHost ? { serveHost } : {}),
+    ...(process.env.INNGEST_SIGNING_KEY ? { signingKey: process.env.INNGEST_SIGNING_KEY } : {}),
 });
