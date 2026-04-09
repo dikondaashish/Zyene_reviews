@@ -8,6 +8,13 @@ import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
     try {
+        // Verify webhook secret via header only (never URL params — they leak in logs)
+        const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
+        if (!sharedSecret) {
+            Sentry.captureMessage("GOOGLE_GBP_WEBHOOK_SECRET is not configured", "error");
+            return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
+        }
+
         // LOG: Log basic metadata about incoming request for debugging
         const headerSecret = req.headers.get("x-webhook-secret");
         const userAgent = req.headers.get("user-agent");
@@ -101,6 +108,8 @@ export async function POST(req: NextRequest) {
 
         // 6. Process the review using the unified sync logic
         // This handles upserting to DB, AI analysis, and alerting
+        const stats = await processGoogleReview(admin, platform, googleReview);
+
         console.log(`[GBP Webhook] Successfully processed review ${googleReview.reviewId}. Stats:`, stats);
 
         // 7. Trigger AI Analysis & Alerts if needed
