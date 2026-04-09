@@ -212,8 +212,10 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         if (!reviews || reviews.length === 0) return { status: "no_reviews_found" };
 
         // 2. Format for AI
+        // Must use `reviewId` in the payload — the model output schema uses reviewId; using `id` often causes
+        // the model to return `id` instead, so .eq("id", result.reviewId) updates zero rows.
         const reviewsForAi = reviews.map((r: { id: string, rating: number, text: string | null }) => ({
-            id: r.id,
+            reviewId: r.id,
             rating: r.rating,
             text: r.text || ""
         }));
@@ -237,8 +239,25 @@ export const processReviewAnalysisBatch = inngest.createFunction(
 
         // 4. Update reviews in Supabase
         await step.run("update-reviews-batch", async () => {
-            for (const result of aiResults) {
-                await supabase
+            if (!Array.isArray(aiResults)) {
+                console.error("[Batch Analysis] AI result is not an array:", typeof aiResults);
+                throw new Error("AI returned non-array batch result");
+            }
+            for (const result of aiResults as Array<{
+                reviewId?: string;
+                id?: string;
+                sentiment?: string;
+                urgency?: number;
+                themes?: string[];
+                summary?: string;
+            }>) {
+                const reviewRowId = result.reviewId ?? result.id;
+                if (!reviewRowId) {
+                    console.warn("[Batch Analysis] Skipping row missing reviewId/id:", result);
+                    continue;
+                }
+
+                const { error: updateError } = await supabase
                     .from("reviews")
                     .update({
                         sentiment: result.sentiment,
@@ -246,11 +265,14 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                         themes: result.themes,
                         ai_summary: result.summary,
                     })
-                    .eq("id", result.reviewId);
-                
-                // Trigger alert if urgency is high (>= 7)
-                if (result.urgency >= 7) {
-                    const reviewObj = reviews.find((r: { id: string }) => r.id === result.reviewId);
+                    .eq("id", reviewRowId);
+
+                if (updateError) {
+                    console.error(`[Batch Analysis] Update failed for ${reviewRowId}:`, updateError);
+                }
+
+                if (result.urgency !== undefined && result.urgency >= 7) {
+                    const reviewObj = reviews.find((r: { id: string }) => r.id === reviewRowId);
                     if (reviewObj) {
                         await sendReviewAlert({ ...reviewObj, ...result });
                     }

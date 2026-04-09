@@ -56,9 +56,9 @@ export const BATCH_REVIEWS_PROMPT = `Analyze exactly {count} customer reviews fo
 Return ONLY a valid JSON array of exactly {count} objects, in the same order as the reviews provided. 
 No markdown, no preamble.
 
-Each object MUST follow this schema:
+Each object MUST follow this schema (use the same reviewId values as in the input list):
 {
-  "reviewId": "the original review identifier provided",
+  "reviewId": "exact UUID from the input review's reviewId field",
   "sentiment": "positive" | "negative" | "neutral" | "mixed",
   "urgency": (number 1-10, where 10 is most urgent),
   "themes": (array of: "food_quality", "service_speed", "staff_behavior", "cleanliness", "pricing", "ambiance", "delivery", "wait_time", "portion_size", "parking", "noise", "product_quality", "professionalism", "communication", "value", "other"),
