@@ -26,7 +26,8 @@ export const processCampaignContact = inngest.createFunction(
         id: "process-campaign-contact",
         name: "Process Campaign Contact",
         concurrency: {
-            limit: 10, // Process 10 SMS per second maximum to avoid Twilio ratelimits
+            // Inngest free/hobby plans cap per-function concurrency at 5; higher values fail sync.
+            limit: 5,
         }
     },
     { event: "campaign/send.contact" },
@@ -295,7 +296,7 @@ export const syncGoogleReviews = inngest.createFunction(
         id: "sync-google-reviews",
         name: "Sync Google Reviews",
         concurrency: {
-            limit: 10,
+            limit: 5,
         },
     },
     { event: "google/sync.reviews" },
