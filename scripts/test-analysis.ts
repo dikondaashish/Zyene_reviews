@@ -11,10 +11,8 @@
 import { generateContentWithFallback } from "../src/domains/ai/adapters/VertexAdapter";
 import { BATCH_REVIEWS_PROMPT } from "../src/domains/ai/prompts";
 import { batchAnalysisSchema } from "../src/domains/ai/schemas/ResponseSchemas";
-import * as dotenv from "dotenv";
+// Note: Environment variables are expected to be pre-loaded via Node.js native --env-file flag.
 
-// Load local environment variables
-dotenv.config({ path: ".env.local" });
 
 const TEST_REVIEWS = [
     {
