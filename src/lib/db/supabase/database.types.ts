@@ -1095,6 +1095,7 @@ export type Database = {
           id: string
           rating: number
           review_request_id: string | null
+          selected_staff: string[] | null
           status: string | null
         }
         Insert: {
@@ -1106,6 +1107,7 @@ export type Database = {
           id?: string
           rating: number
           review_request_id?: string | null
+          selected_staff?: string[] | null
           status?: string | null
         }
         Update: {
@@ -1117,6 +1119,7 @@ export type Database = {
           id?: string
           rating?: number
           review_request_id?: string | null
+          selected_staff?: string[] | null
           status?: string | null
         }
         Relationships: [
@@ -1250,6 +1253,7 @@ export type Database = {
           sent_at: string | null
           status: string
           tags_selected: string[] | null
+          selected_staff: string[] | null
           trigger_source: string
         }
         Insert: {
@@ -1276,6 +1280,7 @@ export type Database = {
           sent_at?: string | null
           status?: string
           tags_selected?: string[] | null
+          selected_staff?: string[] | null
           trigger_source?: string
         }
         Update: {
@@ -1302,6 +1307,7 @@ export type Database = {
           sent_at?: string | null
           status?: string
           tags_selected?: string[] | null
+          selected_staff?: string[] | null
           trigger_source?: string
         }
         Relationships: [
@@ -1345,6 +1351,7 @@ export type Database = {
           sentiment: string | null
           text: string | null
           themes: string[] | null
+          selected_staff: string[] | null
           urgency_score: number | null
         }
         Insert: {
@@ -1370,6 +1377,7 @@ export type Database = {
           sentiment?: string | null
           text?: string | null
           themes?: string[] | null
+          selected_staff?: string[] | null
           urgency_score?: number | null
         }
         Update: {
@@ -1395,6 +1403,7 @@ export type Database = {
           sentiment?: string | null
           text?: string | null
           themes?: string[] | null
+          selected_staff?: string[] | null
           urgency_score?: number | null
         }
         Relationships: [

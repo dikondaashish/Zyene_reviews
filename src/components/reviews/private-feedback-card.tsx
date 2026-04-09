@@ -22,6 +22,7 @@ interface PrivateFeedback {
     customer_email?: string | null;
     status?: string | null;
     category?: string | null;
+    selected_staff?: string[] | null;
     review_requests?: {
         customer_name?: string;
         customer_email?: string;
@@ -136,6 +137,19 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                 <div className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-md border border-slate-100 italic">
                     "{feedback.content}"
                 </div>
+
+                {feedback.selected_staff && feedback.selected_staff.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Served by:</span>
+                        <div className="flex flex-wrap gap-1">
+                            {feedback.selected_staff.map(staff => (
+                                <Badge key={staff} variant="outline" className="px-2 py-0 h-4 text-[10px] bg-blue-50 text-blue-700 border-blue-100">
+                                    {staff}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex flex-wrap items-center gap-4">
                     {displayEmail && (

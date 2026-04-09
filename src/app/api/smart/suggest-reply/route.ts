@@ -89,9 +89,17 @@ export async function POST(request: Request) {
         const businessName = reviewTyped.businesses?.name || "our business";
         const toneInstruction = TONE_INSTRUCTIONS[tone] || TONE_INSTRUCTIONS.professional;
 
+        // Build staff info string
+        let servedByInfo = "";
+        const staff = review.selected_staff;
+        if (staff && staff.length > 0) {
+            servedByInfo = `Context: This customer specifically noted they were served by: ${staff.join(", ")}.`;
+        }
+
         // Build a single-reply prompt with tone instruction
         const prompt = `${REPLY_PROMPT
             .replace("{business_name}", businessName)
+            .replace("{served_by_info}", servedByInfo)
             .replace("{rating}", review.rating.toString())
             .replace("{text}", review.text || "")
             .replace("Generate 2 reply options.", `Generate exactly 1 reply.`)}

@@ -13,6 +13,7 @@ const privateFeedbackSchema = z
         rating: z.number().int().min(1).max(5),
         content: z.string().max(5000).optional().default(""),
         customer_email: z.string().email().optional().nullable(),
+        selected_staff: z.array(z.string()).optional().nullable(),
     })
     .refine(
         (data) => Boolean(data.review_request_id || data.business_id),
@@ -27,7 +28,14 @@ export async function POST(request: Request) {
         if (!parsed.success) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
         }
-        const { review_request_id, business_id: bodyBusinessId, rating, content, customer_email } = parsed.data;
+        const { 
+            review_request_id, 
+            business_id: bodyBusinessId, 
+            rating, 
+            content, 
+            customer_email,
+            selected_staff = []
+        } = parsed.data;
 
         // Validation
         if (!rating) {
@@ -80,6 +88,7 @@ export async function POST(request: Request) {
                 rating,
                 content,
                 customer_email: customer_email || null,
+                selected_staff: selected_staff || [],
                 category,
                 status: 'open',
                 created_at: new Date().toISOString(),
@@ -100,7 +109,7 @@ export async function POST(request: Request) {
             business_id: business_id,
             rating: rating,
             author_name: customer_email || "Anonymous Customer",
-            text: `[PRIVATE FEEDBACK] ${content || "No details provided."}`,
+            text: `[PRIVATE FEEDBACK] ${content || "No details provided."}${selected_staff && selected_staff.length > 0 ? ` (Served by: ${selected_staff.join(", ")})` : ""}`,
             urgency_score: rating <= 2 ? 8 : 4, // Higher urgency for lower ratings
             customer_email: customer_email || null
         }).catch(err => console.error("Failed to send private feedback alert:", err));

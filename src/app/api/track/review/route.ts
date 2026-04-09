@@ -11,6 +11,7 @@ const updateSchema = z.object({
             review_left: z.boolean().optional(),
             rating_given: z.number().int().min(1).max(5).optional(),
             tags_selected: z.array(z.string().max(80)).max(20).optional(),
+            selected_staff: z.array(z.string()).optional(),
             ai_review_text: z.string().max(5000).optional(),
             completed_at: z.string().datetime().optional(),
         })

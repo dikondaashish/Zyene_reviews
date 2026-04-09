@@ -16,9 +16,9 @@
     "general": "Allgemein",
     "business_info": "Unternehmensinfo",
     "public_profile": "Öffentliches Profil",
-    "notifications": "Benachrichtigungen",
     "billing": "Abrechnung",
-    "team": "Team"
+    "team": "Team",
+    "add_business": "Unternehmen hinzufügen"
   },
   "dashboard": {
     "title": "Dashboard",

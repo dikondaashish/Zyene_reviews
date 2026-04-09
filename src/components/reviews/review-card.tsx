@@ -13,6 +13,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 
 interface Review {
@@ -32,6 +33,7 @@ interface Review {
     sentiment?: 'positive' | 'negative' | 'neutral' | 'mixed';
     urgency_score?: number;
     themes?: string[];
+    selected_staff?: string[] | null;
 }
 
 const TONES = ["professional", "friendly", "concise"] as const;
@@ -250,6 +252,19 @@ export function ReviewCard({
                                 {theme.replace(/_/g, ' ')}
                             </span>
                         ))}
+                    </div>
+                )}
+
+                {review.selected_staff && review.selected_staff.length > 0 && (
+                    <div className="flex items-center gap-2 pt-1">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Served by:</span>
+                        <div className="flex flex-wrap gap-1">
+                            {review.selected_staff.map(staff => (
+                                <Badge key={staff} variant="secondary" className="px-2 py-0 h-4 text-[9px] bg-blue-50 text-blue-700 border-blue-100 font-medium">
+                                    {staff}
+                                </Badge>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

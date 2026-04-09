@@ -22,7 +22,7 @@ export function DeleteAccountSection() {
     const [confirmText, setConfirmText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const isConfirmed = confirmText === "DELETE";
+    const isConfirmed = confirmText === "confirm delete";
 
     const handleDeleteAccount = async () => {
         if (!isConfirmed || isDeleting) return;
@@ -75,7 +75,7 @@ export function DeleteAccountSection() {
 
                 <AlertDialog open={open} onOpenChange={setOpen}>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm" className="shrink-0">
+                        <Button variant="destructive" size="sm" className="shrink-0 text-white">
                             Delete Account
                         </Button>
                     </AlertDialogTrigger>
@@ -89,12 +89,12 @@ export function DeleteAccountSection() {
 
                         <div className="my-4 space-y-2">
                             <p className="text-xs text-muted-foreground">
-                                To confirm, please type <span className="font-bold text-foreground">DELETE</span> in the box below:
+                                To confirm, please type <span className="font-bold text-foreground">confirm delete</span> in the box below:
                             </p>
                             <Input
                                 value={confirmText}
                                 onChange={(e) => setConfirmText(e.target.value)}
-                                placeholder="Type DELETE to confirm"
+                                placeholder="Type confirm delete to confirm"
                                 className="border-destructive/50 focus-visible:ring-destructive"
                             />
                         </div>

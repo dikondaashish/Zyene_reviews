@@ -23,9 +23,16 @@ export const useDashboardTour = () => {
             try {
                 // If explicitly requested via query param, force run it
                 const forceTour = searchParams.get("tour") === "true";
+                
+                if (!cancelled && forceTour) {
+                    setRunTour(true);
+                    setIsLoading(false);
+                    return;
+                }
+
                 const hasCompleted = await getTourStatus();
 
-                if (!cancelled && (forceTour || !hasCompleted)) {
+                if (!cancelled && !hasCompleted) {
                     // Auto-start tour after short delay for DOM readiness
                     setTimeout(() => {
                         if (!cancelled) {

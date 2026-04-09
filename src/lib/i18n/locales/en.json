@@ -18,7 +18,8 @@
     "public_profile": "Public Profile",
     "notifications": "Notifications",
     "billing": "Billing",
-    "team": "Team"
+    "team": "Team",
+    "add_business": "Add Business"
   },
   "dashboard": {
     "title": "Dashboard",
