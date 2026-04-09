@@ -8,20 +8,44 @@ import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
     try {
-        // Verify webhook secret via header only (never URL params — they leak in logs)
         const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
         if (!sharedSecret) {
             Sentry.captureMessage("GOOGLE_GBP_WEBHOOK_SECRET is not configured", "error");
             return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
         }
 
-        // LOG: Log basic metadata about incoming request for debugging
+        // Pub/Sub push does not send custom headers. Configure the subscription push URL with a query param, e.g.
+        //   https://app.example.com/api/webhooks/google/gbp-reviews?token=<GOOGLE_GBP_WEBHOOK_SECRET>
+        // Optional: x-webhook-secret header for manual/testing, or Bearer <secret> when not using OIDC JWT.
+        const url = req.nextUrl;
         const headerSecret = req.headers.get("x-webhook-secret");
-        const userAgent = req.headers.get("user-agent");
-        
-        console.log(`[GBP Webhook] Incoming request from ${userAgent}. Secret provided: ${!!headerSecret}`);
+        const queryToken = url.searchParams.get("token") ?? url.searchParams.get("secret");
+        const auth = req.headers.get("authorization");
+        let bearerSecret: string | null = null;
+        if (auth?.startsWith("Bearer ")) {
+            const raw = auth.slice(7).trim();
+            // Pub/Sub OIDC push uses a JWT (three dot-separated segments); verify separately, not as shared secret
+            const looksLikeJwt = raw.split(".").length === 3 && raw.length > 80;
+            if (raw && !looksLikeJwt) {
+                bearerSecret = raw;
+            }
+        }
 
-        if (headerSecret !== sharedSecret) {
+        const provided =
+            headerSecret && headerSecret === sharedSecret
+                ? "header"
+                : queryToken && queryToken === sharedSecret
+                  ? "query"
+                  : bearerSecret && bearerSecret === sharedSecret
+                    ? "bearer"
+                    : null;
+
+        const userAgent = req.headers.get("user-agent");
+        console.log(
+            `[GBP Webhook] Incoming request from ${userAgent}. Auth: ${provided ?? "none"} (header=${!!headerSecret}, query=${!!queryToken}, bearerNonJwt=${!!bearerSecret})`
+        );
+
+        if (!provided) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
