@@ -10,6 +10,7 @@ import {
 } from "./constants";
 
 import { inngest } from "@/services/inngest/client";
+import { registerNotifications } from "./notifications";
 
 type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
 type AdminClient = ReturnType<typeof createAdminClient>;
@@ -268,6 +269,20 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
                 google_location_id: googleLocationId,
                 external_id: googleLocationId
             }).eq("id", platformId);
+        }
+
+        // 5. NEW: Auto-register for real-time notifications if topic is configured
+        const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
+        if (topicName && googleAccountId) {
+            try {
+                const accountName = `accounts/${googleAccountId}`;
+                console.log(`[Sync] Registering notifications for ${accountName} to topic ${topicName}`);
+                await registerNotifications(accessToken!, accountName, topicName);
+                console.log(`[Sync] Notification registration successful.`);
+            } catch (regError) {
+                console.warn(`[Sync] Notification registration failed (Non-critical):`, regError);
+                // We don't fail the sync because notifications failed
+            }
         }
 
         return {

@@ -520,26 +520,37 @@ export function ReviewContentForm({
                                             />
 
                                             {form.watch("enable_staff_selection") && (
-                                                <FormField
-                                                    control={form.control}
-                                                    name="staff_names"
-                                                    render={({ field }) => (
-                                                        <FormItem className="animate-in fade-in slide-in-from-top-2">
-                                                            <FormLabel>Staff Names (Comma Separated)</FormLabel>
-                                                            <FormControl>
-                                                                <Textarea
-                                                                    placeholder="John, Emily, David, Sarah"
-                                                                    className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
-                                                                    {...field}
-                                                                />
-                                                            </FormControl>
-                                                            <FormDescription>
-                                                                List the staff members you want to appear in the review flow. Separate names with commas.
-                                                            </FormDescription>
-                                                            <FormMessage />
-                                                        </FormItem>
+                                                <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="staff_names"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Staff Names (Comma Separated)</FormLabel>
+                                                                <FormControl>
+                                                                    <Textarea
+                                                                        placeholder="John, Emily, David, Sarah"
+                                                                        className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
+                                                                        {...field}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormDescription>
+                                                                    List the staff members you want to appear in the review flow. Separate names with commas.
+                                                                </FormDescription>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    
+                                                    {!form.watch("staff_names") && (
+                                                        <div className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded-md border border-orange-200 dark:border-orange-800 flex gap-3">
+                                                            <Star className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
+                                                            <p className="text-xs text-orange-700 dark:text-orange-300">
+                                                                <strong>Note:</strong> Staff selection will only appear in the review flow if you add at least one name above.
+                                                            </p>
+                                                        </div>
                                                     )}
-                                                />
+                                                </div>
                                             )}
                                         </div>
                                     </div>

@@ -48,7 +48,6 @@ export default async function RequestPage({
             negative_button_text,
             thank_you_heading,
             thank_you_message,
-            thank_you_message,
             footer_text,
             footer_company_name,
             footer_link,
@@ -67,6 +66,8 @@ export default async function RequestPage({
     if (error || !business) {
         return notFound();
     }
+
+    console.log(`[Review Flow] Loading for ${business.slug}. Staff Selection: ${business.enable_staff_selection}, Names Count: ${business.staff_names?.length ?? 0}`);
 
     // Access Control 1: Subscription Check
     // Paid plans are valid when active or trialing.
