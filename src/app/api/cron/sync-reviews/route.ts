@@ -8,52 +8,75 @@ import { inngest } from "@/services/inngest/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
+const HEARTBEAT_URL = "https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV";
+
 export async function GET(request: Request) {
-    // Verify Cron Secret — always required
-    const authHeader = request.headers.get("authorization");
-    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    try {
+        // 1. Verify Cron Secret
+        const authHeader = request.headers.get("authorization");
+        if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+            console.error("[Cron] Unauthorized access attempt");
+            // Ping fail so we know the cron tried to run but was blocked
+            await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const admin = createAdminClient();
+
+        // 2. Fetch all active review platforms
+        const { data: platforms, error } = await admin
+            .from("review_platforms")
+            .select("id, platform")
+            .eq("sync_status", "active")
+            .in("platform", ["google", "yelp", "facebook"]);
+
+        if (error) {
+            console.error("[Cron] Failed to fetch platforms:", error);
+            Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
+            await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        }
+
+        console.log(`[Cron] Dispatching sync for ${platforms?.length || 0} platforms`);
+
+        // 3. Dispatch background jobs via Inngest
+        if (platforms && platforms.length > 0) {
+            try {
+                await inngest.send(
+                    platforms.map((p) => ({
+                        name: "review/sync.platform",
+                        data: {
+                            platformId: p.id,
+                            platformType: p.platform as "google" | "yelp" | "facebook",
+                        },
+                    }))
+                );
+            } catch (inngestError) {
+                console.error("[Cron] Inngest dispatch failed:", inngestError);
+                Sentry.captureException(inngestError, { tags: { route: "cron-sync-reviews", step: "inngest_dispatch" } });
+                await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+                throw inngestError;
+            }
+        }
+
+        // 4. Heartbeat success ping!
+        await fetch(HEARTBEAT_URL).catch(() => { });
+
+        return NextResponse.json({
+            success: true,
+            dispatched: platforms?.length || 0,
+            message: "Background synchronization fanned out"
+        });
+    } catch (error: unknown) {
+        console.error("[Cron] Unexpected error in sync-reviews:", error);
+        Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "unexpected" } });
+        
+        // Final attempt to notify monitoring of failure
+        await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+        
+        return NextResponse.json({ 
+            error: "Internal Server Error",
+            message: error instanceof Error ? error.message : "Unknown error"
+        }, { status: 500 });
     }
-
-    const admin = createAdminClient();
-
-    // Fetch all active review platforms (Google, Yelp, Facebook)
-    const { data: platforms, error } = await admin
-        .from("review_platforms")
-        .select("id, platform")
-        .eq("sync_status", "active")
-        .in("platform", ["google", "yelp", "facebook"]);
-
-    if (error) {
-        console.error("Cron: Failed to fetch platforms", error);
-        Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
-        // Heartbeat fail ping
-        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV/fail").catch(() => { });
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
-
-    console.log(`[Cron] Dispatching sync for ${platforms?.length || 0} platforms`);
-
-    // 1. Dispatch background jobs via Inngest
-    if (platforms && platforms.length > 0) {
-        await inngest.send(
-            platforms.map((p) => ({
-                name: "review/sync.platform",
-                data: {
-                    platformId: p.id,
-                    platformType: p.platform as "google" | "yelp" | "facebook",
-                },
-            }))
-        );
-    }
-
-    // 2. Heartbeat success ping!
-    // We ping success because the DISPATCHER has successfully fanned out the work.
-    await fetch("https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV").catch(() => { });
-
-    return NextResponse.json({
-        success: true,
-        dispatched: platforms?.length || 0,
-        message: "Background synchronization fanned out"
-    });
 }
