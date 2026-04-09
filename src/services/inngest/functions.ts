@@ -9,7 +9,8 @@ import {
     syncGoogleReviewsForPlatform, 
     prepareGoogleSync, 
     syncGoogleReviewsPage, 
-    finalizeGoogleSync 
+    finalizeGoogleSync,
+    enqueueMissingGoogleReviewAnalysis
 } from "@/services/google/sync-service";
 import { MAX_REVIEW_PAGES } from "@/services/google/constants";
 
@@ -307,6 +308,10 @@ export const syncGoogleReviews = inngest.createFunction(
                     lastResp?.total,
                     lastResp?.avgRating
                 );
+            });
+
+            await step.run("enqueue-missing-analysis", async () => {
+                return enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
             });
 
             return { status: "completed", pages: pageCount, synced: totalSynced };

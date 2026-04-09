@@ -398,6 +398,49 @@ export async function finalizeGoogleSync(
 }
 
 /**
+ * Backfill queue for existing reviews that still miss AI analysis.
+ * This is useful when AI was temporarily misconfigured and older rows were never analyzed.
+ */
+export async function enqueueMissingGoogleReviewAnalysis(
+    businessId: string,
+    limit = 2000
+): Promise<{ queued: number }> {
+    const admin = createAdminClient();
+
+    const { data, error } = await admin
+        .from("reviews")
+        .select("id")
+        .eq("business_id", businessId)
+        .eq("platform", "google")
+        .eq("is_visible", true)
+        .is("sentiment", null)
+        .not("text", "is", null)
+        .neq("text", "")
+        .limit(limit);
+
+    if (error) {
+        console.error("[Sync] Failed to fetch missing AI analysis rows:", error);
+        return { queued: 0 };
+    }
+
+    const ids = (data || []).map((row: { id: string }) => row.id);
+    if (ids.length === 0) {
+        return { queued: 0 };
+    }
+
+    for (let i = 0; i < ids.length; i += AI_ANALYSIS_BATCH_SIZE) {
+        const chunk = ids.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
+        await inngest.send({
+            name: "review/analyze.batch",
+            data: { reviewIds: chunk }
+        });
+    }
+
+    console.log(`[Sync] Queued ${ids.length} existing reviews for AI backfill.`);
+    return { queued: ids.length };
+}
+
+/**
  * Compatibility wrapper for existing manual sync (Synchronous).
  * We keep this but internally it now uses the new decomposed steps.
  */
@@ -422,6 +465,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         } while (pageToken && pageCount < MAX_REVIEW_PAGES);
 
         await finalizeGoogleSync(platformId, context.platform.business_id, lastResp?.total, lastResp?.avgRating);
+        await enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
 
         return {
             success: true,

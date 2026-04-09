@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { MessageSquare, Lock, Download, Loader2 } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
+import { toast } from "sonner";
 
 interface ReviewsPageClientProps {
     businessId: string;
@@ -47,6 +48,7 @@ export function ReviewsPageClient({
     const [filters, setFilters] = useState(initialFilters);
     const [isPending, startTransition] = useTransition();
     const [isFetching, setIsFetching] = useState(false);
+    const [isBackfillingAi, setIsBackfillingAi] = useState(false);
 
     const loading = isPending || isFetching;
 
@@ -127,10 +129,36 @@ export function ReviewsPageClient({
         fetchReviews({ type, ...filters, page });
     }, [type, filters, page, fetchReviews]);
 
+    const handleBackfillAi = useCallback(async () => {
+        setIsBackfillingAi(true);
+        try {
+            const response = await fetch("/api/smart/analyze/backfill", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ limit: 1500, businessId }),
+            });
+            const payload = await response.json();
+            if (!response.ok) {
+                throw new Error(payload?.error || "Failed to queue AI analysis");
+            }
+            const queued = payload?.data?.queued ?? payload?.queued ?? 0;
+            if (queued > 0) {
+                toast.success(`Queued AI analysis for ${queued} reviews.`);
+            } else {
+                toast.info("No pending reviews need AI analysis.");
+            }
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Failed to queue AI analysis";
+            toast.error(message);
+        } finally {
+            setIsBackfillingAi(false);
+        }
+    }, [businessId]);
+
     return (
         <>
             {/* Tab Switcher */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
                 <div className="bg-muted p-1 rounded-lg inline-flex">
                     <button onClick={() => handleTypeChange("public")}>
                         <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === "public" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
@@ -146,6 +174,23 @@ export function ReviewsPageClient({
                 </div>
                 {loading && (
                     <Loader2 className="w-4 h-4 ml-3 animate-spin text-muted-foreground" />
+                )}
+                {type === "public" && (
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleBackfillAi}
+                        disabled={isBackfillingAi}
+                    >
+                        {isBackfillingAi ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Queuing AI...
+                            </>
+                        ) : (
+                            "Analyze Missing AI"
+                        )}
+                    </Button>
                 )}
             </div>
 

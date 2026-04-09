@@ -4,25 +4,28 @@ const projectId = process.env.GCP_PROJECT_ID || "zyene-reviews";
 const location = process.env.GCP_REGION || "global";
 const apiKey = process.env.GOOGLE_VERTEX_API_KEY;
 
+/** Default: Gemini 3 Flash Preview (primary). Override with GOOGLE_AI_PRIMARY_MODEL. */
+const DEFAULT_PRIMARY_MODEL = process.env.GOOGLE_AI_PRIMARY_MODEL || "gemini-3-flash-preview";
+/** Default: Gemini 3.1 Pro Preview (fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
+const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-3.1-pro-preview";
+
 /**
  * Initialize the GoogleGenAI client.
  * Priority: 
  * 1. API Key (Express Mode for Vertex AI)
  * 2. Service Account (Standard Vertex AI Mode via ADC)
  */
-const client = new GoogleGenAI(
-    apiKey
-        ? { apiKey }
-        : {
-            vertexai: true,
-            project: projectId,
-            location: location
-        }
-);
+const apiKeyClient = apiKey ? new GoogleGenAI({ apiKey }) : null;
+const vertexClient = new GoogleGenAI({
+    vertexai: true,
+    project: projectId,
+    location: location
+});
 
 export interface VertexGenerationOptions {
     requireJson?: boolean;
     schema?: any;
+    /** Kept for API compatibility; all tiers use primary (Flash) then fallback (Pro) unless env overrides. */
     isPremium?: boolean;
     enableGrounding?: boolean;
 }
@@ -31,9 +34,10 @@ export async function generateContentWithFallback(
     prompt: string,
     options: VertexGenerationOptions = {}
 ): Promise<string> {
-    const { requireJson = false, schema, isPremium = false, enableGrounding = false } = options;
+    const { requireJson = false, schema, enableGrounding = false } = options;
 
-    const modelToUse = isPremium ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview";
+    const primaryModel = DEFAULT_PRIMARY_MODEL;
+    const fallbackModel = DEFAULT_FALLBACK_MODEL;
 
     // Config configuration
     const config: any = {};
@@ -52,42 +56,35 @@ export async function generateContentWithFallback(
     const startTime = Date.now();
 
     try {
-        const response = await client.models.generateContent({
-            model: modelToUse,
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            config
-        });
+        const response = await callModelWithClientFallback(primaryModel, prompt, config);
 
         const latencyMs = Date.now() - startTime;
+        const returnedText = readResponseText(response);
 
-        if (response && response.candidates && response.candidates.length > 0) {
-            const returnedText = response.candidates[0]?.content?.parts?.[0]?.text;
-            console.info(`[GEN AI SDK] model=${modelToUse} latency=${latencyMs}ms status=success`);
+        if (returnedText) {
+            console.info(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=success`);
             return returnedText || "";
         }
 
-        console.warn(`[GEN AI SDK] model=${modelToUse} latency=${latencyMs}ms status=empty_response`);
+        console.warn(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=empty_response`);
         return "";
     } catch (error) {
         const latencyMs = Date.now() - startTime;
-        console.error(`[GEN AI SDK] model=${modelToUse} latency=${latencyMs}ms status=error`, error);
+        console.error(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=error`, error);
 
-        // Fallback Strategy: Pro → Flash
-        if (modelToUse === "gemini-3.1-pro-preview") {
-            console.warn(`[GEN AI SDK] Falling back from gemini-3.1-pro-preview to gemini-3-flash-preview`);
+        // Model fallback strategy for transient model/permission rollout issues.
+        if (fallbackModel !== primaryModel) {
+            console.warn(`[GEN AI SDK] Falling back from ${primaryModel} to ${fallbackModel}`);
             const fallbackStart = Date.now();
 
             try {
-                const backupResponse = await client.models.generateContent({
-                    model: "gemini-3-flash-preview",
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
-                    config
-                });
+                const backupResponse = await callModelWithClientFallback(fallbackModel, prompt, config);
 
                 const fallbackLatency = Date.now() - fallbackStart;
-                console.info(`[GEN AI SDK] model=gemini-3-flash-preview(fallback) latency=${fallbackLatency}ms status=success`);
+                const backupText = readResponseText(backupResponse);
+                console.info(`[GEN AI SDK] model=${fallbackModel}(fallback) latency=${fallbackLatency}ms status=success`);
 
-                return backupResponse.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                return backupText;
             } catch (fallbackError) {
                 console.error(`[GEN AI SDK] Fallback failed:`, fallbackError);
                 throw fallbackError;
@@ -96,6 +93,40 @@ export async function generateContentWithFallback(
 
         throw error;
     }
+}
+
+function readResponseText(response: any): string {
+    if (!response) return "";
+    if (typeof response.text === "string" && response.text.trim()) return response.text.trim();
+    return response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
+
+function isBlockedApiKeyError(error: unknown): boolean {
+    const msg = error instanceof Error ? error.message : String(error);
+    return msg.includes("API_KEY_SERVICE_BLOCKED") || msg.includes("generativelanguage.googleapis.com");
+}
+
+async function callModelWithClientFallback(model: string, prompt: string, config: any) {
+    if (apiKeyClient) {
+        try {
+            return await apiKeyClient.models.generateContent({
+                model,
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                config
+            });
+        } catch (error) {
+            if (!isBlockedApiKeyError(error)) {
+                throw error;
+            }
+            console.warn(`[GEN AI SDK] API key path blocked for ${model}; retrying with Vertex auth.`);
+        }
+    }
+
+    return vertexClient.models.generateContent({
+        model,
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config
+    });
 }
 
 /**
@@ -109,6 +140,16 @@ export function nextResponseForVertexAiError(
     console.error("[GEN AI SDK ERROR]", msg);
 
     // Auth / Permission Errors
+    if (msg.includes("API_KEY_SERVICE_BLOCKED")) {
+        return new Response(
+            JSON.stringify({
+                error: "AI key is blocked for Gemini API. Enable Gemini API access or use Vertex service account credentials.",
+                code: "API_KEY_SERVICE_BLOCKED"
+            }),
+            { status: 503, headers: { "Content-Type": "application/json" } }
+        );
+    }
+
     if (msg.includes("403") || /IAM|permission|unauthenticated|API_KEY_INVALID/i.test(msg)) {
         return new Response(
             JSON.stringify({
