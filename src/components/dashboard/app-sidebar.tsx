@@ -160,11 +160,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             tourTarget: "tour-customers-nav",
         },
         {
-            title: dict.nav.add_business,
-            url: "/businesses/add",
-            icon: Plus,
-        },
-        {
             title: dict.nav.competitors,
             url: "/competitors",
             icon: Target,
