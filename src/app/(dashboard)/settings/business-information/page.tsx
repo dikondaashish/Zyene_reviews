@@ -76,7 +76,7 @@ export default async function BusinessInformationPage() {
                     </p>
                 </div>
                 <div className="px-6 py-5">
-                    <BusinessInfoForm business={business} />
+                    <BusinessInfoForm key={business.id} business={business} />
                 </div>
             </div>
 
@@ -90,7 +90,7 @@ export default async function BusinessInformationPage() {
                         </p>
                     </div>
                     <div className="px-6 py-5">
-                        <GoogleListingEditor businessId={business.id} />
+                        <GoogleListingEditor key={business.id} businessId={business.id} />
                     </div>
                 </div>
             )}
@@ -105,7 +105,7 @@ export default async function BusinessInformationPage() {
                         </p>
                     </div>
                     <div className="px-6 py-5">
-                        <GoogleLodgingPanel businessId={business.id} />
+                        <GoogleLodgingPanel key={business.id} businessId={business.id} />
                     </div>
                 </div>
             )}
@@ -120,7 +120,7 @@ export default async function BusinessInformationPage() {
                         </p>
                     </div>
                     <div className="px-6 py-5">
-                        <GoogleAccountAccessPanel businessId={business.id} />
+                        <GoogleAccountAccessPanel key={business.id} businessId={business.id} />
                     </div>
                 </div>
             )}
@@ -134,7 +134,7 @@ export default async function BusinessInformationPage() {
                     </p>
                 </div>
                 <div className="px-6 py-5">
-                    <ReviewSettingsForm business={business} />
+                    <ReviewSettingsForm key={business.id} business={business} />
                 </div>
             </div>
 
@@ -149,6 +149,7 @@ export default async function BusinessInformationPage() {
                     </div>
                     <div className="px-6 py-5">
                         <PlaceActionLinksManager
+                            key={business.id}
                             businessId={business.id}
                             initialLinks={placeLinks}
                         />

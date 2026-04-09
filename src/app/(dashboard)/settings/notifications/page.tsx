@@ -1,16 +1,21 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { NotificationForm } from "../../../../components/settings/notification-form";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function NotificationSettingsPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
 
+    const { businessId } = await getActiveBusinessId();
+    if (!businessId) return <div>No business selected</div>;
+
     const { data: prefs } = await supabase
         .from("notification_preferences")
         .select("*")
         .eq("user_id", user.id)
+        .eq("business_id", businessId)
         .single();
 
     return (
@@ -22,6 +27,7 @@ export default async function NotificationSettingsPage() {
                 </p>
             </div>
             <NotificationForm 
+                key={businessId}
                 initialPrefs={prefs || {
                     user_id: user.id,
                     email_enabled: true,
@@ -34,7 +40,7 @@ export default async function NotificationSettingsPage() {
                     quiet_hours_end: "08:00",
                     sms_phone_number: null,
                     id: "",
-                    business_id: ""
+                    business_id: businessId
                 }} 
                 userId={user.id} 
             />

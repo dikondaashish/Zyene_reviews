@@ -35,6 +35,7 @@ export default async function PublicProfilePage() {
             <Separator />
 
             <PublicProfileEditor 
+                key={business.id}
                 business={business as any} 
                 initialSlug={business.slug || ""} 
             />
