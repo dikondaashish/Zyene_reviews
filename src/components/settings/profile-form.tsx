@@ -105,7 +105,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             />
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            Email cannot be changed.
+                            Email cannot be changed. If you want to change it, contact customer support.
                         </p>
                     </div>
                 </div>
