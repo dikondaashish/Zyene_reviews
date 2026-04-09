@@ -33,7 +33,7 @@ export async function generateContentWithFallback(
 ): Promise<string> {
     const { requireJson = false, schema, isPremium = false, enableGrounding = false } = options;
 
-    const modelToUse = isPremium ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview";
+    const modelToUse = isPremium ? "gemini-1.5-pro" : "gemini-1.5-flash";
 
     // Config configuration
     const config: any = {};
