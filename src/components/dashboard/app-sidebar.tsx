@@ -18,6 +18,7 @@ import {
     User,
     Users,
     Target,
+    Globe,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -205,6 +206,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: dict.nav.business_info,
             url: "/settings/business-information",
             icon: Store,
+        },
+        {
+            title: dict.nav.public_profile,
+            url: "/settings/public-profile",
+            icon: Globe,
         },
         {
             title: dict.nav.notifications,
