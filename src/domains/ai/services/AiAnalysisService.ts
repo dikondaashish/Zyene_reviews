@@ -1,4 +1,9 @@
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import {
+    normalizeSentimentForDb,
+    normalizeThemesForDb,
+    normalizeUrgencyForDb,
+} from "@/domains/ai/normalizeAnalysisForDb";
 import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { Schema, Type as SchemaType } from "@google/genai";
@@ -53,17 +58,17 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
             schema: sentimentSchema
         });
 
-        const result = JSON.parse(content) as SentimentAnalysisResult;
+        const parsed = JSON.parse(content) as SentimentAnalysisResult;
 
         const admin = createAdminClient();
         await admin.from("reviews").update({
-            sentiment: result.sentiment,
-            urgency_score: result.urgency,
-            themes: result.themes,
-            ai_summary: result.summary,
+            sentiment: normalizeSentimentForDb(parsed.sentiment),
+            urgency_score: normalizeUrgencyForDb(parsed.urgency),
+            themes: normalizeThemesForDb(parsed.themes),
+            ai_summary: parsed.summary ?? "",
         }).eq("id", review.id);
 
-        return result;
+        return parsed;
 
     } catch (error) {
         console.error("AI Analysis Failed:", error);

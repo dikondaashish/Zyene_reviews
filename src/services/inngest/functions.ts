@@ -13,6 +13,11 @@ import {
     enqueueMissingGoogleReviewAnalysis
 } from "@/services/google/sync-service";
 import { MAX_REVIEW_PAGES } from "@/services/google/constants";
+import {
+    normalizeSentimentForDb,
+    normalizeThemesForDb,
+    normalizeUrgencyForDb,
+} from "@/domains/ai/normalizeAnalysisForDb";
 
 // This background job runs for EACH contact asynchronously
 // ... (rest of the file remains the same until syncGoogleReviews)
@@ -260,10 +265,10 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                 const { error: updateError } = await supabase
                     .from("reviews")
                     .update({
-                        sentiment: result.sentiment,
-                        urgency_score: result.urgency,
-                        themes: result.themes,
-                        ai_summary: result.summary,
+                        sentiment: normalizeSentimentForDb(result.sentiment),
+                        urgency_score: normalizeUrgencyForDb(result.urgency),
+                        themes: normalizeThemesForDb(result.themes),
+                        ai_summary: result.summary ?? "",
                     })
                     .eq("id", reviewRowId);
 
