@@ -475,7 +475,12 @@ export function ReviewCard({
                             size="sm"
                             onClick={handleSubmit}
                             disabled={isSubmitting || !replyText.trim()}
-                            className="bg-[#93c5fd] hover:bg-blue-400 text-white shadow-none px-6 font-semibold rounded-lg"
+                            className={cn(
+                                "min-w-[7.5rem] px-6 font-semibold rounded-lg shadow-sm",
+                                "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
+                                "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+                                "disabled:opacity-100 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-200"
+                            )}
                         >
                             {isSubmitting ? "Posting..." : "Post Reply"}
                         </Button>
