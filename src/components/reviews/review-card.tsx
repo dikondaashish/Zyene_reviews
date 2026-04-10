@@ -15,11 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Review {
     id: string;
     business_id: string;
     author_name: string;
+    /** Google/Yelp profile image when the platform provides one */
+    author_avatar_url?: string | null;
     rating: number;
     content?: string;
     text?: string;
@@ -168,6 +171,11 @@ export function ReviewCard({
     };
 
     const displayContent = review.text || review.content || "";
+    const avatarUrl =
+        typeof review.author_avatar_url === "string" && review.author_avatar_url.trim()
+            ? review.author_avatar_url.trim()
+            : null;
+    const authorInitial = (review.author_name || "A").charAt(0);
 
     return (
         <div className={cn(
@@ -191,9 +199,21 @@ export function ReviewCard({
 
             <div className={cn("flex justify-between items-start mb-3", onSelect && "pl-7")}>
                 <div className="flex gap-3">
-                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm border border-slate-200">
-                        {(review.author_name || "A").charAt(0)}
-                    </div>
+                    <Avatar
+                        size="lg"
+                        className="h-10 w-10 shrink-0 border border-slate-200"
+                    >
+                        {avatarUrl ? (
+                            <AvatarImage
+                                src={avatarUrl}
+                                alt={review.author_name || "Reviewer"}
+                                referrerPolicy="no-referrer"
+                            />
+                        ) : null}
+                        <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-sm">
+                            {authorInitial}
+                        </AvatarFallback>
+                    </Avatar>
                     <div>
                         <div className="font-semibold text-sm text-gray-900 line-clamp-1">{review.author_name || "Anonymous"}</div>
                         <div className="flex items-center gap-2 mt-0.5">

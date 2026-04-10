@@ -1033,7 +1033,7 @@ export default async function DashboardPage() {
                                     reviews={recentReviews.map((r: any) => ({
                                         id: r.id,
                                         name: r.author_name || "Anonymous",
-                                        avatar: r.author_photo_url || "",
+                                        avatar: r.author_avatar_url || "",
                                         text: r.text || "No review content provided.",
                                         rating: r.rating
                                     }))}

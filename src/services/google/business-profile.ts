@@ -30,7 +30,10 @@ export interface GoogleReview {
     reviewId: string;
     reviewer: {
         displayName: string;
+        /** v4 REST often uses this name */
         profilePhotoUrl?: string;
+        /** Some payloads use Uri instead of Url */
+        profilePhotoUri?: string;
     };
     starRating: string; // "FIVE", "FOUR", etc.
     comment?: string;

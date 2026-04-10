@@ -23,6 +23,11 @@ function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): Sync
     return error;
 }
 
+function reviewerAvatarFromGoogle(reviewer: GoogleReview["reviewer"]): string | null {
+    const url = reviewer.profilePhotoUrl || reviewer.profilePhotoUri;
+    return url && url.trim() ? url.trim() : null;
+}
+
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
     // Must pass p_lock_duration so PostgREST targets acquire_platform_lock(uuid, interval) only.
     // Two DB overloads (uuid) vs (uuid, interval) cause PGRST203 if only p_id is sent.
@@ -504,7 +509,7 @@ export async function processGoogleReview(
         platform_id: platform.id,
         external_id: review.reviewId,
         author_name: review.reviewer.displayName,
-        author_avatar_url: review.reviewer.profilePhotoUrl || null,
+        author_avatar_url: reviewerAvatarFromGoogle(review.reviewer),
         rating: numericRating,
         text: review.comment || "",
         review_date: review.createTime,

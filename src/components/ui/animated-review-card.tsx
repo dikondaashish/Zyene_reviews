@@ -214,7 +214,13 @@ export const AnimatedReviewCards = ({
             <div className={cn("relative h-full w-full rounded-lg p-6", classNames?.cardContent)}>
               <div className={cn("mb-4 flex items-center", classNames?.header)}>
                 <Avatar className={cn("mr-4 h-10 w-10", classNames?.avatar)}>
-                  <AvatarImage src={review?.avatar} alt={review?.name} />
+                  {review?.avatar ? (
+                    <AvatarImage
+                      src={review.avatar}
+                      alt={review.name}
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : null}
                   <AvatarFallback>{review?.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <h2 className={nameVariants({ theme, className: classNames?.name })}>
