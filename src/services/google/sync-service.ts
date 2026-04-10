@@ -492,6 +492,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     }
 }
 
+function sameReviewReplyText(a: string | null | undefined, b: string | null | undefined): boolean {
+    return (a ?? "").trim() === (b ?? "").trim();
+}
+
 /**
  * Processes a single Google Review: Upserts to DB.
  */
@@ -502,6 +506,23 @@ export async function processGoogleReview(
 ) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
+
+    const { data: existing } = await admin
+        .from("reviews")
+        .select("response_source, response_text")
+        .eq("business_id", platform.business_id)
+        .eq("platform", "google")
+        .eq("external_id", review.reviewId)
+        .maybeSingle();
+
+    const googleReplyText = review.reviewReply?.comment ?? "";
+    let responseSource: string | null = null;
+    if (review.reviewReply) {
+        const preserveZyene =
+            existing?.response_source === "zyene" &&
+            sameReviewReplyText(existing.response_text, googleReplyText);
+        responseSource = preserveZyene ? "zyene" : "google";
+    }
 
     const reviewData = {
         business_id: platform.business_id,
@@ -516,7 +537,7 @@ export async function processGoogleReview(
         response_status: review.reviewReply ? "responded" : "pending",
         response_text: review.reviewReply?.comment || null,
         responded_at: review.reviewReply?.updateTime || null,
-        response_source: review.reviewReply ? 'google' : null,
+        response_source: responseSource,
         is_visible: true,
     };
 

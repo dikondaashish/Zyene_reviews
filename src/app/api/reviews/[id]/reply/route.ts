@@ -83,7 +83,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .update({
                 response_status: "responded",
                 response_text: text,
-                responded_at: new Date().toISOString()
+                responded_at: new Date().toISOString(),
+                response_source: "zyene",
             })
             .eq("id", review.id);
 

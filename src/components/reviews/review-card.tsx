@@ -32,6 +32,8 @@ interface Review {
     response_status: 'pending' | 'responded' | 'ignored';
     response_text?: string;
     responded_at?: string;
+    /** "zyene" = posted from this app; "google" = synced from GBP (e.g. replied on Google) */
+    response_source?: string | null;
     platform: string;
     sentiment?: 'positive' | 'negative' | 'neutral' | 'mixed';
     urgency_score?: number;
@@ -292,11 +294,21 @@ export function ReviewCard({
             {/* Existing Response */}
             {review.response_status === 'responded' && review.response_text && (
                 <div className="bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 mb-1">
-                        <CornerDownRight className="w-3 h-3 text-slate-400" />
-                        Your Response
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                        <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-900 min-w-0">
+                            <CornerDownRight className="w-3 h-3 text-slate-400 shrink-0" />
+                            <span>Your Response</span>
+                            {review.response_source === "zyene" && (
+                                <Badge
+                                    variant="secondary"
+                                    className="h-5 px-2 text-[10px] font-medium bg-violet-50 text-violet-800 border-violet-200"
+                                >
+                                    Replied via Zyene Reviews
+                                </Badge>
+                            )}
+                        </div>
                         {review.responded_at && (
-                            <span className="text-slate-400 font-normal ml-auto text-[10px]">
+                            <span className="text-slate-400 font-normal text-[10px] shrink-0 pt-0.5">
                                 {new Date(review.responded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </span>
                         )}
