@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2 } from "lucide-react";
+import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Review {
     id: string;
@@ -35,6 +43,9 @@ interface Review {
     /** "zyene" = posted from this app; "google" = synced from GBP (e.g. replied on Google) */
     response_source?: string | null;
     platform: string;
+    review_photo_urls?: string[] | null;
+    google_attribute_chips?: string[] | null;
+    google_place_context?: string[] | null;
     sentiment?: 'positive' | 'negative' | 'neutral' | 'mixed';
     urgency_score?: number;
     themes?: string[];
@@ -61,6 +72,8 @@ export function ReviewCard({
     const [isExpanded, setIsExpanded] = useState(false);
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [activePhoto, setActivePhoto] = useState<string | null>(null);
 
     // AI tone state
     const [activeTone, setActiveTone] = useState<Tone | null>(null);
@@ -178,6 +191,9 @@ export function ReviewCard({
             ? review.author_avatar_url.trim()
             : null;
     const authorInitial = (review.author_name || "A").charAt(0);
+    const googlePhotos = (review.review_photo_urls || []).filter(Boolean);
+    const googleAttributeChips = (review.google_attribute_chips || []).filter(Boolean);
+    const googlePlaceContext = (review.google_place_context || []).filter(Boolean);
 
     return (
         <div className={cn(
@@ -268,12 +284,70 @@ export function ReviewCard({
                 </div>
 
                 {review.themes && review.themes.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-1">
+                    <div className="flex flex-wrap gap-1.5 pt-1 pb-1">
                         {review.themes.map(theme => (
                             <span key={theme} className="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200 capitalize">
                                 {theme.replace(/_/g, ' ')}
                             </span>
                         ))}
+                    </div>
+                )}
+
+                {googlePlaceContext.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                        {googlePlaceContext.map((ctx) => (
+                            <Badge
+                                key={`ctx-${ctx}`}
+                                variant="secondary"
+                                className="px-2 py-0.5 h-5 text-[10px] bg-cyan-50 text-cyan-800 border-cyan-200 font-medium"
+                            >
+                                {ctx}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+
+                {googleAttributeChips.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                        {googleAttributeChips.map((chip) => (
+                            <Badge
+                                key={`google-chip-${chip}`}
+                                variant="secondary"
+                                className="px-2 py-0.5 h-5 text-[10px] bg-indigo-50 text-indigo-800 border-indigo-200 font-medium"
+                            >
+                                {chip}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+
+                {googlePhotos.length > 0 && (
+                    <div className="pt-2">
+                        <div className="flex items-center gap-1.5 mb-2">
+                            <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                Review Photos
+                            </span>
+                        </div>
+                        <div className="flex gap-2 overflow-x-auto pb-1">
+                            {googlePhotos.slice(0, 6).map((url, idx) => (
+                                <button
+                                    key={`${url}-${idx}`}
+                                    type="button"
+                                    onClick={() => setActivePhoto(url)}
+                                    className="h-16 w-16 shrink-0 rounded-md border border-slate-200 overflow-hidden hover:opacity-90"
+                                    title="Open photo"
+                                >
+                                    <img
+                                        src={url}
+                                        alt={`Review photo ${idx + 1}`}
+                                        className="h-full w-full object-cover"
+                                        referrerPolicy="no-referrer"
+                                        loading="lazy"
+                                    />
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
 
@@ -293,7 +367,7 @@ export function ReviewCard({
 
             {/* Existing Response */}
             {review.response_status === 'responded' && review.response_text && (
-                <div className="bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="mt-5 bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-900 min-w-0">
                             <CornerDownRight className="w-3 h-3 text-slate-400 shrink-0" />
@@ -388,33 +462,113 @@ export function ReviewCard({
                 )}
 
                 <div className="ml-auto">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full">
-                                <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                            {review.response_status === 'ignored' ? (
-                                <DropdownMenuItem
-                                    className="text-xs cursor-pointer"
-                                    onClick={() => handleUpdateStatus('pending')}
-                                    disabled={isUpdatingStatus}
+                    <div className="flex items-center gap-1">
+                        <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-2 text-xs text-slate-500 hover:text-slate-700"
                                 >
-                                    Move to Pending
-                                </DropdownMenuItem>
-                            ) : (
-                                <DropdownMenuItem
-                                    className="text-xs cursor-pointer"
-                                    onClick={() => handleUpdateStatus('ignored')}
-                                    disabled={isUpdatingStatus}
-                                >
-                                    Mark as Ignored
-                                </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem className="text-xs text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer">Report Review</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                    <Info className="w-3.5 h-3.5 mr-1" />
+                                    Details
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>Review details</DialogTitle>
+                                    <DialogDescription>
+                                        Expanded Google metadata and media for this review.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                    <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                                        {displayContent || "No review text."}
+                                    </div>
+                                    {googlePlaceContext.length > 0 && (
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Place context
+                                            </h4>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {googlePlaceContext.map((ctx) => (
+                                                    <Badge key={`drawer-ctx-${ctx}`} variant="secondary">
+                                                        {ctx}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {googleAttributeChips.length > 0 && (
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Google attributes
+                                            </h4>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {googleAttributeChips.map((chip) => (
+                                                    <Badge key={`drawer-chip-${chip}`} variant="secondary">
+                                                        {chip}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {googlePhotos.length > 0 && (
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Photos
+                                            </h4>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                                {googlePhotos.map((url, idx) => (
+                                                    <button
+                                                        key={`drawer-photo-${url}-${idx}`}
+                                                        type="button"
+                                                        onClick={() => setActivePhoto(url)}
+                                                        className="rounded-md overflow-hidden border border-slate-200"
+                                                    >
+                                                        <img
+                                                            src={url}
+                                                            alt={`Review photo ${idx + 1}`}
+                                                            className="h-28 w-full object-cover"
+                                                            referrerPolicy="no-referrer"
+                                                            loading="lazy"
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                                {review.response_status === 'ignored' ? (
+                                    <DropdownMenuItem
+                                        className="text-xs cursor-pointer"
+                                        onClick={() => handleUpdateStatus('pending')}
+                                        disabled={isUpdatingStatus}
+                                    >
+                                        Move to Pending
+                                    </DropdownMenuItem>
+                                ) : (
+                                    <DropdownMenuItem
+                                        className="text-xs cursor-pointer"
+                                        onClick={() => handleUpdateStatus('ignored')}
+                                        disabled={isUpdatingStatus}
+                                    >
+                                        Mark as Ignored
+                                    </DropdownMenuItem>
+                                )}
+                                <DropdownMenuItem className="text-xs text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer">Report Review</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </div>
 
@@ -494,6 +648,18 @@ export function ReviewCard({
                 title="Upgrade Your Plan"
                 description="You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
             />
+            <Dialog open={!!activePhoto} onOpenChange={(open) => !open && setActivePhoto(null)}>
+                <DialogContent className="sm:max-w-4xl p-2">
+                    {activePhoto ? (
+                        <img
+                            src={activePhoto}
+                            alt="Review media"
+                            className="w-full max-h-[80vh] object-contain rounded-md"
+                            referrerPolicy="no-referrer"
+                        />
+                    ) : null}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

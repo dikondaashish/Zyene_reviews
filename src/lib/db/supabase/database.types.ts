@@ -1338,6 +1338,8 @@ export type Database = {
           created_at: string
           external_id: string | null
           external_url: string | null
+          google_attribute_chips: string[] | null
+          google_place_context: string[] | null
           id: string
           is_visible: boolean | null
           platform: string
@@ -1347,6 +1349,7 @@ export type Database = {
           response_source: string | null
           response_status: string
           response_text: string | null
+          review_photo_urls: string[] | null
           review_date: string
           sentiment: string | null
           text: string | null
@@ -1364,6 +1367,8 @@ export type Database = {
           created_at?: string
           external_id?: string | null
           external_url?: string | null
+          google_attribute_chips?: string[] | null
+          google_place_context?: string[] | null
           id?: string
           is_visible?: boolean | null
           platform: string
@@ -1373,6 +1378,7 @@ export type Database = {
           response_source?: string | null
           response_status?: string
           response_text?: string | null
+          review_photo_urls?: string[] | null
           review_date: string
           sentiment?: string | null
           text?: string | null
@@ -1390,6 +1396,8 @@ export type Database = {
           created_at?: string
           external_id?: string | null
           external_url?: string | null
+          google_attribute_chips?: string[] | null
+          google_place_context?: string[] | null
           id?: string
           is_visible?: boolean | null
           platform?: string
@@ -1399,6 +1407,7 @@ export type Database = {
           response_source?: string | null
           response_status?: string
           response_text?: string | null
+          review_photo_urls?: string[] | null
           review_date?: string
           sentiment?: string | null
           text?: string | null

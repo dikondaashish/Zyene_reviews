@@ -28,6 +28,49 @@ function reviewerAvatarFromGoogle(reviewer: GoogleReview["reviewer"]): string | 
     return url && url.trim() ? url.trim() : null;
 }
 
+function cleanStringArray(values: Array<string | null | undefined>): string[] | null {
+    const cleaned = values
+        .map((v) => (typeof v === "string" ? v.trim() : ""))
+        .filter((v) => v.length > 0);
+    return cleaned.length > 0 ? Array.from(new Set(cleaned)) : null;
+}
+
+function googleReviewPhotoUrls(review: GoogleReview): string[] | null {
+    const fromObjects = (review.photos || []).flatMap((p) => [p.photoUri, p.photoUrl, p.url]);
+    const fromArray = review.photoUrls || [];
+    return cleanStringArray([...fromObjects, ...fromArray]);
+}
+
+function googleAttributeChips(review: GoogleReview): string[] | null {
+    const raw = review as unknown as Record<string, unknown>;
+    const reviewQuestions = Array.isArray(review.reviewQuestions)
+        ? review.reviewQuestions.map((q) => q.displayName || q.question || q.answer || q.rating || "")
+        : [];
+    const detailsObj = raw.details && typeof raw.details === "object" ? (raw.details as Record<string, unknown>) : {};
+    const detailEntries = Object.entries(detailsObj).flatMap(([k, v]) => {
+        if (typeof v === "string" && v.trim()) return [`${k}: ${v.trim()}`];
+        if (typeof v === "number" || typeof v === "boolean") return [`${k}: ${String(v)}`];
+        return [];
+    });
+    return cleanStringArray([...reviewQuestions, ...detailEntries]);
+}
+
+function googlePlaceContext(review: GoogleReview): string[] | null {
+    const raw = review as unknown as Record<string, unknown>;
+    const maybeStrings = [
+        review.tripType,
+        review.mealType,
+        review.priceRange,
+        typeof raw.serviceType === "string" ? raw.serviceType : undefined,
+        typeof raw.seatingType === "string" ? raw.seatingType : undefined,
+    ];
+    const stayDate =
+        review.stayDate?.year && review.stayDate?.month
+            ? `${review.stayDate.year}-${String(review.stayDate.month).padStart(2, "0")}`
+            : undefined;
+    return cleanStringArray([...maybeStrings, stayDate]);
+}
+
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
     // Must pass p_lock_duration so PostgREST targets acquire_platform_lock(uuid, interval) only.
     // Two DB overloads (uuid) vs (uuid, interval) cause PGRST203 if only p_id is sent.
@@ -538,6 +581,9 @@ export async function processGoogleReview(
         response_text: review.reviewReply?.comment || null,
         responded_at: review.reviewReply?.updateTime || null,
         response_source: responseSource,
+        review_photo_urls: googleReviewPhotoUrls(review),
+        google_attribute_chips: googleAttributeChips(review),
+        google_place_context: googlePlaceContext(review),
         is_visible: true,
     };
 

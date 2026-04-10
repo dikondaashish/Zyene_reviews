@@ -35,6 +35,16 @@ export interface GoogleReview {
         /** Some payloads use Uri instead of Url */
         profilePhotoUri?: string;
     };
+    /** Customer-uploaded photos attached to the review (shape can vary by API payload) */
+    photos?: Array<{ photoUri?: string; photoUrl?: string; url?: string }>;
+    photoUrls?: string[];
+    /** Optional rich fields seen in some GBP responses */
+    reviewQuestions?: Array<{ question?: string; answer?: string; rating?: string; displayName?: string }>;
+    stayDate?: { year?: number; month?: number };
+    tripType?: string;
+    mealType?: string;
+    priceRange?: string;
+    details?: Record<string, unknown>;
     starRating: string; // "FIVE", "FOUR", etc.
     comment?: string;
     createTime: string;
