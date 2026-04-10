@@ -7,6 +7,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Badge } from "@/components/ui/badge";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
+import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -111,6 +112,16 @@ export default async function ReviewsPage(props: {
 
     const totalPages = count ? Math.ceil(count / pageSize) : 0;
 
+    const googlePlatform = business?.review_platforms?.find(
+        (p: { platform?: string }) => p.platform === "google"
+    );
+    const googleMapsListingUrl = resolveGoogleMapsListingUrl({
+        googleReviewUrl:
+            typeof business?.google_review_url === "string" ? business.google_review_url : null,
+        platformExternalUrl:
+            typeof googlePlatform?.external_url === "string" ? googlePlatform.external_url : null,
+    });
+
     return (
         <div className="flex flex-col gap-6 h-full">
             {isDemo && <DemoModeBanner className="mb-2" />}
@@ -146,6 +157,7 @@ export default async function ReviewsPage(props: {
 
             <ReviewsPageClient
                 businessId={businessId as string}
+                googleMapsListingUrl={googleMapsListingUrl}
                 initialReviews={reviews}
                 initialCount={count}
                 initialTotalPages={totalPages}

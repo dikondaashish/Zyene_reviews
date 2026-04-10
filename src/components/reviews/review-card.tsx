@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info } from "lucide-react";
+import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
@@ -57,11 +57,14 @@ type Tone = typeof TONES[number];
 
 export function ReviewCard({
     review,
+    googleMapsListingUrl = null,
     isSelected = false,
     onSelect,
     onRefresh,
 }: {
     review: Review;
+    /** Business listing on Google Maps (from GBP link); used when review photos are not in the API. */
+    googleMapsListingUrl?: string | null;
     isSelected?: boolean;
     onSelect?: (id: string, selected: boolean) => void;
     onRefresh?: () => void;
@@ -194,6 +197,12 @@ export function ReviewCard({
     const googlePhotos = (review.review_photo_urls || []).filter(Boolean);
     const googleAttributeChips = (review.google_attribute_chips || []).filter(Boolean);
     const googlePlaceContext = (review.google_place_context || []).filter(Boolean);
+    const googleMapsHref =
+        review.platform === "google" &&
+        typeof googleMapsListingUrl === "string" &&
+        googleMapsListingUrl.trim().length > 0
+            ? googleMapsListingUrl.trim()
+            : null;
 
     return (
         <div className={cn(
@@ -351,6 +360,24 @@ export function ReviewCard({
                     </div>
                 )}
 
+                {googleMapsHref && googlePhotos.length === 0 && (
+                    <div className="pt-2 flex items-start gap-2 rounded-lg border border-slate-100 bg-slate-50/90 px-3 py-2 text-xs text-slate-600">
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-0.5 text-slate-400" aria-hidden />
+                        <p>
+                            Google does not send reviewer photos to third-party apps.{" "}
+                            <a
+                                href={googleMapsHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-blue-600 hover:underline"
+                            >
+                                Open Google Maps
+                            </a>{" "}
+                            to see this listing&apos;s reviews, including any photos customers added.
+                        </p>
+                    </div>
+                )}
+
                 {review.selected_staff && review.selected_staff.length > 0 && (
                     <div className="flex items-center gap-2 pt-1">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Served by:</span>
@@ -478,7 +505,9 @@ export function ReviewCard({
                                 <DialogHeader>
                                     <DialogTitle>Review details</DialogTitle>
                                     <DialogDescription>
-                                        Expanded Google metadata and media for this review.
+                                        Google metadata synced from Business Profile. Customer
+                                        photos only appear here when Google returns image URLs in
+                                        the review payload (often it does not).
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4">
@@ -536,6 +565,22 @@ export function ReviewCard({
                                                     </button>
                                                 ))}
                                             </div>
+                                        </div>
+                                    )}
+                                    {googleMapsHref && (
+                                        <div className="rounded-lg border border-slate-100 bg-slate-50/90 px-3 py-2.5 text-sm text-slate-600">
+                                            <a
+                                                href={googleMapsHref}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline"
+                                            >
+                                                <ExternalLink className="w-3.5 h-3.5" aria-hidden />
+                                                Open listing on Google Maps
+                                            </a>
+                                            <p className="mt-1 text-xs text-slate-500">
+                                                Customer photos attached to reviews usually appear there, not in this app.
+                                            </p>
                                         </div>
                                     )}
                                 </div>

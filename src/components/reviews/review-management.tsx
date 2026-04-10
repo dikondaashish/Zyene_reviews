@@ -10,10 +10,16 @@ import type { ReviewManagementItem } from "@/types/components";
 interface ReviewManagementProps {
     reviews: ReviewManagementItem[];
     businessId: string;
+    googleMapsListingUrl?: string | null;
     onRefresh?: () => void;
 }
 
-export function ReviewManagement({ reviews, businessId, onRefresh }: ReviewManagementProps) {
+export function ReviewManagement({
+    reviews,
+    businessId,
+    googleMapsListingUrl = null,
+    onRefresh,
+}: ReviewManagementProps) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
     const toggleSelect = (id: string, selected: boolean) => {
@@ -65,6 +71,7 @@ export function ReviewManagement({ reviews, businessId, onRefresh }: ReviewManag
                     <ReviewCard
                         key={review.id}
                         review={review as any}
+                        googleMapsListingUrl={googleMapsListingUrl}
                         isSelected={selectedIds.has(review.id)}
                         onSelect={toggleSelect}
                         onRefresh={onRefresh}

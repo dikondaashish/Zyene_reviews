@@ -13,6 +13,8 @@ import { toast } from "sonner";
 
 interface ReviewsPageClientProps {
     businessId: string;
+    /** Opens the connected GBP listing on Google Maps (for review photos Google does not API). */
+    googleMapsListingUrl?: string | null;
     initialReviews: any[];
     initialCount: number;
     initialTotalPages: number;
@@ -29,6 +31,7 @@ interface ReviewsPageClientProps {
 
 export function ReviewsPageClient({
     businessId,
+    googleMapsListingUrl = null,
     initialReviews,
     initialCount,
     initialTotalPages,
@@ -203,7 +206,12 @@ export function ReviewsPageClient({
                     />
                     <div className={loading ? "opacity-60 pointer-events-none transition-opacity" : "transition-opacity"}>
                         {reviews && reviews.length > 0 ? (
-                            <ReviewManagement reviews={reviews} businessId={businessId} onRefresh={refresh} />
+                            <ReviewManagement
+                                reviews={reviews}
+                                businessId={businessId}
+                                googleMapsListingUrl={googleMapsListingUrl}
+                                onRefresh={refresh}
+                            />
                         ) : (
                             <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
                                 <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mb-4">
