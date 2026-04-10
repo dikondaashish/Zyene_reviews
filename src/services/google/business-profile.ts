@@ -317,6 +317,27 @@ export async function replyToReview(
     }
 }
 
+export async function deleteReviewReply(
+    accessToken: string,
+    accountId: string,
+    locationId: string,
+    reviewId: string
+): Promise<void> {
+    const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews/${reviewId}/reply`;
+
+    const response = await fetchWithRetry(url, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        throw new Error(
+            `Failed to delete review reply: ${response.status} ${response.statusText}${body ? ` — ${body}` : ""}`
+        );
+    }
+}
+
 /**
  * Fetches a single review by its resource name.
  * @param accessToken Valid Google access token

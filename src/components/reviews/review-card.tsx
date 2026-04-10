@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info, ExternalLink } from "lucide-react";
+import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Review {
     id: string;
@@ -77,6 +86,9 @@ export function ReviewCard({
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [activePhoto, setActivePhoto] = useState<string | null>(null);
+    const [isEditingReply, setIsEditingReply] = useState(false);
+    const [deleteReplyOpen, setDeleteReplyOpen] = useState(false);
+    const [isDeletingReply, setIsDeletingReply] = useState(false);
 
     // AI tone state
     const [activeTone, setActiveTone] = useState<Tone | null>(null);
@@ -84,6 +96,14 @@ export function ReviewCard({
     const [toneCache, setToneCache] = useState<Partial<Record<Tone, string>>>({});
 
     const router = useRouter();
+
+    const showReplyComposer =
+        (isReplying && review.response_status !== "responded") || isEditingReply;
+
+    const canManageGoogleReply =
+        review.platform === "google" &&
+        review.response_status === "responded" &&
+        !!(review.response_text && review.response_text.trim());
 
     const handleSubmit = async () => {
         if (!replyText.trim()) return;
@@ -96,8 +116,9 @@ export function ReviewCard({
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Failed to reply");
 
-            toast.success("Reply posted successfully");
+            toast.success(isEditingReply ? "Reply updated" : "Reply posted successfully");
             setIsReplying(false);
+            setIsEditingReply(false);
             setReplyText("");
             setActiveTone(null);
             setToneCache({});
@@ -122,7 +143,7 @@ export function ReviewCard({
             return;
         }
 
-        if (!isReplying) setIsReplying(true);
+        if (!isReplying && !isEditingReply) setIsReplying(true);
         setActiveTone(tone);
         setLoadingTone(tone);
 
@@ -149,7 +170,39 @@ export function ReviewCard({
         } finally {
             setLoadingTone(null);
         }
-    }, [isReplying, toneCache, review.id]);
+    }, [isReplying, isEditingReply, toneCache, review.id]);
+
+    const startEditReply = useCallback(() => {
+        setIsEditingReply(true);
+        setReplyText(review.response_text || "");
+        setActiveTone(null);
+        setToneCache({});
+    }, [review.response_text]);
+
+    const cancelReplyComposer = useCallback(() => {
+        setIsReplying(false);
+        setIsEditingReply(false);
+        setReplyText("");
+        setActiveTone(null);
+        setToneCache({});
+    }, []);
+
+    const handleDeleteReply = async () => {
+        setIsDeletingReply(true);
+        try {
+            const res = await fetch(`/api/reviews/${review.id}/reply`, { method: "DELETE" });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || "Failed to delete reply");
+            toast.success("Reply removed");
+            setDeleteReplyOpen(false);
+            onRefresh ? onRefresh() : router.refresh();
+        } catch (e: unknown) {
+            const message = e instanceof Error ? e.message : "An unexpected error occurred";
+            toast.error(message);
+        } finally {
+            setIsDeletingReply(false);
+        }
+    };
 
     const handleUpdateStatus = async (status: 'pending' | 'ignored') => {
         setIsUpdatingStatus(true);
@@ -360,24 +413,6 @@ export function ReviewCard({
                     </div>
                 )}
 
-                {googleMapsHref && googlePhotos.length === 0 && (
-                    <div className="pt-2 flex items-start gap-2 rounded-lg border border-slate-100 bg-slate-50/90 px-3 py-2 text-xs text-slate-600">
-                        <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-0.5 text-slate-400" aria-hidden />
-                        <p>
-                            Google does not send reviewer photos to third-party apps.{" "}
-                            <a
-                                href={googleMapsHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-medium text-blue-600 hover:underline"
-                            >
-                                Open Google Maps
-                            </a>{" "}
-                            to see this listing&apos;s reviews, including any photos customers added.
-                        </p>
-                    </div>
-                )}
-
                 {review.selected_staff && review.selected_staff.length > 0 && (
                     <div className="flex items-center gap-2 pt-1">
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Served by:</span>
@@ -393,7 +428,7 @@ export function ReviewCard({
             </div>
 
             {/* Existing Response */}
-            {review.response_status === 'responded' && review.response_text && (
+            {review.response_status === 'responded' && review.response_text && !isEditingReply && (
                 <div className="mt-5 bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-900 min-w-0">
@@ -408,11 +443,41 @@ export function ReviewCard({
                                 </Badge>
                             )}
                         </div>
-                        {review.responded_at && (
-                            <span className="text-slate-400 font-normal text-[10px] shrink-0 pt-0.5">
-                                {new Date(review.responded_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                            </span>
-                        )}
+                        <div className="flex items-center gap-1 shrink-0">
+                            {canManageGoogleReply && (
+                                <>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 text-xs text-slate-600 hover:text-slate-900"
+                                        onClick={startEditReply}
+                                    >
+                                        <Pencil className="w-3 h-3 mr-1" />
+                                        Edit reply
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        onClick={() => setDeleteReplyOpen(true)}
+                                    >
+                                        <Trash2 className="w-3 h-3 mr-1" />
+                                        Delete
+                                    </Button>
+                                </>
+                            )}
+                            {review.responded_at && (
+                                <span className="text-slate-400 font-normal text-[10px] pt-0.5 pl-1">
+                                    {new Date(review.responded_at).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })}
+                                </span>
+                            )}
+                        </div>
                     </div>
                     <p className="text-slate-600">{review.response_text}</p>
                 </div>
@@ -445,11 +510,7 @@ export function ReviewCard({
                                             size="sm"
                                             variant="outline"
                                             className="h-9 text-xs font-semibold px-4 border-slate-200 text-slate-600 hover:bg-slate-50"
-                                            onClick={() => {
-                                                setIsReplying(false);
-                                                setActiveTone(null);
-                                                setReplyText("");
-                                            }}
+                                            onClick={cancelReplyComposer}
                                         >
                                             <MessageSquare className="w-3.5 h-3.5 mr-2" />
                                             Cancel Reply
@@ -618,8 +679,13 @@ export function ReviewCard({
             </div>
 
             {/* Reply Area with Tone Tabs */}
-            {isReplying && review.response_status !== 'responded' && (
+            {showReplyComposer && (
                 <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 mt-4 animate-in slide-in-from-top-2 duration-200">
+                    {isEditingReply && (
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                            Edit reply
+                        </p>
+                    )}
 
                     {/* Tone Selector Tabs */}
                     {review.platform !== 'yelp' && (
@@ -665,7 +731,8 @@ export function ReviewCard({
                     />
                     <div className="flex justify-end items-center gap-3">
                         <button
-                            onClick={() => { setIsReplying(false); setActiveTone(null); setReplyText(""); }}
+                            type="button"
+                            onClick={cancelReplyComposer}
                             className="text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
                         >
                             Cancel
@@ -681,11 +748,40 @@ export function ReviewCard({
                                 "disabled:opacity-100 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-200"
                             )}
                         >
-                            {isSubmitting ? "Posting..." : "Post Reply"}
+                            {isSubmitting
+                                ? isEditingReply
+                                    ? "Saving..."
+                                    : "Posting..."
+                                : isEditingReply
+                                  ? "Update reply"
+                                  : "Post Reply"}
                         </Button>
                     </div>
                 </div>
             )}
+
+            <AlertDialog open={deleteReplyOpen} onOpenChange={setDeleteReplyOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete this reply?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This removes your public reply from Google Business Profile. You can write a new reply
+                            afterward.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeletingReply}>Cancel</AlertDialogCancel>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            disabled={isDeletingReply}
+                            onClick={() => void handleDeleteReply()}
+                        >
+                            {isDeletingReply ? "Deleting..." : "Delete reply"}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             <UpgradeModal
                 isOpen={showUpgradeModal}
