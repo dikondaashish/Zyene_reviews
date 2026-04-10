@@ -5,6 +5,7 @@ import {
     MAX_REVIEW_PAGES,
     PAGINATION_DELAY_MS,
     REQUEST_SMOOTHING_DELAY_MS,
+    STALE_LOCK_TIMEOUT_MINUTES,
     SYNC_COOLDOWN_MS,
     TOKEN_EXPIRY_BUFFER_MS,
 } from "./constants";
@@ -23,8 +24,11 @@ function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): Sync
 }
 
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
+    // Must pass p_lock_duration so PostgREST targets acquire_platform_lock(uuid, interval) only.
+    // Two DB overloads (uuid) vs (uuid, interval) cause PGRST203 if only p_id is sent.
     const { data: lockAcquired, error: lockError } = await admin.rpc("acquire_platform_lock", {
         p_id: platformId,
+        p_lock_duration: `${STALE_LOCK_TIMEOUT_MINUTES} minutes`,
     });
 
     if (lockError || !lockAcquired) {

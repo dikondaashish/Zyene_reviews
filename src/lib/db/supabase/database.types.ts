@@ -1485,7 +1485,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      acquire_platform_lock: { Args: { p_id: string }; Returns: boolean }
+      acquire_platform_lock: {
+        Args: { p_id: string; p_lock_duration?: string }
+        Returns: boolean
+      }
       bulk_add_customer_tags: {
         Args: { customer_ids: string[]; new_tags: string[] }
         Returns: undefined
