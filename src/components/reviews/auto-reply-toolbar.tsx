@@ -11,8 +11,17 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils/index";
-import { Bot, Loader2 } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Bot, CircleHelp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
+const AUTO_COMMENTER_HELP =
+    "Only reviews that show up after you turn this on: if there is no reply yet and the stars meet your minimum, we draft a reply in your tone and post it on Google. Plan limits still apply.";
 
 export type AutoReplyTone = "professional" | "friendly" | "concise";
 
@@ -109,6 +118,26 @@ export function AutoReplyToolbar({
                 <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-slate-700 cursor-pointer">
                     Auto commenter
                 </Label>
+                <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <button
+                                type="button"
+                                className="inline-flex shrink-0 rounded-full text-slate-400 transition-colors hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-1"
+                                aria-label="How auto commenter works"
+                            >
+                                <CircleHelp className="h-3.5 w-3.5" aria-hidden />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                            side="top"
+                            sideOffset={6}
+                            className="max-w-[min(280px,calc(100vw-2rem))] px-3 py-2 text-left text-xs leading-snug"
+                        >
+                            {AUTO_COMMENTER_HELP}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
                 <Switch
                     id="auto-reply-enabled"
                     checked={enabled}
@@ -163,11 +192,6 @@ export function AutoReplyToolbar({
                     </div>
                 </>
             )}
-
-            <p className="text-[10px] text-slate-500 leading-snug w-full sm:w-auto sm:max-w-[280px]">
-                New Google reviews (last 14 days, no reply yet) at or above the minimum rating get an AI reply in
-                the chosen tone and are posted automatically. Respects your plan limits.
-            </p>
         </div>
     );
 }
