@@ -6,9 +6,13 @@ import { getValidGoogleToken, processGoogleReview } from "@/services/google/sync
 import { extractGoogleLocationIdFromQaPayload, processQaWebhookForLocation } from "@/services/google/webhook-qa";
 import * as Sentry from "@sentry/nextjs";
 
+function normalizeWebhookSecret(value: string | null | undefined): string {
+    return (value ?? "").trim();
+}
+
 export async function POST(req: NextRequest) {
     try {
-        const sharedSecret = process.env.GOOGLE_GBP_WEBHOOK_SECRET;
+        const sharedSecret = normalizeWebhookSecret(process.env.GOOGLE_GBP_WEBHOOK_SECRET);
         if (!sharedSecret) {
             Sentry.captureMessage("GOOGLE_GBP_WEBHOOK_SECRET is not configured", "error");
             return NextResponse.json({ error: "Webhook not configured securely" }, { status: 500 });
@@ -18,8 +22,10 @@ export async function POST(req: NextRequest) {
         //   https://app.example.com/api/webhooks/google/gbp-reviews?token=<GOOGLE_GBP_WEBHOOK_SECRET>
         // Optional: x-webhook-secret header for manual/testing, or Bearer <secret> when not using OIDC JWT.
         const url = req.nextUrl;
-        const headerSecret = req.headers.get("x-webhook-secret");
-        const queryToken = url.searchParams.get("token") ?? url.searchParams.get("secret");
+        const headerSecret = normalizeWebhookSecret(req.headers.get("x-webhook-secret"));
+        const queryToken = normalizeWebhookSecret(
+            url.searchParams.get("token") ?? url.searchParams.get("secret")
+        );
         const auth = req.headers.get("authorization");
         let bearerSecret: string | null = null;
         if (auth?.startsWith("Bearer ")) {
@@ -27,7 +33,7 @@ export async function POST(req: NextRequest) {
             // Pub/Sub OIDC push uses a JWT (three dot-separated segments); verify separately, not as shared secret
             const looksLikeJwt = raw.split(".").length === 3 && raw.length > 80;
             if (raw && !looksLikeJwt) {
-                bearerSecret = raw;
+                bearerSecret = normalizeWebhookSecret(raw);
             }
         }
 
