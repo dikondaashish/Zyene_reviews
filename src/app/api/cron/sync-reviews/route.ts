@@ -1,14 +1,10 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 export const dynamic = "force-dynamic";
 
-import { syncGoogleReviewsForPlatform, SyncResult } from "@/services/google/sync-service";
-import { syncYelpReviewsForPlatform, YelpSyncResult } from "@/services/yelp/sync-service";
-import { syncFacebookReviewsForPlatform, FacebookSyncResult } from "@/services/facebook/sync-service";
 import { inngest } from "@/services/inngest/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-
-const HEARTBEAT_URL = "https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV";
+import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 
 export async function GET(request: Request) {
     try {
@@ -17,7 +13,7 @@ export async function GET(request: Request) {
         if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
             console.error("[Cron] Unauthorized access attempt");
             // Ping fail so we know the cron tried to run but was blocked
-            await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+            await pingReviewSyncHeartbeat(false);
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
@@ -33,7 +29,7 @@ export async function GET(request: Request) {
         if (error) {
             console.error("[Cron] Failed to fetch platforms:", error);
             Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
-            await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+            await pingReviewSyncHeartbeat(false);
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
 
@@ -54,13 +50,13 @@ export async function GET(request: Request) {
             } catch (inngestError) {
                 console.error("[Cron] Inngest dispatch failed:", inngestError);
                 Sentry.captureException(inngestError, { tags: { route: "cron-sync-reviews", step: "inngest_dispatch" } });
-                await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+                await pingReviewSyncHeartbeat(false);
                 throw inngestError;
             }
         }
 
         // 4. Heartbeat success ping!
-        await fetch(HEARTBEAT_URL).catch(() => { });
+        await pingReviewSyncHeartbeat(true);
 
         return NextResponse.json({
             success: true,
@@ -72,7 +68,7 @@ export async function GET(request: Request) {
         Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "unexpected" } });
         
         // Final attempt to notify monitoring of failure
-        await fetch(`${HEARTBEAT_URL}/fail`).catch(() => { });
+        await pingReviewSyncHeartbeat(false);
         
         return NextResponse.json({ 
             error: "Internal Server Error",

@@ -6,6 +6,7 @@ import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service
 import { weeklyDigestEmail } from "@/services/resend/templates/weekly-digest-email";
 import { sendEmail } from "@/services/resend/send-email";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
+import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 
 /**
  * Worker to sync a single review platform.
@@ -21,15 +22,18 @@ export const syncPlatformWorker = inngest.createFunction(
       console.log(`[Worker] Starting sync for ${platformType} platform: ${platformId}`);
       
       try {
+        let result: unknown;
         if (platformType === "google") {
-          return await syncGoogleReviewsForPlatform(platformId);
+          result = await syncGoogleReviewsForPlatform(platformId);
         } else if (platformType === "yelp") {
-          return await syncYelpReviewsForPlatform(platformId);
+          result = await syncYelpReviewsForPlatform(platformId);
         } else if (platformType === "facebook") {
-          return await syncFacebookReviewsForPlatform(platformId);
+          result = await syncFacebookReviewsForPlatform(platformId);
         } else {
           throw new Error(`Unknown platform type: ${platformType}`);
         }
+        await pingReviewSyncHeartbeat(true);
+        return result;
       } catch (error) {
         console.error(`[Worker] Sync failed for ${platformType} (${platformId}):`, error);
         throw error; // Rethrow for Inngest retries

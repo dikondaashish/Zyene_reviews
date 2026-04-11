@@ -18,6 +18,7 @@ import {
     normalizeThemesForDb,
     normalizeUrgencyForDb,
 } from "@/domains/ai/normalizeAnalysisForDb";
+import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 
 // This background job runs for EACH contact asynchronously
 // ... (rest of the file remains the same until syncGoogleReviews)
@@ -341,6 +342,8 @@ export const syncGoogleReviews = inngest.createFunction(
             await step.run("enqueue-missing-analysis", async () => {
                 return enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
             });
+
+            await pingReviewSyncHeartbeat(true);
 
             return { status: "completed", pages: pageCount, synced: totalSynced };
         } catch (error: any) {
