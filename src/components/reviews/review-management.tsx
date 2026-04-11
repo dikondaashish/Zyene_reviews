@@ -11,6 +11,8 @@ interface ReviewManagementProps {
     reviews: ReviewManagementItem[];
     businessId: string;
     googleMapsListingUrl?: string | null;
+    /** Starter+ / Professional / Enterprise — required for AI suggest-reply */
+    planAllowsAiReplies: boolean;
     onRefresh?: () => void;
 }
 
@@ -18,6 +20,7 @@ export function ReviewManagement({
     reviews,
     businessId,
     googleMapsListingUrl = null,
+    planAllowsAiReplies,
     onRefresh,
 }: ReviewManagementProps) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -72,6 +75,7 @@ export function ReviewManagement({
                         key={review.id}
                         review={review as any}
                         googleMapsListingUrl={googleMapsListingUrl}
+                        planAllowsAiReplies={planAllowsAiReplies}
                         isSelected={selectedIds.has(review.id)}
                         onSelect={toggleSelect}
                         onRefresh={onRefresh}

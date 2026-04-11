@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
@@ -40,16 +41,19 @@ const TONES: { id: AutoReplyTone; label: string }[] = [
 export function AutoReplyToolbar({
     businessId,
     googleConnected,
+    planAllowsAutoCommenter,
     initial,
 }: {
     businessId: string;
     googleConnected: boolean;
+    planAllowsAutoCommenter: boolean;
     initial: AutoReplySettingsState;
 }) {
     const [enabled, setEnabled] = useState(initial.auto_reply_enabled);
     const [minRating, setMinRating] = useState<3 | 4 | 5>(initial.auto_reply_min_rating);
     const [tone, setTone] = useState<AutoReplyTone>(initial.auto_reply_tone);
     const [saving, setSaving] = useState(false);
+    const [upgradeOpen, setUpgradeOpen] = useState(false);
 
     const persist = useCallback(
         async (patch: Partial<AutoReplySettingsState>) => {
@@ -76,6 +80,10 @@ export function AutoReplyToolbar({
     );
 
     const onToggle = async (on: boolean) => {
+        if (on && !planAllowsAutoCommenter) {
+            setUpgradeOpen(true);
+            return;
+        }
         const prev = enabled;
         setEnabled(on);
         try {
@@ -112,6 +120,13 @@ export function AutoReplyToolbar({
     }
 
     return (
+        <>
+        <UpgradeModal
+            isOpen={upgradeOpen}
+            onClose={() => setUpgradeOpen(false)}
+            title="Upgrade to use Auto commenter"
+            description="Auto commenter posts AI replies to eligible Google reviews. It is available on Starter, Professional, and Enterprise."
+        />
         <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">
                 <Bot className="h-4 w-4 shrink-0 text-violet-600" aria-hidden />
@@ -193,5 +208,6 @@ export function AutoReplyToolbar({
                 </>
             )}
         </div>
+        </>
     );
 }

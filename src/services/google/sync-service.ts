@@ -17,6 +17,10 @@ import {
     type AutoReplyBusinessSettings,
 } from "@/services/reviews/auto-reply-eligibility";
 import { registerNotifications } from "./notifications";
+import {
+    isZyeneOriginatedReplySource,
+    REVIEW_RESPONSE_SOURCE_GOOGLE,
+} from "@/lib/reviews/response-source";
 
 type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
 type AdminClient = ReturnType<typeof createAdminClient>;
@@ -728,9 +732,10 @@ export async function processGoogleReview(
     let responseSource: string | null = null;
     if (review.reviewReply) {
         const preserveZyene =
-            existing?.response_source === "zyene" &&
+            !!existing &&
+            isZyeneOriginatedReplySource(existing.response_source) &&
             sameReviewReplyText(existing.response_text, googleReplyText);
-        responseSource = preserveZyene ? "zyene" : "google";
+        responseSource = preserveZyene ? existing.response_source! : REVIEW_RESPONSE_SOURCE_GOOGLE;
     }
 
     const reviewData = {

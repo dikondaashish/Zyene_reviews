@@ -1,9 +1,10 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { REVIEW_RESPONSE_SOURCE_ZYENE_AUTO } from "@/lib/reviews/response-source";
 import { listAccounts, replyToReview } from "@/services/google/business-profile";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 
 /**
- * Post a reply to Google and mark the review as responded (Zyene source).
+ * Post a reply to Google and mark the review as responded (Auto commenter / system).
  * For background jobs — no end-user session; uses service role.
  */
 export async function postGoogleReplySystem(reviewId: string, text: string): Promise<void> {
@@ -45,7 +46,7 @@ export async function postGoogleReplySystem(reviewId: string, text: string): Pro
             response_status: "responded",
             response_text: trimmed,
             responded_at: new Date().toISOString(),
-            response_source: "zyene",
+            response_source: REVIEW_RESPONSE_SOURCE_ZYENE_AUTO,
         })
         .eq("id", review.id);
 

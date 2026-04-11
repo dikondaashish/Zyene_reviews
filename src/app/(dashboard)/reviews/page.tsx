@@ -4,6 +4,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
+import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -14,7 +15,8 @@ export default async function ReviewsPage(props: {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
 
-    const { businessId, business } = await getActiveBusinessId();
+    const { businessId, business, organization } = await getActiveBusinessId();
+    const autoCommenterPlanOk = planAllowsAutoCommenter(organization?.plan ?? null);
 
     const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
     const isDemo = !isGoogleConnected;
@@ -119,7 +121,9 @@ export default async function ReviewsPage(props: {
     });
 
     const autoReplyInitial = {
-        auto_reply_enabled: Boolean((business as { auto_reply_enabled?: boolean })?.auto_reply_enabled),
+        auto_reply_enabled:
+            autoCommenterPlanOk &&
+            Boolean((business as { auto_reply_enabled?: boolean })?.auto_reply_enabled),
         auto_reply_min_rating: ((): 3 | 4 | 5 => {
             const r = (business as { auto_reply_min_rating?: number })?.auto_reply_min_rating;
             if (r === 3 || r === 4 || r === 5) return r;
@@ -140,6 +144,7 @@ export default async function ReviewsPage(props: {
                 googleMapsListingUrl={googleMapsListingUrl}
                 isDemo={isDemo}
                 isGoogleConnected={isGoogleConnected}
+                autoCommenterPlanOk={autoCommenterPlanOk}
                 autoReplyInitial={autoReplyInitial}
                 initialReviews={reviews}
                 initialCount={count}

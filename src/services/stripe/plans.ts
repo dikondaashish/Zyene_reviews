@@ -170,3 +170,20 @@ export const UNSUBSCRIBED_LIMITS: PlanLimits = {
 
 /** @deprecated Use UNSUBSCRIBED_LIMITS instead */
 export const FREE_LIMITS = UNSUBSCRIBED_LIMITS;
+
+/**
+ * Auto commenter + AI suggest-reply: allowed for paid SMB tiers and agency/growth plans
+ * (must stay in sync with `organizations.plan` CHECK and Stripe/webhook values).
+ */
+export function planAllowsAutoCommenter(plan: string | null | undefined): boolean {
+    if (plan == null || plan === "") return false;
+    const p = String(plan).toLowerCase().trim();
+    if (p === "free" || p === "none") return false;
+    if (p === "enterprise") return true;
+    if (p === "growth") return true;
+    if (p === "agency_starter" || p === "agency_pro" || p === "agency_scale") return true;
+    if (p === "starter" || p === "pro") return true;
+    if (p.startsWith("starter_")) return true;
+    if (p.startsWith("professional_")) return true;
+    return false;
+}

@@ -2,6 +2,7 @@
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { z } from "zod";
 
 const businessPatchSchema = z
@@ -67,7 +68,10 @@ export async function PATCH(
 
         const { data: currentBiz, error: curErr } = await supabase
             .from("businesses")
-            .select("auto_reply_enabled")
+            .select(`
+                auto_reply_enabled,
+                organizations ( plan )
+            `)
             .eq("id", id)
             .single();
 
@@ -77,6 +81,27 @@ export async function PATCH(
                 code: "BUSINESS_NOT_FOUND",
                 details: curErr?.message,
             });
+        }
+
+        const orgPlan =
+            (currentBiz.organizations as { plan?: string | null } | null)?.plan ?? null;
+        const nextAutoReplyEnabled =
+            body.auto_reply_enabled !== undefined
+                ? body.auto_reply_enabled
+                : currentBiz.auto_reply_enabled;
+        const touchesAutoReply =
+            body.auto_reply_enabled !== undefined ||
+            body.auto_reply_min_rating !== undefined ||
+            body.auto_reply_tone !== undefined;
+
+        if (touchesAutoReply && nextAutoReplyEnabled && !planAllowsAutoCommenter(orgPlan)) {
+            throw new ApiRouteError(
+                "Auto commenter requires a Starter, Professional, or Enterprise plan.",
+                {
+                    status: 403,
+                    code: "AUTO_REPLY_PLAN_REQUIRED",
+                }
+            );
         }
 
         const patch: typeof body & { auto_reply_enabled_at?: string | null } = { ...body };

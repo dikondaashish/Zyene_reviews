@@ -6,6 +6,7 @@ import { checkLimit } from "@/lib/stripe/check-limits";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 
 const requestSchema = z.object({
     reviewId: z.string().uuid(),
@@ -71,6 +72,15 @@ export async function POST(request: Request) {
     const reviewTyped = review as unknown as ReviewWithBusiness;
     const orgId = reviewTyped.businesses?.organization_id;
     if (!orgId) return apiError("Organization not found", { status: 404, details: requestId });
+
+    const orgPlan = reviewTyped.businesses?.organizations?.plan;
+    if (!planAllowsAutoCommenter(orgPlan)) {
+        return apiError("AI reply suggestions require a Starter, Professional, or Enterprise plan.", {
+            status: 403,
+            code: "AI_REPLY_PLAN_REQUIRED",
+            details: requestId,
+        });
+    }
 
     // Check AI reply limits using the centralized limit checker
     const aiLimitCheck = await checkLimit(orgId, "smart_replies");

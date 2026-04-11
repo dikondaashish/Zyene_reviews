@@ -21,6 +21,7 @@ import {
 } from "@/domains/ai/normalizeAnalysisForDb";
 import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 import { checkLimit } from "@/lib/stripe/check-limits";
+import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { generateReplyDraftText, type ReplyTone } from "@/domains/ai/services/generateReplyDraft";
 import { postGoogleReplySystem } from "@/services/reviews/post-google-reply-system";
 import {
@@ -361,6 +362,10 @@ export const processAutoReplyReview = inngest.createFunction(
 
             if (!biz?.auto_reply_enabled) {
                 return { ok: false as const, reason: "auto_reply_disabled" };
+            }
+
+            if (!planAllowsAutoCommenter(biz.organizations?.plan)) {
+                return { ok: false as const, reason: "plan_not_eligible" };
             }
             if (!biz.auto_reply_enabled_at) {
                 return { ok: false as const, reason: "auto_reply_no_cutoff" };

@@ -185,6 +185,12 @@ export async function POST(request: Request) {
                 const subscription = event.data.object as any;
                 const customerId = subscription.customer as string;
 
+                const { data: canceledOrg } = await supabase
+                    .from("organizations")
+                    .select("id")
+                    .eq("stripe_customer_id", customerId)
+                    .maybeSingle();
+
                 await supabase
                     .from("organizations")
                     .update({
@@ -199,6 +205,13 @@ export async function POST(request: Request) {
                         max_link_requests_per_month: FREE_LIMITS.linkRequestsPerMonth,
                     })
                     .eq("stripe_customer_id", customerId);
+
+                if (canceledOrg?.id) {
+                    await supabase
+                        .from("businesses")
+                        .update({ auto_reply_enabled: false, auto_reply_enabled_at: null })
+                        .eq("organization_id", canceledOrg.id);
+                }
 
                 console.log(`❌ Subscription canceled for customer ${customerId}`);
 

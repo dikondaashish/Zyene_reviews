@@ -17,6 +17,8 @@ interface ReviewsPageClientProps {
     googleMapsListingUrl?: string | null;
     isDemo: boolean;
     isGoogleConnected: boolean;
+    /** Starter, Professional, or Enterprise — required to enable Auto commenter */
+    autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
     initialReviews: any[];
     initialCount: number;
@@ -37,6 +39,7 @@ export function ReviewsPageClient({
     googleMapsListingUrl = null,
     isDemo,
     isGoogleConnected,
+    autoCommenterPlanOk,
     autoReplyInitial,
     initialReviews,
     initialCount,
@@ -212,13 +215,6 @@ export function ReviewsPageClient({
                     </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-3 sm:items-end">
-                    {isGoogleConnected && (
-                        <AutoReplyToolbar
-                            businessId={businessId}
-                            googleConnected={isGoogleConnected}
-                            initial={autoReplyInitial}
-                        />
-                    )}
                     <div className="flex gap-2 flex-wrap justify-end">
                         <Button variant="outline" asChild>
                             <a href={`/api/reviews/export?type=${type}`}>
@@ -228,6 +224,14 @@ export function ReviewsPageClient({
                         </Button>
                         <SyncButton businessId={businessId} />
                     </div>
+                    {isGoogleConnected && (
+                        <AutoReplyToolbar
+                            businessId={businessId}
+                            googleConnected={isGoogleConnected}
+                            planAllowsAutoCommenter={autoCommenterPlanOk}
+                            initial={autoReplyInitial}
+                        />
+                    )}
                 </div>
             </div>
 
@@ -281,6 +285,7 @@ export function ReviewsPageClient({
                                 reviews={reviews}
                                 businessId={businessId}
                                 googleMapsListingUrl={googleMapsListingUrl}
+                                planAllowsAiReplies={autoCommenterPlanOk}
                                 onRefresh={refresh}
                             />
                         ) : (

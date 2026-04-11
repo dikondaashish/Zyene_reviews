@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { deleteReviewReply, replyToReview, listAccounts } from "@/services/google/business-profile";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { REVIEW_RESPONSE_SOURCE_ZYENE } from "@/lib/reviews/response-source";
 import { z } from "zod";
 
 const replySchema = z.object({
@@ -84,7 +85,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
                 response_status: "responded",
                 response_text: text,
                 responded_at: new Date().toISOString(),
-                response_source: "zyene",
+                response_source: REVIEW_RESPONSE_SOURCE_ZYENE,
             })
             .eq("id", review.id);
 

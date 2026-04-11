@@ -33,6 +33,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    REVIEW_RESPONSE_SOURCE_ZYENE,
+    REVIEW_RESPONSE_SOURCE_ZYENE_AUTO,
+} from "@/lib/reviews/response-source";
 
 interface Review {
     id: string;
@@ -49,7 +53,7 @@ interface Review {
     response_status: 'pending' | 'responded' | 'ignored';
     response_text?: string;
     responded_at?: string;
-    /** "zyene" = posted from this app; "google" = synced from GBP (e.g. replied on Google) */
+    /** zyene = manual from app; zyene_auto = Auto commenter; google = replied on GBP */
     response_source?: string | null;
     platform: string;
     review_photo_urls?: string[] | null;
@@ -67,6 +71,7 @@ type Tone = typeof TONES[number];
 export function ReviewCard({
     review,
     googleMapsListingUrl = null,
+    planAllowsAiReplies = true,
     isSelected = false,
     onSelect,
     onRefresh,
@@ -74,6 +79,8 @@ export function ReviewCard({
     review: Review;
     /** Business listing on Google Maps (from GBP link); used when review photos are not in the API. */
     googleMapsListingUrl?: string | null;
+    /** Starter+ / Professional / Enterprise — required for AI suggest-reply */
+    planAllowsAiReplies?: boolean;
     isSelected?: boolean;
     onSelect?: (id: string, selected: boolean) => void;
     onRefresh?: () => void;
@@ -84,6 +91,7 @@ export function ReviewCard({
     const [isExpanded, setIsExpanded] = useState(false);
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeModalKind, setUpgradeModalKind] = useState<"limit" | "plan">("limit");
     const [detailOpen, setDetailOpen] = useState(false);
     const [activePhoto, setActivePhoto] = useState<string | null>(null);
     const [isEditingReply, setIsEditingReply] = useState(false);
@@ -166,6 +174,7 @@ export function ReviewCard({
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
+                setUpgradeModalKind("limit");
                 setShowUpgradeModal(true);
             } else {
                 toast.error(message);
@@ -186,6 +195,12 @@ export function ReviewCard({
     const handleToneClick = useCallback(async (tone: Tone) => {
         stopAiStream();
 
+        if (!planAllowsAiReplies) {
+            setUpgradeModalKind("plan");
+            setShowUpgradeModal(true);
+            return;
+        }
+
         // If already cached, just switch (instant — no re-type)
         if (toneCache[tone]) {
             setActiveTone(tone);
@@ -203,7 +218,14 @@ export function ReviewCard({
                 body: JSON.stringify({ reviewId: review.id, tone }),
             });
             const json = await res.json();
-            if (!res.ok) throw new Error(json.error || "Failed to get suggestion");
+            if (!res.ok) {
+                if (json?.code === "AI_REPLY_PLAN_REQUIRED") {
+                    setUpgradeModalKind("plan");
+                    setShowUpgradeModal(true);
+                    return;
+                }
+                throw new Error(json.error || "Failed to get suggestion");
+            }
 
             const payload = json.data || json;
             const reply = payload.reply || "";
@@ -214,6 +236,7 @@ export function ReviewCard({
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
+                setUpgradeModalKind("limit");
                 setShowUpgradeModal(true);
             } else {
                 toast.error(message);
@@ -221,7 +244,15 @@ export function ReviewCard({
         } finally {
             setLoadingTone(null);
         }
-    }, [isReplying, isEditingReply, toneCache, review.id, stopAiStream, startAiStream]);
+    }, [
+        planAllowsAiReplies,
+        isReplying,
+        isEditingReply,
+        toneCache,
+        review.id,
+        stopAiStream,
+        startAiStream,
+    ]);
 
     const startEditReply = useCallback(() => {
         stopAiStream();
@@ -499,12 +530,20 @@ export function ReviewCard({
                                     })}
                                 </time>
                             )}
-                            {review.response_source === "zyene" && (
+                            {review.response_source === REVIEW_RESPONSE_SOURCE_ZYENE && (
                                 <Badge
                                     variant="secondary"
                                     className="h-5 px-2 text-[10px] font-medium bg-violet-50 text-violet-800 border-violet-200"
                                 >
                                     Replied via Zyene Reviews
+                                </Badge>
+                            )}
+                            {review.response_source === REVIEW_RESPONSE_SOURCE_ZYENE_AUTO && (
+                                <Badge
+                                    variant="secondary"
+                                    className="h-5 px-2 text-[10px] font-medium bg-indigo-50 text-indigo-900 border-indigo-200"
+                                >
+                                    AI auto commenter · Zyene Reviews
                                 </Badge>
                             )}
                         </div>
@@ -857,8 +896,16 @@ export function ReviewCard({
             <UpgradeModal
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
-                title="Upgrade Your Plan"
-                description="You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
+                title={
+                    upgradeModalKind === "plan"
+                        ? "Upgrade for AI reply suggestions"
+                        : "Upgrade Your Plan"
+                }
+                description={
+                    upgradeModalKind === "plan"
+                        ? "AI-assisted replies are available on Starter, Professional, and Enterprise. Choose a plan to continue."
+                        : "You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
+                }
             />
             <Dialog open={!!activePhoto} onOpenChange={(open) => !open && setActivePhoto(null)}>
                 <DialogContent className="sm:max-w-4xl p-2">
