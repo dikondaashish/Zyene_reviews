@@ -1,5 +1,9 @@
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/services/google/sync-service";
+import {
+    getValidGoogleToken,
+    reattachOrphanedGoogleReviews,
+    refreshGoogleReviewRollupsFromDb,
+} from "@/services/google/sync-service";
 import { listAccounts, listLocations } from "@/services/google/business-profile";
 import { registerNotifications } from "@/services/google/notifications";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -130,7 +134,7 @@ export async function POST(request: Request) {
 
         const { data: platform, error: platErr } = await supabase
             .from("review_platforms")
-            .select("id, business_id, platform")
+            .select("id, business_id, platform, google_location_id")
             .eq("business_id", businessId)
             .eq("platform", "google")
             .maybeSingle();
@@ -160,30 +164,48 @@ export async function POST(request: Request) {
 
         const admin = createAdminClient();
 
-        // If switching locations, clear old imported Google reviews for this business.
-        await admin.from("reviews").delete().eq("business_id", platform.business_id).eq("platform", "google");
+        const previousLocationId = platform.google_location_id as string | null | undefined;
+        const isSwitchingToDifferentLocation =
+            previousLocationId != null &&
+            previousLocationId !== "" &&
+            rawLocationId != null &&
+            rawLocationId !== previousLocationId;
 
-        await admin
-            .from("review_platforms")
-            .update({
-                google_account_id: rawAccountId,
-                google_location_id: rawLocationId,
-                external_id: rawLocationId,
-                external_url: externalUrl,
-                // reset rollups; next sync will repopulate
-                total_reviews: 0,
-                average_rating: 0,
-                last_synced_at: null,
-                sync_status: "active",
-                updated_at: new Date().toISOString(),
-            })
-            .eq("id", platform.id);
-
-        // Keep businesses rollups consistent (after deleting imported reviews).
-        await admin
-            .from("businesses")
-            .update({ total_reviews: 0, average_rating: 0, updated_at: new Date().toISOString() })
-            .eq("id", platform.business_id);
+        if (isSwitchingToDifferentLocation) {
+            await admin.from("reviews").delete().eq("business_id", platform.business_id).eq("platform", "google");
+            await admin
+                .from("businesses")
+                .update({ total_reviews: 0, average_rating: 0, updated_at: new Date().toISOString() })
+                .eq("id", platform.business_id);
+            await admin
+                .from("review_platforms")
+                .update({
+                    google_account_id: rawAccountId,
+                    google_location_id: rawLocationId,
+                    external_id: rawLocationId,
+                    external_url: externalUrl,
+                    total_reviews: 0,
+                    average_rating: 0,
+                    last_synced_at: null,
+                    sync_status: "active",
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", platform.id);
+        } else {
+            await reattachOrphanedGoogleReviews(admin, platform.business_id, platform.id);
+            await admin
+                .from("review_platforms")
+                .update({
+                    google_account_id: rawAccountId,
+                    google_location_id: rawLocationId,
+                    external_id: rawLocationId,
+                    external_url: externalUrl,
+                    sync_status: "active",
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", platform.id);
+            await refreshGoogleReviewRollupsFromDb(admin, platform.business_id, platform.id);
+        }
 
         // Register Pub/Sub notifications now that we know the account.
         const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;

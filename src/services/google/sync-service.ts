@@ -132,6 +132,80 @@ export async function hideGoogleReviewsRemovedFromSource(
     return { hidden };
 }
 
+/**
+ * After disconnect, `review_platforms` is deleted and reviews get `platform_id = NULL` (ON DELETE SET NULL).
+ * When the user reconnects, point those rows at the new platform and show them again.
+ */
+export async function reattachOrphanedGoogleReviews(
+    admin: AdminClient,
+    businessId: string,
+    platformId: string
+): Promise<{ reattached: number }> {
+    const { data: rows, error } = await admin
+        .from("reviews")
+        .update({ platform_id: platformId, is_visible: true })
+        .eq("business_id", businessId)
+        .eq("platform", "google")
+        .is("platform_id", null)
+        .select("id");
+
+    if (error) {
+        console.error("[Google] Reattach orphaned reviews failed:", error);
+        return { reattached: 0 };
+    }
+    const n = rows?.length ?? 0;
+    if (n > 0) {
+        console.log(`[Google] Reattached ${n} Google review row(s) to platform ${platformId}`);
+    }
+    return { reattached: n };
+}
+
+/** Recompute `total_reviews` / `average_rating` for the Google platform row and business (matches finalize-style google-only rollups). */
+export async function refreshGoogleReviewRollupsFromDb(
+    admin: AdminClient,
+    businessId: string,
+    platformId: string
+): Promise<void> {
+    const { data: ratingRows, error } = await admin
+        .from("reviews")
+        .select("rating")
+        .eq("business_id", businessId)
+        .eq("platform", "google")
+        .eq("is_visible", true);
+
+    if (error) {
+        console.error("[Google] Rollup select failed:", error);
+        return;
+    }
+
+    const list = ratingRows || [];
+    const total = list.length;
+    const avg = total > 0 ? list.reduce((s, r) => s + Number(r.rating ?? 0), 0) / total : 0;
+    const avgRounded = parseFloat(avg.toFixed(1));
+
+    await admin
+        .from("review_platforms")
+        .update({
+            total_reviews: total,
+            average_rating: avgRounded,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", platformId);
+
+    try {
+        await admin
+            .from("businesses")
+            .update({
+                total_reviews: total,
+                average_rating: avgRounded,
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", businessId);
+    } catch (e) {
+        console.error("[Google] Business rollup update failed:", e);
+    }
+}
+
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
     // Must pass p_lock_duration so PostgREST targets acquire_platform_lock(uuid, interval) only.
     // Two DB overloads (uuid) vs (uuid, interval) cause PGRST203 if only p_id is sent.

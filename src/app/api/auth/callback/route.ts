@@ -4,6 +4,10 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { nanoid } from "nanoid";
 import { listAccounts, listLocations, FULL_LOCATION_READ_MASK } from "@/services/google/business-profile";
+import {
+    reattachOrphanedGoogleReviews,
+    refreshGoogleReviewRollupsFromDb,
+} from "@/services/google/sync-service";
 import { redis } from "@/lib/db/redis";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import type {
@@ -407,19 +411,30 @@ export async function GET(request: Request) {
 
                         await admin.from("review_platforms").update(updatePayload).eq("id", platformData.id);
                     } else {
-                        await admin.from("review_platforms").insert({
-                            business_id: businessId,
-                            platform: "google",
-                            sync_status: "active",
-                            total_reviews: 0,
-                            average_rating: 0,
-                            access_token: encAccess,
-                            refresh_token: encRefresh,
-                            google_account_id: null,
-                            google_location_id: null,
-                            external_id: null,
-                            external_url: null,
-                        });
+                        const { data: newPlatform, error: insPlatErr } = await admin
+                            .from("review_platforms")
+                            .insert({
+                                business_id: businessId,
+                                platform: "google",
+                                sync_status: "active",
+                                total_reviews: 0,
+                                average_rating: 0,
+                                access_token: encAccess,
+                                refresh_token: encRefresh,
+                                google_account_id: null,
+                                google_location_id: null,
+                                external_id: null,
+                                external_url: null,
+                            })
+                            .select("id")
+                            .single();
+
+                        if (insPlatErr) {
+                            console.error("[Auth Callback] review_platforms insert failed:", insPlatErr);
+                        } else if (newPlatform?.id) {
+                            await reattachOrphanedGoogleReviews(admin, businessId, newPlatform.id);
+                            await refreshGoogleReviewRollupsFromDb(admin, businessId, newPlatform.id);
+                        }
                     }
 
                     // Notifications are registered after the user selects the correct GBP location/account.
