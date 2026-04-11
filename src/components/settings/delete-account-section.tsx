@@ -33,16 +33,16 @@ export function DeleteAccountSection() {
                 method: "DELETE",
             });
 
-            if (response.status === 501) {
-                toast.error("Account deletion is not yet available. Please contact customer support.");
-                setOpen(false);
-                setConfirmText("");
-                return;
-            }
-
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to delete account");
+                const body = (await response.json().catch(() => ({}))) as {
+                    error?: string;
+                    message?: string;
+                };
+                throw new Error(
+                    (typeof body.error === "string" && body.error) ||
+                        (typeof body.message === "string" && body.message) ||
+                        "Failed to delete account"
+                );
             }
 
             toast.success("Account deleted successfully. Logging out...");
