@@ -484,9 +484,21 @@ export function ReviewCard({
             {review.response_status === 'responded' && review.response_text && !isEditingReply && (
                 <div className="mt-5 bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                        <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-900 min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-900 min-w-0">
                             <CornerDownRight className="w-3 h-3 text-slate-400 shrink-0" />
-                            <span>Your Response</span>
+                            <span className="font-semibold shrink-0">Your Response</span>
+                            {review.responded_at && (
+                                <time
+                                    dateTime={review.responded_at}
+                                    className="text-slate-400 font-normal text-[10px] tabular-nums shrink-0"
+                                >
+                                    {new Date(review.responded_at).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })}
+                                </time>
+                            )}
                             {review.response_source === "zyene" && (
                                 <Badge
                                     variant="secondary"
@@ -520,15 +532,6 @@ export function ReviewCard({
                                         Delete
                                     </Button>
                                 </>
-                            )}
-                            {review.responded_at && (
-                                <span className="text-slate-400 font-normal text-[10px] pt-0.5 pl-1">
-                                    {new Date(review.responded_at).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
-                                </span>
                             )}
                         </div>
                     </div>
