@@ -34,7 +34,17 @@ async function runAnalysisTest() {
     console.log("🚀 Starting AI Analysis Test (Vertex AI Search)...\n");
 
     if (!process.env.DISCOVERY_ENGINE_DATA_STORE_ID) {
-        console.error("❌ Set DISCOVERY_ENGINE_DATA_STORE_ID and GCP auth (ADC or GOOGLE_APPLICATION_CREDENTIALS).");
+        console.error("❌ Set DISCOVERY_ENGINE_DATA_STORE_ID.");
+        process.exit(1);
+    }
+
+    const hasAdc =
+        process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+        process.env.GOOGLE_VERTEX_CREDENTIALS;
+    if (!hasAdc) {
+        console.error(
+            "❌ Set GCP auth: GOOGLE_APPLICATION_CREDENTIALS (path to JSON) or GOOGLE_VERTEX_CREDENTIALS (JSON string / base64), and GCP_PROJECT_ID."
+        );
         process.exit(1);
     }
 

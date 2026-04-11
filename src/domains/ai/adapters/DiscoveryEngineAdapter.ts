@@ -3,6 +3,9 @@ import {
     SearchServiceClient,
     protos,
 } from "@google-cloud/discoveryengine";
+import { ensureVertexAdcFromEnv } from "@/lib/google/ensure-vertex-adc-from-env";
+
+ensureVertexAdcFromEnv();
 
 const projectId =
     process.env.GCP_PROJECT_ID ||
