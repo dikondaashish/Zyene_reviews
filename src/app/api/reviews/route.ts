@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
         supabase
             .from("reviews")
             .select("*", { count: "exact", head: true })
-            .eq("business_id", businessId),
+            .eq("business_id", businessId)
+            .eq("is_visible", true),
         supabase
             .from("private_feedback")
             .select("*", { count: "exact", head: true })
@@ -57,7 +58,8 @@ export async function GET(request: NextRequest) {
         let query = supabase
             .from("reviews")
             .select("*", { count: "exact" })
-            .eq("business_id", businessId);
+            .eq("business_id", businessId)
+            .eq("is_visible", true);
 
         const statusRaw = url.searchParams.get("status") || "all";
         const statusMap: Record<string, string> = {

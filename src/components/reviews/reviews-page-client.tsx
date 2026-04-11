@@ -4,10 +4,10 @@ import { useState, useCallback, useEffect, useTransition } from "react";
 import { ReviewsFilters } from "./reviews-filters";
 import { ReviewManagement } from "./review-management";
 import { PrivateFeedbackCard } from "./private-feedback-card";
+import { AutoReplyToolbar, type AutoReplySettingsState } from "./auto-reply-toolbar";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
-import { MessageSquare, Lock, Download, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { MessageSquare, Lock, Download, Loader2, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { toast } from "sonner";
 
@@ -15,6 +15,9 @@ interface ReviewsPageClientProps {
     businessId: string;
     /** Opens the connected GBP listing on Google Maps (for review photos Google does not API). */
     googleMapsListingUrl?: string | null;
+    isDemo: boolean;
+    isGoogleConnected: boolean;
+    autoReplyInitial: AutoReplySettingsState;
     initialReviews: any[];
     initialCount: number;
     initialTotalPages: number;
@@ -32,6 +35,9 @@ interface ReviewsPageClientProps {
 export function ReviewsPageClient({
     businessId,
     googleMapsListingUrl = null,
+    isDemo,
+    isGoogleConnected,
+    autoReplyInitial,
     initialReviews,
     initialCount,
     initialTotalPages,
@@ -54,6 +60,28 @@ export function ReviewsPageClient({
     const [isBackfillingAi, setIsBackfillingAi] = useState(false);
 
     const loading = isPending || isFetching;
+
+    useEffect(() => {
+        setReviews(initialReviews);
+        setCount(initialCount);
+        setTotalPages(initialTotalPages);
+        setPage(initialPage);
+        setPublicCount(initialPublicCount);
+        setPrivateCount(initialPrivateCount);
+        setType(initialType);
+        setFilters(initialFilters);
+    }, [
+        initialReviews,
+        initialCount,
+        initialTotalPages,
+        initialPage,
+        initialPublicCount,
+        initialPrivateCount,
+        initialType,
+        initialFilters.status,
+        initialFilters.rating,
+        initialFilters.sort,
+    ]);
 
     const fetchReviews = useCallback(async (params: {
         type: string;
@@ -160,6 +188,49 @@ export function ReviewsPageClient({
 
     return (
         <>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+                        Reviews
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                                {count || 0}
+                            </span>
+                            {isDemo && (
+                                <Badge
+                                    variant="outline"
+                                    className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight"
+                                >
+                                    <Eye className="w-3 h-3" />
+                                    Interactive Demo
+                                </Badge>
+                            )}
+                        </div>
+                    </h1>
+                    <p className="text-muted-foreground text-sm mt-1">
+                        Manage and respond to your customer reviews.
+                    </p>
+                </div>
+                <div className="flex flex-col items-stretch gap-3 sm:items-end">
+                    {isGoogleConnected && (
+                        <AutoReplyToolbar
+                            businessId={businessId}
+                            googleConnected={isGoogleConnected}
+                            initial={autoReplyInitial}
+                        />
+                    )}
+                    <div className="flex gap-2 flex-wrap justify-end">
+                        <Button variant="outline" asChild>
+                            <a href={`/api/reviews/export?type=${type}`}>
+                                <Download className="w-4 h-4 mr-2" />
+                                Export CSV
+                            </a>
+                        </Button>
+                        <SyncButton businessId={businessId} />
+                    </div>
+                </div>
+            </div>
+
             {/* Tab Switcher */}
             <div className="flex items-center gap-3">
                 <div className="bg-muted p-1 rounded-lg inline-flex">

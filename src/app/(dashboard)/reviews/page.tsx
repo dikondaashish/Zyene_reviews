@@ -1,13 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Download, Eye } from "lucide-react";
-import { SyncButton } from "@/components/dashboard/sync-button";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
-import { Badge } from "@/components/ui/badge";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
-import { AutoReplyToolbar } from "@/components/reviews/auto-reply-toolbar";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 
 export default async function ReviewsPage(props: {
@@ -140,48 +135,12 @@ export default async function ReviewsPage(props: {
     return (
         <div className="flex flex-col gap-6 h-full">
             {isDemo && <DemoModeBanner className="mb-2" />}
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-                        Reviews
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                                {count || 0}
-                            </span>
-                            {isDemo && (
-                                <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight">
-                                    <Eye className="w-3 h-3" />
-                                    Interactive Demo
-                                </Badge>
-                            )}
-                        </div>
-                    </h1>
-                    <p className="text-muted-foreground text-sm mt-1">Manage and respond to your customer reviews.</p>
-                </div>
-                <div className="flex flex-col items-stretch gap-3 sm:items-end">
-                    {isGoogleConnected && (
-                        <AutoReplyToolbar
-                            businessId={businessId as string}
-                            googleConnected={isGoogleConnected}
-                            initial={autoReplyInitial}
-                        />
-                    )}
-                    <div className="flex gap-2 flex-wrap justify-end">
-                        <Button variant="outline" asChild>
-                            <a href={`/api/reviews/export?type=${type}`}>
-                                <Download className="w-4 h-4 mr-2" />
-                                Export CSV
-                            </a>
-                        </Button>
-                        <SyncButton businessId={businessId as string} />
-                    </div>
-                </div>
-            </div>
-
             <ReviewsPageClient
                 businessId={businessId as string}
                 googleMapsListingUrl={googleMapsListingUrl}
+                isDemo={isDemo}
+                isGoogleConnected={isGoogleConnected}
+                autoReplyInitial={autoReplyInitial}
                 initialReviews={reviews}
                 initialCount={count}
                 initialTotalPages={totalPages}
