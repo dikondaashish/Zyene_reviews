@@ -6,10 +6,29 @@ import {
 } from "@/domains/ai/normalizeAnalysisForDb";
 import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { Schema, Type as SchemaType } from "@google/genai";
 
-const SENTIMENT_JSON_SHAPE = `Return a single JSON object with keys: sentiment (string: positive|negative|neutral|mixed), urgency (number 1-10), themes (string array), summary (one sentence string).`;
+const sentimentSchema: Schema = {
+    type: SchemaType.OBJECT,
+    properties: {
+        sentiment: { type: SchemaType.STRING, description: "positive, negative, neutral, or mixed" },
+        urgency: { type: SchemaType.NUMBER, description: "1-10 urgency score" },
+        themes: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+        summary: { type: SchemaType.STRING, description: "One sentence summary" }
+    },
+    required: ["sentiment", "urgency", "themes", "summary"]
+};
 
-const CATEGORY_JSON_SHAPE = `Return a single JSON object: {"category":"<2-3 word category>"} such as Customer Service, Wait Time, Product Quality, Pricing, or Other.`;
+const categorySchema: Schema = {
+    type: SchemaType.OBJECT,
+    properties: {
+        category: { 
+            type: SchemaType.STRING, 
+            description: "A short category (2-3 words max). E.g. 'Customer Service', 'Wait Time', 'Product Quality', 'Pricing', or 'Other'" 
+        }
+    },
+    required: ["category"]
+};
 
 type ReviewForAnalysis = {
     id: string;
@@ -30,14 +49,13 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
 
     try {
         const text = review.content || review.text || "";
-        const prompt = `${SENTIMENT_PROMPT
+        const prompt = SENTIMENT_PROMPT
             .replace("{rating}", (review.rating || 0).toString())
-            .replace("{text}", text)}
-
-${SENTIMENT_JSON_SHAPE}`;
+            .replace("{text}", text);
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
+            schema: sentimentSchema
         });
 
         const parsed = JSON.parse(content) as SentimentAnalysisResult;
@@ -61,13 +79,10 @@ ${SENTIMENT_JSON_SHAPE}`;
 export async function categorizePrivateFeedback(content: string | null | undefined): Promise<string> {
     if (!content || !content.trim()) return "Other";
     try {
-        const prompt = `Analyze this private customer feedback and categorize the primary issue into a short phrase (2-3 words max, e.g., 'Customer Service', 'Product Quality', 'Wait Time', 'Pricing', etc.).
-
-Feedback: "${content}"
-
-${CATEGORY_JSON_SHAPE}`;
+        const prompt = `Analyze this private customer feedback and categorize the primary issue into a short phrase (2-3 words max, e.g., 'Customer Service', 'Product Quality', 'Wait Time', 'Pricing', etc.).\n\nFeedback: "${content}"`;
         const res = await generateContentWithFallback(prompt, {
             requireJson: true,
+            schema: categorySchema
         });
         const parsed = JSON.parse(res);
         return parsed.category || "Other";

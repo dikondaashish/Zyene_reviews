@@ -1,12 +1,10 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
-import {
-    generateContentWithFallback,
-    ingestReviewDocuments,
-} from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { batchAnalysisSchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { 
     syncGoogleReviewsForPlatform, 
     prepareGoogleSync, 
@@ -194,13 +192,13 @@ export const processCampaignContact = inngest.createFunction(
     }
 );
 
-// This background job analyzes reviews in dynamic batches via Vertex AI Search (grounded summary)
+// This background job analyzes reviews in dynamic batches using Gemini
 export const processReviewAnalysisBatch = inngest.createFunction(
     {
         id: "process-review-analysis-batch",
         name: "Process Review Analysis Batch",
         concurrency: {
-            limit: 5, // Process 5 batches at once max to stay within Discovery Engine quotas
+            limit: 5, // Process 5 batches at once max to stay within Gemini rate limits
         }
     },
     { event: "review/analyze.batch" },
@@ -233,24 +231,11 @@ export const processReviewAnalysisBatch = inngest.createFunction(
             .replace(/\{count\}/g, reviewsForAi.length.toString())
             .replace("{reviews_json}", JSON.stringify(reviewsForAi, null, 2));
 
-        await step.run("ingest-reviews-discovery", async () => {
-            await ingestReviewDocuments(
-                reviewsForAi.map((r: { reviewId: string; rating: number; text: string }) => ({
-                    documentId: `review_${r.reviewId.replace(/-/g, "_")}`,
-                    payload: {
-                        kind: "review",
-                        reviewId: r.reviewId,
-                        rating: r.rating,
-                        text: r.text,
-                    },
-                }))
-            );
-        });
-
-        // 3. Vertex AI Search — grounded generative summary (JSON array in summary text)
-        const aiResults = await step.run("call-discovery-batch", async () => {
+        // 3. Call Gemini with Fallback
+        const aiResults = await step.run("call-gemini-batch", async () => {
             const content = await generateContentWithFallback(prompt, {
                 requireJson: true,
+                schema: batchAnalysisSchema,
             });
             
             try {

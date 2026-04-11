@@ -3,7 +3,24 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-const INSIGHTS_JSON_SHAPE = `Return JSON only: {"themes":["string", ...], "suggestions":["string", ...]} with 3-5 themes and 2-3 suggestions.`;
+import { Schema, Type as SchemaType } from "@google/genai";
+
+const insightsSchema: Schema = {
+    type: SchemaType.OBJECT,
+    properties: {
+        themes: {
+            type: SchemaType.ARRAY,
+            description: "3 to 5 key themes extracted from all the reviews",
+            items: { type: SchemaType.STRING },
+        },
+        suggestions: {
+            type: SchemaType.ARRAY,
+            description: "2 to 3 actionable suggestions for the business owner",
+            items: { type: SchemaType.STRING },
+        },
+    },
+    required: ["themes", "suggestions"],
+};
 
 const INSIGHTS_PROMPT = `You are an expert business analyst. Analyze the following customer reviews for a business called "{business_name}".
 
@@ -21,7 +38,7 @@ Reviews ({count} total):
 {reviews}`;
 
 export async function GET(request: Request) {
-    const { logger, requestId } = createRequestLogger("GET /api/smart/insights");
+    const { logger, requestId } = createRequestLogger("GET /api/ai/insights");
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
@@ -67,15 +84,14 @@ export async function GET(request: Request) {
             .map((r, i) => `[${i + 1}] (${r.rating}★) ${r.text}`)
             .join("\n");
 
-        const prompt = `${INSIGHTS_PROMPT
+        const prompt = INSIGHTS_PROMPT
             .replace("{business_name}", business?.name || "the business")
             .replace("{count}", (count || reviews.length).toString())
-            .replace("{reviews}", reviewsText)}
-
-${INSIGHTS_JSON_SHAPE}`;
+            .replace("{reviews}", reviewsText);
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
+            schema: insightsSchema,
         });
 
         let result;

@@ -1,5 +1,4 @@
 import AnthropicVertex from '@anthropic-ai/vertex-sdk';
-import { ensureVertexAdcFromEnv } from '@/lib/google/ensure-vertex-adc-from-env';
 
 // ─────────────────────────────────────────────────────────
 // Claude via Google Cloud Vertex AI
@@ -19,7 +18,34 @@ import { ensureVertexAdcFromEnv } from '@/lib/google/ensure-vertex-adc-from-env'
 //     to the entire service-account JSON string (base64 or raw).
 // ─────────────────────────────────────────────────────────
 
-ensureVertexAdcFromEnv();
+// For Vercel: write inline credentials to a temp file so the
+// Google Auth library can pick them up via ADC.
+const credJson =
+    process.env.GOOGLE_VERTEX_CREDENTIALS ||
+    // Catch misconfiguration: GOOGLE_APPLICATION_CREDENTIALS set to raw JSON
+    (process.env.GOOGLE_APPLICATION_CREDENTIALS?.trimStart().startsWith('{')
+        ? process.env.GOOGLE_APPLICATION_CREDENTIALS
+        : null);
+
+if (credJson) {
+    const fs = require('fs');
+    const os = require('os');
+    const path = require('path');
+
+    try {
+        // Support both raw JSON and base64-encoded JSON
+        let creds = credJson;
+        if (!creds.trimStart().startsWith('{')) {
+            creds = Buffer.from(creds, 'base64').toString('utf-8');
+        }
+
+        const tmpPath = path.join(os.tmpdir(), 'gcloud-vertex-creds.json');
+        fs.writeFileSync(tmpPath, creds);
+        process.env.GOOGLE_APPLICATION_CREDENTIALS = tmpPath;
+    } catch (e) {
+        console.error('[AI Client] Failed to write Vertex credentials:', e);
+    }
+}
 
 const region = process.env.GCP_REGION || 'us-central1';
 
