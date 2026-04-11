@@ -337,8 +337,11 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
                 await registerNotifications(accessToken!, accountName, topicName);
                 console.log(`[Sync] Notification registration successful.`);
             } catch (regError) {
-                console.warn(`[Sync] Notification registration failed (Non-critical):`, regError);
-                // We don't fail the sync because notifications failed
+                console.error(
+                    `[Sync] Notification registration failed — real-time Google reviews will not arrive until this succeeds. Enable "My Business Notifications API" in GCP and check OAuth scopes:`,
+                    regError
+                );
+                // We don't fail the sync because pull-based review import still works
             }
         }
 

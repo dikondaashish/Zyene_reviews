@@ -1,5 +1,14 @@
 import { fetchWithRetry } from "./business-profile";
 
+/**
+ * Account-level Pub/Sub notification settings MUST use the Notifications API host.
+ * Using mybusinessaccountmanagement.googleapis.com for this PATCH can appear to succeed
+ * without Google actually publishing review events to your topic (no Pub/Sub messages, no webhooks).
+ * @see https://developers.google.com/my-business/reference/notifications/rest/v1/accounts/updateNotificationSetting
+ */
+const BASE_URL_NOTIFICATIONS = "https://mybusinessnotifications.googleapis.com/v1";
+
+/** Only for location-scoped notificationSetting (if used); not the primary Pub/Sub path. */
 const BASE_URL_ACCOUNT_MANAGEMENT = "https://mybusinessaccountmanagement.googleapis.com/v1";
 
 export interface GoogleNotificationSetting {
@@ -21,7 +30,7 @@ export async function registerNotifications(
     topic: string
 ): Promise<GoogleNotificationSetting> {
     // We register at the account level so all locations under this account are covered
-    const url = `${BASE_URL_ACCOUNT_MANAGEMENT}/${accountName}/notificationSetting?updateMask=pubsubTopic,notificationTypes`;
+    const url = `${BASE_URL_NOTIFICATIONS}/${accountName}/notificationSetting?updateMask=pubsubTopic,notificationTypes`;
 
     const body = {
         name: `${accountName}/notificationSetting`,
@@ -97,7 +106,7 @@ export async function getNotificationSetting(
     accessToken: string,
     accountName: string
 ): Promise<GoogleNotificationSetting> {
-    const url = `${BASE_URL_ACCOUNT_MANAGEMENT}/${accountName}/notificationSetting`;
+    const url = `${BASE_URL_NOTIFICATIONS}/${accountName}/notificationSetting`;
 
     const response = await fetchWithRetry(url, {
         headers: {
