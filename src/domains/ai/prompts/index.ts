@@ -38,6 +38,22 @@ Generate 2 reply options. Rules:
 Rating: {rating}/5
 Review: {text}`;
 
+/** Shorter than REPLY_PROMPT (no long examples) — used for dashboard “AI Suggest Reply” to cut latency. */
+export const SUGGEST_REPLY_PROMPT_COMPACT = `You are the owner of {business_name} ({business_category}). Write ONE public reply to this review.
+
+Rules:
+- Sound human: no emojis, no corporate filler ("sincerely apologize", "strive for excellence", "highly recommend").
+- Reference what they said; thank staff by name if listed in context.
+- Mention the business name naturally where it fits.
+- Negative: apologize briefly, offer to make it right, invite them back—never argue.
+- Positive: thank them and echo what they praised.
+- Max ~120 words.
+
+{served_by_info}
+
+Rating: {rating}/5
+Review: {text}`;
+
 export const QA_ANSWER_PROMPT = `You are the owner of {business_name}. A customer asked this on your Google Business Profile Q&A:
 "{question_text}"
 

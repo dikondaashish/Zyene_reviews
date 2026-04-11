@@ -38,7 +38,7 @@ Reviews ({count} total):
 {reviews}`;
 
 export async function GET(request: Request) {
-    const { logger, requestId } = createRequestLogger("GET /api/ai/insights");
+    const { logger, requestId } = createRequestLogger("GET /api/smart/insights");
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return apiError("Unauthorized", { status: 401, details: requestId });

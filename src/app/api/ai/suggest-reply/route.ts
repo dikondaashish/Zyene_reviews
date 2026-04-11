@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
-import { REPLY_PROMPT } from "@/domains/ai/prompts";
+import { SUGGEST_REPLY_PROMPT_COMPACT } from "@/domains/ai/prompts";
 import { singleReplySchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -24,6 +24,7 @@ interface ReviewWithBusiness {
     businesses: {
         organization_id: string;
         name: string;
+        category?: string | null;
         organizations?: OrgWithPlan | null;
     } | null;
 }
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
             *,
             businesses!inner(
                 name,
+                category,
                 organization_id,
                 organizations!inner(
                     id,
@@ -87,6 +89,7 @@ export async function POST(request: Request) {
 
     try {
         const businessName = reviewTyped.businesses?.name || "our business";
+        const businessCategory = reviewTyped.businesses?.category?.trim() || "local";
         const toneInstruction = TONE_INSTRUCTIONS[tone] || TONE_INSTRUCTIONS.professional;
 
         // Build staff info string
@@ -96,25 +99,28 @@ export async function POST(request: Request) {
             servedByInfo = `Context: This customer specifically noted they were served by: ${staff.join(", ")}.`;
         }
 
-        // Build a single-reply prompt with tone instruction
-        const prompt = `${REPLY_PROMPT
-            .replace("{business_name}", businessName)
-            .replace("{served_by_info}", servedByInfo)
+        const prompt = `${SUGGEST_REPLY_PROMPT_COMPACT.replace("{business_name}", businessName)
+            .replace("{business_category}", businessCategory)
+            .replace("{served_by_info}", servedByInfo || "(no staff names noted)")
             .replace("{rating}", review.rating.toString())
-            .replace("{text}", review.text || "")
-            .replace("Generate 2 reply options.", `Generate exactly 1 reply.`)}
+            .replace("{text}", review.text || "")}
 
 TONE: ${toneInstruction}
 
-Return a single reply only.`;
+Return JSON only: {"reply":"..."} matching the schema.`;
 
         const plan = reviewTyped.businesses?.organizations?.plan;
         const isPremium = plan === "growth" || String(plan).includes("agency");
+
+        const suggestModel = process.env.GOOGLE_AI_SUGGEST_REPLY_MODEL?.trim();
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
             schema: singleReplySchema,
             isPremium,
+            maxOutputTokens: 600,
+            temperature: 0.55,
+            ...(suggestModel ? { modelOverride: suggestModel } : {}),
         });
 
         let result;

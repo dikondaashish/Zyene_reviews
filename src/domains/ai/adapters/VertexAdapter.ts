@@ -28,15 +28,28 @@ export interface VertexGenerationOptions {
     /** Kept for API compatibility; all tiers use primary (Flash) then fallback (Pro) unless env overrides. */
     isPremium?: boolean;
     enableGrounding?: boolean;
+    /** Caps generation length — lowers latency for short outputs (e.g. suggest reply). */
+    maxOutputTokens?: number;
+    /** Lower = faster, more deterministic (e.g. 0.45–0.65 for replies). */
+    temperature?: number;
+    /** Use this model id instead of GOOGLE_AI_PRIMARY_MODEL for this call only. */
+    modelOverride?: string;
 }
 
 export async function generateContentWithFallback(
     prompt: string,
     options: VertexGenerationOptions = {}
 ): Promise<string> {
-    const { requireJson = false, schema, enableGrounding = false } = options;
+    const {
+        requireJson = false,
+        schema,
+        enableGrounding = false,
+        maxOutputTokens,
+        temperature,
+        modelOverride,
+    } = options;
 
-    const primaryModel = DEFAULT_PRIMARY_MODEL;
+    const primaryModel = modelOverride?.trim() || DEFAULT_PRIMARY_MODEL;
     const fallbackModel = DEFAULT_FALLBACK_MODEL;
 
     // Config configuration
@@ -51,6 +64,12 @@ export async function generateContentWithFallback(
     }
     if (schema) {
         config.responseSchema = schema;
+    }
+    if (typeof maxOutputTokens === "number" && maxOutputTokens > 0) {
+        config.maxOutputTokens = maxOutputTokens;
+    }
+    if (typeof temperature === "number") {
+        config.temperature = temperature;
     }
 
     const startTime = Date.now();
