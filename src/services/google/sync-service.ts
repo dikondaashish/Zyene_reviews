@@ -76,6 +76,62 @@ function googlePlaceContext(review: GoogleReview): string[] | null {
     return cleanStringArray([...maybeStrings, stayDate]);
 }
 
+/**
+ * After a full Google review list fetch, soft-hide rows that GBP no longer returns (e.g. customer deleted the review).
+ * Skips if {@link reconciliationSafe} is false (sync hit MAX_REVIEW_PAGES with more pages left — list incomplete).
+ */
+export async function hideGoogleReviewsRemovedFromSource(
+    admin: AdminClient,
+    params: {
+        businessId: string;
+        platformId: string;
+        googleExternalIdsSeen: ReadonlySet<string>;
+        reconciliationSafe: boolean;
+    }
+): Promise<{ hidden: number }> {
+    if (!params.reconciliationSafe) {
+        console.log("[Sync] Skip soft-hide for removed reviews: sync did not fetch all pages (or stopped early).");
+        return { hidden: 0 };
+    }
+
+    const { data: rows, error } = await admin
+        .from("reviews")
+        .select("id, external_id")
+        .eq("business_id", params.businessId)
+        .eq("platform", "google")
+        .eq("platform_id", params.platformId)
+        .eq("is_visible", true);
+
+    if (error) {
+        console.error("[Sync] Reconciliation select failed:", error);
+        return { hidden: 0 };
+    }
+
+    const toHide = (rows || []).filter(
+        (r: { id: string; external_id: string | null }) =>
+            r.external_id && !params.googleExternalIdsSeen.has(r.external_id)
+    );
+    if (toHide.length === 0) {
+        return { hidden: 0 };
+    }
+
+    const BATCH = 200;
+    let hidden = 0;
+    for (let i = 0; i < toHide.length; i += BATCH) {
+        const ids = toHide.slice(i, i + BATCH).map((r: { id: string }) => r.id);
+        const { error: upErr } = await admin.from("reviews").update({ is_visible: false }).in("id", ids);
+        if (upErr) {
+            console.error("[Sync] Soft-hide batch failed:", upErr);
+        } else {
+            hidden += ids.length;
+        }
+    }
+    if (hidden > 0) {
+        console.log(`[Sync] Soft-hid ${hidden} Google review(s) no longer returned by GBP (row kept, is_visible=false).`);
+    }
+    return { hidden };
+}
+
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
     // Must pass p_lock_duration so PostgREST targets acquire_platform_lock(uuid, interval) only.
     // Two DB overloads (uuid) vs (uuid, interval) cause PGRST203 if only p_id is sent.
@@ -364,11 +420,13 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
 export async function syncGoogleReviewsPage(
     context: GoogleSyncContext,
     pageToken?: string
-): Promise<{ 
-    nextPageToken?: string, 
-    synced: number, 
-    total: number, 
-    avgRating: number 
+): Promise<{
+    nextPageToken?: string;
+    synced: number;
+    total: number;
+    avgRating: number;
+    /** Google `reviewId` values on this page — used to reconcile deletions after a full sync. */
+    externalIdsOnPage: string[];
 }> {
     const admin = createAdminClient();
 
@@ -416,11 +474,16 @@ export async function syncGoogleReviewsPage(
         }
     }
 
+    const externalIdsOnPage = apiResp.reviews
+        .map((r) => r.reviewId)
+        .filter((id): id is string => typeof id === "string" && id.length > 0);
+
     return {
         nextPageToken: apiResp.nextPageToken,
         synced: syncedCount,
         total: apiResp.totalReviewCount || 0,
-        avgRating: apiResp.averageRating || 0
+        avgRating: apiResp.averageRating || 0,
+        externalIdsOnPage,
     };
 }
 
@@ -513,23 +576,36 @@ export async function enqueueMissingGoogleReviewAnalysis(
  */
 export async function syncGoogleReviewsForPlatform(platformId: string): Promise<SyncResult> {
     const context = await prepareGoogleSync(platformId);
-    
+    const admin = createAdminClient();
+
     try {
         let pageToken: string | undefined = undefined;
         let totalSynced = 0;
         let lastResp = null;
         let pageCount = 0;
+        const seenGoogleExternalIds = new Set<string>();
 
         do {
             lastResp = await syncGoogleReviewsPage(context, pageToken);
+            for (const id of lastResp.externalIdsOnPage) {
+                seenGoogleExternalIds.add(id);
+            }
             pageToken = lastResp.nextPageToken;
             totalSynced += lastResp.synced;
             pageCount++;
-            
+
             if (pageToken && pageCount < MAX_REVIEW_PAGES) {
-                await new Promise(r => setTimeout(r, PAGINATION_DELAY_MS));
+                await new Promise((r) => setTimeout(r, PAGINATION_DELAY_MS));
             }
         } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+        const fullListFetched = !pageToken;
+        await hideGoogleReviewsRemovedFromSource(admin, {
+            businessId: context.platform.business_id,
+            platformId: context.platform.id,
+            googleExternalIdsSeen: seenGoogleExternalIds,
+            reconciliationSafe: fullListFetched,
+        });
 
         await finalizeGoogleSync(platformId, context.platform.business_id, lastResp?.total, lastResp?.avgRating);
         await enqueueMissingGoogleReviewAnalysis(context.platform.business_id);

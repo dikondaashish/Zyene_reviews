@@ -5,12 +5,13 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { batchAnalysisSchema } from "@/domains/ai/schemas/ResponseSchemas";
-import { 
-    syncGoogleReviewsForPlatform, 
-    prepareGoogleSync, 
-    syncGoogleReviewsPage, 
+import {
+    syncGoogleReviewsForPlatform,
+    prepareGoogleSync,
+    syncGoogleReviewsPage,
     finalizeGoogleSync,
-    enqueueMissingGoogleReviewAnalysis
+    enqueueMissingGoogleReviewAnalysis,
+    hideGoogleReviewsRemovedFromSource,
 } from "@/services/google/sync-service";
 import { MAX_REVIEW_PAGES } from "@/services/google/constants";
 import {
@@ -463,8 +464,9 @@ export const syncGoogleReviews = inngest.createFunction(
 
             let pageToken: string | undefined = undefined;
             let totalSynced = 0;
-            let lastResp: { total: number, avgRating: number } | null = null;
+            let lastResp: { total: number; avgRating: number } | null = null;
             let pageCount = 0;
+            const seenGoogleExternalIds: string[] = [];
 
             // 2. Paginated Sync (Each page is a Step)
             do {
@@ -475,9 +477,21 @@ export const syncGoogleReviews = inngest.createFunction(
                 pageToken = result.nextPageToken;
                 totalSynced += result.synced;
                 lastResp = { total: result.total, avgRating: result.avgRating };
+                seenGoogleExternalIds.push(...result.externalIdsOnPage);
                 pageCount++;
-
             } while (pageToken && pageCount < MAX_REVIEW_PAGES);
+
+            const fullListFetched = !pageToken;
+
+            await step.run("reconcile-removed-google-reviews", async () => {
+                const admin = createAdminClient();
+                return hideGoogleReviewsRemovedFromSource(admin, {
+                    businessId: context.platform.business_id,
+                    platformId: context.platform.id,
+                    googleExternalIdsSeen: new Set(seenGoogleExternalIds),
+                    reconciliationSafe: fullListFetched,
+                });
+            });
 
             // 3. Finalize
             await step.run("finalize-sync", async () => {

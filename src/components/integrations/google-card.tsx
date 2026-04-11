@@ -255,13 +255,17 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
         setIsDisconnecting(true);
         try {
             await disconnectGoogle(platform.id);
-            // Server action redirects to /onboarding on success
-        } catch (err) {
-            // redirect() from server actions throws NEXT_REDIRECT — don't catch it
-            if (typeof err === "string" || (err && typeof err === "object" && "digest" in err)) {
-                throw err;
+        } catch (err: unknown) {
+            const digest =
+                err && typeof err === "object" && "digest" in err
+                    ? String((err as { digest?: string }).digest)
+                    : "";
+            if (digest.startsWith("NEXT_REDIRECT")) {
+                return;
             }
-            toast.error("Failed to disconnect");
+            console.error("[Google] disconnect:", err);
+            toast.error(err instanceof Error ? err.message : "Failed to disconnect");
+        } finally {
             setIsDisconnecting(false);
         }
     };
