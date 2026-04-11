@@ -7,6 +7,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Badge } from "@/components/ui/badge";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
+import { AutoReplyToolbar } from "@/components/reviews/auto-reply-toolbar";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 
 export default async function ReviewsPage(props: {
@@ -122,6 +123,20 @@ export default async function ReviewsPage(props: {
             typeof googlePlatform?.external_url === "string" ? googlePlatform.external_url : null,
     });
 
+    const autoReplyInitial = {
+        auto_reply_enabled: Boolean((business as { auto_reply_enabled?: boolean })?.auto_reply_enabled),
+        auto_reply_min_rating: ((): 3 | 4 | 5 => {
+            const r = (business as { auto_reply_min_rating?: number })?.auto_reply_min_rating;
+            if (r === 3 || r === 4 || r === 5) return r;
+            return 4;
+        })(),
+        auto_reply_tone: ((): "professional" | "friendly" | "concise" => {
+            const t = (business as { auto_reply_tone?: string })?.auto_reply_tone;
+            if (t === "friendly" || t === "concise" || t === "professional") return t;
+            return "professional";
+        })(),
+    };
+
     return (
         <div className="flex flex-col gap-6 h-full">
             {isDemo && <DemoModeBanner className="mb-2" />}
@@ -144,14 +159,23 @@ export default async function ReviewsPage(props: {
                     </h1>
                     <p className="text-muted-foreground text-sm mt-1">Manage and respond to your customer reviews.</p>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" asChild>
-                        <a href={`/api/reviews/export?type=${type}`}>
-                            <Download className="w-4 h-4 mr-2" />
-                            Export CSV
-                        </a>
-                    </Button>
-                    <SyncButton businessId={businessId as string} />
+                <div className="flex flex-col items-stretch gap-3 sm:items-end">
+                    {isGoogleConnected && (
+                        <AutoReplyToolbar
+                            businessId={businessId as string}
+                            googleConnected={isGoogleConnected}
+                            initial={autoReplyInitial}
+                        />
+                    )}
+                    <div className="flex gap-2 flex-wrap justify-end">
+                        <Button variant="outline" asChild>
+                            <a href={`/api/reviews/export?type=${type}`}>
+                                <Download className="w-4 h-4 mr-2" />
+                                Export CSV
+                            </a>
+                        </Button>
+                        <SyncButton businessId={businessId as string} />
+                    </div>
                 </div>
             </div>
 

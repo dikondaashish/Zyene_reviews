@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
-import { SUGGEST_REPLY_PROMPT_COMPACT } from "@/domains/ai/prompts";
-import { singleReplySchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
+import { generateReplyDraftText } from "@/domains/ai/services/generateReplyDraft";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { z } from "zod";
@@ -21,6 +20,7 @@ interface OrgWithPlan {
 interface ReviewWithBusiness {
     rating: number;
     text: string | null;
+    selected_staff?: string[] | null;
     businesses: {
         organization_id: string;
         name: string;
@@ -28,12 +28,6 @@ interface ReviewWithBusiness {
         organizations?: OrgWithPlan | null;
     } | null;
 }
-
-const TONE_INSTRUCTIONS: Record<string, string> = {
-    professional: "Write in a professional, polished tone. Be courteous and business-appropriate.",
-    friendly: "Write in a warm, friendly, conversational tone. Sound like a caring neighbor, not a corporation.",
-    concise: "Write a short, direct reply in 2-3 sentences max. Get straight to the point.",
-};
 
 export async function POST(request: Request) {
     const { logger, requestId } = createRequestLogger("POST /api/ai/suggest-reply");
@@ -90,48 +84,17 @@ export async function POST(request: Request) {
     try {
         const businessName = reviewTyped.businesses?.name || "our business";
         const businessCategory = reviewTyped.businesses?.category?.trim() || "local";
-        const toneInstruction = TONE_INSTRUCTIONS[tone] || TONE_INSTRUCTIONS.professional;
-
-        // Build staff info string
-        let servedByInfo = "";
-        const staff = review.selected_staff;
-        if (staff && staff.length > 0) {
-            servedByInfo = `Context: This customer specifically noted they were served by: ${staff.join(", ")}.`;
-        }
-
-        const prompt = `${SUGGEST_REPLY_PROMPT_COMPACT.replace("{business_name}", businessName)
-            .replace("{business_category}", businessCategory)
-            .replace("{served_by_info}", servedByInfo || "(no staff names noted)")
-            .replace("{rating}", review.rating.toString())
-            .replace("{text}", review.text || "")}
-
-TONE: ${toneInstruction}
-
-Return JSON only: {"reply":"..."} matching the schema.`;
-
         const plan = reviewTyped.businesses?.organizations?.plan;
-        const isPremium = plan === "growth" || String(plan).includes("agency");
 
-        const suggestModel = process.env.GOOGLE_AI_SUGGEST_REPLY_MODEL?.trim();
-
-        const content = await generateContentWithFallback(prompt, {
-            requireJson: true,
-            schema: singleReplySchema,
-            isPremium,
-            maxOutputTokens: 600,
-            temperature: 0.55,
-            ...(suggestModel ? { modelOverride: suggestModel } : {}),
+        const reply = await generateReplyDraftText({
+            businessName,
+            businessCategory,
+            rating: review.rating,
+            reviewText: review.text || "",
+            selectedStaff: review.selected_staff,
+            tone,
+            plan,
         });
-
-        let result;
-        try {
-            result = JSON.parse(content);
-        } catch {
-            // If JSON parse fails, use raw content as the reply
-            result = { reply: content };
-        }
-
-        const reply = result.reply || content;
 
         // After successful generative call, increment the counter atomically:
         await supabase.rpc("increment_ai_replies_used", { org_id: orgId });

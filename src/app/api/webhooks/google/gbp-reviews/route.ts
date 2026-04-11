@@ -130,9 +130,15 @@ export async function POST(req: NextRequest) {
         console.log(`[GBP Webhook] Fetching full review: ${reviewName}`);
         const googleReview = await getReview(accessToken!, reviewName);
 
+        const { data: autoReplyRow } = await admin
+            .from("businesses")
+            .select("auto_reply_enabled, auto_reply_enabled_at, auto_reply_min_rating, auto_reply_tone")
+            .eq("id", platform.business_id)
+            .single();
+
         // 6. Process the review using the unified sync logic
         // This handles upserting to DB, AI analysis, and alerting
-        const stats = await processGoogleReview(admin, platform, googleReview);
+        const stats = await processGoogleReview(admin, platform, googleReview, autoReplyRow || null);
 
         console.log(`[GBP Webhook] Successfully processed review ${googleReview.reviewId}. Stats:`, stats);
 

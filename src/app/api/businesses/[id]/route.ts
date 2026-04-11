@@ -24,6 +24,9 @@ const businessPatchSchema = z
         rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional().nullable(),
         enable_staff_selection: z.boolean().optional(),
         staff_names: z.array(z.string()).optional(),
+        auto_reply_enabled: z.boolean().optional(),
+        auto_reply_min_rating: z.union([z.literal(3), z.literal(4), z.literal(5)]).optional(),
+        auto_reply_tone: z.enum(["professional", "friendly", "concise"]).optional(),
     })
     .strict();
 
@@ -62,10 +65,32 @@ export async function PATCH(
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
 
+        const { data: currentBiz, error: curErr } = await supabase
+            .from("businesses")
+            .select("auto_reply_enabled")
+            .eq("id", id)
+            .single();
+
+        if (curErr || !currentBiz) {
+            throw new ApiRouteError("Business not found", {
+                status: 404,
+                code: "BUSINESS_NOT_FOUND",
+                details: curErr?.message,
+            });
+        }
+
+        const patch: typeof body & { auto_reply_enabled_at?: string | null } = { ...body };
+        if (body.auto_reply_enabled === true && !currentBiz.auto_reply_enabled) {
+            patch.auto_reply_enabled_at = new Date().toISOString();
+        }
+        if (body.auto_reply_enabled === false) {
+            patch.auto_reply_enabled_at = null;
+        }
+
         // Update business
         const { data, error } = await supabase
             .from("businesses")
-            .update(body)
+            .update(patch)
             .eq("id", id)
             .select()
             .single();

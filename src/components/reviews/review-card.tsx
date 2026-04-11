@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Star, MessageSquare, MoreHorizontal, CornerDownRight, Sparkles, AlertTriangle, Zap, Loader2, ImageIcon, Info, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -94,8 +94,47 @@ export function ReviewCard({
     const [activeTone, setActiveTone] = useState<Tone | null>(null);
     const [loadingTone, setLoadingTone] = useState<Tone | null>(null);
     const [toneCache, setToneCache] = useState<Partial<Record<Tone, string>>>({});
+    const [isAiTyping, setIsAiTyping] = useState(false);
+    const aiStreamIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const router = useRouter();
+
+    const stopAiStream = useCallback(() => {
+        if (aiStreamIntervalRef.current !== null) {
+            clearInterval(aiStreamIntervalRef.current);
+            aiStreamIntervalRef.current = null;
+        }
+        setIsAiTyping(false);
+    }, []);
+
+    const startAiStream = useCallback(
+        (full: string) => {
+            stopAiStream();
+            if (!full) {
+                setReplyText("");
+                return;
+            }
+            setReplyText("");
+            setIsAiTyping(true);
+            let i = 0;
+            const charsPerTick = 2;
+            const intervalMs = 14;
+            aiStreamIntervalRef.current = setInterval(() => {
+                i = Math.min(i + charsPerTick, full.length);
+                setReplyText(full.slice(0, i));
+                if (i >= full.length) {
+                    if (aiStreamIntervalRef.current !== null) {
+                        clearInterval(aiStreamIntervalRef.current);
+                        aiStreamIntervalRef.current = null;
+                    }
+                    setIsAiTyping(false);
+                }
+            }, intervalMs);
+        },
+        [stopAiStream]
+    );
+
+    useEffect(() => () => stopAiStream(), [stopAiStream]);
 
     const showReplyComposer =
         (isReplying && review.response_status !== "responded") || isEditingReply;
@@ -107,6 +146,7 @@ export function ReviewCard({
 
     const handleSubmit = async () => {
         if (!replyText.trim()) return;
+        stopAiStream();
         setIsSubmitting(true);
         try {
             const res = await fetch(`/api/reviews/${review.id}/reply`, {
@@ -135,11 +175,21 @@ export function ReviewCard({
         }
     };
 
+    const handleReplyTextChange = useCallback(
+        (value: string) => {
+            if (isAiTyping) stopAiStream();
+            setReplyText(value);
+        },
+        [isAiTyping, stopAiStream]
+    );
+
     const handleToneClick = useCallback(async (tone: Tone) => {
-        // If already cached, just switch
+        stopAiStream();
+
+        // If already cached, just switch (instant — no re-type)
         if (toneCache[tone]) {
             setActiveTone(tone);
-            setReplyText(toneCache[tone]);
+            setReplyText(toneCache[tone]!);
             return;
         }
 
@@ -159,7 +209,8 @@ export function ReviewCard({
             const reply = payload.reply || "";
 
             setToneCache((prev) => ({ ...prev, [tone]: reply }));
-            setReplyText(reply);
+            setLoadingTone(null);
+            startAiStream(reply);
         } catch (e: unknown) {
             const message = e instanceof Error ? e.message : "An unexpected error occurred";
             if (message.includes("Monthly AI reply limit reached") || message.includes("upgrade your plan")) {
@@ -170,22 +221,24 @@ export function ReviewCard({
         } finally {
             setLoadingTone(null);
         }
-    }, [isReplying, isEditingReply, toneCache, review.id]);
+    }, [isReplying, isEditingReply, toneCache, review.id, stopAiStream, startAiStream]);
 
     const startEditReply = useCallback(() => {
+        stopAiStream();
         setIsEditingReply(true);
         setReplyText(review.response_text || "");
         setActiveTone(null);
         setToneCache({});
-    }, [review.response_text]);
+    }, [review.response_text, stopAiStream]);
 
     const cancelReplyComposer = useCallback(() => {
+        stopAiStream();
         setIsReplying(false);
         setIsEditingReply(false);
         setReplyText("");
         setActiveTone(null);
         setToneCache({});
-    }, []);
+    }, [stopAiStream]);
 
     const handleDeleteReply = async () => {
         setIsDeletingReply(true);
@@ -722,13 +775,28 @@ export function ReviewCard({
                         </div>
                     )}
 
-                    <Textarea
-                        placeholder="Write a response or click a tone above for an AI draft..."
-                        className="min-h-[120px] mb-4 bg-white text-sm resize-none focus-visible:ring-blue-500 border-slate-200 shadow-sm focus:border-blue-500 placeholder:text-slate-400"
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        autoFocus
-                    />
+                    <div className="relative mb-4">
+                        <Textarea
+                            placeholder="Write a response or click a tone above for an AI draft..."
+                            className={cn(
+                                "min-h-[120px] bg-white text-sm resize-none focus-visible:ring-blue-500 border-slate-200 shadow-sm focus:border-blue-500 placeholder:text-slate-400",
+                                isAiTyping && "border-violet-200 ring-1 ring-violet-100"
+                            )}
+                            value={replyText}
+                            onChange={(e) => handleReplyTextChange(e.target.value)}
+                            aria-busy={isAiTyping}
+                            autoFocus
+                        />
+                        {isAiTyping && (
+                            <span
+                                className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700 border border-violet-100"
+                                aria-live="polite"
+                            >
+                                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+                                Writing
+                            </span>
+                        )}
+                    </div>
                     <div className="flex justify-end items-center gap-3">
                         <button
                             type="button"

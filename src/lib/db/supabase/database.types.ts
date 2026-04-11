@@ -60,6 +60,10 @@ export type Database = {
         Row: {
           address_line1: string | null
           apology_message: string | null
+          auto_reply_enabled: boolean
+          auto_reply_enabled_at: string | null
+          auto_reply_min_rating: number
+          auto_reply_tone: string
           average_rating: number
           brand_color: string | null
           category: string
@@ -113,6 +117,10 @@ export type Database = {
         Insert: {
           address_line1?: string | null
           apology_message?: string | null
+          auto_reply_enabled?: boolean
+          auto_reply_enabled_at?: string | null
+          auto_reply_min_rating?: number
+          auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
           category?: string
@@ -166,6 +174,10 @@ export type Database = {
         Update: {
           address_line1?: string | null
           apology_message?: string | null
+          auto_reply_enabled?: boolean
+          auto_reply_enabled_at?: string | null
+          auto_reply_min_rating?: number
+          auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
           category?: string

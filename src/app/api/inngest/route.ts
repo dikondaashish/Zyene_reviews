@@ -1,6 +1,11 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/services/inngest/client";
-import { processCampaignContact, processReviewAnalysisBatch, syncGoogleReviews } from "@/services/inngest/functions";
+import {
+    processCampaignContact,
+    processReviewAnalysisBatch,
+    processAutoReplyReview,
+    syncGoogleReviews,
+} from "@/services/inngest/functions";
 import { syncPlatformWorker, weeklyDigestWorker, followUpWorker } from "@/services/inngest/sync-worker";
 
 /**
@@ -27,6 +32,7 @@ export const { GET, POST, PUT } = serve({
     functions: [
         processCampaignContact,
         processReviewAnalysisBatch,
+        processAutoReplyReview,
         syncGoogleReviews,
         syncPlatformWorker,
         weeklyDigestWorker,

@@ -44,6 +44,12 @@ type FollowUpEvent = {
     };
 };
 
+type AutoReplyEvent = {
+    data: {
+        reviewId: string;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -51,6 +57,7 @@ type Events = {
     "review/sync.platform": SyncPlatformEvent;
     "cron/weekly-digest.business": WeeklyDigestEvent;
     "cron/follow-up.campaign": FollowUpEvent;
+    "review/auto-reply": AutoReplyEvent;
 };
 
 // Create a client to send and receive events

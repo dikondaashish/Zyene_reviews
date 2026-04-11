@@ -11,6 +11,11 @@ import {
 } from "./constants";
 
 import { inngest } from "@/services/inngest/client";
+import {
+    enqueueAutoReplyJob,
+    reviewQualifiesForAutoReplyEnqueue,
+    type AutoReplyBusinessSettings,
+} from "@/services/reviews/auto-reply-eligibility";
 import { registerNotifications } from "./notifications";
 
 type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
@@ -371,12 +376,19 @@ export async function syncGoogleReviewsPage(
         pageToken
     );
 
+    const { data: autoReplyRow } = await admin
+        .from("businesses")
+        .select("auto_reply_enabled, auto_reply_enabled_at, auto_reply_min_rating, auto_reply_tone")
+        .eq("id", context.platform.business_id)
+        .single();
+    const autoReplySettings = (autoReplyRow || null) as AutoReplyBusinessSettings | null;
+
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];
 
     let newReviewsCount = 0;
     for (const review of apiResp.reviews) {
-        const stats = await processGoogleReview(admin, context.platform, review);
+        const stats = await processGoogleReview(admin, context.platform, review, autoReplySettings);
         if (stats.upserted) {
             syncedCount++;
             if (stats.id && stats.needsAnalysis) {
@@ -545,7 +557,8 @@ function sameReviewReplyText(a: string | null | undefined, b: string | null | un
 export async function processGoogleReview(
     admin: AdminClient,
     platform: ReviewPlatformRef,
-    review: GoogleReview
+    review: GoogleReview,
+    autoReplySettings?: AutoReplyBusinessSettings | null
 ) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
@@ -610,6 +623,16 @@ export async function processGoogleReview(
         // Mark for analysis if text exists and not already analyzed
         if (upserted && !upserted.sentiment && upserted.text) {
             needsAnalysis = true;
+        }
+
+        if (
+            reviewQualifiesForAutoReplyEnqueue(review, numericRating, autoReplySettings, upserted?.id)
+        ) {
+            try {
+                await enqueueAutoReplyJob(upserted!.id);
+            } catch (e) {
+                console.error("[AutoReply] Failed to enqueue job:", e);
+            }
         }
     }
 
