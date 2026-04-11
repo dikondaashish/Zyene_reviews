@@ -133,6 +133,13 @@ export async function searchWithGenerativeSummary(
 
 export type IngestJsonPayload = Record<string, unknown>;
 
+/** Plain text for indexing; unstructured stores often require `content`, not only `jsonData`. */
+function indexTextFromPayload(payload: IngestJsonPayload): string {
+    const t = payload.text;
+    if (typeof t === "string" && t.trim()) return t;
+    return JSON.stringify(payload);
+}
+
 /**
  * Creates or replaces a document in the default branch using `jsonData`
  * (works with generic / unstructured-compatible stores).
@@ -155,10 +162,15 @@ export async function ingestJsonDocument(
             safeId
         );
 
+    const text = indexTextFromPayload(payload);
     const document: protos.google.cloud.discoveryengine.v1.IDocument = {
         name,
         id: safeId,
         jsonData: JSON.stringify(payload),
+        content: {
+            rawBytes: Buffer.from(text, "utf8").toString("base64"),
+            mimeType: "text/plain",
+        },
     };
 
     await docClient.updateDocument({

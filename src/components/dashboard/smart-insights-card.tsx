@@ -18,7 +18,7 @@ export function SmartInsightsCard() {
     useEffect(() => {
         async function fetchInsights() {
             try {
-                const res = await fetch("/api/ai/insights");
+                const res = await fetch("/api/smart/insights");
                 if (!res.ok) throw new Error("Failed to fetch");
                 const json = await res.json();
                 // apiOk wraps as { success, data: { ... } }
