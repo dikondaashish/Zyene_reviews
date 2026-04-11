@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
 import { REPLY_PROMPT } from "@/domains/ai/prompts";
-import { singleReplySchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { z } from "zod";
@@ -113,7 +112,6 @@ Return a single reply only.`;
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
-            schema: singleReplySchema,
             isPremium,
         });
 

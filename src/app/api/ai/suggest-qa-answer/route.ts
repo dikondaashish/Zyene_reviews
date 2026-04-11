@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
 import { QA_ANSWER_PROMPT } from "@/domains/ai/prompts";
-import { qaSchema } from "@/domains/ai/schemas/ResponseSchemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { z } from "zod";
@@ -110,11 +109,10 @@ export async function POST(request: Request) {
 
     try {
         const isPremium = orgTyped.plan === "growth" || String(orgTyped.plan).includes("agency");
-        const content = await generateContentWithFallback(prompt, { 
-            requireJson: true, 
-            schema: qaSchema, 
+        const content = await generateContentWithFallback(prompt, {
+            requireJson: true,
             isPremium,
-            enableGrounding: true
+            enableGrounding: true,
         });
         let result: { answer?: string };
         try {
