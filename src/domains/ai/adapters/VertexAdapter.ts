@@ -6,8 +6,8 @@ const apiKey = process.env.GOOGLE_VERTEX_API_KEY;
 
 /** Default: Gemini 3 Flash Preview (primary). Override with GOOGLE_AI_PRIMARY_MODEL. */
 const DEFAULT_PRIMARY_MODEL = process.env.GOOGLE_AI_PRIMARY_MODEL || "gemini-3-flash-preview";
-/** Default: Gemini 3.1 Pro Preview (fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
-const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-3.1-pro-preview";
+/** Default: Gemini 2.5 Flash (fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
+const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-2.5-flash";
 
 /**
  * Initialize the GoogleGenAI client.

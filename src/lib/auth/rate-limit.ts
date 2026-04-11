@@ -20,7 +20,7 @@ export const campaignRateLimit = new Ratelimit({
 });
 
 // 3. AI Reply Generation Rate Limit
-// 20 requests per minute to protect Claude API credits
+// 20 requests per minute to protect Vertex / Gemini usage
 export const aiRateLimit = new Ratelimit({
     redis: redis,
     limiter: Ratelimit.slidingWindow(20, '1 m'),

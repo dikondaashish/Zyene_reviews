@@ -19,6 +19,10 @@ const sentimentSchema: Schema = {
     required: ["sentiment", "urgency", "themes", "summary"]
 };
 
+/** Cheap classification model for single-review tasks. Override via env if your region uses a different id. */
+const LITE_MODEL =
+    process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview";
+
 const categorySchema: Schema = {
     type: SchemaType.OBJECT,
     properties: {
@@ -55,7 +59,10 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
-            schema: sentimentSchema
+            schema: sentimentSchema,
+            modelOverride: LITE_MODEL,
+            maxOutputTokens: 256,
+            temperature: 0.3,
         });
 
         const parsed = JSON.parse(content) as SentimentAnalysisResult;
@@ -82,7 +89,10 @@ export async function categorizePrivateFeedback(content: string | null | undefin
         const prompt = `Analyze this private customer feedback and categorize the primary issue into a short phrase (2-3 words max, e.g., 'Customer Service', 'Product Quality', 'Wait Time', 'Pricing', etc.).\n\nFeedback: "${content}"`;
         const res = await generateContentWithFallback(prompt, {
             requireJson: true,
-            schema: categorySchema
+            schema: categorySchema,
+            modelOverride: LITE_MODEL,
+            maxOutputTokens: 128,
+            temperature: 0.35,
         });
         const parsed = JSON.parse(res);
         return parsed.category || "Other";
