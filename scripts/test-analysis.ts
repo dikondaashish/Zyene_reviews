@@ -59,6 +59,7 @@ async function runAnalysisTest() {
         JSON.stringify(reviewsForAi, null, 2)
     );
 
+    let rawAiOutput = "";
     try {
         console.log("📥 Ingesting test documents...");
         await ingestReviewDocuments(
@@ -68,15 +69,21 @@ async function runAnalysisTest() {
             }))
         );
 
+        const waitMs = Number(process.env.DISCOVERY_TEST_POST_INGEST_WAIT_MS || 0);
+        if (waitMs > 0) {
+            console.log(`⏳ Waiting ${waitMs}ms for indexing (DISCOVERY_TEST_POST_INGEST_WAIT_MS)...`);
+            await new Promise((r) => setTimeout(r, waitMs));
+        }
+
         console.log("📡 Querying data store (generative summary)...");
         const startTime = Date.now();
 
-        const content = await generateContentWithFallback(prompt, {
+        rawAiOutput = await generateContentWithFallback(prompt, {
             requireJson: true,
         });
 
         const latency = Date.now() - startTime;
-        const results = JSON.parse(content);
+        const results = JSON.parse(rawAiOutput);
 
         console.log(`✅ AI Response Received in ${latency}ms\n`);
         console.log("--- ANALYSIS RESULTS ---");
@@ -94,6 +101,16 @@ async function runAnalysisTest() {
 
         console.log("\n✨ Test completed successfully.");
     } catch (error) {
+        if (rawAiOutput) {
+            console.error("\n--- Raw model output (first 1200 chars) ---\n");
+            console.error(rawAiOutput.slice(0, 1200));
+            console.error("\n--- end raw output ---");
+            if (/no results/i.test(rawAiOutput)) {
+                console.error(
+                    "\nTip: Retrieval returned no hits yet. Wait a few minutes after ingest, or run with DISCOVERY_TEST_POST_INGEST_WAIT_MS=45000"
+                );
+            }
+        }
         console.error("\n❌ AI Analysis Failed:", error);
     }
 }
