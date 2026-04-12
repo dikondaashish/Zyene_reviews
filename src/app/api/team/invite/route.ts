@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     // Verify admin/owner role
     const { data: membership, error: membError } = await supabase
         .from("organization_members")
-        .select("role, organization_id, organizations(name), users(full_name)") // users joined via user_id
+        .select("role, organization_id, organizations(name, max_team_members), users(full_name)")
         .eq("user_id", user.id)
         .in("role", ["owner", "admin", "ORG_OWNER", "ORG_ADMIN"])
         .single();

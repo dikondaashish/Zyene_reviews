@@ -99,4 +99,6 @@ export interface StripeOrganizationUpdatePayload {
     max_email_requests_per_month?: number;
     max_sms_requests_per_month?: number;
     max_link_requests_per_month?: number;
+    max_team_members?: number;
+    trial_ends_at?: string | null;
 }

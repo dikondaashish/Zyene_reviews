@@ -2,9 +2,9 @@ import { stripe } from "@/services/stripe/client";
 import * as Sentry from "@sentry/nextjs";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getPlanByPriceId, FREE_LIMITS } from "@/services/stripe/plans";
+import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import type { StripeOrganizationUpdatePayload } from "@/types/api-routes";
 import { sendEmail } from "@/services/resend/send-email";
 import { subscriptionSuccessEmail } from "@/services/resend/templates/subscription-success-email";
 import { paymentSuccessEmail } from "@/services/resend/templates/payment-success-email";
@@ -16,9 +16,12 @@ import { subscriptionCanceledEmail } from "@/services/resend/templates/subscript
  * IMPORTANT: This route must NOT use the default body parser.
  * We read the raw body for signature verification.
  */
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
     const body = await request.text();
     const signature = request.headers.get("stripe-signature");
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!signature) {
         return NextResponse.json(
@@ -27,14 +30,15 @@ export async function POST(request: Request) {
         );
     }
 
+    if (!webhookSecret) {
+        console.error("STRIPE_WEBHOOK_SECRET is not configured");
+        return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+    }
+
     let event: Stripe.Event;
 
     try {
-        event = stripe.webhooks.constructEvent(
-            body,
-            signature,
-            process.env.STRIPE_WEBHOOK_SECRET!
-        );
+        event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
         console.error("Webhook signature verification failed:", message);
@@ -48,6 +52,14 @@ export async function POST(request: Request) {
     const supabase = createAdminClient();
 
     try {
+        const { error: dedupeError } = await supabase.from("stripe_webhook_events").insert({ event_id: event.id });
+        if (dedupeError) {
+            if (dedupeError.code === "23505") {
+                return NextResponse.json({ received: true });
+            }
+            throw dedupeError;
+        }
+
         switch (event.type) {
             case "checkout.session.completed": {
                 const session = event.data.object as Stripe.Checkout.Session;
@@ -94,14 +106,27 @@ export async function POST(request: Request) {
                     teamMembers: 5,
                 };
 
+                const subStatus = subscription.status;
+                let planStatus = "active";
+                if (subStatus === "trialing") planStatus = "trialing";
+                else if (subStatus === "past_due") planStatus = "past_due";
+                else if (subStatus === "canceled" || subStatus === "unpaid") planStatus = "canceled";
+
+                const trialEndsAt =
+                    subStatus === "trialing" && subscription.trial_end
+                        ? new Date(subscription.trial_end * 1000).toISOString()
+                        : null;
+
                 await supabase
                     .from("organizations")
                     .update({
                         stripe_customer_id: customerId,
                         stripe_subscription_id: subscriptionId,
                         plan: planId,
-                        plan_status: "active",
+                        plan_status: planStatus,
+                        trial_ends_at: trialEndsAt,
                         max_businesses: limits.maxLocations,
+                        max_team_members: limits.teamMembers,
                         max_review_requests_per_month: limits.emailRequestsPerMonth + limits.smsRequestsPerMonth + limits.linkRequestsPerMonth,
                         max_ai_replies_per_month: limits.smartRepliesPerMonth,
                         max_email_requests_per_month: limits.emailRequestsPerMonth,
@@ -142,42 +167,18 @@ export async function POST(request: Request) {
 
             case "customer.subscription.updated": {
                 const subscription = event.data.object as Stripe.Subscription;
-                const customerId = subscription.customer as string;
-                const priceId = subscription.items.data[0]?.price?.id;
-                const status = subscription.status;
-
-                // Map Stripe status to our plan_status
-                let planStatus = "active";
-                if (status === "past_due") planStatus = "past_due";
-                else if (status === "canceled" || status === "unpaid") planStatus = "canceled";
-                else if (status === "trialing") planStatus = "trialing";
-
-                const updateData: StripeOrganizationUpdatePayload = {
-                    plan_status: planStatus,
-                    stripe_subscription_id: subscription.id,
-                };
-
-                // If price changed, update plan and limits
-                if (priceId) {
-                    const plan = getPlanByPriceId(priceId);
-                    if (plan) {
-                        updateData.plan = plan.id;
-                        updateData.max_businesses = plan.limits.maxLocations;
-                        updateData.max_review_requests_per_month =
-                            plan.limits.emailRequestsPerMonth + plan.limits.smsRequestsPerMonth + plan.limits.linkRequestsPerMonth;
-                        updateData.max_ai_replies_per_month = plan.limits.smartRepliesPerMonth;
-                        updateData.max_email_requests_per_month = plan.limits.emailRequestsPerMonth;
-                        updateData.max_sms_requests_per_month = plan.limits.smsRequestsPerMonth;
-                        updateData.max_link_requests_per_month = plan.limits.linkRequestsPerMonth;
-                    }
+                const customerId =
+                    typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+                if (!customerId) {
+                    console.warn("customer.subscription.updated: missing customer id", subscription.id);
+                    break;
                 }
 
-                await supabase
-                    .from("organizations")
-                    .update(updateData)
-                    .eq("stripe_customer_id", customerId);
+                const updateData = stripeSubscriptionToOrganizationUpdate(subscription);
 
-                console.log(`🔄 Subscription updated for customer ${customerId}: ${planStatus}`);
+                await supabase.from("organizations").update(updateData).eq("stripe_customer_id", customerId);
+
+                console.log(`🔄 Subscription updated for customer ${customerId}: ${updateData.plan_status}`);
                 break;
             }
 
@@ -197,7 +198,9 @@ export async function POST(request: Request) {
                         plan: "free",
                         plan_status: "canceled",
                         stripe_subscription_id: null,
+                        trial_ends_at: null,
                         max_businesses: FREE_LIMITS.maxLocations,
+                        max_team_members: FREE_LIMITS.teamMembers,
                         max_review_requests_per_month: FREE_LIMITS.emailRequestsPerMonth + FREE_LIMITS.smsRequestsPerMonth + FREE_LIMITS.linkRequestsPerMonth,
                         max_ai_replies_per_month: FREE_LIMITS.smartRepliesPerMonth,
                         max_email_requests_per_month: FREE_LIMITS.emailRequestsPerMonth,
@@ -241,7 +244,12 @@ export async function POST(request: Request) {
 
             case "invoice.payment_failed": {
                 const invoice = event.data.object as Stripe.Invoice;
-                const customerId = invoice.customer as string;
+                const customerId =
+                    typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
+                if (!customerId) {
+                    console.warn("invoice.payment_failed: missing customer id", invoice.id);
+                    break;
+                }
 
                 await supabase
                     .from("organizations")

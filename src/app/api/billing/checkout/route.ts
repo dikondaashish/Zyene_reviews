@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
-import { getPlanByPriceId, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
+import { getPlanByPriceId, isPaidPlanTierDowngrade, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
@@ -152,6 +152,11 @@ export async function POST(request: Request) {
                         targetPlan &&
                         isPaidPlanTierUpgrade(currentPlan.id, targetPlan.id);
 
+                    const tierDowngrade =
+                        currentPlan &&
+                        targetPlan &&
+                        isPaidPlanTierDowngrade(currentPlan.id, targetPlan.id);
+
                     await stripe.subscriptions.update(org.stripe_subscription_id, {
                         items: [
                             {
@@ -159,7 +164,8 @@ export async function POST(request: Request) {
                                 price: priceId,
                             },
                         ],
-                        proration_behavior: "create_prorations",
+                        // Downgrades: no immediate proration credit — change applies per Stripe schedule (standard SaaS).
+                        proration_behavior: tierDowngrade ? "none" : "create_prorations",
                         ...(endTrialForTierUpgrade ? { trial_end: "now" } : {}),
                     });
 

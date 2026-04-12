@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
                     return NextResponse.json({ error: "No valid customers found" }, { status: 400 });
                 }
 
-                // 3. Plan Limit Check
-                const { allowed, remaining } = await checkLimit(business.organizations.id, "review_requests");
+                // 3. Plan limit (bulk request uses SMS only — enforce SMS channel cap)
+                const { allowed, remaining } = await checkLimit(business.organizations.id, "sms_requests");
                 if (!allowed) {
                     return NextResponse.json({ error: "Monthly limit reached" }, { status: 403 });
                 }

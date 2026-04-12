@@ -212,6 +212,17 @@ export function isPaidPlanTierUpgrade(
     return PAID_TIER_ORDER[to] > PAID_TIER_ORDER[from];
 }
 
+/** True when moving to a lower SMB tier (e.g. Professional → Starter). Used for proration_behavior = none at period boundaries. */
+export function isPaidPlanTierDowngrade(
+    fromPlanId: string | null | undefined,
+    toPlanId: string | null | undefined
+): boolean {
+    const from = planProductTier(fromPlanId);
+    const to = planProductTier(toPlanId);
+    if (!from || !to) return false;
+    return PAID_TIER_ORDER[to] < PAID_TIER_ORDER[from];
+}
+
 export function planAllowsAutoCommenter(plan: string | null | undefined): boolean {
     if (plan == null || plan === "") return false;
     const p = String(plan).toLowerCase().trim();

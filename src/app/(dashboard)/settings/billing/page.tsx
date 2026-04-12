@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { redirect } from "next/navigation";
 import { BillingClient } from "@/components/settings/billing-client";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { PLANS } from "@/services/stripe/plans";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
+import { reconcileOrganizationBillingFromStripe } from "@/services/stripe/organization-billing-sync";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -53,32 +55,47 @@ export default async function BillingPage() {
         );
     }
 
+    const admin = createAdminClient();
+    await reconcileOrganizationBillingFromStripe(admin, {
+        id: org.id,
+        stripe_subscription_id: org.stripe_subscription_id,
+        stripe_customer_id: org.stripe_customer_id,
+    });
+
+    const { data: orgRefreshed } = await admin
+        .from("organizations")
+        .select("id, name, plan, stripe_customer_id, stripe_subscription_id, plan_status")
+        .eq("id", org.id)
+        .single();
+
+    const orgLive = orgRefreshed ?? org;
+
     // Get usage stats (per-channel)
     const [emailRequests, smsRequests, linkRequests, smartReplies, businesses] = await Promise.all([
-        checkLimit(org.id, "email_requests"),
-        checkLimit(org.id, "sms_requests"),
-        checkLimit(org.id, "link_requests"),
-        checkLimit(org.id, "smart_replies"),
-        checkLimit(org.id, "businesses"),
+        checkLimit(orgLive.id, "email_requests"),
+        checkLimit(orgLive.id, "sms_requests"),
+        checkLimit(orgLive.id, "link_requests"),
+        checkLimit(orgLive.id, "smart_replies"),
+        checkLimit(orgLive.id, "businesses"),
     ]);
 
     // Determine current plan from Stripe subscription price ID or org.plan field
-    const orgPlanId = org.plan || "none";
+    const orgPlanId = orgLive.plan || "none";
     const currentPlan = PLANS.find((p) => p.id === orgPlanId) || null;
 
-    const checkoutOffersTrial = await isEligibleForIntroTrial(org.stripe_customer_id ?? null);
+    const checkoutOffersTrial = await isEligibleForIntroTrial(orgLive.stripe_customer_id ?? null);
 
-    const planStatusNorm = String(org.plan_status || "");
+    const planStatusNorm = String(orgLive.plan_status || "");
     const hasActiveStripeSubscription =
-        Boolean(org.stripe_subscription_id) &&
+        Boolean(orgLive.stripe_subscription_id) &&
         ["active", "trialing", "past_due"].includes(planStatusNorm);
 
     return (
         <BillingClient
             currentPlan={currentPlan}
             organizationPlanId={orgPlanId}
-            planStatus={org.plan_status || "active"}
-            hasStripeCustomer={!!org.stripe_customer_id}
+            planStatus={orgLive.plan_status || "active"}
+            hasStripeCustomer={!!orgLive.stripe_customer_id}
             hasActiveStripeSubscription={hasActiveStripeSubscription}
             checkoutOffersTrial={checkoutOffersTrial}
             canManageBilling={canManageBilling}

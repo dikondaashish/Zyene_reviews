@@ -19,7 +19,7 @@ export default async function PublicProfilePage() {
         return (
             <div className="p-8 text-center">
                 <h2 className="text-xl font-semibold">No business found</h2>
-                <p className="text-muted-foreground">Please create an organization first.</p>
+                <p className="text-muted-foreground">Please create a business first.</p>
             </div>
         );
     }

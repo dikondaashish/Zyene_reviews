@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { planProductTier } from "@/services/stripe/plans";
 
 interface LimitCheckResult {
     allowed: boolean;
@@ -8,16 +9,26 @@ interface LimitCheckResult {
 }
 
 type LimitType =
-    | "review_requests"      // generic total (all channels)
+    | "review_requests" // generic total (all channels)
     | "email_requests"
     | "sms_requests"
     | "link_requests"
     | "smart_replies"
     | "businesses";
 
+/** Professional tier: per-location caps in marketing — multiply base DB limits by active locations (capped by max_businesses). */
+function perLocationMultiplier(plan: string | null | undefined, businessCount: number, maxBusinesses: number): number {
+    const tier = planProductTier(plan ?? undefined);
+    if (tier !== "professional") {
+        return 1;
+    }
+    const capped = Math.min(Math.max(businessCount, 0), Math.max(maxBusinesses, 1));
+    return Math.max(1, capped);
+}
+
 /**
  * Check if an organization has remaining capacity for a given limit type.
- * For per-location plans, the limit is multiplied by the number of active businesses.
+ * For Professional, email/SMS/link/review totals use (base limit × active locations), capped by max_businesses.
  */
 export async function checkLimit(
     organizationId: string,
@@ -25,7 +36,6 @@ export async function checkLimit(
 ): Promise<LimitCheckResult> {
     const supabase = createAdminClient();
 
-    // Get the organization's plan limits
     const { data: org, error: orgError } = await supabase
         .from("organizations")
         .select(
@@ -38,25 +48,39 @@ export async function checkLimit(
         return { allowed: false, current: 0, max: 0, remaining: 0 };
     }
 
+    const { count: businessCountRaw } = await supabase
+        .from("businesses")
+        .select("*", { count: "exact", head: true })
+        .eq("organization_id", organizationId);
+
+    const businessCount = businessCountRaw ?? 0;
+    const maxBiz = org.max_businesses ?? 1;
+    const mult = perLocationMultiplier(org.plan, businessCount, maxBiz);
+
     // Determine the max for this limit type
     let max: number;
     switch (limitType) {
         case "businesses":
-            max = org.max_businesses ?? 1;
+            max = maxBiz;
             break;
         case "email_requests":
             max = org.max_email_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            if (max !== -1) max *= mult;
             break;
         case "sms_requests":
             max = org.max_sms_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            if (max !== -1) max *= mult;
             break;
         case "link_requests":
             max = org.max_link_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            if (max !== -1) max *= mult;
             break;
-        case "review_requests":
-            // Generic total — sum of all channel limits or fallback
-            max = org.max_review_requests_per_month ?? 100;
+        case "review_requests": {
+            const base = org.max_review_requests_per_month ?? 100;
+            max = base;
+            if (max !== -1) max *= mult;
             break;
+        }
         case "smart_replies":
             max = org.max_ai_replies_per_month ?? 0;
             break;
@@ -73,19 +97,12 @@ export async function checkLimit(
     let current = 0;
 
     if (limitType === "businesses") {
-        const { count } = await supabase
-            .from("businesses")
-            .select("*", { count: "exact", head: true })
-            .eq("organization_id", organizationId);
-
-        current = count || 0;
+        current = businessCount;
     } else {
-        // For monthly limits, count this month's usage
         const startOfMonth = new Date();
         startOfMonth.setDate(1);
         startOfMonth.setHours(0, 0, 0, 0);
 
-        // Get business IDs for this organization
         const { data: businesses } = await supabase
             .from("businesses")
             .select("id")
@@ -108,14 +125,12 @@ export async function checkLimit(
 
             current = count || 0;
         } else {
-            // review_requests filtered by channel
             let query = supabase
                 .from("review_requests")
                 .select("*", { count: "exact", head: true })
                 .in("business_id", businessIds)
                 .gte("created_at", startOfMonth.toISOString());
 
-            // Filter by channel for specific limit types
             if (limitType === "email_requests") {
                 query = query.eq("channel", "email");
             } else if (limitType === "sms_requests") {
@@ -123,7 +138,6 @@ export async function checkLimit(
             } else if (limitType === "link_requests") {
                 query = query.eq("channel", "link");
             }
-            // "review_requests" = no channel filter (all channels)
 
             const { count } = await query;
             current = count || 0;

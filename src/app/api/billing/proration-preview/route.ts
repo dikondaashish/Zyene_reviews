@@ -5,7 +5,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
-import { getPlanByPriceId, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
+import { getPlanByPriceId, isPaidPlanTierDowngrade, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
@@ -137,12 +137,17 @@ export async function POST(request: Request) {
             targetPlan &&
             isPaidPlanTierUpgrade(currentPlan.id, targetPlan.id);
 
+        const tierDowngrade =
+            currentPlan &&
+            targetPlan &&
+            isPaidPlanTierDowngrade(currentPlan.id, targetPlan.id);
+
         const preview = await stripe.invoices.createPreview({
             customer: org.stripe_customer_id,
             subscription: org.stripe_subscription_id,
             subscription_details: {
                 items: [{ id: currentItem.id, price: priceId }],
-                proration_behavior: "create_prorations",
+                proration_behavior: tierDowngrade ? "none" : "create_prorations",
                 ...(endTrialForTierUpgrade ? { trial_end: "now" } : {}),
             },
         });

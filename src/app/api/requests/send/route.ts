@@ -37,7 +37,8 @@ export async function POST(request: Request) {
         if (!parsed.success) {
             return apiError(parsed.error.issues[0].message, { status: 400 });
         }
-        const { customerName, customerPhone, channel, businessId } = parsed.data;
+        const { customerName, customerPhone, channel: channelRaw, businessId } = parsed.data;
+        const channel = channelRaw || "sms";
 
         // 1. Verify ownership & Get Business Config
         const { data: business, error: businessError } = await supabase
@@ -62,11 +63,16 @@ export async function POST(request: Request) {
 
         const orgId = business.organizations?.id;
 
-        // 2. Check Plan Limit
+        // 2. Check plan limit for this channel (defaults to SMS — matches send path below)
         if (orgId) {
-            const { allowed } = await checkLimit(orgId, "review_requests");
+            const ch = channel.toLowerCase();
+            const limitType =
+                ch === "email" ? "email_requests" : ch === "link" ? "link_requests" : "sms_requests";
+            const { allowed } = await checkLimit(orgId, limitType);
             if (!allowed) {
-                return apiError("You've reached your monthly limit. Upgrade your plan.", { status: 403 });
+                return apiError("You've reached your monthly limit for this channel. Upgrade your plan.", {
+                    status: 403,
+                });
             }
         }
 
@@ -115,7 +121,7 @@ export async function POST(request: Request) {
                 business_id: businessId,
                 customer_name: customerName,
                 customer_phone: customerPhone,
-                channel: channel,
+                channel,
                 status: "sending", // Temporary status
             })
             .select()
@@ -136,7 +142,7 @@ export async function POST(request: Request) {
         let sendStatus = "sent";
         let errorMessage = null;
 
-        if (channel === "sms") {
+        if (channel.toLowerCase() === "sms") {
             const messageBody = `Hi ${customerName || "there"}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
 
             const result = await sendSMS(customerPhone, messageBody);

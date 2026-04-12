@@ -91,7 +91,8 @@ export default async function TeamSettingsPage() {
                 <div>
                     <h3 className="text-lg font-medium">Team Management</h3>
                     <p className="text-sm text-muted-foreground">
-                        Manage your team members and their roles.
+                        Invite and manage people for your organization. Membership applies to all
+                        businesses under this org.
                     </p>
                 </div>
                 <InviteMemberDialog />
