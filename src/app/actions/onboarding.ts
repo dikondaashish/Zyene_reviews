@@ -1175,13 +1175,7 @@ export async function createNotificationPreferences(
       };
     }
 
-    // Validate SMS phone requirement
-    if (data.smsAlerts && !data.phone) {
-      return {
-        success: false,
-        error: "Please provide a phone number for SMS alerts.",
-      };
-    }
+    // SMS can be enabled without a phone; texts send only after a number is saved in settings.
 
     // Create notification preferences
     const { error: preferencesError } = await supabase
@@ -1191,9 +1185,9 @@ export async function createNotificationPreferences(
         business_id: businessId,
         email_enabled: data.emailAlerts,
         sms_enabled: data.smsAlerts,
-        sms_phone_number: data.phone || null,
+        sms_phone_number: data.phone?.trim() || null,
         email_frequency: "immediately", // Default to immediate
-        digest_enabled: false,
+        digest_enabled: true,
         quiet_hours_start: "22:00:00", // Default quiet hours
         quiet_hours_end: "08:00:00",
         min_urgency_for_sms: 1,

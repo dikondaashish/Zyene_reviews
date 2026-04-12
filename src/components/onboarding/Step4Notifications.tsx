@@ -51,7 +51,7 @@ export function Step4Notifications({
     resolver: zodResolver(stepNotificationsSchema),
     defaultValues: {
       emailAlerts: true,
-      smsAlerts: false,
+      smsAlerts: true,
       phone: "",
     },
   });

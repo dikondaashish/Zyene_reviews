@@ -101,11 +101,12 @@ export const weeklyDigestWorker = inngest.createFunction(
       const { data: prefs } = await admin
         .from("notification_preferences")
         .select("*, users(email)")
+        .eq("business_id", businessId)
         .in("user_id", userIds);
 
       const recipients = prefs?.filter(p => {
         const pTyped = p as any;
-        return (pTyped.digest_enabled !== false) && pTyped.users?.email;
+        return pTyped.digest_enabled !== false && pTyped.users?.email;
       }) || [];
 
       if (recipients.length === 0) return;

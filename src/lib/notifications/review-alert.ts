@@ -17,8 +17,6 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
     const rating = review.rating || 5;
     const isPrivateFeedback = review.text?.startsWith("[PRIVATE FEEDBACK]");
 
-    // Determine alert level
-    const isHighUrgency = urgency >= 7 || rating <= 2;
     const admin = createAdminClient();
 
     // 1. Get Organization ID from Business
@@ -104,8 +102,10 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
             console.log(`⏭️ Skipping email for ${userEmail} (disabled in preferences)`);
         }
 
-        // -- SMS LOGIC --
-        if (isHighUrgency && userPref?.sms_enabled && userPref.sms_phone_number) {
+        // -- SMS LOGIC (per-user threshold + low-star override) --
+        const smsThreshold = userPref?.min_urgency_for_sms ?? 7;
+        const meetsSmsUrgency = urgency >= smsThreshold || rating <= 2;
+        if (meetsSmsUrgency && userPref?.sms_enabled && userPref.sms_phone_number) {
             // Check Quiet Hours
             let inQuietHours = false;
             if (userPref.quiet_hours_start && userPref.quiet_hours_end) {

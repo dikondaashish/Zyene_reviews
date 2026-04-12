@@ -29,13 +29,14 @@ export default async function NotificationSettingsPage() {
                     Configure how and when you want to be alerted about new reviews.
                 </p>
             </div>
-            <NotificationForm 
+            <NotificationForm
+                businessId={businessId}
                 key={businessId}
                 initialPrefs={prefs || {
                     user_id: user.id,
                     email_enabled: true,
-                    sms_enabled: false,
-                    digest_enabled: false,
+                    sms_enabled: true,
+                    digest_enabled: true,
                     email_frequency: "instant",
                     min_rating_threshold: 1,
                     min_urgency_for_sms: 7,

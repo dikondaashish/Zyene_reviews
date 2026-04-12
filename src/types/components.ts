@@ -116,9 +116,12 @@ export interface OrganizationSettingsRecord {
 export interface NotificationPreferenceFormValues {
     sms_enabled?: boolean;
     phone_number?: string | null;
+    /** Row from DB uses this column name */
+    sms_phone_number?: string | null;
     email_enabled?: boolean;
     digest_enabled?: boolean;
     min_urgency_score?: number;
+    min_urgency_for_sms?: number;
     quiet_hours_start?: string | null;
     quiet_hours_end?: string | null;
 }
