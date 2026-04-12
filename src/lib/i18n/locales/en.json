@@ -111,6 +111,7 @@
     "start_trial_cta": "Start free trial",
     "subscription_ended": "Your subscription is canceled or ended. Choose a plan below to subscribe again, or use the billing portal for past invoices.",
     "no_billing_permission": "Only organization owners and admins can change plans or open the billing portal. Ask your admin for access.",
+    "billing_not_configured": "Billing isn’t set up for this environment (Stripe price ID missing). Contact support.",
     "switch_to_yearly": "Switch to yearly billing",
     "switch_to_monthly": "Switch to monthly billing",
     "switch_to_prefix": "Switch to"

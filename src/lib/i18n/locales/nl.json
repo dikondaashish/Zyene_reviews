@@ -111,6 +111,7 @@
     "start_trial_cta": "Start gratis proefperiode",
     "subscription_ended": "Uw abonnement is beëindigd of opgezegd. Kies hieronder opnieuw een plan of gebruik het portaal voor oude facturen.",
     "no_billing_permission": "Alleen eigenaren en beheerders kunnen het plan wijzigen of het facturatieportaal openen.",
+    "billing_not_configured": "Facturatie is niet ingesteld voor deze omgeving (Stripe-prijs-ID ontbreekt). Neem contact op met support.",
     "switch_to_yearly": "Overschakelen op jaarlijkse facturatie",
     "switch_to_monthly": "Overschakelen op maandelijkse facturatie",
     "switch_to_prefix": "Overschakelen naar"

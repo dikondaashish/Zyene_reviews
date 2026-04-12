@@ -111,6 +111,7 @@
     "start_trial_cta": "Kostenlos testen",
     "subscription_ended": "Ihr Abonnement ist beendet oder gekündigt. Wählen Sie unten einen Plan oder nutzen Sie das Portal für alte Rechnungen.",
     "no_billing_permission": "Nur Inhaber und Admins können Pläne ändern oder das Abrechnungsportal öffnen.",
+    "billing_not_configured": "Abrechnung ist für diese Umgebung nicht konfiguriert (fehlende Stripe-Preis-ID). Bitte Support kontaktieren.",
     "switch_to_yearly": "Auf Jahresabrechnung wechseln",
     "switch_to_monthly": "Auf Monatsabrechnung wechseln",
     "switch_to_prefix": "Wechseln zu"

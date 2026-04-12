@@ -46,6 +46,7 @@ export function UpgradeModal({
         try {
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ priceId, source: "billing" }),
             });
@@ -188,13 +189,22 @@ export function UpgradeModal({
                                             </PricingCard.Price>
                                             
                                             <Button
+                                                type="button"
                                                 className={cn(
                                                     "w-full font-semibold text-white",
                                                     "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
                                                     "hover:from-orange-600 hover:to-orange-700"
                                                 )}
-                                                onClick={() => handleSubscribe(plan.stripePriceId!)}
-                                                disabled={!plan.stripePriceId || loadingPlan === plan.stripePriceId}
+                                                onClick={() => {
+                                                    if (!plan.stripePriceId) {
+                                                        toast.error(
+                                                            "Billing isn’t set up for this environment (Stripe price ID missing)."
+                                                        );
+                                                        return;
+                                                    }
+                                                    void handleSubscribe(plan.stripePriceId);
+                                                }}
+                                                disabled={loadingPlan === plan.stripePriceId}
                                             >
                                                 {loadingPlan === plan.stripePriceId ? (
                                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -111,6 +111,7 @@
     "start_trial_cta": "Commencer l'essai gratuit",
     "subscription_ended": "Votre abonnement est terminé ou annulé. Choisissez un plan ci-dessous pour vous réabonner, ou utilisez le portail pour les anciennes factures.",
     "no_billing_permission": "Seuls les propriétaires et administrateurs peuvent modifier le plan ou ouvrir le portail de facturation.",
+    "billing_not_configured": "La facturation n’est pas configurée pour cet environnement (ID de prix Stripe manquant). Contactez le support.",
     "switch_to_yearly": "Passer à la facturation annuelle",
     "switch_to_monthly": "Passer à la facturation mensuelle",
     "switch_to_prefix": "Passer à"

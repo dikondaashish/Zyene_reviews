@@ -205,6 +205,7 @@ export function BillingClient({
         try {
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ priceId, source: "billing" }),
             });
@@ -243,7 +244,7 @@ export function BillingClient({
         }
         setLoadingPortal(true);
         try {
-            const res = await fetch("/api/billing/portal", { method: "POST" });
+            const res = await fetch("/api/billing/portal", { method: "POST", credentials: "include" });
             const data = await res.json();
             if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : "Failed to open portal");
             if (data.url) window.location.href = data.url;
@@ -299,7 +300,7 @@ export function BillingClient({
                         size="sm"
                         className="shrink-0 border-orange-300"
                         onClick={() => void handleManageSubscription()}
-                        disabled={!hasStripeCustomer || !canManageBilling || loadingPortal}
+                        disabled={!hasStripeCustomer || loadingPortal}
                     >
                         {loadingPortal ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                         Update payment
@@ -394,7 +395,7 @@ export function BillingClient({
                         <Button
                             variant="outline"
                             onClick={() => void handleManageSubscription()}
-                            disabled={loadingPortal || !canManageBilling}
+                            disabled={loadingPortal}
                             title={permissionTooltip}
                             className="gap-2 order-1 sm:order-2 shrink-0"
                         >
@@ -576,20 +577,23 @@ export function BillingClient({
                                             </Button>
                                         ) : (
                                             <Button
+                                                type="button"
                                                 className={cn(
                                                     "w-full font-semibold text-white",
                                                     "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
                                                     "hover:from-orange-600 hover:to-orange-700 disabled:opacity-60"
                                                 )}
-                                                onClick={() => void handleSubscribe(plan.stripePriceId!)}
-                                                disabled={
-                                                    !priceConfigured ||
-                                                    loadingPlan === plan.stripePriceId ||
-                                                    !canManageBilling
-                                                }
+                                                onClick={() => {
+                                                    if (!plan.stripePriceId) {
+                                                        toast.error(b.billing_not_configured);
+                                                        return;
+                                                    }
+                                                    void handleSubscribe(plan.stripePriceId);
+                                                }}
+                                                disabled={loadingPlan === plan.stripePriceId}
                                                 title={
                                                     !priceConfigured
-                                                        ? "Stripe price ID is not configured for this environment."
+                                                        ? b.billing_not_configured
                                                         : permissionTooltip
                                                 }
                                             >
@@ -645,15 +649,12 @@ export function BillingClient({
                                             {b.current_plan_badge}
                                         </Button>
                                     ) : (
-                                        <a
-                                            href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
-                                            className="block w-full"
-                                        >
-                                            <Button variant="outline" className="w-full gap-2 font-semibold">
+                                        <Button variant="outline" className="w-full gap-2 font-semibold" asChild>
+                                            <a href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan.">
                                                 <Mail className="h-4 w-4" />
                                                 Contact sales
-                                            </Button>
-                                        </a>
+                                            </a>
+                                        </Button>
                                     )}
                                 </PricingCard.Header>
                                 <PricingCard.Body>

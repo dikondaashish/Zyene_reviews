@@ -17,11 +17,11 @@ export function parseBillingCheckoutResponse(json: unknown): {
         return { ok: false, error: "Invalid response" };
     }
     const o = json as Record<string, unknown>;
-    if (o.success === false) {
+    if (o.success !== true) {
         const err = o.error;
         return {
             ok: false,
-            error: typeof err === "string" ? err : "Request failed",
+            error: typeof err === "string" ? err : o.success === false ? "Request failed" : "Invalid response",
         };
     }
     const inner = o.data;

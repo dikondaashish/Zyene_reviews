@@ -111,6 +111,7 @@
     "start_trial_cta": "Empezar prueba gratuita",
     "subscription_ended": "Su suscripción finalizó o está cancelada. Elija un plan abajo para volver a suscribirse o use el portal para facturas anteriores.",
     "no_billing_permission": "Solo propietarios y administradores pueden cambiar el plan o abrir el portal de facturación.",
+    "billing_not_configured": "La facturación no está configurada en este entorno (falta el ID de precio de Stripe). Contacte con soporte.",
     "switch_to_yearly": "Cambiar a facturación anual",
     "switch_to_monthly": "Cambiar a facturación mensual",
     "switch_to_prefix": "Cambiar a"
