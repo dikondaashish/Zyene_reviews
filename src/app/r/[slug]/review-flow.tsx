@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
-import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, ChevronRight, Check, Star } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, ChevronRight, Check, Star } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils/index";
@@ -34,7 +34,8 @@ const RATINGS = [
     { emoji: "😞", label: "Awful", value: 1, color: "from-red-400 to-red-500" },
 ];
 
-// ─── Props ──────────────────────────────────────────────────────────────
+export type PrivateFeedbackContactMode = "hidden" | "optional" | "required";
+
 // ─── Props ──────────────────────────────────────────────────────────────
 export interface PublicReviewFlowProps {
     businessId: string;
@@ -60,6 +61,9 @@ export interface PublicReviewFlowProps {
     negativeSubheading?: string; // "Share your feedback directly..."
     negativeTextareaPlaceholder?: string;
     negativeButtonText?: string;
+    /** Public negative-feedback step: whether email is collected and if it is optional or required */
+    privateFeedbackEmailMode?: PrivateFeedbackContactMode;
+    privateFeedbackPhoneMode?: PrivateFeedbackContactMode;
     thankYouHeading?: string;
     thankYouMessage?: string;
     footerText?: string;
@@ -100,6 +104,8 @@ export function PublicReviewFlow({
     negativeSubheading,
     negativeTextareaPlaceholder,
     negativeButtonText,
+    privateFeedbackEmailMode = "optional",
+    privateFeedbackPhoneMode = "hidden",
     thankYouHeading,
     thankYouMessage,
     footerText,
@@ -120,6 +126,7 @@ export function PublicReviewFlow({
     const [reviewText, setReviewText] = useState("");
     const [feedback, setFeedback] = useState("");
     const [customerEmail, setCustomerEmail] = useState("");
+    const [customerPhone, setCustomerPhone] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isRedirecting, setIsRedirecting] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -271,12 +278,36 @@ export function PublicReviewFlow({
         }, 2050); // Slightly longer than transition
     };
 
+    const emailLooksValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    const phoneLooksValid = (v: string) => {
+        const t = v.trim();
+        if (!t) return false;
+        return /^[\d+][\d\s().-]{6,31}$/.test(t) && t.replace(/\D/g, "").length >= 7;
+    };
+
+    const negativeContactValid = () => {
+        const em = privateFeedbackEmailMode;
+        const ph = privateFeedbackPhoneMode;
+        if (em === "required" && !emailLooksValid(customerEmail)) return false;
+        if (em === "optional" && customerEmail.trim() && !emailLooksValid(customerEmail)) return false;
+        if (ph === "required" && !phoneLooksValid(customerPhone)) return false;
+        if (ph === "optional" && customerPhone.trim() && !phoneLooksValid(customerPhone)) return false;
+        return true;
+    };
+
     const handleSubmitFeedback = async () => {
         if (!rating) return;
 
         if (isPreview) {
             toast.info("Preview Mode: Feedback submitted.");
             setStep("thankyou");
+            return;
+        }
+
+        if (!negativeContactValid()) {
+            toast.error("Please check the contact fields.", {
+                description: "Fill in a valid email and/or phone where required.",
+            });
             return;
         }
 
@@ -290,13 +321,15 @@ export function PublicReviewFlow({
                     business_id: businessId,
                     review_request_id: requestId,
                     content: feedback,
-                    customer_email: customerEmail || null,
+                    customer_email: customerEmail.trim() || null,
+                    customer_phone: customerPhone.trim() || null,
                     selected_staff: selectedStaff,
-                })
+                }),
             });
 
+            const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-                throw new Error("Failed to submit feedback");
+                throw new Error(typeof data.error === "string" ? data.error : "Failed to submit feedback");
             }
 
             if (requestId) {
@@ -321,7 +354,7 @@ export function PublicReviewFlow({
             });
         } catch (error) {
             console.error("Feedback error:", error);
-            toast.error("Failed to submit feedback. Please try again.");
+            toast.error(error instanceof Error ? error.message : "Failed to submit feedback. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -428,6 +461,8 @@ export function PublicReviewFlow({
 
     if (step === "negative") {
         const selectedRating = RATINGS.find((r) => r.value === rating);
+        const canSubmitNegative =
+            feedback.trim().length > 0 && negativeContactValid();
         return renderCardWrapper(
             <form
                 className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
@@ -460,25 +495,63 @@ export function PublicReviewFlow({
                     />
                 </div>
 
-                {/* Email input */}
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700">Your email <span className="text-slate-400 font-normal">(optional)</span></label>
-                    <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                        <input
-                            type="email"
-                            placeholder="you@example.com"
-                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
-                            value={customerEmail}
-                            onChange={(e) => setCustomerEmail(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    e.preventDefault();
-                                }
-                            }}
-                        />
+                {privateFeedbackEmailMode !== "hidden" && (
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">
+                            Your email{" "}
+                            {privateFeedbackEmailMode === "required" ? (
+                                <span className="text-red-500">*</span>
+                            ) : (
+                                <span className="text-slate-400 font-normal">(optional)</span>
+                            )}
+                        </label>
+                        <div className="relative">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <input
+                                type="email"
+                                placeholder="you@example.com"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                value={customerEmail}
+                                onChange={(e) => setCustomerEmail(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
+
+                {privateFeedbackPhoneMode !== "hidden" && (
+                    <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-700">
+                            Phone number{" "}
+                            {privateFeedbackPhoneMode === "required" ? (
+                                <span className="text-red-500">*</span>
+                            ) : (
+                                <span className="text-slate-400 font-normal">(optional)</span>
+                            )}
+                        </label>
+                        <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <input
+                                type="tel"
+                                inputMode="tel"
+                                autoComplete="tel"
+                                placeholder="+1 (555) 000-0000"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                value={customerPhone}
+                                onChange={(e) => setCustomerPhone(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {/* Action buttons */}
                 <div className="space-y-3 pt-2">
@@ -491,7 +564,7 @@ export function PublicReviewFlow({
                             "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                             "flex items-center justify-center gap-2"
                         )}
-                        disabled={isSubmitting || !feedback.trim()}
+                        disabled={isSubmitting || !canSubmitNegative}
                     >
                         {isSubmitting ? (
                             <Loader2 className="h-5 w-5 animate-spin" />
@@ -507,6 +580,7 @@ export function PublicReviewFlow({
                             className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
                             onClick={() => {
                                 setRating(null);
+                                setCustomerPhone("");
                                 setStep("rating");
                             }}
                         >

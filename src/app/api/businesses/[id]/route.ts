@@ -40,6 +40,8 @@ const businessPatchSchema = z
         negative_subheading: z.string().max(500).optional().nullable(),
         negative_textarea_placeholder: z.string().max(500).optional().nullable(),
         negative_button_text: z.string().max(200).optional().nullable(),
+        private_feedback_email_mode: z.enum(["hidden", "optional", "required"]).optional(),
+        private_feedback_phone_mode: z.enum(["hidden", "optional", "required"]).optional(),
         thank_you_heading: z.string().max(200).optional().nullable(),
         thank_you_message: z.string().max(5000).optional().nullable(),
         footer_text: z.string().max(200).optional().nullable(),

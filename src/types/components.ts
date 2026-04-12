@@ -146,6 +146,8 @@ export interface PublicProfileBusinessRecord {
     negative_subheading?: string | null;
     negative_textarea_placeholder?: string | null;
     negative_button_text?: string | null;
+    private_feedback_email_mode?: string | null;
+    private_feedback_phone_mode?: string | null;
     thank_you_heading?: string | null;
     thank_you_message?: string | null;
     footer_text?: string | null;
@@ -178,6 +180,8 @@ export interface PublicProfilePreviewValues {
     negative_subheading?: string;
     negative_textarea_placeholder?: string;
     negative_button_text?: string;
+    private_feedback_email_mode?: "hidden" | "optional" | "required";
+    private_feedback_phone_mode?: "hidden" | "optional" | "required";
     thank_you_heading?: string;
     thank_you_message?: string;
     footer_text?: string;

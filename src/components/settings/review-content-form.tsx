@@ -44,6 +44,8 @@ const contentSchema = z.object({
     negative_subheading: z.string().optional(),
     negative_textarea_placeholder: z.string().optional(),
     negative_button_text: z.string().optional(),
+    private_feedback_email_mode: z.enum(["hidden", "optional", "required"]),
+    private_feedback_phone_mode: z.enum(["hidden", "optional", "required"]),
     thank_you_heading: z.string().optional(),
     thank_you_message: z.string().optional(),
     footer_text: z.string().optional(),
@@ -91,6 +93,8 @@ export function ReviewContentForm({
             negative_subheading: "",
             negative_textarea_placeholder: "",
             negative_button_text: "",
+            private_feedback_email_mode: "optional",
+            private_feedback_phone_mode: "hidden",
             thank_you_heading: "",
             thank_you_message: "",
             footer_text: "",
@@ -197,6 +201,18 @@ export function ReviewContentForm({
                         negative_subheading: data.negative_subheading || "Share your feedback directly with the owner.",
                         negative_textarea_placeholder: data.negative_textarea_placeholder || "Tell us what happened...",
                         negative_button_text: data.negative_button_text || "Send Feedback",
+                        private_feedback_email_mode:
+                            data.private_feedback_email_mode === "hidden" ||
+                            data.private_feedback_email_mode === "optional" ||
+                            data.private_feedback_email_mode === "required"
+                                ? data.private_feedback_email_mode
+                                : "optional",
+                        private_feedback_phone_mode:
+                            data.private_feedback_phone_mode === "hidden" ||
+                            data.private_feedback_phone_mode === "optional" ||
+                            data.private_feedback_phone_mode === "required"
+                                ? data.private_feedback_phone_mode
+                                : "hidden",
                         thank_you_heading: data.thank_you_heading || "Thank You!",
                         thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
 
@@ -253,6 +269,8 @@ export function ReviewContentForm({
                 negative_subheading: trimOrNull(data.negative_subheading),
                 negative_textarea_placeholder: trimOrNull(data.negative_textarea_placeholder),
                 negative_button_text: trimOrNull(data.negative_button_text),
+                private_feedback_email_mode: data.private_feedback_email_mode,
+                private_feedback_phone_mode: data.private_feedback_phone_mode,
                 thank_you_heading: trimOrNull(data.thank_you_heading),
                 thank_you_message: trimOrNull(data.thank_you_message),
                 footer_text: trimOrNull(data.footer_text),
@@ -725,6 +743,63 @@ export function ReviewContentForm({
                                             </FormItem>
                                         )}
                                     />
+
+                                    <div className="pt-4 border-t border-border space-y-4">
+                                        <p className="text-sm font-medium text-foreground">Contact fields on private feedback</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Choose whether customers can leave an email and/or phone, and whether each is optional or required.
+                                        </p>
+                                        <FormField
+                                            control={form.control}
+                                            name="private_feedback_email_mode"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Email</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="bg-muted/30 focus:bg-background transition-colors">
+                                                                <SelectValue />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="hidden">Hidden</SelectItem>
+                                                            <SelectItem value="optional">Optional</SelectItem>
+                                                            <SelectItem value="required">Required</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormDescription>
+                                                        When hidden, the email field is not shown on the public page.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="private_feedback_phone_mode"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Phone number</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="bg-muted/30 focus:bg-background transition-colors">
+                                                                <SelectValue />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="hidden">Hidden</SelectItem>
+                                                            <SelectItem value="optional">Optional</SelectItem>
+                                                            <SelectItem value="required">Required</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormDescription>
+                                                        Collect a callback number when you want to reach customers who left low ratings.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                 </div>
                             </TabsContent>
 

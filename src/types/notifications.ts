@@ -6,6 +6,7 @@ export interface ReviewAlertPayload {
     rating?: number | null;
     urgency_score?: number | null;
     customer_email?: string | null;
+    customer_phone?: string | null;
 }
 
 export interface NotificationPreference {

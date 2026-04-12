@@ -49,6 +49,18 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         negative_subheading: business.negative_subheading ?? undefined,
         negative_textarea_placeholder: business.negative_textarea_placeholder ?? undefined,
         negative_button_text: business.negative_button_text ?? undefined,
+        private_feedback_email_mode:
+            business.private_feedback_email_mode === "hidden" ||
+            business.private_feedback_email_mode === "optional" ||
+            business.private_feedback_email_mode === "required"
+                ? business.private_feedback_email_mode
+                : "optional",
+        private_feedback_phone_mode:
+            business.private_feedback_phone_mode === "hidden" ||
+            business.private_feedback_phone_mode === "optional" ||
+            business.private_feedback_phone_mode === "required"
+                ? business.private_feedback_phone_mode
+                : "hidden",
         thank_you_heading: business.thank_you_heading ?? undefined,
         thank_you_message: business.thank_you_message ?? undefined,
         footer_text: business.footer_text ?? undefined,
@@ -258,6 +270,8 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 negativeSubheading={previewState.negative_subheading}
                                 negativeTextareaPlaceholder={previewState.negative_textarea_placeholder}
                                 negativeButtonText={previewState.negative_button_text}
+                                privateFeedbackEmailMode={previewState.private_feedback_email_mode}
+                                privateFeedbackPhoneMode={previewState.private_feedback_phone_mode}
                                 thankYouHeading={previewState.thank_you_heading}
                                 thankYouMessage={previewState.thank_you_message}
                                 footerText={previewState.footer_text}

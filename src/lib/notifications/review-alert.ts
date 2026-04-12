@@ -91,7 +91,8 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
                 urgencyScore: urgency,
                 dashboardUrl: `${APP_URL}/dashboard`,
                 settingsUrl: `${APP_URL}/settings/notifications`,
-                customerEmail: review.customer_email || undefined
+                customerEmail: review.customer_email || undefined,
+                customerPhone: review.customer_phone || undefined,
             });
 
             await sendEmail({

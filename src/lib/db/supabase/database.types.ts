@@ -89,6 +89,8 @@ export type Database = {
           negative_button_text: string | null
           negative_subheading: string | null
           negative_textarea_placeholder: string | null
+          private_feedback_email_mode: string
+          private_feedback_phone_mode: string
           organization_id: string
           phone: string | null
           rating_subtitle: string | null
@@ -146,6 +148,8 @@ export type Database = {
           negative_button_text?: string | null
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
+          private_feedback_email_mode?: string
+          private_feedback_phone_mode?: string
           organization_id: string
           phone?: string | null
           rating_subtitle?: string | null
@@ -203,6 +207,8 @@ export type Database = {
           negative_button_text?: string | null
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
+          private_feedback_email_mode?: string
+          private_feedback_phone_mode?: string
           organization_id?: string
           phone?: string | null
           rating_subtitle?: string | null
@@ -1104,6 +1110,7 @@ export type Database = {
           content: string | null
           created_at: string
           customer_email: string | null
+          customer_phone: string | null
           id: string
           rating: number
           review_request_id: string | null
@@ -1116,6 +1123,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           customer_email?: string | null
+          customer_phone?: string | null
           id?: string
           rating: number
           review_request_id?: string | null
@@ -1128,6 +1136,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           customer_email?: string | null
+          customer_phone?: string | null
           id?: string
           rating?: number
           review_request_id?: string | null

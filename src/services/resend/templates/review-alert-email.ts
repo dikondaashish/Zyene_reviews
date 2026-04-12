@@ -8,6 +8,7 @@ interface ReviewAlertProps {
     dashboardUrl: string;
     settingsUrl: string;
     customerEmail?: string;
+    customerPhone?: string;
 }
 
 export function reviewAlertEmail({
@@ -19,6 +20,7 @@ export function reviewAlertEmail({
     dashboardUrl,
     settingsUrl,
     customerEmail,
+    customerPhone,
 }: ReviewAlertProps): string {
     const starLabel = "★".repeat(rating) + "☆".repeat(5 - rating);
     const starColor = rating >= 4 ? "#16a34a" : rating === 3 ? "#ca8a04" : "#dc2626";
@@ -69,6 +71,13 @@ export function reviewAlertEmail({
                                     "${reviewText}"
                                 </div>
                             </div>
+
+                            ${customerPhone ? `
+                            <p style="margin: 0 0 20px; font-size: 14px; color: #52525b;">
+                                <strong>Customer phone:</strong>
+                                <a href="tel:${String(customerPhone).replace(/[^\d+]/g, "")}" style="color: #2563eb;">${customerPhone}</a>
+                            </p>
+                            ` : ""}
 
                             <!-- CTA -->
                             <div style="margin-bottom: 40px; display: flex; gap: 12px; flex-wrap: wrap;">

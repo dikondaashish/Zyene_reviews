@@ -51,6 +51,8 @@ export interface PrivateFeedbackExportRow {
     created_at: string;
     rating: number | null;
     content?: string | null;
+    customer_email?: string | null;
+    customer_phone?: string | null;
     review_requests?: {
         customer_name?: string | null;
         customer_email?: string | null;

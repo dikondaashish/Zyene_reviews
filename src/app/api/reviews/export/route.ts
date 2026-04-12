@@ -33,6 +33,8 @@ export async function GET(request: Request) {
                 rating,
                 content,
                 created_at,
+                customer_email,
+                customer_phone,
                 review_requests (
                     customer_name,
                     customer_email,
@@ -48,8 +50,10 @@ export async function GET(request: Request) {
             "Rating": feedbackRow.rating,
             "Feedback": feedbackRow.content || "No details provided.",
             "Customer Name": feedbackRow.review_requests?.customer_name || "Anonymous",
-            "Customer Email": feedbackRow.review_requests?.customer_email || "",
-            "Customer Phone": feedbackRow.review_requests?.customer_phone || ""
+            "Customer Email":
+                feedbackRow.customer_email || feedbackRow.review_requests?.customer_email || "",
+            "Customer Phone":
+                feedbackRow.customer_phone || feedbackRow.review_requests?.customer_phone || "",
         }));
 
         csvData = Papa.unparse(formatted);

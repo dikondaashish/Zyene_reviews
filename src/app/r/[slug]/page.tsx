@@ -46,6 +46,8 @@ export default async function RequestPage({
             negative_subheading,
             negative_textarea_placeholder,
             negative_button_text,
+            private_feedback_email_mode,
+            private_feedback_phone_mode,
             thank_you_heading,
             thank_you_message,
             footer_text,
@@ -137,6 +139,20 @@ export default async function RequestPage({
                 negativeSubheading={business.negative_subheading ?? undefined}
                 negativeTextareaPlaceholder={business.negative_textarea_placeholder ?? undefined}
                 negativeButtonText={business.negative_button_text ?? undefined}
+                privateFeedbackEmailMode={
+                    business.private_feedback_email_mode === "hidden" ||
+                    business.private_feedback_email_mode === "optional" ||
+                    business.private_feedback_email_mode === "required"
+                        ? business.private_feedback_email_mode
+                        : undefined
+                }
+                privateFeedbackPhoneMode={
+                    business.private_feedback_phone_mode === "hidden" ||
+                    business.private_feedback_phone_mode === "optional" ||
+                    business.private_feedback_phone_mode === "required"
+                        ? business.private_feedback_phone_mode
+                        : undefined
+                }
                 thankYouHeading={business.thank_you_heading ?? undefined}
                 thankYouMessage={business.thank_you_message ?? undefined}
                 footerText={business.footer_text ?? undefined}

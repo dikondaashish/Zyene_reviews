@@ -1,7 +1,7 @@
 "use client";
 
 import { TimeAgo } from "@/components/ui/time-ago";
-import { Star, User, Mail, MessageSquare, CheckCircle2, Clock, CheckCircle } from "lucide-react";
+import { Star, User, Mail, Phone, MessageSquare, CheckCircle2, Clock, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils/index";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ interface PrivateFeedback {
     content: string;
     created_at: string;
     customer_email?: string | null;
+    customer_phone?: string | null;
     status?: string | null;
     category?: string | null;
     selected_staff?: string[] | null;
@@ -72,7 +73,8 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
     const customerName = feedback.review_requests?.customer_name || "Anonymous Customer";
     const displayEmail = feedback.customer_email || feedback.review_requests?.customer_email;
-    const customerContact = displayEmail || feedback.review_requests?.customer_phone;
+    const displayPhone =
+        feedback.customer_phone?.trim() || feedback.review_requests?.customer_phone?.trim();
 
     return (
         <div className={cn(
@@ -158,10 +160,12 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                             <a href={`mailto:${displayEmail}`} className="hover:underline">{displayEmail}</a>
                         </div>
                     )}
-                    {feedback.review_requests?.customer_phone && (
+                    {displayPhone && (
                         <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-                            <User className="w-3 h-3" />
-                            <span>{feedback.review_requests.customer_phone}</span>
+                            <Phone className="w-3 h-3 shrink-0" />
+                            <a href={`tel:${displayPhone.replace(/\s/g, "")}`} className="hover:underline">
+                                {displayPhone}
+                            </a>
                         </div>
                     )}
                 </div>
