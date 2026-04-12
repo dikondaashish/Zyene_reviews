@@ -34,10 +34,20 @@ import * as PricingCard from "@/components/ui/pricing-card";
 import { cn } from "@/lib/utils/index";
 import { toast } from "sonner";
 import type { Plan } from "@/services/stripe/plans";
-import { planProductTier } from "@/services/stripe/plans";
+import { isPaidPlanTierUpgrade, planProductTier } from "@/services/stripe/plans";
 import { useLanguage } from "@/lib/language-context";
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
 import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -55,6 +65,8 @@ interface BillingClientProps {
     hasStripeCustomer: boolean;
     /** Net-new Stripe checkout may include a 7-day trial; false for returning subscribers. */
     checkoutOffersTrial: boolean;
+    /** Active Stripe subscription (active / trialing / past_due) — drives CTA copy and proration confirmation. */
+    hasActiveStripeSubscription: boolean;
     canManageBilling: boolean;
     usage: {
         emailRequests: UsageStat;
@@ -123,6 +135,7 @@ export function BillingClient({
     planStatus,
     hasStripeCustomer,
     checkoutOffersTrial,
+    hasActiveStripeSubscription,
     canManageBilling,
     usage,
     plans,
@@ -134,6 +147,9 @@ export function BillingClient({
     );
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
+    const [confirmPlanChange, setConfirmPlanChange] = useState<{ priceId: string; plan: Plan } | null>(null);
+    type ProrationPreviewState = "idle" | "loading" | "fallback" | { amountFormatted: string };
+    const [prorationPreview, setProrationPreview] = useState<ProrationPreviewState>("idle");
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -142,6 +158,44 @@ export function BillingClient({
             setInterval(currentPlan.interval);
         }
     }, [currentPlan?.id, currentPlan?.interval]);
+
+    useEffect(() => {
+        if (!confirmPlanChange) {
+            return;
+        }
+        const ac = new AbortController();
+        void (async () => {
+            try {
+                const res = await fetch("/api/billing/proration-preview", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ priceId: confirmPlanChange.priceId }),
+                    signal: ac.signal,
+                });
+                const json: unknown = await res.json();
+                if (ac.signal.aborted) {
+                    return;
+                }
+                const root = json as { success?: boolean; data?: { previewAvailable?: boolean; amountDueTodayFormatted?: string } };
+                if (!res.ok || root.success !== true || !root.data) {
+                    setProrationPreview("fallback");
+                    return;
+                }
+                const d = root.data;
+                if (d.previewAvailable === true && typeof d.amountDueTodayFormatted === "string") {
+                    setProrationPreview({ amountFormatted: d.amountDueTodayFormatted });
+                } else {
+                    setProrationPreview("fallback");
+                }
+            } catch {
+                if (!ac.signal.aborted) {
+                    setProrationPreview("fallback");
+                }
+            }
+        })();
+        return () => ac.abort();
+    }, [confirmPlanChange]);
 
     useEffect(() => {
         const success = searchParams.get("success");
@@ -178,6 +232,10 @@ export function BillingClient({
     const subscriptionHealthy = ["active", "trialing", "past_due"].includes(planStatus);
     const isPaidPlan = (hasPricedPlan || isEnterpriseOrg) && planStatus !== "canceled";
 
+    /** Prefer subscription reality over org.plan lookup so CTAs never show trial copy for paying customers. */
+    const treatsAsReturningForCta =
+        hasPricedPlan || isEnterpriseOrg || hasActiveStripeSubscription;
+
     const showFullUsage =
         planStatus === "trialing" ||
         ((hasPricedPlan || isEnterpriseOrg) &&
@@ -199,6 +257,35 @@ export function BillingClient({
     const currentPlanDisplayName = isEnterpriseOrg
         ? "Enterprise"
         : currentPlan?.name || b.no_active_plan;
+
+    function formatRecurringLabel(plan: Plan): string {
+        const suffix = plan.interval === "year" ? "/yr" : "/mo";
+        const amount = plan.price != null ? plan.price.toFixed(2) : "—";
+        return `$${amount}${suffix}`;
+    }
+
+    function requestPlanChange(plan: Plan) {
+        if (!canManageBilling) {
+            toast.error(b.no_billing_permission);
+            return;
+        }
+        if (!plan.stripePriceId) {
+            toast.error(b.billing_not_configured);
+            return;
+        }
+        const isExactCurrent = currentPlan?.id === plan.id;
+        if (isExactCurrent && subscriptionHealthy) {
+            return;
+        }
+        const needsProrationConfirm =
+            hasActiveStripeSubscription && subscriptionHealthy && !isExactCurrent;
+        if (needsProrationConfirm) {
+            setProrationPreview("loading");
+            setConfirmPlanChange({ priceId: plan.stripePriceId, plan });
+            return;
+        }
+        void handleSubscribe(plan.stripePriceId);
+    }
 
     async function handleSubscribe(priceId: string) {
         if (!canManageBilling) {
@@ -515,8 +602,8 @@ export function BillingClient({
                             const isPro = plan.name === "Professional";
                             const priceConfigured = !!plan.stripePriceId;
 
-                            let planCta = checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta;
-                            if (hasPricedPlan || isEnterpriseOrg) {
+                            let planCta: string;
+                            if (treatsAsReturningForCta) {
                                 if (isBillingIntervalSwitch) {
                                     planCta =
                                         plan.interval === "year"
@@ -525,7 +612,21 @@ export function BillingClient({
                                 } else {
                                     planCta = `${b.switch_to_prefix} ${plan.name}`;
                                 }
+                            } else {
+                                planCta = checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta;
                             }
+
+                            const showTrialEndsOnUpgradeHint =
+                                planStatus === "trialing" &&
+                                subscriptionHealthy &&
+                                !isExactCurrent &&
+                                isPaidPlanTierUpgrade(currentPlan?.id, plan.id);
+
+                            const showProProratedHint =
+                                isPro &&
+                                treatsAsReturningForCta &&
+                                subscriptionHealthy &&
+                                !isExactCurrent;
 
                             return (
                                 <PricingCard.Card
@@ -572,9 +673,14 @@ export function BillingClient({
                                             <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                                             <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                                         </PricingCard.Price>
-                                        {!hasPricedPlan && !isEnterpriseOrg && checkoutOffersTrial && (
+                                        {!treatsAsReturningForCta && checkoutOffersTrial && (
                                             <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
                                                 {b.trial_included}
+                                            </p>
+                                        )}
+                                        {showProProratedHint && (
+                                            <p className="text-xs text-muted-foreground mb-3">
+                                                {b.pro_prorated_no_trial_badge}
                                             </p>
                                         )}
                                         {isExactCurrent && subscriptionHealthy ? (
@@ -589,13 +695,7 @@ export function BillingClient({
                                                     "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
                                                     "hover:from-orange-600 hover:to-orange-700 disabled:opacity-60"
                                                 )}
-                                                onClick={() => {
-                                                    if (!plan.stripePriceId) {
-                                                        toast.error(b.billing_not_configured);
-                                                        return;
-                                                    }
-                                                    void handleSubscribe(plan.stripePriceId);
-                                                }}
+                                                onClick={() => requestPlanChange(plan)}
                                                 disabled={loadingPlan === plan.stripePriceId}
                                                 title={
                                                     !priceConfigured
@@ -608,6 +708,11 @@ export function BillingClient({
                                                 ) : null}
                                                 {planCta}
                                             </Button>
+                                        )}
+                                        {showTrialEndsOnUpgradeHint && (
+                                            <p className="text-xs text-amber-800 dark:text-amber-200 mt-2 leading-snug">
+                                                {b.trial_ends_on_upgrade_notice}
+                                            </p>
                                         )}
                                     </PricingCard.Header>
                                     <PricingCard.Body className="space-y-3 p-2">
@@ -689,6 +794,68 @@ export function BillingClient({
                     </div>
                 </div>
             </div>
+
+            <AlertDialog
+                open={confirmPlanChange !== null}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setConfirmPlanChange(null);
+                        setProrationPreview("idle");
+                    }
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{b.confirm_plan_change_title}</AlertDialogTitle>
+                        <AlertDialogDescription asChild>
+                            <div className="space-y-3 text-muted-foreground text-sm">
+                                {prorationPreview === "loading" && (
+                                    <div className="flex items-center gap-2 text-foreground">
+                                        <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden />
+                                        <span>{b.proration_preview_loading}</span>
+                                    </div>
+                                )}
+                                {prorationPreview === "fallback" && confirmPlanChange && (
+                                    <p>
+                                        {b.proration_notice_fallback.replace(
+                                            "{{recurring}}",
+                                            formatRecurringLabel(confirmPlanChange.plan)
+                                        )}
+                                    </p>
+                                )}
+                                {typeof prorationPreview === "object" && confirmPlanChange && (
+                                    <p>
+                                        {b.proration_notice
+                                            .replace("{{amount_due_today}}", prorationPreview.amountFormatted)
+                                            .replace("{{recurring}}", formatRecurringLabel(confirmPlanChange.plan))}
+                                    </p>
+                                )}
+                                {confirmPlanChange &&
+                                    planStatus === "trialing" &&
+                                    isPaidPlanTierUpgrade(currentPlan?.id, confirmPlanChange.plan.id) && (
+                                        <p className="text-amber-900 dark:text-amber-100 font-medium">
+                                            {b.trial_ends_on_upgrade_notice}
+                                        </p>
+                                    )}
+                            </div>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{b.confirm_plan_change_cancel}</AlertDialogCancel>
+                        <AlertDialogAction
+                            disabled={prorationPreview === "loading"}
+                            onClick={() => {
+                                const pending = confirmPlanChange;
+                                setConfirmPlanChange(null);
+                                setProrationPreview("idle");
+                                if (pending) void handleSubscribe(pending.priceId);
+                            }}
+                        >
+                            {b.confirm_plan_change_continue}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

@@ -116,7 +116,15 @@
     "billing_not_configured": "Abrechnung ist für diese Umgebung nicht konfiguriert (fehlende Stripe-Preis-ID). Bitte Support kontaktieren.",
     "switch_to_yearly": "Auf Jahresabrechnung wechseln",
     "switch_to_monthly": "Auf Monatsabrechnung wechseln",
-    "switch_to_prefix": "Wechseln zu"
+    "switch_to_prefix": "Wechseln zu",
+    "confirm_plan_change_title": "Planwechsel bestätigen",
+    "confirm_plan_change_continue": "Weiter",
+    "confirm_plan_change_cancel": "Abbrechen",
+    "proration_notice": "Heute werden {{amount_due_today}} für den Rest Ihrer Abrechnungsperiode berechnet, danach {{recurring}}.",
+    "proration_notice_fallback": "Heute fällt ein anteiliger Betrag für den Rest Ihrer Abrechnungsperiode an, danach {{recurring}}.",
+    "proration_preview_loading": "Berechnung Ihrer Gebühr…",
+    "trial_ends_on_upgrade_notice": "Ein Upgrade beendet Ihre kostenlose Testphase und startet die Abrechnung sofort.",
+    "pro_prorated_no_trial_badge": "Anteilige Abrechnung — keine Testphase"
   },
   "public_profile": {
     "title": "Öffentliches Profil",

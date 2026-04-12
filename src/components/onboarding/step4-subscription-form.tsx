@@ -43,7 +43,8 @@ export function Step4SubscriptionForm({
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [interval, setInterval] = useState<"month" | "year">("month");
-  const [checkoutOffersTrial, setCheckoutOffersTrial] = useState(true);
+  /** null until loaded — matches /api/billing/checkout via isEligibleForIntroTrial (any past subscription on customer). */
+  const [checkoutOffersTrial, setCheckoutOffersTrial] = useState<boolean | null>(null);
 
   useEffect(() => {
     setIsLoading(externalIsLoading);
@@ -124,6 +125,9 @@ export function Step4SubscriptionForm({
     }
   };
 
+  const trialEligibilityLoading = checkoutOffersTrial === null;
+  /** Plan buttons wait for trial eligibility; skip does not need it. */
+  const planBusy = isLoading || loadingPlan !== null || trialEligibilityLoading;
   const busy = isLoading || loadingPlan !== null;
 
   return (
@@ -255,7 +259,7 @@ export function Step4SubscriptionForm({
                       <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                       <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                     </PricingCard.Price>
-                    {checkoutOffersTrial && (
+                    {checkoutOffersTrial === true && (
                       <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
                         {b.trial_included}
                       </p>
@@ -267,12 +271,15 @@ export function Step4SubscriptionForm({
                         "hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(249,115,22,0.4)] hover:brightness-110 active:translate-y-0 active:shadow-md",
                       )}
                       onClick={() => onSubscribe(plan)}
-                      disabled={loadingPlan === plan.id || busy}
+                      disabled={loadingPlan === plan.id || planBusy}
                     >
-                      {loadingPlan === plan.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : null}
-                      {checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta}
+                      <span className="inline-flex items-center justify-center gap-2">
+                        {(loadingPlan === plan.id || trialEligibilityLoading) && (
+                          <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                        )}
+                        {!trialEligibilityLoading &&
+                          (checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta)}
+                      </span>
                     </Button>
                   </PricingCard.Header>
                   <PricingCard.Body className="space-y-3 p-2">

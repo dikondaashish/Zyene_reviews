@@ -68,12 +68,18 @@ export default async function BillingPage() {
 
     const checkoutOffersTrial = await isEligibleForIntroTrial(org.stripe_customer_id ?? null);
 
+    const planStatusNorm = String(org.plan_status || "");
+    const hasActiveStripeSubscription =
+        Boolean(org.stripe_subscription_id) &&
+        ["active", "trialing", "past_due"].includes(planStatusNorm);
+
     return (
         <BillingClient
             currentPlan={currentPlan}
             organizationPlanId={orgPlanId}
             planStatus={org.plan_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
+            hasActiveStripeSubscription={hasActiveStripeSubscription}
             checkoutOffersTrial={checkoutOffersTrial}
             canManageBilling={canManageBilling}
             usage={{

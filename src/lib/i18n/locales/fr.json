@@ -116,7 +116,15 @@
     "billing_not_configured": "La facturation n’est pas configurée pour cet environnement (ID de prix Stripe manquant). Contactez le support.",
     "switch_to_yearly": "Passer à la facturation annuelle",
     "switch_to_monthly": "Passer à la facturation mensuelle",
-    "switch_to_prefix": "Passer à"
+    "switch_to_prefix": "Passer à",
+    "confirm_plan_change_title": "Confirmer le changement de plan",
+    "confirm_plan_change_continue": "Continuer",
+    "confirm_plan_change_cancel": "Annuler",
+    "proration_notice": "{{amount_due_today}} seront facturés aujourd’hui pour le reste de votre période, puis {{recurring}}.",
+    "proration_notice_fallback": "Un montant au prorata sera facturé aujourd’hui pour le reste de votre période, puis {{recurring}}.",
+    "proration_preview_loading": "Calcul de votre facturation…",
+    "trial_ends_on_upgrade_notice": "Une mise à niveau met fin à votre essai gratuit et la facturation commence immédiatement.",
+    "pro_prorated_no_trial_badge": "Facturation au prorata — pas d’essai"
   },
   "public_profile": {
     "title": "Profil Public",

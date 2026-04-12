@@ -110,13 +110,21 @@
     "choose_plan_title": "Choose your plan",
     "current_plan_badge": "Current plan",
     "trial_included": "7-day free trial on checkout (where eligible)",
-    "start_trial_cta": "Start free trial",
+    "start_trial_cta": "Start 7-day free trial",
     "subscription_ended": "Your subscription is canceled or ended. Choose a plan below to subscribe again, or use the billing portal for past invoices.",
     "no_billing_permission": "Only organization owners and admins can change plans or open the billing portal. Ask your admin for access.",
     "billing_not_configured": "Billing isn’t set up for this environment (Stripe price ID missing). Contact support.",
     "switch_to_yearly": "Switch to yearly billing",
     "switch_to_monthly": "Switch to monthly billing",
-    "switch_to_prefix": "Switch to"
+    "switch_to_prefix": "Switch to",
+    "confirm_plan_change_title": "Confirm plan change",
+    "confirm_plan_change_continue": "Continue",
+    "confirm_plan_change_cancel": "Cancel",
+    "proration_notice": "You'll be charged {{amount_due_today}} today for the rest of your billing period, then {{recurring}} going forward.",
+    "proration_notice_fallback": "You'll be charged a prorated amount today for the remainder of your billing period, then {{recurring}} going forward.",
+    "proration_preview_loading": "Calculating your charge…",
+    "trial_ends_on_upgrade_notice": "Upgrading will end your free trial and start billing immediately.",
+    "pro_prorated_no_trial_badge": "Prorated billing — no trial"
   },
   "public_profile": {
     "title": "Public Profile",

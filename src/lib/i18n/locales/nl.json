@@ -116,7 +116,15 @@
     "billing_not_configured": "Facturatie is niet ingesteld voor deze omgeving (Stripe-prijs-ID ontbreekt). Neem contact op met support.",
     "switch_to_yearly": "Overschakelen op jaarlijkse facturatie",
     "switch_to_monthly": "Overschakelen op maandelijkse facturatie",
-    "switch_to_prefix": "Overschakelen naar"
+    "switch_to_prefix": "Overschakelen naar",
+    "confirm_plan_change_title": "Planwijziging bevestigen",
+    "confirm_plan_change_continue": "Doorgaan",
+    "confirm_plan_change_cancel": "Annuleren",
+    "proration_notice": "Vandaag betaalt u {{amount_due_today}} voor de rest van uw factureringsperiode, daarna {{recurring}}.",
+    "proration_notice_fallback": "Vandaag betaalt u een pro rata-bedrag voor de rest van uw factureringsperiode, daarna {{recurring}}.",
+    "proration_preview_loading": "Uw bedrag wordt berekend…",
+    "trial_ends_on_upgrade_notice": "Upgraden beëindigt uw gratis proefperiode en de facturering start direct.",
+    "pro_prorated_no_trial_badge": "Pro rata-facturering — geen proefperiode"
   },
   "public_profile": {
     "title": "Openbaar Profiel",

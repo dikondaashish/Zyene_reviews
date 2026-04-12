@@ -116,7 +116,15 @@
     "billing_not_configured": "A cobrança não está configurada neste ambiente (ID de preço do Stripe ausente). Entre em contato com o suporte.",
     "switch_to_yearly": "Mudar para cobrança anual",
     "switch_to_monthly": "Mudar para cobrança mensal",
-    "switch_to_prefix": "Mudar para"
+    "switch_to_prefix": "Mudar para",
+    "confirm_plan_change_title": "Confirmar mudança de plano",
+    "confirm_plan_change_continue": "Continuar",
+    "confirm_plan_change_cancel": "Cancelar",
+    "proration_notice": "Será cobrado hoje {{amount_due_today}} pelo restante do seu período de faturação; em seguida, {{recurring}}.",
+    "proration_notice_fallback": "Será cobrado hoje um valor proporcional ao restante do seu período de faturação; em seguida, {{recurring}}.",
+    "proration_preview_loading": "A calcular o valor…",
+    "trial_ends_on_upgrade_notice": "Ao fazer upgrade, sua avaliação gratuita termina e a cobrança começa imediatamente.",
+    "pro_prorated_no_trial_badge": "Faturação proporcional — sem avaliação"
   },
   "public_profile": {
     "title": "Perfil Público",
