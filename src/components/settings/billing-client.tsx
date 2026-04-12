@@ -28,12 +28,15 @@ import {
     MapPin,
     Sparkles,
     ArrowRight,
+    Lock,
 } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { cn } from "@/lib/utils/index";
 import { toast } from "sonner";
 import type { Plan } from "@/services/stripe/plans";
+import { planProductTier } from "@/services/stripe/plans";
 import { useLanguage } from "@/lib/language-context";
+import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -41,13 +44,15 @@ import { useLanguage } from "@/lib/language-context";
 
 interface UsageStat {
     used: number;
-    max: number; // -1 = unlimited
+    max: number;
 }
 
 interface BillingClientProps {
     currentPlan: Plan | null;
+    organizationPlanId: string;
     planStatus: string;
     hasStripeCustomer: boolean;
+    canManageBilling: boolean;
     usage: {
         emailRequests: UsageStat;
         smsRequests: UsageStat;
@@ -59,7 +64,7 @@ interface BillingClientProps {
 }
 
 // ─────────────────────────────────────────────────────────
-// Usage Bar Component
+// Usage Bar
 // ─────────────────────────────────────────────────────────
 
 function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?: React.ReactNode }) {
@@ -74,7 +79,7 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
                     {icon}
                     {label}
                 </span>
-                <span className="font-medium">
+                <span className="font-medium tabular-nums">
                     {stat.used.toLocaleString()}
                     {isUnlimited ? " used" : ` / ${stat.max.toLocaleString()}`}
                 </span>
@@ -82,8 +87,10 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
             {!isUnlimited && (
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
                     <div
-                        className={`h-full rounded-full transition-all ${isNearLimit ? "bg-orange-500" : "bg-blue-500"
-                            }`}
+                        className={cn(
+                            "h-full rounded-full transition-all",
+                            isNearLimit ? "bg-orange-500" : "bg-blue-500"
+                        )}
                         style={{ width: `${percentage}%` }}
                     />
                 </div>
@@ -95,33 +102,51 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
     );
 }
 
+function sameProductTier(a: Plan | null, b: Plan): boolean {
+    if (!a) return false;
+    if (a.id === "enterprise" || b.id === "enterprise") return a.id === b.id;
+    const ta = planProductTier(a.id);
+    const tb = planProductTier(b.id);
+    return ta !== null && ta === tb;
+}
+
 // ─────────────────────────────────────────────────────────
-// Main Component
+// Main
 // ─────────────────────────────────────────────────────────
 
 export function BillingClient({
     currentPlan,
+    organizationPlanId,
     planStatus,
     hasStripeCustomer,
+    canManageBilling,
     usage,
     plans,
 }: BillingClientProps) {
     const { dict } = useLanguage();
-    const [interval, setInterval] = useState<"month" | "year">("month");
+    const b = dict.billing;
+    const [interval, setInterval] = useState<"month" | "year">(() =>
+        currentPlan?.interval === "year" ? "year" : "month"
+    );
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
     const [loadingPortal, setLoadingPortal] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    // Show toast after checkout redirect or limit reached
+    useEffect(() => {
+        if (currentPlan?.interval === "month" || currentPlan?.interval === "year") {
+            setInterval(currentPlan.interval);
+        }
+    }, [currentPlan?.id, currentPlan?.interval]);
+
     useEffect(() => {
         const success = searchParams.get("success");
         const canceled = searchParams.get("canceled");
         const status = searchParams.get("status");
 
         if (success === "true") {
-            toast.success("Subscription activated!", {
-                description: "Your plan is now active. Welcome aboard!",
+            toast.success("Subscription updated", {
+                description: "Your plan and billing are up to date.",
             });
             router.replace("/settings/billing");
         } else if (canceled === "true") {
@@ -131,57 +156,78 @@ export function BillingClient({
             router.replace("/settings/billing");
         } else if (status === "limit_reached") {
             toast.error("Business limit reached", {
-                description: `You've reached the maximum number of businesses for your current plan. Upgrade to add more locations.`,
+                description:
+                    "You've reached the maximum number of businesses for your current plan. Upgrade to add more locations.",
                 duration: 6000,
             });
-            // Don't replace immediately so they can see why they landed here
         }
     }, [searchParams, router]);
 
-    const isPaidPlan = !!currentPlan && currentPlan.price !== null && currentPlan.price > 0;
-    const currentPlanName = currentPlan?.name || "No Active Plan";
+    const isEnterpriseOrg = organizationPlanId === "enterprise";
+    const hasPricedPlan =
+        !!currentPlan &&
+        currentPlan.price !== null &&
+        currentPlan.price > 0 &&
+        organizationPlanId !== "none" &&
+        organizationPlanId !== "free";
 
-    // If no active plan, force usage max limits to 0, except for businesses which should be 1.
-    // Also set used to 0 so it clearly shows "0 / 0".
-    // If no active plan, force usage max limits to 0, except for businesses which should be 1.
-    // Also set used to 0 so it clearly shows "0 / 0".
-    const displayUsage = (isPaidPlan || planStatus === "trialing")
-        ? usage 
+    const subscriptionHealthy = ["active", "trialing", "past_due"].includes(planStatus);
+    const isPaidPlan = (hasPricedPlan || isEnterpriseOrg) && planStatus !== "canceled";
+
+    const showFullUsage =
+        planStatus === "trialing" ||
+        ((hasPricedPlan || isEnterpriseOrg) &&
+            ["active", "past_due", "canceled"].includes(planStatus));
+
+    const displayUsage = showFullUsage
+        ? usage
         : {
-            emailRequests: { used: 0, max: 0 },
-            smsRequests: { used: 0, max: 0 },
-            linkRequests: { used: 0, max: 0 },
-            smartReplies: { used: 0, max: 0 },
-            businesses: { used: usage.businesses?.used || 0, max: 1 },
-        };
+              emailRequests: { used: 0, max: 0 },
+              smsRequests: { used: 0, max: 0 },
+              linkRequests: { used: 0, max: 0 },
+              smartReplies: { used: 0, max: 0 },
+              businesses: { used: usage.businesses?.used || 0, max: 1 },
+          };
 
-    // Filter plans by selected interval (exclude enterprise)
-    const displayPlans = plans.filter(
-        (p) => p.interval === interval && p.id !== "enterprise"
-    );
+    const displayPlans = plans.filter((p) => p.interval === interval && p.id !== "enterprise");
     const enterprisePlan = plans.find((p) => p.id === "enterprise");
 
+    const currentPlanDisplayName = isEnterpriseOrg
+        ? "Enterprise"
+        : currentPlan?.name || b.no_active_plan;
+
     async function handleSubscribe(priceId: string) {
+        if (!canManageBilling) {
+            toast.error(b.no_billing_permission);
+            return;
+        }
         setLoadingPlan(priceId);
         try {
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ priceId }),
+                body: JSON.stringify({ priceId, source: "billing" }),
             });
-            const data = await res.json();
+            const json = await res.json();
+            const parsed = parseBillingCheckoutResponse(json);
 
-            if (!res.ok) throw new Error(data.error);
+            if (!res.ok || !parsed.ok) {
+                throw new Error(parsed.error || "Failed to start checkout");
+            }
 
-            if (data.switched) {
-                // Plan was switched in-place (no Stripe checkout needed)
-                toast.success("Plan switched!", {
-                    description: "Your subscription has been updated. Changes take effect immediately.",
+            const payload = parsed.payload;
+
+            if (payload?.switched && payload.url) {
+                toast.success("Plan updated", {
+                    description: "Your subscription has been updated. Redirecting…",
                 });
-                router.refresh();
-            } else if (data.url) {
-                // New subscription — redirect to Stripe checkout
-                window.location.href = data.url;
+                window.location.assign(payload.url);
+                return;
+            }
+            if (payload?.url) {
+                window.location.assign(payload.url);
+            } else {
+                throw new Error("No checkout URL returned");
             }
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : "Failed to start checkout");
@@ -191,14 +237,15 @@ export function BillingClient({
     }
 
     async function handleManageSubscription() {
+        if (!canManageBilling) {
+            toast.error(b.no_billing_permission);
+            return;
+        }
         setLoadingPortal(true);
         try {
-            const res = await fetch("/api/billing/portal", {
-                method: "POST",
-            });
+            const res = await fetch("/api/billing/portal", { method: "POST" });
             const data = await res.json();
-
-            if (!res.ok) throw new Error(data.error);
+            if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : "Failed to open portal");
             if (data.url) window.location.href = data.url;
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : "Failed to open billing portal");
@@ -208,199 +255,210 @@ export function BillingClient({
     }
 
     const intervalLabel = interval === "month" ? "/mo" : "/yr";
-    const monthlyStarterPrice = plans.find(p => p.id === "starter_monthly")?.price ?? 0;
-    const yearlyStarterPrice = plans.find(p => p.id === "starter_yearly")?.price ?? 0;
-    const yearlySavings = monthlyStarterPrice > 0 ? Math.round((1 - yearlyStarterPrice / (monthlyStarterPrice * 12)) * 100) : 0;
+    const monthlyStarterPrice = plans.find((p) => p.id === "starter_monthly")?.price ?? 0;
+    const yearlyStarterPrice = plans.find((p) => p.id === "starter_yearly")?.price ?? 0;
+    const yearlySavings =
+        monthlyStarterPrice > 0
+            ? Math.round((1 - yearlyStarterPrice / (monthlyStarterPrice * 12)) * 100)
+            : 0;
+
+    const permissionTooltip = !canManageBilling ? b.no_billing_permission : undefined;
 
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">{dict.billing.title}</h1>
-                <p className="text-muted-foreground">
-                    {dict.billing.subtitle}
-                </p>
+                <h1 className="text-3xl font-bold tracking-tight">{b.title}</h1>
+                <p className="text-muted-foreground">{b.subtitle}</p>
             </div>
 
-            {/* Past Due Warning */}
+            {!canManageBilling && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/40 px-4 py-3 flex gap-3 text-sm text-amber-900 dark:text-amber-100">
+                    <Lock className="h-4 w-4 shrink-0 mt-0.5" aria-hidden />
+                    <p>{b.no_billing_permission}</p>
+                </div>
+            )}
+
+            {planStatus === "canceled" && (
+                <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/40 dark:border-slate-800 px-4 py-3 flex gap-3 text-sm">
+                    <AlertTriangle className="h-4 w-4 text-slate-600 shrink-0 mt-0.5" aria-hidden />
+                    <p className="text-slate-700 dark:text-slate-300">{b.subscription_ended}</p>
+                </div>
+            )}
+
             {planStatus === "past_due" && (
-                <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 flex items-center gap-3">
+                <div className="rounded-lg border border-orange-200 bg-orange-50 dark:bg-orange-950/20 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                     <AlertTriangle className="h-5 w-5 text-orange-600 shrink-0" />
-                    <div>
-                        <p className="font-medium text-orange-800">
-                            Payment Past Due
-                        </p>
-                        <p className="text-sm text-orange-700">
-                            Your last payment failed. Please update your payment
-                            method to avoid service interruption.
+                    <div className="flex-1 min-w-0">
+                        <p className="font-medium text-orange-800 dark:text-orange-200">Payment past due</p>
+                        <p className="text-sm text-orange-700 dark:text-orange-300">
+                            Update your payment method in the billing portal to avoid losing access.
                         </p>
                     </div>
                     <Button
                         variant="outline"
                         size="sm"
-                        className="ml-auto shrink-0"
-                        onClick={handleManageSubscription}
+                        className="shrink-0 border-orange-300"
+                        onClick={() => void handleManageSubscription()}
+                        disabled={!hasStripeCustomer || !canManageBilling || loadingPortal}
                     >
-                        Update Payment
+                        {loadingPortal ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        Update payment
                     </Button>
                 </div>
             )}
 
-            {/* Current Plan Card */}
             <Card>
                 <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                            <CardTitle className="text-xl">
-                                {dict.billing.current_plan}
-                            </CardTitle>
-                            <CardDescription>
-                                {dict.billing.active_subscription}
-                            </CardDescription>
+                            <CardTitle className="text-xl">{b.current_plan}</CardTitle>
+                            <CardDescription>{b.active_subscription}</CardDescription>
                         </div>
                         <Badge
                             variant={isPaidPlan ? (planStatus === "trialing" ? "secondary" : "default") : "secondary"}
                             className={cn(
-                                "text-sm px-3 py-1",
+                                "text-sm px-3 py-1 w-fit",
                                 planStatus === "trialing" && "bg-blue-50 text-blue-700 border-blue-200"
                             )}
                         >
-                            {isPaidPlan 
-                                ? (planStatus === "trialing" ? `${currentPlan?.name} (Trial)` : currentPlan?.name)
-                                : dict.billing.no_active_plan
-                            }
+                            {isPaidPlan
+                                ? planStatus === "trialing"
+                                    ? `${currentPlanDisplayName} (trial)`
+                                    : currentPlanDisplayName
+                                : planStatus === "canceled" && (hasPricedPlan || isEnterpriseOrg)
+                                  ? `${currentPlanDisplayName} (canceled)`
+                                  : b.no_active_plan}
                         </Badge>
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="flex items-baseline gap-2">
-                        {isPaidPlan ? (
+                    <div className="flex flex-wrap items-baseline gap-2">
+                        {hasPricedPlan ? (
                             <>
-                                {currentPlan?.originalPrice && currentPlan.originalPrice > (currentPlan.price || 0) && (
-                                    <span className="text-xl line-through text-gray-400">
-                                        ${currentPlan.originalPrice}
-                                    </span>
-                                )}
-                                <span className="text-4xl font-bold">
-                                    ${currentPlan?.price}
-                                </span>
+                                {currentPlan?.originalPrice &&
+                                    currentPlan.originalPrice > (currentPlan.price || 0) && (
+                                        <span className="text-xl line-through text-muted-foreground">
+                                            ${currentPlan.originalPrice}
+                                        </span>
+                                    )}
+                                <span className="text-4xl font-bold tabular-nums">${currentPlan?.price}</span>
                                 <span className="text-muted-foreground">
                                     /{currentPlan?.interval === "year" ? "year" : "month"}
                                 </span>
                             </>
+                        ) : isEnterpriseOrg ? (
+                            <span className="text-2xl font-semibold text-foreground">Custom pricing</span>
                         ) : (
                             <>
-                                <span className="text-4xl font-bold">{dict.billing.no_active_plan}</span>
-                                <span className="text-muted-foreground text-sm">{dict.billing.choose_plan}</span>
+                                <span className="text-2xl font-bold">{b.no_active_plan}</span>
+                                <span className="text-muted-foreground text-sm">{b.choose_plan}</span>
                             </>
                         )}
                     </div>
 
-                    {/* Usage Stats */}
                     <div className="space-y-4 pt-2">
                         <h3 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">
-                            {dict.billing.usage_title}
+                            {b.usage_title}
                         </h3>
                         <UsageBar
-                            label={dict.billing.email_requests}
+                            label={b.email_requests}
                             stat={displayUsage.emailRequests}
                             icon={<Mail className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label={dict.billing.sms_requests}
+                            label={b.sms_requests}
                             stat={displayUsage.smsRequests}
                             icon={<MessageSquare className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label={dict.billing.link_requests}
+                            label={b.link_requests}
                             stat={displayUsage.linkRequests}
                             icon={<LinkIcon className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label={dict.billing.smart_replies}
+                            label={b.smart_replies}
                             stat={displayUsage.smartReplies}
                             icon={<Bot className="h-3.5 w-3.5" />}
                         />
                         <UsageBar
-                            label={dict.billing.locations}
+                            label={b.locations}
                             stat={displayUsage.businesses}
                             icon={<MapPin className="h-3.5 w-3.5" />}
                         />
                     </div>
                 </CardContent>
-                {isPaidPlan && hasStripeCustomer && (
-                    <CardFooter>
+
+                {hasStripeCustomer && (
+                    <CardFooter className="flex-col items-stretch gap-2 border-t bg-muted/30 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-xs text-muted-foreground order-2 sm:order-1">{b.portal_help}</p>
                         <Button
                             variant="outline"
-                            onClick={handleManageSubscription}
-                            disabled={loadingPortal}
-                            className="gap-2"
+                            onClick={() => void handleManageSubscription()}
+                            disabled={loadingPortal || !canManageBilling}
+                            title={permissionTooltip}
+                            className="gap-2 order-1 sm:order-2 shrink-0"
                         >
                             {loadingPortal ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
                                 <CreditCard className="h-4 w-4" />
                             )}
-                            {dict.billing.manage_subscription}
-                            <ExternalLink className="h-3 w-3" />
+                            {b.manage_subscription}
+                            <ExternalLink className="h-3 w-3 opacity-70" />
                         </Button>
                     </CardFooter>
                 )}
 
-                {/* Upgrade CTA for free users */}
-                {!isPaidPlan && (
-                    <CardFooter className="bg-blue-50/50 border-t flex items-center gap-3 p-4">
-                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-blue-900">
-                                {dict.billing.starter_msg}
-                            </p>
-                            <p className="text-xs text-blue-700">
-                                {dict.billing.starter_price}
-                            </p>
+                {!isPaidPlan && !hasStripeCustomer && (
+                    <CardFooter className="bg-blue-50/50 dark:bg-blue-950/20 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
+                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0 hidden sm:block" />
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">{b.starter_msg}</p>
+                            <p className="text-xs text-blue-800/90 dark:text-blue-200/90">{b.starter_price}</p>
                         </div>
                         <Button
                             size="sm"
-                            className="bg-blue-600 hover:bg-blue-700 gap-1 shrink-0"
-                            onClick={() => {
-                                document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" });
-                            }}
+                            className="bg-blue-600 hover:bg-blue-700 gap-1 shrink-0 text-white"
+                            onClick={() => document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" })}
                         >
-                            {dict.billing.upgrade} <ArrowRight className="h-3.5 w-3.5" />
+                            {b.upgrade} <ArrowRight className="h-3.5 w-3.5" />
                         </Button>
                     </CardFooter>
                 )}
             </Card>
 
-            {/* ─── Plan Picker ─── */}
-            <div id="plan-picker" className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8">
+            {/* Plan picker */}
+            <div
+                id="plan-picker"
+                className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8"
+            >
                 <div
-                    aria-hidden="true"
+                    aria-hidden
                     className="pointer-events-none absolute inset-0 opacity-[0.35] dark:opacity-[0.2]"
                     style={{
-                        backgroundImage:
-                            "radial-gradient(rgba(0,0,0,0.06) 0.8px, transparent 0.8px)",
+                        backgroundImage: "radial-gradient(rgba(0,0,0,0.06) 0.8px, transparent 0.8px)",
                         backgroundSize: "14px 14px",
                         maskImage:
                             "radial-gradient(ellipse at 50% 10%, rgba(0,0,0,1), rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 72%)",
                     }}
                 />
                 <div
-                    aria-hidden="true"
+                    aria-hidden
                     className={cn(
                         "pointer-events-none absolute -top-1/2 left-1/2 h-[min(120vmin,720px)] w-[min(120vmin,720px)] -translate-x-1/2 rounded-full",
-                        "bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12),transparent_55%)]",
-                        "blur-[32px]",
+                        "bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12),transparent_55%)] blur-[32px]"
                     )}
                 />
 
                 <div className="relative z-10">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-                        <h2 className="text-xl font-semibold">
-                            {isPaidPlan ? "Change Plan" : "Choose a Plan"}
-                        </h2>
+                    <div className="mb-2">
+                        <h2 className="text-xl font-semibold">{hasPricedPlan || isEnterpriseOrg ? b.change_plan_title : b.choose_plan_title}</h2>
+                        <p className="text-sm text-muted-foreground mt-1 max-w-3xl">{b.plan_section_subtitle}</p>
+                    </div>
 
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end mb-6">
                         <div
-                            className="inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80"
+                            className="inline-flex w-full sm:w-auto items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80"
                             role="tablist"
                             aria-label="Billing interval"
                         >
@@ -410,10 +468,10 @@ export function BillingClient({
                                 aria-selected={interval === "month"}
                                 onClick={() => setInterval("month")}
                                 className={cn(
-                                    "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                                    "flex-1 sm:flex-none rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                                     interval === "month"
                                         ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
                                 )}
                             >
                                 Monthly
@@ -424,14 +482,17 @@ export function BillingClient({
                                 aria-selected={interval === "year"}
                                 onClick={() => setInterval("year")}
                                 className={cn(
-                                    "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                                    "flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                                     interval === "year"
                                         ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
                                 )}
                             >
                                 Yearly
-                                <Badge variant="secondary" className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900">
+                                <Badge
+                                    variant="secondary"
+                                    className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900"
+                                >
                                     Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
                                 </Badge>
                             </button>
@@ -440,8 +501,24 @@ export function BillingClient({
 
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {displayPlans.map((plan) => {
-                            const isCurrentPlan = currentPlan?.id === plan.id;
+                            const isExactCurrent = currentPlan?.id === plan.id;
+                            const tierMatch = sameProductTier(currentPlan, plan);
+                            const isBillingIntervalSwitch =
+                                tierMatch && currentPlan && currentPlan.id !== plan.id;
                             const isPro = plan.name === "Professional";
+                            const priceConfigured = !!plan.stripePriceId;
+
+                            let planCta = b.start_trial_cta;
+                            if (hasPricedPlan || isEnterpriseOrg) {
+                                if (isBillingIntervalSwitch) {
+                                    planCta =
+                                        plan.interval === "year"
+                                            ? b.switch_to_yearly
+                                            : b.switch_to_monthly;
+                                } else {
+                                    planCta = `${b.switch_to_prefix} ${plan.name}`;
+                                }
+                            }
 
                             return (
                                 <PricingCard.Card
@@ -450,13 +527,13 @@ export function BillingClient({
                                         "relative flex w-full max-w-none flex-col h-full",
                                         isPro &&
                                             "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
-                                        isCurrentPlan && "ring-2 ring-primary/60",
+                                        isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"
                                     )}
                                 >
                                     {isPro && (
                                         <div className="absolute -top-2 right-3 z-20">
                                             <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
-                                                Most Popular
+                                                Most popular
                                             </Badge>
                                         </div>
                                     )}
@@ -471,15 +548,13 @@ export function BillingClient({
                                                 <span className="text-foreground">{plan.name}</span>
                                             </PricingCard.PlanName>
                                             <PricingCard.Badge>
-                                                {isPro
-                                                    ? "Multi-location"
-                                                    : "Single location"}
+                                                {isPro ? "Multi-location" : "Single location"}
                                             </PricingCard.Badge>
                                         </PricingCard.Plan>
-                                        <PricingCard.Description className="mb-2 text-[11px] leading-tight">
+                                        <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
                                             {isPro
-                                                ? "For growing multi-location businesses."
-                                                : "Perfect for single-location businesses."}
+                                                ? "For growing brands with multiple stores or franchises."
+                                                : "Everything you need to collect reviews and reply from one location."}
                                         </PricingCard.Description>
                                         <PricingCard.Price>
                                             {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
@@ -490,44 +565,45 @@ export function BillingClient({
                                             <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                                             <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                                         </PricingCard.Price>
-                                        {!isPaidPlan && (
+                                        {!hasPricedPlan && !isEnterpriseOrg && (
                                             <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
-                                                7-day free trial included
+                                                {b.trial_included}
                                             </p>
                                         )}
-                                        {isCurrentPlan ? (
+                                        {isExactCurrent && subscriptionHealthy ? (
                                             <Button variant="outline" className="w-full font-semibold" disabled>
-                                                Current Plan
+                                                {b.current_plan_badge}
                                             </Button>
                                         ) : (
                                             <Button
                                                 className={cn(
                                                     "w-full font-semibold text-white",
                                                     "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
-                                                    "hover:from-orange-600 hover:to-orange-700",
+                                                    "hover:from-orange-600 hover:to-orange-700 disabled:opacity-60"
                                                 )}
-                                                onClick={() => handleSubscribe(plan.stripePriceId!)}
+                                                onClick={() => void handleSubscribe(plan.stripePriceId!)}
                                                 disabled={
-                                                    !plan.stripePriceId ||
-                                                    loadingPlan === plan.stripePriceId
+                                                    !priceConfigured ||
+                                                    loadingPlan === plan.stripePriceId ||
+                                                    !canManageBilling
+                                                }
+                                                title={
+                                                    !priceConfigured
+                                                        ? "Stripe price ID is not configured for this environment."
+                                                        : permissionTooltip
                                                 }
                                             >
                                                 {loadingPlan === plan.stripePriceId ? (
                                                     <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : null}
-                                                {isPaidPlan
-                                                    ? `Switch to ${plan.name}`
-                                                    : "Start Free Trial"}
+                                                {planCta}
                                             </Button>
                                         )}
                                     </PricingCard.Header>
                                     <PricingCard.Body className="space-y-3 p-2">
                                         <PricingCard.List className="space-y-2">
                                             {plan.features.map((feature) => (
-                                                <PricingCard.ListItem
-                                                    key={feature}
-                                                    className="text-xs gap-2"
-                                                >
+                                                <PricingCard.ListItem key={feature} className="text-xs gap-2">
                                                     <span className="mt-0.5 shrink-0">
                                                         <CheckCircle2
                                                             className="h-3.5 w-3.5 text-emerald-500"
@@ -544,7 +620,12 @@ export function BillingClient({
                         })}
 
                         {enterprisePlan && (
-                            <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed">
+                            <PricingCard.Card
+                                className={cn(
+                                    "relative flex w-full max-w-none flex-col border-dashed",
+                                    isEnterpriseOrg && subscriptionHealthy && "ring-2 ring-primary/60"
+                                )}
+                            >
                                 <PricingCard.Header className="relative z-10">
                                     <PricingCard.Plan>
                                         <PricingCard.PlanName>
@@ -553,21 +634,27 @@ export function BillingClient({
                                         </PricingCard.PlanName>
                                         <PricingCard.Badge>Custom</PricingCard.Badge>
                                     </PricingCard.Plan>
-                                    <PricingCard.Description className="mb-3">
-                                        For large organizations with custom needs.
+                                    <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
+                                        Volume, security reviews, SSO, and custom contracts for large groups.
                                     </PricingCard.Description>
                                     <PricingCard.Price>
                                         <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                                     </PricingCard.Price>
-                                    <a
-                                        href="mailto:sales@zyenereviews.com?subject=Interested%20in%20Zyene%20Enterprise&body=Hi%2C%20I%27m%20interested%20in%20your%20Enterprise%20plan.%20Can%20I%20get%20more%20details%3F"
-                                        className="block w-full"
-                                    >
-                                        <Button variant="outline" className="w-full gap-2 font-semibold">
-                                            <Mail className="h-4 w-4" />
-                                            Contact Sales
+                                    {isEnterpriseOrg && subscriptionHealthy ? (
+                                        <Button variant="outline" className="w-full font-semibold" disabled>
+                                            {b.current_plan_badge}
                                         </Button>
-                                    </a>
+                                    ) : (
+                                        <a
+                                            href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
+                                            className="block w-full"
+                                        >
+                                            <Button variant="outline" className="w-full gap-2 font-semibold">
+                                                <Mail className="h-4 w-4" />
+                                                Contact sales
+                                            </Button>
+                                        </a>
+                                    )}
                                 </PricingCard.Header>
                                 <PricingCard.Body>
                                     <PricingCard.List>

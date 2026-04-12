@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { PLANS } from "@/services/stripe/plans";
 import { cn } from "@/lib/utils/index";
+import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
 
 export function UpgradeModal({
     isOpen,
@@ -46,19 +47,26 @@ export function UpgradeModal({
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ priceId }),
+                body: JSON.stringify({ priceId, source: "billing" }),
             });
-            const data = await res.json();
+            const json = await res.json();
+            const parsed = parseBillingCheckoutResponse(json);
 
-            if (!res.ok) throw new Error(data.error || "Checkout failed");
+            if (!res.ok || !parsed.ok) {
+                throw new Error(parsed.error || "Checkout failed");
+            }
 
-            if (data.switched) {
-                toast.success("Plan switched!", {
-                    description: "Your subscription has been updated. Changes take effect immediately.",
+            const payload = parsed.payload;
+            if (payload?.switched && payload.url) {
+                toast.success("Plan updated", {
+                    description: "Redirecting to confirm your subscription…",
                 });
                 onClose();
-            } else if (data.url) {
-                window.location.href = data.url;
+                window.location.assign(payload.url);
+            } else if (payload?.url) {
+                window.location.assign(payload.url);
+            } else {
+                throw new Error("No checkout URL returned");
             }
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : "Failed to start checkout");

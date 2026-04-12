@@ -2,7 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { BillingClient } from "@/components/settings/billing-client";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { PLANS, getPlanByPriceId } from "@/services/stripe/plans";
+import { PLANS } from "@/services/stripe/plans";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -19,6 +19,7 @@ export default async function BillingPage() {
     const { data: memberData } = await supabase
         .from("organization_members")
         .select(`
+            role,
             organizations (
                 id,
                 name,
@@ -30,6 +31,16 @@ export default async function BillingPage() {
         `)
         .eq("user_id", user.id)
         .single();
+
+    const memberRole = (memberData as { role?: string } | null)?.role ?? "";
+    const canManageBilling = [
+        "owner",
+        "admin",
+        "manager",
+        "ORG_OWNER",
+        "ORG_ADMIN",
+        "ORG_MANAGER",
+    ].includes(memberRole);
 
     const org = (memberData as any)?.organizations;
 
@@ -57,8 +68,10 @@ export default async function BillingPage() {
     return (
         <BillingClient
             currentPlan={currentPlan}
+            organizationPlanId={orgPlanId}
             planStatus={org.plan_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
+            canManageBilling={canManageBilling}
             usage={{
                 emailRequests: { used: emailRequests.current, max: emailRequests.max },
                 smsRequests: { used: smsRequests.current, max: smsRequests.max },

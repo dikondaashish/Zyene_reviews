@@ -37,8 +37,15 @@ const STARTER_LIMITS: PlanLimits = {
 };
 
 const STARTER_FEATURES = [
-    "Easy to use dashboard",
-    "Smart response assistant",
+    "1 business location on your plan",
+    "Google Business Profile review sync",
+    "2,500 email review requests / month",
+    "2,500 SMS review requests / month",
+    "5,000 review link requests / month",
+    "Unlimited AI reply suggestions & usage-based smart replies",
+    "Auto commenter for eligible Google reviews (paid plan)",
+    "Dashboard, analytics & team alerts",
+    "Up to 5 team members",
 ];
 
 const PRO_LIMITS: PlanLimits = {
@@ -53,11 +60,13 @@ const PRO_LIMITS: PlanLimits = {
 
 const PRO_FEATURES = [
     "Everything in Starter, plus:",
-    "3 Locations",
-    "3,000 email requests/month per location",
-    "3,000 SMS requests/month per location",
-    "6,000 review link requests/month per location",
-    "Priority support",
+    "Up to 3 business locations (limits per location)",
+    "3,000 email review requests / month per location",
+    "3,000 SMS review requests / month per location",
+    "6,000 review link requests / month per location",
+    "Unlimited AI reply suggestions (plan limits apply)",
+    "Priority email support",
+    "Up to 15 team members",
 ];
 
 const ENTERPRISE_LIMITS: PlanLimits = {
@@ -71,11 +80,12 @@ const ENTERPRISE_LIMITS: PlanLimits = {
 
 const ENTERPRISE_FEATURES = [
     "Everything in Professional, plus:",
-    "Unlimited locations",
-    "Unlimited requests",
+    "Unlimited business locations",
+    "Unlimited email, SMS & link requests",
+    "Unlimited AI / smart replies (contract terms)",
     "Dedicated account manager",
-    "Custom integrations",
-    "SLA guarantee",
+    "Custom integrations & SSO (as agreed)",
+    "Uptime SLA & security review options",
 ];
 
 export const PLANS: Plan[] = [
@@ -175,6 +185,16 @@ export const FREE_LIMITS = UNSUBSCRIBED_LIMITS;
  * Auto commenter + AI suggest-reply: allowed for paid SMB tiers and agency/growth plans
  * (must stay in sync with `organizations.plan` CHECK and Stripe/webhook values).
  */
+/** Same product family (monthly vs yearly cards share a tier). */
+export function planProductTier(planId: string | null | undefined): "starter" | "professional" | "enterprise" | null {
+    if (planId == null || planId === "") return null;
+    const id = String(planId).toLowerCase();
+    if (id === "enterprise") return "enterprise";
+    if (id.startsWith("starter_") || id === "starter") return "starter";
+    if (id.startsWith("professional_") || id === "pro") return "professional";
+    return null;
+}
+
 export function planAllowsAutoCommenter(plan: string | null | undefined): boolean {
     if (plan == null || plan === "") return false;
     const p = String(plan).toLowerCase().trim();
