@@ -128,6 +128,8 @@ export interface PublicProfileBusinessRecord {
     name: string;
     slug?: string;
     brand_color?: string | null;
+    /** Full-screen backdrop behind the white card on /r/[slug] */
+    review_page_background_color?: string | null;
     logo_url?: string | null;
     enable_staff_selection?: boolean;
     staff_names?: string[];
@@ -164,6 +166,7 @@ export interface PublicProfileBusinessRecord {
 export interface PublicProfilePreviewValues {
     slug?: string;
     brand_color?: string;
+    review_page_background_color?: string;
     logo_url?: string | null;
     enable_staff_selection?: boolean;
     staff_names?: string[];

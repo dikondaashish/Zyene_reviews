@@ -7,6 +7,7 @@ import { BrandingForm } from "./branding-form";
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils/index";
+import { reviewPageBackdropGradient } from "@/lib/utils/review-page-background";
 import { Link as LinkIcon, HelpCircle, QrCode, Check, Download, Printer, Share2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -31,6 +32,11 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     const [previewState, setPreviewState] = useState<PublicProfilePreviewValues>({
         slug: initialSlug,
         brand_color: business.brand_color || "#0f172a",
+        review_page_background_color:
+            (business.review_page_background_color &&
+                /^#([0-9A-F]{3}){1,2}$/i.test(business.review_page_background_color) &&
+                business.review_page_background_color) ||
+            "#0f172a",
         logo_url: business.logo_url,
         min_stars_for_google: business.min_stars_for_google || 4,
         rating_style: business.rating_style || "emoji",
@@ -107,6 +113,11 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
 
     const previewUrl = `zyenereviews.com/${previewState.slug || initialSlug}`;
     const fullUrl = `https://${previewUrl}`;
+    const previewBackdrop =
+        previewState.review_page_background_color &&
+        /^#([0-9A-F]{3}){1,2}$/i.test(previewState.review_page_background_color)
+            ? reviewPageBackdropGradient(previewState.review_page_background_color)
+            : reviewPageBackdropGradient("#0f172a");
 
     // Share & QR state
     const [copied, setCopied] = useState(false);
@@ -263,17 +274,21 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     </div>
 
                     {/* Preview Container */}
-                    <div className="mx-auto h-[700px] w-full bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-900 ring-1 ring-white/10">
+                    <div className="mx-auto h-[700px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-950 ring-1 ring-white/10">
                         {/* Status Bar Area (Mock) */}
                         <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
 
                         {/* Content */}
-                        <div className="h-full w-full overflow-y-auto no-scrollbar bg-slate-900">
+                        <div
+                            className="h-full w-full overflow-y-auto no-scrollbar"
+                            style={{ background: previewBackdrop }}
+                        >
                             <PublicReviewFlow
                                 businessId={business.id}
                                 businessName={business.name}
                                 businessCategory={business.category || ""}
                                 brandColor={previewState.brand_color}
+                                reviewPageBackgroundColor={previewState.review_page_background_color}
                                 logoUrl={previewState.logo_url ?? undefined}
                                 minStars={previewState.min_stars_for_google}
                                 ratingStyle={previewState.rating_style}

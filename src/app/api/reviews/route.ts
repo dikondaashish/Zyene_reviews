@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
 
     const url = request.nextUrl;
     const type = url.searchParams.get("type") || "public";
-    const page = parseInt(url.searchParams.get("page") || "1");
+    const pageRaw = Number.parseInt(url.searchParams.get("page") || "1", 10);
+    const page = Number.isFinite(pageRaw) && pageRaw >= 1 ? pageRaw : 1;
     const pageSize = 20;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
@@ -74,7 +75,10 @@ export async function GET(request: NextRequest) {
 
         const rating = url.searchParams.get("rating");
         if (rating && rating !== "all") {
-            query = query.eq("rating", parseInt(rating));
+            const r = Number.parseInt(rating, 10);
+            if (Number.isFinite(r) && r >= 1 && r <= 5) {
+                query = query.eq("rating", r);
+            }
         }
 
         const sort = url.searchParams.get("sort") || "newest";

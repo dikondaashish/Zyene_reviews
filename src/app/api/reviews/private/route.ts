@@ -52,10 +52,6 @@ export async function POST(request: Request) {
             selected_staff = [],
         } = parsed.data;
 
-        if (!rating) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-        }
-
         const supabase = createAdminClient();
         let business_id = bodyBusinessId || null;
         let businessName: string | null | undefined;
@@ -87,14 +83,18 @@ export async function POST(request: Request) {
             business_id = bodyBusinessId;
         }
 
-        const { data: bizSettings } = await supabase
+        const { data: bizSettings, error: bizSettingsErr } = await supabase
             .from("businesses")
             .select("private_feedback_email_mode, private_feedback_phone_mode")
             .eq("id", business_id)
-            .single();
+            .maybeSingle();
 
-        const emailMode = normalizeContactMode(bizSettings?.private_feedback_email_mode, "optional");
-        const phoneMode = normalizeContactMode(bizSettings?.private_feedback_phone_mode, "hidden");
+        if (bizSettingsErr || !bizSettings) {
+            return NextResponse.json({ error: "Business not found" }, { status: 404 });
+        }
+
+        const emailMode = normalizeContactMode(bizSettings.private_feedback_email_mode, "optional");
+        const phoneMode = normalizeContactMode(bizSettings.private_feedback_phone_mode, "hidden");
 
         let customer_email = rawEmail?.trim() || null;
         let customer_phone = rawPhone?.trim() || null;

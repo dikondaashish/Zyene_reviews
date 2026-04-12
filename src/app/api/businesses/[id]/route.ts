@@ -2,9 +2,12 @@
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import type { Database } from "@/lib/db/supabase/database.types";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { sanitizeSlug } from "@/lib/utils/index";
 import { z } from "zod";
+
+const DEFAULT_REVIEW_PAGE_BG = "#0f172a" as const;
 
 const businessPatchSchema = z
     .object({
@@ -30,6 +33,11 @@ const businessPatchSchema = z
         postal_code: z.string().max(20).optional().nullable(),
         zip: z.string().max(20).optional().nullable(),
         brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i).optional().nullable(),
+        review_page_background_color: z
+            .string()
+            .regex(/^#([0-9A-F]{3}){1,2}$/i)
+            .optional()
+            .nullable(),
         rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional().nullable(),
         enable_staff_selection: z.boolean().optional(),
         staff_names: z.array(z.string().max(120)).max(100).optional(),
@@ -169,10 +177,23 @@ export async function PATCH(
             patch.auto_reply_enabled_at = null;
         }
 
+        const { review_page_background_color, ...patchRest } = patch;
+        const updatePayload: Database["public"]["Tables"]["businesses"]["Update"] = {
+            ...patchRest,
+            ...(review_page_background_color !== undefined
+                ? {
+                      review_page_background_color:
+                          review_page_background_color === null
+                              ? DEFAULT_REVIEW_PAGE_BG
+                              : review_page_background_color,
+                  }
+                : {}),
+        };
+
         // Update business
         const { data, error } = await supabase
             .from("businesses")
-            .update(patch)
+            .update(updatePayload)
             .eq("id", id)
             .select()
             .single();

@@ -5,6 +5,7 @@ import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gi
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils/index";
+import { reviewPageBackdropGradient, reviewPageOrbRgba } from "@/lib/utils/review-page-background";
 
 // ─── Category → Tag mapping ────────────────────────────────────────────
 const CATEGORY_TAGS: Record<string, string[]> = {
@@ -48,6 +49,8 @@ export interface PublicReviewFlowProps {
     requestId?: string;
     googleUrl?: string;
     brandColor?: string;
+    /** Outer full-page gradient behind the white card (Brand Identity → page background) */
+    reviewPageBackgroundColor?: string | null;
     logoUrl?: string;
     minStars?: number;
     ratingStyle?: string;
@@ -94,6 +97,7 @@ export function PublicReviewFlow({
     requestId,
     googleUrl,
     brandColor = "#2563EB", // Default Blue
+    reviewPageBackgroundColor,
     logoUrl,
     minStars: minStarsVal,
     ratingStyle = "emoji",
@@ -127,6 +131,9 @@ export function PublicReviewFlow({
     className,
 }: PublicReviewFlowProps) {
     const minStars = minStarsVal ?? 4;
+    const pageBgHex = reviewPageBackgroundColor?.trim() ?? "";
+    const useCustomPageBackdrop =
+        pageBgHex.length > 0 && /^#([0-9A-F]{3}){1,2}$/i.test(pageBgHex);
     const [step, setStep] = useState<FlowStep>("rating");
     const [rating, setRating] = useState<number | null>(null);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
@@ -206,7 +213,7 @@ export function PublicReviewFlow({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    businessId,
+                    reviewRequestId: requestId,
                     businessName,
                     businessCategory: categoryKey,
                     rating,
@@ -329,6 +336,7 @@ export function PublicReviewFlow({
                 body: JSON.stringify({
                     business_id: businessId,
                     review_request_id: requestId,
+                    rating,
                     content: feedback,
                     customer_email: customerEmail.trim() || null,
                     customer_phone: customerPhone.trim() || null,
@@ -377,16 +385,46 @@ export function PublicReviewFlow({
     // ─── Shared card wrapper ────────────────────────────────────────────
 
     const renderCardWrapper = (children: React.ReactNode, contentClassName?: string) => (
-        <div className={cn(
-            "min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 transition-all duration-500",
-            !mounted && "opacity-0",
-            mounted && "opacity-100",
-            className // Apply parent PublicReviewFlow className (outer container)
-        )}>
+        <div
+            className={cn(
+                "min-h-screen flex items-center justify-center p-4 transition-all duration-500",
+                !useCustomPageBackdrop &&
+                    "bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950",
+                !mounted && "opacity-0",
+                mounted && "opacity-100",
+                className // Apply parent PublicReviewFlow className (outer container)
+            )}
+            style={
+                useCustomPageBackdrop
+                    ? { background: reviewPageBackdropGradient(pageBgHex) }
+                    : undefined
+            }
+        >
             {/* Subtle animated gradient orbs */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+                {useCustomPageBackdrop ? (
+                    <>
+                        <div
+                            className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse"
+                            style={{ backgroundColor: reviewPageOrbRgba(pageBgHex, 0.14) }}
+                        />
+                        <div
+                            className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl animate-pulse"
+                            style={{
+                                backgroundColor: reviewPageOrbRgba(pageBgHex, 0.11),
+                                animationDelay: "1s",
+                            }}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+                        <div
+                            className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"
+                            style={{ animationDelay: "1s" }}
+                        />
+                    </>
+                )}
             </div>
 
             <div className={cn(

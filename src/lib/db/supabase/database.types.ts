@@ -66,6 +66,7 @@ export type Database = {
           auto_reply_tone: string
           average_rating: number
           brand_color: string | null
+          review_page_background_color: string
           category: string
           city: string | null
           country: string
@@ -127,6 +128,7 @@ export type Database = {
           auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
+          review_page_background_color?: string
           category?: string
           city?: string | null
           country?: string
@@ -188,6 +190,7 @@ export type Database = {
           auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
+          review_page_background_color?: string
           category?: string
           city?: string | null
           country?: string

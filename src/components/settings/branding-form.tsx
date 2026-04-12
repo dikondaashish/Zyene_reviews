@@ -26,7 +26,9 @@ import type { BusinessUpdatePayload } from "@/types/components";
 
 const brandingSchema = z.object({
     brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, "Invalid hex color code."),
-    // Logo is handled separately via state/upload
+    review_page_background_color: z
+        .string()
+        .regex(/^#([0-9A-F]{3}){1,2}$/i, "Invalid hex color code."),
 });
 
 type BrandingFormValues = z.infer<typeof brandingSchema>;
@@ -35,6 +37,7 @@ interface BrandingFormProps {
     business: {
         id: string;
         brand_color?: string | null;
+        review_page_background_color?: string | null;
         logo_url?: string | null;
     };
     onValuesChange?: (values: Partial<BrandingFormValues>) => void;
@@ -66,6 +69,9 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         resolver: zodResolver(brandingSchema),
         defaultValues: {
             brand_color: (business.brand_color || "#0f172a").toLowerCase(),
+            review_page_background_color: (
+                business.review_page_background_color || "#0f172a"
+            ).toLowerCase(),
         },
     });
 
@@ -355,6 +361,46 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                             </div>
                                             <p className="text-xs text-muted-foreground flex-1">
                                                 This color will be used for buttons, links, and accents throughout your public review page.
+                                            </p>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="review_page_background_color"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <FormLabel className="text-base font-medium text-foreground">
+                                            Page background
+                                        </FormLabel>
+                                        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                            <div className="flex gap-3 items-center w-full sm:w-auto">
+                                                <div className="relative h-11 w-11 rounded-xl border border-border shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-orange-500">
+                                                    <div
+                                                        className="absolute inset-0"
+                                                        style={{ backgroundColor: field.value }}
+                                                    />
+                                                    <input
+                                                        type="color"
+                                                        {...field}
+                                                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full p-0 border-0"
+                                                    />
+                                                </div>
+                                                <div className="flex-1 sm:w-32">
+                                                    <Input
+                                                        {...field}
+                                                        placeholder="#0f172a"
+                                                        className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground flex-1">
+                                                Full-screen color behind your review card on the public link (e.g.{" "}
+                                                <span className="font-mono">#04112f</span>). Accent buttons still use
+                                                Brand Color above.
                                             </p>
                                         </div>
                                         <FormMessage />

@@ -32,6 +32,7 @@ export default async function RequestPage({
             category,
             logo_url,
             brand_color,
+            review_page_background_color,
             min_stars_for_google,
             welcome_message,
             apology_message,
@@ -118,6 +119,13 @@ export default async function RequestPage({
         }
     }
 
+    const rawPageBg = (business as { review_page_background_color?: string | null })
+        .review_page_background_color;
+    const reviewPageBackgroundColor =
+        typeof rawPageBg === "string" && /^#([0-9A-F]{3}){1,2}$/i.test(rawPageBg)
+            ? rawPageBg
+            : undefined;
+
     return (
         <div className="review-page-wrapper">
             <PublicReviewFlow
@@ -128,6 +136,7 @@ export default async function RequestPage({
                 googleUrl={business.google_review_url ?? platform?.external_url ?? undefined}
                 logoUrl={business.logo_url ?? undefined}
                 brandColor={business.brand_color ?? undefined}
+                reviewPageBackgroundColor={reviewPageBackgroundColor}
                 minStars={business.min_stars_for_google ?? undefined}
                 welcomeMsg={business.welcome_message ?? undefined}
                 apologyMsg={business.apology_message ?? undefined}

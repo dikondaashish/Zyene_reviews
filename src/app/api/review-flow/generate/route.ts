@@ -5,12 +5,13 @@ import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
 const requestSchema = z.object({
-    businessId: z.string().optional(),
-    businessName: z.string().min(1),
-    businessCategory: z.string().min(1),
+    /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
+    reviewRequestId: z.string().uuid().optional(),
+    businessName: z.string().min(1).max(200),
+    businessCategory: z.string().min(1).max(120),
     rating: z.number().int().min(4).max(5),
-    selectedTags: z.array(z.string()).min(1).max(10),
-    selectedStaff: z.array(z.string()).optional(),
+    selectedTags: z.array(z.string().min(1).max(200)).min(1).max(10),
+    selectedStaff: z.array(z.string().max(120)).max(50).optional(),
 });
 
 export async function POST(request: Request) {
@@ -41,26 +42,38 @@ export async function POST(request: Request) {
             );
         }
 
-        const { businessId, businessName, businessCategory, rating, selectedTags, selectedStaff } = parsed.data;
+        const { reviewRequestId, businessName, businessCategory, rating, selectedTags, selectedStaff } =
+            parsed.data;
         const tagsString = selectedTags.join(", ");
-        const staffString = selectedStaff && selectedStaff.length > 0 ? ` They also specifically wanted to highlight the great service from their staff member(s): ${selectedStaff.join(" and ")}.` : "";
+        const staffString =
+            selectedStaff && selectedStaff.length > 0
+                ? ` They also specifically wanted to highlight the great service from their staff member(s): ${selectedStaff.join(" and ")}.`
+                : "";
 
         let recentReviewsContext = "";
-        if (businessId) {
+        if (reviewRequestId) {
             try {
                 const supabase = createAdminClient();
-                const { data: reviews } = await supabase
-                    .from("reviews")
-                    .select("text")
-                    .eq("business_id", businessId)
-                    .not("text", "is", null)
-                    .order("review_date", { ascending: false })
-                    .limit(5);
+                const { data: rr, error: rrErr } = await supabase
+                    .from("review_requests")
+                    .select("business_id")
+                    .eq("id", reviewRequestId)
+                    .maybeSingle();
 
-                if (reviews && reviews.length > 0) {
-                    recentReviewsContext = reviews
-                        .map((r, i) => `Previous Review ${i + 1}: "${r.text}"`)
-                        .join("\n\n");
+                if (!rrErr && rr?.business_id) {
+                    const { data: reviews } = await supabase
+                        .from("reviews")
+                        .select("text")
+                        .eq("business_id", rr.business_id)
+                        .not("text", "is", null)
+                        .order("review_date", { ascending: false })
+                        .limit(5);
+
+                    if (reviews && reviews.length > 0) {
+                        recentReviewsContext = reviews
+                            .map((r, i) => `Previous Review ${i + 1}: "${r.text}"`)
+                            .join("\n\n");
+                    }
                 }
             } catch (err) {
                 console.error("Failed to fetch context reviews:", err);

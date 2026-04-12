@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/db/supabase/admin";
+import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { z } from "zod";
 
 const statusSchema = z.object({
@@ -12,29 +13,56 @@ export async function PATCH(
 ) {
     try {
         const { id } = await params;
-        const body = await request.json();
-        const parsed = statusSchema.safeParse(body);
-
-        if (!parsed.success) {
-            return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+        const idParsed = z.string().uuid().safeParse(id);
+        if (!idParsed.success) {
+            return apiError("Invalid feedback id", { status: 400 });
         }
 
-        const supabase = createAdminClient();
-        const { data, error } = await supabase
+        const supabase = await createClient();
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+            return apiError("Unauthorized", { status: 401 });
+        }
+
+        const parsed = statusSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError("Invalid status", { status: 400 });
+        }
+        const { status } = parsed.data;
+
+        const { data: row, error: fetchError } = await supabase
             .from("private_feedback")
-            .update({ status: parsed.data.status })
-            .eq("id", id)
+            .select("id, business_id")
+            .eq("id", idParsed.data)
+            .maybeSingle();
+
+        if (fetchError || !row) {
+            return apiError("Feedback not found", { status: 404 });
+        }
+
+        const hasAccess = await userCanAccessBusiness(supabase, user.id, row.business_id);
+        if (!hasAccess) {
+            return apiError("Access denied", { status: 403 });
+        }
+
+        const { data, error: updateError } = await supabase
+            .from("private_feedback")
+            .update({ status })
+            .eq("id", idParsed.data)
             .select()
             .single();
 
-        if (error) {
-            console.error("Failed to update status:", error);
-            return NextResponse.json({ error: "Failed to update status" }, { status: 500 });
+        if (updateError) {
+            console.error("Failed to update private feedback status:", updateError);
+            return apiError("Failed to update status", { status: 500 });
         }
 
-        return NextResponse.json({ success: true, data });
+        return apiOk(data);
     } catch (error) {
         console.error("Status Update API Error:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return apiError("Internal server error", { status: 500 });
     }
 }
