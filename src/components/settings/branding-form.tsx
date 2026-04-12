@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -60,7 +60,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
 
     const form = useForm<BrandingFormValues>({
         resolver: zodResolver(brandingSchema),
@@ -210,6 +210,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         try {
             await updateBusiness({ logo_url: null });
             setLogoUrl(undefined);
+            onLogoChange?.(null);
 
             if (oldLogoUrl) {
                 await deleteOldLogo(oldLogoUrl);
@@ -223,16 +224,21 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const updateBusiness = async (updates: BusinessUpdatePayload) => {
         const response = await fetch(`/api/businesses/${business.id}`, {
             method: "PATCH",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updates),
         });
 
-        if (!response.ok) {
-            let errorMsg = "Failed to update";
-            try {
-                const data = await response.json();
-                errorMsg = data.error || data.details?.[0]?.message || errorMsg;
-            } catch (e) {}
+        const data = (await response.json().catch(() => ({}))) as {
+            success?: boolean;
+            error?: string;
+        };
+
+        if (!response.ok || data.success !== true) {
+            const errorMsg =
+                typeof data.error === "string" && data.error.length > 0
+                    ? data.error
+                    : "Failed to update";
             throw new Error(errorMsg);
         }
         router.refresh();
@@ -264,7 +270,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                 <div className="grid grid-cols-1 gap-8">
                     {/* Logo Section */}
                     <div className="space-y-4">
-                        <FormLabel className="text-base font-medium text-foreground">Logo</FormLabel>
+                        <FormLabel className="text-base font-medium text-foreground">Business Logo</FormLabel>
                         <div className="flex flex-col sm:flex-row gap-6 items-start">
                             <div className="relative h-28 w-28 rounded-2xl border-2 border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
                                 {uploadingLogo ? (

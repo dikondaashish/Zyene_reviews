@@ -65,6 +65,10 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
         onSlugChange?.(watchedSlug);
     }, [watchedSlug, onSlugChange]);
 
+    useEffect(() => {
+        form.reset({ slug: initialSlug });
+    }, [initialSlug, form.reset]);
+
     // Debounced check
     useEffect(() => {
         if (!watchedSlug || watchedSlug === initialSlug) {
@@ -72,35 +76,48 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
             return;
         }
 
-        const sanitized = sanitizeSlug(watchedSlug);
-        if (sanitized !== watchedSlug) {
-            // Basic sanitization happens in render input usually, 
-            // but we can let user type and validate via schema too.
-            // Schema ensures regex.
+        if (watchedSlug.length < 3) {
+            setIsAvailable(null);
+            return;
         }
-
-        if (watchedSlug.length < 3) return;
 
         const timer = setTimeout(async () => {
             setIsChecking(true);
             try {
-                const res = await fetch(`/api/businesses/check-slug?slug=${watchedSlug}&businessId=${businessId}`);
-                const data = await res.json();
-                setIsAvailable(data.available);
-                if (!data.available) {
+                const res = await fetch(
+                    `/api/businesses/check-slug?slug=${encodeURIComponent(watchedSlug)}&businessId=${encodeURIComponent(businessId)}`,
+                    { credentials: "include" }
+                );
+                const data = (await res.json().catch(() => ({}))) as {
+                    available?: boolean;
+                    error?: string;
+                };
+                if (!res.ok) {
+                    setIsAvailable(null);
+                    form.setError("slug", {
+                        message:
+                            typeof data.error === "string" && data.error.length > 0
+                                ? data.error
+                                : "Could not verify link availability.",
+                    });
+                    return;
+                }
+                setIsAvailable(data.available === true);
+                if (data.available === false) {
                     form.setError("slug", { message: "This link is already taken." });
-                } else {
+                } else if (data.available === true) {
                     form.clearErrors("slug");
                 }
             } catch (error) {
                 console.error(error);
+                setIsAvailable(null);
             } finally {
                 setIsChecking(false);
             }
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [watchedSlug, businessId, initialSlug, form]);
+    }, [watchedSlug, businessId, initialSlug, form.setError, form.clearErrors]);
 
     const onSubmit = (data: SlugFormValues) => {
         if (data.slug === initialSlug) return;
@@ -118,13 +135,22 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
         try {
             const response = await fetch(`/api/businesses/${businessId}`, {
                 method: "PATCH",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ slug: pendingSlug }),
             });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to update link");
+            const json = (await response.json().catch(() => ({}))) as {
+                success?: boolean;
+                error?: string;
+            };
+
+            if (!response.ok || json.success !== true) {
+                const msg =
+                    typeof json.error === "string" && json.error.length > 0
+                        ? json.error
+                        : "Failed to update link";
+                throw new Error(msg);
             }
 
             toast.success("Link updated successfully!");
@@ -174,7 +200,14 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                     </div>
                                     <Button
                                         type="submit"
-                                        disabled={!form.formState.isValid || isChecking || isAvailable === false || watchedSlug === initialSlug || isSaving}
+                                        disabled={
+                                            !form.formState.isValid ||
+                                            isChecking ||
+                                            isAvailable === false ||
+                                            watchedSlug === initialSlug ||
+                                            isSaving ||
+                                            (watchedSlug !== initialSlug && isAvailable !== true)
+                                        }
                                         className="bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-sm"
                                     >
                                         Save

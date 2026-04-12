@@ -26,37 +26,54 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette } from "lucide-react";
+import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette, Gift } from "lucide-react";
 import type { PublicProfilePreviewValues } from "@/types/components";
 
+/** Match `businessPatchSchema` max lengths so saves fail in-form instead of opaque API 400s */
 const contentSchema = z.object({
-    rating_subtitle: z.string().optional(),
-    tags_heading: z.string().optional(),
-    tags_subheading: z.string().optional(),
-    custom_tags: z.string().optional(), // Comma-separated string for easier editing
+    rating_subtitle: z.string().max(500).optional(),
+    tags_heading: z.string().max(500).optional(),
+    tags_subheading: z.string().max(500).optional(),
+    custom_tags: z.string().optional(),
     enable_staff_selection: z.boolean().optional(),
-    staff_names: z.string().optional(), // Comma-separated
-    google_heading: z.string().optional(),
-    google_subheading: z.string().optional(),
-    google_button_text: z.string().optional(),
-    negative_subheading: z.string().optional(),
-    negative_textarea_placeholder: z.string().optional(),
-    negative_button_text: z.string().optional(),
+    staff_names: z.string().optional(),
+    google_heading: z.string().max(500).optional(),
+    google_subheading: z.string().max(500).optional(),
+    google_button_text: z.string().max(200).optional(),
+    negative_subheading: z.string().max(500).optional(),
+    negative_textarea_placeholder: z.string().max(500).optional(),
+    negative_button_text: z.string().max(200).optional(),
     private_feedback_email_mode: z.enum(["hidden", "optional", "required"]),
     private_feedback_phone_mode: z.enum(["hidden", "optional", "required"]),
-    thank_you_heading: z.string().optional(),
-    thank_you_message: z.string().optional(),
-    footer_text: z.string().optional(),
-    footer_company_name: z.string().optional(),
-    footer_link: z.string().optional(),
-    footer_logo_url: z.string().optional(),
+    private_feedback_offer_mode: z.enum(["hidden", "visible"]),
+    private_feedback_offer_message: z.string().max(500).optional(),
+    thank_you_heading: z.string().max(200).optional(),
+    thank_you_message: z.string().max(5000).optional(),
+    footer_text: z.string().max(200).optional(),
+    footer_company_name: z.string().max(200).optional(),
+    footer_link: z
+        .string()
+        .max(2048)
+        .optional()
+        .refine(
+            (s) => !s?.trim() || /^https?:\/\//i.test(s.trim()),
+            { message: "Use a full URL starting with http:// or https://" }
+        ),
+    footer_logo_url: z.string().max(1000).optional(),
     hide_branding: z.boolean().optional(),
-    welcome_message: z.string().optional(),
-    apology_message: z.string().optional(),
+    welcome_message: z.string().max(500).optional(),
+    apology_message: z.string().max(500).optional(),
     min_stars_for_google: z.number().min(1).max(5).optional(),
-    google_review_url: z.string().optional(),
+    google_review_url: z
+        .string()
+        .max(2048)
+        .optional()
+        .refine(
+            (s) => !s?.trim() || /^https?:\/\//i.test(s.trim()),
+            { message: "Use a full URL starting with http:// or https://" }
+        ),
     rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional(),
 });
 
@@ -72,7 +89,7 @@ export function ReviewContentForm({
     onTabChange?: (tab: string) => void;
 }) {
     const router = useRouter();
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -95,6 +112,8 @@ export function ReviewContentForm({
             negative_button_text: "",
             private_feedback_email_mode: "optional",
             private_feedback_phone_mode: "hidden",
+            private_feedback_offer_mode: "hidden",
+            private_feedback_offer_message: "",
             thank_you_heading: "",
             thank_you_message: "",
             footer_text: "",
@@ -153,26 +172,27 @@ export function ReviewContentForm({
     // Watch for changes and notify parent for preview
     useEffect(() => {
         const subscription = form.watch((value) => {
-            if (onValuesChange) {
-                const customTagsArray = value.custom_tags
-                    ? value.custom_tags.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
-                    : [];
+            if (!onValuesChange) return;
+            const customTagsArray = value.custom_tags
+                ? value.custom_tags.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
+                : [];
 
-                const staffNamesArray = value.staff_names
-                    ? value.staff_names.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
-                    : [];
+            const staffNamesArray = value.staff_names
+                ? value.staff_names.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
+                : [];
 
-                onValuesChange({
-                    ...value,
-                    custom_tags: customTagsArray,
-                    staff_names: staffNamesArray
-                });
-            }
+            onValuesChange({
+                ...value,
+                custom_tags: customTagsArray,
+                staff_names: staffNamesArray,
+            });
         });
         return () => subscription.unsubscribe();
-    }, [form.watch, onValuesChange]);
+    }, [form, onValuesChange]);
 
     useEffect(() => {
+        let cancelled = false;
+
         async function loadData() {
             if (!businessId) return;
 
@@ -185,8 +205,9 @@ export function ReviewContentForm({
 
                 if (error) throw error;
 
-                if (data) {
-                    form.reset({
+                if (cancelled || !data) return;
+
+                form.reset({
                         min_stars_for_google: data.min_stars_for_google ?? 4,
                         rating_subtitle: data.rating_subtitle || "Your feedback means a lot to us!",
                         tags_heading: data.tags_heading || "What did you like most?",
@@ -213,6 +234,9 @@ export function ReviewContentForm({
                             data.private_feedback_phone_mode === "required"
                                 ? data.private_feedback_phone_mode
                                 : "hidden",
+                        private_feedback_offer_mode:
+                            data.private_feedback_offer_mode === "visible" ? "visible" : "hidden",
+                        private_feedback_offer_message: data.private_feedback_offer_message || "",
                         thank_you_heading: data.thank_you_heading || "Thank You!",
                         thank_you_message: data.thank_you_message || "Your feedback means the world to us.\nWe appreciate you taking the time.",
 
@@ -225,17 +249,20 @@ export function ReviewContentForm({
                         apology_message: data.apology_message || "Sorry about that",
                         rating_style: (data.rating_style as "emoji" | "stars" | "number" | "slider" | "radio") || "emoji",
                     });
-                }
             } catch (error) {
                 console.error("Error loading content settings:", error);
-                toast.error("Failed to load content settings");
+                if (!cancelled) toast.error("Failed to load content settings");
             } finally {
-                setIsLoading(false);
+                if (!cancelled) setIsLoading(false);
             }
         }
 
+        setIsLoading(true);
         loadData();
-    }, [businessId, supabase, form]);
+        return () => {
+            cancelled = true;
+        };
+    }, [businessId, supabase, form.reset]);
 
     async function onSubmit(data: ContentFormValues) {
         setIsSaving(true);
@@ -271,6 +298,8 @@ export function ReviewContentForm({
                 negative_button_text: trimOrNull(data.negative_button_text),
                 private_feedback_email_mode: data.private_feedback_email_mode,
                 private_feedback_phone_mode: data.private_feedback_phone_mode,
+                private_feedback_offer_mode: data.private_feedback_offer_mode,
+                private_feedback_offer_message: trimOrNull(data.private_feedback_offer_message),
                 thank_you_heading: trimOrNull(data.thank_you_heading),
                 thank_you_message: trimOrNull(data.thank_you_message),
                 footer_text: trimOrNull(data.footer_text),
@@ -675,7 +704,10 @@ export function ReviewContentForm({
                                                     <Input placeholder="https://g.page/r/..." {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormDescription>
-                                                    Optional: Override the default Review Site link.
+                                                    Optional: Override the default Review Site link. If you enter a URL, it must start
+                                                    with{" "}
+                                                    <span className="font-mono">https://</span> or{" "}
+                                                    <span className="font-mono">http://</span> or saving will fail validation.
                                                 </FormDescription>
                                                 <FormMessage />
                                             </FormItem>
@@ -743,6 +775,65 @@ export function ReviewContentForm({
                                             </FormItem>
                                         )}
                                     />
+
+                                    <div className="pt-4 border-t border-border space-y-4">
+                                        <div className="flex items-start gap-2">
+                                            <Gift className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="text-sm font-medium text-foreground">Special offer message</p>
+                                                <p className="text-xs text-muted-foreground mt-0.5">
+                                                    Optional banner above &quot;Your feedback&quot; — use it to acknowledge the issue and mention a goodwill offer (e.g. discount or follow-up).
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <FormField
+                                            control={form.control}
+                                            name="private_feedback_offer_mode"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Banner</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="bg-muted/30 focus:bg-background transition-colors">
+                                                                <SelectValue />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="hidden">Hidden</SelectItem>
+                                                            <SelectItem value="visible">Show</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormDescription>
+                                                        When shown, customers see this before they write their feedback.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {form.watch("private_feedback_offer_mode") === "visible" && (
+                                            <FormField
+                                                control={form.control}
+                                                name="private_feedback_offer_message"
+                                                render={({ field }) => (
+                                                    <FormItem className="animate-in fade-in slide-in-from-top-1 duration-200">
+                                                        <FormLabel>Custom message (optional)</FormLabel>
+                                                        <FormControl>
+                                                            <Textarea
+                                                                placeholder={`We're sorry for the inconvenience. We'd like to make things right with a special offer for you — we'll follow up with the details.`}
+                                                                className="min-h-[100px] bg-muted/30 focus:bg-background transition-colors resize-none text-sm"
+                                                                maxLength={500}
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormDescription>
+                                                            Leave blank to use the default wording. Max 500 characters.
+                                                        </FormDescription>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        )}
+                                    </div>
 
                                     <div className="pt-4 border-t border-border space-y-4">
                                         <p className="text-sm font-medium text-foreground">Contact fields on private feedback</p>
@@ -876,7 +967,9 @@ export function ReviewContentForm({
                                                     <Input placeholder="https://zyene.com" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormDescription>
-                                                    Where should the footer link to?
+                                                    Where should the footer link to? Leave blank or use a full URL starting with{" "}
+                                                    <span className="font-mono">https://</span> or{" "}
+                                                    <span className="font-mono">http://</span>.
                                                 </FormDescription>
                                                 <FormMessage />
                                             </FormItem>

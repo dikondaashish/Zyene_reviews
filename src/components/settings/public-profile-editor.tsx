@@ -61,6 +61,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
             business.private_feedback_phone_mode === "required"
                 ? business.private_feedback_phone_mode
                 : "hidden",
+        private_feedback_offer_mode:
+            business.private_feedback_offer_mode === "visible" ? "visible" : "hidden",
+        private_feedback_offer_message: (business.private_feedback_offer_message as string | null) ?? "",
         thank_you_heading: business.thank_you_heading ?? undefined,
         thank_you_message: business.thank_you_message ?? undefined,
         footer_text: business.footer_text ?? undefined,
@@ -102,7 +105,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         handleValuesChange({ logo_url: url });
     }, [handleValuesChange]);
 
-    const previewUrl = `zyenereviews.com/${previewState.slug}`;
+    const previewUrl = `zyenereviews.com/${previewState.slug || initialSlug}`;
     const fullUrl = `https://${previewUrl}`;
 
     // Share & QR state
@@ -110,6 +113,16 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     const [qrDialogOpen, setQrDialogOpen] = useState(false);
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
+
+    // After slug save + router.refresh(), keep preview + share URL aligned with server slug
+    useEffect(() => {
+        setPreviewState((prev) => ({ ...prev, slug: initialSlug }));
+    }, [initialSlug]);
+
+    // QR image is generated from DB slug; drop cache when canonical slug changes so we never show an old link
+    useEffect(() => {
+        setQrDataUrl(null);
+    }, [initialSlug]);
 
     const handleShare = async () => {
         if (navigator.share) {
@@ -131,12 +144,21 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     const fetchQrCode = useCallback(async () => {
         setQrLoading(true);
         try {
-            const res = await fetch(`/api/businesses/${business.id}/qr-code`);
-            if (!res.ok) throw new Error();
-            const data = await res.json();
+            const res = await fetch(`/api/businesses/${business.id}/qr-code`, {
+                credentials: "include",
+            });
+            const data = (await res.json().catch(() => ({}))) as {
+                qrCodeDataUrl?: string;
+                error?: string;
+            };
+            if (!res.ok || !data.qrCodeDataUrl) {
+                throw new Error(
+                    typeof data.error === "string" ? data.error : "Failed to load QR code"
+                );
+            }
             setQrDataUrl(data.qrCodeDataUrl);
-        } catch {
-            toast.error("Failed to load QR code");
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : "Failed to load QR code");
         } finally {
             setQrLoading(false);
         }
@@ -190,7 +212,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
 
             const link = document.createElement("a");
             link.href = canvas.toDataURL("image/png");
-            link.download = `${previewState.slug}-qr-code.png`;
+            link.download = `${previewState.slug || initialSlug || "review"}-qr-code.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -272,6 +294,8 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                                 negativeButtonText={previewState.negative_button_text}
                                 privateFeedbackEmailMode={previewState.private_feedback_email_mode}
                                 privateFeedbackPhoneMode={previewState.private_feedback_phone_mode}
+                                privateFeedbackOfferMode={previewState.private_feedback_offer_mode}
+                                privateFeedbackOfferMessage={previewState.private_feedback_offer_message}
                                 thankYouHeading={previewState.thank_you_heading}
                                 thankYouMessage={previewState.thank_you_message}
                                 footerText={previewState.footer_text}

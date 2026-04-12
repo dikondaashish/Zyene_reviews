@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
-import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, ChevronRight, Check, Star } from "lucide-react";
+import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils/index";
@@ -35,6 +35,10 @@ const RATINGS = [
 ];
 
 export type PrivateFeedbackContactMode = "hidden" | "optional" | "required";
+export type PrivateFeedbackOfferMode = "hidden" | "visible";
+
+const DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT =
+    "We're sorry for the inconvenience. We'd like to make things right with a special offer for you — we'll follow up with the details.";
 
 // ─── Props ──────────────────────────────────────────────────────────────
 export interface PublicReviewFlowProps {
@@ -64,6 +68,9 @@ export interface PublicReviewFlowProps {
     /** Public negative-feedback step: whether email is collected and if it is optional or required */
     privateFeedbackEmailMode?: PrivateFeedbackContactMode;
     privateFeedbackPhoneMode?: PrivateFeedbackContactMode;
+    /** When visible, shows a goodwill / special-offer message above the feedback field */
+    privateFeedbackOfferMode?: PrivateFeedbackOfferMode;
+    privateFeedbackOfferMessage?: string | null;
     thankYouHeading?: string;
     thankYouMessage?: string;
     footerText?: string;
@@ -106,6 +113,8 @@ export function PublicReviewFlow({
     negativeButtonText,
     privateFeedbackEmailMode = "optional",
     privateFeedbackPhoneMode = "hidden",
+    privateFeedbackOfferMode = "hidden",
+    privateFeedbackOfferMessage = null,
     thankYouHeading,
     thankYouMessage,
     footerText,
@@ -463,6 +472,8 @@ export function PublicReviewFlow({
         const selectedRating = RATINGS.find((r) => r.value === rating);
         const canSubmitNegative =
             feedback.trim().length > 0 && negativeContactValid();
+        const offerBannerText =
+            privateFeedbackOfferMessage?.trim() || DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT;
         return renderCardWrapper(
             <form
                 className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
@@ -482,6 +493,36 @@ export function PublicReviewFlow({
                         </p>
                     </div>
                 </div>
+
+                {privateFeedbackOfferMode === "visible" && (
+                    <div
+                        className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-slate-50/80 p-4 pl-[1.125rem] shadow-[0_1px_0_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.04]"
+                        style={{ borderLeftWidth: 4, borderLeftColor: brandColor }}
+                        role="status"
+                        aria-live="polite"
+                    >
+                        <div
+                            className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full opacity-[0.12]"
+                            style={{ background: brandColor }}
+                        />
+                        <div className="relative flex gap-3.5">
+                            <div
+                                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200/80"
+                                aria-hidden
+                            >
+                                <Gift className="h-5 w-5" style={{ color: brandColor }} strokeWidth={2} />
+                            </div>
+                            <div className="min-w-0 flex-1 space-y-1 pt-0.5">
+                                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                                    Special offer
+                                </p>
+                                <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-line">
+                                    {offerBannerText}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Feedback textarea */}
                 <div className="space-y-2">

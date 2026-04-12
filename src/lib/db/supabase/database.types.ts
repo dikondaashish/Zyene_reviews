@@ -90,6 +90,8 @@ export type Database = {
           negative_subheading: string | null
           negative_textarea_placeholder: string | null
           private_feedback_email_mode: string
+          private_feedback_offer_message: string | null
+          private_feedback_offer_mode: string
           private_feedback_phone_mode: string
           organization_id: string
           phone: string | null
@@ -149,6 +151,8 @@ export type Database = {
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
           private_feedback_email_mode?: string
+          private_feedback_offer_message?: string | null
+          private_feedback_offer_mode?: string
           private_feedback_phone_mode?: string
           organization_id: string
           phone?: string | null
@@ -208,6 +212,8 @@ export type Database = {
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
           private_feedback_email_mode?: string
+          private_feedback_offer_message?: string | null
+          private_feedback_offer_mode?: string
           private_feedback_phone_mode?: string
           organization_id?: string
           phone?: string | null

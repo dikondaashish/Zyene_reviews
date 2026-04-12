@@ -3,11 +3,19 @@ import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
+import { sanitizeSlug } from "@/lib/utils/index";
 import { z } from "zod";
 
 const businessPatchSchema = z
     .object({
         name: z.string().min(1).max(255).optional(),
+        /** Public review page path segment; validated and uniqueness-checked on update */
+        slug: z
+            .string()
+            .min(3, "Slug must be at least 3 characters.")
+            .max(120)
+            .regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers, and hyphens.")
+            .optional(),
         category: z.string().min(1).max(100).optional(),
         timezone: z.string().min(1).max(80).optional(),
         country: z.string().min(2).max(2).optional(),
@@ -42,6 +50,8 @@ const businessPatchSchema = z
         negative_button_text: z.string().max(200).optional().nullable(),
         private_feedback_email_mode: z.enum(["hidden", "optional", "required"]).optional(),
         private_feedback_phone_mode: z.enum(["hidden", "optional", "required"]).optional(),
+        private_feedback_offer_mode: z.enum(["hidden", "visible"]).optional(),
+        private_feedback_offer_message: z.string().max(500).optional().nullable(),
         thank_you_heading: z.string().max(200).optional().nullable(),
         thank_you_message: z.string().max(5000).optional().nullable(),
         footer_text: z.string().max(200).optional().nullable(),
@@ -129,6 +139,29 @@ export async function PATCH(
         }
 
         const patch: typeof body & { auto_reply_enabled_at?: string | null } = { ...body };
+
+        if (body.slug !== undefined) {
+            const sanitized = sanitizeSlug(body.slug);
+            if (sanitized.length < 3) {
+                throw new ApiRouteError("Slug must be at least 3 characters.", {
+                    status: 400,
+                    code: "INVALID_SLUG",
+                });
+            }
+            const { data: slugConflict } = await supabase
+                .from("businesses")
+                .select("id")
+                .eq("slug", sanitized)
+                .neq("id", id)
+                .maybeSingle();
+            if (slugConflict) {
+                throw new ApiRouteError("This link is already taken.", {
+                    status: 409,
+                    code: "SLUG_TAKEN",
+                });
+            }
+            patch.slug = sanitized;
+        }
         if (body.auto_reply_enabled === true && !currentBiz.auto_reply_enabled) {
             patch.auto_reply_enabled_at = new Date().toISOString();
         }

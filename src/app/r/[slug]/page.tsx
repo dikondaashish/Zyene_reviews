@@ -48,6 +48,8 @@ export default async function RequestPage({
             negative_button_text,
             private_feedback_email_mode,
             private_feedback_phone_mode,
+            private_feedback_offer_mode,
+            private_feedback_offer_message,
             thank_you_heading,
             thank_you_message,
             footer_text,
@@ -153,6 +155,10 @@ export default async function RequestPage({
                         ? business.private_feedback_phone_mode
                         : undefined
                 }
+                privateFeedbackOfferMode={
+                    business.private_feedback_offer_mode === "visible" ? "visible" : undefined
+                }
+                privateFeedbackOfferMessage={business.private_feedback_offer_message ?? undefined}
                 thankYouHeading={business.thank_you_heading ?? undefined}
                 thankYouMessage={business.thank_you_message ?? undefined}
                 footerText={business.footer_text ?? undefined}
