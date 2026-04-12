@@ -116,8 +116,15 @@ export async function generateContentWithFallback(
 
 function readResponseText(response: any): string {
     if (!response) return "";
+    const parts = response.candidates?.[0]?.content?.parts;
+    if (Array.isArray(parts) && parts.length > 0) {
+        const joined = parts
+            .map((p: { text?: string }) => (typeof p?.text === "string" ? p.text : ""))
+            .join("");
+        if (joined.trim()) return joined.trim();
+    }
     if (typeof response.text === "string" && response.text.trim()) return response.text.trim();
-    return response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    return "";
 }
 
 function isBlockedApiKeyError(error: unknown): boolean {

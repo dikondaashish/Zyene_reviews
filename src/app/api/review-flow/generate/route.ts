@@ -76,7 +76,9 @@ ${recentReviewsContext || "None available."}
 
 Rules for a NATURAL, HUMAN-WRITTEN review:
 - First person perspective as the customer
-- 2-3 sentences max
+- Write exactly 2-3 complete sentences; every sentence must end with proper punctuation (period, etc.).
+- The last sentence must clearly include the full business name: "${businessName}".
+- Do not stop mid-sentence. Do not trail off with "to" or an unfinished clause.
 - Strictly NO icons or emojis
 - Strictly NO starting with 'I'
 - Strictly NO 'highly recommend'
@@ -84,13 +86,15 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 - Answer Engine Friendly: Use clear, direct sentences for AI search engines to feature as snippets.
 - Sound like a real person, not marketing. ONE exclamation mark max.
 - Mention specific things the customer liked naturally.
+- Output ONLY the review text — no labels, no quotes around the whole review, no "Review:" prefix.
 
 Review Content:`;
 
         try {
+            // Short reviews still need headroom: low caps hit MAX_TOKENS mid-sentence (especially with staff + context).
             const reviewText = await generateContentWithFallback(prompt, {
                 requireJson: false,
-                maxOutputTokens: 256,
+                maxOutputTokens: 1024,
                 temperature: 0.7,
             });
 
