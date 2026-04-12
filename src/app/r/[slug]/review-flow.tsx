@@ -73,7 +73,7 @@ export interface PublicReviewFlowProps {
 }
 
 // ─── Step type ──────────────────────────────────────────────────────────
-type FlowStep = "rating" | "tags" | "staff" | "generating" | "review" | "thankyou" | "negative";
+type FlowStep = "rating" | "tags" | "generating" | "review" | "thankyou" | "negative";
 
 // ─── Main component ─────────────────────────────────────────────────────
 export function PublicReviewFlow({
@@ -215,11 +215,8 @@ export function PublicReviewFlow({
     };
 
     const handleTagsContinue = () => {
-        if (enableStaffSelection && staffNames.length > 0) {
-            setStep("staff");
-        } else {
-            handleGenerateReview();
-        }
+        // Staff is chosen on the same screen as tags (no separate step).
+        void handleGenerateReview();
     };
 
     const handlePostToGoogle = async () => {
@@ -782,11 +779,14 @@ export function PublicReviewFlow({
 
                     <div className="h-2" /> {/* Extra spacing */}
 
-                    {/* Staff Selection */}
+                    {/* Staff selection (same step as tags — avoids a duplicate full-screen staff step) */}
                     {enableStaffSelection && staffNames.length > 0 && (
                         <div className="pt-4 border-t border-slate-100">
-                            <p className="text-center text-sm font-medium text-slate-600 mb-3">
-                                Who served you? (Optional)
+                            <p className="text-center text-sm font-medium text-slate-600 mb-1">
+                                Who served you?
+                            </p>
+                            <p className="text-center text-xs text-slate-500 mb-3">
+                                Select who helped you today (optional)
                             </p>
                             <div className="flex flex-wrap justify-center gap-2.5">
                                 {staffNames.map((name) => (
@@ -847,74 +847,6 @@ export function PublicReviewFlow({
                     </button>
                 </div>,
             "overflow-visible min-h-[450px] flex flex-col relative z-20"
-        );
-    }
-
-    // ─── Render: Staff Selection (step 3) ────────────────────────────────
-    if (step === "staff") {
-        return renderCardWrapper(
-            <div className="p-8 pb-32 flex-1 flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-400">
-                {/* Step indicator */}
-                <div className="flex items-center gap-2">
-                    <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
-                    <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
-                    <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
-                    <div className="h-1.5 flex-1 bg-slate-200 rounded-full" />
-                </div>
-
-                <div className="text-center space-y-1">
-                    <h2 className="text-2xl font-bold text-slate-900">Who served you?</h2>
-                    <p className="text-slate-500 text-sm">Select the staff members who helped you today (optional)</p>
-                </div>
-
-                {/* Staff Selection List */}
-                <div className="flex flex-wrap justify-center gap-2.5 my-4">
-                    {staffNames.map((name) => (
-                        <button
-                            key={name}
-                            onClick={() => toggleStaff(name)}
-                            className={cn(
-                                "flex items-center gap-1.5 px-4 py-3 rounded-full text-sm font-medium transition-all duration-200",
-                                "border-2 active:scale-95 shadow-sm",
-                                selectedStaff.includes(name)
-                                    ? "text-white scale-105 shadow-md"
-                                    : "bg-white text-slate-600 border-slate-200 hover:bg-gray-50 hover:border-slate-300"
-                            )}
-                            style={{
-                                backgroundColor: selectedStaff.includes(name) ? brandColor : undefined,
-                                borderColor: selectedStaff.includes(name) ? brandColor : undefined
-                            }}
-                        >
-                            <span className="text-base">👤</span>
-                            {name}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="mt-auto space-y-4">
-                    <button
-                        className={cn(
-                            "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-                            "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
-                            "active:scale-[0.98] flex items-center justify-center gap-2"
-                        )}
-                        onClick={handleGenerateReview}
-                    >
-                        {selectedStaff.length > 0 ? "Continue" : "Skip"}
-                        <ChevronRight className="h-5 w-5" />
-                    </button>
-
-                    <button
-                        className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
-                        onClick={() => setStep("tags")}
-                    >
-                        <ArrowLeft className="h-3.5 w-3.5" />
-                        Back
-                    </button>
-                </div>
-            </div>,
-            "overflow-visible min-h-[500px] flex flex-col relative z-20"
         );
     }
 
@@ -1024,7 +956,7 @@ export function PublicReviewFlow({
 
                     <button
                         className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
-                        onClick={() => enableStaffSelection && staffNames.length > 0 ? setStep("staff") : setStep("tags")}
+                        onClick={() => setStep("tags")}
                     >
                         <ArrowLeft className="h-3.5 w-3.5" />
                         Back
