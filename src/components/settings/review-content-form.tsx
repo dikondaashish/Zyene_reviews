@@ -27,6 +27,7 @@ import {
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette } from "lucide-react";
 import type { PublicProfilePreviewValues } from "@/types/components";
 
@@ -68,6 +69,7 @@ export function ReviewContentForm({
     onValuesChange?: (values: Partial<PublicProfilePreviewValues>) => void;
     onTabChange?: (tab: string) => void;
 }) {
+    const router = useRouter();
     const supabase = createClient();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -223,37 +225,77 @@ export function ReviewContentForm({
         setIsSaving(true);
         try {
             const customTagsArray = data.custom_tags
-                ? data.custom_tags.split(",").map(t => t.trim()).filter(t => t.length > 0)
-                : null;
-
+                ? data.custom_tags.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
+                : [];
             const staffNamesArray = data.staff_names
-                ? data.staff_names.split(",").map(t => t.trim()).filter(t => t.length > 0)
+                ? data.staff_names.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
                 : [];
 
-            const updateData = {
-                ...data,
-                custom_tags: customTagsArray,
-                staff_names: staffNamesArray,
+            const trimOrNull = (s: string | undefined) => {
+                const v = s?.trim();
+                return v && v.length > 0 ? v : null;
             };
 
-            const { error } = await supabase
-                .from("businesses")
-                .update(updateData)
-                .eq("id", businessId);
+            const patch = {
+                welcome_message: trimOrNull(data.welcome_message),
+                rating_subtitle: trimOrNull(data.rating_subtitle),
+                tags_heading: trimOrNull(data.tags_heading),
+                tags_subheading: trimOrNull(data.tags_subheading),
+                custom_tags: customTagsArray.length > 0 ? customTagsArray : null,
+                enable_staff_selection: data.enable_staff_selection ?? false,
+                staff_names: staffNamesArray,
+                google_heading: trimOrNull(data.google_heading),
+                google_subheading: trimOrNull(data.google_subheading),
+                google_button_text: trimOrNull(data.google_button_text),
+                google_review_url: trimOrNull(data.google_review_url),
+                min_stars_for_google: data.min_stars_for_google ?? null,
+                apology_message: trimOrNull(data.apology_message),
+                negative_subheading: trimOrNull(data.negative_subheading),
+                negative_textarea_placeholder: trimOrNull(data.negative_textarea_placeholder),
+                negative_button_text: trimOrNull(data.negative_button_text),
+                thank_you_heading: trimOrNull(data.thank_you_heading),
+                thank_you_message: trimOrNull(data.thank_you_message),
+                footer_text: trimOrNull(data.footer_text),
+                footer_company_name: trimOrNull(data.footer_company_name),
+                footer_link: trimOrNull(data.footer_link),
+                footer_logo_url: trimOrNull(data.footer_logo_url),
+                hide_branding: data.hide_branding ?? false,
+                rating_style: data.rating_style ?? null,
+            };
 
-            if (error) throw error;
+            const response = await fetch(`/api/businesses/${businessId}`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(patch),
+            });
 
-            // Delete marked files from storage
+            const json = (await response.json().catch(() => ({}))) as {
+                success?: boolean;
+                error?: string;
+                data?: unknown;
+            };
+
+            if (!response.ok || json.success !== true) {
+                const msg =
+                    typeof json.error === "string" && json.error.length > 0
+                        ? json.error
+                        : "Failed to save content settings";
+                throw new Error(msg);
+            }
+
             if (filesToDelete.length > 0) {
-                const pathsToDelete = filesToDelete.map(url => {
-                    try {
-                        const urlObj = new URL(url);
-                        const parts = urlObj.pathname.split('/');
-                        return parts[parts.length - 1];
-                    } catch (e) {
-                        return null;
-                    }
-                }).filter(p => p !== null) as string[];
+                const pathsToDelete = filesToDelete
+                    .map((url) => {
+                        try {
+                            const urlObj = new URL(url);
+                            const parts = urlObj.pathname.split("/");
+                            return parts[parts.length - 1];
+                        } catch {
+                            return null;
+                        }
+                    })
+                    .filter((p): p is string => p !== null);
 
                 if (pathsToDelete.length > 0) {
                     await supabase.storage.from("business-logos").remove(pathsToDelete);
@@ -261,10 +303,12 @@ export function ReviewContentForm({
                 setFilesToDelete([]);
             }
 
+            form.reset(data);
+            router.refresh();
             toast.success("Content settings updated successfully");
         } catch (error) {
             console.error("Error saving content settings:", error);
-            toast.error("Failed to save content settings");
+            toast.error(error instanceof Error ? error.message : "Failed to save content settings");
         } finally {
             setIsSaving(false);
         }
@@ -837,11 +881,16 @@ export function ReviewContentForm({
                         </div>
 
                         {/* ── Save Button ── */}
-                        <div className="border-t bg-muted/30 px-6 py-4 flex justify-end">
+                        <div className="border-t bg-muted/30 px-6 py-4 flex justify-end items-center gap-4">
+                            {form.formState.isDirty && (
+                                <span className="text-sm text-amber-500 font-medium hidden sm:inline-block">
+                                    Unsaved changes
+                                </span>
+                            )}
                             <Button
                                 type="submit"
-                                disabled={isSaving}
-                                className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 shadow-sm transition-all active:scale-[0.98]"
+                                disabled={isSaving || !form.formState.isDirty}
+                                className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
                             >
                                 {isSaving ? (
                                     <>
