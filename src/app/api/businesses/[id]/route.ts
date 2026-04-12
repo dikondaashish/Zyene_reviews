@@ -7,7 +7,7 @@ import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { sanitizeSlug } from "@/lib/utils/index";
 import { z } from "zod";
 
-const DEFAULT_REVIEW_PAGE_BG = "#0f172a" as const;
+const DEFAULT_REVIEW_PAGE_BG = "#1a2b5a" as const;
 
 const businessPatchSchema = z
     .object({

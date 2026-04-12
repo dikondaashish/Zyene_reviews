@@ -70,7 +70,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         defaultValues: {
             brand_color: (business.brand_color || "#0f172a").toLowerCase(),
             review_page_background_color: (
-                business.review_page_background_color || "#0f172a"
+                business.review_page_background_color || "#1a2b5a"
             ).toLowerCase(),
         },
     });
@@ -354,7 +354,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                                 <div className="flex-1 sm:w-32">
                                                     <Input
                                                         {...field}
-                                                        placeholder="#0f172a"
+                                                        placeholder="#1a2b5a"
                                                         className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
                                                     />
                                                 </div>
@@ -392,7 +392,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                                 <div className="flex-1 sm:w-32">
                                                     <Input
                                                         {...field}
-                                                        placeholder="#0f172a"
+                                                        placeholder="#1a2b5a"
                                                         className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
                                                     />
                                                 </div>

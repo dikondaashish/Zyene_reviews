@@ -1,5 +1,19 @@
 /** Build a subtle diagonal gradient from a single brand hex (public /r/[slug] backdrop). */
 
+/** Default “seed” color for orbs and new businesses (royal blue, top-right in reference UI). */
+export const DEFAULT_REVIEW_PAGE_BACKGROUND_HEX = "#1a2b5a";
+
+/**
+ * Full-page default backdrop (navy bottom-left → blue top-right), matching product reference.
+ * Used when no custom color is set and for legacy DB default #0f172a.
+ */
+export const DEFAULT_REVIEW_PAGE_BACKDROP_CSS =
+    "linear-gradient(135deg, #1a2b5a 0%, #0e1a3d 46%, #050a1b 100%)";
+
+function normalizeHexKey(hex: string) {
+    return hex.replace(/^#/, "").toLowerCase();
+}
+
 function parseHexRgb(hex: string): { r: number; g: number; b: number } | null {
     const raw = hex.replace(/^#/, "").trim();
     if (raw.length === 3) {
@@ -36,17 +50,30 @@ function toHex(rgb: { r: number; g: number; b: number }) {
 }
 
 export function reviewPageBackdropGradient(baseHex: string): string {
+    const key = normalizeHexKey(baseHex);
+    if (key === "1a2b5a" || key === "0f172a") {
+        return DEFAULT_REVIEW_PAGE_BACKDROP_CSS;
+    }
+
     const rgb = parseHexRgb(baseHex);
     if (!rgb) {
-        return "linear-gradient(135deg, #0f172a 0%, #172554 50%, #1e1b4b 100%)";
+        return DEFAULT_REVIEW_PAGE_BACKDROP_CSS;
     }
-    const mid = mixTowardBlack(rgb, 0.32);
-    const end = mixTowardBlack(rgb, 0.52);
-    return `linear-gradient(135deg, ${toHex(rgb)} 0%, ${toHex(mid)} 52%, ${toHex(end)} 100%)`;
+    const mid = mixTowardBlack(rgb, 0.35);
+    const end = mixTowardBlack(rgb, 0.72);
+    return `linear-gradient(135deg, ${toHex(rgb)} 0%, ${toHex(mid)} 46%, ${toHex(end)} 100%)`;
+}
+
+/** Hex to use for glow orbs (matches gradient hue even when DB still has legacy default). */
+export function reviewPageOrbBaseHex(baseHex: string): string {
+    const k = normalizeHexKey(baseHex);
+    if (k === "0f172a" || k === "1a2b5a") return DEFAULT_REVIEW_PAGE_BACKGROUND_HEX;
+    if (!parseHexRgb(baseHex)) return DEFAULT_REVIEW_PAGE_BACKGROUND_HEX;
+    return baseHex;
 }
 
 export function reviewPageOrbRgba(baseHex: string, alpha: number): string {
-    const rgb = parseHexRgb(baseHex);
-    if (!rgb) return `rgba(59, 130, 246, ${alpha})`;
+    const rgb = parseHexRgb(reviewPageOrbBaseHex(baseHex));
+    if (!rgb) return `rgba(26, 43, 90, ${alpha})`;
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 }

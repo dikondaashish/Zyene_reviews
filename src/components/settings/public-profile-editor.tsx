@@ -7,7 +7,10 @@ import { BrandingForm } from "./branding-form";
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils/index";
-import { reviewPageBackdropGradient } from "@/lib/utils/review-page-background";
+import {
+    DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
+    reviewPageBackdropGradient,
+} from "@/lib/utils/review-page-background";
 import { Link as LinkIcon, HelpCircle, QrCode, Check, Download, Printer, Share2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -36,7 +39,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
             (business.review_page_background_color &&
                 /^#([0-9A-F]{3}){1,2}$/i.test(business.review_page_background_color) &&
                 business.review_page_background_color) ||
-            "#0f172a",
+            DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
         logo_url: business.logo_url,
         min_stars_for_google: business.min_stars_for_google || 4,
         rating_style: business.rating_style || "emoji",
@@ -117,7 +120,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
         previewState.review_page_background_color &&
         /^#([0-9A-F]{3}){1,2}$/i.test(previewState.review_page_background_color)
             ? reviewPageBackdropGradient(previewState.review_page_background_color)
-            : reviewPageBackdropGradient("#0f172a");
+            : reviewPageBackdropGradient(DEFAULT_REVIEW_PAGE_BACKGROUND_HEX);
 
     // Share & QR state
     const [copied, setCopied] = useState(false);
