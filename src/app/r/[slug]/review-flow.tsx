@@ -540,41 +540,42 @@ export function PublicReviewFlow({
                 {privateFeedbackOfferMode === "visible" && (
                     <div
                         className={cn(
-                            "relative overflow-hidden rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50/95 via-white to-orange-50/90 p-5 pl-5",
-                            "shadow-[0_12px_40px_-16px_rgba(245,158,11,0.45),0_4px_14px_-6px_rgba(234,88,12,0.12)]",
-                            "ring-1 ring-amber-400/20 animate-in fade-in zoom-in-95 duration-500"
+                            "relative overflow-hidden rounded-2xl border border-slate-200/90 p-5 pl-5",
+                            "bg-gradient-to-br from-white via-slate-50/80 to-sky-50/50",
+                            "shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12),0_2px_8px_-4px_rgba(15,23,42,0.06)]",
+                            "ring-1 ring-slate-900/[0.04] animate-in fade-in zoom-in-95 duration-500"
                         )}
                         role="status"
                         aria-live="polite"
                     >
                         <div
-                            className="pointer-events-none absolute inset-y-4 left-3 w-1 rounded-full opacity-95"
+                            className="pointer-events-none absolute inset-y-4 left-3 w-1 rounded-full"
                             style={{
                                 background: offerBrandHex
-                                    ? `linear-gradient(180deg, ${offerBrandHex} 0%, #f59e0b 55%, #ea580c 100%)`
-                                    : "linear-gradient(180deg, #f59e0b 0%, #ea580c 50%, #e11d48 100%)",
+                                    ? `linear-gradient(180deg, ${offerBrandHex} 0%, #0284c7 70%, #0d9488 100%)`
+                                    : "linear-gradient(180deg, #0ea5e9 0%, #0284c7 45%, #0d9488 100%)",
                             }}
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute -right-12 -top-14 h-40 w-40 rounded-full bg-gradient-to-br from-amber-300/40 via-orange-200/30 to-rose-200/25 blur-[2px]"
+                            className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-gradient-to-br from-sky-200/35 to-teal-100/25 blur-[2px]"
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute -bottom-8 right-8 h-28 w-28 rounded-full bg-amber-400/20"
+                            className="pointer-events-none absolute -bottom-6 right-10 h-24 w-24 rounded-full bg-slate-200/40"
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute right-24 top-2 text-amber-400/50"
+                            className="pointer-events-none absolute right-20 top-3 text-sky-400/45"
                             aria-hidden
                         >
-                            <Sparkles className="h-5 w-5" strokeWidth={1.75} />
+                            <Sparkles className="h-4 w-4" strokeWidth={2} />
                         </div>
                         <div className="relative flex gap-4 pl-3">
                             <div
                                 className={cn(
-                                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-lg ring-2 ring-white/90",
-                                    "bg-gradient-to-br from-amber-400 to-orange-600 shadow-orange-500/35"
+                                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white",
+                                    "bg-gradient-to-br from-sky-600 to-teal-600 shadow-md shadow-sky-900/15 ring-2 ring-white"
                                 )}
                                 aria-hidden
                             >
@@ -582,14 +583,14 @@ export function PublicReviewFlow({
                             </div>
                             <div className="min-w-0 flex-1 space-y-2 pt-0.5">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-r from-amber-800 via-orange-700 to-rose-700">
+                                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-700">
                                         Special offer
                                     </p>
-                                    <span className="inline-flex items-center rounded-full bg-amber-100/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900/90 ring-1 ring-amber-300/50">
-                                        For you
+                                    <span className="inline-flex items-center rounded-full bg-sky-100/90 px-2 py-0.5 text-[10px] font-semibold text-sky-900/85 ring-1 ring-sky-200/80">
+                                        Exclusive
                                     </span>
                                 </div>
-                                <p className="text-[15px] leading-relaxed text-stone-800 whitespace-pre-line">
+                                <p className="text-[15px] leading-relaxed text-slate-600 whitespace-pre-line">
                                     {offerBannerText}
                                 </p>
                             </div>
