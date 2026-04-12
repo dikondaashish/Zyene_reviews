@@ -102,6 +102,8 @@
     "upgrade": "Ver planes",
     "starter_msg": "Desbloquee la experiencia completa de Zyene Reviews",
     "starter_price": "Los planes incluyen prueba de 7 días en el checkout de Stripe cuando aplique.",
+    "starter_price_no_trial": "Suscríbase en el checkout de Stripe. La facturación sigue el ciclo de su plan (la prueba introductoria solo es para nuevos suscriptores).",
+    "subscribe_cta": "Suscribirse",
     "portal_help": "Método de pago, facturas y cancelación se gestionan de forma segura en Stripe.",
     "plan_section_subtitle": "Todos los planes incluyen sincronización con Google, herramientas de respuesta con IA (según plan), solicitudes de reseñas y analíticas. Los planes superiores añaden más ubicaciones y límites de envío.",
     "change_plan_title": "Cambiar o renovar plan",

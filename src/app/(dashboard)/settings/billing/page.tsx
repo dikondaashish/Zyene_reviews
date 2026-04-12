@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { BillingClient } from "@/components/settings/billing-client";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { PLANS } from "@/services/stripe/plans";
+import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -65,12 +66,15 @@ export default async function BillingPage() {
     const orgPlanId = org.plan || "none";
     const currentPlan = PLANS.find((p) => p.id === orgPlanId) || null;
 
+    const checkoutOffersTrial = await isEligibleForIntroTrial(org.stripe_customer_id ?? null);
+
     return (
         <BillingClient
             currentPlan={currentPlan}
             organizationPlanId={orgPlanId}
             planStatus={org.plan_status || "active"}
             hasStripeCustomer={!!org.stripe_customer_id}
+            checkoutOffersTrial={checkoutOffersTrial}
             canManageBilling={canManageBilling}
             usage={{
                 emailRequests: { used: emailRequests.current, max: emailRequests.max },

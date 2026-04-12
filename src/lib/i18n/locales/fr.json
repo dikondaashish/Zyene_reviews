@@ -102,6 +102,8 @@
     "upgrade": "Voir les plans",
     "starter_msg": "Profitez de toute la puissance de Zyene Reviews",
     "starter_price": "Les plans incluent un essai de 7 jours au paiement Stripe lorsque c'est prévu.",
+    "starter_price_no_trial": "Abonnez-vous via Stripe. La facturation suit le cycle de votre plan (l’essai d’introduction est réservé aux nouveaux abonnés).",
+    "subscribe_cta": "S’abonner",
     "portal_help": "Moyen de paiement, factures et annulation sont gérés en toute sécurité dans Stripe.",
     "plan_section_subtitle": "Tous les plans incluent la synchro Google, les réponses IA (selon le plan), les demandes d'avis et les analyses. Les niveaux supérieurs ajoutent des emplacements et des limites d'envoi plus élevées.",
     "change_plan_title": "Changer ou renouveler le plan",

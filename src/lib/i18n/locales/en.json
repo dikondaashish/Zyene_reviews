@@ -102,6 +102,8 @@
     "upgrade": "View plans",
     "starter_msg": "Unlock the full Zyene Reviews experience",
     "starter_price": "Plans include a 7-day trial on Stripe checkout. No charge until the trial ends if terms apply.",
+    "starter_price_no_trial": "Subscribe in Stripe checkout. Billing follows your plan’s cycle (intro trials are for first-time subscribers only).",
+    "subscribe_cta": "Subscribe",
     "portal_help": "Payment method, invoices, receipts, and cancellation are handled securely in Stripe.",
     "plan_section_subtitle": "All plans include Google review sync, AI reply tools (where your plan allows), review requests, and dashboard analytics. Higher tiers add more locations and higher monthly send limits.",
     "change_plan_title": "Change or renew your plan",

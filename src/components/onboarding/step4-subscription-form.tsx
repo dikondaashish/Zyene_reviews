@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/lib/language-context";
+import { getCheckoutTrialEligibilityForOrganization } from "@/app/actions/billing-trial";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle2,
@@ -16,6 +18,7 @@ import * as PricingCard from "@/components/ui/pricing-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { savePlanSelection } from "@/app/actions/onboarding";
 import { cn } from "@/lib/utils/index";
+import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
 import { PLANS, type Plan } from "@/services/stripe/plans";
 
 interface Step4SubscriptionFormProps {
@@ -35,13 +38,26 @@ export function Step4SubscriptionForm({
   isLoading: externalIsLoading = false,
 }: Step4SubscriptionFormProps) {
   void _isGoogleConnected;
+  const { dict } = useLanguage();
+  const b = dict.billing;
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [interval, setInterval] = useState<"month" | "year">("month");
+  const [checkoutOffersTrial, setCheckoutOffersTrial] = useState(true);
 
   useEffect(() => {
     setIsLoading(externalIsLoading);
   }, [externalIsLoading]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getCheckoutTrialEligibilityForOrganization(organizationId).then((r) => {
+      if (!cancelled) setCheckoutOffersTrial(r.eligible);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [organizationId]);
 
   const displayPlans = PLANS.filter(
     (p) => p.interval === interval && p.id !== "enterprise"
@@ -62,18 +78,24 @@ export function Step4SubscriptionForm({
     try {
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId: plan.id, source: "onboarding" }),
       });
       const data = await res.json().catch(() => ({}));
 
-      if (!res.ok) {
-        throw new Error(typeof data.error === "string" ? data.error : "Failed to start checkout");
+      if (!res.ok || data.success !== true) {
+        const err =
+          typeof data.error === "string"
+            ? data.error
+            : "Failed to start checkout";
+        throw new Error(err);
       }
 
-      if (data.data?.url && typeof data.data.url === "string") {
+      const url = data.data?.url;
+      if (typeof url === "string" && url.length > 0) {
         sessionStorage.setItem("zyene_payment_pending", "true");
-        window.location.href = data.data.url;
+        window.location.href = url;
         return;
       }
 
@@ -233,9 +255,11 @@ export function Step4SubscriptionForm({
                       <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                       <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                     </PricingCard.Price>
-                    <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
-                      7-day free trial included
-                    </p>
+                    {checkoutOffersTrial && (
+                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
+                        {b.trial_included}
+                      </p>
+                    )}
                     <Button
                       className={cn(
                         "relative z-20 w-full font-semibold text-white transition-all duration-300 cursor-pointer",
@@ -248,7 +272,7 @@ export function Step4SubscriptionForm({
                       {loadingPlan === plan.id ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : null}
-                      Start Free Trial
+                      {checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta}
                     </Button>
                   </PricingCard.Header>
                   <PricingCard.Body className="space-y-3 p-2">
@@ -286,19 +310,18 @@ export function Step4SubscriptionForm({
                   <PricingCard.Price>
                     <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                   </PricingCard.Price>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                  <a
+                    href={enterpriseSalesGmailComposeUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "default" }),
+                      "w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                    )}
                   >
-                    <a
-                      href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan."
-                      className="flex items-center justify-center"
-                    >
-                      <Mail className="h-4 w-4" />
-                      Contact Sales
-                    </a>
-                  </Button>
+                    <Mail className="h-4 w-4" aria-hidden />
+                    Contact Sales
+                  </a>
                 </PricingCard.Header>
                 <PricingCard.Body>
                   <PricingCard.List>

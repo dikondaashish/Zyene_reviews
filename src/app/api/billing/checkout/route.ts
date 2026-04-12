@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
-import { PLANS } from "@/services/stripe/plans";
+import { getPlanByPriceId, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
+import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
@@ -137,12 +138,29 @@ export async function POST(request: Request) {
 
                 // Only update if the subscription is still active/trialing
                 if (["active", "trialing", "past_due"].includes(existingSub.status)) {
+                    const currentItem = existingSub.items.data[0];
+                    if (!currentItem) {
+                        return apiError("Subscription has no billable items.", { status: 400, details: requestId });
+                    }
+                    const currentPriceId = currentItem.price?.id;
+                    const currentPlan = currentPriceId ? getPlanByPriceId(currentPriceId) : null;
+                    const targetPlan = getPlanByPriceId(priceId);
+
+                    const endTrialForTierUpgrade =
+                        existingSub.status === "trialing" &&
+                        currentPlan &&
+                        targetPlan &&
+                        isPaidPlanTierUpgrade(currentPlan.id, targetPlan.id);
+
                     await stripe.subscriptions.update(org.stripe_subscription_id, {
-                        items: [{
-                            id: existingSub.items.data[0].id,
-                            price: priceId,
-                        }],
+                        items: [
+                            {
+                                id: currentItem.id,
+                                price: priceId,
+                            },
+                        ],
                         proration_behavior: "create_prorations",
+                        ...(endTrialForTierUpgrade ? { trial_end: "now" } : {}),
                     });
 
                     const switchedReturnUrl =
@@ -184,6 +202,8 @@ export async function POST(request: Request) {
         const successUrl = source === "onboarding" ? onboardingSuccessUrl : billingSuccessUrl;
         const cancelUrl = source === "onboarding" ? onboardingCancelUrl : billingCancelUrl;
 
+        const includeIntroTrial = await isEligibleForIntroTrial(stripeCustomerId);
+
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomerId,
             mode: "subscription",
@@ -193,14 +213,18 @@ export async function POST(request: Request) {
             ...(couponId
                 ? { discounts: [{ coupon: couponId }] }
                 : { allow_promotion_codes: true }),
-            subscription_data: {
-                trial_period_days: 7,
-                trial_settings: {
-                    end_behavior: {
-                        missing_payment_method: "cancel",
-                    },
-                },
-            },
+            ...(includeIntroTrial
+                ? {
+                      subscription_data: {
+                          trial_period_days: 7,
+                          trial_settings: {
+                              end_behavior: {
+                                  missing_payment_method: "cancel",
+                              },
+                          },
+                      },
+                  }
+                : {}),
             metadata: {
                 organization_id: member.organization_id,
             },

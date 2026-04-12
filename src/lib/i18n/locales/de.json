@@ -102,6 +102,8 @@
     "upgrade": "Pläne ansehen",
     "starter_msg": "Nutzen Sie Zyene Reviews vollständig",
     "starter_price": "Pläne beinhalten bei Stripe ggf. eine 7-Tage-Testphase.",
+    "starter_price_no_trial": "Abonnieren Sie im Stripe-Checkout. Die Abrechnung folgt Ihrem Plan (Einführungs-Testphasen nur für Neukunden).",
+    "subscribe_cta": "Abonnieren",
     "portal_help": "Zahlungsmittel, Rechnungen und Kündigung werden sicher in Stripe verwaltet.",
     "plan_section_subtitle": "Alle Pläne umfassen Google-Sync, KI-Antworten (je nach Plan), Bewertungsanfragen und Analysen. Höhere Stufen bieten mehr Standorte und höhere monatliche Limits.",
     "change_plan_title": "Plan ändern oder verlängern",

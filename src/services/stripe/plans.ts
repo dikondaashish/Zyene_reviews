@@ -195,6 +195,23 @@ export function planProductTier(planId: string | null | undefined): "starter" | 
     return null;
 }
 
+const PAID_TIER_ORDER: Record<"starter" | "professional" | "enterprise", number> = {
+    starter: 1,
+    professional: 2,
+    enterprise: 3,
+};
+
+/** True when moving to a higher SMB tier (e.g. Starter → Professional). Same-tier interval changes are false. */
+export function isPaidPlanTierUpgrade(
+    fromPlanId: string | null | undefined,
+    toPlanId: string | null | undefined
+): boolean {
+    const from = planProductTier(fromPlanId);
+    const to = planProductTier(toPlanId);
+    if (!from || !to) return false;
+    return PAID_TIER_ORDER[to] > PAID_TIER_ORDER[from];
+}
+
 export function planAllowsAutoCommenter(plan: string | null | undefined): boolean {
     if (plan == null || plan === "") return false;
     const p = String(plan).toLowerCase().trim();

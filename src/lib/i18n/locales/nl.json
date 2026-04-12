@@ -102,6 +102,8 @@
     "upgrade": "Bekijk plannen",
     "starter_msg": "Ontgrendel de volledige Zyene Reviews-ervaring",
     "starter_price": "Plannen bevatten waar van toepassing een proefperiode van 7 dagen via Stripe.",
+    "starter_price_no_trial": "Abonneer via Stripe. Facturatie volgt de cyclus van uw plan (intro-proef alleen voor nieuwe abonnees).",
+    "subscribe_cta": "Abonneren",
     "portal_help": "Betaalmethode, facturen en opzeggen worden veilig in Stripe afgehandeld.",
     "plan_section_subtitle": "Alle plannen bevatten Google-synchronisatie, AI-antwoorden (afhankelijk van plan), reviewverzoeken en analyses. Hogere plannen voegen locaties en hogere maandlimieten toe.",
     "change_plan_title": "Plan wijzigen of verlengen",

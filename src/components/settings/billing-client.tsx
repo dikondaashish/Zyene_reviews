@@ -10,7 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
     CheckCircle2,
@@ -37,6 +37,7 @@ import type { Plan } from "@/services/stripe/plans";
 import { planProductTier } from "@/services/stripe/plans";
 import { useLanguage } from "@/lib/language-context";
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
+import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -52,6 +53,8 @@ interface BillingClientProps {
     organizationPlanId: string;
     planStatus: string;
     hasStripeCustomer: boolean;
+    /** Net-new Stripe checkout may include a 7-day trial; false for returning subscribers. */
+    checkoutOffersTrial: boolean;
     canManageBilling: boolean;
     usage: {
         emailRequests: UsageStat;
@@ -119,6 +122,7 @@ export function BillingClient({
     organizationPlanId,
     planStatus,
     hasStripeCustomer,
+    checkoutOffersTrial,
     canManageBilling,
     usage,
     plans,
@@ -415,7 +419,9 @@ export function BillingClient({
                         <Sparkles className="h-5 w-5 text-blue-600 shrink-0 hidden sm:block" />
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-blue-900 dark:text-blue-100">{b.starter_msg}</p>
-                            <p className="text-xs text-blue-800/90 dark:text-blue-200/90">{b.starter_price}</p>
+                            <p className="text-xs text-blue-800/90 dark:text-blue-200/90">
+                                {checkoutOffersTrial ? b.starter_price : b.starter_price_no_trial}
+                            </p>
                         </div>
                         <Button
                             size="sm"
@@ -509,7 +515,7 @@ export function BillingClient({
                             const isPro = plan.name === "Professional";
                             const priceConfigured = !!plan.stripePriceId;
 
-                            let planCta = b.start_trial_cta;
+                            let planCta = checkoutOffersTrial ? b.start_trial_cta : b.subscribe_cta;
                             if (hasPricedPlan || isEnterpriseOrg) {
                                 if (isBillingIntervalSwitch) {
                                     planCta =
@@ -566,7 +572,7 @@ export function BillingClient({
                                             <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                                             <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                                         </PricingCard.Price>
-                                        {!hasPricedPlan && !isEnterpriseOrg && (
+                                        {!hasPricedPlan && !isEnterpriseOrg && checkoutOffersTrial && (
                                             <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
                                                 {b.trial_included}
                                             </p>
@@ -649,12 +655,18 @@ export function BillingClient({
                                             {b.current_plan_badge}
                                         </Button>
                                     ) : (
-                                        <Button variant="outline" className="w-full gap-2 font-semibold" asChild>
-                                            <a href="mailto:sales@zyenereviews.com?cc=Karthik.reddy@zyene.com&subject=Interested%20in%20Zyene%20Enterprise%20Plan&body=Hi%20Zyene%20Reviews,%0A%0AWe%20are%20interested%20to%20talk%20with%20you%20regarding%20a%20bigger%20plan.">
-                                                <Mail className="h-4 w-4" />
-                                                Contact sales
-                                            </a>
-                                        </Button>
+                                        <a
+                                            href={enterpriseSalesGmailComposeUrl()}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={cn(
+                                                buttonVariants({ variant: "outline", size: "default" }),
+                                                "w-full gap-2 font-semibold"
+                                            )}
+                                        >
+                                            <Mail className="h-4 w-4" aria-hidden />
+                                            Contact sales
+                                        </a>
                                     )}
                                 </PricingCard.Header>
                                 <PricingCard.Body>
