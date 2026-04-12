@@ -513,6 +513,10 @@ export function PublicReviewFlow({
             feedback.trim().length > 0 && negativeContactValid();
         const offerBannerText =
             privateFeedbackOfferMessage?.trim() || DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT;
+        const offerBrandHex =
+            typeof brandColor === "string" && /^#([0-9A-F]{3}){1,2}$/i.test(brandColor.trim())
+                ? brandColor.trim()
+                : null;
         return renderCardWrapper(
             <form
                 className="px-8 py-10 space-y-6 animate-in fade-in slide-in-from-right-4 duration-400"
@@ -535,27 +539,57 @@ export function PublicReviewFlow({
 
                 {privateFeedbackOfferMode === "visible" && (
                     <div
-                        className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-slate-50/80 p-4 pl-[1.125rem] shadow-[0_1px_0_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.04]"
-                        style={{ borderLeftWidth: 4, borderLeftColor: brandColor }}
+                        className={cn(
+                            "relative overflow-hidden rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50/95 via-white to-orange-50/90 p-5 pl-5",
+                            "shadow-[0_12px_40px_-16px_rgba(245,158,11,0.45),0_4px_14px_-6px_rgba(234,88,12,0.12)]",
+                            "ring-1 ring-amber-400/20 animate-in fade-in zoom-in-95 duration-500"
+                        )}
                         role="status"
                         aria-live="polite"
                     >
                         <div
-                            className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full opacity-[0.12]"
-                            style={{ background: brandColor }}
+                            className="pointer-events-none absolute inset-y-4 left-3 w-1 rounded-full opacity-95"
+                            style={{
+                                background: offerBrandHex
+                                    ? `linear-gradient(180deg, ${offerBrandHex} 0%, #f59e0b 55%, #ea580c 100%)`
+                                    : "linear-gradient(180deg, #f59e0b 0%, #ea580c 50%, #e11d48 100%)",
+                            }}
+                            aria-hidden
                         />
-                        <div className="relative flex gap-3.5">
+                        <div
+                            className="pointer-events-none absolute -right-12 -top-14 h-40 w-40 rounded-full bg-gradient-to-br from-amber-300/40 via-orange-200/30 to-rose-200/25 blur-[2px]"
+                            aria-hidden
+                        />
+                        <div
+                            className="pointer-events-none absolute -bottom-8 right-8 h-28 w-28 rounded-full bg-amber-400/20"
+                            aria-hidden
+                        />
+                        <div
+                            className="pointer-events-none absolute right-24 top-2 text-amber-400/50"
+                            aria-hidden
+                        >
+                            <Sparkles className="h-5 w-5" strokeWidth={1.75} />
+                        </div>
+                        <div className="relative flex gap-4 pl-3">
                             <div
-                                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200/80"
+                                className={cn(
+                                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white shadow-lg ring-2 ring-white/90",
+                                    "bg-gradient-to-br from-amber-400 to-orange-600 shadow-orange-500/35"
+                                )}
                                 aria-hidden
                             >
-                                <Gift className="h-5 w-5" style={{ color: brandColor }} strokeWidth={2} />
+                                <Gift className="h-6 w-6" strokeWidth={2.25} />
                             </div>
-                            <div className="min-w-0 flex-1 space-y-1 pt-0.5">
-                                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                                    Special offer
-                                </p>
-                                <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-line">
+                            <div className="min-w-0 flex-1 space-y-2 pt-0.5">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-r from-amber-800 via-orange-700 to-rose-700">
+                                        Special offer
+                                    </p>
+                                    <span className="inline-flex items-center rounded-full bg-amber-100/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900/90 ring-1 ring-amber-300/50">
+                                        For you
+                                    </span>
+                                </div>
+                                <p className="text-[15px] leading-relaxed text-stone-800 whitespace-pre-line">
                                     {offerBannerText}
                                 </p>
                             </div>
