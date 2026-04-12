@@ -14,12 +14,36 @@ export default async function NotificationSettingsPage() {
     const { businessId } = await getActiveBusinessId();
     if (!businessId) return <div>No business selected</div>;
 
-    const { data: prefs } = await supabase
-        .from("notification_preferences")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("business_id", businessId)
-        .single();
+    const [{ data: prefs }, { data: profile }] = await Promise.all([
+        supabase
+            .from("notification_preferences")
+            .select("*")
+            .eq("user_id", user.id)
+            .eq("business_id", businessId)
+            .maybeSingle(),
+        supabase.from("users").select("phone").eq("id", user.id).maybeSingle(),
+    ]);
+
+    const profilePhone = profile?.phone?.trim() || null;
+    const mergedPrefs = prefs
+        ? {
+              ...prefs,
+              sms_phone_number: prefs.sms_phone_number?.trim() || profilePhone,
+          }
+        : {
+              user_id: user.id,
+              email_enabled: true,
+              sms_enabled: true,
+              digest_enabled: true,
+              email_frequency: "instant",
+              min_rating_threshold: 1,
+              min_urgency_for_sms: 7,
+              quiet_hours_start: "22:00",
+              quiet_hours_end: "08:00",
+              sms_phone_number: profilePhone,
+              id: "",
+              business_id: businessId,
+          };
 
     return (
         <div className="space-y-6">
@@ -28,25 +52,16 @@ export default async function NotificationSettingsPage() {
                 <p className="text-sm text-muted-foreground">
                     Configure how and when you want to be alerted about new reviews.
                 </p>
+                <p className="text-xs text-muted-foreground mt-2 max-w-lg">
+                    If you signed up with Google, add your mobile number below (and turn on SMS alerts) to receive
+                    urgent review texts—Google sign-up doesn&apos;t collect your phone.
+                </p>
             </div>
             <NotificationForm
                 businessId={businessId}
                 key={businessId}
-                initialPrefs={prefs || {
-                    user_id: user.id,
-                    email_enabled: true,
-                    sms_enabled: true,
-                    digest_enabled: true,
-                    email_frequency: "instant",
-                    min_rating_threshold: 1,
-                    min_urgency_for_sms: 7,
-                    quiet_hours_start: "22:00",
-                    quiet_hours_end: "08:00",
-                    sms_phone_number: null,
-                    id: "",
-                    business_id: businessId
-                }} 
-                userId={user.id} 
+                initialPrefs={mergedPrefs}
+                userId={user.id}
             />
         </div>
     );

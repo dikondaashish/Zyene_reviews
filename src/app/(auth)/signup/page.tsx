@@ -4,12 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
-import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail } from "lucide-react";
+import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail, Phone } from "lucide-react";
+import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
 
 export default function SignupPage() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +49,13 @@ export default function SignupPage() {
             return;
         }
 
+        const phoneTrimmed = phone.trim();
+        if (!isPlausibleMobileNumber(phoneTrimmed)) {
+            toast.error("Enter a valid mobile number with country code (e.g. +1 555 123 4567).");
+            setIsLoading(false);
+            return;
+        }
+
         const supabase = createClient();
 
         const { error } = await supabase.auth.signUp({
@@ -55,6 +64,7 @@ export default function SignupPage() {
             options: {
                 data: {
                     full_name: fullName,
+                    phone: phoneTrimmed,
                 },
                 emailRedirectTo: `${window.location.origin}/api/auth/callback`,
             },
@@ -121,6 +131,16 @@ export default function SignupPage() {
                     </svg>
                     Sign up with Google
                 </button>
+                <p className="text-center text-[11px] text-gray-400 leading-relaxed px-1">
+                    Google sign-up doesn&apos;t ask for your phone. After you&apos;re in, add your mobile under{" "}
+                    <Link
+                        href="/settings/notifications"
+                        className="font-medium text-gray-600 underline underline-offset-2 hover:text-orange-600"
+                    >
+                        Settings → Notifications
+                    </Link>{" "}
+                    if you want SMS review alerts.
+                </p>
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
@@ -149,6 +169,26 @@ export default function SignupPage() {
                         />
                         <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
                              Your name will be visible on your business profile.
+                        </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                            Mobile number
+                        </label>
+                        <input
+                            id="phone"
+                            type="tel"
+                            placeholder="+1 555 123 4567"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                            disabled={isLoading}
+                            autoComplete="tel"
+                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
+                        />
+                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                            <Phone className="h-3 w-3" /> Used for SMS review alerts; include your country code.
                         </p>
                     </div>
 

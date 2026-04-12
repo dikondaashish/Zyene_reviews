@@ -21,6 +21,7 @@ import {
   type StepNotificationsFormData,
 } from "@/lib/validations/onboarding";
 import { createNotificationPreferences } from "@/app/actions/onboarding";
+import { createClient } from "@/lib/db/supabase/client";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
@@ -55,6 +56,25 @@ export function Step4Notifications({
       phone: "",
     },
   });
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user || cancelled) return;
+      const { data: row } = await supabase.from("users").select("phone").eq("id", user.id).maybeSingle();
+      const p = row?.phone?.trim();
+      if (p && !cancelled) {
+        form.setValue("phone", p);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [form]);
 
   const smsAlerts = form.watch("smsAlerts");
 

@@ -1175,27 +1175,40 @@ export async function createNotificationPreferences(
       };
     }
 
-    // SMS can be enabled without a phone; texts send only after a number is saved in settings.
-
-    // Create notification preferences
-    const { error: preferencesError } = await supabase
+    const { data: profile } = await supabase.from("users").select("phone").eq("id", user.id).maybeSingle();
+    const { data: existingPref } = await supabase
       .from("notification_preferences")
-      .insert({
+      .select("sms_phone_number")
+      .eq("user_id", user.id)
+      .eq("business_id", businessId)
+      .maybeSingle();
+
+    const fromForm = data.phone?.trim() || "";
+    const smsPhone =
+      fromForm ||
+      existingPref?.sms_phone_number?.trim() ||
+      profile?.phone?.trim() ||
+      null;
+
+    const { error: preferencesError } = await supabase.from("notification_preferences").upsert(
+      {
         user_id: user.id,
         business_id: businessId,
         email_enabled: data.emailAlerts,
         sms_enabled: data.smsAlerts,
-        sms_phone_number: data.phone?.trim() || null,
-        email_frequency: "immediately", // Default to immediate
+        sms_phone_number: smsPhone,
+        email_frequency: "immediately",
         digest_enabled: true,
-        quiet_hours_start: "22:00:00", // Default quiet hours
+        quiet_hours_start: "22:00:00",
         quiet_hours_end: "08:00:00",
         min_urgency_for_sms: 1,
         min_rating_threshold: 1,
-      });
+      },
+      { onConflict: "user_id,business_id" }
+    );
 
     if (preferencesError) {
-      console.error("Error creating notification preferences:", preferencesError);
+      console.error("Error saving notification preferences:", preferencesError);
       return {
         success: false,
         error: "Failed to save notification preferences. Please try again.",

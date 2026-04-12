@@ -54,5 +54,9 @@ export async function POST(request: Request) {
 
     if (error) return apiError("Internal Server Error", { status: 500 });
 
+    if (phone) {
+        await supabase.from("users").update({ phone }).eq("id", user.id);
+    }
+
     return apiOk({ saved: true });
 }

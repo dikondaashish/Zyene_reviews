@@ -15,6 +15,15 @@ import type {
     GoogleLocationDetails,
     GooglePlatformUpdatePayload,
 } from "@/types/api-routes";
+import { isPlausibleMobileNumber } from "@/lib/validations/phone";
+
+function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): string | null {
+    const raw = user.user_metadata?.phone;
+    if (typeof raw !== "string") return null;
+    const t = raw.trim();
+    if (!t || !isPlausibleMobileNumber(t)) return null;
+    return t;
+}
 
 function safeNextPath(raw: string | null): string {
     const fallback = "/dashboard";
@@ -82,10 +91,12 @@ export async function GET(request: Request) {
                     .single();
 
                 if (!existingUser) {
+                    const addBizPhone = signUpPhoneFromUserMetadata(data.user);
                     await admin.from("users").insert({
                         id: data.user.id,
                         email: data.user.email!,
                         full_name: data.user.user_metadata?.full_name || data.user.email?.split("@")[0] || "User",
+                        phone: addBizPhone,
                     });
                 }
 
@@ -283,11 +294,13 @@ export async function GET(request: Request) {
                     "User";
                 const email = data.user.email!;
                 const slug = `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
+                const signupPhone = signUpPhoneFromUserMetadata(data.user);
 
                 const { error: userError } = await admin.from("users").insert({
                     id: data.user.id,
                     email: email,
                     full_name: fullName,
+                    phone: signupPhone,
                 });
 
                 if (userError) {
@@ -312,15 +325,52 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                await admin.from("businesses").insert({
-                    organization_id: org.id,
-                    name: `${fullName}'s Business`,
-                    slug: org.slug,
-                    country: "US",
-                    timezone: "UTC",
-                    category: "uncategorized",
-                    status: "active",
-                });
+                const { data: newBusiness, error: newBizError } = await admin
+                    .from("businesses")
+                    .insert({
+                        organization_id: org.id,
+                        name: `${fullName}'s Business`,
+                        slug: org.slug,
+                        country: "US",
+                        timezone: "UTC",
+                        category: "uncategorized",
+                        status: "active",
+                    })
+                    .select("id")
+                    .single();
+
+                if (newBizError || !newBusiness) {
+                    console.error("Failed to create default business:", newBizError);
+                    Sentry.captureException(newBizError ?? new Error("missing business id"), {
+                        tags: { route: "auth-callback", step: "create_business" },
+                    });
+                    return NextResponse.redirect(`${origin}/login?error=setup_failed`);
+                }
+
+                if (signupPhone) {
+                    const { error: prefErr } = await admin.from("notification_preferences").upsert(
+                        {
+                            user_id: data.user.id,
+                            business_id: newBusiness.id,
+                            email_enabled: true,
+                            digest_enabled: true,
+                            sms_enabled: true,
+                            sms_phone_number: signupPhone,
+                            email_frequency: "immediately",
+                            min_urgency_for_sms: 7,
+                            min_rating_threshold: 1,
+                            quiet_hours_start: "22:00:00",
+                            quiet_hours_end: "08:00:00",
+                        },
+                        { onConflict: "user_id,business_id" }
+                    );
+                    if (prefErr) {
+                        console.error("Failed to seed notification preferences:", prefErr);
+                        Sentry.captureException(prefErr, {
+                            tags: { route: "auth-callback", step: "seed_notification_preferences" },
+                        });
+                    }
+                }
 
                 await admin.from("organization_members").insert({
                     organization_id: org.id,
