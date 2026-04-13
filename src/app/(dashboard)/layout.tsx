@@ -34,26 +34,42 @@ export default async function DashboardLayout({
     }
 
     // Get active business context (handles cookie + validation + fallback)
-    const { businesses, businessId: activeBusinessId, organization } = await getActiveBusinessId();
+    const { businesses, businessId: activeBusinessId, organization, business: activeBusiness } =
+        await getActiveBusinessId();
 
     const headerContent = (
-        <div className="flex-1 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <OrganizationDisplay organization={organization ? { 
-                    id: organization.id, 
-                    name: organization.name || "Your Organization" 
-                } : null} />
-                <BusinessSwitcher
-                    businesses={businesses.map(b => ({
-                        id: b.id,
-                        name: b.name || "Business",
-                        status: b.status || "active"
-                    }))}
-                    activeBusinessId={activeBusinessId}
-                    maxBusinesses={organization?.max_businesses || 1}
-                />
+        <div className="flex flex-1 items-center justify-between gap-3 min-w-0">
+            <div className="flex min-w-0 flex-col gap-0.5">
+                <div className="flex items-center gap-2 min-w-0">
+                    <OrganizationDisplay organization={organization ? { 
+                        id: organization.id, 
+                        name: organization.name || "Your Organization" 
+                    } : null} />
+                    <BusinessSwitcher
+                        businesses={businesses.map(b => ({
+                            id: b.id,
+                            name: b.name || "Business",
+                            status: b.status || "active"
+                        }))}
+                        activeBusinessId={activeBusinessId}
+                        maxBusinesses={organization?.max_businesses || 1}
+                    />
+                </div>
+                {activeBusiness?.name ? (
+                    <p
+                        className="hidden text-[11px] text-muted-foreground truncate pl-0.5 md:block max-w-[min(42vw,380px)] lg:max-w-[480px]"
+                        title={`Dashboard actions apply to ${activeBusiness.name}`}
+                    >
+                        <span className="text-muted-foreground/80">Scope: </span>
+                        {activeBusiness.name}
+                    </p>
+                ) : businesses.length === 0 ? (
+                    <p className="hidden text-[11px] text-primary md:block pl-0.5">
+                        Add a business to use reviews, integrations, and team features.
+                    </p>
+                ) : null}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
                 <ThemeToggle />
                 <UserNav user={user} />
             </div>

@@ -10,6 +10,8 @@ import { GoogleAccountAccessPanel } from "@/components/settings/google-account-a
 import { GoogleLodgingPanel } from "@/components/settings/google-lodging-panel";
 
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { Building2 } from "lucide-react";
 
 export default async function BusinessInformationPage() {
     const supabase = await createClient();
@@ -26,10 +28,11 @@ export default async function BusinessInformationPage() {
 
     if (!business) {
         return (
-            <div className="rounded-lg border border-border bg-card p-8 text-center">
-                <h2 className="text-lg font-semibold">No business found</h2>
-                <p className="text-sm text-muted-foreground mt-1">Please create a business first.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={Building2}
+                title="Add a business to edit details"
+                description="Business information, Google listing, and review settings apply to your active location. Create or select a business first."
+            />
         );
     }
 

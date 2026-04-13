@@ -2,6 +2,8 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { NotificationForm } from "../../../../components/settings/notification-form";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { Bell } from "lucide-react";
 
 export default async function NotificationSettingsPage() {
     const supabase = await createClient();
@@ -12,7 +14,15 @@ export default async function NotificationSettingsPage() {
     }
 
     const { businessId } = await getActiveBusinessId();
-    if (!businessId) return <div>No business selected</div>;
+    if (!businessId) {
+        return (
+            <BusinessContextEmptyState
+                icon={Bell}
+                title="Add a business for notification settings"
+                description="Email and SMS preferences are saved per business. Create a location first, then configure alerts for that business."
+            />
+        );
+    }
 
     const [{ data: prefs }, { data: profile }] = await Promise.all([
         supabase

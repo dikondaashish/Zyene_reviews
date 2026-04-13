@@ -26,6 +26,8 @@ import { Badge } from "@/components/ui/badge";
 import { EngagementFunnelCard } from "@/components/analytics/engagement-funnel-card";
 import { PlatformTabs } from "@/components/analytics/platform-tabs";
 import { ZyenePlatformAnalytics } from "@/components/analytics/zyene-platform-analytics";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { BarChart3 } from "lucide-react";
 
 // Helper with comparison support
 function getPeriods(range: string) {
@@ -85,7 +87,13 @@ export default async function AnalyticsPage({
     const { currentStart, currentEnd, previousStart } = getPeriods(range);
 
     if (!businessId) {
-        return <div>No business selected.</div>;
+        return (
+            <BusinessContextEmptyState
+                icon={BarChart3}
+                title="Add a business to view analytics"
+                description="Charts, exports, and reports use your active business. Create a location or switch business in the header when you have one."
+            />
+        );
     }
 
     // 1. Fetch Reviews (current + previous)

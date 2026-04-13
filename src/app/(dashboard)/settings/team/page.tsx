@@ -5,6 +5,11 @@ import { TeamTable } from "@/components/settings/team-table";
 import { InviteMemberDialog } from "@/components/settings/invite-member-dialog";
 import { Separator } from "@/components/ui/separator";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import {
+    BusinessContextEmptyState,
+    TeamMembershipEmptyState,
+} from "@/components/dashboard/business-context-empty-state";
+import { Users } from "lucide-react";
 
 export default async function TeamSettingsPage() {
     const supabase = await createClient();
@@ -20,7 +25,13 @@ export default async function TeamSettingsPage() {
     const { businessId, business } = await getActiveBusinessId();
 
     if (!businessId || !business) {
-        return <div>No business selected.</div>;
+        return (
+            <BusinessContextEmptyState
+                icon={Users}
+                title="Add a business to manage team"
+                description="Invites and roles are per business. Add a location first, then invite teammates for that business only."
+            />
+        );
     }
 
     // Fetch current user's membership for the active business
@@ -32,7 +43,7 @@ export default async function TeamSettingsPage() {
         .single();
 
     if (!currentUserMember) {
-        return <div>You are not a member of this business.</div>;
+        return <TeamMembershipEmptyState businessName={business.name} />;
     }
 
     const { data: members } = await supabase

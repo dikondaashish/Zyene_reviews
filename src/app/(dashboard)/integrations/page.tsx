@@ -19,6 +19,7 @@ import {
     Code2,
     MonitorPlay
 } from "lucide-react";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 
 // ── Brand Icons ──
 
@@ -111,16 +112,11 @@ export default async function IntegrationsPage() {
 
     if (!business) {
         return (
-            <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
-                <div className="rounded-2xl bg-gradient-to-br from-muted to-muted/50 p-6 mb-6">
-                    <Plug className="h-10 w-10 text-muted-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold mb-2">No Business Found</h1>
-                <p className="text-muted-foreground max-w-md">
-                    Please create a business first to manage your integrations
-                    and connect review platforms.
-                </p>
-            </div>
+            <BusinessContextEmptyState
+                icon={Plug}
+                title="Add a business to manage integrations"
+                description="Connect Google, Yelp, Facebook, and more once you have at least one business location in Zyene."
+            />
         );
     }
 

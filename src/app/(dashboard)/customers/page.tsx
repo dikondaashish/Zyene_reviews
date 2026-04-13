@@ -1,13 +1,20 @@
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { createClient } from "@/lib/db/supabase/server";
 import { CustomerManagement } from "@/components/customers/customer-management";
-import { redirect } from "next/navigation";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { UsersRound } from "lucide-react";
 
 export default async function CustomersPage() {
     const { businessId, businesses } = await getActiveBusinessId();
 
     if (!businessId || businesses.length === 0) {
-        redirect("/businesses/add");
+        return (
+            <BusinessContextEmptyState
+                icon={UsersRound}
+                title="Add a business to manage customers"
+                description="Customer lists and imports are scoped to a business location. Create one to get started, or open an existing business from the header."
+            />
+        );
     }
 
     const supabase = await createClient();

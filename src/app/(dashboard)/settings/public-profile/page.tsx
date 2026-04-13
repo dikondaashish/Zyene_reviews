@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { PublicProfileEditor } from "@/components/settings/public-profile-editor";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { Globe } from "lucide-react";
 
 export default async function PublicProfilePage() {
     const supabase = await createClient();
@@ -17,10 +19,11 @@ export default async function PublicProfilePage() {
 
     if (!business) {
         return (
-            <div className="p-8 text-center">
-                <h2 className="text-xl font-semibold">No business found</h2>
-                <p className="text-muted-foreground">Please create a business first.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={Globe}
+                title="Add a business for a public profile"
+                description="Your public review page and slug are tied to a business. Add one to customize branding and links."
+            />
         );
     }
 

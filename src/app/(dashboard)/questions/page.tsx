@@ -10,6 +10,8 @@ import {
     type GbpQuestionRow,
 } from "@/components/questions/questions-page-client";
 import { Button } from "@/components/ui/button";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { MessagesSquare } from "lucide-react";
 
 export default async function QuestionsPage() {
     const supabase = await createClient();
@@ -22,10 +24,11 @@ export default async function QuestionsPage() {
 
     if (!businessId) {
         return (
-            <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-                <h2 className="text-xl font-semibold">No business found</h2>
-                <p className="mt-1 text-muted-foreground">Complete onboarding to manage Q&A.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={MessagesSquare}
+                title="Add a business to manage Q&A"
+                description="Google Business Profile questions are synced per location. Add or select a business in the header to continue."
+            />
         );
     }
 

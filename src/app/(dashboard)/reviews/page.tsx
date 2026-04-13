@@ -5,6 +5,8 @@ import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { MessageSquareQuote } from "lucide-react";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -23,10 +25,11 @@ export default async function ReviewsPage(props: {
 
     if (!businessId) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-100">
-                <h2 className="text-xl font-semibold">No Business Found</h2>
-                <p className="text-muted-foreground">Please complete onboarding.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={MessageSquareQuote}
+                title="Add a business to see reviews"
+                description="Review inbox, private feedback, and replies are tied to a business location. Create one or pick an existing business from the header."
+            />
         );
     }
 

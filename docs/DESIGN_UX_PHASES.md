@@ -20,16 +20,18 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 
 ---
 
-## Phase 2 — Dashboard UX & product surfaces
+## Phase 2 — Dashboard UX & product surfaces (v1 shipped in repo)
 
 **Goal:** Calm, scannable app UI with clear business context.
 
-- **Scope clarity:** Persistent business context in headers, empty states, and destructive actions.
-- **States:** Standardize loading skeletons, empty states, and error states on high-traffic routes (Reviews, Analytics, Integrations, Customers).
-- **Density:** Table/filter patterns, sticky toolbars, one primary action per view.
-- **Settings:** Progressive disclosure for long forms; section labels (uppercase + tracking) where helpful.
+- **Scope clarity:** Header shows optional **Scope: {business name}** (md+) and a hint when there are zero businesses; business switcher has an **`aria-label`** for assistive tech (`src/app/(dashboard)/layout.tsx`, `business-switcher.tsx`).
+- **States:** Shared **`BusinessContextEmptyState`** + **`TeamMembershipEmptyState`** for all “no business” / “not a member” cases across Integrations, Reviews, Competitors, Review Requests, Analytics, Customers, Q&A, Team, and Business / Public Profile / Notifications settings. **`integrations/loading.tsx`** and **`settings/team/loading.tsx`** added; Reviews/Analytics/Customers/Campaigns already had loading UIs.
+- **Density:** Table/filter patterns, sticky toolbars, one primary action per view — *next iteration*.
+- **Settings:** Progressive disclosure for long forms; section labels (uppercase + tracking) — *Phase 2 follow-up or Phase 3*.
 
-**Exit criteria:** Each major dashboard route has intentional loading/empty/error UI; switching business updates copy and data without confusion.
+**Exit criteria (v1):** Major dashboard routes use the shared empty state with CTAs (`/businesses/add`, `/businesses`); Analytics no longer returns a bare “No business” string; Team distinguishes “no business” vs “not a member”; Customers no longer hard-redirects to add-business only (user sees the same pattern as other routes).
+
+**Next:** Per-route **fetch error** UI (retry), and **settings** form section labels / disclosure.
 
 ---
 
@@ -71,6 +73,6 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 | Phase | Status                         |
 |-------|--------------------------------|
 | 1     | v1 done — optional polish left |
-| 2     | Planned                        |
+| 2     | v1 done — density & settings polish next |
 | 3     | Planned                        |
 | 4     | Planned                        |

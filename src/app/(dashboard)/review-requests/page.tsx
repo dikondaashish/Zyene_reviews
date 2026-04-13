@@ -27,6 +27,7 @@ import {
     Inbox,
 } from "lucide-react";
 import Link from "next/link";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { formatDistanceToNow } from "date-fns";
 
 interface ReviewRequest {
@@ -105,10 +106,11 @@ export default async function ReviewRequestsPage(props: {
 
     if (!businessId) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-100">
-                <h2 className="text-xl font-semibold">No Business Found</h2>
-                <p className="text-muted-foreground">Please complete onboarding.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={Send}
+                title="Add a business to send review requests"
+                description="Review request history and sending are tied to your active business. Create a business first, then return here."
+            />
         );
     }
 

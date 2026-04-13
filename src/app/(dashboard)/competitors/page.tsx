@@ -2,6 +2,8 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { CompetitorsList } from "./competitors-list";
+import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { TrendingUp } from "lucide-react";
 
 export const metadata = {
     title: "Competitors - Zyene Reviews",
@@ -24,10 +26,11 @@ export default async function CompetitorsPage() {
 
     if (!businessId) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-100">
-                <h2 className="text-xl font-semibold">No Business Found</h2>
-                <p className="text-muted-foreground">Please complete onboarding.</p>
-            </div>
+            <BusinessContextEmptyState
+                icon={TrendingUp}
+                title="Add a business to track competitors"
+                description="Competitor monitoring is scoped to your active business. Add a location or switch business in the header to continue."
+            />
         );
     }
 

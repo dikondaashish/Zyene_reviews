@@ -47,6 +47,11 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                     variant="outline"
                     className="w-[220px] justify-between"
                     disabled={switching}
+                    aria-label={
+                        activeBusiness
+                            ? `Active business: ${activeBusiness.name}. Open menu to switch.`
+                            : "Select a business. Open menu."
+                    }
                 >
                     <Store className="mr-2 h-4 w-4 shrink-0" />
                     <span className="truncate">
