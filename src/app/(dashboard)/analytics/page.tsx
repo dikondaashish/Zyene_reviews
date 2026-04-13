@@ -27,6 +27,7 @@ import { EngagementFunnelCard } from "@/components/analytics/engagement-funnel-c
 import { PlatformTabs } from "@/components/analytics/platform-tabs";
 import { ZyenePlatformAnalytics } from "@/components/analytics/zyene-platform-analytics";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { BarChart3 } from "lucide-react";
 
 // Helper with comparison support
@@ -129,14 +130,40 @@ export default async function AnalyticsPage({
               .limit(50)
         : null;
 
-    const [{ data: allReviews }, { data: allRequests }, { data: reviewPlatforms }, privateFeedbackResult] = await Promise.all([
+    const [
+        reviewsRes,
+        requestsRes,
+        platformsRes,
+        privateFeedbackResult,
+    ] = await Promise.all([
         reviewsQuery,
         requestsQuery,
         supabase.from("review_platforms").select("platform").eq("business_id", businessId),
-        privateFeedbackQuery ?? Promise.resolve({ data: null }),
+        privateFeedbackQuery ?? Promise.resolve({ data: null, error: null }),
     ]);
 
-    const privateFeedback = (privateFeedbackResult as any)?.data || [];
+    const privateRes = privateFeedbackResult as { data: unknown; error: unknown };
+    if (reviewsRes.error || requestsRes.error || platformsRes.error || privateRes.error) {
+        console.error("[Analytics page] Data fetch failed:", {
+            reviews: reviewsRes.error,
+            requests: requestsRes.error,
+            platforms: platformsRes.error,
+            privateFeedback: privateRes.error,
+        });
+        return (
+            <div className="flex flex-1 flex-col gap-8 p-4 md:p-8">
+                <DashboardFetchError
+                    message="We could not load analytics for this business. Check your connection and try again."
+                    retryHref="/analytics"
+                />
+            </div>
+        );
+    }
+
+    const allReviews = reviewsRes.data;
+    const allRequests = requestsRes.data;
+    const reviewPlatforms = platformsRes.data;
+    const privateFeedback = Array.isArray(privateRes.data) ? privateRes.data : [];
 
     const connectedPlatforms = (reviewPlatforms || []).map(p => p.platform);
 

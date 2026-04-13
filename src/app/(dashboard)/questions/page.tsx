@@ -11,6 +11,7 @@ import {
 } from "@/components/questions/questions-page-client";
 import { Button } from "@/components/ui/button";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { MessagesSquare } from "lucide-react";
 
 export default async function QuestionsPage() {
@@ -38,8 +39,22 @@ export default async function QuestionsPage() {
     const isDemo = !isGoogleConnected;
 
     let questions: GbpQuestionRow[] = [];
+    let questionsFetchFailed = false;
     if (!isDemo) {
-        questions = await fetchQuestions(supabase, businessId);
+        const result = await fetchQuestions(supabase, businessId);
+        questions = result.questions;
+        questionsFetchFailed = result.failed;
+    }
+
+    if (questionsFetchFailed) {
+        return (
+            <div className="flex w-full flex-col gap-6 p-4 lg:p-6">
+                <DashboardFetchError
+                    message="We could not load Google Q&A. Check your connection and try again."
+                    retryHref="/questions"
+                />
+            </div>
+        );
     }
 
     return (
@@ -71,7 +86,7 @@ export default async function QuestionsPage() {
 async function fetchQuestions(
     supabase: Awaited<ReturnType<typeof createClient>>,
     businessId: string
-): Promise<GbpQuestionRow[]> {
+): Promise<{ questions: GbpQuestionRow[]; failed: boolean }> {
     const { data, error } = await supabase
         .from("gbp_questions")
         .select(
@@ -82,7 +97,7 @@ async function fetchQuestions(
 
     if (error) {
         console.error("[questions page]", error);
-        return [];
+        return { questions: [], failed: true };
     }
-    return data ?? [];
+    return { questions: data ?? [], failed: false };
 }

@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { formatDistanceToNow } from "date-fns";
 
 interface ReviewRequest {
@@ -123,6 +124,14 @@ export default async function ReviewRequestsPage(props: {
 
     if (error) {
         console.error("Error fetching review requests:", error);
+        return (
+            <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
+                <DashboardFetchError
+                    message="We could not load review requests. Check your connection and try again."
+                    retryHref="/review-requests"
+                />
+            </div>
+        );
     }
 
     const requests = (allRequests || []) as ReviewRequest[];

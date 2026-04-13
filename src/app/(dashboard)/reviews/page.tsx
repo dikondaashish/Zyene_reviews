@@ -6,6 +6,7 @@ import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { MessageSquareQuote } from "lucide-react";
 
 export default async function ReviewsPage(props: {
@@ -40,23 +41,36 @@ export default async function ReviewsPage(props: {
     const to = from + pageSize - 1;
 
     // Fetch counts + initial data in parallel
-    const [{ count: publicCount }, { count: privateCount }] = await Promise.all([
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", businessId)
-            .eq("is_visible", true),
-        supabase
-            .from("private_feedback")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", businessId),
-    ]);
+    const [{ count: publicCount, error: publicCountErr }, { count: privateCount, error: privateCountErr }] =
+        await Promise.all([
+            supabase
+                .from("reviews")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", businessId)
+                .eq("is_visible", true),
+            supabase
+                .from("private_feedback")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", businessId),
+        ]);
+
+    if (publicCountErr || privateCountErr) {
+        console.error("[Reviews page] Count queries failed:", publicCountErr || privateCountErr);
+        return (
+            <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
+                <DashboardFetchError
+                    message="We could not load review counts. Check your connection and try again."
+                    retryHref="/reviews"
+                />
+            </div>
+        );
+    }
 
     let reviews: any[] = [];
     let count = 0;
 
     if (type === "private") {
-        const { data, count: totalCount } = await supabase
+        const { data, count: totalCount, error: listErr } = await supabase
             .from("private_feedback")
             .select(`
                 *,
@@ -69,6 +83,18 @@ export default async function ReviewsPage(props: {
             .eq("business_id", businessId)
             .order("created_at", { ascending: false })
             .range(from, to);
+
+        if (listErr) {
+            console.error("[Reviews page] Failed to load private feedback:", listErr);
+            return (
+                <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
+                    <DashboardFetchError
+                        message="We could not load private feedback. Check your connection and try again."
+                        retryHref="/reviews"
+                    />
+                </div>
+            );
+        }
 
         reviews = data || [];
         count = totalCount || 0;
@@ -106,6 +132,14 @@ export default async function ReviewsPage(props: {
         const { data, count: totalCount, error } = await query;
         if (error) {
             console.error("[Reviews page] Failed to load reviews:", error);
+            return (
+                <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
+                    <DashboardFetchError
+                        message="We could not load reviews. Check your connection and try again."
+                        retryHref="/reviews"
+                    />
+                </div>
+            );
         }
         reviews = data || [];
         count = totalCount || 0;

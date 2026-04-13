@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { CompetitorsList } from "./competitors-list";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { TrendingUp } from "lucide-react";
 
 export const metadata = {
@@ -35,11 +36,23 @@ export default async function CompetitorsPage() {
     }
 
     // Fetch competitors
-    const { data: competitors } = await supabase
+    const { data: competitors, error: competitorsError } = await supabase
         .from("competitors")
         .select("*")
         .eq("business_id", businessId)
         .order("created_at", { ascending: false });
+
+    if (competitorsError) {
+        console.error("[Competitors page] Fetch failed:", competitorsError);
+        return (
+            <div className="flex-1 space-y-6 p-8 pt-6">
+                <DashboardFetchError
+                    message="We could not load competitors. Check your connection and try again."
+                    retryHref="/competitors"
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 space-y-6 p-8 pt-6">

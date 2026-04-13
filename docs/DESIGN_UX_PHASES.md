@@ -31,7 +31,7 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 
 **Exit criteria (v1):** Major dashboard routes use the shared empty state with CTAs (`/businesses/add`, `/businesses`); Analytics no longer returns a bare “No business” string; Team distinguishes “no business” vs “not a member”; Customers no longer hard-redirects to add-business only (user sees the same pattern as other routes).
 
-**Next:** Per-route **fetch error** UI on more routes (retry / `retryHref`); more settings surfaces with section labels / disclosure where forms are long.
+**Next:** **`DashboardFetchError`** on remaining server pages (e.g. dashboard home, integrations, settings loaders); more settings section labels / disclosure where forms are long.
 
 ---
 
@@ -43,11 +43,11 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 - **Cards/inputs:** `Card` + `Input` already at **5px** radius; unchanged this pass.
 - **Buttons:** Default `Button` radius set to **4px** (`rounded-[4px]`) per primary CTA spec; `lg` remains **8px** (`rounded-lg`).
 - **Charts:** Recharts primary series use **`var(--primary)`** instead of hard-coded `#ff4f00` where the accent should track theme tokens (`ratings-chart`, `google-performance-profile-chart`, `zyene-platform-analytics`, competitors bar chart).
-- **Fetch errors:** `DashboardFetchError` with optional **`retryHref`** (server pages) or **`onRetry`** (client); **Customers** page shows it when the initial query fails.
+- **Fetch errors:** `DashboardFetchError` with **`retryHref`** (server pages) or **`onRetry`** (client). Shown when the initial Supabase read fails on **Customers**, **Reviews**, **Analytics**, **Competitors**, **Requests** (`/requests`), **Review Requests** (`/review-requests`), and **Questions**.
 
 **Exit criteria (v1):** Tab primitive matches inset-underline pattern; key surfaces use `variant="line"`; customers fetch failure is not silent.
 
-**Next:** Pill-style review filters stay as `variant="default"` by design; optional further token sweeps outside Recharts (auth layout hexes, tour CSS).
+**Next:** Pill-style review filters stay as `variant="default"` by design; optional further token sweeps outside Recharts (auth layout hexes, tour CSS); extend fetch-error pattern to dashboard shell data and settings pages where helpful.
 
 ---
 

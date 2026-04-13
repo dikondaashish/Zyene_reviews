@@ -32,6 +32,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { SendRequestDialog } from "./send-request-dialog";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 
 export default async function RequestsPage({
     searchParams,
@@ -56,33 +57,70 @@ export default async function RequestsPage({
         return <div>Business not found. Please contact support.</div>;
     }
 
-    // --- STATS FETCHING ---
+    // --- STATS + LIST (parallel) ---
+    const page = Number(sp.page) || 1;
+    const pageSize = 20;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
 
-    // Total Sent
-    const { count: totalSent } = await supabase
-        .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", business.id);
+    const [
+        totalSentRes,
+        deliveredRes,
+        clickedRes,
+        reviewsRes,
+        listRes,
+    ] = await Promise.all([
+        supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id),
+        supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .eq("status", "delivered"),
+        supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .or("status.eq.clicked,review_left.eq.true"),
+        supabase
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .eq("review_left", true),
+        supabase
+            .from("review_requests")
+            .select("*")
+            .eq("business_id", business.id)
+            .order("created_at", { ascending: false })
+            .range(from, to),
+    ]);
 
-    // Delivered
-    const { count: delivered } = await supabase
-        .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", business.id)
-        .eq("status", "delivered");
+    const statsOrListError =
+        totalSentRes.error ||
+        deliveredRes.error ||
+        clickedRes.error ||
+        reviewsRes.error ||
+        listRes.error;
 
-    // Clicked (includes review_left)
-    const { count: clicked } = await supabase
-        .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", business.id)
-        .or("status.eq.clicked,review_left.eq.true");
+    if (statsOrListError) {
+        console.error("[Requests page] Fetch failed:", statsOrListError);
+        return (
+            <div className="flex flex-1 flex-col gap-4 p-4 lg:p-8">
+                <DashboardFetchError
+                    message="We could not load review requests. Check your connection and try again."
+                    retryHref="/requests"
+                />
+            </div>
+        );
+    }
 
-    const { count: reviews } = await supabase
-        .from("review_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", business.id)
-        .eq("review_left", true);
+    const totalSent = totalSentRes.count;
+    const delivered = deliveredRes.count;
+    const clicked = clickedRes.count;
+    const reviews = reviewsRes.count;
+    const requests = listRes.data ?? [];
 
     const safeTotal = totalSent || 0;
     const deliveryRate = safeTotal > 0 ? ((delivered || 0) / safeTotal) * 100 : 0;
@@ -90,19 +128,6 @@ export default async function RequestsPage({
     const safeClicked = clicked || 0;
     const conversionRate = safeClicked > 0 ? ((reviews || 0) / safeClicked) * 100 : 0;
 
-
-    // --- LIST FETCHING ---
-    const page = Number(sp.page) || 1;
-    const pageSize = 20;
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
-
-    const { data: requests } = await supabase
-        .from("review_requests")
-        .select("*")
-        .eq("business_id", business.id)
-        .order("created_at", { ascending: false })
-        .range(from, to);
 
     // Initial customer pre-fill if we navigated from the Customers page
     const customerId = sp.customer;
