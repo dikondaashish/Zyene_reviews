@@ -1,8 +1,7 @@
 
 import { createClient } from "@/lib/db/supabase/server";
-import { sendEmail } from "@/services/resend/send-email";
-import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { deliverTeamInviteEmail } from "@/lib/team/deliver-team-invite-email";
 import { z } from "zod";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { canManageBusinessTeam, INVITE_ROLE_VALUES } from "@/lib/team/business-team";
@@ -142,27 +141,14 @@ export async function POST(request: Request) {
         return apiError(inviteError.message, { status: 500 });
     }
 
-    // Send email
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zyenereviews.com";
-    const inviteLink = `${appUrl}/signup?invite=${invite.token}`;
-
     const inviterName = membershipTyped.users?.full_name || "A team member";
     const orgName = business.name || organization?.name || "Zyene Reviews";
 
-    const emailText = [
-        `${inviterName} invited you to join ${orgName} on Zyene Reviews.`,
-        "",
-        `Accept the invitation (sign up or sign in with this email):`,
-        inviteLink,
-        "",
-        "If you did not expect this, you can ignore this message.",
-    ].join("\n");
-
-    const sendResult = await sendEmail({
+    const { sendResult, inviteLink } = await deliverTeamInviteEmail({
         to: email,
-        subject: `Join ${orgName} on Zyene Reviews`,
-        html: TeamInviteEmail(inviteLink, inviterName, orgName),
-        text: emailText,
+        inviteToken: invite.token,
+        inviterName,
+        orgName,
     });
 
     const payloadBase = {

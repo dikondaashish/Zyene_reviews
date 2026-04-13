@@ -809,6 +809,7 @@ export type Database = {
       }
       invitations: {
         Row: {
+          accepted_at: string | null
           business_id: string | null
           created_at: string | null
           email: string
@@ -819,6 +820,7 @@ export type Database = {
           token: string
         }
         Insert: {
+          accepted_at?: string | null
           business_id?: string | null
           created_at?: string | null
           email: string
@@ -829,6 +831,7 @@ export type Database = {
           token?: string
         }
         Update: {
+          accepted_at?: string | null
           business_id?: string | null
           created_at?: string | null
           email?: string
