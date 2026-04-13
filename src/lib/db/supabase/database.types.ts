@@ -1187,6 +1187,7 @@ export type Database = {
           google_place_actions_synced_at: string | null
           google_profile_health_score: number | null
           google_qa_synced_at: string | null
+          google_qa_unavailable: boolean
           id: string
           last_synced_at: string | null
           platform: string
@@ -1213,6 +1214,7 @@ export type Database = {
           google_place_actions_synced_at?: string | null
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
+          google_qa_unavailable?: boolean
           id?: string
           last_synced_at?: string | null
           platform: string
@@ -1239,6 +1241,7 @@ export type Database = {
           google_place_actions_synced_at?: string | null
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
+          google_qa_unavailable?: boolean
           id?: string
           last_synced_at?: string | null
           platform?: string

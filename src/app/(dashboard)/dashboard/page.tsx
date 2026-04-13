@@ -137,12 +137,18 @@ export default async function DashboardPage() {
     );
     const isGoogleConnected = !!googlePlatform;
     const lastSynced = googlePlatform?.last_synced_at;
+    const googleQaUnavailable = !!(googlePlatform as { google_qa_unavailable?: boolean } | undefined)
+        ?.google_qa_unavailable;
 
     let googlePerf: GooglePerformanceTotals | null = null;
     let perfSyncedAt: string | null = null;
 
     // ── Demo Data Injection ───────────────────────────────────
     const useDemoData = !isGoogleConnected;
+
+    /** Hide Q&A metrics when Google returned no Q&A for this listing (see review_platforms.google_qa_unavailable). */
+    const showUnansweredQaCard =
+        (isGoogleConnected || useDemoData) && (!isGoogleConnected || !googleQaUnavailable);
 
     // ── Real Data Queries ──────────────────────────────────────
 
@@ -503,29 +509,48 @@ export default async function DashboardPage() {
     }
 
     if (!useDemoData && business.id && isGoogleConnected) {
-        const [qaRes, plRes] = await Promise.all([
-            supabase
-                .from("gbp_questions")
-                .select("*", { count: "exact", head: true })
-                .eq("business_id", business.id)
-                .eq("has_merchant_answer", false),
-            supabase
+        if (googleQaUnavailable) {
+            const plRes = await supabase
                 .from("gbp_place_action_links")
                 .select("*", { count: "exact", head: true })
                 .eq("business_id", business.id)
-                .eq("is_broken", true),
-        ]);
-        if (qaRes.error || plRes.error) {
-            console.error("[Dashboard page] Google health fetch failed:", qaRes.error || plRes.error);
-            return (
-                <DashboardFetchError
-                    message="We could not load Google health metrics. Check your connection and try again."
-                    retryHref="/dashboard"
-                />
-            );
+                .eq("is_broken", true);
+            if (plRes.error) {
+                console.error("[Dashboard page] Google health fetch failed:", plRes.error);
+                return (
+                    <DashboardFetchError
+                        message="We could not load Google health metrics. Check your connection and try again."
+                        retryHref="/dashboard"
+                    />
+                );
+            }
+            unansweredQaCount = 0;
+            brokenPlaceLinksCount = plRes.count ?? 0;
+        } else {
+            const [qaRes, plRes] = await Promise.all([
+                supabase
+                    .from("gbp_questions")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("has_merchant_answer", false),
+                supabase
+                    .from("gbp_place_action_links")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("is_broken", true),
+            ]);
+            if (qaRes.error || plRes.error) {
+                console.error("[Dashboard page] Google health fetch failed:", qaRes.error || plRes.error);
+                return (
+                    <DashboardFetchError
+                        message="We could not load Google health metrics. Check your connection and try again."
+                        retryHref="/dashboard"
+                    />
+                );
+            }
+            unansweredQaCount = qaRes.count ?? 0;
+            brokenPlaceLinksCount = plRes.count ?? 0;
         }
-        unansweredQaCount = qaRes.count ?? 0;
-        brokenPlaceLinksCount = plRes.count ?? 0;
     }
 
     // ── Computed Stats ──────────────────────────────────────────
@@ -602,6 +627,15 @@ export default async function DashboardPage() {
     }
     const isHotelBusiness = business.category === "hotel";
     const showLodgingCard = useDemoData || isHotelBusiness || googleLodgingApplicable === true;
+
+    const googleHealthMetricsCount =
+        (showUnansweredQaCard ? 1 : 0) + 2 + (showLodgingCard ? 1 : 0);
+    const googleHealthMetricsGridClass =
+        googleHealthMetricsCount >= 4
+            ? "xl:grid-cols-4"
+            : googleHealthMetricsCount === 3
+              ? "xl:grid-cols-3"
+              : "xl:grid-cols-2";
 
     if (!useDemoData && business.id && isGoogleConnected) {
         const { start, end } = dateRangeLastNDays(30);
@@ -727,30 +761,32 @@ export default async function DashboardPage() {
             </div>
 
             {(isGoogleConnected || useDemoData) && (
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">{dict.dashboard.unanswered_qa}</CardTitle>
-                            <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div
-                                className={`text-2xl font-bold ${
-                                    unansweredQaCount === 0 ? "text-green-600" : "text-amber-600"
-                                }`}
-                            >
-                                {unansweredQaCount}
-                            </div>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                                {dict.dashboard.qa_desc}
-                            </p>
-                            <Link href="/questions" className="mt-3 inline-block">
-                                <Button variant="outline" size="sm">
-                                    {dict.dashboard.manage_qa}
-                                </Button>
-                            </Link>
-                        </CardContent>
-                    </Card>
+                <div className={`grid gap-4 sm:grid-cols-2 ${googleHealthMetricsGridClass}`}>
+                    {showUnansweredQaCard && (
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">{dict.dashboard.unanswered_qa}</CardTitle>
+                                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div
+                                    className={`text-2xl font-bold ${
+                                        unansweredQaCount === 0 ? "text-green-600" : "text-amber-600"
+                                    }`}
+                                >
+                                    {unansweredQaCount}
+                                </div>
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                    {dict.dashboard.qa_desc}
+                                </p>
+                                <Link href="/questions" className="mt-3 inline-block">
+                                    <Button variant="outline" size="sm">
+                                        {dict.dashboard.manage_qa}
+                                    </Button>
+                                </Link>
+                            </CardContent>
+                        </Card>
+                    )}
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">{dict.dashboard.broken_links}</CardTitle>

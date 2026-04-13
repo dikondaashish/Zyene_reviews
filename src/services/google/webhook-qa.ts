@@ -52,13 +52,17 @@ export async function processQaWebhookForLocation(googleLocationId: string): Pro
     const admin = createAdminClient();
     const { data: platform, error } = await admin
         .from("review_platforms")
-        .select("id")
+        .select("id, google_qa_unavailable")
         .eq("platform", "google")
         .eq("google_location_id", googleLocationId)
         .maybeSingle();
 
     if (error || !platform) {
         console.warn("[GBP Webhook] Q&A: no platform for location", googleLocationId);
+        return;
+    }
+
+    if (platform.google_qa_unavailable) {
         return;
     }
 

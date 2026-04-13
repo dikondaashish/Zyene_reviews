@@ -136,13 +136,17 @@ function SettingsNavItems({
     )
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+    hideGoogleQaNav,
+    ...props
+}: React.ComponentProps<typeof Sidebar> & { hideGoogleQaNav?: boolean }) {
     const pathname = usePathname()
     const { dict } = useLanguage()
     const isSettingsActive = pathname.startsWith("/settings")
 
     // Memoize menu metadata so child renders only depend on pathname/language changes.
-    const items = React.useMemo<NavItem[]>(() => [
+    const items = React.useMemo<NavItem[]>(() => {
+        const base: NavItem[] = [
         {
             title: dict.nav.dashboard,
             url: "/dashboard",
@@ -195,7 +199,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/integrations",
             icon: Plug,
         },
-    ], [dict])
+        ]
+        if (hideGoogleQaNav) {
+            return base.filter((item) => item.url !== "/questions")
+        }
+        return base
+    }, [dict, hideGoogleQaNav])
 
     const settingsItems = React.useMemo<NavItem[]>(() => [
         {

@@ -37,6 +37,11 @@ export default async function DashboardLayout({
     const { businesses, businessId: activeBusinessId, organization, business: activeBusiness } =
         await getActiveBusinessId();
 
+    const googlePlatformForNav = activeBusiness?.review_platforms?.find(
+        (p: { platform?: string }) => p.platform === "google"
+    ) as { google_qa_unavailable?: boolean } | undefined;
+    const hideGoogleQaNav = !!(googlePlatformForNav && googlePlatformForNav.google_qa_unavailable === true);
+
     const headerContent = (
         <div className="flex flex-1 items-center justify-between gap-3 min-w-0">
             <div className="flex min-w-0 flex-col gap-0.5">
@@ -78,7 +83,7 @@ export default async function DashboardLayout({
 
     return (
         <SidebarProvider>
-            <AppSidebar />
+            <AppSidebar hideGoogleQaNav={hideGoogleQaNav} />
             <SidebarInset>
                 <VerificationBanner user={user} />
                 <TrialBanner organization={organization} />

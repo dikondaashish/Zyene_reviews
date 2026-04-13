@@ -33,6 +33,24 @@ export default async function QuestionsPage() {
         );
     }
 
+    const googlePlatform = business?.review_platforms?.find(
+        (p: { platform?: string }) => p.platform === "google"
+    ) as { google_qa_unavailable?: boolean } | undefined;
+    if (googlePlatform?.google_qa_unavailable) {
+        return (
+            <div className="flex w-full max-w-lg flex-col gap-4">
+                <h1 className="text-3xl font-bold tracking-tight">Google Q&A</h1>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                    Google Q&A isn&apos;t available for this business listing. We didn&apos;t receive any Q&amp;A data
+                    from Google for this location, so this feature stays hidden.
+                </p>
+                <Button asChild variant="outline" className="w-fit">
+                    <Link href="/dashboard">Back to dashboard</Link>
+                </Button>
+            </div>
+        );
+    }
+
     const isGoogleConnected = !!business?.review_platforms?.find(
         (p: { platform?: string }) => p.platform === "google"
     );

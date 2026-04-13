@@ -29,12 +29,16 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
 
     const { data: platform, error: pErr } = await admin
         .from("review_platforms")
-        .select("id, business_id, platform, google_location_id")
+        .select("id, business_id, platform, google_location_id, google_qa_unavailable")
         .eq("id", platformId)
         .single();
 
     if (pErr || !platform || platform.platform !== "google" || !platform.google_location_id) {
         return { success: false, count: 0, error: "Invalid Google platform" };
+    }
+
+    if (platform.google_qa_unavailable) {
+        return { success: true, count: 0 };
     }
 
     try {
@@ -49,7 +53,10 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
         if (rows.length === 0) {
             await admin
                 .from("review_platforms")
-                .update({ google_qa_synced_at: new Date().toISOString() })
+                .update({
+                    google_qa_synced_at: new Date().toISOString(),
+                    google_qa_unavailable: true,
+                })
                 .eq("id", platformId);
             return { success: true, count: 0 };
         }
@@ -69,7 +76,10 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
 
         await admin
             .from("review_platforms")
-            .update({ google_qa_synced_at: new Date().toISOString() })
+            .update({
+                google_qa_synced_at: new Date().toISOString(),
+                google_qa_unavailable: false,
+            })
             .eq("id", platformId);
 
         return { success: true, count: rows.length };
