@@ -72,6 +72,7 @@ function SignupForm() {
                 data: {
                     full_name: fullName,
                     phone: phoneTrimmed,
+                    ...(inviteToken ? { invite_token: inviteToken } : {}),
                 },
                 emailRedirectTo: callbackUrl.toString(),
             },
@@ -118,7 +119,9 @@ function SignupForm() {
                     Create an account
                 </h1>
                 <p className="text-muted-foreground">
-                    Start managing your business reviews in minutes
+                    {inviteToken ?
+                        "You have been invited to a team. Use the same email the invitation was sent to—you will not need to create a new business or pick a plan."
+                    :   "Start managing your business reviews in minutes"}
                 </p>
             </div>
 

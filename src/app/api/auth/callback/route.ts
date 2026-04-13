@@ -16,6 +16,7 @@ import type {
     GooglePlatformUpdatePayload,
 } from "@/types/api-routes";
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
+import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
 
 function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): string | null {
     const raw = user.user_metadata?.phone;
@@ -35,67 +36,6 @@ function safeNextPath(raw: string | null): string {
     return candidate;
 }
 
-async function acceptBusinessInvitation(params: {
-    admin: ReturnType<typeof createAdminClient>;
-    userId: string;
-    userEmail: string | null | undefined;
-    inviteToken: string | null;
-}) {
-    const { admin, userId, userEmail, inviteToken } = params;
-    if (!inviteToken || !userEmail) return { accepted: false as const };
-
-    const invitationsTable = admin.from("invitations" as never);
-    const inviteResult = await invitationsTable
-        .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
-        .eq("token", inviteToken)
-        .is("accepted_at", null)
-        .maybeSingle();
-    const invite = inviteResult.data as
-        | {
-              id: string;
-              email: string;
-              role: string;
-              business_id: string | null;
-              organization_id: string;
-              expires_at: string | null;
-          }
-        | null;
-
-    if (!invite) return { accepted: false as const };
-    if (invite.email.toLowerCase() !== userEmail.toLowerCase()) return { accepted: false as const };
-    if (invite.expires_at && new Date(invite.expires_at) < new Date()) return { accepted: false as const };
-
-    let businessId = invite.business_id;
-    if (!businessId) {
-        const { data: firstBusiness } = await admin
-            .from("businesses")
-            .select("id")
-            .eq("organization_id", invite.organization_id)
-            .order("created_at", { ascending: true })
-            .limit(1)
-            .maybeSingle();
-        businessId = firstBusiness?.id ?? null;
-    }
-    if (!businessId) return { accepted: false as const };
-
-    const role = ["owner", "admin", "manager", "member", "viewer"].includes(invite.role)
-        ? invite.role
-        : "member";
-
-    await admin.from("business_members").upsert(
-        {
-            business_id: businessId,
-            user_id: userId,
-            role,
-            status: "active",
-        },
-        { onConflict: "business_id,user_id" }
-    );
-
-    await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
-    return { accepted: true as const, businessId };
-}
-
 export async function GET(request: Request) {
     try {
         const { searchParams, origin } = new URL(request.url);
@@ -103,7 +43,6 @@ export async function GET(request: Request) {
         const code = searchParams.get("code");
         const next = safeNextPath(searchParams.get("next"));
         const biz = searchParams.get("biz");
-        const inviteToken = searchParams.get("invite");
 
         // "Add a Business" flow: org_id and user_id passed as URL query params.
         // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
@@ -134,6 +73,12 @@ export async function GET(request: Request) {
 
         if (data.user) {
             const admin = createAdminClient();
+
+            const inviteParamForAccept =
+                searchParams.get("invite")?.trim() ||
+                (typeof data.user.user_metadata?.invite_token === "string"
+                    ? data.user.user_metadata.invite_token.trim()
+                    : "");
 
             if (isAddBusinessFlow && addBusinessOrgId) {
                 // Check business limit before proceeding
@@ -381,18 +326,13 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
-                const invited = await acceptBusinessInvitation({
+                const invited = await acceptBusinessInvitationAdmin({
                     admin,
                     userId: data.user.id,
                     userEmail: data.user.email,
-                    inviteToken,
+                    inviteParam: inviteParamForAccept || null,
                 });
                 if (invited.accepted) {
-                    try {
-                        await redis.del(`user_businesses:${data.user.id}`);
-                    } catch (e) {
-                        console.error("[Auth Callback] Failed to clear business cache:", e);
-                    }
                     return NextResponse.redirect(`${appUrl}/dashboard`);
                 }
 
@@ -503,18 +443,13 @@ export async function GET(request: Request) {
             }
 
             // ─── EXISTING USER LOGIN ────────────────────────────
-            const invited = await acceptBusinessInvitation({
+            const invited = await acceptBusinessInvitationAdmin({
                 admin,
                 userId: data.user.id,
                 userEmail: data.user.email,
-                inviteToken,
+                inviteParam: inviteParamForAccept || null,
             });
             if (invited.accepted) {
-                try {
-                    await redis.del(`user_businesses:${data.user.id}`);
-                } catch (e) {
-                    console.error("[Auth Callback] Failed to clear business cache:", e);
-                }
                 return NextResponse.redirect(`${appUrl}/dashboard`);
             }
 
