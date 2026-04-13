@@ -7,6 +7,11 @@ import { z } from "zod";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { canManageBusinessTeam, INVITE_ROLE_VALUES } from "@/lib/team/business-team";
 
+const inviteRoleSchema = z.preprocess(
+    (v) => (typeof v === "string" ? v.trim().toLowerCase() : v),
+    z.enum(INVITE_ROLE_VALUES as unknown as [string, ...string[]])
+);
+
 const inviteSchema = z.object({
     email: z
         .string()
@@ -15,7 +20,7 @@ const inviteSchema = z.object({
         .email("Enter a valid email address")
         .max(255)
         .transform((e) => e.toLowerCase()),
-    role: z.enum(INVITE_ROLE_VALUES as unknown as [string, ...string[]]),
+    role: inviteRoleSchema,
 });
 
 export async function POST(request: Request) {
@@ -125,9 +130,14 @@ export async function POST(request: Request) {
         .single();
 
     if (inviteError) {
-        // Handle unique constraint violation (already invited)
         if (inviteError.code === "23505") {
             return apiError("User already invited", { status: 400 });
+        }
+        if (inviteError.code === "23514") {
+            return apiError(
+                "Invalid role for invitation. Try again or contact support if this persists.",
+                { status: 400 }
+            );
         }
         return apiError(inviteError.message, { status: 500 });
     }
