@@ -53,7 +53,11 @@ export async function getActiveBusinessId(): Promise<{
             .from("organization_members")
             .select(`
                 organizations (
-                    *
+                    *,
+                    businesses (
+                        *,
+                        review_platforms (*)
+                    )
                 )
             `)
             .eq("user_id", user.id)

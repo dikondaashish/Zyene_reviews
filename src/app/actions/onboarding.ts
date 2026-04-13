@@ -1036,6 +1036,25 @@ export async function createBusinessWithLocation(
       };
     }
 
+    // Ensure the creator can access the newly-created business in business-scoped flows.
+    const { error: memberError } = await supabase.from("business_members").upsert(
+      {
+        business_id: business.id,
+        user_id: user.id,
+        role: "owner",
+        status: "active",
+      },
+      { onConflict: "business_id,user_id" }
+    );
+
+    if (memberError) {
+      console.error("Error creating business membership:", memberError);
+      return {
+        success: false,
+        error: "Business created, but failed to assign access. Please contact support.",
+      };
+    }
+
     // Invalidate business context cache
     const cacheKey = `user_businesses:${user.id}`;
     await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
