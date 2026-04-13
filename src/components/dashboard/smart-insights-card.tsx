@@ -14,6 +14,8 @@ export function SmartInsightsCard() {
     const [data, setData] = useState<InsightsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [showAllThemes, setShowAllThemes] = useState(false);
+    const [showAllSuggestions, setShowAllSuggestions] = useState(false);
 
     useEffect(() => {
         async function fetchInsights() {
@@ -54,6 +56,11 @@ export function SmartInsightsCard() {
 
     if (!data || data.themes.length === 0) return null; // No insights available
 
+    const visibleThemes = showAllThemes ? data.themes : data.themes.slice(0, 1);
+    const visibleSuggestions = showAllSuggestions
+        ? data.suggestions
+        : data.suggestions.slice(0, 1);
+
     return (
         <div className="rounded-xl border border-border bg-card p-6">
             {/* Header */}
@@ -83,13 +90,22 @@ export function SmartInsightsCard() {
                     </span>
                 </div>
                 <ul className="space-y-2.5">
-                    {data.themes.map((theme, i) => (
+                    {visibleThemes.map((theme, i) => (
                         <li key={i} className="flex items-start gap-2.5">
                             <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
                             <span className="text-sm text-foreground leading-relaxed">{theme}</span>
                         </li>
                     ))}
                 </ul>
+                {data.themes.length > 1 && (
+                    <button
+                        type="button"
+                        className="mt-3 text-sm text-primary hover:underline"
+                        onClick={() => setShowAllThemes((prev) => !prev)}
+                    >
+                        {showAllThemes ? "Show less" : "Read more"}
+                    </button>
+                )}
             </div>
 
             {/* Divider */}
@@ -104,13 +120,22 @@ export function SmartInsightsCard() {
                     </span>
                 </div>
                 <ul className="space-y-2.5">
-                    {data.suggestions.map((suggestion, i) => (
+                    {visibleSuggestions.map((suggestion, i) => (
                         <li key={i} className="flex items-start gap-2.5">
                             <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-400 flex-shrink-0" />
                             <span className="text-sm text-foreground leading-relaxed">{suggestion}</span>
                         </li>
                     ))}
                 </ul>
+                {data.suggestions.length > 1 && (
+                    <button
+                        type="button"
+                        className="mt-3 text-sm text-primary hover:underline"
+                        onClick={() => setShowAllSuggestions((prev) => !prev)}
+                    >
+                        {showAllSuggestions ? "Show less" : "Read more"}
+                    </button>
+                )}
             </div>
         </div>
     );
