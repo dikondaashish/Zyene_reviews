@@ -600,6 +600,8 @@ export default async function DashboardPage() {
         googleLodgingHealthScore =
             typeof gp.google_lodging_health_score === "number" ? gp.google_lodging_health_score : null;
     }
+    const isHotelBusiness = business.category === "hotel";
+    const showLodgingCard = useDemoData || isHotelBusiness || googleLodgingApplicable === true;
 
     if (!useDemoData && business.id && isGoogleConnected) {
         const { start, end } = dateRangeLastNDays(30);
@@ -804,7 +806,7 @@ export default async function DashboardPage() {
                             </Link>
                         </CardContent>
                     </Card>
-                    {googleLodgingApplicable !== false && (
+                    {showLodgingCard && (
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">{dict.dashboard.lodging_completeness}</CardTitle>
