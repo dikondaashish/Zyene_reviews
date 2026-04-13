@@ -79,24 +79,56 @@ export function InviteMemberDialog() {
                     ? ((payload as { data: Record<string, unknown> }).data)
                     : null;
 
-            if (data && data.email_delivered === false) {
-                const link = typeof data.invite_link === "string" ? data.invite_link : null;
-                toast.warning(
-                    link
-                        ? "Invite saved, but the email could not be sent. Copy the link and share it manually."
-                        : "Invite saved, but the email could not be sent. Check Resend configuration or try again.",
-                    { duration: 8000 }
-                );
+            const link = typeof data?.invite_link === "string" ? data.invite_link : null;
+
+            const copyLink = () => {
                 if (link && typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-                    try {
-                        await navigator.clipboard.writeText(link);
-                        toast.message("Invite link copied to clipboard");
-                    } catch {
-                        /* clipboard optional */
-                    }
+                    void navigator.clipboard.writeText(link);
                 }
+            };
+
+            if (data?.email_delivered === false) {
+                toast.warning("Invite saved, but email was not sent from our server.", {
+                    description:
+                        typeof data.email_delivery_error === "string"
+                            ? data.email_delivery_error
+                            : "Check Vercel env: RESEND_API_KEY and RESEND_FROM (verified domain).",
+                    duration: 12_000,
+                    action:
+                        link ?
+                            {
+                                label: "Copy invite link",
+                                onClick: copyLink,
+                            }
+                        :   undefined,
+                });
+                if (link) copyLink();
+            } else if (data?.email_delivered === true) {
+                toast.success(`Invitation email queued for ${trimmed}`, {
+                    description:
+                        "If they don’t see it within a few minutes, ask them to check spam or Promotions. You can also copy the link as a backup.",
+                    duration: 10_000,
+                    action:
+                        link ?
+                            {
+                                label: "Copy invite link",
+                                onClick: copyLink,
+                            }
+                        :   undefined,
+                });
             } else {
-                toast.success("Invitation sent");
+                toast.message("Invite saved", {
+                    description:
+                        "We could not confirm email delivery. Copy the link and send it to your colleague if they don’t receive an email.",
+                    duration: 10_000,
+                    action:
+                        link ?
+                            {
+                                label: "Copy invite link",
+                                onClick: copyLink,
+                            }
+                        :   undefined,
+                });
             }
 
             setOpen(false);

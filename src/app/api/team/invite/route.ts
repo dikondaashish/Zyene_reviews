@@ -149,24 +149,40 @@ export async function POST(request: Request) {
     const inviterName = membershipTyped.users?.full_name || "A team member";
     const orgName = business.name || organization?.name || "Zyene Reviews";
 
+    const emailText = [
+        `${inviterName} invited you to join ${orgName} on Zyene Reviews.`,
+        "",
+        `Accept the invitation (sign up or sign in with this email):`,
+        inviteLink,
+        "",
+        "If you did not expect this, you can ignore this message.",
+    ].join("\n");
+
     const sendResult = await sendEmail({
         to: email,
         subject: `Join ${orgName} on Zyene Reviews`,
         html: TeamInviteEmail(inviteLink, inviterName, orgName),
+        text: emailText,
     });
+
+    const payloadBase = {
+        ...invite,
+        invite_link: inviteLink,
+        invited_email: email,
+    };
 
     if (!sendResult.sent) {
         console.error("[team/invite] Email delivery failed:", sendResult.error);
         return apiOk({
-            ...invite,
+            ...payloadBase,
             email_delivered: false as const,
             email_delivery_error: sendResult.error ?? "Email could not be sent",
-            invite_link: inviteLink,
         });
     }
 
     return apiOk({
-        ...invite,
+        ...payloadBase,
         email_delivered: true as const,
+        resend_email_id: sendResult.id,
     });
 }
