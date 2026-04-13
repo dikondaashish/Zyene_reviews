@@ -187,7 +187,7 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center space-x-2 pt-1 border-t border-orange-100">
+                                <div className="flex items-center space-x-2 pt-1 border-t border-primary/20">
                                     <Checkbox 
                                         id="consent" 
                                         checked={hasConsent}

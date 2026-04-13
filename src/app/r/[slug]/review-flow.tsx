@@ -36,7 +36,7 @@ const RATINGS = [
     { emoji: "😍", label: "Excellent", value: 5, color: "from-emerald-400 to-emerald-500" },
     { emoji: "😊", label: "Good", value: 4, color: "from-green-400 to-green-500" },
     { emoji: "😐", label: "OK", value: 3, color: "from-amber-400 to-amber-500" },
-    { emoji: "😕", label: "Bad", value: 2, color: "from-orange-400 to-orange-500" },
+    { emoji: "😕", label: "Bad", value: 2, color: "from-primary/70 to-primary" },
     { emoji: "😞", label: "Awful", value: 1, color: "from-red-400 to-red-500" },
 ];
 
@@ -541,7 +541,7 @@ export function PublicReviewFlow({
                     <div
                         className={cn(
                             "relative overflow-hidden rounded-2xl border border-border p-5 pl-5",
-                            "bg-gradient-to-br from-white via-slate-50/80 to-sky-50/50",
+                            "bg-gradient-to-br from-background via-muted/80 to-sky-50/50",
                             "ring-1 ring-border animate-in fade-in zoom-in-95 duration-500"
                         )}
                         role="status"
@@ -706,7 +706,7 @@ export function PublicReviewFlow({
                                 href={googleUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                                className="text-muted-foreground text-sm hover:text-foreground transition-colors"
                             >
                                 Go to Google
                             </a>

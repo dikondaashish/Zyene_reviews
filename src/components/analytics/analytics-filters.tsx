@@ -33,7 +33,7 @@ export function AnalyticsFilters() {
                         key={range.value}
                         onClick={() => setRange(range.value)}
                         className={cn(
-                            "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                            "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary",
                             isActive ? "text-white" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                         )}
                     >

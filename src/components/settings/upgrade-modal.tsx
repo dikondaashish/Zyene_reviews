@@ -108,7 +108,7 @@ export function UpgradeModal({
                                     aria-selected={interval === "month"}
                                     onClick={() => setInterval("month")}
                                     className={cn(
-                                        "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
+                                        "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                                         interval === "month"
                                             ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                             : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
@@ -122,7 +122,7 @@ export function UpgradeModal({
                                     aria-selected={interval === "year"}
                                     onClick={() => setInterval("year")}
                                     className={cn(
-                                        "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
+                                        "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
                                         interval === "year"
                                             ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                             : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
@@ -193,7 +193,7 @@ export function UpgradeModal({
                                                 className={cn(
                                                     "w-full font-semibold text-white",
                                                     "bg-primary",
-                                                    "hover:from-orange-600 hover:to-orange-700"
+                                                    "hover:bg-primary/90"
                                                 )}
                                                 onClick={() => {
                                                     if (!plan.stripePriceId) {

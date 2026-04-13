@@ -82,7 +82,7 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
                             {isActive && (
                                 <motion.div
                                     layoutId="active-platform"
-                                    className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-500/10 border border-orange-500/20 rounded-xl -z-10"
+                                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/20 rounded-xl -z-10"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}

@@ -389,7 +389,7 @@ export function BillingClient({
                     <Button
                         variant="outline"
                         size="sm"
-                        className="shrink-0 border-orange-300"
+                        className="shrink-0 border-primary/30"
                         onClick={() => void handleManageSubscription()}
                         disabled={!hasStripeCustomer || loadingPortal}
                     >
@@ -562,7 +562,7 @@ export function BillingClient({
                                 aria-selected={interval === "month"}
                                 onClick={() => setInterval("month")}
                                 className={cn(
-                                    "flex-1 sm:flex-none rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                                    "flex-1 sm:flex-none rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                                     interval === "month"
                                         ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                         : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
@@ -576,7 +576,7 @@ export function BillingClient({
                                 aria-selected={interval === "year"}
                                 onClick={() => setInterval("year")}
                                 className={cn(
-                                    "flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                                    "flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                                     interval === "year"
                                         ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                         : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
@@ -693,7 +693,7 @@ export function BillingClient({
                                                 className={cn(
                                                     "w-full font-semibold text-white",
                                                     "bg-primary",
-                                                    "hover:from-orange-600 hover:to-orange-700 disabled:opacity-60"
+                                                    "hover:bg-primary/90 disabled:opacity-60"
                                                 )}
                                                 onClick={() => requestPlanChange(plan)}
                                                 disabled={loadingPlan === plan.stripePriceId}

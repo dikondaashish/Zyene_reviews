@@ -3,21 +3,21 @@ import { Store } from "lucide-react";
 
 export default function NotFound() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-muted/40 p-4">
             <div className="bg-card p-8 rounded-lg border border-border text-center max-w-md w-full">
-                <div className="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Store className="h-8 w-8 text-slate-400" />
+                <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Store className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Business Not Found</h2>
-                <p className="text-slate-600 mb-6">
+                <h2 className="text-2xl font-bold text-foreground mb-2">Business Not Found</h2>
+                <p className="text-muted-foreground mb-6">
                     We couldn't find the business you're looking for. The link might be incorrect or the business may have been removed.
                 </p>
-                <div className="text-xs text-slate-400 border-t pt-4 mt-4">
+                <div className="text-xs text-muted-foreground border-t border-border pt-4 mt-4">
                     <p>Debug Info: Review Flow 404</p>
                     <p>If you are the owner, please check your business slug in the dashboard.</p>
                 </div>
                 <div className="mt-6">
-                    <Link href="/" className="text-orange-600 hover:text-orange-700 hover:underline font-medium">
+                    <Link href="/" className="text-primary hover:text-primary/80 hover:underline font-medium">
                         Go to Home
                     </Link>
                 </div>

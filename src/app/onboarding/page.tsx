@@ -345,7 +345,7 @@ export default function OnboardingPage() {
                   )}
                 </motion.div>
                 <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
-                  isActive ? "text-[oklch(0.7_0.22_60)]" : isCompleted ? "text-orange-500/70" : "text-muted-foreground"
+                  isActive ? "text-[oklch(0.7_0.22_60)]" : isCompleted ? "text-primary/70" : "text-muted-foreground"
                 }`}>
                   {step.label}
                 </span>
@@ -370,7 +370,7 @@ export default function OnboardingPage() {
       {/* Glass card wrapper */}
       <div className="relative">
         {/* Card glow */}
-        <div className="absolute -inset-1 bg-gradient-to-br from-orange-500/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
+        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
 
         <div className="relative pro-card p-7 sm:p-10">
           <AnimatePresence mode="wait">
