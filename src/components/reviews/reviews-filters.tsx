@@ -21,7 +21,7 @@ interface ReviewsFiltersProps {
 
 export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps) {
     return (
-        <div className="bg-card p-1 rounded-lg border border-border flex flex-col sm:flex-row gap-2 sm:items-center justify-between sticky top-0 z-10">
+        <div className="sticky top-0 z-20 flex flex-col gap-2 rounded-lg border border-border bg-card/95 p-1 backdrop-blur-sm supports-[backdrop-filter]:bg-card/90 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center overflow-x-auto no-scrollbar">
                 <Tabs value={filters.status || "all"} onValueChange={(val) => onFilterChange("status", val)} className="w-full sm:w-auto">
                     <TabsList className="bg-transparent h-9 p-0">

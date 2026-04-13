@@ -155,7 +155,10 @@ export function GoogleLodgingPanel({ businessId }: { businessId: string }) {
             </div>
 
             <Tabs key={tabsVersion} defaultValue="property" className="w-full">
-                <TabsList className="flex flex-wrap h-auto gap-1">
+                <TabsList
+                    variant="line"
+                    className="flex h-auto w-full min-w-0 flex-wrap justify-start gap-0 border-b border-border p-0"
+                >
                     <TabsTrigger value="property">Property</TabsTrigger>
                     <TabsTrigger value="services">Services</TabsTrigger>
                     <TabsTrigger value="connectivity">Wi‑Fi & parking</TabsTrigger>

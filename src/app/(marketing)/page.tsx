@@ -19,7 +19,7 @@ import {
   ChevronDown,
   Lock
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
@@ -39,23 +39,38 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
     </div>
   );
 }
-import { motion, Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 export default function MarketingPage() {
-  const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
+  const prefersReducedMotion = useReducedMotion();
 
-  const staggerContainer: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
-  };
+  const fadeInUp: Variants = useMemo(
+    () =>
+      prefersReducedMotion
+        ? {
+            hidden: { opacity: 1, y: 0 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0 } },
+          }
+        : {
+            hidden: { opacity: 0, y: 30 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+          },
+    [prefersReducedMotion]
+  );
+
+  const staggerContainer: Variants = useMemo(
+    () =>
+      prefersReducedMotion
+        ? {
+            hidden: { opacity: 1 },
+            visible: { opacity: 1, transition: { staggerChildren: 0 } },
+          }
+        : {
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+          },
+    [prefersReducedMotion]
+  );
 
   return (
     <div className="flex flex-col items-center w-full bg-background text-foreground overflow-hidden font-sans pt-20">
@@ -96,9 +111,9 @@ export default function MarketingPage() {
 
             {/* Right Visual (SpotHopper Petal Shape) */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
+              animate={prefersReducedMotion ? false : { opacity: 1, x: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, ease: "easeOut" }}
               className="w-full lg:w-[50%] relative"
             >
               {/* Petal Container */}
@@ -114,8 +129,12 @@ export default function MarketingPage() {
 
               {/* Floating Overlap Card (SpotHopper Style) */}
               <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                animate={prefersReducedMotion ? false : { y: [0, -10, 0] }}
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { repeat: Infinity, duration: 4, ease: "easeInOut" }
+                }
                 className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-16 bg-card p-6 rounded-lg border border-border max-w-[320px] w-[90%]"
               >
                 <div className="flex items-center gap-3 border-b border-border pb-4 mb-4">

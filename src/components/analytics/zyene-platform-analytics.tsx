@@ -162,7 +162,7 @@ export function ZyenePlatformAnalytics({
         5: "#10b981",
         4: "#34d399",
         3: "#f59e0b",
-        2: "#ff4f00",
+        2: "var(--primary)",
         1: "#ef4444",
     };
 
@@ -207,8 +207,8 @@ export function ZyenePlatformAnalytics({
 
     // ── Funnel Steps ───────────────────────────────────────────────────
     const funnelSteps = [
-        { label: "Sent", count: totalSent, icon: Send, color: "#ff4f00" },
-        { label: "Delivered", count: totalDelivered, icon: CheckCircle2, color: "#ff4f00" },
+        { label: "Sent", count: totalSent, icon: Send, color: "var(--primary)" },
+        { label: "Delivered", count: totalDelivered, icon: CheckCircle2, color: "var(--primary)" },
         { label: "Opened", count: totalOpened, icon: Eye, color: "#ff7a45" },
         { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "#ff7a45" },
         { label: "Completed", count: totalCompleted, icon: Sparkles, color: "#c2410c" },
@@ -423,8 +423,8 @@ export function ZyenePlatformAnalytics({
                                     >
                                         <defs>
                                             <linearGradient id="gradSent" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#ff4f00" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#ff4f00" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="gradClicked" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="#ff7a45" stopOpacity={0.3} />
@@ -486,7 +486,7 @@ export function ZyenePlatformAnalytics({
                                             type="monotone"
                                             dataKey="sent"
                                             name="Sent"
-                                            stroke="#ff4f00"
+                                            stroke="var(--primary)"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#gradSent)"

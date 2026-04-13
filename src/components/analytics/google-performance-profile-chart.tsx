@@ -84,7 +84,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="profileViews" 
                         name="Profile views" 
-                        stroke="#ff4f00" 
+                        stroke="var(--primary)" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}

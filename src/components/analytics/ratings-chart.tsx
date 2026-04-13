@@ -43,8 +43,8 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                 <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#ff4f00" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#ff4f00" stopOpacity={0} />
+                            <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
@@ -84,13 +84,13 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                     />
                     <ReferenceLine 
                         y={overallAvg} 
-                        stroke="#ff4f00" 
+                        stroke="var(--primary)" 
                         strokeDasharray="4 4" 
                         strokeWidth={1.5}
                         label={{ 
                             value: `Avg: ${overallAvg.toFixed(1)}`, 
                             position: 'insideTopRight', 
-                            fill: "#ff4f00", 
+                            fill: "var(--primary)", 
                             fontSize: 10,
                             fontWeight: 700,
                             offset: 10
@@ -99,7 +99,7 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                     <Area
                         type="monotone"
                         dataKey="rating"
-                        stroke="#ff4f00"
+                        stroke="var(--primary)"
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorRating)"

@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { NotificationPreferenceFormValues } from "@/types/components";
+import { SettingsSectionLabel } from "@/components/settings/settings-section-label";
 
 // Schema for Form Interface (what the inputs use)
 const formSchema = z.object({
@@ -47,7 +48,7 @@ function FieldHelpTip({ label, children }: { label: string; children: ReactNode 
             <TooltipTrigger asChild>
                 <button
                     type="button"
-                    className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="inline-flex h-11 min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     aria-label={label}
                 >
                     <CircleHelp className="h-4 w-4" strokeWidth={2} aria-hidden />
@@ -193,6 +194,7 @@ export function NotificationForm({
                     )}
                 />
 
+                <SettingsSectionLabel id="notif-sms">Text messages</SettingsSectionLabel>
                 {/* SMS Alerts */}
                 <FormField
                     control={form.control}

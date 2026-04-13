@@ -261,7 +261,7 @@ export function CompetitorsList({
                                                 <XAxis dataKey="name" axisLine={false} tickLine={false} />
                                                 <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} axisLine={false} tickLine={false} />
                                                 <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px' }} />
-                                                <Bar dataKey="rating" fill="#ff4f00" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                                                <Bar dataKey="rating" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={50} />
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
