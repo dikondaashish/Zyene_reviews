@@ -2,6 +2,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { createClient } from "@/lib/db/supabase/server";
 import { CustomerManagement } from "@/components/customers/customer-management";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { UsersRound } from "lucide-react";
 
 export default async function CustomersPage() {
@@ -29,6 +30,14 @@ export default async function CustomersPage() {
 
     if (error) {
         console.error("Error fetching initial customers:", error);
+        return (
+            <div className="max-w-[1200px] mx-auto py-10 px-6">
+                <DashboardFetchError
+                    message="We couldn&apos;t load customers for this business. Check your connection and try again."
+                    retryHref="/customers"
+                />
+            </div>
+        );
     }
 
     return (

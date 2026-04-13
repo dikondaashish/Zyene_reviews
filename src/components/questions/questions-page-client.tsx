@@ -150,7 +150,7 @@ export function QuestionsPageClient({
     return (
         <div className="space-y-4">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as "all" | "unanswered")}>
-                <TabsList>
+                <TabsList variant="line" className="w-full justify-start border-b border-border">
                     <TabsTrigger value="all">All</TabsTrigger>
                     <TabsTrigger value="unanswered">Unanswered</TabsTrigger>
                 </TabsList>

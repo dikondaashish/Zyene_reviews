@@ -31,20 +31,23 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 
 **Exit criteria (v1):** Major dashboard routes use the shared empty state with CTAs (`/businesses/add`, `/businesses`); Analytics no longer returns a bare “No business” string; Team distinguishes “no business” vs “not a member”; Customers no longer hard-redirects to add-business only (user sees the same pattern as other routes).
 
-**Next:** Per-route **fetch error** UI (retry), and **settings** form section labels / disclosure.
+**Next:** Per-route **fetch error** UI on more routes (retry / `retryHref`), and **settings** form section labels / disclosure.
 
 ---
 
-## Phase 3 — Component consistency pass
+## Phase 3 — Component consistency pass (v1 shipped in repo)
 
 **Goal:** One component language across the app.
 
-- **Tabs:** Inset underline active/hover pattern everywhere tabs are used.
-- **Cards/inputs:** Single radius scale (5px cards/inputs, 4px primary buttons per spec); sand borders over shadows.
-- **Buttons:** Primary / secondary / ghost map to `DESIGN.md` padding and hover states.
-- **Charts:** Semantic chart tokens; orange only for primary series where appropriate.
+- **Tabs:** `TabsList variant="line"` uses **DESIGN.md** inset underlines (`#ff4f00` active, `#c5c0b1` hover); horizontal vs vertical orientation scoped in `tabs.tsx`. Migrated: Campaigns, Send Request dialog, Q&A filters, Review Flow Content (settings).
+- **Cards/inputs:** `Card` + `Input` already at **5px** radius; unchanged this pass.
+- **Buttons:** Default `Button` radius set to **4px** (`rounded-[4px]`) per primary CTA spec; `lg` remains **8px** (`rounded-lg`).
+- **Charts:** Semantic chart tokens — *optional sweep later*; many charts already use `#ff4f00` / primary.
+- **Fetch errors:** `DashboardFetchError` with optional **`retryHref`** (server pages) or **`onRetry`** (client); **Customers** page shows it when the initial query fails.
 
-**Exit criteria:** UI primitives match `DESIGN.md` tables; audit diff is mostly deletion of one-off classes.
+**Exit criteria (v1):** Tab primitive matches inset-underline pattern; key surfaces use `variant="line"`; customers fetch failure is not silent.
+
+**Next:** Line variant on remaining tab UIs (e.g. lodging panel); chart token audit; pill-style review filters stay as `variant="default"` by design.
 
 ---
 
@@ -74,5 +77,5 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 |-------|--------------------------------|
 | 1     | v1 done — optional polish left |
 | 2     | v1 done — density & settings polish next |
-| 3     | Planned                        |
+| 3     | v1 done — charts / remaining tabs next |
 | 4     | Planned                        |

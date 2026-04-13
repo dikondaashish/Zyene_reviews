@@ -382,46 +382,31 @@ export function ReviewContentForm({
                         <div className="border-b bg-muted/40 px-6 pt-5 pb-0">
                             <h3 className="text-lg font-semibold text-foreground mb-1">Review Flow Content</h3>
                             <p className="text-sm text-muted-foreground mb-4">Customize every step of your customer review experience.</p>
-                            <TabsList className="h-auto p-0 bg-transparent gap-0 w-full justify-start rounded-none border-0 overflow-x-auto overflow-y-hidden flex-nowrap no-scrollbar">
-                                <TabsTrigger
-                                    value="rating"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                            <TabsList
+                                variant="line"
+                                className="h-auto w-full min-w-0 justify-start gap-0 overflow-x-auto overflow-y-hidden flex-nowrap no-scrollbar border-0 bg-transparent p-0"
+                            >
+                                <TabsTrigger value="rating" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <Star className="h-3.5 w-3.5 mr-1.5" />
                                     Rating
                                 </TabsTrigger>
-                                <TabsTrigger
-                                    value="tags"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                                <TabsTrigger value="tags" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <Tag className="h-3.5 w-3.5 mr-1.5" />
                                     Tags
                                 </TabsTrigger>
-                                <TabsTrigger
-                                    value="google"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                                <TabsTrigger value="google" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <Globe className="h-3.5 w-3.5 mr-1.5" />
                                     Review Site
                                 </TabsTrigger>
-                                <TabsTrigger
-                                    value="feedback"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                                <TabsTrigger value="feedback" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                                     Feedback
                                 </TabsTrigger>
-                                <TabsTrigger
-                                    value="success"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                                <TabsTrigger value="success" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                                     Success
                                 </TabsTrigger>
-                                <TabsTrigger
-                                    value="branding"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
-                                >
+                                <TabsTrigger value="branding" className="whitespace-nowrap data-[state=active]:text-primary">
                                     <Palette className="h-3.5 w-3.5 mr-1.5" />
                                     Branding
                                 </TabsTrigger>

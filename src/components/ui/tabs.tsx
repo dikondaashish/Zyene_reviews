@@ -31,7 +31,8 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default: "bg-muted",
-        line: "gap-1 bg-transparent",
+        /** DESIGN.md: border-first nav; underline via inset shadow on triggers */
+        line: "gap-0 bg-transparent p-0 h-auto min-h-9",
       },
     },
     defaultVariants: {
@@ -66,10 +67,13 @@ function TabsTrigger({
       type={type}
       data-slot="tabs-trigger"
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring text-foreground/70 hover:text-foreground relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent",
-        "data-[state=active]:bg-background dark:data-[state=active]:text-foreground dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 data-[state=active]:text-foreground",
-        "after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-4px] group-data-[orientation=horizontal]/tabs:after:h-1 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-1 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100 group-data-[variant=line]/tabs-list:data-[state=active]:after:bg-[#ff4f00] group-data-[variant=line]/tabs-list:hover:after:bg-[#c5c0b1]",
+        "focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        /* Pill tabs (default list) */
+        "text-foreground/70 hover:text-foreground group-data-[variant=default]/tabs-list:data-[state=active]:bg-background group-data-[variant=default]/tabs-list:data-[state=active]:text-foreground dark:group-data-[variant=default]/tabs-list:data-[state=active]:border-input dark:group-data-[variant=default]/tabs-list:data-[state=active]:bg-input/30",
+        /* Line / underline tabs — DESIGN.md inset underline (orange active, sand hover) */
+        "group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:px-4 group-data-[variant=line]/tabs-list:py-3 group-data-[variant=line]/tabs-list:text-foreground/80 group-data-[variant=line]/tabs-list:hover:text-foreground group-data-[variant=line]/tabs-list:data-[state=active]:text-foreground group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent",
+        "group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_0_-4px_0_0_#ff4f00] group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_0_-4px_0_0_#c5c0b1]",
+        "group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_4px_0_0_0_#ff4f00] group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_4px_0_0_0_#c5c0b1]",
         className
       )}
       {...props}

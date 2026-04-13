@@ -163,7 +163,7 @@ export default function CampaignsPage() {
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-                <TabsList className="mb-4">
+                <TabsList variant="line" className="mb-4 w-full min-w-0 justify-start border-b border-border">
                     <TabsTrigger value="all">All Campaigns</TabsTrigger>
                     <TabsTrigger value="templates">Template Library</TabsTrigger>
                 </TabsList>

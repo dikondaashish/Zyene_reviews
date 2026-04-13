@@ -172,7 +172,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                     </DialogDescription>
                 </DialogHeader>
                 <Tabs defaultValue="sms">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList variant="line" className="grid w-full grid-cols-2 gap-0 border-b border-border p-0">
                         <TabsTrigger value="sms">Send SMS</TabsTrigger>
                         <TabsTrigger value="link" onClick={loadQR}>QR Code / Link</TabsTrigger>
                     </TabsList>
