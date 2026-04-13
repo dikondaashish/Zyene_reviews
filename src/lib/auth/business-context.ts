@@ -10,6 +10,22 @@ import type {
 const COOKIE_NAME = "active_business_id";
 
 /**
+ * Live read of `review_platforms.google_qa_unavailable` for the Google row.
+ * Prefer this over `business.review_platforms` from {@link getActiveBusinessId} because that payload can be Redis-cached for several minutes.
+ */
+export async function getGoogleQaUnavailableForActiveBusiness(businessId: string | null): Promise<boolean> {
+    if (!businessId) return false;
+    const supabase = await createClient();
+    const { data } = await supabase
+        .from("review_platforms")
+        .select("google_qa_unavailable")
+        .eq("business_id", businessId)
+        .eq("platform", "google")
+        .maybeSingle();
+    return data?.google_qa_unavailable === true;
+}
+
+/**
  * Get the active business ID from cookie.
  * Validates that the business belongs to the current user's organization.
  * Falls back to the first business if no valid cookie is set.

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import {
@@ -33,10 +33,8 @@ export default async function QuestionsPage() {
         );
     }
 
-    const googlePlatform = business?.review_platforms?.find(
-        (p: { platform?: string }) => p.platform === "google"
-    ) as { google_qa_unavailable?: boolean } | undefined;
-    if (googlePlatform?.google_qa_unavailable) {
+    const qaUnavailable = await getGoogleQaUnavailableForActiveBusiness(businessId);
+    if (qaUnavailable) {
         return (
             <div className="flex w-full max-w-lg flex-col gap-4">
                 <h1 className="text-3xl font-bold tracking-tight">Google Q&A</h1>

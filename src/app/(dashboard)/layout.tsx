@@ -8,7 +8,7 @@ import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { OrganizationDisplay } from "@/components/dashboard/organization-display";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
-import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
@@ -37,10 +37,7 @@ export default async function DashboardLayout({
     const { businesses, businessId: activeBusinessId, organization, business: activeBusiness } =
         await getActiveBusinessId();
 
-    const googlePlatformForNav = activeBusiness?.review_platforms?.find(
-        (p: { platform?: string }) => p.platform === "google"
-    ) as { google_qa_unavailable?: boolean } | undefined;
-    const hideGoogleQaNav = !!(googlePlatformForNav && googlePlatformForNav.google_qa_unavailable === true);
+    const hideGoogleQaNav = await getGoogleQaUnavailableForActiveBusiness(activeBusinessId);
 
     const headerContent = (
         <div className="flex flex-1 items-center justify-between gap-3 min-w-0">

@@ -47,7 +47,7 @@ import Link from "next/link";
 import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
 import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
 import { QRCodeCard } from "@/components/dashboard/qr-code-card";
-import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
 import { DASHBOARD_DEMO_DATA } from "@/constants/dashboard-demo-data";
 import {
     dateRangeLastNDays,
@@ -137,8 +137,9 @@ export default async function DashboardPage() {
     );
     const isGoogleConnected = !!googlePlatform;
     const lastSynced = googlePlatform?.last_synced_at;
-    const googleQaUnavailable = !!(googlePlatform as { google_qa_unavailable?: boolean } | undefined)
-        ?.google_qa_unavailable;
+    const googleQaUnavailable = business.id
+        ? await getGoogleQaUnavailableForActiveBusiness(business.id)
+        : false;
 
     let googlePerf: GooglePerformanceTotals | null = null;
     let perfSyncedAt: string | null = null;
