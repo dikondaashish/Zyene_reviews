@@ -65,7 +65,7 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
         <button
             onClick={generatePDF}
             disabled={isGenerating}
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 disabled:pointer-events-none disabled:opacity-50 bg-[#f97316] text-white shadow hover:bg-[#ea580c] h-10 px-4 py-2 gap-2"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2"
         >
             {isGenerating ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

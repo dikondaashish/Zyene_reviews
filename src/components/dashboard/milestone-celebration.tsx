@@ -81,7 +81,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
             : `Phenomenal! Your business maintains a ${milestone} star rating! ⭐`;
 
         toast.custom((id) => (
-            <div className="animate-in fade-in zoom-in max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary shadow-2xl rounded-2xl pointer-events-auto flex flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300">
+            <div className="animate-in fade-in zoom-in max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary rounded-2xl pointer-events-auto flex flex-row ring-1 ring-border overflow-hidden transition-all duration-300">
                 <div className="flex-1 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">

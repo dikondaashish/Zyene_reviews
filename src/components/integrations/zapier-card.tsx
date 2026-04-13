@@ -20,13 +20,13 @@ export function ZapierCard({ businessId }: { businessId: string }) {
     };
 
     return (
-        <Card className="overflow-hidden border-orange-200/50 dark:border-orange-900/30">
-            <div className="h-1 bg-orange-500 w-full" />
+        <Card className="overflow-hidden border-primary/20">
+            <div className="h-1 bg-primary w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-950/30 border shadow-sm">
-                            <Zap className="h-5 w-5 text-orange-500" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                            <Zap className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Zapier</p>

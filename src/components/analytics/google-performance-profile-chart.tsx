@@ -63,7 +63,6 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                             backgroundColor: "hsl(var(--card))",
                             border: "1px solid hsl(var(--border))",
                             borderRadius: "12px",
-                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                             padding: "8px 12px",
                         }}
                         labelClassName="font-bold text-xs mb-1"
@@ -85,7 +84,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="profileViews" 
                         name="Profile views" 
-                        stroke="#f97316" 
+                        stroke="#ff4f00" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
@@ -95,7 +94,7 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         type="monotone" 
                         dataKey="websiteClicks" 
                         name="Website clicks" 
-                        stroke="#ea580c" 
+                        stroke="#ff7a45" 
                         strokeWidth={3} 
                         dot={false} 
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}

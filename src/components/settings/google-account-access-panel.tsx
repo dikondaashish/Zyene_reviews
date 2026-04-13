@@ -91,7 +91,7 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
                     {accounts.map((acc) => (
                         <div
                             key={acc.resourceName}
-                            className={`rounded-md border p-3 text-sm ${acc.isLinkedToZyeneReviews ? "border-orange-200 bg-orange-50/50" : ""}`}
+                            className={`rounded-md border p-3 text-sm ${acc.isLinkedToZyeneReviews ? "border-primary/20 bg-primary/10" : ""}`}
                         >
                             <div className="flex flex-wrap items-center gap-2">
                                 <span className="font-medium">{acc.accountName}</span>

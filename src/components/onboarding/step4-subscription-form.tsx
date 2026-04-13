@@ -155,10 +155,10 @@ export function Step4SubscriptionForm({
 
         <div className="relative z-10">
           {isCancelled && (
-            <Alert className="mb-6 bg-orange-50/50 border-orange-200 dark:bg-orange-950/20 dark:border-orange-900/50">
-              <Zap className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              <AlertTitle className="text-orange-800 dark:text-orange-300">Payment not completed</AlertTitle>
-              <AlertDescription className="text-orange-700/80 dark:text-orange-400/70">
+            <Alert className="mb-6 bg-primary/10 border-primary/20">
+              <Zap className="h-4 w-4 text-primary" />
+              <AlertTitle className="text-foreground">Payment not completed</AlertTitle>
+              <AlertDescription className="text-muted-foreground">
                 It looks like the checkout process wasn't finished. You can try again or choose a different plan.
               </AlertDescription>
             </Alert>
@@ -168,7 +168,7 @@ export function Step4SubscriptionForm({
             <h3 className="text-xl font-semibold text-left">Choose a Plan</h3>
 
             <div
-              className="inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
+              className="inline-flex items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
               role="tablist"
               aria-label="Billing interval"
             >
@@ -178,10 +178,10 @@ export function Step4SubscriptionForm({
                 aria-selected={interval === "month"}
                 onClick={() => setInterval("month")}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                  "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                   interval === "month"
-                    ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                    : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                    ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                    : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground",
                 )}
               >
                 Monthly
@@ -192,10 +192,10 @@ export function Step4SubscriptionForm({
                 aria-selected={interval === "year"}
                 onClick={() => setInterval("year")}
                 className={cn(
-                  "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
+                  "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                   interval === "year"
-                    ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                    : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground",
+                    ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                    : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground",
                 )}
               >
                 Yearly
@@ -218,14 +218,14 @@ export function Step4SubscriptionForm({
                   key={plan.id}
                   className={cn(
                     "relative flex w-full max-w-none flex-col h-full",
-                    "transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-stone-300 dark:hover:border-stone-700",
+                    "transition-all duration-300 hover:-translate-y-2 hover:border-border dark:hover:border-border",
                     isPro &&
-                      "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)] hover:shadow-[0_30px_60px_-15px_rgba(249,115,22,0.45)] hover:ring-orange-500/70",
+                      "ring-2 ring-primary/50 hover:ring-primary/70",
                   )}
                 >
                   {isPro && (
                     <div className="absolute -top-2 right-3 z-20">
-                      <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
+                      <Badge className="bg-primary text-primary-foreground border-0">
                         Most Popular
                       </Badge>
                     </div>
@@ -234,9 +234,9 @@ export function Step4SubscriptionForm({
                     <PricingCard.Plan>
                       <PricingCard.PlanName>
                         {isPro ? (
-                          <Crown className="text-orange-500" aria-hidden />
+                          <Crown className="text-primary" aria-hidden />
                         ) : (
-                          <Zap className="text-orange-500" aria-hidden />
+                          <Zap className="text-primary" aria-hidden />
                         )}
                         <span className="text-foreground">{plan.name}</span>
                       </PricingCard.PlanName>
@@ -267,8 +267,8 @@ export function Step4SubscriptionForm({
                     <Button
                       className={cn(
                         "relative z-20 w-full font-semibold text-white transition-all duration-300 cursor-pointer",
-                        "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(249,115,22,0.25)]",
-                        "hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(249,115,22,0.4)] hover:brightness-110 active:translate-y-0 active:shadow-md",
+                        "bg-primary",
+                        "hover:-translate-y-1 hover:brightness-110 active:translate-y-0",
                       )}
                       onClick={() => onSubscribe(plan)}
                       disabled={loadingPlan === plan.id || planBusy}
@@ -302,7 +302,7 @@ export function Step4SubscriptionForm({
             })}
 
             {enterprisePlan && (
-              <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-solid hover:border-stone-300 dark:hover:border-stone-600">
+              <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed transition-all duration-300 hover:-translate-y-2 hover:border-solid hover:border-border dark:hover:border-border">
                 <PricingCard.Header className="relative z-10">
                   <PricingCard.Plan>
                     <PricingCard.PlanName>
@@ -323,7 +323,7 @@ export function Step4SubscriptionForm({
                     rel="noopener noreferrer"
                     className={cn(
                       buttonVariants({ variant: "outline", size: "default" }),
-                      "w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                      "w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:bg-muted dark:hover:bg-muted"
                     )}
                   >
                     <Mail className="h-4 w-4" aria-hidden />

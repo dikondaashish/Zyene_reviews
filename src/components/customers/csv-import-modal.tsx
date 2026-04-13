@@ -147,7 +147,7 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
                 <div className="space-y-4 py-4">
                     <div
                         onClick={() => fileInputRef.current?.click()}
-                        className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-slate-400 transition-colors"
+                        className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-foreground/30 transition-colors"
                     >
                         <input
                             ref={fileInputRef}
@@ -164,7 +164,7 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
 
                     {csvData.length > 0 && (
                         <div className="space-y-3">
-                            <div className="bg-slate-50 rounded-lg p-3 max-h-32 overflow-y-auto text-xs border">
+                            <div className="bg-muted rounded-lg p-3 max-h-32 overflow-y-auto text-xs border border-border">
                                 <table className="w-full">
                                     <tbody>
                                         {csvData.slice(0, 3).map((row, idx) => (
@@ -177,12 +177,12 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
                                 </table>
                             </div>
 
-                            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 space-y-3">
+                            <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 space-y-3">
                                 <div className="flex gap-3">
-                                    <ShieldCheck className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
+                                    <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                                     <div className="space-y-1">
-                                        <p className="text-sm font-semibold text-orange-900">Compliance Acknowledgment</p>
-                                        <p className="text-xs text-orange-800/80 leading-relaxed">
+                                        <p className="text-sm font-semibold text-foreground">Compliance Acknowledgment</p>
+                                        <p className="text-xs text-muted-foreground leading-relaxed">
                                             I certify that I have obtained express consent to contact these individuals via SMS/Email in accordance with TCPA/CAN-SPAM.
                                         </p>
                                     </div>
@@ -193,7 +193,7 @@ export function CSVImportModal({ open, onOpenChange, onSuccess }: CSVImportModal
                                         checked={hasConsent}
                                         onCheckedChange={(v) => setHasConsent(v as boolean)}
                                     />
-                                    <Label htmlFor="consent" className="text-xs font-medium text-orange-900 cursor-pointer">
+                                    <Label htmlFor="consent" className="text-xs font-medium text-foreground cursor-pointer">
                                         I confirm I have explicit consent.
                                     </Label>
                                 </div>

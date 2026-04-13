@@ -104,7 +104,7 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
                     <div
                         className={cn(
                             "h-full rounded-full transition-all",
-                            isNearLimit ? "bg-orange-500" : "bg-blue-500"
+                            isNearLimit ? "bg-primary" : "bg-blue-500"
                         )}
                         style={{ width: `${percentage}%` }}
                     />
@@ -371,18 +371,18 @@ export function BillingClient({
             )}
 
             {planStatus === "canceled" && (
-                <div className="rounded-lg border border-slate-200 bg-slate-50 dark:bg-slate-900/40 dark:border-slate-800 px-4 py-3 flex gap-3 text-sm">
-                    <AlertTriangle className="h-4 w-4 text-slate-600 shrink-0 mt-0.5" aria-hidden />
-                    <p className="text-slate-700 dark:text-slate-300">{b.subscription_ended}</p>
+                <div className="rounded-lg border border-border bg-muted px-4 py-3 flex gap-3 text-sm">
+                    <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" aria-hidden />
+                    <p className="text-muted-foreground">{b.subscription_ended}</p>
                 </div>
             )}
 
             {planStatus === "past_due" && (
-                <div className="rounded-lg border border-orange-200 bg-orange-50 dark:bg-orange-950/20 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                    <AlertTriangle className="h-5 w-5 text-orange-600 shrink-0" />
+                <div className="rounded-lg border border-primary/20 bg-primary/10 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                    <AlertTriangle className="h-5 w-5 text-primary shrink-0" />
                     <div className="flex-1 min-w-0">
-                        <p className="font-medium text-orange-800 dark:text-orange-200">Payment past due</p>
-                        <p className="text-sm text-orange-700 dark:text-orange-300">
+                        <p className="font-medium text-foreground">Payment past due</p>
+                        <p className="text-sm text-muted-foreground">
                             Update your payment method in the billing portal to avoid losing access.
                         </p>
                     </div>
@@ -552,7 +552,7 @@ export function BillingClient({
 
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end mb-6">
                         <div
-                            className="inline-flex w-full sm:w-auto items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80"
+                            className="inline-flex w-full sm:w-auto items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80"
                             role="tablist"
                             aria-label="Billing interval"
                         >
@@ -564,8 +564,8 @@ export function BillingClient({
                                 className={cn(
                                     "flex-1 sm:flex-none rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                                     interval === "month"
-                                        ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                        ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                                        : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
                                 )}
                             >
                                 Monthly
@@ -578,8 +578,8 @@ export function BillingClient({
                                 className={cn(
                                     "flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2",
                                     interval === "year"
-                                        ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                        : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                        ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                                        : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
                                 )}
                             >
                                 Yearly
@@ -634,13 +634,13 @@ export function BillingClient({
                                     className={cn(
                                         "relative flex w-full max-w-none flex-col h-full",
                                         isPro &&
-                                            "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]",
+                                            "ring-2 ring-primary/50",
                                         isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"
                                     )}
                                 >
                                     {isPro && (
                                         <div className="absolute -top-2 right-3 z-20">
-                                            <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
+                                            <Badge className="bg-primary text-primary-foreground border-0">
                                                 Most popular
                                             </Badge>
                                         </div>
@@ -649,9 +649,9 @@ export function BillingClient({
                                         <PricingCard.Plan>
                                             <PricingCard.PlanName>
                                                 {isPro ? (
-                                                    <Crown className="text-orange-500" aria-hidden />
+                                                    <Crown className="text-primary" aria-hidden />
                                                 ) : (
-                                                    <Zap className="text-orange-500" aria-hidden />
+                                                    <Zap className="text-primary" aria-hidden />
                                                 )}
                                                 <span className="text-foreground">{plan.name}</span>
                                             </PricingCard.PlanName>
@@ -692,7 +692,7 @@ export function BillingClient({
                                                 type="button"
                                                 className={cn(
                                                     "w-full font-semibold text-white",
-                                                    "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
+                                                    "bg-primary",
                                                     "hover:from-orange-600 hover:to-orange-700 disabled:opacity-60"
                                                 )}
                                                 onClick={() => requestPlanChange(plan)}

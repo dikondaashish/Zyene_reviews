@@ -159,7 +159,7 @@ export default function ImportCustomersPage() {
                     </CardHeader>
                     <CardContent>
                         <div
-                            className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-12 text-center hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer"
+                            className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:bg-muted transition-colors cursor-pointer"
                             onClick={() => fileInputRef.current?.click()}
                         >
                             <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
@@ -186,7 +186,7 @@ export default function ImportCustomersPage() {
                                 Match your CSV columns to the customer fields in Zyene Reviews.
                             </CardDescription>
                         </div>
-                        <div className="flex items-center gap-2 text-sm bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 px-3 py-1.5 rounded-full font-medium border border-orange-200 dark:border-orange-900/30">
+                        <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-full font-medium border border-primary/20">
                             <FileText className="h-4 w-4" />
                             {csvData.length} total rows
                         </div>
@@ -197,7 +197,7 @@ export default function ImportCustomersPage() {
                             <p>You must map at least an <strong>Email</strong> or <strong>Phone Number</strong> so we can contact the customer.</p>
                         </div>
 
-                        <div className="space-y-4 border rounded-lg p-4 bg-slate-50/50">
+                        <div className="space-y-4 border border-border rounded-lg p-4 bg-muted/50">
                             {REQUIRED_FIELDS.map((field) => (
                                 <div key={field} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                                     <div className="font-medium text-foreground">
@@ -224,14 +224,14 @@ export default function ImportCustomersPage() {
                             ))}
                         </div>
 
-                        <div className="bg-slate-50 border rounded-lg p-4 space-y-2">
+                        <div className="bg-muted border border-border rounded-lg p-4 space-y-2">
                             <h4 className="text-sm font-semibold text-foreground">Data Preview (First row)</h4>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mt-3">
                                 {REQUIRED_FIELDS.map(field => {
                                     const mappedHeader = mapping[field];
                                     const sampleValue = mappedHeader && csvData[0] ? csvData[0][mappedHeader] : "---";
                                     return (
-                                        <div key={field} className="bg-card p-2.5 rounded border shadow-sm">
+                                        <div key={field} className="bg-card p-2.5 rounded border border-border">
                                             <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">{FIELD_LABELS[field]}</p>
                                             <p className="font-medium truncate" title={sampleValue}>{sampleValue}</p>
                                         </div>
@@ -255,7 +255,7 @@ export default function ImportCustomersPage() {
             {step === "importing" && (
                 <Card>
                     <CardContent className="py-12 flex flex-col items-center justify-center">
-                        <Loader2 className="h-12 w-12 text-orange-500 animate-spin mb-4" />
+                        <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
                         <h3 className="text-xl font-semibold">Importing Customers...</h3>
                         <p className="text-muted-foreground mt-2">Please wait while we process your file. This may take a minute.</p>
                     </CardContent>

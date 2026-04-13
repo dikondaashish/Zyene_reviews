@@ -56,13 +56,13 @@ export function ReviewManagement({
                         variant="ghost"
                         size="sm"
                         onClick={toggleSelectAll}
-                        className="text-xs text-slate-500 hover:text-slate-900 h-8 px-2"
+                        className="text-xs text-muted-foreground hover:text-foreground h-8 px-2"
                     >
                         {allSelected ? <CheckSquare className="w-3.5 h-3.5 mr-2 text-blue-600" /> : <Square className="w-3.5 h-3.5 mr-2" />}
                         {allSelected ? "Deselect All" : "Select All on Page"}
                     </Button>
                     {selectedCount > 0 && (
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-muted-foreground">
                             {selectedCount} selected
                         </span>
                     )}

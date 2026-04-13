@@ -20,13 +20,13 @@ export default function RootError({
     }, [error]);
 
     return (
-        <div className="flex min-h-screen w-full flex-col items-center justify-center gap-6 p-8 text-center bg-gray-50">
+        <div className="flex min-h-screen w-full flex-col items-center justify-center gap-6 p-8 text-center bg-muted/40">
             <div className="rounded-full bg-red-100 p-4">
                 <AlertTriangle className="h-10 w-10 text-red-600" />
             </div>
 
             <div className="space-y-3 max-w-md">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">
                     Application Error
                 </h1>
                 <p className="text-base text-muted-foreground">

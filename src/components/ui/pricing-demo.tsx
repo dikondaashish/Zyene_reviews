@@ -127,7 +127,7 @@ function PricingCard({
     <div
       className={cn(
         "flex flex-col rounded-lg border p-6 text-left",
-        plan.featured && "border-primary shadow-sm ring-1 ring-primary/10"
+        plan.featured && "border-primary ring-1 ring-primary/10"
       )}
       aria-label={`${plan.title} plan`}
     >

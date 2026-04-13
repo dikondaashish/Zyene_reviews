@@ -57,7 +57,7 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-slate-50 dark:bg-background min-h-[calc(100vh-4rem)]">
+            <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6 bg-muted/40 dark:bg-background min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
         </>

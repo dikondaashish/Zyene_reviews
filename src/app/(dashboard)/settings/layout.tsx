@@ -28,11 +28,6 @@ const organizationNavItems = [
         href: "/settings/billing",
         icon: CreditCard,
     },
-    {
-        title: "Team",
-        href: "/settings/team",
-        icon: Users,
-    },
 ];
 
 const businessNavItems = [
@@ -50,6 +45,11 @@ const businessNavItems = [
         title: "Notifications",
         href: "/settings/notifications",
         icon: Bell,
+    },
+    {
+        title: "Team",
+        href: "/settings/team",
+        icon: Users,
     },
 ];
 
@@ -75,7 +75,7 @@ function SettingsTabLinks({
                         className={cn(
                             "flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px",
                             isActive
-                                ? "border-orange-500 text-orange-600 dark:text-orange-400"
+                                    ? "border-[#ff4f00] text-[#ff4f00]"
                                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                         )}
                     >

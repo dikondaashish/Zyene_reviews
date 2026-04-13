@@ -27,7 +27,7 @@ export interface BusinessContextOrganization {
     max_businesses?: number | null;
     max_review_requests_per_month?: number | null;
     onboarding_completed?: boolean;
-    businesses: BusinessContextBusiness[];
+    businesses?: BusinessContextBusiness[];
     [key: string]: unknown;
 }
 

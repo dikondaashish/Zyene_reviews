@@ -21,14 +21,14 @@ interface ReviewsFiltersProps {
 
 export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps) {
     return (
-        <div className="bg-white p-1 rounded-lg border shadow-sm flex flex-col sm:flex-row gap-2 sm:items-center justify-between sticky top-0 z-10">
+        <div className="bg-card p-1 rounded-lg border border-border flex flex-col sm:flex-row gap-2 sm:items-center justify-between sticky top-0 z-10">
             <div className="flex items-center overflow-x-auto no-scrollbar">
                 <Tabs value={filters.status || "all"} onValueChange={(val) => onFilterChange("status", val)} className="w-full sm:w-auto">
                     <TabsList className="bg-transparent h-9 p-0">
-                        <TabsTrigger value="all" className="data-[state=active]:bg-gray-100 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-gray-200 rounded-md h-8 text-xs px-3">All</TabsTrigger>
-                        <TabsTrigger value="needs_response" className="data-[state=active]:bg-yellow-50 data-[state=active]:text-yellow-700 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-yellow-100 rounded-md h-8 text-xs px-3">Needs Response</TabsTrigger>
-                        <TabsTrigger value="responded" className="data-[state=active]:bg-green-50 data-[state=active]:text-green-700 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-green-100 rounded-md h-8 text-xs px-3">Responded</TabsTrigger>
-                        <TabsTrigger value="ignored" className="data-[state=active]:bg-gray-100 data-[state=active]:shadow-none border border-transparent data-[state=active]:border-gray-200 rounded-md h-8 text-xs px-3">Ignored</TabsTrigger>
+                        <TabsTrigger value="all" className="data-[state=active]:bg-muted border border-transparent data-[state=active]:border-border rounded-md h-8 text-xs px-3">All</TabsTrigger>
+                        <TabsTrigger value="needs_response" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md h-8 text-xs px-3">Needs Response</TabsTrigger>
+                        <TabsTrigger value="responded" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md h-8 text-xs px-3">Responded</TabsTrigger>
+                        <TabsTrigger value="ignored" className="data-[state=active]:bg-muted border border-transparent data-[state=active]:border-border rounded-md h-8 text-xs px-3">Ignored</TabsTrigger>
                     </TabsList>
                 </Tabs>
             </div>

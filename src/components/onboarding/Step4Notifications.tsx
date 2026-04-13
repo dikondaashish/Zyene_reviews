@@ -117,7 +117,7 @@ export function Step4Notifications({
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Notification Preferences</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Choose how you&apos;d like to receive alerts about new reviews
         </p>
       </div>
@@ -206,8 +206,8 @@ export function Step4Notifications({
           </div>
 
           {/* Info Box */}
-          <div className="rounded-lg bg-gray-50 p-4">
-            <p className="text-sm text-gray-600">
+          <div className="rounded-lg bg-muted p-4">
+            <p className="text-sm text-muted-foreground">
               💡 <strong>Tip:</strong> You can customize these settings anytime in your notification preferences.
             </p>
           </div>

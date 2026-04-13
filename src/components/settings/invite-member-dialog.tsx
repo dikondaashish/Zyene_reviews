@@ -71,7 +71,7 @@ export function InviteMemberDialog() {
                 <DialogHeader>
                     <DialogTitle>Invite Member</DialogTitle>
                     <DialogDescription>
-                        Invite a new member to your team. They will receive an email to join.
+                        Invite a new member to this business team. They will receive an email to join.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">

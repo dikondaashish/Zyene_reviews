@@ -203,7 +203,7 @@ export function FacebookIntegrationCard({
                     <CardContent className="space-y-4">
                         {/* Stats grid */}
                         <div className="grid grid-cols-3 gap-3 text-center">
-                            <div className="rounded-lg bg-white dark:bg-gray-900 p-2 shadow-sm">
+                            <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <Star className="h-3.5 w-3.5 text-yellow-500" />
                                     {platform.average_rating?.toFixed(1) || "—"}
@@ -212,7 +212,7 @@ export function FacebookIntegrationCard({
                                     Rating
                                 </div>
                             </div>
-                            <div className="rounded-lg bg-white dark:bg-gray-900 p-2 shadow-sm">
+                            <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <MessageSquare className="h-3.5 w-3.5 text-blue-500" />
                                     {platform.total_reviews || 0}
@@ -221,9 +221,9 @@ export function FacebookIntegrationCard({
                                     Reviews
                                 </div>
                             </div>
-                            <div className="rounded-lg bg-white dark:bg-gray-900 p-2 shadow-sm">
+                            <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                    <Clock className="h-3.5 w-3.5 text-gray-500" />
+                                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                                     {!mounted ? "..." : (platform?.last_synced_at
                                         ? new Date(
                                             platform.last_synced_at as string

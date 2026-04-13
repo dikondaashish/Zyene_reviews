@@ -50,8 +50,8 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
 
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4 duration-300">
-            <div className="bg-slate-900 text-white rounded-full px-4 py-2 shadow-2xl flex items-center gap-4 border border-slate-800">
-                <div className="flex items-center gap-2 border-r border-slate-700 pr-4">
+            <div className="bg-foreground text-background rounded-full px-4 py-2 flex items-center gap-4 border border-border">
+                <div className="flex items-center gap-2 border-r border-border/40 pr-4">
                     <div className="bg-blue-600 text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
                         {selectedIds.length}
                     </div>
@@ -64,7 +64,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         variant="ghost"
                         onClick={() => handleBulkStatusUpdate('ignored')}
                         disabled={isUpdating}
-                        className="h-8 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-full"
+                        className="h-8 text-xs text-background/80 hover:text-background hover:bg-background/20 rounded-full"
                     >
                         {isUpdating ? (
                             <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
@@ -79,19 +79,19 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         variant="ghost"
                         onClick={() => handleBulkStatusUpdate('pending')}
                         disabled={isUpdating}
-                        className="h-8 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-full"
+                        className="h-8 text-xs text-background/80 hover:text-background hover:bg-background/20 rounded-full"
                     >
                         <Check className="w-3.5 h-3.5 mr-1.5 text-green-400" />
                         Move to Pending
                     </Button>
                 </div>
 
-                <div className="pl-2 border-l border-slate-700">
+                <div className="pl-2 border-l border-border/40">
                     <Button
                         size="sm"
                         variant="ghost"
                         onClick={onClearSelection}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full"
+                        className="h-8 w-8 p-0 text-background/70 hover:text-background hover:bg-background/20 rounded-full"
                     >
                         <X className="w-4 h-4" />
                     </Button>

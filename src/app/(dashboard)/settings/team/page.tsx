@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { TeamTable } from "@/components/settings/team-table";
 import { InviteMemberDialog } from "@/components/settings/invite-member-dialog";
 import { Separator } from "@/components/ui/separator";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 export default async function TeamSettingsPage() {
     const supabase = await createClient();
@@ -16,38 +17,26 @@ export default async function TeamSettingsPage() {
         redirect("/login");
     }
 
-    // Fetch current user details to check permissions
+    const { businessId, business } = await getActiveBusinessId();
+
+    if (!businessId || !business) {
+        return <div>No business selected.</div>;
+    }
+
+    // Fetch current user's membership for the active business
     const { data: currentUserMember } = await supabase
-        .from("organization_members")
-        .select("role, organization_id")
+        .from("business_members")
+        .select("role, business_id")
         .eq("user_id", user.id)
+        .eq("business_id", businessId)
         .single();
 
     if (!currentUserMember) {
-        return <div>No organization found.</div>;
+        return <div>You are not a member of this business.</div>;
     }
 
-    const orgId = currentUserMember.organization_id;
-
-    // Fetch active members
-    // Ideally we join with public.users to get names/emails/avatars
-    // Assuming Supabase auth users are not directly queryable, but maybe we have a public.users table?
-    // User request: "Columns: Name, Email..."
-    // If public.users exists and has RLS allowing org members to see each other.
-    // Let's assume standard Supabase starter often has `users` table trigger. 
-    // If not, we might only get User ID.
-    // Wait, the API route I wrote assumed `users` table exists for displaying names in email template?
-    // Actually I wrote: select "role, organization_id, organizations(name), users(full_name)"
-    // So I assumed `users` table exists.
-    // Let's check `users` table exists.
-    // If not, I can only get User ID (and maybe email if I use admin client, but I shouldn't).
-    // I will double check `users` table existence.
-    // If not, I'll fallback to showing User ID, or fix the query.
-    // The previous queries I verified were: `businesses`, `organization_members`.
-    // I did NOT verify `users` table.
-
-    const { data: members, error: membersError } = await supabase
-        .from("organization_members")
+    const { data: members } = await supabase
+        .from("business_members")
         .select(`
             id,
             role,
@@ -60,13 +49,14 @@ export default async function TeamSettingsPage() {
                 avatar_url
             )
         `)
-        .eq("organization_id", orgId);
+        .eq("business_id", businessId);
 
     // Fetch pending invites
     const { data: invites } = await supabase
         .from("invitations")
         .select("*")
-        .eq("organization_id", orgId);
+        .eq("business_id", businessId)
+        .is("accepted_at", null);
 
     const combinedMembers = [
         ...(members || []).map((m: any) => ({
@@ -91,8 +81,7 @@ export default async function TeamSettingsPage() {
                 <div>
                     <h3 className="text-lg font-medium">Team Management</h3>
                     <p className="text-sm text-muted-foreground">
-                        Invite and manage people for your organization. Membership applies to all
-                        businesses under this org.
+                        Manage team members for {business.name ?? "this business"}.
                     </p>
                 </div>
                 <InviteMemberDialog />

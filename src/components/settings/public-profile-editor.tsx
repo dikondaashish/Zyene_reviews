@@ -277,7 +277,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     </div>
 
                     {/* Preview Container */}
-                    <div className="mx-auto h-[700px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl relative border-[4px] border-slate-950 ring-1 ring-white/10">
+                    <div className="mx-auto h-[700px] w-full rounded-[2.5rem] overflow-hidden relative border-[4px] border-foreground ring-1 ring-border">
                         {/* Status Bar Area (Mock) */}
                         <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
 
@@ -330,9 +330,9 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 </div>
 
                 {/* Shareable Link Section */}
-                <div className="bg-card rounded-xl shadow-sm border p-4 flex items-center gap-3">
+                <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
                     <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
-                        <div className="h-10 w-10 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="h-10 w-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center flex-shrink-0 border border-primary/20">
                             <LinkIcon className="h-5 w-5" />
                         </div>
                         <div className="min-w-0 flex flex-col">
@@ -351,7 +351,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             "shrink-0 font-semibold px-5 transition-all",
                             copied
                                 ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                                : "bg-orange-500 hover:bg-orange-600 text-white"
+                                : "bg-primary hover:bg-primary/90 text-primary-foreground"
                         )}
                         onClick={handleShare}
                     >
@@ -363,7 +363,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                     </Button>
                     <button
                         onClick={() => setQrDialogOpen(true)}
-                        className="h-10 w-10 rounded-lg border border-border bg-card flex items-center justify-center shrink-0 hover:bg-muted transition-colors shadow-sm"
+                        className="h-10 w-10 rounded-lg border border-border bg-card flex items-center justify-center shrink-0 hover:bg-muted transition-colors"
                         aria-label="Show QR Code"
                     >
                         <QrCode className="h-5 w-5 text-muted-foreground" />
@@ -383,7 +383,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                             </DialogDescription>
                         </DialogHeader>
                         <div className="flex flex-col items-center gap-5 py-4">
-                            <div className="bg-white p-4 rounded-xl border shadow-sm">
+                            <div className="bg-card p-4 rounded-xl border border-border">
                                 {qrLoading ? (
                                     <div className="h-[200px] w-[200px] flex items-center justify-center">
                                         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />

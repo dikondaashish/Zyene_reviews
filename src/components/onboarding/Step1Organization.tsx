@@ -73,7 +73,7 @@ export function Step1Organization({ onSuccess }: Step1OrganizationProps) {
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Welcome to Zyene Reviews</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Let&apos;s start by setting up your organization
         </p>
       </div>
@@ -117,9 +117,9 @@ export function Step1Organization({ onSuccess }: Step1OrganizationProps) {
       {/* Progress indicator */}
       <div className="mt-8 flex justify-center gap-2">
         <div className="h-2 w-8 bg-blue-600 rounded-full" />
-        <div className="h-2 w-8 bg-gray-300 rounded-full" />
-        <div className="h-2 w-8 bg-gray-300 rounded-full" />
-        <div className="h-2 w-8 bg-gray-300 rounded-full" />
+        <div className="h-2 w-8 bg-muted rounded-full" />
+        <div className="h-2 w-8 bg-muted rounded-full" />
+        <div className="h-2 w-8 bg-muted rounded-full" />
       </div>
     </div>
   );

@@ -99,7 +99,7 @@ export function UpgradeModal({
                     <div className="relative z-10">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center mb-6">
                             <div
-                                className="inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 bg-stone-200/90 p-1 shadow-inner dark:border-border/60 dark:bg-muted/80"
+                                className="inline-flex items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80"
                                 role="tablist"
                             >
                                 <button
@@ -110,8 +110,8 @@ export function UpgradeModal({
                                     className={cn(
                                         "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
                                         interval === "month"
-                                            ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                            : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                            ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                                            : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
                                     )}
                                 >
                                     Monthly
@@ -124,8 +124,8 @@ export function UpgradeModal({
                                     className={cn(
                                         "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50",
                                         interval === "year"
-                                            ? "bg-white text-stone-900 shadow-sm ring-1 ring-orange-500/40 dark:bg-card dark:text-foreground dark:ring-orange-500/50"
-                                            : "text-stone-600 hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground"
+                                            ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
+                                            : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
                                     )}
                                 >
                                     Yearly
@@ -149,12 +149,12 @@ export function UpgradeModal({
                                         className={cn(
                                             "relative flex w-full max-w-none flex-col h-full",
                                             isPro &&
-                                                "ring-2 ring-orange-500/50 shadow-[0_20px_50px_-12px_rgba(249,115,22,0.25)]"
+                                                "ring-2 ring-primary/50"
                                         )}
                                     >
                                         {isPro && (
                                             <div className="absolute -top-2 right-3 z-20">
-                                                <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-md">
+                                                <Badge className="bg-primary text-primary-foreground border-0">
                                                     Most Popular
                                                 </Badge>
                                             </div>
@@ -163,9 +163,9 @@ export function UpgradeModal({
                                             <PricingCard.Plan>
                                                 <PricingCard.PlanName>
                                                     {isPro ? (
-                                                        <Crown className="text-orange-500" aria-hidden />
+                                                        <Crown className="text-primary" aria-hidden />
                                                     ) : (
-                                                        <Zap className="text-orange-500" aria-hidden />
+                                                        <Zap className="text-primary" aria-hidden />
                                                     )}
                                                     <span className="text-foreground">{plan.name}</span>
                                                 </PricingCard.PlanName>
@@ -192,7 +192,7 @@ export function UpgradeModal({
                                                 type="button"
                                                 className={cn(
                                                     "w-full font-semibold text-white",
-                                                    "bg-gradient-to-b from-orange-500 to-orange-600 shadow-[0_10px_25px_rgba(255,115,0,0.3)]",
+                                                    "bg-primary",
                                                     "hover:from-orange-600 hover:to-orange-700"
                                                 )}
                                                 onClick={() => {

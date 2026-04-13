@@ -364,13 +364,13 @@ export function ReviewContentForm({
     if (isLoading) {
         return (
             <div className="flex justify-center p-8">
-                <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
         );
     }
 
     return (
-        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <Tabs
@@ -385,42 +385,42 @@ export function ReviewContentForm({
                             <TabsList className="h-auto p-0 bg-transparent gap-0 w-full justify-start rounded-none border-0 overflow-x-auto overflow-y-hidden flex-nowrap no-scrollbar">
                                 <TabsTrigger
                                     value="rating"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Star className="h-3.5 w-3.5 mr-1.5" />
                                     Rating
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="tags"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Tag className="h-3.5 w-3.5 mr-1.5" />
                                     Tags
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="google"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Globe className="h-3.5 w-3.5 mr-1.5" />
                                     Review Site
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="feedback"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                                     Feedback
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="success"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                                     Success
                                 </TabsTrigger>
                                 <TabsTrigger
                                     value="branding"
-                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500 data-[state=active]:bg-transparent data-[state=active]:shadow-none px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 hover:text-foreground transition-colors whitespace-nowrap"
+                                    className="relative rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-2.5 sm:px-3 pb-3 pt-2 text-sm font-medium text-muted-foreground data-[state=active]:text-primary hover:text-foreground transition-colors whitespace-nowrap"
                                 >
                                     <Palette className="h-3.5 w-3.5 mr-1.5" />
                                     Branding
@@ -593,10 +593,10 @@ export function ReviewContentForm({
                                                 render={({ field }) => (
                                                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-muted/10">
                                                         <div className="space-y-0.5">
-                                                            <FormLabel className="text-base font-semibold text-slate-800 dark:text-slate-200">
+                                                            <FormLabel className="text-base font-semibold text-foreground">
                                                                 Enable Staff Selection
                                                             </FormLabel>
-                                                            <FormDescription className="text-slate-500">
+                                                            <FormDescription className="text-muted-foreground">
                                                                 Allow customers to select which staff members helped them.
                                                             </FormDescription>
                                                         </div>
@@ -634,9 +634,9 @@ export function ReviewContentForm({
                                                     />
                                                     
                                                     {!form.watch("staff_names") && (
-                                                        <div className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded-md border border-orange-200 dark:border-orange-800 flex gap-3">
-                                                            <Star className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
-                                                            <p className="text-xs text-orange-700 dark:text-orange-300">
+                                                        <div className="p-3 bg-primary/10 rounded-md border border-primary/20 flex gap-3">
+                                                            <Star className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                                                            <p className="text-xs text-primary">
                                                                 <strong>Note:</strong> Staff selection will only appear in the review flow if you add at least one name above.
                                                             </p>
                                                         </div>
@@ -778,7 +778,7 @@ export function ReviewContentForm({
 
                                     <div className="pt-4 border-t border-border space-y-4">
                                         <div className="flex items-start gap-2">
-                                            <Gift className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
+                                            <Gift className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                                             <div>
                                                 <p className="text-sm font-medium text-foreground">Special offer message</p>
                                                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -1058,7 +1058,7 @@ export function ReviewContentForm({
                             <Button
                                 type="submit"
                                 disabled={isSaving || !form.formState.isDirty}
-                                className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
+                                className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 h-10 transition-all active:scale-[0.98] disabled:opacity-50"
                             >
                                 {isSaving ? (
                                     <>

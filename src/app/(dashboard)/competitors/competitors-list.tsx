@@ -105,13 +105,13 @@ export function CompetitorsList({
             </div>
 
             {competitors.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-orange-50/30 dark:to-orange-950/10 rounded-3xl border border-orange-100/50 dark:border-orange-900/30 shadow-sm relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/20 dark:bg-orange-900/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-100/10 dark:bg-amber-900/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
-                        <div className="w-20 h-20 bg-gradient-to-tr from-[#f97316] to-[#f59e0b] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-orange-200 dark:shadow-orange-900/30 rotate-2 transform transition-transform hover:rotate-0 duration-500">
+                        <div className="w-20 h-20 bg-gradient-to-tr from-primary to-primary/70 rounded-2xl flex items-center justify-center mb-8 rotate-2 transform transition-transform hover:rotate-0 duration-500">
                             <Star className="h-10 w-10 text-white fill-white" />
                         </div>
                         
@@ -130,7 +130,7 @@ export function CompetitorsList({
 
                         <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-orange-500/10 rounded-lg text-[#f97316]"><Star className="h-4 w-4" /></div>
+                                <div className="p-2 bg-primary/10 rounded-lg text-primary"><Star className="h-4 w-4" /></div>
                                 Rating Tracking
                             </div>
                             <div className="flex flex-col items-center gap-2">
@@ -138,7 +138,7 @@ export function CompetitorsList({
                                 Volume Growth
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-orange-500/10 rounded-lg text-[#ea580c]"><CartesianGrid className="h-4 w-4" /></div>
+                                <div className="p-2 bg-primary/10 rounded-lg text-primary"><CartesianGrid className="h-4 w-4" /></div>
                                 Market Share
                             </div>
                             <div className="flex flex-col items-center gap-2">
@@ -211,7 +211,7 @@ export function CompetitorsList({
                                                             href={competitor.google_url}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="flex items-center text-[#f97316] hover:underline"
+                                                            className="flex items-center text-primary hover:underline"
                                                         >
                                                             View <ExternalLink className="h-3 w-3 ml-1" />
                                                         </a>
@@ -261,7 +261,7 @@ export function CompetitorsList({
                                                 <XAxis dataKey="name" axisLine={false} tickLine={false} />
                                                 <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} axisLine={false} tickLine={false} />
                                                 <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px' }} />
-                                                <Bar dataKey="rating" fill="#f97316" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                                                <Bar dataKey="rating" fill="#ff4f00" radius={[4, 4, 0, 0]} maxBarSize={50} />
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>

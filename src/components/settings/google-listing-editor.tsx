@@ -141,8 +141,8 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
     if (notConnected) {
         return (
             <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center space-y-3">
-                <div className="mx-auto h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-950/30 flex items-center justify-center">
-                    <CheckCircle2 className="h-6 w-6 text-orange-600 dark:text-orange-400 opacity-50" />
+                <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <CheckCircle2 className="h-6 w-6 text-primary opacity-50" />
                 </div>
                 <div className="space-y-1">
                     <h3 className="text-sm font-medium text-foreground">Google not connected</h3>
@@ -150,7 +150,7 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
                         Connect your Google Business Profile to edit your live listing details directly from this dashboard.
                     </p>
                 </div>
-                <Button variant="outline" className="mt-2 bg-background shadow-sm" asChild>
+                <Button variant="outline" className="mt-2 bg-background" asChild>
                     <a href="/settings/general">Go to Integrations</a>
                 </Button>
             </div>

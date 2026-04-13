@@ -590,7 +590,7 @@ export default async function DashboardPage() {
                             {dict.dashboard.title}
                         </h1>
                         {useDemoData && (
-                            <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5">
+                            <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1 px-2.5 py-0.5">
                                 <Eye className="w-3 h-3" />
                                 {dict.dashboard.demo_badge}
                             </Badge>
@@ -843,7 +843,7 @@ export default async function DashboardPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Direction requests</CardTitle>
-                                <Navigation2 className="h-4 w-4 text-[#f97316]" />
+                                <Navigation2 className="h-4 w-4 text-primary" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
@@ -855,7 +855,7 @@ export default async function DashboardPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">{dict.dashboard.website_clicks}</CardTitle>
-                                <MousePointerClick className="h-4 w-4 text-orange-500" />
+                                <MousePointerClick className="h-4 w-4 text-primary" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
@@ -932,7 +932,7 @@ export default async function DashboardPage() {
                             </div>
                             {!isPaidPlan && (
                                 <Link href="/settings/billing">
-                                    <Button variant="outline" size="sm" className="h-7 text-xs border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800 dark:bg-orange-950/30 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-900/40">
+                                    <Button variant="outline" size="sm" className="h-7 text-xs border-primary/30 bg-primary/10 text-primary hover:bg-primary/20">
                                         <ArrowRight className="mr-1 h-3 w-3" />
                                         {dict.dashboard.upgrade_prompt || "Upgrade"}
                                     </Button>
@@ -1007,12 +1007,12 @@ export default async function DashboardPage() {
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
                 {/* Spotlight Reviews */}
-                <Card className="overflow-hidden border-none bg-transparent shadow-none">
+                <Card className="overflow-hidden border-none bg-transparent">
                     <CardHeader className="px-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Star className="h-4 w-4 text-[#f97316]" />
+                                    <Star className="h-4 w-4 text-primary" />
                                     Review Spotlight
                                 </CardTitle>
                                 <CardDescription>
@@ -1055,7 +1055,7 @@ export default async function DashboardPage() {
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="flex items-center gap-2">
-                                <AlertTriangle className="h-4 w-4 text-orange-500" />
+                                <AlertTriangle className="h-4 w-4 text-primary" />
                                 Needs Attention
                             </CardTitle>
                             <CardDescription>

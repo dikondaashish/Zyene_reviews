@@ -152,7 +152,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
     // ── Connected State ──
     if (isConnected) {
         return (
-            <Card className="border bg-white">
+            <Card className="border border-border bg-card">
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -169,19 +169,19 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                 </CardHeader>
                 <CardContent className="pb-3">
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-slate-50 rounded-md p-2.5">
+                        <div className="bg-muted rounded-md p-2.5">
                             <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
                                 <Star className="w-3 h-3" /> Reviews synced
                             </div>
-                            <p className="text-lg font-bold text-slate-900">
+                            <p className="text-lg font-bold text-foreground">
                                 {platform.total_reviews || 0}
                             </p>
                         </div>
-                        <div className="bg-slate-50 rounded-md p-2.5">
+                        <div className="bg-muted rounded-md p-2.5">
                             <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
                                 <Clock className="w-3 h-3" /> Last synced
                             </div>
-                            <p className="text-xs font-medium text-slate-900 mt-1">
+                            <p className="text-xs font-medium text-foreground mt-1">
                                 {!mounted ? "..." : (platform.last_synced_at
                                     ? new Date(platform.last_synced_at as string).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
                                     : "Never")}
@@ -318,7 +318,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                     <div className="space-y-3">
                         {/* Search form */}
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-slate-700">Business Name</label>
+                            <label className="text-xs font-medium text-foreground">Business Name</label>
                             <Input
                                 placeholder="e.g. Joe's Coffee Shop"
                                 value={searchName}
@@ -327,7 +327,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-slate-700">City, State</label>
+                            <label className="text-xs font-medium text-foreground">City, State</label>
                             <Input
                                 placeholder="e.g. San Francisco, CA"
                                 value={searchLocation}
@@ -358,13 +358,13 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                 {searchResults.map((biz) => (
                                     <button
                                         key={biz.yelpId}
-                                        className="w-full text-left p-2.5 border rounded-md hover:bg-slate-50 hover:border-red-200 transition-colors group"
+                                        className="w-full text-left p-2.5 border border-border rounded-md hover:bg-muted hover:border-red-200 transition-colors group"
                                         onClick={() => handleConfirm(biz)}
                                         disabled={isConfirming !== null}
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-slate-900 group-hover:text-red-700 truncate">
+                                                <p className="text-sm font-medium text-foreground group-hover:text-red-700 truncate">
                                                     {biz.name}
                                                 </p>
                                                 <div className="flex items-center gap-1 mt-0.5 text-[10px] text-muted-foreground">
@@ -388,7 +388,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                             {isConfirming === biz.yelpId ? (
                                                 <Loader2 className="w-4 h-4 animate-spin text-red-600" />
                                             ) : (
-                                                <CheckCircle2 className="w-4 h-4 text-slate-300 group-hover:text-red-500 transition-colors" />
+                                                <CheckCircle2 className="w-4 h-4 text-muted-foreground group-hover:text-red-500 transition-colors" />
                                             )}
                                         </div>
                                     </button>
@@ -397,7 +397,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                         )}
 
                         <button
-                            className="text-xs text-muted-foreground hover:text-slate-700 hover:underline w-full text-center"
+                            className="text-xs text-muted-foreground hover:text-foreground hover:underline w-full text-center"
                             onClick={() => {
                                 setShowConnect(false);
                                 setSearchResults([]);

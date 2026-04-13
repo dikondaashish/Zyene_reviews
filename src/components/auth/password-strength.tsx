@@ -29,7 +29,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
     if (!password) return null;
 
     const getStrengthColor = () => {
-        if (strength === 0) return "bg-gray-200";
+        if (strength === 0) return "bg-muted";
         if (strength === 1) return "bg-red-500";
         if (strength === 2) return "bg-yellow-500";
         return "bg-green-500";
@@ -50,7 +50,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
                     <div
                         key={level}
                         className={`h-full flex-1 rounded-full transition-all duration-500 ${
-                            level <= strength ? getStrengthColor() : "bg-gray-100"
+                            level <= strength ? getStrengthColor() : "bg-muted/60"
                         }`}
                     />
                 ))}
@@ -58,8 +58,8 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
 
             {/* Label */}
             <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
-                <span className="text-gray-400">Security Score:</span>
-                <span className={strength === 3 ? "text-green-600" : "text-gray-600"}>
+                <span className="text-muted-foreground">Security Score:</span>
+                <span className={strength === 3 ? "text-green-600" : "text-muted-foreground"}>
                     {getStrengthLabel()}
                 </span>
             </div>
@@ -69,15 +69,15 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
                 {requirements.map((req) => (
                     <div key={req.label} className="flex items-center gap-2">
                         <div className={`flex-shrink-0 w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors ${
-                            req.met ? "bg-green-100" : "bg-gray-100"
+                            req.met ? "bg-green-100" : "bg-muted"
                         }`}>
                             {req.met ? (
                                 <Check className="h-2 w-2 text-green-600" strokeWidth={4} />
                             ) : (
-                                <X className="h-2 w-2 text-gray-400" strokeWidth={3} />
+                                <X className="h-2 w-2 text-muted-foreground" strokeWidth={3} />
                             )}
                         </div>
-                        <span className={`text-xs ${req.met ? "text-gray-600" : "text-gray-400"}`}>
+                        <span className={`text-xs ${req.met ? "text-foreground/80" : "text-muted-foreground"}`}>
                             {req.label}
                         </span>
                     </div>

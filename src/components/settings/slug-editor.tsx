@@ -165,7 +165,7 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
     };
 
     return (
-        <div className="rounded-xl border bg-card p-6 shadow-sm space-y-6">
+        <div className="rounded-xl border border-border bg-card p-6 space-y-6">
             <div>
                 <h3 className="text-xl font-semibold text-foreground">Public Link</h3>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -208,7 +208,7 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                             isSaving ||
                                             (watchedSlug !== initialSlug && isAvailable !== true)
                                         }
-                                        className="bg-orange-500 hover:bg-orange-600 text-white font-medium shadow-sm"
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
                                     >
                                         Save
                                     </Button>

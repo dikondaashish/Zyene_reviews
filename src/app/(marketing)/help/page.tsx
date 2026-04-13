@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, ArrowRight, Mail, FileText, Phone } from "lucide-react";
+import { ArrowRight, Mail, FileText, Phone } from "lucide-react";
 
 export const metadata = {
     title: "Help Center - Zyene Reviews",
@@ -37,19 +37,19 @@ export default function HelpCenterPage() {
     return (
         <div className="flex flex-col min-h-screen">
             {/* Header section */}
-            <section className="bg-slate-50 border-b py-20">
+            <section className="bg-muted border-b border-border py-20">
                 <div className="container px-4 md:px-6 mx-auto max-w-5xl text-center">
                     <h1 className="text-4xl font-bold tracking-tight mb-4">How can we help you today?</h1>
-                    <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+                    <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                         Search our knowledge base or browse categories below to find answers to your questions.
                     </p>
-                    <div className="max-w-xl mx-auto flex items-center bg-white rounded-full border shadow-sm px-4 py-2">
+                    <div className="max-w-xl mx-auto flex items-center bg-background rounded-lg border border-border px-4 py-2">
                         <input
                             type="text"
                             placeholder="Search for articles, guides..."
-                            className="flex-1 bg-transparent border-none focus:outline-none px-2 py-2"
+                            className="flex-1 bg-transparent border-none focus:outline-none px-2 py-2 text-foreground placeholder:text-muted-foreground"
                         />
-                        <button className="bg-[#f97316] text-white rounded-full px-6 py-2 font-medium hover:bg-[#ea580c] transition">
+                        <button className="bg-primary text-primary-foreground border border-primary rounded-md px-6 py-2 font-medium hover:brightness-95 transition">
                             Search
                         </button>
                     </div>
@@ -57,7 +57,7 @@ export default function HelpCenterPage() {
             </section>
 
             {/* Categories */}
-            <section className="py-20 bg-white">
+            <section className="py-20 bg-background">
                 <div className="container px-4 md:px-6 mx-auto max-w-5xl">
                     <h2 className="text-2xl font-bold mb-8">Browse Categories</h2>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -65,15 +65,15 @@ export default function HelpCenterPage() {
                             <Link
                                 href="#"
                                 key={category.title}
-                                className="group flex p-6 rounded-2xl border bg-white hover:border-orange-200 hover:shadow-md transition-all items-start"
+                            className="group flex p-6 rounded-lg border border-border bg-card hover:border-primary/30 transition-all items-start"
                             >
-                                <div className="p-3 bg-orange-50 text-orange-600 rounded-xl mr-4 group-hover:bg-[#f97316] group-hover:text-white transition-colors">
+                                <div className="p-3 bg-primary/10 text-primary rounded-md border border-primary/20 mr-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                                     <category.icon className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-2 group-hover:text-orange-600 transition-colors">{category.title}</h3>
-                                    <p className="text-slate-600 mb-4">{category.description}</p>
-                                    <span className="text-orange-600 text-sm font-medium flex items-center">
+                                    <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{category.title}</h3>
+                                    <p className="text-muted-foreground mb-4">{category.description}</p>
+                                    <span className="text-primary text-sm font-medium flex items-center">
                                         View Articles <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                                     </span>
                                 </div>
@@ -84,19 +84,19 @@ export default function HelpCenterPage() {
             </section>
 
             {/* Contact Support */}
-            <section className="py-20 bg-slate-50 border-t">
+            <section className="py-20 bg-muted border-t border-border">
                 <div className="container px-4 md:px-6 mx-auto max-w-4xl text-center">
-                    <div className="p-10 bg-white rounded-3xl border shadow-sm">
+                    <div className="p-10 bg-card rounded-lg border border-border">
                         <h2 className="text-2xl font-bold mb-4">Still need help?</h2>
-                        <p className="text-slate-600 mb-8 max-w-xl mx-auto">
+                        <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
                             Our support team is available Monday through Friday, 9am to 6pm EST. We typically respond within 2 hours.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <a href="mailto:support@zyenereviews.com" className="inline-flex items-center justify-center bg-[#f97316] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#ea580c] transition">
+                            <a href="mailto:support@zyenereviews.com" className="inline-flex items-center justify-center bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition">
                                 <Mail className="w-5 h-5 mr-2" />
                                 Email Support
                             </a>
-                            <a href="#" className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-lg font-medium hover:bg-slate-50 transition">
+                            <a href="#" className="inline-flex items-center justify-center bg-background border border-border text-foreground px-6 py-3 rounded-md font-medium hover:bg-accent transition">
                                 <Phone className="w-5 h-5 mr-2" />
                                 Call Us
                             </a>

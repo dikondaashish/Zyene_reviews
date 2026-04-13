@@ -64,7 +64,7 @@ export function OnboardingCompletionScreen({
   ].filter((item) => item.condition);
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -119,10 +119,10 @@ export function OnboardingCompletionScreen({
           transition={{ duration: 0.5, delay: 0.3 }}
           className="space-y-2"
         >
-          <h1 className="text-4xl font-bold text-gray-900">
+          <h1 className="text-4xl font-bold text-foreground">
             You're all set, {firstName}! 🎉
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-muted-foreground">
             Your Zyene Reviews dashboard is ready.
           </p>
         </motion.div>
@@ -158,7 +158,7 @@ export function OnboardingCompletionScreen({
               >
               <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
               </motion.div>
-              <span className="text-sm text-gray-700">{item.label}</span>
+              <span className="text-sm text-foreground">{item.label}</span>
             </motion.div>
           ))}
         </motion.div>
@@ -168,9 +168,9 @@ export function OnboardingCompletionScreen({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 1.2 }}
-          className="bg-gray-50 border border-gray-200 rounded-lg p-4"
+          className="bg-muted border border-border rounded-lg p-4"
         >
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-foreground">
             💡 <strong>Tip:</strong> You'll get an email confirmation at{" "}
             <span className="font-medium">{email}</span> when your first review
             syncs.
@@ -189,7 +189,7 @@ export function OnboardingCompletionScreen({
                 setAutoRedirectStarted(true);
                 onComplete();
               }}
-              className="w-full bg-black hover:bg-gray-800 text-white"
+              className="w-full bg-foreground hover:bg-foreground/80 text-background"
               size="lg"
             >
               Go to Dashboard →
@@ -202,7 +202,7 @@ export function OnboardingCompletionScreen({
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.5 }}
           transition={{ duration: 0.4, delay: 1.5 }}
-          className="text-xs text-gray-500"
+          className="text-xs text-muted-foreground"
         >
           Redirecting automatically in a moment...
         </motion.p>

@@ -66,7 +66,7 @@ export function ProStatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.23, 1, 0.32, 1] }}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-6 shadow-sm cursor-pointer",
+        "group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-6 cursor-pointer",
         "pro-hover", // Added official UI Pro hover utility
         className
       )}

@@ -19,7 +19,7 @@ export function MobileSidebarFAB() {
             size="lg"
             onClick={() => setOpen(!open)}
             className={`
-                fixed bottom-6 right-6 rounded-full shadow-lg
+                fixed bottom-6 right-6 rounded-full
                 bg-blue-600 hover:bg-blue-700 text-white
                 h-14 w-14 p-0 z-40
                 transition-all duration-200

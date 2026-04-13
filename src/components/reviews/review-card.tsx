@@ -309,7 +309,7 @@ export function ReviewCard({
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'responded': return <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium border border-green-200">Responded</span>;
-            case 'ignored': return <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 font-medium border border-gray-200">Ignored</span>;
+            case 'ignored': return <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium border border-border">Ignored</span>;
             default: return <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 font-medium border border-yellow-200">Pending</span>;
         }
     };
@@ -319,7 +319,7 @@ export function ReviewCard({
         return (
             <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={cn("w-3.5 h-3.5", i < rating ? colorClass : "text-gray-200 fill-gray-200")} />
+                    <Star key={i} className={cn("w-3.5 h-3.5", i < rating ? colorClass : "text-muted-foreground/40 fill-muted")} />
                 ))}
             </div>
         );
@@ -343,8 +343,8 @@ export function ReviewCard({
 
     return (
         <div className={cn(
-            "bg-white rounded-xl border p-4 shadow-sm hover:shadow-md transition-all duration-300 relative group",
-            isSelected && "border-blue-200 bg-blue-50/20 shadow-blue-50"
+            "bg-card rounded-xl border border-border p-4 transition-all duration-300 relative group",
+            isSelected && "border-blue-200 bg-blue-50/20"
         )}>
             {/* Selection Checkbox */}
             {onSelect && (
@@ -356,7 +356,7 @@ export function ReviewCard({
                         type="checkbox"
                         checked={isSelected}
                         onChange={(e) => onSelect(review.id, e.target.checked)}
-                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-border text-blue-600 focus:ring-blue-500 cursor-pointer"
                     />
                 </div>
             )}
@@ -365,7 +365,7 @@ export function ReviewCard({
                 <div className="flex gap-3">
                     <Avatar
                         size="lg"
-                        className="h-10 w-10 shrink-0 border border-slate-200"
+                        className="h-10 w-10 shrink-0 border border-border"
                     >
                         {avatarUrl ? (
                             <AvatarImage
@@ -374,16 +374,16 @@ export function ReviewCard({
                                 referrerPolicy="no-referrer"
                             />
                         ) : null}
-                        <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-sm">
+                        <AvatarFallback className="bg-muted text-muted-foreground font-bold text-sm">
                             {authorInitial}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <div className="font-semibold text-sm text-gray-900 line-clamp-1">{review.author_name || "Anonymous"}</div>
+                        <div className="font-semibold text-sm text-foreground line-clamp-1">{review.author_name || "Anonymous"}</div>
                         <div className="flex items-center gap-2 mt-0.5">
                             {renderStars(review.rating)}
                             {(review.review_date || review.published_at || review.created_at) && (
-                                <span className="text-xs text-slate-400">
+                                <span className="text-xs text-muted-foreground">
                                     {new Date(review.review_date || review.published_at || review.created_at || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </span>
                             )}
@@ -403,14 +403,14 @@ export function ReviewCard({
                             "text-[10px] font-medium px-2 py-0.5 rounded-full border capitalize",
                             review.sentiment === 'positive' && "bg-green-50 text-green-700 border-green-100",
                             review.sentiment === 'negative' && "bg-red-50 text-red-700 border-red-100",
-                            review.sentiment === 'neutral' && "bg-gray-50 text-gray-700 border-gray-100",
-                            review.sentiment === 'mixed' && "bg-orange-50 text-orange-700 border-orange-100",
+                            review.sentiment === 'neutral' && "bg-muted text-muted-foreground border-border",
+                            review.sentiment === 'mixed' && "bg-primary/10 text-primary border-primary/20",
                         )}>
                             {review.sentiment}
                         </span>
                     )}
                     {review.id.startsWith("demo-") && (
-                        <span className="text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full uppercase tracking-wider">
                             Demo Data
                         </span>
                     )}
@@ -420,7 +420,7 @@ export function ReviewCard({
 
             {/* Content & Themes */}
             <div className="space-y-2">
-                <div className="text-sm text-slate-600 leading-relaxed">
+                <div className="text-sm text-muted-foreground leading-relaxed">
                     <p className={cn(!isExpanded && "line-clamp-3")}>{displayContent}</p>
                     {displayContent.length > 200 && (
                         <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-600 text-xs font-medium mt-1 hover:underline focus:outline-none">
@@ -432,7 +432,7 @@ export function ReviewCard({
                 {review.themes && review.themes.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 pt-1 pb-1">
                         {review.themes.map(theme => (
-                            <span key={theme} className="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200 capitalize">
+                            <span key={theme} className="text-[10px] px-2 py-0.5 bg-muted text-muted-foreground rounded-full border border-border capitalize">
                                 {theme.replace(/_/g, ' ')}
                             </span>
                         ))}
@@ -470,8 +470,8 @@ export function ReviewCard({
                 {googlePhotos.length > 0 && (
                     <div className="pt-2">
                         <div className="flex items-center gap-1.5 mb-2">
-                            <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                                 Review Photos
                             </span>
                         </div>
@@ -481,7 +481,7 @@ export function ReviewCard({
                                     key={`${url}-${idx}`}
                                     type="button"
                                     onClick={() => setActivePhoto(url)}
-                                    className="h-16 w-16 shrink-0 rounded-md border border-slate-200 overflow-hidden hover:opacity-90"
+                                    className="h-16 w-16 shrink-0 rounded-md border border-border overflow-hidden hover:opacity-90"
                                     title="Open photo"
                                 >
                                     <img
@@ -499,7 +499,7 @@ export function ReviewCard({
 
                 {review.selected_staff && review.selected_staff.length > 0 && (
                     <div className="flex items-center gap-2 pt-1">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Served by:</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Served by:</span>
                         <div className="flex flex-wrap gap-1">
                             {review.selected_staff.map(staff => (
                                 <Badge key={staff} variant="secondary" className="px-2 py-0 h-4 text-[9px] bg-blue-50 text-blue-700 border-blue-100 font-medium">
@@ -513,15 +513,15 @@ export function ReviewCard({
 
             {/* Existing Response */}
             {review.response_status === 'responded' && review.response_text && !isEditingReply && (
-                <div className="mt-5 bg-slate-50 rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="mt-5 bg-muted rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-900 min-w-0">
-                            <CornerDownRight className="w-3 h-3 text-slate-400 shrink-0" />
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground min-w-0">
+                            <CornerDownRight className="w-3 h-3 text-muted-foreground shrink-0" />
                             <span className="font-semibold shrink-0">Your Response</span>
                             {review.responded_at && (
                                 <time
                                     dateTime={review.responded_at}
-                                    className="text-slate-400 font-normal text-[10px] tabular-nums shrink-0"
+                                    className="text-muted-foreground font-normal text-[10px] tabular-nums shrink-0"
                                 >
                                     {new Date(review.responded_at).toLocaleDateString("en-US", {
                                         month: "short",
@@ -554,7 +554,7 @@ export function ReviewCard({
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        className="h-7 px-2 text-xs text-slate-600 hover:text-slate-900"
+                                        className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
                                         onClick={startEditReply}
                                     >
                                         <Pencil className="w-3 h-3 mr-1" />
@@ -574,12 +574,12 @@ export function ReviewCard({
                             )}
                         </div>
                     </div>
-                    <p className="text-slate-600">{review.response_text}</p>
+                    <p className="text-muted-foreground">{review.response_text}</p>
                 </div>
             )}
 
             {/* Actions */}
-            <div className="flex items-center gap-2 pt-2 border-t border-slate-50 mt-1">
+            <div className="flex items-center gap-2 pt-2 border-t border-border mt-1">
                 {review.response_status !== 'responded' && (
                     <div className="flex items-center gap-2">
                         {review.platform === 'yelp' ? (
@@ -604,7 +604,7 @@ export function ReviewCard({
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            className="h-9 text-xs font-semibold px-4 border-slate-200 text-slate-600 hover:bg-slate-50"
+                                            className="h-9 text-xs font-semibold px-4 border-border text-muted-foreground hover:bg-muted"
                                             onClick={cancelReplyComposer}
                                         >
                                             <MessageSquare className="w-3.5 h-3.5 mr-2" />
@@ -612,7 +612,7 @@ export function ReviewCard({
                                         </Button>
                                         <Button
                                             size="sm"
-                                            className="h-9 text-xs font-semibold px-4 bg-[#f5f3ff] hover:bg-[#ede9fe] text-[#7c3aed] border border-[#ddd6fe] shadow-none"
+                                            className="h-9 text-xs font-semibold px-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
                                             onClick={() => !activeTone && handleToneClick("professional")}
                                         >
                                             <Sparkles className="w-3.5 h-3.5 mr-2" />
@@ -623,7 +623,7 @@ export function ReviewCard({
                                     <div className="flex items-center gap-2">
                                         <Button
                                             size="sm"
-                                            className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                                            className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white"
                                             onClick={() => setIsReplying(true)}
                                         >
                                             <MessageSquare className="w-3.5 h-3.5 mr-2" />
@@ -631,7 +631,7 @@ export function ReviewCard({
                                         </Button>
                                         <Button
                                             size="sm"
-                                            className="h-9 text-xs font-semibold px-4 bg-[#f5f3ff] hover:bg-[#ede9fe] text-[#7c3aed] border border-[#ddd6fe] shadow-none"
+                                            className="h-9 text-xs font-semibold px-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
                                             onClick={() => handleToneClick("professional")}
                                         >
                                             <Sparkles className="w-3.5 h-3.5 mr-2" />
@@ -651,7 +651,7 @@ export function ReviewCard({
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-8 px-2 text-xs text-slate-500 hover:text-slate-700"
+                                    className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
                                 >
                                     <Info className="w-3.5 h-3.5 mr-1" />
                                     Details
@@ -667,12 +667,12 @@ export function ReviewCard({
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4">
-                                    <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                                    <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                                         {displayContent || "No review text."}
                                     </div>
                                     {googlePlaceContext.length > 0 && (
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                                 Place context
                                             </h4>
                                             <div className="flex flex-wrap gap-1.5">
@@ -686,7 +686,7 @@ export function ReviewCard({
                                     )}
                                     {googleAttributeChips.length > 0 && (
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                                 Google attributes
                                             </h4>
                                             <div className="flex flex-wrap gap-1.5">
@@ -700,7 +700,7 @@ export function ReviewCard({
                                     )}
                                     {googlePhotos.length > 0 && (
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                                 Photos
                                             </h4>
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -709,7 +709,7 @@ export function ReviewCard({
                                                         key={`drawer-photo-${url}-${idx}`}
                                                         type="button"
                                                         onClick={() => setActivePhoto(url)}
-                                                        className="rounded-md overflow-hidden border border-slate-200"
+                                                        className="rounded-md overflow-hidden border border-border"
                                                     >
                                                         <img
                                                             src={url}
@@ -724,7 +724,7 @@ export function ReviewCard({
                                         </div>
                                     )}
                                     {googleMapsHref && (
-                                        <div className="rounded-lg border border-slate-100 bg-slate-50/90 px-3 py-2.5 text-sm text-slate-600">
+                                        <div className="rounded-lg border border-border bg-muted/90 px-3 py-2.5 text-sm text-muted-foreground">
                                             <a
                                                 href={googleMapsHref}
                                                 target="_blank"
@@ -734,7 +734,7 @@ export function ReviewCard({
                                                 <ExternalLink className="w-3.5 h-3.5" aria-hidden />
                                                 Open listing on Google Maps
                                             </a>
-                                            <p className="mt-1 text-xs text-slate-500">
+                                            <p className="mt-1 text-xs text-muted-foreground">
                                                 Customer photos attached to reviews usually appear there, not in this app.
                                             </p>
                                         </div>
@@ -744,7 +744,7 @@ export function ReviewCard({
                         </Dialog>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full">
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full">
                                     <MoreHorizontal className="w-4 h-4" />
                                 </Button>
                             </DropdownMenuTrigger>
@@ -775,9 +775,9 @@ export function ReviewCard({
 
             {/* Reply Area with Tone Tabs */}
             {showReplyComposer && (
-                <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 mt-4 animate-in slide-in-from-top-2 duration-200">
+                <div className="bg-muted p-5 rounded-xl border border-border mt-4 animate-in slide-in-from-top-2 duration-200">
                     {isEditingReply && (
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                             Edit reply
                         </p>
                     )}
@@ -787,7 +787,7 @@ export function ReviewCard({
                         <div className="flex items-center gap-3 mb-4">
                             <div className="flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-violet-500" />
-                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">AI Tone</span>
+                                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">AI Tone</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 {TONES.map((tone) => (
@@ -798,8 +798,8 @@ export function ReviewCard({
                                         className={cn(
                                             "px-4 py-1.5 rounded-full text-xs font-semibold transition-all border capitalize",
                                             activeTone === tone
-                                                ? "bg-[#f97316] text-white border-[#f97316] shadow-sm"
-                                                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                                                ? "bg-primary text-primary-foreground border-primary"
+                                                : "bg-background text-muted-foreground border-border hover:border-foreground/30 hover:bg-muted",
                                             loadingTone !== null && loadingTone !== tone && "opacity-50 cursor-not-allowed"
                                         )}
                                     >
@@ -821,7 +821,7 @@ export function ReviewCard({
                         <Textarea
                             placeholder="Write a response or click a tone above for an AI draft..."
                             className={cn(
-                                "min-h-[120px] bg-white text-sm resize-none focus-visible:ring-blue-500 border-slate-200 shadow-sm focus:border-blue-500 placeholder:text-slate-400",
+                                "min-h-[120px] bg-background text-sm resize-none focus-visible:ring-blue-500 border-border focus:border-blue-500 placeholder:text-muted-foreground",
                                 isAiTyping && "border-violet-200 ring-1 ring-violet-100"
                             )}
                             value={replyText}
@@ -843,7 +843,7 @@ export function ReviewCard({
                         <button
                             type="button"
                             onClick={cancelReplyComposer}
-                            className="text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+                            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                         >
                             Cancel
                         </button>
@@ -852,10 +852,10 @@ export function ReviewCard({
                             onClick={handleSubmit}
                             disabled={isSubmitting || !replyText.trim()}
                             className={cn(
-                                "min-w-[7.5rem] px-6 font-semibold rounded-lg shadow-sm",
+                                "min-w-[7.5rem] px-6 font-semibold rounded-lg",
                                 "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
                                 "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
-                                "disabled:opacity-100 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-200"
+                                "disabled:opacity-100 disabled:bg-muted disabled:text-muted-foreground disabled:hover:bg-muted"
                             )}
                         >
                             {isSubmitting

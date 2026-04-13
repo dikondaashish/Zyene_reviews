@@ -2,8 +2,9 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
-const roleSchema = z.enum(["owner", "admin", "member", "ORG_OWNER", "ORG_ADMIN"]);
+const roleSchema = z.enum(["owner", "admin", "manager", "member", "viewer"]);
 
 export async function PATCH(
     request: Request,
@@ -25,44 +26,43 @@ export async function PATCH(
     }
     const role = parsed.data;
 
-    // Verify requester is owner (only owner can change roles? or admins too?)
-    // Typically admins can manage members, Owners manage everything.
-    // Let's say Owners/Admins can manage, but can't change Owner's role.
+    const { businessId } = await getActiveBusinessId();
+    if (!businessId) {
+        return apiError("No active business selected", { status: 400 });
+    }
+
     const { data: requester, error: reqError } = await supabase
-        .from("organization_members")
-        .select("role, organization_id")
+        .from("business_members")
+        .select("role, business_id")
         .eq("user_id", user.id)
+        .eq("business_id", businessId)
         .single();
 
-    if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
+    if (reqError || !["owner", "admin"].includes(requester.role)) {
         return apiError("Forbidden", { status: 403 });
     }
 
     const { data: targetMember } = await supabase
-        .from("organization_members")
+        .from("business_members")
         .select("id, role, user_id")
         .eq("id", id)
-        .eq("organization_id", requester.organization_id)
+        .eq("business_id", requester.business_id)
         .maybeSingle();
     if (!targetMember) {
         return apiError("Member not found", { status: 404 });
     }
-    if (!["owner", "ORG_OWNER"].includes(requester.role) && ["owner", "ORG_OWNER"].includes(role)) {
+    if (requester.role !== "owner" && role === "owner") {
         return apiError("Only owners can assign owner role", { status: 403 });
     }
-    if (["owner", "ORG_OWNER"].includes(targetMember.role) && !["owner", "ORG_OWNER"].includes(requester.role)) {
+    if (targetMember.role === "owner" && requester.role !== "owner") {
         return apiError("Only owners can modify owner role", { status: 403 });
     }
 
-    // Determine target type?
-    // This route is for changing MEMBERS role. Invites role can't be changed easily in this UI pattern usually, or we recreate invite.
-    // We assume ID is organization_member.id
-
     const { error: updateError } = await supabase
-        .from("organization_members")
+        .from("business_members")
         .update({ role })
         .eq("id", id)
-        .eq("organization_id", requester.organization_id); // Security check
+        .eq("business_id", requester.business_id);
 
     if (updateError) {
         return apiError(updateError.message, { status: 500 });
@@ -87,15 +87,19 @@ export async function DELETE(
     const { id } = await params;
     const url = new URL(request.url);
     const type = url.searchParams.get("type") || "member"; // 'member' or 'invite'
+    const { businessId } = await getActiveBusinessId();
+    if (!businessId) {
+        return apiError("No active business selected", { status: 400 });
+    }
 
-    // Verify requester
     const { data: requester, error: reqError } = await supabase
-        .from("organization_members")
-        .select("role, organization_id")
+        .from("business_members")
+        .select("role, business_id")
         .eq("user_id", user.id)
+        .eq("business_id", businessId)
         .single();
 
-    if (reqError || !["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(requester.role)) {
+    if (reqError || !["owner", "admin"].includes(requester.role)) {
         return apiError("Forbidden", { status: 403 });
     }
 
@@ -104,16 +108,16 @@ export async function DELETE(
             .from("invitations")
             .delete()
             .eq("id", id)
-            .eq("organization_id", requester.organization_id);
+            .eq("business_id", requester.business_id);
 
         if (error) return apiError("Internal Server Error", { status: 500 });
 
     } else {
         const { data: targetMember } = await supabase
-            .from("organization_members")
+            .from("business_members")
             .select("id, role, user_id")
             .eq("id", id)
-            .eq("organization_id", requester.organization_id)
+            .eq("business_id", requester.business_id)
             .maybeSingle();
         if (!targetMember) {
             return apiError("Member not found", { status: 404 });
@@ -121,14 +125,14 @@ export async function DELETE(
         if (targetMember.user_id === user.id) {
             return apiError("You cannot remove yourself", { status: 400 });
         }
-        if (["owner", "ORG_OWNER"].includes(targetMember.role)) {
+        if (targetMember.role === "owner") {
             return apiError("Owner cannot be removed", { status: 403 });
         }
         const { error } = await supabase
-            .from("organization_members")
+            .from("business_members")
             .delete()
             .eq("id", id)
-            .eq("organization_id", requester.organization_id);
+            .eq("business_id", requester.business_id);
 
         if (error) return apiError("Internal Server Error", { status: 500 });
     }

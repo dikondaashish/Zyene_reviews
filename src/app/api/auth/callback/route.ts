@@ -35,6 +35,67 @@ function safeNextPath(raw: string | null): string {
     return candidate;
 }
 
+async function acceptBusinessInvitation(params: {
+    admin: ReturnType<typeof createAdminClient>;
+    userId: string;
+    userEmail: string | null | undefined;
+    inviteToken: string | null;
+}) {
+    const { admin, userId, userEmail, inviteToken } = params;
+    if (!inviteToken || !userEmail) return { accepted: false as const };
+
+    const invitationsTable = admin.from("invitations" as never);
+    const inviteResult = await invitationsTable
+        .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
+        .eq("token", inviteToken)
+        .is("accepted_at", null)
+        .maybeSingle();
+    const invite = inviteResult.data as
+        | {
+              id: string;
+              email: string;
+              role: string;
+              business_id: string | null;
+              organization_id: string;
+              expires_at: string | null;
+          }
+        | null;
+
+    if (!invite) return { accepted: false as const };
+    if (invite.email.toLowerCase() !== userEmail.toLowerCase()) return { accepted: false as const };
+    if (invite.expires_at && new Date(invite.expires_at) < new Date()) return { accepted: false as const };
+
+    let businessId = invite.business_id;
+    if (!businessId) {
+        const { data: firstBusiness } = await admin
+            .from("businesses")
+            .select("id")
+            .eq("organization_id", invite.organization_id)
+            .order("created_at", { ascending: true })
+            .limit(1)
+            .maybeSingle();
+        businessId = firstBusiness?.id ?? null;
+    }
+    if (!businessId) return { accepted: false as const };
+
+    const role = ["owner", "admin", "manager", "member", "viewer"].includes(invite.role)
+        ? invite.role
+        : "member";
+
+    await admin.from("business_members").upsert(
+        {
+            business_id: businessId,
+            user_id: userId,
+            role,
+            status: "active",
+        },
+        { onConflict: "business_id,user_id" }
+    );
+
+    await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
+    return { accepted: true as const, businessId };
+}
+
 export async function GET(request: Request) {
     try {
         const { searchParams, origin } = new URL(request.url);
@@ -42,6 +103,7 @@ export async function GET(request: Request) {
         const code = searchParams.get("code");
         const next = safeNextPath(searchParams.get("next"));
         const biz = searchParams.get("biz");
+        const inviteToken = searchParams.get("invite");
 
         // "Add a Business" flow: org_id and user_id passed as URL query params.
         // These travel through the entire OAuth redirect chain (dashboard → Google → Supabase → here).
@@ -235,6 +297,16 @@ export async function GET(request: Request) {
                     });
 
                     console.log(`✅ New business "${newBizName}" (${newBusiness.id}) added to org ${addBusinessOrgId}`);
+
+                    await admin.from("business_members").upsert(
+                        {
+                            business_id: newBusiness.id,
+                            user_id: data.user.id,
+                            role: "owner",
+                            status: "active",
+                        },
+                        { onConflict: "business_id,user_id" }
+                    );
                 }
 
                 // If the OAuth switched to a DIFFERENT auth user (different Google account),
@@ -309,6 +381,21 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
 
+                const invited = await acceptBusinessInvitation({
+                    admin,
+                    userId: data.user.id,
+                    userEmail: data.user.email,
+                    inviteToken,
+                });
+                if (invited.accepted) {
+                    try {
+                        await redis.del(`user_businesses:${data.user.id}`);
+                    } catch (e) {
+                        console.error("[Auth Callback] Failed to clear business cache:", e);
+                    }
+                    return NextResponse.redirect(`${appUrl}/dashboard`);
+                }
+
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
@@ -346,6 +433,16 @@ export async function GET(request: Request) {
                     });
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
+
+                await admin.from("business_members").upsert(
+                    {
+                        business_id: newBusiness.id,
+                        user_id: data.user.id,
+                        role: "owner",
+                        status: "active",
+                    },
+                    { onConflict: "business_id,user_id" }
+                );
 
                 if (signupPhone) {
                     const { error: prefErr } = await admin.from("notification_preferences").upsert(
@@ -406,6 +503,21 @@ export async function GET(request: Request) {
             }
 
             // ─── EXISTING USER LOGIN ────────────────────────────
+            const invited = await acceptBusinessInvitation({
+                admin,
+                userId: data.user.id,
+                userEmail: data.user.email,
+                inviteToken,
+            });
+            if (invited.accepted) {
+                try {
+                    await redis.del(`user_businesses:${data.user.id}`);
+                } catch (e) {
+                    console.error("[Auth Callback] Failed to clear business cache:", e);
+                }
+                return NextResponse.redirect(`${appUrl}/dashboard`);
+            }
+
             const isGoogle = data.user.app_metadata.provider === 'google' ||
                 data.user.identities?.some(id => id.provider === 'google');
 

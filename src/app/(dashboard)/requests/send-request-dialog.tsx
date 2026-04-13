@@ -213,7 +213,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                         name="channel"
                                         render={({ field }) => (
                                             <div className="flex items-center gap-4">
-                                                <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-pointer transition-all ${field.value === 'sms' ? 'border-orange-500 bg-orange-500/5 ring-1 ring-orange-500' : 'border-input hover:bg-muted/50'}`}>
+                                                <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-pointer transition-all ${field.value === 'sms' ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-input hover:bg-muted/50'}`}>
                                                     <input
                                                         type="radio"
                                                         className="sr-only"
@@ -245,7 +245,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                     control={form.control}
                                     name="scheduledFor"
                                     render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                                             <div className="space-y-0.5">
                                                 <FormLabel>Schedule for Later</FormLabel>
                                             </div>
@@ -279,13 +279,13 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                     <TabsContent value="link" className="space-y-4 pt-2">
                         {businessSlug ? (
                             <>
-                                <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border">
+                                <div className="flex items-center gap-2 p-3 bg-muted rounded-lg border border-border">
                                     <span className="font-mono text-xs bg-muted px-2 py-1 rounded">
                                         {process.env.NEXT_PUBLIC_ROOT_DOMAIN}/{businessSlug}
                                     </span>
                                     <button
                                         onClick={handleCopyLink}
-                                        className="flex-shrink-0 p-1.5 rounded hover:bg-slate-200 transition-colors"
+                                        className="flex-shrink-0 p-1.5 rounded hover:bg-border transition-colors"
                                     >
                                         {linkCopied ? (
                                             <Check className="h-4 w-4 text-green-500" />
@@ -296,7 +296,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                 </div>
                                 <div className="flex justify-center">
                                     {qrLoading ? (
-                                        <div className="h-[160px] w-[160px] bg-slate-100 rounded-lg animate-pulse" />
+                                        <div className="h-[160px] w-[160px] bg-muted rounded-lg animate-pulse" />
                                     ) : qrDataUrl ? (
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img

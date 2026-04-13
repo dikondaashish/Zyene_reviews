@@ -45,7 +45,7 @@ export function GettingStartedBanner({
   };
 
   return (
-    <div className="relative overflow-hidden bg-card border border-border/50 rounded-2xl p-6 mb-6 shadow-sm">
+    <div className="relative overflow-hidden bg-card border border-border/50 rounded-2xl p-6 mb-6">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>

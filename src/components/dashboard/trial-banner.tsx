@@ -60,8 +60,8 @@ export function TrialBanner({ organization }: { organization: TrialOrganizationS
                     size="sm" 
                     onClick={() => router.push("/settings/billing")}
                     className={expired 
-                        ? "bg-red-600 hover:bg-red-700 text-white border-none shadow-sm h-8 px-4" 
-                        : "bg-indigo-600 hover:bg-indigo-700 text-white border-none shadow-sm h-8 px-4"
+                        ? "bg-red-600 hover:bg-red-700 text-white border-none h-8 px-4"
+                        : "bg-indigo-600 hover:bg-indigo-700 text-white border-none h-8 px-4"
                     }
                 >
                     <Zap className="mr-2 h-3.5 w-3.5 fill-current" />

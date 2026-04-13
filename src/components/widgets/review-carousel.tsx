@@ -27,7 +27,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
     // If no reviews, display a fallback
     if (!reviews || reviews.length === 0) {
         return (
-            <div className="flex h-full w-full items-center justify-center p-8 bg-white border rounded-xl shadow-sm font-sans">
+            <div className="flex h-full w-full items-center justify-center p-8 bg-card border border-border rounded-xl font-sans">
                 <p className="text-muted-foreground text-sm">No reviews to display yet.</p>
             </div>
         );
@@ -70,9 +70,9 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                             <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-500" />
                         ))}
                     </div>
-                    <span className="font-semibold text-slate-900 text-sm tracking-tight">{businessName}</span>
+                    <span className="font-semibold text-foreground text-sm tracking-tight">{businessName}</span>
                 </div>
-                <div className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-1 rounded-full border border-slate-200 shadow-sm">
+                <div className="text-xs text-muted-foreground font-medium bg-muted px-2 py-1 rounded-full border border-border">
                     Verified Reviews
                 </div>
             </div>
@@ -83,7 +83,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                     {displayReviews.map((review, i) => (
                         <div
                             key={`${review.id}-${i}`}
-                            className="flex-none w-[280px] sm:w-[320px] bg-white rounded-xl border shadow-sm p-4 flex flex-col gap-3 transition-transform hover:-translate-y-1 hover:shadow-md cursor-default"
+                            className="flex-none w-[280px] sm:w-[320px] bg-card rounded-xl border border-border p-4 flex flex-col gap-3 transition-transform hover:-translate-y-1 cursor-default"
                         >
                             <div className="flex justify-between items-start">
                                 <div className="flex -space-x-0.5">
@@ -92,27 +92,27 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                                             key={i}
                                             className={cn(
                                                 "w-4 h-4",
-                                                i < review.rating ? "fill-yellow-400 text-yellow-500" : "fill-slate-100 text-slate-200"
+                                                i < review.rating ? "fill-yellow-400 text-yellow-500" : "fill-muted text-muted-foreground/40"
                                             )}
                                         />
                                     ))}
                                 </div>
                                 {review.platform && (
-                                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                                         {review.platform}
                                     </span>
                                 )}
                             </div>
 
-                            <p className="text-sm text-slate-700 leading-relaxed line-clamp-4 flex-1">
+                            <p className="text-sm text-foreground leading-relaxed line-clamp-4 flex-1">
                                 "{review.content || "Great experience!"}"
                             </p>
 
-                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
-                                <span className="font-semibold text-sm text-slate-900 truncate">
+                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+                                <span className="font-semibold text-sm text-foreground truncate">
                                     {review.author_name || "Valued Customer"}
                                 </span>
-                                <span className="text-xs text-slate-400 whitespace-nowrap">
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">
                                     {mounted ? new Date(review.created_at).toLocaleDateString([], { month: 'short', year: 'numeric' }) : "—"}
                                 </span>
                             </div>

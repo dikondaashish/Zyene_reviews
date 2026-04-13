@@ -278,7 +278,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white border shadow-sm">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
                                 <GoogleIcon />
                             </div>
                             <div>
@@ -317,7 +317,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white border shadow-sm">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
                                 <GoogleIcon />
                             </div>
                             <div>
@@ -496,7 +496,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             <div className="h-1 bg-muted w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white border shadow-sm">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
                         <GoogleIcon />
                     </div>
                     <div>

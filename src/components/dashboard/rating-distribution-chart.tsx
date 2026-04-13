@@ -50,7 +50,7 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
             height={250} 
             title="Rating Distribution" 
             description="Lifetime rating breakdown"
-            className="border-none bg-transparent p-0 backdrop-blur-none shadow-none"
+            className="border-none bg-transparent p-0 backdrop-blur-none"
         >
             <BarChart
                 data={fullData}

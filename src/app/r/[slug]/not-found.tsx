@@ -4,7 +4,7 @@ import { Store } from "lucide-react";
 export default function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-slate-200 text-center max-w-md w-full">
+            <div className="bg-card p-8 rounded-lg border border-border text-center max-w-md w-full">
                 <div className="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Store className="h-8 w-8 text-slate-400" />
                 </div>

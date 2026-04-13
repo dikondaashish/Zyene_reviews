@@ -53,8 +53,8 @@ function SectionHeader({
     return (
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10">
-                    <Icon className="h-4 w-4 text-[#f97316]" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                    <Icon className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold tracking-tight">
@@ -170,13 +170,13 @@ export default async function IntegrationsPage() {
                 {/* Summary stats */}
                 {connectedCount > 0 && (
                     <div className="flex items-center gap-3 flex-wrap">
-                        <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
-                            <Puzzle className="h-4 w-4 text-[#f97316]" />
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+                            <Puzzle className="h-4 w-4 text-primary" />
                             <span className="text-sm font-medium">
                                 {`${connectedCount} platform${connectedCount !== 1 ? "s" : ""} connected`}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
                             <Star className="h-4 w-4 text-yellow-500" />
                             <span className="text-sm font-medium">
                                 {`${totalReviews.toLocaleString("en-US")} total reviews synced`}
@@ -239,9 +239,9 @@ export default async function IntegrationsPage() {
                         name="Square"
                         description="Auto-send review requests after Square payments"
                         icon={
-                            <Store className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                            <Store className="h-5 w-5 text-foreground/70" />
                         }
-                        accentColor="bg-gray-600"
+                        accentColor="bg-foreground/70"
                     />
                     <PlaceholderCard
                         name="Clover"
@@ -255,9 +255,9 @@ export default async function IntegrationsPage() {
                         name="Toast"
                         description="Connect Toast POS for automatic follow-ups"
                         icon={
-                            <Utensils className="h-5 w-5 text-orange-600" />
+                            <Utensils className="h-5 w-5 text-primary" />
                         }
-                        accentColor="bg-orange-500"
+                        accentColor="bg-primary"
                     />
                     <ZapierCard businessId={business.id} />
                 </div>

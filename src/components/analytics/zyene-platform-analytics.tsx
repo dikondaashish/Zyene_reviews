@@ -162,7 +162,7 @@ export function ZyenePlatformAnalytics({
         5: "#10b981",
         4: "#34d399",
         3: "#f59e0b",
-        2: "#f97316",
+        2: "#ff4f00",
         1: "#ef4444",
     };
 
@@ -207,10 +207,10 @@ export function ZyenePlatformAnalytics({
 
     // ── Funnel Steps ───────────────────────────────────────────────────
     const funnelSteps = [
-        { label: "Sent", count: totalSent, icon: Send, color: "#f97316" },
-        { label: "Delivered", count: totalDelivered, icon: CheckCircle2, color: "#f97316" },
-        { label: "Opened", count: totalOpened, icon: Eye, color: "#ea580c" },
-        { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "#ea580c" },
+        { label: "Sent", count: totalSent, icon: Send, color: "#ff4f00" },
+        { label: "Delivered", count: totalDelivered, icon: CheckCircle2, color: "#ff4f00" },
+        { label: "Opened", count: totalOpened, icon: Eye, color: "#ff7a45" },
+        { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "#ff7a45" },
         { label: "Completed", count: totalCompleted, icon: Sparkles, color: "#c2410c" },
         { label: "Posted to Google", count: totalReviewLeft, icon: Star, color: "#10b981" },
     ];
@@ -225,7 +225,7 @@ export function ZyenePlatformAnalytics({
                 <CardHeader>
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-[#f97316]" />
+                            <Zap className="w-5 h-5 text-primary" />
                             Review Request Funnel
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -247,7 +247,7 @@ export function ZyenePlatformAnalytics({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.08 }}
                                 >
-                                    <div className="relative flex flex-col items-center gap-2 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-orange-500/20 transition-all group">
+                                    <div className="relative flex flex-col items-center gap-2 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-primary/20 transition-all group">
                                         <div
                                             className="h-10 w-10 rounded-xl flex items-center justify-center transition-colors"
                                             style={{
@@ -364,13 +364,13 @@ export function ZyenePlatformAnalytics({
                             transition={{ delay: idx * 0.05 }}
                             whileHover={{ y: -4, scale: 1.01 }}
                         >
-                            <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 shadow-sm backdrop-blur-xl transition-all hover:border-orange-500/20 hover:shadow-md">
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent pointer-events-none" />
+                            <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 backdrop-blur-xl transition-all hover:border-primary/20">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                     <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground truncate">
                                         {metric.title}
                                     </CardTitle>
-                                    <metric.icon className="h-4 w-4 text-[#f97316]" />
+                                    <metric.icon className="h-4 w-4 text-primary" />
                                 </CardHeader>
                                 <CardContent className="space-y-3">
                                     <div className="text-3xl font-black tracking-tight leading-none">
@@ -401,11 +401,11 @@ export function ZyenePlatformAnalytics({
             {/* ──────────── 3. DAILY ACTIVITY + CHANNEL PERFORMANCE ──────────── */}
             <div className="grid gap-6 lg:grid-cols-5">
                 {/* Daily Activity Chart */}
-                <Card className="lg:col-span-3 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="lg:col-span-3 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="space-y-1">
                             <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <Sparkles className="w-5 h-5 text-[#f97316]" />
+                                <Sparkles className="w-5 h-5 text-primary" />
                                 Daily Activity
                             </CardTitle>
                             <p className="text-xs text-muted-foreground font-medium">
@@ -423,12 +423,12 @@ export function ZyenePlatformAnalytics({
                                     >
                                         <defs>
                                             <linearGradient id="gradSent" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#ff4f00" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#ff4f00" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="gradClicked" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#ea580c" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#ea580c" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#ff7a45" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#ff7a45" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="gradCompleted" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -463,7 +463,6 @@ export function ZyenePlatformAnalytics({
                                                 backgroundColor: "hsl(var(--card))",
                                                 border: "1px solid hsl(var(--border))",
                                                 borderRadius: "12px",
-                                                boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                                                 padding: "8px 12px",
                                             }}
                                             labelClassName="font-bold text-xs mb-1"
@@ -487,7 +486,7 @@ export function ZyenePlatformAnalytics({
                                             type="monotone"
                                             dataKey="sent"
                                             name="Sent"
-                                            stroke="#f97316"
+                                            stroke="#ff4f00"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#gradSent)"
@@ -498,7 +497,7 @@ export function ZyenePlatformAnalytics({
                                             type="monotone"
                                             dataKey="clicked"
                                             name="Clicked"
-                                            stroke="#ea580c"
+                                            stroke="#ff7a45"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#gradClicked)"
@@ -528,11 +527,11 @@ export function ZyenePlatformAnalytics({
                 </Card>
 
                 {/* Channel Performance */}
-                <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="space-y-1">
                             <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <Send className="w-5 h-5 text-[#f97316]" />
+                                <Send className="w-5 h-5 text-primary" />
                                 Channel Performance
                             </CardTitle>
                             <p className="text-xs text-muted-foreground font-medium">
@@ -552,8 +551,8 @@ export function ZyenePlatformAnalytics({
                                 <div key={ch.channel} className="space-y-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2.5">
-                                            <div className="h-8 w-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                                                <ChannelIcon className="h-4 w-4 text-[#f97316]" />
+                                            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                <ChannelIcon className="h-4 w-4 text-primary" />
                                             </div>
                                             <div>
                                                 <p className="text-sm font-bold">{ch.channel}</p>
@@ -563,7 +562,7 @@ export function ZyenePlatformAnalytics({
                                             </div>
                                         </div>
                                         <div className="text-right space-y-0.5">
-                                            <p className="text-sm font-black text-[#f97316]">
+                                            <p className="text-sm font-black text-primary">
                                                 {ch.clickRate}% CTR
                                             </p>
                                             <p className="text-[10px] text-muted-foreground">
@@ -574,13 +573,13 @@ export function ZyenePlatformAnalytics({
                                     {/* Stacked progress bar */}
                                     <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden flex">
                                         <div
-                                            className="h-full bg-[#f97316] rounded-l-full transition-all duration-700"
+                                            className="h-full bg-primary rounded-l-full transition-all duration-700"
                                             style={{
                                                 width: `${ch.sent > 0 ? (ch.completed / ch.sent) * 100 : 0}%`,
                                             }}
                                         />
                                         <div
-                                            className="h-full bg-[#f97316]/40 transition-all duration-700"
+                                            className="h-full bg-primary/40 transition-all duration-700"
                                             style={{
                                                 width: `${ch.sent > 0 ? ((ch.clicked - ch.completed) / ch.sent) * 100 : 0}%`,
                                             }}
@@ -588,11 +587,11 @@ export function ZyenePlatformAnalytics({
                                     </div>
                                     <div className="flex items-center gap-4 text-[10px] font-semibold text-muted-foreground">
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-[#f97316]" />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                                             {ch.completed} completed
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-[#f97316]/40" />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
                                             {ch.clicked - ch.completed} clicked only
                                         </span>
                                     </div>
@@ -612,11 +611,11 @@ export function ZyenePlatformAnalytics({
             {/* ──────────── 4. RATING DISTRIBUTION + POPULAR TAGS ──────────── */}
             <div className="grid gap-6 lg:grid-cols-2">
                 {/* Rating Distribution */}
-                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="space-y-1">
                             <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <Star className="w-5 h-5 text-[#f97316]" />
+                                <Star className="w-5 h-5 text-primary" />
                                 Rating Distribution
                             </CardTitle>
                             <p className="text-xs text-muted-foreground font-medium">
@@ -660,11 +659,11 @@ export function ZyenePlatformAnalytics({
                 </Card>
 
                 {/* Popular Tags */}
-                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="space-y-1">
                             <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <Hash className="w-5 h-5 text-[#f97316]" />
+                                <Hash className="w-5 h-5 text-primary" />
                                 What Customers Loved
                             </CardTitle>
                             <p className="text-xs text-muted-foreground font-medium">
@@ -685,13 +684,13 @@ export function ZyenePlatformAnalytics({
                                             transition={{ delay: idx * 0.04 }}
                                         >
                                             <div
-                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-orange-500/20 bg-orange-500/5 hover:bg-orange-500/10 transition-colors cursor-default"
+                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors cursor-default"
                                                 style={{ opacity: 0.5 + intensity * 0.5 }}
                                             >
                                                 <span className="text-sm font-semibold">{t.tag}</span>
                                                 <Badge
                                                     variant="secondary"
-                                                    className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 text-[10px] px-1.5 py-0 font-bold"
+                                                    className="bg-primary/10 text-primary border-primary/20 text-[10px] px-1.5 py-0 font-bold"
                                                 >
                                                     {t.count}
                                                 </Badge>
@@ -713,7 +712,7 @@ export function ZyenePlatformAnalytics({
             {/* ──────────── 5. LOW RATING TIMELINE + PRIVATE FEEDBACK ──────────── */}
             <div className="grid gap-6 lg:grid-cols-2">
                 {/* Low Rating Alerts */}
-                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
@@ -800,12 +799,12 @@ export function ZyenePlatformAnalytics({
                 </Card>
 
                 {/* Private Feedback Feed */}
-                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-orange-500/20">
+                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
                                 <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                    <MessageCircle className="w-5 h-5 text-[#f97316]" />
+                                    <MessageCircle className="w-5 h-5 text-primary" />
                                     Private Feedback
                                 </CardTitle>
                                 <p className="text-xs text-muted-foreground font-medium">
@@ -813,7 +812,7 @@ export function ZyenePlatformAnalytics({
                                 </p>
                             </div>
                             {privateFeedback.length > 0 && (
-                                <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/20 font-bold">
+                                <Badge className="bg-primary/10 text-primary border-primary/20 font-bold">
                                     {privateFeedback.length}
                                 </Badge>
                             )}

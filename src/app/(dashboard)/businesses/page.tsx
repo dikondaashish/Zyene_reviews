@@ -63,7 +63,7 @@ export default async function BusinessesPage() {
                         return (
                             <div
                                 key={business.id}
-                                className={`border rounded-xl bg-card overflow-hidden transition-all cursor-pointer ${isActive ? "ring-2 ring-orange-500 border-orange-300 dark:border-orange-900/50 shadow-sm" : "hover:shadow-md"
+                                className={`border rounded-xl bg-card overflow-hidden transition-all cursor-pointer ${isActive ? "ring-2 ring-primary border-primary/40" : "hover:border-primary/40"
                                     }`}
                             >
                                 <form
@@ -76,9 +76,9 @@ export default async function BusinessesPage() {
                                     <button type="submit" className="w-full text-left p-5 flex flex-col gap-3 hover:bg-muted/50 transition-colors cursor-pointer">
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-orange-500/15" : "bg-orange-500/10"
+                                                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-primary/15" : "bg-primary/10"
                                                     }`}>
-                                                    <Building2 className={`h-5 w-5 ${isActive ? "text-orange-600" : "text-[#f97316]"
+                                                    <Building2 className={`h-5 w-5 ${isActive ? "text-primary" : "text-primary"
                                                         }`} />
                                                 </div>
                                                 <div>
@@ -104,7 +104,7 @@ export default async function BusinessesPage() {
                                                     {business.status}
                                                 </Badge>
                                                 {isActive && (
-                                                    <span className="text-[10px] text-orange-600 dark:text-orange-400 font-medium">
+                                                    <span className="text-[10px] text-primary font-medium">
                                                         Active
                                                     </span>
                                                 )}
@@ -154,8 +154,8 @@ export default async function BusinessesPage() {
                 </div>
             ) : (
                 <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
-                    <div className="h-12 w-12 bg-orange-500/10 rounded-full flex items-center justify-center mb-4">
-                        <Building2 className="h-6 w-6 text-[#f97316]" />
+                    <div className="h-12 w-12 bg-primary/10 rounded-full border border-primary/20 flex items-center justify-center mb-4">
+                        <Building2 className="h-6 w-6 text-primary" />
                     </div>
                     <h3 className="text-lg font-medium text-foreground">
                         No businesses yet

@@ -27,13 +27,13 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
             id: "all", 
             name: "All Platforms", 
             icon: <LayoutGrid className="w-4 h-4" />,
-            color: "text-orange-500"
+            color: "text-primary"
         },
         { 
             id: "zyene", 
             name: "Own Platform", 
             icon: <Globe className="w-4 h-4" />,
-            color: "text-orange-400"
+            color: "text-primary"
         },
         { 
             id: "google", 
@@ -75,7 +75,7 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
                             className={cn(
                                 "relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                                 isActive 
-                                    ? "text-white shadow-lg" 
+                                    ? "text-white" 
                                     : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                             )}
                         >
@@ -99,14 +99,14 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
                 <motion.div 
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-xl w-fit"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl w-fit"
                 >
-                    <span className="text-xs text-orange-400 font-medium">Internal Link:</span>
+                    <span className="text-xs text-primary font-medium">Internal Link:</span>
                     <a 
                         href={`https://zyenereviews.com/${businessSlug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-orange-200 hover:underline flex items-center gap-1"
+                        className="text-xs text-primary/80 hover:underline flex items-center gap-1"
                     >
                         zyenereviews.com/{businessSlug}
                         <Globe className="w-3 h-3 ml-1" />

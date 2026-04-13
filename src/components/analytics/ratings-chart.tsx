@@ -43,8 +43,8 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                 <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#ff4f00" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#ff4f00" stopOpacity={0} />
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
@@ -72,26 +72,25 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                             backgroundColor: "hsl(var(--card))",
                             border: "1px solid hsl(var(--border))",
                             borderRadius: "12px",
-                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                             padding: "8px 12px",
                         }}
                         labelClassName="font-bold text-xs mb-1"
                         labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}
                         formatter={(value: any) => [
-                            <span key="val" className="text-orange-600">{Number(value).toFixed(1)} ★</span>,
+                            <span key="val" className="text-primary">{Number(value).toFixed(1)} ★</span>,
                             "Avg Rating"
                         ]}
                     />
                     <ReferenceLine 
                         y={overallAvg} 
-                        stroke="#f97316" 
+                        stroke="#ff4f00" 
                         strokeDasharray="4 4" 
                         strokeWidth={1.5}
                         label={{ 
                             value: `Avg: ${overallAvg.toFixed(1)}`, 
                             position: 'insideTopRight', 
-                            fill: "#f97316", 
+                            fill: "#ff4f00", 
                             fontSize: 10,
                             fontWeight: 700,
                             offset: 10
@@ -100,7 +99,7 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                     <Area
                         type="monotone"
                         dataKey="rating"
-                        stroke="#f97316"
+                        stroke="#ff4f00"
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#colorRating)"

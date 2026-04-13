@@ -51,7 +51,7 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                             if (active && payload && payload.length) {
                                 const data = payload[0].payload as ThemeDataPoint;
                                 return (
-                                    <div className="rounded-lg border bg-background/90 backdrop-blur-md p-3 shadow-xl ring-1 ring-black/5">
+                                    <div className="rounded-lg border bg-background/90 backdrop-blur-md p-3 ring-1 ring-border">
                                         <div className="flex flex-col gap-1.5">
                                             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                                                 {data.theme.replace(/_/g, " ")}

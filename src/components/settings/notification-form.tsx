@@ -227,7 +227,7 @@ export function NotificationForm({
                 />
 
                 {form.watch("sms_enabled") && (
-                    <div className="space-y-4 border-l-2 border-slate-100 pl-4 animate-in slide-in-from-top-2">
+                    <div className="space-y-4 border-l-2 border-border pl-4 animate-in slide-in-from-top-2">
                         <FormField
                             control={form.control}
                             name="phone_number"

@@ -35,7 +35,7 @@ export default async function OnboardingLayout({
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-orange-200/15 blur-[100px]" />
 
             {/* Header with logo */}
-            <header className="relative z-10 border-b border-orange-100/60 bg-white/50 backdrop-blur-xl">
+            <header className="relative z-10 border-b border-primary/20 bg-background/50 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
                         {/* Brand logo mark */}

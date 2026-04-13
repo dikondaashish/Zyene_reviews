@@ -144,8 +144,8 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="p-2 bg-orange-500/10 rounded-xl">
-                            <Users className="h-5 w-5 text-[#f97316]" />
+                        <div className="p-2 bg-primary/10 rounded-xl border border-primary/20">
+                            <Users className="h-5 w-5 text-primary" />
                         </div>
                         <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Customers</h1>
                     </div>
@@ -165,7 +165,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     </Button>
                     <Button 
                         onClick={() => setIsAddModalOpen(true)}
-                        className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-2xl h-11 px-6 font-bold shadow-lg shadow-orange-500/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl h-11 px-6 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
                     >
                         <UserPlus className="h-4.5 w-4.5" />
                         Add Customer
@@ -175,16 +175,16 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
             {/* Quick Stats / Overview Banner */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-orange-500/10 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-[#f97316]" />
+                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Customers</p>
                         <h3 className="text-2xl font-bold text-foreground">{customerStats.totalCustomers}</h3>
                     </div>
                 </div>
-                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
                     <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
                         <RefreshCcw className="h-6 w-6 text-emerald-600" />
                     </div>
@@ -195,7 +195,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         </h3>
                     </div>
                 </div>
-                <div className="bg-card p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
                     <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center">
                         <Users className="h-6 w-6 text-amber-600" />
                     </div>
@@ -218,8 +218,8 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
             {/* Main Table Content */}
             {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-64 bg-card rounded-3xl border shadow-sm">
-                    <RefreshCcw className="h-10 w-10 text-[#f97316] animate-spin mb-4" />
+                <div className="flex flex-col items-center justify-center h-64 bg-card rounded-3xl border border-border">
+                    <RefreshCcw className="h-10 w-10 text-primary animate-spin mb-4" />
                     <p className="text-muted-foreground font-medium">Loading your customers...</p>
                 </div>
             ) : (

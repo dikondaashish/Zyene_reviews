@@ -205,28 +205,28 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
     };
 
     return (
-        <Card className="overflow-hidden bg-white shadow-sm border-slate-200/60 border mt-2">
+        <Card className="overflow-hidden bg-card border-border/60 border mt-2">
             <CardContent className="p-0 flex flex-col md:flex-row">
                 {/* Left Section: Text Content */}
                 <div className="flex-1 p-6 md:py-10 md:pl-16 lg:pl-24 md:pr-8 flex flex-col justify-center">
                     <div className="flex items-start gap-4">
-                        <div className="mt-1 flex-shrink-0 text-slate-400">
+                        <div className="mt-1 flex-shrink-0 text-muted-foreground">
                             <QrCode className="w-8 h-8" strokeWidth={1.5} />
                         </div>
                         <div>
-                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">
+                            <h2 className="text-3xl font-bold text-foreground tracking-tight mb-2">
                                 {businessName}
                             </h2>
-                            <h3 className="text-xl font-medium text-slate-900 mb-4">
+                            <h3 className="text-xl font-medium text-foreground mb-4">
                                 {dict.qr.portal}
                             </h3>
-                            <p className="text-slate-600 text-base max-w-md mb-6 leading-relaxed">
+                            <p className="text-muted-foreground text-base max-w-md mb-6 leading-relaxed">
                                 {dict.qr.description}
                             </p>
                             
                             <div 
                                 onClick={handleCopyLink}
-                                className="flex items-center text-sm font-mono text-slate-500 hover:text-slate-900 cursor-pointer transition-colors w-fit" 
+                                className="flex items-center text-sm font-mono text-muted-foreground hover:text-foreground cursor-pointer transition-colors w-fit"
                             >
                                 {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
                                 {copied ? <Check className="w-4 h-4 ml-2 text-green-500" /> : <Copy className="w-4 h-4 ml-2" />}
@@ -236,47 +236,47 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Middle Action Buttons */}
-                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-slate-200/60 min-w-[180px] md:pr-8 lg:pr-12">
-                    <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-border/60 min-w-[180px] md:pr-8 lg:pr-12">
+                    <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
                         <Download className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.download}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                    <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
                         <Printer className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.print}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                    <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
                         <QrCode className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.order}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleShare} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-slate-50/50 hover:bg-slate-100 border-slate-200 text-slate-700 shadow-none">
+                    <Button variant="outline" size="sm" onClick={handleShare} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
                         <Share2 className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.share}
                     </Button>
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="p-6 md:py-10 md:pl-8 lg:pl-12 md:pr-16 lg:pr-24 flex flex-col items-center justify-center min-w-[280px] bg-white">
+                <div className="p-6 md:py-10 md:pl-8 lg:pl-12 md:pr-16 lg:pr-24 flex flex-col items-center justify-center min-w-[280px] bg-card">
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
-                                <div className="bg-white p-6 rounded-[2rem] border-[4px] border-slate-100 shadow-sm flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 group-hover:shadow-md duration-300 h-[228px] w-[228px]">
-                                    <QrCode className="h-[140px] w-[140px] text-slate-800" strokeWidth={1} />
+                                <div className="bg-card p-6 rounded-[2rem] border-[4px] border-border flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 duration-300 h-[228px] w-[228px]">
+                                    <QrCode className="h-[140px] w-[140px] text-foreground" strokeWidth={1} />
                                 </div>
-                                <p className="text-[13px] text-slate-900 font-medium text-center group-hover:text-blue-600 transition-colors">
+                                <p className="text-[13px] text-foreground font-medium text-center group-hover:text-blue-600 transition-colors">
                                     {dict.qr.tap_icon}
                                 </p>
                             </div>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-md rounded-2xl p-8 border-none shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)]">
+                        <DialogContent className="sm:max-w-md rounded-2xl p-8 border-none">
                             <DialogTitle className="sr-only">QR Code for {businessName}</DialogTitle>
                             <div className="flex flex-col items-center mb-2">
-                                <h2 className="text-2xl font-bold text-slate-900 text-center mb-2">
+                                <h2 className="text-2xl font-bold text-foreground text-center mb-2">
                                     {businessName} {dict.qr.review_page}
                                 </h2>
                                 <div 
                                     onClick={handleCopyLink}
-                                    className="flex items-center text-sm text-slate-500 hover:text-slate-900 cursor-pointer transition-colors w-fit mx-auto"
+                                    className="flex items-center text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors w-fit mx-auto"
                                 >
                                     {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
                                     {copied ? <Check className="w-3.5 h-3.5 ml-1.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 ml-1.5" />}
@@ -287,7 +287,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                 {loading ? (
                                     <Skeleton className="h-[220px] w-[220px] rounded-xl" />
                                 ) : error ? (
-                                    <div className="h-[220px] w-[220px] flex flex-col items-center justify-center gap-3 bg-slate-50 rounded-xl border border-dashed">
+                                    <div className="h-[220px] w-[220px] flex flex-col items-center justify-center gap-3 bg-muted rounded-xl border border-dashed">
                                         <p className="text-sm text-muted-foreground">Couldn't load QR code.</p>
                                     </div>
                                 ) : (
@@ -301,19 +301,19 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                             </div>
                             
                             <div className="grid grid-cols-2 gap-3 mt-2">
-                                <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-muted border border-border">
                                     <Download className="h-4 w-4 mr-2" />
                                     {dict.qr.download_short}
                                 </Button>
-                                <Button variant="outline" onClick={handleShare} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                <Button variant="outline" onClick={handleShare} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-muted border border-border">
                                     <Share2 className="h-4 w-4 mr-2" />
                                     {dict.qr.share_link}
                                 </Button>
-                                <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-slate-50 border border-slate-200">
+                                <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="w-full text-xs font-medium h-10 rounded-full bg-transparent hover:bg-muted border border-border">
                                     <Printer className="h-4 w-4 mr-2" />
                                     {dict.qr.print_short}
                                 </Button>
-                                <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]">
+                                <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white">
                                     <ShoppingCart className="h-4 w-4 mr-2" />
                                     {dict.qr.order_now}
                                 </Button>

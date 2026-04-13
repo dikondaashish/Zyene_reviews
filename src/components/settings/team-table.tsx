@@ -49,7 +49,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     const router = useRouter();
     const [isLoadingId, setIsLoadingId] = useState<string | null>(null);
 
-    const canManage = ["owner", "admin", "ORG_OWNER", "ORG_ADMIN"].includes(currentUserRole);
+    const canManage = ["owner", "admin"].includes(currentUserRole);
 
     const handleRoleChange = async (memberId: string, newRole: string) => {
         setIsLoadingId(memberId);
@@ -167,7 +167,9 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                             {member.type === "member" && (
                                                 <>
                                                     <DropdownMenuItem onClick={() => handleRoleChange(member.id, "admin")}>Make Admin</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>Make Manager</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>Make Member</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>Make Viewer</DropdownMenuItem>
                                                 </>
                                             )}
                                             <DropdownMenuSeparator />

@@ -202,7 +202,7 @@ export function ReviewsPageClient({
                             {isDemo && (
                                 <Badge
                                     variant="outline"
-                                    className="border-orange-500/30 bg-orange-500/10 text-orange-600 dark:bg-orange-950/20 dark:border-orange-900/50 flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight"
+                                    className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight"
                                 >
                                     <Eye className="w-3 h-3" />
                                     Interactive Demo
@@ -239,12 +239,12 @@ export function ReviewsPageClient({
             <div className="flex items-center gap-3">
                 <div className="bg-muted p-1 rounded-lg inline-flex">
                     <button onClick={() => handleTypeChange("public")}>
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === "public" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === "public" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                             Public Reviews ({publicCount})
                         </div>
                     </button>
                     <button onClick={() => handleTypeChange("private")}>
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${type === "private" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${type === "private" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                             Private Feedback ({privateCount})
                             <Lock className="w-3 h-3" />
                         </div>

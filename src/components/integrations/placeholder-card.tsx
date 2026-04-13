@@ -21,7 +21,7 @@ export function PlaceholderCard({
     name,
     description,
     icon,
-    accentColor = "bg-gray-400",
+    accentColor = "bg-muted-foreground",
 }: PlaceholderCardProps) {
     const handleNotify = () => {
         toast.success(
@@ -33,14 +33,14 @@ export function PlaceholderCard({
     };
 
     return (
-        <Card className="relative overflow-hidden border-dashed opacity-75 hover:opacity-100 transition-all duration-300 hover:shadow-sm group">
+        <Card className="relative overflow-hidden border-dashed opacity-75 hover:opacity-100 transition-all duration-300 group">
             {/* Accent bar */}
             <div className={`h-1 ${accentColor} w-full opacity-40 group-hover:opacity-70 transition-opacity`} />
 
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/80 border shadow-sm">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/80 border border-border">
                             {icon}
                         </div>
                         <div>

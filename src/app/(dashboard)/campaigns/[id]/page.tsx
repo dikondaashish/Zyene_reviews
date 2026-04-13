@@ -79,7 +79,7 @@ const statusColors: Record<string, string> = {
     sent: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
     delivered: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
     opened: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
-    clicked: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+    clicked: "bg-primary/10 text-primary",
     review_left: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
     completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
     failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
@@ -237,7 +237,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const funnelStages = [
         { label: "Sent", value: campaign.total_sent, icon: Send, color: "bg-blue-500" },
         { label: "Opened", value: campaign.total_opened, icon: Eye, color: "bg-yellow-500" },
-        { label: "Clicked", value: campaign.total_clicked, icon: MousePointerClick, color: "bg-orange-500" },
+        { label: "Clicked", value: campaign.total_clicked, icon: MousePointerClick, color: "bg-primary" },
         { label: "Completed", value: totalCompleted, icon: CheckCircle, color: "bg-green-500" },
     ];
     const maxFunnel = Math.max(campaign.total_sent, 1);

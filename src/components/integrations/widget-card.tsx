@@ -32,9 +32,9 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     };
 
     return (
-        <Card className="flex flex-col relative overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/50 group">
+        <Card className="flex flex-col relative overflow-hidden transition-all duration-300 hover:border-primary/50 group">
             <CardHeader className="flex flex-row items-center gap-4 pb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
                     <Code2 className="h-6 w-6" />
                 </div>
                 <div>
@@ -49,7 +49,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
 
                 <div className="space-y-2 mt-auto">
                     <div className="relative group/code">
-                        <pre className="p-3 bg-slate-950 text-slate-50 rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono relative">
+                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono relative">
                             {mounted ? embedCode : "Loading embed code..."}
                         </pre>
                         <Button

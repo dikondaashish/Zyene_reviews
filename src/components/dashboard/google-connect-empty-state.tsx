@@ -7,7 +7,7 @@ export function GoogleConnectEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-6">
       {/* Google Logo */}
-      <div className="w-16 h-16 flex items-center justify-center bg-gray-50 rounded-xl">
+      <div className="w-16 h-16 flex items-center justify-center bg-muted rounded-xl">
         <svg
           width="32"
           height="32"
@@ -36,10 +36,10 @@ export function GoogleConnectEmptyState() {
 
       {/* Content */}
       <div className="space-y-2">
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-semibold text-foreground">
           Connect Google Business Profile
         </h3>
-        <p className="text-gray-600 max-w-sm">
+        <p className="text-muted-foreground max-w-sm">
           Import your reviews from Google and start monitoring customer feedback in real-time.
         </p>
       </div>

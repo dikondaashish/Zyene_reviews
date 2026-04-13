@@ -127,10 +127,10 @@ export function AutoReplyToolbar({
             title="Upgrade to use Auto commenter"
             description="Auto commenter posts AI replies to eligible Google reviews. It is available on Starter, Professional, and Enterprise."
         />
-        <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">
                 <Bot className="h-4 w-4 shrink-0 text-violet-600" aria-hidden />
-                <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-slate-700 cursor-pointer">
+                <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-foreground cursor-pointer">
                     Auto commenter
                 </Label>
                 <TooltipProvider delayDuration={200}>
@@ -138,7 +138,7 @@ export function AutoReplyToolbar({
                         <TooltipTrigger asChild>
                             <button
                                 type="button"
-                                className="inline-flex shrink-0 rounded-full text-slate-400 transition-colors hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-1"
+                                className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-1"
                                 aria-label="How auto commenter works"
                             >
                                 <CircleHelp className="h-3.5 w-3.5" aria-hidden />
@@ -159,13 +159,13 @@ export function AutoReplyToolbar({
                     onCheckedChange={(v) => void onToggle(!!v)}
                     disabled={saving}
                 />
-                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" aria-hidden />}
+                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" aria-hidden />}
             </div>
 
             {enabled && (
                 <>
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400 whitespace-nowrap">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground whitespace-nowrap">
                             Min stars
                         </span>
                         <Select
@@ -173,7 +173,7 @@ export function AutoReplyToolbar({
                             onValueChange={(v) => void onMinRatingChange(v)}
                             disabled={saving}
                         >
-                            <SelectTrigger className="h-8 w-[130px] text-xs bg-white">
+                            <SelectTrigger className="h-8 w-[130px] text-xs bg-background">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -185,7 +185,7 @@ export function AutoReplyToolbar({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mr-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mr-1">
                             Tone
                         </span>
                         {TONES.map((t) => (
@@ -198,7 +198,7 @@ export function AutoReplyToolbar({
                                     "px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-colors",
                                     tone === t.id
                                         ? "bg-violet-600 text-white border-violet-600"
-                                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                                        : "bg-background text-muted-foreground border-border hover:border-foreground/30"
                                 )}
                             >
                                 {t.label}

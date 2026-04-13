@@ -264,7 +264,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     };
 
     return (
-        <div className="rounded-xl border bg-card p-6 shadow-sm space-y-8">
+        <div className="rounded-xl border border-border bg-card p-6 space-y-8">
             <Form {...form}>
                 <div className="space-y-1">
                     <h3 className="text-xl font-semibold text-foreground">Brand Identity</h3>
@@ -278,7 +278,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                     <div className="space-y-4">
                         <FormLabel className="text-base font-medium text-foreground">Business Logo</FormLabel>
                         <div className="flex flex-col sm:flex-row gap-6 items-start">
-                            <div className="relative h-28 w-28 rounded-2xl border-2 border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                            <div className="relative h-28 w-28 rounded-2xl border-2 border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0">
                                 {uploadingLogo ? (
                                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                                 ) : logoUrl ? (
@@ -295,7 +295,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                             <div className="flex-1 space-y-3 pt-1">
                                 <div className="flex flex-wrap gap-3">
                                     <div className="relative">
-                                        <Button variant="outline" size="sm" type="button" className="relative h-9 px-4 border-border hover:bg-muted font-medium bg-card shadow-sm" disabled={uploadingLogo}>
+                                        <Button variant="outline" size="sm" type="button" className="relative h-9 px-4 border-border hover:bg-muted font-medium bg-card" disabled={uploadingLogo}>
                                             <Upload className="mr-2 h-3.5 w-3.5" />
                                             Upload Logo
                                             <input
@@ -340,7 +340,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                         <FormLabel className="text-base font-medium text-foreground">Brand Color</FormLabel>
                                         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                             <div className="flex gap-3 items-center w-full sm:w-auto">
-                                                <div className="relative h-11 w-11 rounded-xl border border-border shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-orange-500">
+                                                <div className="relative h-11 w-11 rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary">
                                                     <div
                                                         className="absolute inset-0"
                                                         style={{ backgroundColor: field.value }}
@@ -378,7 +378,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                         </FormLabel>
                                         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                             <div className="flex gap-3 items-center w-full sm:w-auto">
-                                                <div className="relative h-11 w-11 rounded-xl border border-border shadow-sm overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-orange-500">
+                                                <div className="relative h-11 w-11 rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary">
                                                     <div
                                                         className="absolute inset-0"
                                                         style={{ backgroundColor: field.value }}
@@ -415,7 +415,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                 <Button
                                     type="submit"
                                     disabled={isLoading || !form.formState.isDirty}
-                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 h-10 w-full sm:w-auto transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 h-10 w-full sm:w-auto transition-all active:scale-95 disabled:opacity-50"
                                 >
                                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Save Brand Settings
@@ -486,7 +486,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                         <Button 
                             onClick={handleSaveCrop}
                             disabled={uploadingLogo || !completedCrop?.width || !completedCrop?.height}
-                            className="bg-orange-500 hover:bg-orange-600 text-white"
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
                         >
                             {uploadingLogo && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {uploadingLogo ? "Saving..." : "Save Crop"}

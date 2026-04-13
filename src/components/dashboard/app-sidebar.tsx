@@ -55,7 +55,7 @@ function navButtonClass(isActive: boolean) {
     return `
         transition-all duration-150
         ${isActive
-            ? "bg-sidebar-accent text-orange-500 border-l-2 border-l-orange-500"
+            ? "bg-sidebar-accent text-primary border-l-2 border-l-primary"
             : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         }
     `
@@ -74,7 +74,7 @@ function MainNavItems({ items, pathname }: { items: NavItem[]; pathname: string 
                             className={navButtonClass(isActive)}
                         >
                             <Link href={item.url}>
-                                <item.icon className={isActive ? "text-orange-600" : ""} />
+                                <item.icon className={isActive ? "text-primary" : ""} />
                                 <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
                             </Link>
                         </SidebarMenuButton>
@@ -105,7 +105,7 @@ function SettingsNavItems({
                             className={navButtonClass(isSettingsActive)}
                             tooltip={settingsLabel}
                         >
-                            <Settings className={isSettingsActive ? "text-orange-600" : ""} />
+                            <Settings className={isSettingsActive ? "text-primary" : ""} />
                             <span className={isSettingsActive ? "font-semibold" : ""}>{settingsLabel}</span>
                             <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                         </SidebarMenuButton>
@@ -121,7 +121,7 @@ function SettingsNavItems({
                                             className={navButtonClass(isActive)}
                                         >
                                             <Link href={item.url}>
-                                                <item.icon className={`h-4 w-4 ${isActive ? "text-orange-600" : ""}`} />
+                                                <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : ""}`} />
                                                 <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
                                             </Link>
                                         </SidebarMenuSubButton>

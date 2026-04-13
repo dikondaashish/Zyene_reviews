@@ -98,7 +98,7 @@ export function Step2Business({
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Add Your Business</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Tell us about your business location
         </p>
       </div>
@@ -252,8 +252,8 @@ export function Step2Business({
       <div className="mt-8 flex justify-center gap-2">
         <div className="h-2 w-8 bg-blue-600 rounded-full" />
         <div className="h-2 w-8 bg-blue-600 rounded-full" />
-        <div className="h-2 w-8 bg-gray-300 rounded-full" />
-        <div className="h-2 w-8 bg-gray-300 rounded-full" />
+        <div className="h-2 w-8 bg-muted rounded-full" />
+        <div className="h-2 w-8 bg-muted rounded-full" />
       </div>
     </div>
   );

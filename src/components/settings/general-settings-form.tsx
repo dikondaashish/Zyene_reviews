@@ -73,7 +73,7 @@ export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormP
     };
 
     return (
-        <form onSubmit={handleSave} className="rounded-lg border bg-white shadow-sm flex flex-col">
+        <form onSubmit={handleSave} className="rounded-lg border border-border bg-card flex flex-col">
             {/* Profile Header */}
             <div className="border-b px-6 py-4">
                 <h4 className="text-sm font-semibold">Your Profile</h4>

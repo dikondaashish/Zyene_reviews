@@ -57,7 +57,7 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 
 const channelConfig: Record<string, { label: string; icon: any; color: string }> = {
     sms: { label: "SMS", icon: MessageSquare, color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" },
-    email: { label: "Email", icon: Mail, color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
+    email: { label: "Email", icon: Mail, color: "bg-primary/10 text-primary" },
     both: { label: "SMS + Email", icon: MessageSquare, color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" },
 };
 
@@ -179,13 +179,13 @@ export default function CampaignsPage() {
 
             {/* Empty State */}
             {!loading && campaigns.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-orange-50/30 dark:to-orange-950/10 rounded-3xl border border-orange-100 dark:border-orange-900/30 shadow-sm relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-100/10 dark:bg-teal-900/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
-                        <div className="w-24 h-24 bg-gradient-to-tr from-orange-500 to-orange-400 rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-orange-200 rotate-3 transform transition-transform hover:rotate-0 duration-500">
+                        <div className="w-24 h-24 bg-gradient-to-tr from-primary to-primary/80 rounded-3xl flex items-center justify-center mb-8 rotate-3 transform transition-transform hover:rotate-0 duration-500">
                             <Megaphone className="h-12 w-12 text-white" />
                         </div>
                         
@@ -198,7 +198,7 @@ export default function CampaignsPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2">
-                             <Button size="lg" className="h-14 px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl shadow-lg shadow-orange-200 transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
+                             <Button size="lg" className="h-14 px-8 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98]" asChild>
                                 <Link href="/campaigns/new">
                                     <Plus className="mr-2 h-5 w-5" />
                                     Launch New Campaign
@@ -209,9 +209,9 @@ export default function CampaignsPage() {
                         {/* Quick Start Templates */}
                         <div className="mt-16 w-full max-w-4xl">
                             <div className="flex items-center justify-center gap-2 mb-8">
-                                <div className="h-px w-8 bg-orange-200"></div>
-                                <span className="text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider text-xs">Or Quick Start with a Template</span>
-                                <div className="h-px w-8 bg-orange-200"></div>
+                                <div className="h-px w-8 bg-primary/30"></div>
+                                <span className="text-primary font-semibold uppercase tracking-wider text-xs">Or Quick Start with a Template</span>
+                                <div className="h-px w-8 bg-primary/30"></div>
                             </div>
                             
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
@@ -231,7 +231,7 @@ export default function CampaignsPage() {
                                 Smart Triggers
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
                                 Real-time Tracking
                             </div>
                         </div>
@@ -248,7 +248,7 @@ export default function CampaignsPage() {
                                 const ChannelIcon = channel.icon;
 
                                 return (
-                                    <Card key={campaign.id} className="hover:shadow-md transition-shadow">
+                                    <Card key={campaign.id} className="hover:border-primary/30 transition-colors">
                                         <CardContent className="p-5">
                                             <div className="flex items-start justify-between gap-4">
                                                 {/* Left: Name + badges */}

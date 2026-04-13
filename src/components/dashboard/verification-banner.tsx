@@ -39,14 +39,14 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
     };
 
     return (
-        <div className="bg-orange-600 text-white py-3 px-4 shadow-lg flex items-center justify-between gap-4 z-50">
+        <div className="bg-primary text-primary-foreground py-3 px-4 flex items-center justify-between gap-4 z-50">
             <div className="flex items-center gap-3">
-                <div className="bg-orange-500 rounded-full p-1.5 hidden md:block">
+                <div className="bg-primary/80 rounded-full p-1.5 hidden md:block">
                     <Mail className="h-4 w-4" />
                 </div>
                 <div className="text-sm font-medium">
                     <span className="opacity-90">Please verify your email address (</span>
-                    <span className="font-bold underline decoration-orange-300">{user.email}</span>
+                    <span className="font-bold underline decoration-primary-foreground/40">{user.email}</span>
                     <span className="opacity-90">) to unlock all features, including campaign sending.</span>
                 </div>
             </div>
@@ -57,13 +57,13 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
                     size="sm" 
                     onClick={resendVerification}
                     disabled={isResending}
-                    className="h-8 text-xs bg-orange-700 hover:bg-orange-800 text-white border-none"
+                    className="h-8 text-xs bg-primary/80 hover:bg-primary/70 text-primary-foreground border-none"
                 >
                     {isResending ? "Sending..." : "Resend Link"}
                 </Button>
                 <button 
                     onClick={() => setIsVisible(false)}
-                    className="p-1 hover:bg-orange-700 rounded-lg transition-colors"
+                    className="p-1 hover:bg-primary/80 rounded-lg transition-colors"
                 >
                     <X className="h-4 w-4" />
                 </button>

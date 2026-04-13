@@ -10,6 +10,7 @@ import { Loader2, Eye, EyeOff } from "lucide-react"
 function LoginForm() {
     const searchParams = useSearchParams()
     const error = searchParams.get("error")
+    const inviteToken = searchParams.get("invite")
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const supabase = createClient()
@@ -24,10 +25,12 @@ function LoginForm() {
 
     async function handleGoogleLogin() {
         setIsLoading(true)
+        const callbackUrl = new URL("/api/auth/callback", window.location.origin)
+        if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken)
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: `${window.location.origin}/api/auth/callback`,
+                redirectTo: callbackUrl.toString(),
                 queryParams: {
                     access_type: "offline",
                     prompt: "consent",
@@ -65,6 +68,20 @@ function LoginForm() {
             return
         }
 
+        if (inviteToken) {
+            const acceptRes = await fetch("/api/team/accept-invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: inviteToken }),
+            })
+            if (!acceptRes.ok) {
+                const payload = await acceptRes.json().catch(() => ({}))
+                toast.error("Invite acceptance failed", {
+                    description: payload?.message || "Please ask for a new invite.",
+                })
+            }
+        }
+
         // Redirect to dashboard subdomain
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
         const protocol = rootDomain.includes("localhost") ? "http" : "https"
@@ -75,10 +92,10 @@ function LoginForm() {
         <div className="space-y-8">
             {/* Header */}
             <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">
                     Welcome back
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-muted-foreground">
                     Enter your credentials to access your dashboard
                 </p>
             </div>
@@ -89,7 +106,7 @@ function LoginForm() {
                     type="button"
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
-                    className="w-full h-12 flex items-center justify-center gap-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-[0.98] disabled:opacity-50"
+                    className="w-full h-12 flex items-center justify-center gap-3 bg-background border border-border rounded-md text-foreground font-medium hover:bg-accent transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -102,16 +119,16 @@ function LoginForm() {
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-100"></div>
+                        <div className="w-full border-t border-border"></div>
                     </div>
-                    <div className="relative flex justify-center text-xs text-gray-400 uppercase">
-                        <span className="bg-white px-3">Or continue with email</span>
+                    <div className="relative flex justify-center text-xs text-muted-foreground uppercase">
+                        <span className="bg-background px-3">Or continue with email</span>
                     </div>
                 </div>
 
                 <form onSubmit={onSubmit} className="space-y-4">
                     <div className="space-y-1.5">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-foreground">
                             Email
                         </label>
                         <input
@@ -123,18 +140,18 @@ function LoginForm() {
                             autoComplete="email"
                             autoCorrect="off"
                             required
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                            className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all"
                         />
                     </div>
 
                     <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="password" className="block text-sm font-medium text-foreground">
                                 Password
                             </label>
                             <Link
                                 href="/forgot-password"
-                                className="text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                                className="text-sm text-primary hover:brightness-90 font-medium transition-colors"
                             >
                                 Forgot password?
                             </Link>
@@ -146,12 +163,12 @@ function LoginForm() {
                                 type={showPassword ? "text" : "password"}
                                 required
                                 placeholder="Enter your password"
-                                className="w-full h-12 px-4 pr-12 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
+                                className="w-full h-12 px-4 pr-12 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                             </button>
@@ -161,7 +178,7 @@ function LoginForm() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full h-12 bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Sign In
@@ -170,9 +187,9 @@ function LoginForm() {
             </div>
 
             {/* Footer */}
-            <p className="text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-muted-foreground">
                 Don&apos;t have an account?{" "}
-                <Link href="/signup" className="font-semibold text-orange-600 hover:text-orange-700 transition-colors">
+                <Link href="/signup" className="font-semibold text-primary hover:brightness-90 transition-colors">
                     Sign up
                 </Link>
             </p>
@@ -182,7 +199,7 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-orange-500" /></div>}>
+        <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>}>
             <LoginForm />
         </Suspense>
     )

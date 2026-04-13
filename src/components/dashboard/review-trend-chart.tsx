@@ -40,7 +40,7 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
             height={250} 
             title="Review Trends" 
             description="Automatic review volume tracking"
-            className="border-none bg-transparent p-0 backdrop-blur-none shadow-none"
+            className="border-none bg-transparent p-0 backdrop-blur-none"
         >
             <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                 <CartesianGrid {...chartConfig.grid} />

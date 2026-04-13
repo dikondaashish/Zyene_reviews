@@ -429,7 +429,7 @@ export function PublicReviewFlow({
             </div>
 
             <div className={cn(
-                "relative w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-black/20 overflow-hidden",
+                "relative w-full max-w-md bg-card rounded-3xl border border-border overflow-hidden",
                 "transform transition-all duration-500",
                 mounted ? "translate-y-0 scale-100" : "translate-y-4 scale-95",
                 contentClassName
@@ -438,8 +438,8 @@ export function PublicReviewFlow({
 
                 {/* Powered by footer */}
                 {!hideBranding && (
-                    <div className="py-4 text-center border-t border-slate-100">
-                        <div className="text-xs text-slate-400 font-medium tracking-wide flex items-center justify-center gap-1.5">
+                    <div className="py-4 text-center border-t border-border">
+                        <div className="text-xs text-muted-foreground font-medium tracking-wide flex items-center justify-center gap-1.5">
                             <span>Powered by</span>
                             {footerLink ? (
                                 <a
@@ -456,7 +456,7 @@ export function PublicReviewFlow({
                                             className="h-4 w-4 object-contain"
                                         />
                                     )}
-                                    <span className="text-slate-700 font-bold tracking-tight hover:text-slate-900 transition-colors">
+                                    <span className="text-foreground font-bold tracking-tight hover:text-foreground/80 transition-colors">
                                         {footerCompanyName || "Zyene"}
                                     </span>
                                 </a>
@@ -470,7 +470,7 @@ export function PublicReviewFlow({
                                             className="h-4 w-4 object-contain"
                                         />
                                     )}
-                                    <span className="text-slate-700 font-bold tracking-tight">
+                                    <span className="text-foreground font-bold tracking-tight">
                                         {footerCompanyName || "Zyene"}
                                     </span>
                                 </span>
@@ -496,8 +496,8 @@ export function PublicReviewFlow({
                     </div>
                 </div>
                 <div>
-                    <h2 className="text-3xl font-bold text-slate-900 mb-2">{thankYouHeading || "Thank You!"}</h2>
-                    <p className="text-slate-500 text-lg leading-relaxed whitespace-pre-line">
+                    <h2 className="text-3xl font-bold text-foreground mb-2">{thankYouHeading || "Thank You!"}</h2>
+                    <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-line">
                         {thankYouMessage || "Your feedback means the world to us.\nWe appreciate you taking the time."}
                     </p>
                 </div>
@@ -524,14 +524,14 @@ export function PublicReviewFlow({
             >
                 {/* Header with emoji */}
                 <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 border border-slate-200">
+                    <div className="h-16 w-16 bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border">
                         <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
                     </div>
                     <div className="text-left">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold text-foreground">
                             {apologyMsg || "Sorry about that"}
                         </h2>
-                        <p className="text-slate-500 text-sm leading-snug">
+                        <p className="text-muted-foreground text-sm leading-snug">
                             {negativeSubheading || "Share your feedback directly with the owner."}
                         </p>
                     </div>
@@ -540,10 +540,9 @@ export function PublicReviewFlow({
                 {privateFeedbackOfferMode === "visible" && (
                     <div
                         className={cn(
-                            "relative overflow-hidden rounded-2xl border border-slate-200/90 p-5 pl-5",
+                            "relative overflow-hidden rounded-2xl border border-border p-5 pl-5",
                             "bg-gradient-to-br from-white via-slate-50/80 to-sky-50/50",
-                            "shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12),0_2px_8px_-4px_rgba(15,23,42,0.06)]",
-                            "ring-1 ring-slate-900/[0.04] animate-in fade-in zoom-in-95 duration-500"
+                            "ring-1 ring-border animate-in fade-in zoom-in-95 duration-500"
                         )}
                         role="status"
                         aria-live="polite"
@@ -562,7 +561,7 @@ export function PublicReviewFlow({
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute -bottom-6 right-10 h-24 w-24 rounded-full bg-slate-200/40"
+                            className="pointer-events-none absolute -bottom-6 right-10 h-24 w-24 rounded-full bg-muted/40"
                             aria-hidden
                         />
                         <div
@@ -583,14 +582,14 @@ export function PublicReviewFlow({
                             </div>
                             <div className="min-w-0 flex-1 space-y-2 pt-0.5">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-700">
+                                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground">
                                         Special offer
                                     </p>
                                     <span className="inline-flex items-center rounded-full bg-sky-100/90 px-2 py-0.5 text-[10px] font-semibold text-sky-900/85 ring-1 ring-sky-200/80">
                                         Exclusive
                                     </span>
                                 </div>
-                                <p className="text-[15px] leading-relaxed text-slate-600 whitespace-pre-line">
+                                <p className="text-[15px] leading-relaxed text-muted-foreground whitespace-pre-line">
                                     {offerBannerText}
                                 </p>
                             </div>
@@ -600,10 +599,10 @@ export function PublicReviewFlow({
 
                 {/* Feedback textarea */}
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-700">Your feedback</label>
+                    <label className="text-sm font-semibold text-foreground">Your feedback</label>
                     <textarea
                         placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
-                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-slate-50 placeholder:text-slate-400"
+                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground"
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
                         autoFocus
@@ -612,20 +611,20 @@ export function PublicReviewFlow({
 
                 {privateFeedbackEmailMode !== "hidden" && (
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">
+                        <label className="text-sm font-semibold text-foreground">
                             Your email{" "}
                             {privateFeedbackEmailMode === "required" ? (
                                 <span className="text-red-500">*</span>
                             ) : (
-                                <span className="text-slate-400 font-normal">(optional)</span>
+                                <span className="text-muted-foreground font-normal">(optional)</span>
                             )}
                         </label>
                         <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <input
                                 type="email"
                                 placeholder="you@example.com"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
                                 onKeyDown={(e) => {
@@ -640,22 +639,22 @@ export function PublicReviewFlow({
 
                 {privateFeedbackPhoneMode !== "hidden" && (
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700">
+                        <label className="text-sm font-semibold text-foreground">
                             Phone number{" "}
                             {privateFeedbackPhoneMode === "required" ? (
                                 <span className="text-red-500">*</span>
                             ) : (
-                                <span className="text-slate-400 font-normal">(optional)</span>
+                                <span className="text-muted-foreground font-normal">(optional)</span>
                             )}
                         </label>
                         <div className="relative">
-                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <input
                                 type="tel"
                                 inputMode="tel"
                                 autoComplete="tel"
                                 placeholder="+1 (555) 000-0000"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-slate-50 text-sm placeholder:text-slate-400"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
                                 value={customerPhone}
                                 onChange={(e) => setCustomerPhone(e.target.value)}
                                 onKeyDown={(e) => {
@@ -692,7 +691,7 @@ export function PublicReviewFlow({
                     <div className="flex items-center justify-between px-1">
                         <button
                             type="button"
-                            className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors"
+                            className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors"
                             onClick={() => {
                                 setRating(null);
                                 setCustomerPhone("");
@@ -726,7 +725,7 @@ export function PublicReviewFlow({
                     {/* Business avatar */}
                     <div className="flex flex-col items-center gap-4">
                         {logoUrl ? (
-                            <div className="h-24 w-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white">
+                            <div className="h-24 w-24 rounded-full border-4 border-background overflow-hidden bg-background">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={logoUrl} alt={businessName} className="h-full w-full object-cover" />
                             </div>
@@ -739,14 +738,14 @@ export function PublicReviewFlow({
                             </div>
                         )}
                         <div className="text-center">
-                            <h1 className="text-xl font-bold text-slate-900 mb-1">{businessName}</h1>
-                            <p className="text-slate-500 text-sm">{ratingSubtitle || "Your feedback means a lot to us!"}</p>
+                            <h1 className="text-xl font-bold text-foreground mb-1">{businessName}</h1>
+                            <p className="text-muted-foreground text-sm">{ratingSubtitle || "Your feedback means a lot to us!"}</p>
                         </div>
                     </div>
 
                     {/* Question */}
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-slate-900 leading-tight px-4 whitespace-pre-line">
+                        <h2 className="text-2xl font-bold text-foreground leading-tight px-4 whitespace-pre-line">
                             {welcomeMsg || "How was your experience?"}
                         </h2>
                     </div>
@@ -769,7 +768,7 @@ export function PublicReviewFlow({
                                             ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
                                             : rating === r.value
                                                 ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/20 shadow-md scale-105 z-10"
-                                                : "border-slate-200 bg-white"
+                                                : "border-border bg-background"
                                     )}
                                 >
                                     <span className={cn(
@@ -785,7 +784,7 @@ export function PublicReviewFlow({
                                         "text-[10px] sm:text-xs font-semibold tracking-tight transition-all duration-300",
                                         hoverRating === r.value || rating === r.value
                                             ? "text-blue-700"
-                                            : "text-slate-500",
+                                            : "text-muted-foreground",
                                         rating === r.value && "opacity-0"
                                     )}>
                                         {r.label}
@@ -813,7 +812,7 @@ export function PublicReviewFlow({
                                             "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
                                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
                                                 ? "fill-[#F59E0B] text-[#F59E0B]"
-                                                : "fill-slate-100 text-slate-200"
+                                                : "fill-muted text-muted-foreground/40"
                                         )}
                                     />
                                 </button>
@@ -836,7 +835,7 @@ export function PublicReviewFlow({
                                             ? "border-blue-600 bg-blue-600 text-white scale-110 shadow-md ring-4 ring-blue-500/20 z-10"
                                             : hoverRating === num
                                                 ? "border-blue-400 bg-blue-50 text-blue-700 scale-105"
-                                                : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                                                : "border-border bg-background text-muted-foreground hover:border-foreground/30"
                                     )}
                                 >
                                     {num}
@@ -864,10 +863,10 @@ export function PublicReviewFlow({
                                     setHoverRating(null);
                                     handleRate(val);
                                 }}
-                                className="w-full cursor-pointer h-3 bg-slate-200 rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all touch-none"
+                                className="w-full cursor-pointer h-3 bg-muted rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all touch-none"
                                 style={{ touchAction: "none" }}
                             />
-                            <div className="flex justify-between text-xs sm:text-sm font-semibold text-slate-500 px-1 uppercase tracking-wider">
+                            <div className="flex justify-between text-xs sm:text-sm font-semibold text-muted-foreground px-1 uppercase tracking-wider">
                                 <span>POOR</span>
                                 <span>EXCELLENT</span>
                             </div>
@@ -885,18 +884,18 @@ export function PublicReviewFlow({
                                         "focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98]",
                                         rating === r.value
                                             ? "border-blue-600 bg-blue-50/80 shadow-sm"
-                                            : "border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50"
+                                            : "border-border bg-background hover:border-blue-300 hover:bg-muted"
                                     )}
                                 >
                                     <div className={cn(
                                         "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-                                        rating === r.value ? "border-blue-600" : "border-slate-300"
+                                        rating === r.value ? "border-blue-600" : "border-border"
                                     )}>
                                         {rating === r.value && <div className="h-3 w-3 rounded-full bg-blue-600 animate-in zoom-in duration-200" />}
                                     </div>
                                     <span className={cn(
                                         "font-medium text-lg",
-                                        rating === r.value ? "text-blue-900" : "text-slate-700"
+                                        rating === r.value ? "text-blue-900" : "text-foreground"
                                     )}>
                                         {r.label}
                                     </span>
@@ -917,12 +916,12 @@ export function PublicReviewFlow({
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
-                        <div className="h-1.5 flex-1 bg-slate-200 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-muted rounded-full" />
                     </div>
 
                     <div className="text-center space-y-1">
-                        <h2 className="text-2xl font-bold text-slate-900">{tagsHeading || "What did you like most?"}</h2>
-                        <p className="text-slate-500 text-sm">{tagsSubheading || "Tap to select what stood out"}</p>
+                        <h2 className="text-2xl font-bold text-foreground">{tagsHeading || "What did you like most?"}</h2>
+                        <p className="text-muted-foreground text-sm">{tagsSubheading || "Tap to select what stood out"}</p>
                     </div>
 
                     {/* Tags */}
@@ -936,7 +935,7 @@ export function PublicReviewFlow({
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
                                         ? "text-white scale-105 shadow-md"
-                                        : "bg-white text-slate-600 border-slate-200 hover:bg-gray-50"
+                                        : "bg-background text-muted-foreground border-border hover:bg-muted"
                                 )}
                                 style={{
                                     backgroundColor: selectedTags.includes(tag) ? brandColor : undefined,
@@ -956,7 +955,7 @@ export function PublicReviewFlow({
                             "border-2 active:scale-[0.98]",
                             selectedTags.includes("👍 Everything")
                                 ? "text-white shadow-md"
-                                : "text-slate-700 border-slate-200 hover:bg-gray-50"
+                                : "text-foreground border-border hover:bg-muted"
                         )}
                         style={{
                             backgroundColor: selectedTags.includes("👍 Everything") ? brandColor : undefined,
@@ -970,11 +969,11 @@ export function PublicReviewFlow({
 
                     {/* Staff selection (same step as tags — avoids a duplicate full-screen staff step) */}
                     {enableStaffSelection && staffNames.length > 0 && (
-                        <div className="pt-4 border-t border-slate-100">
-                            <p className="text-center text-sm font-medium text-slate-600 mb-1">
+                        <div className="pt-4 border-t border-border">
+                            <p className="text-center text-sm font-medium text-foreground mb-1">
                                 Who served you?
                             </p>
-                            <p className="text-center text-xs text-slate-500 mb-3">
+                            <p className="text-center text-xs text-muted-foreground mb-3">
                                 Select who helped you today (optional)
                             </p>
                             <div className="flex flex-wrap justify-center gap-2.5">
@@ -987,7 +986,7 @@ export function PublicReviewFlow({
                                             "border-2 active:scale-95",
                                             selectedStaff.includes(name)
                                                 ? "text-white scale-105 shadow-md"
-                                                : "bg-white text-slate-600 border-slate-200 hover:bg-gray-50"
+                                                : "bg-background text-muted-foreground border-border hover:bg-muted"
                                         )}
                                         style={{
                                             backgroundColor: selectedStaff.includes(name) ? brandColor : undefined,
@@ -1024,7 +1023,7 @@ export function PublicReviewFlow({
                     </div>
 
                     <button
-                        className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
+                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
                         onClick={() => {
                             setRating(null);
                             setSelectedTags([]);
@@ -1059,8 +1058,8 @@ export function PublicReviewFlow({
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-slate-900">Crafting your review...</h2>
-                        <p className="text-sm text-slate-500 mt-1">Just a moment ✨</p>
+                        <h2 className="text-xl font-bold text-foreground">Crafting your review...</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Just a moment ✨</p>
                     </div>
                 </div>
         );
@@ -1078,15 +1077,15 @@ export function PublicReviewFlow({
                     </div>
 
                     <div className="text-center space-y-1">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold text-foreground">
                             {googleHeading || "Would you post this on Google?"}
                         </h2>
-                        <p className="text-slate-500 text-sm">{googleSubheading || "Tap to edit, or post as-is"}</p>
+                        <p className="text-muted-foreground text-sm">{googleSubheading || "Tap to edit, or post as-is"}</p>
                     </div>
 
                     {/* AI Generated Review */}
                     <div className="relative">
-                        <div className="absolute -top-3 left-4 bg-white px-2">
+                        <div className="absolute -top-3 left-4 bg-background px-2">
                             <div className="flex items-center gap-1 text-xs font-semibold text-blue-600">
                                 <Sparkles className="h-3.5 w-3.5" />
                                 AI Generated
@@ -1104,7 +1103,7 @@ export function PublicReviewFlow({
                         className={cn(
                             "w-full h-14 rounded-2xl text-base font-semibold transition-all duration-300 relative overflow-hidden",
                             isRedirecting
-                                ? "bg-slate-100 cursor-wait ring-0"
+                                ? "bg-muted cursor-wait ring-0"
                                 : "text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
                             !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                         )}
@@ -1123,7 +1122,7 @@ export function PublicReviewFlow({
                                     }}
                                 />
 
-                                <div className="relative z-10 flex items-center justify-center gap-2 text-slate-700 animate-in fade-in duration-300">
+                                <div className="relative z-10 flex items-center justify-center gap-2 text-foreground animate-in fade-in duration-300">
                                     <div className="bg-green-100 text-green-600 rounded-full p-0.5">
                                         <Check className="h-4 w-4" />
                                     </div>
@@ -1144,7 +1143,7 @@ export function PublicReviewFlow({
                     </button>
 
                     <button
-                        className="flex items-center gap-1 text-slate-400 text-sm hover:text-slate-600 transition-colors mx-auto"
+                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
                         onClick={() => setStep("tags")}
                     >
                         <ArrowLeft className="h-3.5 w-3.5" />

@@ -18,8 +18,8 @@ export function EngagementFunnelCard({
     directionRequests
 }: EngagementFunnelCardProps) {
     const funnelSteps = [
-        { label: "Profile views", value: profileViews, icon: Eye, color: "bg-orange-500" },
-        { label: "Website clicks", value: websiteClicks, icon: MousePointer2, color: "bg-orange-500" },
+        { label: "Profile views", value: profileViews, icon: Eye, color: "bg-primary" },
+        { label: "Website clicks", value: websiteClicks, icon: MousePointer2, color: "bg-primary" },
         { label: "Direction requests", value: directionRequests, icon: MapPin, color: "bg-amber-500" },
         { label: "Call clicks", value: callClicks, icon: Phone, color: "bg-emerald-500" },
     ];
@@ -36,7 +36,7 @@ export function EngagementFunnelCard({
                     transition={{ delay: idx * 0.1 }}
                     className="group"
                 >
-                    <div className="flex flex-col gap-3 p-4 rounded-xl border bg-card/50 backdrop-blur-sm transition-all hover:shadow-md hover:bg-card">
+                    <div className="flex flex-col gap-3 p-4 rounded-xl border bg-card/50 backdrop-blur-sm transition-all hover:bg-card">
                         <div className="flex items-center justify-between">
                             <div className={`p-2 rounded-lg ${step.color} bg-opacity-10`}>
                                 <step.icon className={`h-4 w-4 ${step.color.replace('bg-', 'text-')}`} />

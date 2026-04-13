@@ -36,7 +36,7 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className={cn("h-full", className)}
         >
-            <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 shadow-sm backdrop-blur-xl transition-all hover:border-orange-500/20 hover:shadow-md dark:bg-card/40">
+            <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 backdrop-blur-xl transition-all hover:border-primary/20 dark:bg-card/40">
                 {/* Subtle gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent pointer-events-none" />
                 
@@ -44,7 +44,7 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                     <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground flex items-center justify-between w-full">
                         <span className="truncate">{title}</span>
                         {isDemo && (
-                            <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-orange-100 text-orange-700 border-none ml-2 shrink-0 flex items-center gap-1 px-1.5 py-0 font-bold">
+                            <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-primary/10 text-primary border-none ml-2 shrink-0 flex items-center gap-1 px-1.5 py-0 font-bold">
                                 <Sparkles className="w-2.5 h-2.5" />
                                 Demo
                             </Badge>

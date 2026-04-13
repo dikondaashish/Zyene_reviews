@@ -26,7 +26,7 @@ export default async function BusinessInformationPage() {
 
     if (!business) {
         return (
-            <div className="rounded-lg border bg-card shadow-sm p-8 text-center">
+            <div className="rounded-lg border border-border bg-card p-8 text-center">
                 <h2 className="text-lg font-semibold">No business found</h2>
                 <p className="text-sm text-muted-foreground mt-1">Please create a business first.</p>
             </div>
@@ -68,7 +68,7 @@ export default async function BusinessInformationPage() {
             </div>
 
             {/* Business Details */}
-            <div className="rounded-lg border bg-card shadow-sm">
+            <div className="rounded-lg border border-border bg-card">
                 <div className="border-b px-6 py-4">
                     <h4 className="text-sm font-semibold">Business Details</h4>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -81,7 +81,7 @@ export default async function BusinessInformationPage() {
             </div>
 
             {isGoogleConnected && (
-                <div className="rounded-lg border bg-card shadow-sm">
+                <div className="rounded-lg border border-border bg-card">
                     <div className="border-b px-6 py-4">
                         <h4 className="text-sm font-semibold">Google Business Profile listing</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -96,7 +96,7 @@ export default async function BusinessInformationPage() {
             )}
 
             {isGoogleConnected && isLodgingBusiness && (
-                <div className="rounded-lg border bg-card shadow-sm">
+                <div className="rounded-lg border border-border bg-card">
                     <div className="border-b px-6 py-4">
                         <h4 className="text-sm font-semibold">Hotel & lodging (Google)</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -111,7 +111,7 @@ export default async function BusinessInformationPage() {
             )}
 
             {isGoogleConnected && (
-                <div className="rounded-lg border bg-card shadow-sm">
+                <div className="rounded-lg border border-border bg-card">
                     <div className="border-b px-6 py-4">
                         <h4 className="text-sm font-semibold">Google account access</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -126,7 +126,7 @@ export default async function BusinessInformationPage() {
             )}
 
             {/* Review Settings */}
-            <div className="rounded-lg border bg-card shadow-sm">
+            <div className="rounded-lg border border-border bg-card">
                 <div className="border-b px-6 py-4">
                     <h4 className="text-sm font-semibold">Review Request Settings</h4>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -139,7 +139,7 @@ export default async function BusinessInformationPage() {
             </div>
 
             {isGoogleConnected && (
-                <div className="rounded-lg border bg-card shadow-sm">
+                <div className="rounded-lg border border-border bg-card">
                     <div className="border-b px-6 py-4">
                         <h4 className="text-sm font-semibold">Google place action links</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">

@@ -77,7 +77,7 @@ function ChannelBadge({ channel }: { channel: string }) {
         email: {
             label: "Email",
             icon: Mail,
-            color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+            color: "bg-primary/10 text-primary",
         },
     };
     const config_item = config[channel] || config.email;
@@ -243,7 +243,7 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "all"
-                                            ? "bg-background text-foreground shadow-sm"
+                                            ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
@@ -254,7 +254,7 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "pending"
-                                            ? "bg-background text-foreground shadow-sm"
+                                            ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
@@ -265,7 +265,7 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "opened"
-                                            ? "bg-background text-foreground shadow-sm"
+                                            ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >
@@ -276,7 +276,7 @@ export default async function ReviewRequestsPage(props: {
                                 <div
                                     className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                                         filterStatus === "clicked"
-                                            ? "bg-background text-foreground shadow-sm"
+                                            ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
                                     }`}
                                 >

@@ -4,10 +4,11 @@ import { sendEmail } from "@/services/resend/send-email";
 import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 
 const inviteSchema = z.object({
     email: z.string().email().max(255),
-    role: z.enum(["admin", "manager", "member", "viewer", "ORG_ADMIN", "ORG_MANAGER"]),
+    role: z.enum(["admin", "manager", "member", "viewer"]),
 });
 
 export async function POST(request: Request) {
@@ -26,42 +27,48 @@ export async function POST(request: Request) {
     }
     const { email, role } = parsed.data;
 
-    // Verify admin/owner role
+    const { businessId, business, organization } = await getActiveBusinessId();
+    if (!businessId || !business) {
+        return apiError("No active business selected", { status: 400 });
+    }
+
+    // Verify admin/owner role for current business
     const { data: membership, error: membError } = await supabase
-        .from("organization_members")
-        .select("role, organization_id, organizations(name, max_team_members), users(full_name)")
+        .from("business_members")
+        .select("role, business_id, users(full_name)")
         .eq("user_id", user.id)
-        .in("role", ["owner", "admin", "ORG_OWNER", "ORG_ADMIN"])
+        .eq("business_id", businessId)
+        .in("role", ["owner", "admin"])
         .single();
 
     if (membError || !membership) {
         return apiError("Forbidden: Admins only", { status: 403 });
     }
 
-    const organizationId = membership.organization_id;
-
     interface MembershipWithOrg {
-        organizations: { name: string; max_team_members?: number } | null;
         users: { full_name: string | null } | null;
     }
     const membershipTyped = membership as unknown as MembershipWithOrg;
 
-    // FIX 4.2: Enforce team member limit
-    const org = membershipTyped.organizations;
-    const maxMembers = org?.max_team_members ?? 1;
+    const organizationId = organization?.id;
+    const resolvedOrganizationId = organizationId ?? (business.organization_id as string | undefined);
+    if (!resolvedOrganizationId) {
+        return apiError("Organization not found for active business", { status: 400 });
+    }
+    const maxMembers = Number(organization?.max_team_members ?? 1);
 
     const { count: currentMemberCount } = await supabase
-        .from("organization_members")
+        .from("business_members")
         .select("*", { count: "exact", head: true })
-        .eq("organization_id", organizationId);
+        .eq("business_id", businessId);
 
     const { count: pendingInviteCount } = await supabase
         .from("invitations")
         .select("*", { count: "exact", head: true })
-        .eq("organization_id", organizationId)
+        .eq("business_id", businessId)
         .is("accepted_at", null);
 
-    const totalSeats = (currentMemberCount || 0) + (pendingInviteCount || 0);
+    const totalSeats = Number(currentMemberCount || 0) + Number(pendingInviteCount || 0);
     if (totalSeats >= maxMembers) {
         return apiError("Team member limit reached. Please upgrade your plan.", { status: 403 });
     }
@@ -70,7 +77,8 @@ export async function POST(request: Request) {
     const { data: invite, error: inviteError } = await supabase
         .from("invitations")
         .insert({
-            organization_id: organizationId,
+            organization_id: resolvedOrganizationId,
+            business_id: businessId,
             email,
             role,
         })
@@ -90,7 +98,7 @@ export async function POST(request: Request) {
     const inviteLink = `${appUrl}/signup?invite=${invite.token}`;
 
     const inviterName = membershipTyped.users?.full_name || "A team member";
-    const orgName = membershipTyped.organizations?.name || "Zyene Reviews";
+    const orgName = business.name || organization?.name || "Zyene Reviews";
 
     try {
         await sendEmail({

@@ -107,19 +107,19 @@ export default function AddBusinessPage() {
                 </div>
 
                 <div className="max-w-lg mx-auto w-full">
-                    <Card className="border-orange-200 bg-orange-50/30 overflow-hidden">
-                        <div className="bg-orange-500 h-1.5 w-full" />
+                    <Card className="border-primary/30 bg-primary/10 overflow-hidden">
+                        <div className="bg-primary h-1.5 w-full" />
                         <CardHeader className="text-center pt-8">
-                            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 border-2 border-orange-200">
-                                <Lock className="h-7 w-7 text-orange-600" />
+                            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30">
+                                <Lock className="h-7 w-7 text-primary" />
                             </div>
-                            <CardTitle className="text-2xl font-bold text-orange-900">Plan Limit Reached</CardTitle>
-                            <CardDescription className="text-orange-800 font-medium">
+                            <CardTitle className="text-2xl font-bold text-foreground">Plan Limit Reached</CardTitle>
+                            <CardDescription className="text-muted-foreground font-medium">
                                 Maximum business locations reached for your current plan.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 text-center pb-8">
-                            <p className="text-sm text-orange-700 leading-relaxed">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                                 You&apos;ve reached the maximum number of business locations allowed on your current plan. 
                                 Upgrade to a higher plan to add more locations and unlock premium features for all your businesses.
                             </p>
@@ -127,7 +127,7 @@ export default function AddBusinessPage() {
                                 <Link href="/settings/billing?status=limit_reached">
                                     <Button
                                         size="lg"
-                                        className="w-full bg-orange-600 hover:bg-orange-700 shadow-md gap-2"
+                                        className="w-full gap-2"
                                     >
                                         Verify Plans & Upgrade
                                     </Button>
@@ -157,8 +157,8 @@ export default function AddBusinessPage() {
             <div className="max-w-lg mx-auto w-full">
                 <Card>
                     <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
-                            <Store className="h-6 w-6 text-[#f97316]" />
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
+                            <Store className="h-6 w-6 text-primary" />
                         </div>
                         <CardTitle className="text-2xl">Add a Business</CardTitle>
                         <CardDescription>
@@ -169,7 +169,7 @@ export default function AddBusinessPage() {
                     <CardContent className="flex flex-col gap-4">
                         <Button
                             size="lg"
-                            className="w-full bg-orange-600 hover:bg-orange-700"
+                            className="w-full"
                             onClick={handleConnectGoogle}
                         >
                             Connect Google Business Profile

@@ -49,14 +49,14 @@ const cardVariants = cva(
   {
     variants: {
       theme: {
-        default: "border border-border bg-background shadow-xs",
+        default: "border border-border bg-background",
         primary: "bg-primary/5 border border-primary/20",
         elegant:
           "border border-zinc-200 bg-zinc-50 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100",
         vibrant:
           "border border-fuchsia-400 bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white dark:border-fuchsia-700 dark:from-fuchsia-600 dark:to-pink-600",
         minimal:
-          "border border-gray-100 bg-gray-50 text-gray-900 dark:border-gray-900 dark:bg-gray-950 dark:text-gray-100",
+          "border border-border bg-muted text-foreground dark:border-border dark:bg-muted dark:text-foreground",
       },
       cursor: {
         drag: "cursor-grab active:cursor-grabbing",
@@ -74,7 +74,7 @@ const nameVariants = cva("text-lg font-semibold", {
       secondary: "text-secondary",
       elegant: "text-zinc-900 dark:text-zinc-100",
       vibrant: "text-white",
-      minimal: "text-gray-900 dark:text-gray-100",
+      minimal: "text-foreground dark:text-foreground",
     },
   },
 })
@@ -86,7 +86,7 @@ const textVariants = cva("select-none text-start text-sm", {
       primary: "text-primary/80",
       elegant: "text-zinc-600 dark:text-zinc-300",
       vibrant: "text-white/90",
-      minimal: "text-gray-600 dark:text-gray-400",
+      minimal: "text-muted-foreground dark:text-muted-foreground",
     },
   },
 })
@@ -109,8 +109,8 @@ const starColorVariants = {
     inactive: "text-white/40",
   },
   minimal: {
-    active: "text-gray-900 dark:text-gray-100 fill-current",
-    inactive: "text-gray-200 dark:text-gray-700",
+    active: "text-foreground dark:text-foreground fill-current",
+    inactive: "text-muted-foreground/40 dark:text-muted-foreground/60",
   },
 }
 

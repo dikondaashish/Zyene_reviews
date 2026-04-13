@@ -1,11 +1,11 @@
 export default function PrivacyPolicyPage() {
     return (
-        <div className="min-h-screen bg-slate-50 py-24">
-            <div className="container mx-auto px-4 sm:px-8 max-w-4xl bg-white p-8 md:p-16 rounded-2xl shadow-sm border border-slate-100">
-                <h1 className="text-4xl font-bold text-slate-900 mb-8">Privacy Policy</h1>
+        <div className="min-h-screen bg-background py-24 text-foreground">
+            <div className="container mx-auto px-4 sm:px-8 max-w-4xl bg-card p-8 md:p-16 rounded-lg border border-border">
+                <h1 className="text-4xl font-bold text-foreground mb-8">Privacy Policy</h1>
 
-                <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-a:text-orange-600 hover:prose-a:text-orange-700">
-                    <p className="text-sm text-slate-500 mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                <div className="prose max-w-none prose-headings:text-foreground prose-a:text-primary hover:prose-a:brightness-90 prose-p:text-muted-foreground prose-li:text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 
                     <p>
                         Zyene Reviews, a product of{" "}

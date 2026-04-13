@@ -32,7 +32,7 @@ const GoogleIcon = () => (
 
 export function PlatformTable({ data }: { data: PlatformData[] }) {
     return (
-        <div className="rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm overflow-hidden shadow-sm">
+        <div className="rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm overflow-hidden">
             <Table>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
@@ -58,7 +58,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                             <TableRow key={row.platform} className="transition-colors hover:bg-muted/20">
                                 <TableCell className="font-bold py-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex items-center justify-center h-8 w-8 rounded-lg border bg-background shadow-sm shrink-0">
+                                        <div className="flex items-center justify-center h-8 w-8 rounded-lg border bg-background shrink-0">
                                             {(row.platform.toLowerCase() === "google") ? (
                                                 <GoogleIcon />
                                             ) : (
@@ -70,7 +70,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                 </TableCell>
                                 <TableCell className="text-right font-medium tabular-nums">{row.reviews.toLocaleString()}</TableCell>
                                 <TableCell className="text-right font-bold tabular-nums">
-                                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-orange-500/5 text-orange-600 dark:text-orange-400 border border-orange-500/10">
+                                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary/5 text-primary border border-primary/10">
                                         {row.avgRating.toFixed(1)} 
                                         <span className="text-[10px]">★</span>
                                     </div>
@@ -83,7 +83,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                             row.responseRate >= 90 
                                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
                                                 : row.responseRate >= 50 
-                                                    ? "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/20 dark:text-orange-400 dark:border-orange-900/30" 
+                                                    ? "bg-primary/10 text-primary border-primary/20" 
                                                     : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30"
                                         )}
                                     >

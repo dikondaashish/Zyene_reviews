@@ -7,8 +7,11 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail, Phone } from "lucide-react";
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
+import { useSearchParams } from "next/navigation";
 
 export default function SignupPage() {
+    const searchParams = useSearchParams();
+    const inviteToken = searchParams.get("invite");
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -20,10 +23,12 @@ export default function SignupPage() {
     async function handleGoogleSignup() {
         setIsLoading(true);
         const supabase = createClient();
+        const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+        if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: `${window.location.origin}/api/auth/callback`,
+                redirectTo: callbackUrl.toString(),
                 queryParams: {
                     access_type: "offline",
                     prompt: "consent",
@@ -57,6 +62,8 @@ export default function SignupPage() {
         }
 
         const supabase = createClient();
+        const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+        if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken);
 
         const { error } = await supabase.auth.signUp({
             email,
@@ -66,7 +73,7 @@ export default function SignupPage() {
                     full_name: fullName,
                     phone: phoneTrimmed,
                 },
-                emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+                emailRedirectTo: callbackUrl.toString(),
             },
         });
 
@@ -82,20 +89,20 @@ export default function SignupPage() {
     if (isSuccess) {
         return (
             <div className="text-center space-y-6">
-                <div className="mx-auto w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center">
-                    <CheckCircle2 className="h-8 w-8 text-green-500" />
+                <div className="mx-auto w-16 h-16 bg-secondary rounded-lg flex items-center justify-center border border-border">
+                    <CheckCircle2 className="h-8 w-8 text-primary" />
                 </div>
                 <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gray-900">Check your email</h2>
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    <h2 className="text-2xl font-bold text-foreground">Check your email</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                         We&apos;ve sent a confirmation link to{" "}
-                        <span className="font-medium text-gray-900">{email}</span>.
+                        <span className="font-medium text-foreground">{email}</span>.
                         <br />
                         Click the link to activate your account.
                     </p>
                 </div>
                 <Link href="/login">
-                    <button className="mt-2 text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">
+                    <button className="mt-2 text-sm font-medium text-primary hover:brightness-90 transition-colors">
                         ← Back to Login
                     </button>
                 </Link>
@@ -107,10 +114,10 @@ export default function SignupPage() {
         <div className="space-y-8">
             {/* Header */}
             <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">
                     Create an account
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-muted-foreground">
                     Start managing your business reviews in minutes
                 </p>
             </div>
@@ -121,7 +128,7 @@ export default function SignupPage() {
                     type="button"
                     onClick={handleGoogleSignup}
                     disabled={isLoading}
-                    className="w-full h-12 flex items-center justify-center gap-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-[0.98] disabled:opacity-50"
+                    className="w-full h-12 flex items-center justify-center gap-3 bg-background border border-border rounded-md text-foreground font-medium hover:bg-accent transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -131,11 +138,11 @@ export default function SignupPage() {
                     </svg>
                     Sign up with Google
                 </button>
-                <p className="text-center text-[11px] text-gray-400 leading-relaxed px-1">
+                <p className="text-center text-[11px] text-muted-foreground leading-relaxed px-1">
                     Google sign-up doesn&apos;t ask for your phone. After you&apos;re in, add your mobile under{" "}
                     <Link
                         href="/settings/notifications"
-                        className="font-medium text-gray-600 underline underline-offset-2 hover:text-orange-600"
+                        className="font-medium text-foreground underline underline-offset-2 hover:text-primary"
                     >
                         Settings → Notifications
                     </Link>{" "}
@@ -144,16 +151,16 @@ export default function SignupPage() {
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-100"></div>
+                        <div className="w-full border-t border-border"></div>
                     </div>
-                    <div className="relative flex justify-center text-xs text-gray-400 uppercase">
-                        <span className="bg-white px-3">Or continue with email</span>
+                    <div className="relative flex justify-center text-xs text-muted-foreground uppercase">
+                        <span className="bg-background px-3">Or continue with email</span>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-1.5">
-                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="fullName" className="block text-sm font-medium text-foreground">
                             Full Name
                         </label>
                         <input
@@ -165,15 +172,15 @@ export default function SignupPage() {
                             required
                             disabled={isLoading}
                             autoComplete="name"
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
+                            className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                         />
-                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
                              Your name will be visible on your business profile.
                         </p>
                     </div>
 
                     <div className="space-y-1.5">
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="phone" className="block text-sm font-medium text-foreground">
                             Mobile number
                         </label>
                         <input
@@ -185,15 +192,15 @@ export default function SignupPage() {
                             required
                             disabled={isLoading}
                             autoComplete="tel"
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
+                            className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                         />
-                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
                             <Phone className="h-3 w-3" /> Used for SMS review alerts; include your country code.
                         </p>
                     </div>
 
                     <div className="space-y-1.5">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-foreground">
                             Email
                         </label>
                         <input
@@ -205,15 +212,15 @@ export default function SignupPage() {
                             required
                             disabled={isLoading}
                             autoComplete="email"
-                            className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
+                            className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                         />
-                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
                             <Mail className="h-3 w-3" /> We use this for critical dashboard alerts and secure access.
                         </p>
                     </div>
 
                     <div className="space-y-1.5">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="password" className="block text-sm font-medium text-foreground">
                             Password
                         </label>
                         <div className="relative">
@@ -227,17 +234,17 @@ export default function SignupPage() {
                                 minLength={6}
                                 disabled={isLoading}
                                 autoComplete="new-password"
-                                className="w-full h-12 px-4 pr-12 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all disabled:opacity-50"
+                                className="w-full h-12 px-4 pr-12 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                             </button>
                         </div>
-                        <p className="text-[10px] text-gray-400 flex items-center gap-1 px-1">
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
                             <ShieldCheck className="h-3 w-3" /> Help us protect your business with a strong, unique password.
                         </p>
                         <PasswordStrengthIndicator password={password} />
@@ -246,7 +253,7 @@ export default function SignupPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full h-12 bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create Account
@@ -255,22 +262,22 @@ export default function SignupPage() {
             </div>
 
             {/* Footer */}
-            <p className="text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                     href="/login"
-                    className="font-semibold text-orange-600 hover:text-orange-700 transition-colors"
+                    className="font-semibold text-primary hover:brightness-90 transition-colors"
                 >
                     Log in
                 </Link>
             </p>
 
             {/* Terms */}
-            <p className="text-center text-xs text-gray-400 leading-relaxed">
+            <p className="text-center text-xs text-muted-foreground leading-relaxed">
                 By creating an account, you agree to our{" "}
-                <Link href="/terms" className="underline hover:text-gray-600 transition-colors">Terms of Service</Link>
+                <Link href="/terms" className="underline hover:text-foreground transition-colors">Terms of Service</Link>
                 {" "}and{" "}
-                <Link href="/privacy" className="underline hover:text-gray-600 transition-colors">Privacy Policy</Link>
+                <Link href="/privacy" className="underline hover:text-foreground transition-colors">Privacy Policy</Link>
                 .
             </p>
         </div>

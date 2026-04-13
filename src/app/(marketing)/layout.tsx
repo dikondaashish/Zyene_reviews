@@ -14,29 +14,29 @@ export default function MarketingLayout({
 }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     return (
-        <div className="flex min-h-screen flex-col bg-white">
-            <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="flex min-h-screen flex-col bg-background text-foreground">
+            <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8 max-w-7xl">
                     <Link
                         href="/"
-                        className="flex items-center gap-2 font-bold text-xl text-slate-900"
+                        className="flex items-center gap-2 font-bold text-xl text-foreground"
                     >
-                        <span className="text-orange-600">Zyene</span> Reviews
+                        <span className="text-primary">Zyene</span> Reviews
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
-                        <Link href="#features" className="hover:text-orange-600 transition-colors">
+                    <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+                        <Link href="#features" className="hover:text-primary transition-colors">
                             Features
                         </Link>
-                        <Link href="#pricing" className="hover:text-orange-600 transition-colors">
+                        <Link href="#pricing" className="hover:text-primary transition-colors">
                             Pricing
                         </Link>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-orange-600 transition-colors">
+                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-primary transition-colors">
                             Log In
                         </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="bg-[#f97316] hover:bg-[#ea580c] text-white rounded-full px-6">
+                            <Button className="rounded-md px-6">
                                 Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
@@ -75,14 +75,14 @@ export default function MarketingLayout({
 
                 {/* Mobile Menu */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden border-t bg-white px-4 py-4 space-y-3">
-                        <Link href="#features" className="block text-sm font-medium text-slate-700 hover:text-orange-600 py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
-                        <Link href="#pricing" className="block text-sm font-medium text-slate-700 hover:text-orange-600 py-2" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="block text-sm font-medium text-slate-700 hover:text-orange-600 py-2">
+                    <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
+                        <Link href="#features" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
+                        <Link href="#pricing" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
+                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2">
                             Log In
                         </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white rounded-full">
+                            <Button className="w-full rounded-md">
                                 Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Link>
@@ -95,23 +95,23 @@ export default function MarketingLayout({
             </main>
             <CookieBanner />
 
-            <footer className="border-t bg-slate-50 py-12">
+            <footer className="border-t border-border bg-muted py-12">
                 <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
                         <div className="col-span-2 md:col-span-2">
-                            <Link href="/" className="font-bold text-lg text-slate-900 mb-4 block">
-                                <span className="text-orange-600">Zyene</span> Reviews
+                            <Link href="/" className="font-bold text-lg text-foreground mb-4 block">
+                                <span className="text-primary">Zyene</span> Reviews
                             </Link>
-                            <p className="text-sm text-slate-500 mb-4 max-w-sm">
+                            <p className="text-sm text-muted-foreground mb-4 max-w-sm">
                                 Review management software for local businesses.
                             </p>
-                            <p className="text-sm text-slate-400 mb-4">
+                            <p className="text-sm text-muted-foreground mb-4">
                                 © {new Date().getFullYear()}{" "}
                                 <a
                                     href="https://zyene.com"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-slate-500 hover:text-orange-600 transition-colors underline-offset-2 hover:underline"
+                                    className="text-muted-foreground hover:text-primary transition-colors underline-offset-2 hover:underline"
                                 >
                                     Zyene, Inc.
                                 </a>{" "}
@@ -120,33 +120,33 @@ export default function MarketingLayout({
                             <iframe src="https://status.zyenereviews.com/badge?theme=light" width="250" height="30" frameBorder="0" scrolling="no" style={{ colorScheme: "normal" }}></iframe>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 mb-3">Product</h3>
-                            <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/#features" className="hover:text-orange-600">Features</Link></li>
-                                <li><Link href="/#pricing" className="hover:text-orange-600">Pricing</Link></li>
-                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-orange-600">Log In</Link></li>
+                            <h3 className="font-semibold text-foreground mb-3">Product</h3>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><Link href="/#features" className="hover:text-primary">Features</Link></li>
+                                <li><Link href="/#pricing" className="hover:text-primary">Pricing</Link></li>
+                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-primary">Log In</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 mb-3">Resources</h3>
-                            <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/about" className="hover:text-orange-600">About Us</Link></li>
-                                <li><Link href="/contact" className="hover:text-orange-600">Contact</Link></li>
-                                <li><Link href="/help" className="hover:text-orange-600">Help Center</Link></li>
-                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-600">System Status</a></li>
+                            <h3 className="font-semibold text-foreground mb-3">Resources</h3>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
+                                <li><Link href="/contact" className="hover:text-primary">Contact</Link></li>
+                                <li><Link href="/help" className="hover:text-primary">Help Center</Link></li>
+                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">System Status</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 mb-3">Legal</h3>
-                            <ul className="space-y-2 text-sm text-slate-600">
-                                <li><Link href="/privacy" className="hover:text-orange-600">Privacy Policy</Link></li>
-                                <li><Link href="/terms" className="hover:text-orange-600">Terms of Service</Link></li>
-                                <li><Link href="/data-retention" className="hover:text-orange-600">Data Retention</Link></li>
+                            <h3 className="font-semibold text-foreground mb-3">Legal</h3>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
+                                <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
+                                <li><Link href="/data-retention" className="hover:text-primary">Data Retention</Link></li>
                             </ul>
                         </div>
                     </div>
-                    <div className="border-t border-slate-200 pt-6">
-                        <p className="text-xs text-slate-400 text-center">
+                    <div className="border-t border-border pt-6">
+                        <p className="text-xs text-muted-foreground text-center">
                             Zyene Reviews is an independent platform and is not affiliated with, endorsed by, or sponsored by Google LLC.
                         </p>
                     </div>

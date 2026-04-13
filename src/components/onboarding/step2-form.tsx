@@ -278,17 +278,17 @@ export function Step2Form({
       <div className="relative rounded-2xl overflow-hidden">
         {/* Subtle gradient border */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-green-500/10 rounded-2xl" />
-        <div className="relative bg-white/60 backdrop-blur-sm border border-blue-100/50 rounded-2xl p-6 sm:p-8 space-y-5">
+        <div className="relative bg-background/60 backdrop-blur-sm border border-primary/20 rounded-2xl p-6 sm:p-8 space-y-5">
 
           {googleState.status === "idle" && (
             <div className="space-y-4 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-white shadow-md border border-gray-100 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center mx-auto">
                 <GoogleIcon />
               </div>
               <Button
                 type="button"
                 onClick={handleConnectClick}
-                className="w-full h-14 text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-200/40 rounded-2xl transition-all font-semibold cursor-pointer group"
+                className="w-full h-14 text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-2xl transition-all font-semibold cursor-pointer group"
               >
                 <GoogleIcon />
                 <span className="ml-2.5">Connect Google Business</span>
@@ -332,7 +332,7 @@ export function Step2Form({
               <Button
                 type="button"
                 onClick={onSaveAndNext}
-                className="w-full h-13 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold shadow-lg shadow-emerald-200/40 text-base cursor-pointer group"
+                className="w-full h-13 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-base cursor-pointer group"
                 disabled={advancing}
               >
                 {advancing ? (
@@ -370,7 +370,7 @@ export function Step2Form({
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-border/60" />
         </div>
-        <div className="relative bg-white/70 backdrop-blur-sm px-4">
+        <div className="relative bg-background/70 backdrop-blur-sm px-4">
           <span className="text-xs uppercase tracking-[0.15em] font-bold text-muted-foreground/60">
             or enter manually
           </span>
@@ -386,7 +386,7 @@ export function Step2Form({
               {...form.register("businessName")}
               placeholder="e.g. Acme Restaurant"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
             />
           </div>
           <div className="space-y-1.5">
@@ -395,7 +395,7 @@ export function Step2Form({
               {...form.register("address")}
               placeholder="123 Main St"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
             />
           </div>
         </div>
@@ -407,7 +407,7 @@ export function Step2Form({
               {...form.register("city")}
               placeholder="San Francisco"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
             />
           </div>
           <div className="space-y-1.5">
@@ -417,7 +417,7 @@ export function Step2Form({
               onValueChange={(v) => form.setValue("state", v)}
               disabled={isLoading || googleState.status === "success"}
             >
-              <SelectTrigger className="h-12 bg-white/60 border-violet-200/50 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all">
+              <SelectTrigger className="h-12 bg-background/60 border-primary/20 focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all">
                 <SelectValue placeholder="State" />
               </SelectTrigger>
               <SelectContent>
@@ -433,7 +433,7 @@ export function Step2Form({
               {...form.register("phone")}
               placeholder="(555) 555-5555"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-xl text-sm transition-all"
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-xl text-sm transition-all"
             />
           </div>
         </div>
@@ -443,7 +443,7 @@ export function Step2Form({
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full h-14 mt-2 font-semibold cta-button shadow-none"
+            className="w-full h-14 mt-2 font-semibold cta-button"
           >
             {advancing || isLoading ? (
               <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
@@ -461,7 +461,7 @@ export function Step2Form({
             type="button"
             onClick={handleSkip}
             disabled={advancing}
-            className="text-xs font-semibold text-muted-foreground/60 hover:text-orange-500 transition-colors tracking-wide cursor-pointer hover:underline underline-offset-4"
+            className="text-xs font-semibold text-muted-foreground/60 hover:text-primary transition-colors tracking-wide cursor-pointer hover:underline underline-offset-4"
           >
             I&apos;ll connect later
           </button>

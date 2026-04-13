@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
 import type {
     BusinessContextBusiness,
-    OrganizationMemberWithBusinesses,
+    BusinessContextOrganization,
 } from "@/types/business-context";
 
 const COOKIE_NAME = "active_business_id";
@@ -17,7 +17,7 @@ const COOKIE_NAME = "active_business_id";
 export async function getActiveBusinessId(): Promise<{
     businessId: string | null;
     business: BusinessContextBusiness | null;
-    organization: OrganizationMemberWithBusinesses["organizations"];
+    organization: BusinessContextOrganization | null;
     businesses: BusinessContextBusiness[];
 }> {
     const supabase = await createClient();
@@ -32,50 +32,68 @@ export async function getActiveBusinessId(): Promise<{
 
     // ── Redis Caching for Business Context ──
     const cacheKey = `user_businesses:${user.id}`;
-    let memberData: OrganizationMemberWithBusinesses | null = null;
+    let organization: BusinessContextOrganization | null = null;
+    let businesses: BusinessContextBusiness[] = [];
 
     try {
         const { redis } = await import("@/lib/db/redis");
         const cached = await redis.get(cacheKey);
         if (cached) {
             const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-            memberData = parsed as OrganizationMemberWithBusinesses;
+            organization = (parsed.organization as BusinessContextOrganization | null) ?? null;
+            businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
         }
     } catch (e) {
         console.error("Redis cache error:", e);
     }
 
-    if (!memberData) {
-        // Fetch user's org with all businesses
-        const { data } = await supabase
+    if (!organization || businesses.length === 0) {
+        // Organization metadata (single-org account model)
+        const { data: orgData } = await supabase
             .from("organization_members")
             .select(`
                 organizations (
-                    *,
-                    businesses (
-                        *,
-                        review_platforms (*)
-                    )
+                    *
                 )
             `)
             .eq("user_id", user.id)
             .single();
 
-        memberData = data as OrganizationMemberWithBusinesses | null;
+        organization = (orgData as { organizations?: BusinessContextOrganization | null } | null)
+            ?.organizations ?? null;
 
-        if (memberData) {
+        // Business-scoped memberships for this user
+        const { data: memberBusinesses } = await supabase
+            .from("business_members")
+            .select(`
+                business_id,
+                businesses (
+                    *,
+                    review_platforms (*)
+                )
+            `)
+            .eq("user_id", user.id);
+
+        businesses =
+            (memberBusinesses ?? [])
+                .map((entry: { businesses?: BusinessContextBusiness | null }) => entry.businesses)
+                .filter((b): b is BusinessContextBusiness => !!b)
+                .filter((business) => business.status !== "archived");
+
+        // Backward-compat fallback until all org users are migrated to business_members.
+        if (businesses.length === 0 && organization?.businesses?.length) {
+            businesses = organization.businesses.filter((business) => business.status !== "archived");
+        }
+
+        if (organization) {
             try {
                 const { redis } = await import("@/lib/db/redis");
-                await redis.set(cacheKey, JSON.stringify(memberData), { ex: 300 }); // 5 min TTL
+                await redis.set(cacheKey, JSON.stringify({ organization, businesses }), { ex: 300 }); // 5 min TTL
             } catch (e) {
                 console.error("Redis cache set error:", e);
             }
         }
     }
-
-    const organization = memberData?.organizations || null;
-    const allBusinesses = organization?.businesses || [];
-    const businesses = allBusinesses.filter((business) => business.status !== "archived");
 
     if (businesses.length === 0) {
         return { businessId: null, business: null, organization, businesses: [] };

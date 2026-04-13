@@ -103,7 +103,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                 const name = `${customer.first_name || ""} ${customer.last_name || ""}`.trim();
                 return (
                     <div className="flex flex-col">
-                        <span className="font-medium text-gray-900">{name || "Unnamed Customer"}</span>
+                        <span className="font-medium text-foreground">{name || "Unnamed Customer"}</span>
                         <div className="flex gap-2 mt-1">
                             {customer.email && (
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
@@ -134,7 +134,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                                 </Badge>
                             ))
                         ) : (
-                            <span className="text-xs text-gray-400 italic">No tags</span>
+                            <span className="text-xs text-muted-foreground italic">No tags</span>
                         )}
                     </div>
                 );
@@ -153,7 +153,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             ),
-            cell: ({ row }) => <div className="text-gray-600 font-medium">{row.getValue("visit_count") || 0}</div>,
+            cell: ({ row }) => <div className="text-muted-foreground font-medium">{row.getValue("visit_count") || 0}</div>,
         },
         {
             accessorKey: "total_spend_cents",
@@ -174,7 +174,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                     style: "currency",
                     currency: "USD",
                 }).format(amount);
-                return <div className="text-gray-900 font-medium">{formatted}</div>;
+                return <div className="text-foreground font-medium">{formatted}</div>;
             },
         },
         {
@@ -182,7 +182,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
             header: "Requests",
             cell: ({ row }) => (
                 <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs font-normal border-gray-200 text-gray-600">
+                    <Badge variant="outline" className="text-xs font-normal border-border text-muted-foreground">
                         {row.getValue("total_requests_sent") || 0} sent
                     </Badge>
                 </div>
@@ -268,14 +268,14 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
 
     return (
         <div className="w-full">
-            <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
+            <div className="rounded-2xl border border-border bg-card overflow-hidden">
                 <Table>
-                    <TableHeader className="bg-gray-50/50">
+                    <TableHeader className="bg-muted/50">
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id} className="hover:bg-transparent border-gray-100">
+                            <TableRow key={headerGroup.id} className="hover:bg-transparent border-border">
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="py-4 text-gray-500 font-semibold h-auto">
+                                        <TableHead key={header.id} className="py-4 text-muted-foreground font-semibold h-auto">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -294,7 +294,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className="border-gray-50 transition-colors hover:bg-gray-50/30 data-[state=selected]:bg-blue-50/30"
+                                    className="border-border transition-colors hover:bg-muted/30 data-[state=selected]:bg-blue-50/30"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className="py-4 align-middle h-auto">
@@ -310,7 +310,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-32 text-center text-gray-500"
+                                    className="h-32 text-center text-muted-foreground"
                                 >
                                     No customers found.
                                 </TableCell>
@@ -320,7 +320,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                 </Table>
             </div>
             <div className="flex items-center justify-between space-x-2 py-6">
-                <div className="text-sm text-gray-500 font-medium">
+                <div className="text-sm text-muted-foreground font-medium">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
@@ -330,7 +330,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                         size="sm"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
-                        className="rounded-xl border-gray-200 text-gray-600 font-medium h-9 px-4 transition-all hover:bg-gray-50"
+                        className="rounded-xl border-border text-muted-foreground font-medium h-9 px-4 transition-all hover:bg-muted"
                     >
                         Previous
                     </Button>
@@ -339,7 +339,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
-                        className="rounded-xl border-gray-200 text-gray-600 font-medium h-9 px-4 transition-all hover:bg-gray-50"
+                        className="rounded-xl border-border text-muted-foreground font-medium h-9 px-4 transition-all hover:bg-muted"
                     >
                         Next
                     </Button>

@@ -144,8 +144,8 @@ export function Step3Form({
                     className={`
                       relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
                       ${isSelected
-                        ? "border-orange-500 bg-orange-500/[0.06] ring-2 ring-orange-500/20 shadow-md shadow-orange-500/10"
-                        : "border-border/40 bg-white/40 hover:border-orange-500/30 hover:bg-orange-500/[0.02] hover:shadow-sm"
+                        ? "border-primary bg-primary/[0.06] ring-2 ring-primary/20"
+                        : "border-border/40 bg-background/40 hover:border-primary/30 hover:bg-primary/[0.02]"
                       }
                     `}
                   >
@@ -154,7 +154,7 @@ export function Step3Form({
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shadow-sm"
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary flex items-center justify-center"
                       >
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -164,12 +164,12 @@ export function Step3Form({
 
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center transition-colors
-                      ${isSelected ? "bg-orange-500/15 text-orange-500" : "bg-secondary/60 text-muted-foreground group-hover:text-orange-500/70"}
+                      ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"}
                     `}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <span className={`text-xs font-semibold text-center leading-tight ${
-                      isSelected ? "text-orange-600" : "text-muted-foreground group-hover:text-foreground"
+                      isSelected ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                     }`}>
                       {cat.label}
                     </span>
@@ -189,7 +189,7 @@ export function Step3Form({
         <Button
           type="submit"
           disabled={!selectedCategory || isLoading}
-          className="w-full h-14 font-semibold cta-button shadow-none"
+          className="w-full h-14 font-semibold cta-button"
         >
           {isLoading ? (
             <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>

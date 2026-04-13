@@ -45,7 +45,7 @@
 
 /* ── Tooltip Header ──────────────────────────── */
 .tour-tooltip-header {
-    background: linear-gradient(135deg, #f97316 0%, #c2410c 50%, #9a3412 100%);
+    background: linear-gradient(135deg, #ff4f00 0%, #c2410c 50%, #9a3412 100%);
     padding: 18px 20px 14px;
     position: relative;
     overflow: hidden;
@@ -169,7 +169,7 @@
 }
 
 .tour-tooltip-dot.active {
-    background: #f97316;
+    background: #ff4f00;
     width: 20px;
     border-radius: 4px;
 }
@@ -218,13 +218,13 @@
 }
 
 .tour-btn-next {
-    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    background: linear-gradient(135deg, #ff4f00 0%, #ff7a45 100%);
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
 .tour-btn-next:hover {
-    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    background: linear-gradient(135deg, #ff7a45 0%, #c2410c 100%);
     box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
     transform: translateY(-1px);
 }

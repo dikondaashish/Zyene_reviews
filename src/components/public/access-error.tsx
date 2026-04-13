@@ -13,7 +13,7 @@ export function AccessError({ type, businessName }: AccessErrorProps) {
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
-            <Card className="w-full max-w-md mx-auto shadow-lg border-muted">
+            <Card className="w-full max-w-md mx-auto border-muted">
                 <CardHeader className="text-center space-y-4 pb-2">
                     <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center">
                         {isSubscription ? (

@@ -134,7 +134,7 @@ export function Step1Form({
                     id="organizationName"
                     placeholder="e.g. Acme Inc."
                     disabled={submitting || isLoading}
-                    className="h-14 text-base bg-white/60 border-slate-200 focus:border-[oklch(0.7_0.22_60)] focus:ring-4 focus:ring-[oklch(0.7_0.22_60)]/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
+                    className="h-14 text-base bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
                     {...field}
                   />
                 </FormControl>
@@ -146,7 +146,7 @@ export function Step1Form({
           <Button
             type="submit"
             disabled={!form.formState.isValid || submitting || isLoading}
-            className="w-full h-14 text-base font-semibold cta-button shadow-none"
+            className="w-full h-14 text-base font-semibold cta-button"
           >
             {submitting || isLoading ? (
               <>
