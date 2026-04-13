@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Trash2, Loader2 } from "lucide-react";
+import { MoreHorizontal, Loader2 } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -25,11 +25,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { TeamRoleBadgeVariant } from "@/types/components";
+import { canManageBusinessTeam, isElevatedBusinessRole } from "@/lib/team/business-team";
 
 interface Member {
     id: string;
     role: string;
     type: "member" | "invite";
+    /** Present for rows backed by `business_members` (not pending invites). */
+    userId?: string;
     user?: {
         full_name: string;
         email: string;
@@ -49,7 +52,16 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
     const router = useRouter();
     const [isLoadingId, setIsLoadingId] = useState<string | null>(null);
 
-    const canManage = ["owner", "admin"].includes(currentUserRole);
+    const canManage = canManageBusinessTeam(currentUserRole);
+
+    const canOpenActionsMenu = (member: Member) => {
+        if (!canManage) return false;
+        if (member.type === "invite") return true;
+        if (member.userId === currentUserId) return false;
+        if (currentUserRole === "manager" && isElevatedBusinessRole(member.role)) return false;
+        if (currentUserRole === "admin" && member.role === "owner") return false;
+        return true;
+    };
 
     const handleRoleChange = async (memberId: string, newRole: string) => {
         setIsLoadingId(memberId);
@@ -107,7 +119,10 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
             case "admin":
             case "org_admin":
                 return "secondary"; // blue-ish
-            default: return "outline"; // gray
+            case "manager":
+                return "secondary";
+            default:
+                return "outline"; // gray
         }
     };
 
@@ -123,7 +138,13 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {members.map((member) => (
+                    {members.map((member) => {
+                        const showOwnerAdminRoleItems =
+                            member.type === "member" &&
+                            (currentUserRole === "owner" || currentUserRole === "admin");
+                        const showManagerRoleItems = member.type === "member" && currentUserRole === "manager";
+
+                        return (
                         <TableRow key={member.id}>
                             <TableCell className="flex items-center gap-3">
                                 <Avatar className="h-9 w-9">
@@ -154,7 +175,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                 </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                                {canManage ? (
+                                {canOpenActionsMenu(member) ? (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="h-8 w-8 p-0" disabled={isLoadingId === member.id}>
@@ -164,7 +185,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            {member.type === "member" && (
+                                            {showOwnerAdminRoleItems && (
                                                 <>
                                                     <DropdownMenuItem onClick={() => handleRoleChange(member.id, "admin")}>Make Admin</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>Make Manager</DropdownMenuItem>
@@ -172,18 +193,28 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                                     <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>Make Viewer</DropdownMenuItem>
                                                 </>
                                             )}
-                                            <DropdownMenuSeparator />
+                                            {showManagerRoleItems && (
+                                                <>
+                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>Make Manager</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>Make Member</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>Make Viewer</DropdownMenuItem>
+                                                </>
+                                            )}
+                                            {(showOwnerAdminRoleItems || showManagerRoleItems) && <DropdownMenuSeparator />}
                                             <DropdownMenuItem className="text-red-600" onClick={() => handleRemove(member.id, member.type)}>
                                                 Remove
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
+                                ) : canManage ? (
+                                    <span className="text-muted-foreground text-xs">—</span>
                                 ) : (
                                     <span className="text-muted-foreground text-xs">View only</span>
                                 )}
                             </TableCell>
                         </TableRow>
-                    ))}
+                    );
+                    })}
                 </TableBody>
             </Table>
         </div>

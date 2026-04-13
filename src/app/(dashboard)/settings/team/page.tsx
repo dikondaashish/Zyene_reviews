@@ -10,6 +10,7 @@ import {
     TeamMembershipEmptyState,
 } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
+import { canManageBusinessTeam } from "@/lib/team/business-team";
 import { Users } from "lucide-react";
 
 export default async function TeamSettingsPage() {
@@ -56,6 +57,8 @@ export default async function TeamSettingsPage() {
         return <TeamMembershipEmptyState businessName={business.name} />;
     }
 
+    const canInviteTeam = canManageBusinessTeam(currentUserMember.role);
+
     const { data: members, error: membersError } = await supabase
         .from("business_members")
         .select(`
@@ -93,6 +96,7 @@ export default async function TeamSettingsPage() {
             id: m.id,
             role: m.role,
             type: "member" as const,
+            userId: m.user_id as string,
             user: m.users,
             status: m.status || "active",
         })),
@@ -114,7 +118,7 @@ export default async function TeamSettingsPage() {
                         Manage team members for {business.name ?? "this business"}.
                     </p>
                 </div>
-                <InviteMemberDialog />
+                {canInviteTeam ? <InviteMemberDialog /> : null}
             </div>
             <Separator />
 

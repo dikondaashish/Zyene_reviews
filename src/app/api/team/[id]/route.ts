@@ -3,8 +3,13 @@ import { createClient } from "@/lib/db/supabase/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import {
+    BUSINESS_MEMBER_ROLES,
+    canManageBusinessTeam,
+    isElevatedBusinessRole,
+} from "@/lib/team/business-team";
 
-const roleSchema = z.enum(["owner", "admin", "manager", "member", "viewer"]);
+const roleSchema = z.enum(BUSINESS_MEMBER_ROLES as unknown as [string, ...string[]]);
 
 export async function PATCH(
     request: Request,
@@ -38,7 +43,7 @@ export async function PATCH(
         .eq("business_id", businessId)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
+    if (reqError || !canManageBusinessTeam(requester.role)) {
         return apiError("Forbidden", { status: 403 });
     }
 
@@ -51,11 +56,22 @@ export async function PATCH(
     if (!targetMember) {
         return apiError("Member not found", { status: 404 });
     }
+    if (targetMember.user_id === user.id) {
+        return apiError("You cannot change your own role here", { status: 400 });
+    }
     if (requester.role !== "owner" && role === "owner") {
         return apiError("Only owners can assign owner role", { status: 403 });
     }
     if (targetMember.role === "owner" && requester.role !== "owner") {
         return apiError("Only owners can modify owner role", { status: 403 });
+    }
+    if (requester.role === "manager") {
+        if (isElevatedBusinessRole(targetMember.role)) {
+            return apiError("Managers cannot modify owners or admins", { status: 403 });
+        }
+        if (isElevatedBusinessRole(role)) {
+            return apiError("Managers cannot assign admin or owner roles", { status: 403 });
+        }
     }
 
     const { error: updateError } = await supabase
@@ -99,7 +115,7 @@ export async function DELETE(
         .eq("business_id", businessId)
         .single();
 
-    if (reqError || !["owner", "admin"].includes(requester.role)) {
+    if (reqError || !canManageBusinessTeam(requester.role)) {
         return apiError("Forbidden", { status: 403 });
     }
 
@@ -127,6 +143,9 @@ export async function DELETE(
         }
         if (targetMember.role === "owner") {
             return apiError("Owner cannot be removed", { status: 403 });
+        }
+        if (requester.role === "manager" && isElevatedBusinessRole(targetMember.role)) {
+            return apiError("Managers cannot remove owners or admins", { status: 403 });
         }
         const { error } = await supabase
             .from("business_members")

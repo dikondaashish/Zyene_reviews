@@ -24,6 +24,11 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { INVITE_ROLE_VALUES } from "@/lib/team/business-team";
+
+function inviteRoleLabel(role: (typeof INVITE_ROLE_VALUES)[number]) {
+    return role.charAt(0).toUpperCase() + role.slice(1);
+}
 
 export function InviteMemberDialog() {
     const [open, setOpen] = useState(false);
@@ -33,20 +38,67 @@ export function InviteMemberDialog() {
     const router = useRouter();
 
     const handleInvite = async () => {
+        const trimmed = email.trim();
+        if (!trimmed) {
+            toast.error("Enter an email address");
+            return;
+        }
+
         setIsLoading(true);
         try {
             const response = await fetch("/api/team/invite", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, role }),
+                body: JSON.stringify({ email: trimmed, role }),
             });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to invite member");
+            let payload: unknown;
+            try {
+                payload = await response.json();
+            } catch {
+                throw new Error("Invalid response from server");
             }
 
-            toast.success("Invitation sent");
+            if (!response.ok) {
+                const err =
+                    typeof payload === "object" &&
+                    payload !== null &&
+                    "error" in payload &&
+                    typeof (payload as { error: unknown }).error === "string"
+                        ? (payload as { error: string }).error
+                        : "Failed to invite member";
+                throw new Error(err);
+            }
+
+            const data =
+                typeof payload === "object" &&
+                payload !== null &&
+                "data" in payload &&
+                typeof (payload as { data: unknown }).data === "object" &&
+                (payload as { data: unknown }).data !== null
+                    ? ((payload as { data: Record<string, unknown> }).data)
+                    : null;
+
+            if (data && data.email_delivered === false) {
+                const link = typeof data.invite_link === "string" ? data.invite_link : null;
+                toast.warning(
+                    link
+                        ? "Invite saved, but the email could not be sent. Copy the link and share it manually."
+                        : "Invite saved, but the email could not be sent. Check Resend configuration or try again.",
+                    { duration: 8000 }
+                );
+                if (link && typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(link);
+                        toast.message("Invite link copied to clipboard");
+                    } catch {
+                        /* clipboard optional */
+                    }
+                }
+            } else {
+                toast.success("Invitation sent");
+            }
+
             setOpen(false);
             setEmail("");
             setRole("member");
@@ -97,15 +149,17 @@ export function InviteMemberDialog() {
                                 <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                <SelectItem value="member">Member</SelectItem>
-                                <SelectItem value="viewer">Viewer</SelectItem>
+                                {INVITE_ROLE_VALUES.map((r) => (
+                                    <SelectItem key={r} value={r}>
+                                        {inviteRoleLabel(r)}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleInvite} disabled={isLoading || !email}>
+                    <Button type="button" onClick={handleInvite} disabled={isLoading || !email.trim()}>
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Send Invite
                     </Button>

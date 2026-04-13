@@ -25,14 +25,13 @@ export default async function NotificationSettingsPage() {
         );
     }
 
-    const [{ data: prefsRows, error: prefsError }, { data: profile, error: profileError }] = await Promise.all([
+    const [{ data: prefs, error: prefsError }, { data: profile, error: profileError }] = await Promise.all([
         supabase
             .from("notification_preferences")
             .select("*")
             .eq("user_id", user.id)
             .eq("business_id", businessId)
-            .order("updated_at", { ascending: false })
-            .limit(1),
+            .maybeSingle(),
         supabase.from("users").select("phone").eq("id", user.id).maybeSingle(),
     ]);
 
@@ -46,7 +45,6 @@ export default async function NotificationSettingsPage() {
         );
     }
 
-    const prefs = prefsRows?.[0] ?? null;
     const profilePhone = profile?.phone?.trim() || null;
     const mergedPrefs = prefs
         ? {
