@@ -11,6 +11,7 @@ import { GoogleLodgingPanel } from "@/components/settings/google-lodging-panel";
 
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { Building2 } from "lucide-react";
 
 export default async function BusinessInformationPage() {
@@ -52,11 +53,20 @@ export default async function BusinessInformationPage() {
     }[] = [];
 
     if (isGoogleConnected) {
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from("gbp_place_action_links")
             .select("id, place_action_type, uri, is_preferred, is_broken")
             .eq("business_id", business.id)
             .order("place_action_type", { ascending: true });
+        if (error) {
+            console.error("[Business information] Place links fetch failed:", error);
+            return (
+                <DashboardFetchError
+                    message="We could not load Google place action links. Check your connection and try again."
+                    retryHref="/settings/business-information"
+                />
+            );
+        }
         placeLinks = data ?? [];
     }
 

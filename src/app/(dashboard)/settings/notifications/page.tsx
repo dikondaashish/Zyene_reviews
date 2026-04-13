@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { NotificationForm } from "../../../../components/settings/notification-form";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { Bell } from "lucide-react";
 
 export default async function NotificationSettingsPage() {
@@ -24,7 +25,7 @@ export default async function NotificationSettingsPage() {
         );
     }
 
-    const [{ data: prefs }, { data: profile }] = await Promise.all([
+    const [{ data: prefs, error: prefsError }, { data: profile, error: profileError }] = await Promise.all([
         supabase
             .from("notification_preferences")
             .select("*")
@@ -33,6 +34,16 @@ export default async function NotificationSettingsPage() {
             .maybeSingle(),
         supabase.from("users").select("phone").eq("id", user.id).maybeSingle(),
     ]);
+
+    if (prefsError || profileError) {
+        console.error("[Notification settings] Fetch failed:", prefsError || profileError);
+        return (
+            <DashboardFetchError
+                message="We could not load notification settings. Check your connection and try again."
+                retryHref="/settings/notifications"
+            />
+        );
+    }
 
     const profilePhone = profile?.phone?.trim() || null;
     const mergedPrefs = prefs

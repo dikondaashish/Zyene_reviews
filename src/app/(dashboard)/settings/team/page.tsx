@@ -9,6 +9,7 @@ import {
     BusinessContextEmptyState,
     TeamMembershipEmptyState,
 } from "@/components/dashboard/business-context-empty-state";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { Users } from "lucide-react";
 
 export default async function TeamSettingsPage() {
@@ -35,18 +36,27 @@ export default async function TeamSettingsPage() {
     }
 
     // Fetch current user's membership for the active business
-    const { data: currentUserMember } = await supabase
+    const { data: currentUserMember, error: currentUserMemberError } = await supabase
         .from("business_members")
         .select("role, business_id")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
         .single();
+    if (currentUserMemberError) {
+        console.error("[Team settings] Current member fetch failed:", currentUserMemberError);
+        return (
+            <DashboardFetchError
+                message="We could not load team permissions. Check your connection and try again."
+                retryHref="/settings/team"
+            />
+        );
+    }
 
     if (!currentUserMember) {
         return <TeamMembershipEmptyState businessName={business.name} />;
     }
 
-    const { data: members } = await supabase
+    const { data: members, error: membersError } = await supabase
         .from("business_members")
         .select(`
             id,
@@ -63,11 +73,20 @@ export default async function TeamSettingsPage() {
         .eq("business_id", businessId);
 
     // Fetch pending invites
-    const { data: invites } = await supabase
+    const { data: invites, error: invitesError } = await supabase
         .from("invitations")
         .select("*")
         .eq("business_id", businessId)
         .is("accepted_at", null);
+    if (membersError || invitesError) {
+        console.error("[Team settings] Team data fetch failed:", membersError || invitesError);
+        return (
+            <DashboardFetchError
+                message="We could not load team members. Check your connection and try again."
+                retryHref="/settings/team"
+            />
+        );
+    }
 
     const combinedMembers = [
         ...(members || []).map((m: any) => ({

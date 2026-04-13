@@ -6,6 +6,7 @@ import { checkLimit } from "@/lib/stripe/check-limits";
 import { PLANS } from "@/services/stripe/plans";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 import { reconcileOrganizationBillingFromStripe } from "@/services/stripe/organization-billing-sync";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -19,7 +20,7 @@ export default async function BillingPage() {
     }
 
     // Fetch user's organization via membership
-    const { data: memberData } = await supabase
+    const { data: memberData, error: memberDataError } = await supabase
         .from("organization_members")
         .select(`
             role,
@@ -34,6 +35,15 @@ export default async function BillingPage() {
         `)
         .eq("user_id", user.id)
         .single();
+    if (memberDataError) {
+        console.error("[Billing settings] Member fetch failed:", memberDataError);
+        return (
+            <DashboardFetchError
+                message="We could not load billing membership details. Check your connection and try again."
+                retryHref="/settings/billing"
+            />
+        );
+    }
 
     const memberRole = (memberData as { role?: string } | null)?.role ?? "";
     const canManageBilling = [
@@ -62,11 +72,20 @@ export default async function BillingPage() {
         stripe_customer_id: org.stripe_customer_id,
     });
 
-    const { data: orgRefreshed } = await admin
+    const { data: orgRefreshed, error: orgRefreshError } = await admin
         .from("organizations")
         .select("id, name, plan, stripe_customer_id, stripe_subscription_id, plan_status")
         .eq("id", org.id)
         .single();
+    if (orgRefreshError) {
+        console.error("[Billing settings] Organization refresh failed:", orgRefreshError);
+        return (
+            <DashboardFetchError
+                message="We could not load current billing details. Check your connection and try again."
+                retryHref="/settings/billing"
+            />
+        );
+    }
 
     const orgLive = orgRefreshed ?? org;
 

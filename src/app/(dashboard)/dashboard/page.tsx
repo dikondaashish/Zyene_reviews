@@ -57,6 +57,7 @@ import {
 import { ProStatCard } from "@/components/dashboard/pro-stat-card";
 import { AnimatedReviewCards } from "@/components/ui/animated-review-card";
 import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
+import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -215,6 +216,15 @@ export default async function DashboardPage() {
                     .eq("user_id", user.id)
                     .limit(1),
             ]);
+            if (customerCountCached.error || notificationPrefsCached.error) {
+                console.error("[Dashboard page] Cached branch fetch failed:", customerCountCached.error || notificationPrefsCached.error);
+                return (
+                    <DashboardFetchError
+                        message="We could not load dashboard stats for this business. Check your connection and try again."
+                        retryHref="/dashboard"
+                    />
+                );
+            }
             customerCount = customerCountCached.count || 0;
             notificationsConfigured =
                 (notificationPrefsCached.data &&
@@ -351,6 +361,32 @@ export default async function DashboardPage() {
                     .eq("user_id", user.id)
                     .limit(1),
             ]);
+            const coreFetchError =
+                respondedResult.error ||
+                pendingResult.error ||
+                recentResult.error ||
+                attentionResult.error ||
+                monthResult.error ||
+                trendResult.error ||
+                ratingResult.error ||
+                positiveResult.error ||
+                negMixedResult.error ||
+                sentimentTotalResult.error ||
+                completedRequestsResult.error ||
+                sentRequestsResult.error ||
+                monthlyRequestsResult.error ||
+                newReview30dResult.error ||
+                customerCountResult.error ||
+                notificationPrefsResult.error;
+            if (coreFetchError) {
+                console.error("[Dashboard page] Core fetch failed:", coreFetchError);
+                return (
+                    <DashboardFetchError
+                        message="We could not load dashboard stats for this business. Check your connection and try again."
+                        retryHref="/dashboard"
+                    />
+                );
+            }
 
             // ── Process results ──
 
@@ -479,6 +515,15 @@ export default async function DashboardPage() {
                 .eq("business_id", business.id)
                 .eq("is_broken", true),
         ]);
+        if (qaRes.error || plRes.error) {
+            console.error("[Dashboard page] Google health fetch failed:", qaRes.error || plRes.error);
+            return (
+                <DashboardFetchError
+                    message="We could not load Google health metrics. Check your connection and try again."
+                    retryHref="/dashboard"
+                />
+            );
+        }
         unansweredQaCount = qaRes.count ?? 0;
         brokenPlaceLinksCount = plRes.count ?? 0;
     }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
+import { useReducedMotion } from "framer-motion";
 import { toast, type ToastT } from "sonner";
 import { Sparkles, Trophy } from "lucide-react";
 
@@ -21,6 +22,7 @@ const MILESTONES = {
 export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: MilestoneCelebrationProps) {
     const [lastMilestone, setLastMilestone] = useState<number | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
         if (isDemo) return;
@@ -54,24 +56,25 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
     }, [currentCount, type, lastMilestone, isInitialized]);
 
     const triggerCelebration = (milestone: number, milestoneType: string) => {
-        // Confetti!
-        const duration = 5 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+        if (!shouldReduceMotion) {
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
 
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+            const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-        const interval: ReturnType<typeof setInterval> = setInterval(() => {
-            const timeLeft = animationEnd - Date.now();
+            const interval: ReturnType<typeof setInterval> = setInterval(() => {
+                const timeLeft = animationEnd - Date.now();
 
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
 
-            const particleCount = 50 * (timeLeft / duration);
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-        }, 250);
+                const particleCount = 50 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+            }, 250);
+        }
 
         // Toast Notification
         const message = milestoneType === "reviews" 
@@ -103,7 +106,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
                     <button
                         type="button"
                         onClick={() => toast.dismiss(id)}
-                        className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus:outline-none cursor-pointer active:bg-primary/10 whitespace-nowrap"
+                        className="w-full min-h-11 border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer active:bg-primary/10 whitespace-nowrap"
                     >
                         Awesome!
                     </button>
