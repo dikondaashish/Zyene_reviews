@@ -41,8 +41,8 @@ export default async function TeamSettingsPage() {
         .select("role, business_id")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
-        .single();
-    if (currentUserMemberError) {
+        .maybeSingle();
+    if (currentUserMemberError && currentUserMemberError.code !== "PGRST116") {
         console.error("[Team settings] Current member fetch failed:", currentUserMemberError);
         return (
             <DashboardFetchError

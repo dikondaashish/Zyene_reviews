@@ -25,17 +25,18 @@ export default async function NotificationSettingsPage() {
         );
     }
 
-    const [{ data: prefs, error: prefsError }, { data: profile, error: profileError }] = await Promise.all([
+    const [{ data: prefsRows, error: prefsError }, { data: profile, error: profileError }] = await Promise.all([
         supabase
             .from("notification_preferences")
             .select("*")
             .eq("user_id", user.id)
             .eq("business_id", businessId)
-            .maybeSingle(),
+            .order("updated_at", { ascending: false })
+            .limit(1),
         supabase.from("users").select("phone").eq("id", user.id).maybeSingle(),
     ]);
 
-    if (prefsError || profileError) {
+    if (prefsError || (profileError && profileError.code !== "PGRST116")) {
         console.error("[Notification settings] Fetch failed:", prefsError || profileError);
         return (
             <DashboardFetchError
@@ -45,6 +46,7 @@ export default async function NotificationSettingsPage() {
         );
     }
 
+    const prefs = prefsRows?.[0] ?? null;
     const profilePhone = profile?.phone?.trim() || null;
     const mergedPrefs = prefs
         ? {
