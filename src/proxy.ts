@@ -210,6 +210,11 @@ export async function proxy(request: NextRequest) {
 
     // --- APP SUBDOMAIN (app.domain) ---
     if (hostname === `app.${rootDomain}`) {
+        // Public review carousel embed — no login; must not redirect to auth (iframes break).
+        if (pathname.startsWith("/w/")) {
+            return createResponse(supabaseResponse);
+        }
+
         if (!user) {
             // For RSC/fetch requests from auth subdomain, don't redirect (causes CORS error)
             const isRSC = request.headers.get("rsc") === "1"

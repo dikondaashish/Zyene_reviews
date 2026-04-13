@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check, Copy, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,15 +8,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 
 export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     const [copied, setCopied] = useState(false);
-    const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const embedUrl = mounted
-        ? `${window.location.protocol}//${window.location.host}/w/${businessSlug}`
-        : `https://zyenereviews.com/w/${businessSlug}`;
+    // Always use the public apex domain for iframes — app.* requires login and redirects to auth.* (breaks embeds).
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+    const protocol = rootDomain.includes("localhost") ? "http" : "https";
+    const embedBase = `${protocol}://${rootDomain}`;
+    const embedUrl = `${embedBase}/w/${businessSlug}`;
 
     const embedCode = `<iframe src="${embedUrl}" width="100%" height="400px" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>`;
 
@@ -50,14 +47,13 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                 <div className="space-y-2 mt-auto">
                     <div className="relative group/code">
                         <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono relative">
-                            {mounted ? embedCode : "Loading embed code..."}
+                            {embedCode}
                         </pre>
                         <Button
                             variant="secondary"
                             size="sm"
                             className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity"
                             onClick={handleCopy}
-                            disabled={!mounted}
                         >
                             {copied ? <Check className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />}
                             {copied ? "Copied" : "Copy"}

@@ -1,35 +1,33 @@
-import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Embeddable widget: loaded in third-party iframes without auth.
+ * Uses service role only to read public review data (RLS requires org membership for anon).
+ */
 export default async function WidgetPage({
     params,
 }: {
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
-    const supabase = await createClient();
+    const admin = createAdminClient();
 
-    // 1. Find business by slug
-    const { data: business } = await supabase
-        .from("businesses")
-        .select("id, name")
-        .eq("slug", slug)
-        .single();
+    const { data: business } = await admin.from("businesses").select("id, name").eq("slug", slug).maybeSingle();
 
     if (!business) {
         notFound();
     }
 
-    // 2. Fetch top reviews (4+ stars)
-    const { data: reviews } = await supabase
+    const { data: reviews } = await admin
         .from("reviews")
         .select(`
             id,
             rating,
-            content,
+            text,
             author_name,
             created_at,
             review_platforms (
@@ -41,19 +39,18 @@ export default async function WidgetPage({
         .order("created_at", { ascending: false })
         .limit(20);
 
-    // Format for component
-    const formattedReviews = (reviews || []).map((r: any) => ({
+    const formattedReviews = (reviews ?? []).map((r) => ({
         id: r.id,
         author_name: r.author_name || "Customer",
-        rating: r.rating || 5,
-        content: r.content || "Excellent service!",
+        rating: r.rating ?? 5,
+        content: (r.text || "").trim() || "Excellent service!",
         platform: r.review_platforms?.platform || "Direct",
-        created_at: r.created_at
+        created_at: r.created_at,
     }));
 
     return (
         <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0">
-            <ReviewCarousel reviews={formattedReviews} businessName={business.name} />
+            <ReviewCarousel reviews={formattedReviews} businessName={business.name ?? "Reviews"} />
         </div>
     );
 }
