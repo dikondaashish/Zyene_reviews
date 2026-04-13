@@ -26,8 +26,9 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
     <div className="border-b border-border last:border-0">
       <button
+        type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-5 text-left"
+        className="flex cursor-pointer items-center justify-between w-full py-5 text-left"
       >
         <span className="text-lg font-medium text-foreground">{question}</span>
         <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -73,7 +74,7 @@ export default function MarketingPage() {
             >
               <motion.h1
                 variants={fadeInUp}
-                className="text-5xl md:text-7xl lg:text-[5.5rem] font-medium tracking-tighter text-foreground mb-8 leading-[1.05]"
+                className="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-medium tracking-tight text-foreground mb-8 leading-[0.9]"
               >
                 Know about every review in 15 minutes
               </motion.h1>

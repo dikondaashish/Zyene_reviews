@@ -95,23 +95,24 @@ export default function MarketingLayout({
             </main>
             <CookieBanner />
 
-            <footer className="border-t border-border bg-muted py-12">
+            {/* Zapier Black footer band (DESIGN.md) — explicit hex so it stays correct in light + dark theme */}
+            <footer className="border-t border-[#36342e] bg-[#201515] py-12 text-[#fffefb]">
                 <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
                         <div className="col-span-2 md:col-span-2">
-                            <Link href="/" className="font-bold text-lg text-foreground mb-4 block">
+                            <Link href="/" className="font-bold text-lg text-[#fffefb] mb-4 block">
                                 <span className="text-primary">Zyene</span> Reviews
                             </Link>
-                            <p className="text-sm text-muted-foreground mb-4 max-w-sm">
+                            <p className="text-sm text-[#c5c0b1] mb-4 max-w-sm">
                                 Review management software for local businesses.
                             </p>
-                            <p className="text-sm text-muted-foreground mb-4">
+                            <p className="text-sm text-[#c5c0b1] mb-4">
                                 © {new Date().getFullYear()}{" "}
                                 <a
                                     href="https://zyene.com"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary transition-colors underline-offset-2 hover:underline"
+                                    className="text-[#c5c0b1] hover:text-[#fffefb] transition-colors underline-offset-2 hover:underline"
                                 >
                                     Zyene, Inc.
                                 </a>{" "}
@@ -120,33 +121,33 @@ export default function MarketingLayout({
                             <iframe src="https://status.zyenereviews.com/badge?theme=light" width="250" height="30" frameBorder="0" scrolling="no" style={{ colorScheme: "normal" }}></iframe>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-foreground mb-3">Product</h3>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><Link href="/#features" className="hover:text-primary">Features</Link></li>
-                                <li><Link href="/#pricing" className="hover:text-primary">Pricing</Link></li>
-                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-primary">Log In</Link></li>
+                            <h3 className="font-semibold text-[#fffefb] mb-3">Product</h3>
+                            <ul className="space-y-2 text-sm text-[#c5c0b1]">
+                                <li><Link href="/#features" className="hover:text-[#fffefb]">Features</Link></li>
+                                <li><Link href="/#pricing" className="hover:text-[#fffefb]">Pricing</Link></li>
+                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-[#fffefb]">Log In</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-foreground mb-3">Resources</h3>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
-                                <li><Link href="/contact" className="hover:text-primary">Contact</Link></li>
-                                <li><Link href="/help" className="hover:text-primary">Help Center</Link></li>
-                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">System Status</a></li>
+                            <h3 className="font-semibold text-[#fffefb] mb-3">Resources</h3>
+                            <ul className="space-y-2 text-sm text-[#c5c0b1]">
+                                <li><Link href="/about" className="hover:text-[#fffefb]">About Us</Link></li>
+                                <li><Link href="/contact" className="hover:text-[#fffefb]">Contact</Link></li>
+                                <li><Link href="/help" className="hover:text-[#fffefb]">Help Center</Link></li>
+                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#fffefb]">System Status</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 className="font-semibold text-foreground mb-3">Legal</h3>
-                            <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
-                                <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
-                                <li><Link href="/data-retention" className="hover:text-primary">Data Retention</Link></li>
+                            <h3 className="font-semibold text-[#fffefb] mb-3">Legal</h3>
+                            <ul className="space-y-2 text-sm text-[#c5c0b1]">
+                                <li><Link href="/privacy" className="hover:text-[#fffefb]">Privacy Policy</Link></li>
+                                <li><Link href="/terms" className="hover:text-[#fffefb]">Terms of Service</Link></li>
+                                <li><Link href="/data-retention" className="hover:text-[#fffefb]">Data Retention</Link></li>
                             </ul>
                         </div>
                     </div>
-                    <div className="border-t border-border pt-6">
-                        <p className="text-xs text-muted-foreground text-center">
+                    <div className="border-t border-[#36342e] pt-6">
+                        <p className="text-xs text-[#939084] text-center">
                             Zyene Reviews is an independent platform and is not affiliated with, endorsed by, or sponsored by Google LLC.
                         </p>
                     </div>

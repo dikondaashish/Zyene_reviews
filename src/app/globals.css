@@ -132,30 +132,37 @@
     @apply bg-background text-foreground;
     font-family: var(--font-inter), Inter, Helvetica, Arial, sans-serif;
   }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
 
 @layer utilities {
+  /* Marketing / hero only — geometric display (Syne); functional UI stays Inter (DESIGN.md) */
+  .font-display {
+    font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
+  }
+
   .pro-hover {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-colors duration-200 ease-out border border-transparent;
     &:hover {
-      @apply -translate-y-1 shadow-xl shadow-primary/10;
+      @apply border-border -translate-y-px;
     }
     &:active {
-      @apply translate-y-0 shadow-md;
+      @apply translate-y-0;
     }
   }
 
   .pro-card {
-    @apply bg-card/70 backdrop-blur-xl border border-border rounded-3xl;
+    @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
   }
 
+  /* Primary CTA — border-first, Zapier orange (DESIGN.md §4 Buttons) */
   .cta-button {
-    @apply bg-[oklch(0.7_0.22_60)] text-white hover:bg-[oklch(0.65_0.2_60)] 
-           transition-all duration-300 ease-out px-6 py-2.5 rounded-2xl font-semibold 
-           shadow-lg shadow-orange-500/20 active:scale-[0.98];
-    &:hover {
-      @apply -translate-y-0.5 shadow-xl shadow-orange-500/30;
-    }
+    @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
+           transition-colors duration-200 ease-out hover:brightness-95 active:brightness-90;
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Syne } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -17,6 +17,13 @@ const inter = Inter({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+/** Display / marketing hero face — geometric, Degular-like; UI stays Inter per DESIGN.md */
+const syneDisplay = Syne({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -46,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${geistMono.variable} ${syneDisplay.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

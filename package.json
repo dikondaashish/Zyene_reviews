@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "verify:critical-flows": "tsx scripts/verify-critical-flows.ts",
     "email:test": "npx tsx --env-file=.env.local scripts/mail-tester.ts",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },
