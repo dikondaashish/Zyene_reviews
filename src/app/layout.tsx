@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
@@ -23,13 +23,19 @@ export const metadata: Metadata = {
   title: "Zyene Reviews - Reputation Management for Local Businesses",
   description: "Automate your customer reviews and grow your business with Zyene Reviews.",
   manifest: "/manifest.json",
-  themeColor: "#ff4f00",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Zyene Reviews",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ff4f00",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

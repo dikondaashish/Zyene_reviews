@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
 import { useSearchParams } from "next/navigation";
 
-export default function SignupPage() {
+function SignupForm() {
     const searchParams = useSearchParams();
     const inviteToken = searchParams.get("invite");
     const [fullName, setFullName] = useState("");
@@ -281,5 +281,13 @@ export default function SignupPage() {
                 .
             </p>
         </div>
+    );
+}
+
+export default function SignupPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>}>
+            <SignupForm />
+        </Suspense>
     );
 }
