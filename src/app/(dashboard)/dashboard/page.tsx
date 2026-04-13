@@ -662,15 +662,8 @@ export default async function DashboardPage() {
                 {isGoogleConnected && <SyncButton />}
             </div>
 
-            {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
-            {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
-                <GettingStartedBanner
-                    googleConnected={isGoogleConnected}
-                    customerCount={customerCount}
-                    requestSent={requestsThisMonth > 0}
-                    notificationsConfigured={notificationsConfigured}
-                />
-            )}
+            {/* Smart Review Insights */}
+            <SmartInsightsCard />
 
             {/* QR Code Card */}
             {business.slug && (
@@ -678,6 +671,16 @@ export default async function DashboardPage() {
                     businessId={business.id}
                     businessSlug={business.slug}
                     businessName={business.name || "Business"}
+                />
+            )}
+
+            {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
+            {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
+                <GettingStartedBanner
+                    googleConnected={isGoogleConnected}
+                    customerCount={customerCount}
+                    requestSent={requestsThisMonth > 0}
+                    notificationsConfigured={notificationsConfigured}
                 />
             )}
 
@@ -1045,9 +1048,6 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
-
-            {/* Smart Review Insights */}
-            <SmartInsightsCard />
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">

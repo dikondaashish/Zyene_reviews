@@ -57,8 +57,9 @@ export function ProStatCard({
   delay = 0,
 }: ProStatCardProps) {
   const Icon = ICON_MAP[iconName] || MessageSquare
-  const isPositive = trend && trend > 0
-  const isNegative = trend && trend < 0
+  const hasTrend = typeof trend === "number"
+  const isPositive = hasTrend && trend > 0
+  const isNegative = hasTrend && trend < 0
 
   return (
     <motion.div
@@ -66,20 +67,20 @@ export function ProStatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.23, 1, 0.32, 1] }}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-6 cursor-pointer",
-        "pro-hover", // Added official UI Pro hover utility
+        "group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 md:p-6 min-h-[180px]",
+        "transition-all duration-200 hover:border-primary/30 hover:shadow-sm",
         className
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       
       <div className="relative flex items-center justify-between">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
-          <Icon className="h-6 w-6" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-105">
+          <Icon className="h-5 w-5" />
         </div>
-        {trend !== undefined && (
+        {hasTrend && (
           <div className={cn(
-            "flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium",
+            "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold",
             isPositive ? "bg-green-500/10 text-green-600" : 
             isNegative ? "bg-red-500/10 text-red-600" : 
             "bg-muted text-muted-foreground"
@@ -91,21 +92,21 @@ export function ProStatCard({
         )}
       </div>
 
-      <div className="relative mt-4">
+      <div className="relative mt-4 space-y-1.5">
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
-        <div className="mt-1 flex items-baseline gap-1">
+        <div className="flex items-baseline gap-1">
           <AnimatedNumber
             value={value}
             prefix={prefix}
             suffix={suffix}
             precision={precision}
-            className="text-3xl font-bold tracking-tight text-foreground"
+            className="text-4xl font-bold tracking-tight text-foreground"
           />
         </div>
         {description && (
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
+          <p className="text-xs leading-relaxed text-muted-foreground line-clamp-2 min-h-8">
             {description}
-            {trendLabel && <span className="ml-1 opacity-70 italic">{trendLabel}</span>}
+            {trendLabel && <span className="ml-1 opacity-80">{trendLabel}</span>}
           </p>
         )}
       </div>
