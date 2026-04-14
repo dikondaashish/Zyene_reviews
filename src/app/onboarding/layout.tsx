@@ -29,44 +29,31 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="relative min-h-screen overflow-x-clip bg-background">
-            <header className="relative z-10 border-b border-border/80 bg-card">
-                <div className="mx-auto flex max-w-7xl items-center px-4 py-4 sm:px-6 lg:px-8">
+        <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-[#f5f5f4]">
+            {/* Ambient gradient blobs */}
+            <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[120px]" />
+            <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-primary/15 blur-[100px]" />
+
+            {/* Header with logo */}
+            <header className="relative z-10 border-b border-primary/20 bg-background/50 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                            <span className="text-sm font-bold tracking-tight text-white">ZR</span>
+                        {/* Brand logo mark */}
+                        <div className="w-9 h-9 bg-gradient-to-br from-[oklch(0.7_0.22_60)] to-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 ring-1 ring-background/40">
+                            <span className="text-white font-bold text-sm tracking-tight text-white">ZR</span>
                         </div>
-                        <span className="text-lg font-semibold tracking-tight text-foreground">
-                            Zyene Reviews
+                        <span className="text-lg font-bold text-[#262626] tracking-tight">
+                            Zyene <span className="text-[oklch(0.7_0.22_60)]">Reviews</span>
                         </span>
                     </div>
                 </div>
             </header>
 
-            <main className="relative z-10 mx-auto grid min-h-[calc(100vh-73px)] w-full max-w-7xl items-stretch px-4 py-6 sm:px-6 lg:grid-cols-2 lg:gap-0 lg:px-8 lg:py-0">
-                <section className="flex min-w-0 items-center py-4 lg:py-12">
-                    <div className="w-full min-w-0">{children}</div>
-                </section>
-                <aside className="hidden border-l border-border/80 bg-[#d8e8e6] lg:flex lg:items-center lg:justify-center">
-                    <div className="w-full max-w-md space-y-4 px-8">
-                        <div className="ml-auto h-28 w-28 rounded-xl border border-border/70 bg-card" />
-                        <div className="rounded-xl border border-border/70 bg-card p-6">
-                            <div className="grid grid-cols-3 gap-3">
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                            </div>
-                        </div>
-                        <div className="rounded-xl border border-border/70 bg-card p-6">
-                            <div className="grid grid-cols-4 gap-3">
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                                <div className="h-14 rounded-lg bg-[#d8e8e6]" />
-                            </div>
-                        </div>
-                    </div>
-                </aside>
+            {/* Main content */}
+            <main className="relative z-10 flex min-w-0 flex-1 items-center justify-center px-4 py-8 sm:px-6 md:py-12 lg:px-8">
+                <div className="w-full min-w-0 max-w-6xl">
+                    {children}
+                </div>
             </main>
         </div>
     );
