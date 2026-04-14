@@ -205,7 +205,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
     };
 
     return (
-        <Card className="overflow-hidden bg-card border-border/60 border mt-2">
+        <Card className="overflow-hidden bg-[#f9f7f3] border-border/60 border mt-2">
             <CardContent className="p-0 flex min-w-0 flex-col md:flex-row">
                 {/* Left Section: Text Content */}
                 <div className="flex min-w-0 flex-1 flex-col justify-center p-6 md:py-10 md:pl-16 md:pr-8 lg:pl-24">
@@ -261,7 +261,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="w-full bg-card p-6 flex flex-col items-center justify-center border-t border-border/60 md:w-auto md:border-t-0 md:min-w-[280px] md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
+                <div className="w-full bg-[#f9f7f3] p-6 flex flex-col items-center justify-center border-t border-border/60 md:w-auto md:border-t-0 md:min-w-[280px] md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
