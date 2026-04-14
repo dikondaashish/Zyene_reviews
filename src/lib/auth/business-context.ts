@@ -64,25 +64,7 @@ export async function getActiveBusinessId(): Promise<{
     }
 
     if (!organization || businesses.length === 0) {
-        // Organization metadata (single-org account model)
-        const { data: orgData } = await supabase
-            .from("organization_members")
-            .select(`
-                organizations (
-                    *,
-                    businesses (
-                        *,
-                        review_platforms (*)
-                    )
-                )
-            `)
-            .eq("user_id", user.id)
-            .single();
-
-        organization = (orgData as { organizations?: BusinessContextOrganization | null } | null)
-            ?.organizations ?? null;
-
-        // Business-scoped memberships for this user
+        // Business-scoped memberships (source of truth for which org the user is working in)
         const { data: memberBusinesses } = await supabase
             .from("business_members")
             .select(`
@@ -100,7 +82,45 @@ export async function getActiveBusinessId(): Promise<{
                 .filter((b): b is BusinessContextBusiness => !!b)
                 .filter((business) => business.status !== "archived");
 
-        // Backward-compat fallback until all org users are migrated to business_members.
+        const primaryBusinessOrgId =
+            businesses.length > 0
+                ? String(
+                      (businesses[0] as BusinessContextBusiness & { organization_id?: string })
+                          .organization_id ?? ""
+                  ).trim() || null
+                : null;
+
+        // All org memberships (invited teammates have organization_members + business_members; RLS requires org row)
+        const { data: orgMemberRows } = await supabase
+            .from("organization_members")
+            .select(`
+                organization_id,
+                organizations (
+                    *,
+                    businesses (
+                        *,
+                        review_platforms (*)
+                    )
+                )
+            `)
+            .eq("user_id", user.id)
+            .eq("status", "active");
+
+        type OrgMemberRow = {
+            organization_id: string;
+            organizations: BusinessContextOrganization | null;
+        };
+        const rows = (orgMemberRows ?? []) as OrgMemberRow[];
+
+        if (primaryBusinessOrgId) {
+            const match = rows.find((r) => r.organization_id === primaryBusinessOrgId);
+            organization = match?.organizations ?? null;
+        }
+        if (!organization && rows.length > 0) {
+            organization = rows[0].organizations ?? null;
+        }
+
+        // Backward-compat: org-only members until all users have business_members
         if (businesses.length === 0 && organization?.businesses?.length) {
             businesses = organization.businesses.filter((business) => business.status !== "archived");
         }

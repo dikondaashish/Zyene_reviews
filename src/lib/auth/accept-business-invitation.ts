@@ -17,6 +17,43 @@ type InviteRow = {
     accepted_at?: string | null;
 };
 
+/** Maps `business_members` / invitation role to `organization_members.role` (CHECK allows ORG_*). */
+function mapInviteBusinessRoleToOrgRole(inviteRole: string): string {
+    switch (inviteRole) {
+        case "admin":
+            return "ORG_ADMIN";
+        case "manager":
+            return "ORG_MANAGER";
+        case "viewer":
+            return "viewer";
+        case "member":
+        default:
+            return "ORG_EMPLOYEE";
+    }
+}
+
+async function ensureOrganizationMembershipForInvite(
+    admin: AdminClient,
+    organizationId: string,
+    userId: string,
+    inviteRole: string
+): Promise<void> {
+    const orgRole = mapInviteBusinessRoleToOrgRole(inviteRole);
+    const { error } = await admin.from("organization_members").upsert(
+        {
+            organization_id: organizationId,
+            user_id: userId,
+            role: orgRole,
+            status: "active",
+        },
+        { onConflict: "organization_id,user_id" }
+    );
+    if (error) {
+        console.error("[acceptBusinessInvitationAdmin] organization_members upsert failed:", error);
+        throw error;
+    }
+}
+
 /**
  * Accept a pending business invitation: `business_members` row, mark invite accepted,
  * and skip full product onboarding (invited users join an existing org/business).
@@ -92,6 +129,12 @@ export async function acceptBusinessInvitationAdmin(params: {
             .eq("user_id", userId)
             .maybeSingle();
         if (alreadyMember) {
+            await ensureOrganizationMembershipForInvite(
+                admin,
+                anyInvite.organization_id,
+                userId,
+                anyInvite.role
+            );
             try {
                 await redis.del(`user_businesses:${userId}`);
             } catch (e) {
@@ -111,6 +154,12 @@ export async function acceptBusinessInvitationAdmin(params: {
                 status: "active",
             },
             { onConflict: "business_id,user_id" }
+        );
+        await ensureOrganizationMembershipForInvite(
+            admin,
+            anyInvite.organization_id,
+            userId,
+            anyInvite.role
         );
         try {
             await redis.del(`user_businesses:${userId}`);
@@ -149,6 +198,8 @@ export async function acceptBusinessInvitationAdmin(params: {
         },
         { onConflict: "business_id,user_id" }
     );
+
+    await ensureOrganizationMembershipForInvite(admin, invite.organization_id, userId, invite.role);
 
     await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
 
