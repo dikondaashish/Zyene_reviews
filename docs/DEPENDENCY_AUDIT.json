@@ -1,31 +1,6 @@
 {
-  "total_packages": 72,
+  "total_packages": 64,
   "unused_candidates": [
-    {
-      "package": "@radix-ui/react-label",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@radix-ui/react-slot",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@radix-ui/react-tabs",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@react-email/components",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@stripe/stripe-js",
-      "used": false,
-      "scope": "dependency"
-    },
     {
       "package": "@types/canvas-confetti",
       "used": false,
@@ -55,21 +30,6 @@
       "package": "@types/react-dom",
       "used": false,
       "scope": "devDependency"
-    },
-    {
-      "package": "babel-plugin-react-compiler",
-      "used": false,
-      "scope": "devDependency"
-    },
-    {
-      "package": "prettier-plugin-tailwindcss",
-      "used": false,
-      "scope": "devDependency"
-    },
-    {
-      "package": "react-wrap-balancer",
-      "used": false,
-      "scope": "dependency"
     }
   ],
   "all": [
@@ -99,11 +59,6 @@
       "scope": "dependency"
     },
     {
-      "package": "@radix-ui/react-label",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
       "package": "@radix-ui/react-progress",
       "used": true,
       "scope": "dependency"
@@ -119,28 +74,8 @@
       "scope": "dependency"
     },
     {
-      "package": "@radix-ui/react-slot",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@radix-ui/react-tabs",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
-      "package": "@react-email/components",
-      "used": false,
-      "scope": "dependency"
-    },
-    {
       "package": "@sentry/nextjs",
       "used": true,
-      "scope": "dependency"
-    },
-    {
-      "package": "@stripe/stripe-js",
-      "used": false,
       "scope": "dependency"
     },
     {
@@ -217,11 +152,6 @@
       "package": "@vercel/speed-insights",
       "used": true,
       "scope": "dependency"
-    },
-    {
-      "package": "babel-plugin-react-compiler",
-      "used": false,
-      "scope": "devDependency"
     },
     {
       "package": "canvas-confetti",
@@ -324,11 +254,6 @@
       "scope": "devDependency"
     },
     {
-      "package": "prettier-plugin-tailwindcss",
-      "used": false,
-      "scope": "devDependency"
-    },
-    {
       "package": "qrcode",
       "used": true,
       "scope": "dependency"
@@ -356,11 +281,6 @@
     {
       "package": "react-image-crop",
       "used": true,
-      "scope": "dependency"
-    },
-    {
-      "package": "react-wrap-balancer",
-      "used": false,
       "scope": "dependency"
     },
     {

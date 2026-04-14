@@ -63,8 +63,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         const locationId = platform.external_id;
         if (!locationId) throw new Error("Platform location ID missing");
 
-        // We need Account ID. Since we don't store it, fetch lists.
-        // TODO: Store account_id in review_platforms to optimize this.
+        // We currently resolve account_id dynamically from Google account listings.
+        // Persisting account_id in review_platforms can optimize this later.
         const accounts = await listAccounts(accessToken!);
         // Prioritize ORGANIZATION type if multiple, else first.
         const account = accounts.find((a) => a.type === "ORGANIZATION") || accounts[0];

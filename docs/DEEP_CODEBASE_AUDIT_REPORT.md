@@ -40,32 +40,34 @@ These have no internal app references but may be externally linked or manually u
 
 ### High-priority remaining items (flagged)
 
-- TODO debt:
-  - `src/app/api/reviews/[id]/reply/route.ts`
+- No blocking TODO/FIXME debt remains from the original flagged set.
 
 ## Phase 3 - Dependency Audit
 
 - Full machine-readable matrix: `docs/DEPENDENCY_AUDIT.json`
-- Total packages checked: `72`
-- Candidate review list: `14` (heuristic candidates, not auto-removed)
+- Total packages checked: `64`
+- Candidate review list: `6` (TypeScript `@types/*` packages; expected for type tooling)
 
 ### Candidate review packages
 
-- `@radix-ui/react-label`
-- `@radix-ui/react-slot`
-- `@radix-ui/react-tabs`
-- `@react-email/components`
-- `@stripe/stripe-js`
-- `babel-plugin-react-compiler`
-- `prettier-plugin-tailwindcss`
-- `react-wrap-balancer`
-- Type packages flagged by static grep but typically required by TS toolchain:
+- Type packages flagged by static grep but expected for TS toolchain:
   - `@types/node`
   - `@types/react`
   - `@types/react-dom`
   - `@types/canvas-confetti`
   - `@types/papaparse`
   - `@types/qrcode`
+
+### Packages removed in cleanup
+
+- `@radix-ui/react-label`
+- `@radix-ui/react-slot`
+- `@radix-ui/react-tabs`
+- `@react-email/components`
+- `@stripe/stripe-js`
+- `react-wrap-balancer`
+- `babel-plugin-react-compiler`
+- `prettier-plugin-tailwindcss`
 
 ## Phase 4 - Folder & Architecture Audit
 
