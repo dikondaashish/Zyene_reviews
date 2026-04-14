@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -24,20 +24,23 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { INVITE_ROLE_VALUES } from "@/lib/team/business-team";
+import { inviteRolesAssignableByInviter, type InviteRole } from "@/lib/team/business-team";
 import { cn } from "@/lib/utils";
 
-function inviteRoleLabel(role: (typeof INVITE_ROLE_VALUES)[number]) {
+function inviteRoleLabel(role: InviteRole) {
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
 export function InviteMemberDialog({
+    inviterRole,
     triggerLabel = "Invite Member",
     triggerClassName,
     triggerVariant = "default",
     showPlusIcon = true,
     autoCopyInviteLink = false,
 }: {
+    /** Current user's `business_members.role` for this business (drives which invite roles appear). */
+    inviterRole: string;
     triggerLabel?: string;
     triggerClassName?: string;
     triggerVariant?: "default" | "outline" | "secondary" | "ghost";
@@ -49,6 +52,15 @@ export function InviteMemberDialog({
     const [role, setRole] = useState("member");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
+    const assignableRoles = useMemo(() => inviteRolesAssignableByInviter(inviterRole), [inviterRole]);
+
+    useEffect(() => {
+        if (assignableRoles.length === 0) return;
+        if (!assignableRoles.includes(role as InviteRole)) {
+            setRole(assignableRoles[0] ?? "member");
+        }
+    }, [assignableRoles, role]);
 
     const handleInvite = async () => {
         const trimmed = email.trim();
@@ -150,7 +162,7 @@ export function InviteMemberDialog({
 
             setOpen(false);
             setEmail("");
-            setRole("member");
+            setRole(assignableRoles[0] ?? "member");
             router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
@@ -198,7 +210,7 @@ export function InviteMemberDialog({
                                 <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                             <SelectContent>
-                                {INVITE_ROLE_VALUES.map((r) => (
+                                {assignableRoles.map((r) => (
                                     <SelectItem key={r} value={r}>
                                         {inviteRoleLabel(r)}
                                     </SelectItem>

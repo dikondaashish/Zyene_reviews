@@ -109,7 +109,7 @@ export function TeamManagementPanel({
                             <Copy className="mr-2 h-4 w-4" />
                             Copy invite link
                         </Button>
-                        <InviteMemberDialog triggerLabel="Invite members" />
+                        <InviteMemberDialog inviterRole={currentUserRole} triggerLabel="Invite members" />
                     </div>
                 ) : null}
             </div>

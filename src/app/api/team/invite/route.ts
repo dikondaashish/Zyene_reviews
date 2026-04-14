@@ -4,7 +4,11 @@ import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { deliverTeamInviteEmail } from "@/lib/team/deliver-team-invite-email";
 import { z } from "zod";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { canManageBusinessTeam, INVITE_ROLE_VALUES } from "@/lib/team/business-team";
+import {
+    canInviterAssignInviteRole,
+    canManageBusinessTeam,
+    INVITE_ROLE_VALUES,
+} from "@/lib/team/business-team";
 import { teamMemberLimitForPlan } from "@/services/stripe/plans";
 
 const inviteRoleSchema = z.preprocess(
@@ -65,6 +69,16 @@ export async function POST(request: Request) {
 
     if (membError || !membership || !canManageBusinessTeam(membership.role)) {
         return apiError("Forbidden: Insufficient permissions to invite", { status: 403 });
+    }
+
+    if (!canInviterAssignInviteRole(membership.role, role)) {
+        const isManager = String(membership.role || "").toLowerCase() === "manager";
+        return apiError(
+            isManager
+                ? "Managers may only invite teammates as Manager or Member."
+                : "You cannot assign that role with your current permissions.",
+            { status: 403 }
+        );
     }
 
     interface MembershipWithOrg {
