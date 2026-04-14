@@ -1,5 +1,7 @@
 # Codebase Structure
 
+> Doc classification: contributor architecture guide. See `docs/INDEX.md` for full documentation map.
+
 ## Top-level layout
 
 - `src/app`: Next.js App Router pages, layouts, and API routes
@@ -12,7 +14,8 @@
 - `public`: Static assets
 - `supabase/migrations`: Database migrations
 - `tests/unit`, `tests/integration`: automated tests
-- `_archive`: non-runtime artifacts and historical docs
+- `docs`: verification guides, audits, and generated documentation artifacts
+- `.agent/docs`: agent-runtime/internal implementation notes
 
 ## Placement rules
 
@@ -23,7 +26,8 @@
 5. Keep feature-specific components in their feature folders.
 6. Keep global/shared types in `src/types`.
 7. Keep static constants in `src/constants`.
-8. Keep historical docs out of root in `_archive/docs`.
+8. Keep generated audits and verification docs under `docs/`.
+9. Keep agent-specific/internal notes under `.agent/docs`.
 
 ## Notes
 

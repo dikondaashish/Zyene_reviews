@@ -1,5 +1,7 @@
 # Zyene Reviews - Platform Features & Capabilities
 
+> Doc classification: product capability summary (external-facing narrative). See `docs/INDEX.md` for full documentation map.
+
 Welcome to **Zyene Reviews**, a premium reputation management platform designed to help local businesses grow their online presence, build trust, and manage customer feedback efficiently.
 
 ## 🚀 1. Seamless Onboarding

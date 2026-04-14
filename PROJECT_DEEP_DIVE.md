@@ -1,10 +1,12 @@
 # Zyene Reviews - Comprehensive Project Deep Dive & Technical Architecture
 
+> Doc classification: core architecture reference. See `docs/INDEX.md` for full documentation map.
+
 ## 1. System Architecture Overview
 Zyene Reviews is built using a modern, high-performance tech stack designed for scalability, multi-tenancy, and extreme reliability.
 
 ### Core Stack
-*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router) utilizing TypeScript for end-to-end type safety.
+*   **Framework**: [Next.js 16](https://nextjs.org/) (App Router) utilizing TypeScript for end-to-end type safety.
 *   **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL) with Row Level Security (RLS) for multi-tenant isolation.
 *   **Background Jobs**: [Inngest](https://www.inngest.com/) for reliable, event-driven asynchronous workflows (review syncing, message scheduling).
 *   **Caching & Rate Limiting**: [Upstash Redis](https://upstash.com/) for low-latency middleware checks and metadata caching.

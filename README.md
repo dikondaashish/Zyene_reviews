@@ -65,6 +65,7 @@ See `.env.example` and route/service files under `src/app/api` and `src/services
 - This repo is pnpm-managed (single lockfile: `pnpm-lock.yaml`).
 - Supabase schema changes are tracked in `supabase/migrations`.
 - Operational docs are being organized incrementally under `docs/` (in progress).
+- Documentation map: `docs/INDEX.md`.
 
 ## Folder structure (current baseline)
 

@@ -1,5 +1,7 @@
 # PRODUCTION CHECKLIST
 
+> Doc classification: release operations checklist. See `docs/INDEX.md` for full documentation map.
+
 ## 1. Pre-deploy checklist
 - [ ] TypeScript check: `pnpm tsc --noEmit`
 - [ ] Lint check: `pnpm lint`
