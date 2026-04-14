@@ -11,7 +11,17 @@ import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-c
 import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
+import { PastDuePaymentBanner } from "@/components/dashboard/past-due-payment-banner";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
+
+const BILLING_MANAGER_ROLES = new Set([
+    "owner",
+    "admin",
+    "manager",
+    "ORG_OWNER",
+    "ORG_ADMIN",
+    "ORG_MANAGER",
+]);
 
 export default async function DashboardLayout({
     children,
@@ -38,6 +48,23 @@ export default async function DashboardLayout({
         await getActiveBusinessId();
 
     const hideGoogleQaNav = await getGoogleQaUnavailableForActiveBusiness(activeBusinessId);
+
+    const planStatusNorm = String(organization?.plan_status ?? "").toLowerCase().trim();
+    let canManageBilling = false;
+    if (planStatusNorm === "past_due") {
+        const { data: orgMember } = await supabase
+            .from("organization_members")
+            .select("role")
+            .eq("user_id", user.id)
+            .maybeSingle();
+        const role = orgMember?.role ?? "";
+        canManageBilling = BILLING_MANAGER_ROLES.has(role);
+    }
+
+    const stripeCustomerId =
+        organization && typeof organization.stripe_customer_id === "string"
+            ? organization.stripe_customer_id
+            : null;
 
     const headerContent = (
         <div className="flex flex-1 items-center justify-between gap-3 min-w-0">
@@ -84,6 +111,11 @@ export default async function DashboardLayout({
             <SidebarInset>
                 <VerificationBanner user={user} />
                 <TrialBanner organization={organization} />
+                <PastDuePaymentBanner
+                    planStatus={organization?.plan_status}
+                    stripeCustomerId={stripeCustomerId}
+                    canManageBilling={canManageBilling}
+                />
                 <DashboardLayoutClient header={headerContent}>
                     <ErrorBoundary>{children}</ErrorBoundary>
                 </DashboardLayoutClient>

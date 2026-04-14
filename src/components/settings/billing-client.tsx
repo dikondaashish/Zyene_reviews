@@ -48,6 +48,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { PastDueBillingAlert } from "@/components/billing/past-due-billing-alert";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -378,25 +379,15 @@ export function BillingClient({
             )}
 
             {planStatus === "past_due" && (
-                <div className="rounded-lg border border-primary/20 bg-primary/10 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                    <AlertTriangle className="h-5 w-5 text-primary shrink-0" />
-                    <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground">Payment past due</p>
-                        <p className="text-sm text-muted-foreground">
-                            Update your payment method in the billing portal to avoid losing access.
-                        </p>
-                    </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="shrink-0 border-primary/30"
-                        onClick={() => void handleManageSubscription()}
-                        disabled={!hasStripeCustomer || loadingPortal}
-                    >
-                        {loadingPortal ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                        Update payment
-                    </Button>
-                </div>
+                <PastDueBillingAlert
+                    layout="panel"
+                    action={{
+                        label: "Update payment",
+                        disabled: !hasStripeCustomer,
+                        loading: loadingPortal,
+                        onClick: () => void handleManageSubscription(),
+                    }}
+                />
             )}
 
             <Card>
