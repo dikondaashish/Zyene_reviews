@@ -25,12 +25,25 @@ import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { INVITE_ROLE_VALUES } from "@/lib/team/business-team";
+import { cn } from "@/lib/utils";
 
 function inviteRoleLabel(role: (typeof INVITE_ROLE_VALUES)[number]) {
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
-export function InviteMemberDialog() {
+export function InviteMemberDialog({
+    triggerLabel = "Invite Member",
+    triggerClassName,
+    triggerVariant = "default",
+    showPlusIcon = true,
+    autoCopyInviteLink = false,
+}: {
+    triggerLabel?: string;
+    triggerClassName?: string;
+    triggerVariant?: "default" | "outline" | "secondary" | "ghost";
+    showPlusIcon?: boolean;
+    autoCopyInviteLink?: boolean;
+}) {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("member");
@@ -86,6 +99,10 @@ export function InviteMemberDialog() {
                     void navigator.clipboard.writeText(link);
                 }
             };
+
+            if (autoCopyInviteLink && link) {
+                copyLink();
+            }
 
             if (data?.email_delivered === false) {
                 toast.warning("Invite saved, but email was not sent from our server.", {
@@ -146,9 +163,9 @@ export function InviteMemberDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Invite Member
+                <Button variant={triggerVariant} className={cn(triggerClassName)}>
+                    {showPlusIcon ? <Plus className="mr-2 h-4 w-4" /> : null}
+                    {triggerLabel}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

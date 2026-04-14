@@ -31,14 +31,14 @@ export async function PATCH(
     }
     const role = parsed.data;
 
-    const { businessId } = await getActiveBusinessId();
+    const { businessId, organization } = await getActiveBusinessId();
     if (!businessId) {
         return apiError("No active business selected", { status: 400 });
     }
 
     const { data: requester, error: reqError } = await supabase
         .from("business_members")
-        .select("role, business_id")
+        .select("role, business_id, users(full_name)")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
         .single();
@@ -49,7 +49,7 @@ export async function PATCH(
 
     const { data: targetMember } = await supabase
         .from("business_members")
-        .select("id, role, user_id")
+        .select("id, role, user_id, users(full_name, email)")
         .eq("id", id)
         .eq("business_id", requester.business_id)
         .maybeSingle();
@@ -84,6 +84,31 @@ export async function PATCH(
         return apiError(updateError.message, { status: 500 });
     }
 
+    try {
+        const requesterName =
+            ((requester as any)?.users?.full_name as string | null) || "Someone";
+        const targetName =
+            ((targetMember as any)?.users?.full_name as string | null) ||
+            ((targetMember as any)?.users?.email as string | null) ||
+            "a member";
+        await supabase.from("events").insert({
+            organization_id: organization?.id as string,
+            business_id: businessId,
+            user_id: user.id,
+            event_type: "team.role_changed",
+            entity_type: "business_member",
+            entity_id: targetMember.id,
+            metadata: {
+                actor_name: requesterName,
+                target_name: targetName,
+                from_role: targetMember.role,
+                to_role: role,
+            },
+        });
+    } catch (e) {
+        console.error("[team/patch] Failed to write event:", e);
+    }
+
     return apiOk({ updated: true });
 }
 
@@ -103,14 +128,14 @@ export async function DELETE(
     const { id } = await params;
     const url = new URL(request.url);
     const type = url.searchParams.get("type") || "member"; // 'member' or 'invite'
-    const { businessId } = await getActiveBusinessId();
+    const { businessId, organization } = await getActiveBusinessId();
     if (!businessId) {
         return apiError("No active business selected", { status: 400 });
     }
 
     const { data: requester, error: reqError } = await supabase
         .from("business_members")
-        .select("role, business_id")
+        .select("role, business_id, users(full_name)")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
         .single();
@@ -120,6 +145,12 @@ export async function DELETE(
     }
 
     if (type === "invite") {
+        const { data: inviteRow } = await supabase
+            .from("invitations")
+            .select("id, email")
+            .eq("id", id)
+            .eq("business_id", requester.business_id)
+            .maybeSingle();
         const { error } = await supabase
             .from("invitations")
             .delete()
@@ -128,10 +159,29 @@ export async function DELETE(
 
         if (error) return apiError("Internal Server Error", { status: 500 });
 
+        try {
+            const requesterName =
+                ((requester as any)?.users?.full_name as string | null) || "Someone";
+            await supabase.from("events").insert({
+                organization_id: organization?.id as string,
+                business_id: businessId,
+                user_id: user.id,
+                event_type: "team.invite_removed",
+                entity_type: "invitation",
+                entity_id: id,
+                metadata: {
+                    actor_name: requesterName,
+                    invited_email: inviteRow?.email ?? null,
+                },
+            });
+        } catch (e) {
+            console.error("[team/delete invite] Failed to write event:", e);
+        }
+
     } else {
         const { data: targetMember } = await supabase
             .from("business_members")
-            .select("id, role, user_id")
+            .select("id, role, user_id, users(full_name, email)")
             .eq("id", id)
             .eq("business_id", requester.business_id)
             .maybeSingle();
@@ -154,6 +204,30 @@ export async function DELETE(
             .eq("business_id", requester.business_id);
 
         if (error) return apiError("Internal Server Error", { status: 500 });
+
+        try {
+            const requesterName =
+                ((requester as any)?.users?.full_name as string | null) || "Someone";
+            const targetName =
+                ((targetMember as any)?.users?.full_name as string | null) ||
+                ((targetMember as any)?.users?.email as string | null) ||
+                "a member";
+            await supabase.from("events").insert({
+                organization_id: organization?.id as string,
+                business_id: businessId,
+                user_id: user.id,
+                event_type: "team.member_removed",
+                entity_type: "business_member",
+                entity_id: targetMember.id,
+                metadata: {
+                    actor_name: requesterName,
+                    target_name: targetName,
+                    removed_role: targetMember.role,
+                },
+            });
+        } catch (e) {
+            console.error("[team/delete member] Failed to write event:", e);
+        }
     }
 
     return apiOk({ deleted: true });

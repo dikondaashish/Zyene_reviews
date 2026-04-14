@@ -159,11 +159,48 @@ export async function POST(request: Request) {
 
     if (!sendResult.sent) {
         console.error("[team/invite] Email delivery failed:", sendResult.error);
+        try {
+            await supabase.from("events").insert({
+                organization_id: resolvedOrganizationId,
+                business_id: businessId,
+                user_id: user.id,
+                event_type: "team.invite_sent",
+                entity_type: "invitation",
+                entity_id: invite.id,
+                metadata: {
+                    invited_email: email,
+                    role,
+                    email_delivered: false,
+                    actor_name: inviterName,
+                },
+            });
+        } catch (e) {
+            console.error("[team/invite] Failed to write invite event:", e);
+        }
         return apiOk({
             ...payloadBase,
             email_delivered: false as const,
             email_delivery_error: sendResult.error ?? "Email could not be sent",
         });
+    }
+
+    try {
+        await supabase.from("events").insert({
+            organization_id: resolvedOrganizationId,
+            business_id: businessId,
+            user_id: user.id,
+            event_type: "team.invite_sent",
+            entity_type: "invitation",
+            entity_id: invite.id,
+            metadata: {
+                invited_email: email,
+                role,
+                email_delivered: true,
+                actor_name: inviterName,
+            },
+        });
+    } catch (e) {
+        console.error("[team/invite] Failed to write invite event:", e);
     }
 
     return apiOk({

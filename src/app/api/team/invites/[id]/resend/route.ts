@@ -75,6 +75,10 @@ export async function POST(
 
     const inviterName = membershipTyped.users?.full_name || "A team member";
     const orgName = business.name || organization?.name || "Zyene Reviews";
+    const orgId =
+        (typeof organization?.id === "string" && organization.id) ||
+        (typeof business.organization_id === "string" && business.organization_id) ||
+        "";
 
     const { sendResult, inviteLink } = await deliverTeamInviteEmail({
         to: row.email,
@@ -91,11 +95,48 @@ export async function POST(
 
     if (!sendResult.sent) {
         console.error("[team/invites/resend] Email delivery failed:", sendResult.error);
+        try {
+            if (!orgId) throw new Error("missing organization id");
+            await supabase.from("events").insert({
+                organization_id: orgId,
+                business_id: businessId,
+                user_id: user.id,
+                event_type: "team.invite_resent",
+                entity_type: "invitation",
+                entity_id: row.id,
+                metadata: {
+                    invited_email: row.email,
+                    email_delivered: false,
+                    actor_name: inviterName,
+                },
+            });
+        } catch (e) {
+            console.error("[team/invites/resend] Failed to write event:", e);
+        }
         return apiOk({
             ...payloadBase,
             email_delivered: false as const,
             email_delivery_error: sendResult.error ?? "Email could not be sent",
         });
+    }
+
+    try {
+        if (!orgId) throw new Error("missing organization id");
+        await supabase.from("events").insert({
+            organization_id: orgId,
+            business_id: businessId,
+            user_id: user.id,
+            event_type: "team.invite_resent",
+            entity_type: "invitation",
+            entity_id: row.id,
+            metadata: {
+                invited_email: row.email,
+                email_delivered: true,
+                actor_name: inviterName,
+            },
+        });
+    } catch (e) {
+        console.error("[team/invites/resend] Failed to write event:", e);
     }
 
     return apiOk({

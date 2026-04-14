@@ -82,6 +82,23 @@ export async function acceptBusinessInvitationAdmin(params: {
 
     await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
 
+    try {
+        await admin.from("events").insert({
+            organization_id: invite.organization_id,
+            business_id: businessId,
+            user_id: userId,
+            event_type: "team.member_joined",
+            entity_type: "business_member",
+            entity_id: userId,
+            metadata: {
+                member_email: userEmail,
+                role,
+            },
+        });
+    } catch (e) {
+        console.error("[acceptBusinessInvitationAdmin] team.member_joined event insert failed:", e);
+    }
+
     const { error: userUpdErr } = await admin
         .from("users")
         .update({ onboarding_completed: true })
