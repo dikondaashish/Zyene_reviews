@@ -14,6 +14,7 @@ type InviteRow = {
     business_id: string | null;
     organization_id: string;
     expires_at: string | null;
+    accepted_at?: string | null;
 };
 
 /**
@@ -30,6 +31,7 @@ export async function acceptBusinessInvitationAdmin(params: {
     const raw = typeof inviteParam === "string" ? inviteParam.trim() : "";
     if (!raw || !userEmail) return { accepted: false };
 
+    const emailNorm = userEmail.trim().toLowerCase();
     const invitationsTable = admin.from("invitations" as never);
 
     let inviteResult = await invitationsTable
@@ -49,8 +51,76 @@ export async function acceptBusinessInvitationAdmin(params: {
         invite = byId.data as InviteRow | null;
     }
 
-    if (!invite) return { accepted: false };
-    if (invite.email.toLowerCase() !== userEmail.toLowerCase()) return { accepted: false };
+    if (!invite) {
+        // Invite may already have been accepted (e.g. auth callback ran first; user still lands on /signup?invite=).
+        const anyByToken = await invitationsTable
+            .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
+            .eq("token", raw)
+            .maybeSingle();
+        let anyInvite = anyByToken.data as InviteRow | null;
+        if (!anyInvite && INVITATION_ID_RE.test(raw)) {
+            const anyById = await invitationsTable
+                .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
+                .eq("id", raw)
+                .maybeSingle();
+            anyInvite = anyById.data as InviteRow | null;
+        }
+        if (!anyInvite || anyInvite.email.toLowerCase() !== emailNorm) {
+            return { accepted: false };
+        }
+        if (!anyInvite.accepted_at) {
+            return { accepted: false };
+        }
+        let businessIdResolved = anyInvite.business_id;
+        if (!businessIdResolved) {
+            const { data: firstBusiness } = await admin
+                .from("businesses")
+                .select("id")
+                .eq("organization_id", anyInvite.organization_id)
+                .order("created_at", { ascending: true })
+                .limit(1)
+                .maybeSingle();
+            businessIdResolved = firstBusiness?.id ?? null;
+        }
+        if (!businessIdResolved) {
+            return { accepted: false };
+        }
+        const { data: alreadyMember } = await admin
+            .from("business_members")
+            .select("user_id")
+            .eq("business_id", businessIdResolved)
+            .eq("user_id", userId)
+            .maybeSingle();
+        if (alreadyMember) {
+            try {
+                await redis.del(`user_businesses:${userId}`);
+            } catch (e) {
+                console.error("[acceptBusinessInvitationAdmin] Redis cache clear failed:", e);
+            }
+            return { accepted: true, businessId: businessIdResolved };
+        }
+        // Rare: invite marked accepted but membership row missing — repair.
+        const roleRepair = ["owner", "admin", "manager", "member", "viewer"].includes(anyInvite.role)
+            ? anyInvite.role
+            : "member";
+        await admin.from("business_members").upsert(
+            {
+                business_id: businessIdResolved,
+                user_id: userId,
+                role: roleRepair,
+                status: "active",
+            },
+            { onConflict: "business_id,user_id" }
+        );
+        try {
+            await redis.del(`user_businesses:${userId}`);
+        } catch (e) {
+            console.error("[acceptBusinessInvitationAdmin] Redis cache clear failed:", e);
+        }
+        return { accepted: true, businessId: businessIdResolved };
+    }
+
+    if (invite.email.toLowerCase() !== emailNorm) return { accepted: false };
     if (invite.expires_at && new Date(invite.expires_at) < new Date()) return { accepted: false };
 
     let businessId = invite.business_id;

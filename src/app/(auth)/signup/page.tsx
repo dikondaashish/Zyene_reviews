@@ -43,7 +43,7 @@ function SignupForm() {
                         body: JSON.stringify({ token: inviteToken }),
                     });
                     if (!acceptRes.ok) {
-                        const payload = await acceptRes.json().catch(() => ({}));
+                        const payload = (await acceptRes.json().catch(() => ({}))) as { error?: string };
                         toast.error("Invite acceptance failed", {
                             description: payload?.error || "Please ask for a new invite.",
                         });

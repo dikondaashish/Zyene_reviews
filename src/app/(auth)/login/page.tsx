@@ -75,9 +75,9 @@ function LoginForm() {
                 body: JSON.stringify({ token: inviteToken }),
             })
             if (!acceptRes.ok) {
-                const payload = await acceptRes.json().catch(() => ({}))
+                const payload = await acceptRes.json().catch(() => ({})) as { error?: string }
                 toast.error("Invite acceptance failed", {
-                    description: payload?.message || "Please ask for a new invite.",
+                    description: payload?.error || "Please ask for a new invite.",
                 })
             }
         }
