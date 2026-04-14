@@ -7,7 +7,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 
 interface PlatformData {
     platform: string;

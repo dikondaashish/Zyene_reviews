@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, X, AlertTriangle } from "lucide-react";
-import { sanitizeSlug } from "@/lib/utils/index";
+import { sanitizeSlug } from "@/lib/utils";
 import {
     AlertDialog,
     AlertDialogAction,

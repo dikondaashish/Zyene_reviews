@@ -6,7 +6,7 @@ import { BrandingForm } from "./branding-form";
 
 import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import {
     DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
     reviewPageBackdropGradient,

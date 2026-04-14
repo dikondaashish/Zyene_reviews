@@ -31,7 +31,7 @@ import {
     Lock,
 } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import type { Plan } from "@/services/stripe/plans";
 import { isPaidPlanTierUpgrade, planProductTier } from "@/services/stripe/plans";

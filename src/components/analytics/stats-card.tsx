@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingDown, TrendingUp, Minus, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
     title: string;

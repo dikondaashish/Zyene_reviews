@@ -1,8 +1,6 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { sendSMS } from "@/lib/twilio/send-sms";
-import { sendEmail } from "@/lib/resend/send-email";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 
 // This background job runs for EACH contact asynchronously

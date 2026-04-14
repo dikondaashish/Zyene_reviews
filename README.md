@@ -31,6 +31,26 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+## Required environment variables
+
+Core variables used by this project (non-exhaustive):
+
+- `NEXT_PUBLIC_ROOT_DOMAIN`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `RESEND_API_KEY`
+- `RESEND_FROM`
+- `TWILIO_ACCOUNT_SID`
+- `TWILIO_AUTH_TOKEN`
+- `TWILIO_FROM_NUMBER`
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+
+See `.env.example` and route/service files under `src/app/api` and `src/services` for the complete runtime set.
+
 ## Scripts
 
 - `pnpm dev` — start local app
@@ -45,3 +65,16 @@ pnpm dev
 - This repo is pnpm-managed (single lockfile: `pnpm-lock.yaml`).
 - Supabase schema changes are tracked in `supabase/migrations`.
 - Operational docs are being organized incrementally under `docs/` (in progress).
+
+## Folder structure (current baseline)
+
+- `src/app` - Next.js pages, layouts, API routes, and server actions.
+- `src/components` - UI and feature-facing React components.
+- `src/components/ui` - Reusable design-system primitives.
+- `src/hooks` - Custom React hooks.
+- `src/lib` - Shared utilities, providers, and third-party client setup.
+- `src/services` - Service-layer integrations (Google, Stripe, Twilio, etc.).
+- `src/types` - Shared TypeScript interfaces and domain typing helpers.
+- `src/constants` - Global constants and configuration maps.
+- `src/stores` - Global state containers.
+- `docs` - Technical docs, audits, and implementation notes.

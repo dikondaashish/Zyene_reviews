@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -58,6 +59,7 @@ interface SendRequestDialogProps {
 }
 
 export function SendRequestDialog({ businessId, businessSlug, businessName, initialCustomer, autoOpen }: SendRequestDialogProps) {
+    const router = useRouter();
     const [open, setOpen] = useState(autoOpen || false);
     const [isLoading, setIsLoading] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
@@ -90,7 +92,6 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                     customerName: values.customerName,
                     customerPhone: phone,
                     channel: values.channel,
-                    // scheduledFor: values.scheduledFor ? values.scheduleDate : undefined 
                 }),
             });
 
@@ -104,11 +105,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
             });
             setOpen(false);
             form.reset();
-            // Refresh data? 
-            // In a better implementation, we'd trigger a router.refresh() 
-            // but for simplicity we rely on next navigation or manual reload.
-            // Actually let's do router.refresh() using useRouter
-            window.location.reload(); // Brute force refresh for now to see list
+            router.refresh();
         } catch (error: unknown) {
             toast.error("Failed to send", {
                 description: error instanceof Error ? error.message : "Something went wrong.",

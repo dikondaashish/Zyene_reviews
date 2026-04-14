@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { PLANS } from "@/services/stripe/plans";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
 
 export function UpgradeModal({

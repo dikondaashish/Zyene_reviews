@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import {
     AreaChart,
     Area,

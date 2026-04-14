@@ -41,7 +41,7 @@ export function Step5Form({
         colors: ["#7C3AED", "#F97316", "#10b981", "#3B82F6"],
       });
     } catch {
-      console.debug("canvas-confetti not available");
+      // Optional visual effect failed; onboarding flow can continue.
     }
   };
 
@@ -59,8 +59,7 @@ export function Step5Form({
         return;
       }
       onNext();
-    } catch (error) {
-      console.error("Failed to complete onboarding:", error);
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsCompleting(false);

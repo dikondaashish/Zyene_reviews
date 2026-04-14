@@ -3,7 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 export function AnalyticsFilters() {

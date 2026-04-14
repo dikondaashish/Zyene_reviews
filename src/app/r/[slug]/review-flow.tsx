@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import {
     DEFAULT_REVIEW_PAGE_BACKDROP_CSS,
     DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,

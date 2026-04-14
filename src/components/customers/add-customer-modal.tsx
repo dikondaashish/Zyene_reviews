@@ -96,7 +96,6 @@ export function AddCustomerModal({ open, onOpenChange, businessId, onSuccess }: 
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "Failed to add customer";
             toast.error(message);
-            console.error("Error adding customer:", error);
         } finally {
             setIsLoading(false);
         }

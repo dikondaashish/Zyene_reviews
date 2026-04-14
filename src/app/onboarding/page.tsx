@@ -73,7 +73,6 @@ export default function OnboardingPage() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     if (code) {
-      console.log("[Onboarding] Detected Google OAuth code, jumping to Step 2");
       setPendingGoogleCode(code);
       setCurrentStep(2);
       setIsStepResolved(true);
@@ -94,7 +93,6 @@ export default function OnboardingPage() {
       window.history.replaceState({}, document.title, window.location.pathname);
 
     if (canceled === "1") {
-      console.log("[Onboarding] Detected checkout cancellation, jumping to Step 4");
       setShowPaymentCancelled(true);
       setCurrentStep(4);
       setIsStepResolved(true);
@@ -148,7 +146,6 @@ export default function OnboardingPage() {
     if (typeof window === "undefined") return;
     const pending = sessionStorage.getItem("zyene_payment_pending");
     if (pending === "true") {
-      console.log("[Onboarding] Detected return from Stripe via Back button");
       setShowPaymentCancelled(true);
       sessionStorage.removeItem("zyene_payment_pending");
     }
@@ -209,7 +206,9 @@ export default function OnboardingPage() {
               
               // If Google is already connected, trigger a background sync on login
               if (hasGoogle) {
-                triggerOnboardingSync(biz.id).catch(console.error);
+                triggerOnboardingSync(biz.id).catch(() => {
+                  // Non-blocking background sync failure should not block onboarding.
+                });
               }
             }
           }
@@ -223,7 +222,6 @@ export default function OnboardingPage() {
               .single();
 
             if (userData?.onboarding_step) {
-              console.log("[Onboarding] Recovered step from database:", userData.onboarding_step);
               setCurrentStep(userData.onboarding_step);
             }
             setIsStepResolved(true);

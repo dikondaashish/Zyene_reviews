@@ -101,8 +101,7 @@ export default function CampaignsPage() {
                         action: {
                             label: "Resend Email",
                             onClick: () => {
-                                // This is handled by the top banner, but we could trigger it here too
-                                console.log("Resend verification requested");
+                                /* No-op: resend is handled by the banner flow. */
                             }
                         }
                     });

@@ -17,7 +17,7 @@ import {
 import * as PricingCard from "@/components/ui/pricing-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { savePlanSelection } from "@/app/actions/onboarding";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
 import { PLANS, type Plan } from "@/services/stripe/plans";
 

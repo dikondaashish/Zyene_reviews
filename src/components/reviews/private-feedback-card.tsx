@@ -2,7 +2,7 @@
 
 import { TimeAgo } from "@/components/ui/time-ago";
 import { Star, User, Mail, Phone, MessageSquare, CheckCircle2, Clock, CheckCircle } from "lucide-react";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
 import { 

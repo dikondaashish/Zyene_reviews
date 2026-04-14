@@ -1,7 +1,7 @@
 
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
-import { sanitizeSlug } from "@/lib/utils/index";
+import { sanitizeSlug } from "@/lib/utils";
 
 export async function GET(request: Request) {
     const supabase = await createClient();

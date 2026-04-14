@@ -4,7 +4,7 @@ import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
-import { sanitizeSlug } from "@/lib/utils/index";
+import { sanitizeSlug } from "@/lib/utils";
 import { z } from "zod";
 
 const DEFAULT_REVIEW_PAGE_BG = "#1a2b5a" as const;

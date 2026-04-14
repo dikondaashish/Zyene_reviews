@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 
 interface CampaignTemplateCardProps {
     template: CampaignTemplate;
