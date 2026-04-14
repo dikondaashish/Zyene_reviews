@@ -92,7 +92,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col gap-0 p-6">
+        <div className="flex min-w-0 flex-col gap-0 p-4 sm:p-6">
             {/* Page header */}
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                 Settings

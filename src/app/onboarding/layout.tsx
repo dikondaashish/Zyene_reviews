@@ -29,7 +29,7 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="min-h-screen bg-[#f5f5f4] flex flex-col relative overflow-hidden">
+        <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-[#f5f5f4]">
             {/* Ambient gradient blobs */}
             <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-primary/15 blur-[100px]" />
@@ -50,8 +50,8 @@ export default async function OnboardingLayout({
             </header>
 
             {/* Main content */}
-            <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-                <div className="w-full max-w-6xl">
+            <main className="relative z-10 flex min-w-0 flex-1 items-center justify-center px-4 py-8 sm:px-6 md:py-12 lg:px-8">
+                <div className="w-full min-w-0 max-w-6xl">
                     {children}
                 </div>
             </main>

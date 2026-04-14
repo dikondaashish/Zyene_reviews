@@ -6,7 +6,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 
 export function MobileSidebarFAB() {
-    const { open, setOpen } = useSidebar();
+    const { openMobile, toggleSidebar } = useSidebar();
     const isMobile = !useMediaQuery("(min-width: 768px)");
 
     if (!isMobile) {
@@ -17,16 +17,16 @@ export function MobileSidebarFAB() {
         <Button
             variant="default"
             size="lg"
-            onClick={() => setOpen(!open)}
+            onClick={() => toggleSidebar()}
             className={`
                 fixed bottom-6 right-6 rounded-full
                 bg-blue-600 hover:bg-blue-700 text-white
                 h-14 w-14 p-0 z-40
                 transition-all duration-200
             `}
-            aria-label={open ? "Close sidebar" : "Open sidebar"}
+            aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
         >
-            {open ? (
+            {openMobile ? (
                 <X className="h-6 w-6" />
             ) : (
                 <Menu className="h-6 w-6" />

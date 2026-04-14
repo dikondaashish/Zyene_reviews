@@ -14,12 +14,12 @@ export default function MarketingLayout({
 }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     return (
-        <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-                <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8 max-w-7xl">
+        <div className="flex min-h-screen min-w-0 flex-col overflow-x-clip bg-background text-foreground">
+            <header className="sticky top-0 z-50 w-full min-w-0 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+                <div className="container mx-auto flex h-16 min-w-0 max-w-full items-center justify-between gap-2 px-4 sm:px-8 max-w-7xl">
                     <Link
                         href="/"
-                        className="flex items-center gap-2 font-bold text-xl text-foreground"
+                        className="flex min-w-0 shrink-0 items-center gap-2 font-bold text-xl text-foreground"
                     >
                         <span className="text-primary">Zyene</span> Reviews
                     </Link>
@@ -90,7 +90,7 @@ export default function MarketingLayout({
                 )}
             </header>
 
-            <main className="flex-1">
+            <main className="min-w-0 flex-1">
                 {children}
             </main>
             <CookieBanner />
@@ -118,7 +118,21 @@ export default function MarketingLayout({
                                 </a>{" "}
                                 All rights reserved.
                             </p>
-                            <iframe src="https://status.zyenereviews.com/badge?theme=light" width="250" height="30" frameBorder="0" scrolling="no" style={{ colorScheme: "normal" }}></iframe>
+                            <div className="max-w-full overflow-hidden">
+                                <iframe
+                                    src="https://status.zyenereviews.com/badge?theme=light"
+                                    width="250"
+                                    height="30"
+                                    title="Service status"
+                                    className="max-w-full"
+                                    frameBorder="0"
+                                    scrolling="no"
+                                    style={{
+                                        colorScheme: "normal",
+                                        maxWidth: "100%",
+                                    }}
+                                />
+                            </div>
                         </div>
                         <div>
                             <h3 className="font-semibold text-[#fffefb] mb-3">Product</h3>

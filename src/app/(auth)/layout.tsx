@@ -7,7 +7,7 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex min-h-screen bg-background text-foreground">
+        <div className="flex min-h-screen min-w-0 overflow-x-clip bg-background text-foreground">
             {/* Left Branded Panel */}
             <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-[#201515] flex-col justify-between p-12">
                 {/* Background pattern */}
@@ -94,7 +94,7 @@ export default function AuthLayout({
             </div>
 
             {/* Right Content Panel */}
-            <div className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-12 lg:px-12">
+            <div className="flex min-w-0 flex-1 flex-col items-center justify-center bg-background px-6 py-12 lg:px-12">
                 {/* Mobile logo */}
                 <div className="lg:hidden mb-10">
                     <Link href="/" className="inline-flex items-center gap-3">
@@ -107,7 +107,7 @@ export default function AuthLayout({
                     </Link>
                 </div>
 
-                <div className="w-full max-w-[420px]">
+                <div className="w-full min-w-0 max-w-[420px]">
                     {children}
                 </div>
             </div>
