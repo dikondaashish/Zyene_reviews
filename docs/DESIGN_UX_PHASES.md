@@ -1,6 +1,6 @@
-# Design & UX improvement phases (`DESIGN.md` + `.agent` skills)
+# Design & UX improvement phases (`docs/DESIGN.md` + `.agent` skills)
 
-Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.md` as the source of truth for palette, radii, borders, typography roles, and orange restraint.
+Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `docs/DESIGN.md` as the source of truth for palette, radii, borders, typography roles, and orange restraint.
 
 ---
 
@@ -11,7 +11,7 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 - **Typography:** Syne loaded as `--font-display` (Degular-like marketing hero face); Inter remains default UI via `body` (`src/app/layout.tsx`, `.font-display` in `globals.css`).
 - **CSS utilities:** `.font-display` for hero headlines; `.pro-hover`, `.pro-card`, `.cta-button` refactored toward border-first / primary tokens (`globals.css`).
 - **Marketing:** Landing `h1` uses `font-display` + `leading-[0.9]` (`src/app/(marketing)/page.tsx`).
-- **Footer:** Marketing footer uses explicit `DESIGN.md` hexes so the dark band is correct in light and dark theme (`src/app/(marketing)/layout.tsx`).
+- **Footer:** Marketing footer uses explicit `docs/DESIGN.md` hexes so the dark band is correct in light and dark theme (`src/app/(marketing)/layout.tsx`).
 - **Motion:** Baseline `prefers-reduced-motion` for `scroll-behavior` on `html` (`globals.css`). Marketing hero uses Framer **`useReducedMotion`** so stagger/float are disabled when the user prefers reduced motion (`(marketing)/page.tsx`).
 
 **Exit criteria:** Landing hero uses display font + tight line-height; primary CTA utility matches orange + 4px radius pattern; footer is a consistent dark band; reduced-motion baseline in place.
@@ -39,7 +39,7 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `DESIGN.m
 
 **Goal:** One component language across the app.
 
-- **Tabs:** `TabsList variant="line"` uses **DESIGN.md** inset underlines (`#ff4f00` active, `#c5c0b1` hover); horizontal vs vertical orientation scoped in `tabs.tsx`. Migrated: Campaigns, Send Request dialog, Q&A filters, Review Flow Content (settings), **Google lodging panel** (`google-lodging-panel.tsx`).
+- **Tabs:** `TabsList variant="line"` uses **docs/DESIGN.md** inset underlines (`#ff4f00` active, `#c5c0b1` hover); horizontal vs vertical orientation scoped in `tabs.tsx`. Migrated: Campaigns, Send Request dialog, Q&A filters, Review Flow Content (settings), **Google lodging panel** (`google-lodging-panel.tsx`).
 - **Cards/inputs:** `Card` + `Input` already at **5px** radius; unchanged this pass.
 - **Buttons:** Default `Button` radius set to **4px** (`rounded-[4px]`) per primary CTA spec; `lg` remains **8px** (`rounded-lg`).
 - **Charts:** Recharts primary series use **`var(--primary)`** instead of hard-coded `#ff4f00` where the accent should track theme tokens (`ratings-chart`, `google-performance-profile-chart`, `zyene-platform-analytics`, competitors bar chart).

@@ -95,7 +95,7 @@ export default function MarketingLayout({
             </main>
             <CookieBanner />
 
-            {/* Zapier Black footer band (DESIGN.md) — explicit hex so it stays correct in light + dark theme */}
+            {/* Zapier Black footer band (docs/DESIGN.md) — explicit hex so it stays correct in light + dark theme */}
             <footer className="border-t border-[#36342e] bg-[#201515] py-12 text-[#fffefb]">
                 <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">

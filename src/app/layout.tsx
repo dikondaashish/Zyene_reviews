@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-/** Display / marketing hero face — geometric, Degular-like; UI stays Inter per DESIGN.md */
+/** Display / marketing hero face — geometric, Degular-like; UI stays Inter per docs/DESIGN.md */
 const syneDisplay = Syne({
   variable: "--font-display",
   subsets: ["latin"],

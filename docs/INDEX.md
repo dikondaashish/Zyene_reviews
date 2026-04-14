@@ -4,12 +4,12 @@ Central index for project documentation and where each file belongs.
 
 ## Core Product Docs (KEEP)
 
-- `README.md` - project overview, setup, scripts, and environment baseline.
-- `DESIGN.md` - design system source of truth.
-- `PLATFORM_FEATURES.md` - customer-facing platform capability summary.
-- `PROJECT_DEEP_DIVE.md` - deep technical architecture and domain model reference.
-- `CODEBASE_STRUCTURE.md` - repo structure and placement rules.
-- `PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
+- `README.md` - project overview, setup, scripts, and environment baseline (kept at root).
+- `docs/DESIGN.md` - design system source of truth.
+- `docs/PLATFORM_FEATURES.md` - customer-facing platform capability summary.
+- `docs/PROJECT_DEEP_DIVE.md` - deep technical architecture and domain model reference.
+- `docs/CODEBASE_STRUCTURE.md` - repo structure and placement rules.
+- `docs/PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
 
 ## Operations & Verification Docs (KEEP in `docs/`)
 
@@ -40,6 +40,7 @@ These are internal working docs for agent-assisted development and should stay u
 
 ## Current Organization Decision
 
-- Keep strategic docs at repo root for discoverability (`README.md`, `DESIGN.md`, `PROJECT_DEEP_DIVE.md`, `PLATFORM_FEATURES.md`, `CODEBASE_STRUCTURE.md`, `PRODUCTION_CHECKLIST.md`).
+- Keep `README.md` at repo root for discovery and onboarding.
+- Keep all remaining project documentation under `docs/`.
 - Keep verification and generated audit artifacts inside `docs/`.
 - Keep all agent-specific operational docs in `.agent/` to avoid mixing runtime project docs with automation docs.

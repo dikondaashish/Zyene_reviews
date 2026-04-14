@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Uppercase section label (DESIGN.md micro / caption style) for long settings forms.
+ * Uppercase section label (docs/DESIGN.md micro / caption style) for long settings forms.
  */
 export function SettingsSectionLabel({
     children,

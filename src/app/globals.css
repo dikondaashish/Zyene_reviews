@@ -144,7 +144,7 @@
 }
 
 @layer utilities {
-  /* Marketing / hero only — geometric display (Syne); functional UI stays Inter (DESIGN.md) */
+  /* Marketing / hero only — geometric display (Syne); functional UI stays Inter (docs/DESIGN.md) */
   .font-display {
     font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
   }
@@ -163,7 +163,7 @@
     @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
   }
 
-  /* Primary CTA — border-first, Zapier orange (DESIGN.md §4 Buttons) */
+  /* Primary CTA — border-first, Zapier orange (docs/DESIGN.md §4 Buttons) */
   .cta-button {
     @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
            transition-colors duration-200 ease-out hover:brightness-95 active:brightness-90;

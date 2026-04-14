@@ -1,5 +1,5 @@
 {
-  "total_files": 528,
+  "total_files": 529,
   "items": [
     {
       "file": ".agent/docs/AGENTS.md",
@@ -371,6 +371,12 @@
       "file": "docs/FULL_FILE_USAGE_AUDIT.json",
       "status": "\u2705 ACTIVELY USED",
       "reason": "Referenced in repository",
+      "action": "KEEP"
+    },
+    {
+      "file": "docs/INDEX.md",
+      "status": "\u2705 ACTIVELY USED",
+      "reason": "Project config/docs/migrations artifact",
       "action": "KEEP"
     },
     {
