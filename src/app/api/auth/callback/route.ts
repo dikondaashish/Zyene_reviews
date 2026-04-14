@@ -74,11 +74,40 @@ export async function GET(request: Request) {
         if (data.user) {
             const admin = createAdminClient();
 
-            const inviteParamForAccept =
+            let inviteParamForAccept =
                 searchParams.get("invite")?.trim() ||
                 (typeof data.user.user_metadata?.invite_token === "string"
                     ? data.user.user_metadata.invite_token.trim()
                     : "");
+
+            // Fallback for verification flows where query params can be dropped by email providers/redirects.
+            // If the user email has a pending invite, auto-resolve it so invitees skip onboarding.
+            if (!inviteParamForAccept && data.user.email) {
+                try {
+                    const { data: pendingInvites } = await admin
+                        .from("invitations")
+                        .select("id, token, expires_at, created_at")
+                        .ilike("email", data.user.email)
+                        .is("accepted_at", null)
+                        .order("created_at", { ascending: false })
+                        .limit(10);
+
+                    const now = Date.now();
+                    const valid = (pendingInvites || []).find((inv) => {
+                        if (!inv) return false;
+                        if (!inv.expires_at) return true;
+                        const ts = new Date(inv.expires_at).getTime();
+                        return Number.isFinite(ts) && ts > now;
+                    });
+
+                    inviteParamForAccept =
+                        (valid?.token && valid.token.trim()) ||
+                        (valid?.id && valid.id.trim()) ||
+                        "";
+                } catch (e) {
+                    console.error("[Auth Callback] Failed to resolve invite fallback by email:", e);
+                }
+            }
 
             if (isAddBusinessFlow && addBusinessOrgId) {
                 // Check business limit before proceeding
