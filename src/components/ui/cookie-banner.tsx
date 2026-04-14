@@ -23,6 +23,28 @@ export function CookieBanner() {
     });
 
     useEffect(() => {
+        const isEmbedWidgetPath = window.location.pathname.startsWith("/w/");
+        const isPublicReviewPath = window.location.pathname.startsWith("/r/");
+        const reservedSingleSegmentRoutes = new Set([
+            "/",
+            "/privacy",
+            "/terms",
+            "/data-retention",
+            "/help",
+            "/about",
+            "/contact",
+            "/login",
+            "/signup",
+            "/forgot-password",
+        ]);
+        const isBusinessSlugPath =
+            /^\/[^/]+$/.test(window.location.pathname) &&
+            !reservedSingleSegmentRoutes.has(window.location.pathname);
+        const isInsideIframe = window.self !== window.top;
+        if (isEmbedWidgetPath || isPublicReviewPath || isBusinessSlugPath || isInsideIframe) {
+            return;
+        }
+
         // Delay slightly so it doesn't block the initial render immediately
         const timer = setTimeout(() => {
             const consent = localStorage.getItem(CONSENT_KEY);
