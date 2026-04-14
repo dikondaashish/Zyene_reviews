@@ -12,7 +12,7 @@ export function OrganizationDisplay({ organization }: OrganizationDisplayProps) 
     return (
         <Button
             variant="outline"
-            className="w-[220px] justify-start pointer-events-none"
+            className="hidden w-full max-w-[220px] justify-start pointer-events-none sm:flex"
             tabIndex={-1}
         >
             <Building2 className="mr-2 h-4 w-4 shrink-0" />

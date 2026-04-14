@@ -45,7 +45,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="w-[220px] justify-between"
+                    className="w-full max-w-[min(70vw,220px)] justify-between sm:w-[220px]"
                     disabled={switching}
                     aria-label={
                         activeBusiness
@@ -60,7 +60,10 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[220px]" align="start">
+            <DropdownMenuContent
+                className="w-[min(20rem,calc(100vw-1rem))] min-w-[12rem] sm:w-[220px]"
+                align="start"
+            >
                 <DropdownMenuLabel>Switch Business</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {businesses.length > 0 ? (

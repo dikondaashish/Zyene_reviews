@@ -173,7 +173,7 @@ export function AutoReplyToolbar({
                             onValueChange={(v) => void onMinRatingChange(v)}
                             disabled={saving}
                         >
-                            <SelectTrigger className="h-8 w-[130px] text-xs bg-background">
+                            <SelectTrigger className="h-10 w-[130px] text-sm bg-background md:h-8 md:text-xs">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
