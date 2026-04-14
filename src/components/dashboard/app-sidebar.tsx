@@ -19,7 +19,6 @@ import {
     Users,
     Target,
     Globe,
-    Plus,
     X,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -299,13 +298,6 @@ export function AppSidebar({
                 >
                     <X className="h-5 w-5" />
                 </button>
-                <Link
-                    href="/campaigns/new"
-                    className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-                >
-                    <Plus className="h-4 w-4" />
-                    Create
-                </Link>
             </SidebarHeader>
 
             <SidebarContent data-tour-target="tour-sidebar" className="px-2 py-3">
