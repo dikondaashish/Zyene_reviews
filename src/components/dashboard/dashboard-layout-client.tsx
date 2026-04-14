@@ -38,7 +38,7 @@ export function DashboardLayoutClient({
     return (
         <>
             <DashboardTourProvider />
-            <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b bg-background px-4">
+            <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
                     <>
@@ -59,7 +59,7 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-4 p-4 lg:p-6 bg-muted/40 dark:bg-background min-h-[calc(100vh-4rem)]">
+            <main className="flex min-w-0 flex-1 flex-col gap-4 bg-[#f7f5ef] p-4 lg:p-6 dark:bg-background min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
         </>

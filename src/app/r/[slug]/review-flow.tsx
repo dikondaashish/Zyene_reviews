@@ -101,7 +101,7 @@ export function PublicReviewFlow({
     businessCategory,
     requestId,
     googleUrl,
-    brandColor = "#2563EB", // Default Blue
+    brandColor = "#ff4f00", // Default primary
     reviewPageBackgroundColor,
     logoUrl,
     minStars: minStarsVal,
@@ -602,7 +602,7 @@ export function PublicReviewFlow({
                     <label className="text-sm font-semibold text-foreground">Your feedback</label>
                     <textarea
                         placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
-                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground"
+                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground"
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
                         autoFocus
@@ -624,7 +624,7 @@ export function PublicReviewFlow({
                             <input
                                 type="email"
                                 placeholder="you@example.com"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
                                 onKeyDown={(e) => {
@@ -654,7 +654,7 @@ export function PublicReviewFlow({
                                 inputMode="tel"
                                 autoComplete="tel"
                                 placeholder="+1 (555) 000-0000"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-blue-500 focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
                                 value={customerPhone}
                                 onChange={(e) => setCustomerPhone(e.target.value)}
                                 onKeyDown={(e) => {
@@ -673,8 +673,8 @@ export function PublicReviewFlow({
                         type="submit"
                         className={cn(
                             "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-                            "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                            "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
+                            "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                             "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                             "flex items-center justify-center gap-2"
                         )}
@@ -761,13 +761,13 @@ export function PublicReviewFlow({
                                     onMouseLeave={() => setHoverRating(null)}
                                     className={cn(
                                         "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
-                                        "border-2 hover:border-blue-300 hover:bg-blue-50/50",
-                                        "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                        "border-2 hover:border-primary/40 hover:bg-primary/10",
+                                        "focus:outline-none focus:ring-2 focus:ring-primary/40",
                                         rating !== r.value && "active:scale-95",
                                         hoverRating === r.value && rating !== r.value
-                                            ? "border-blue-400 bg-blue-50 scale-105 shadow-md"
+                                            ? "border-primary/50 bg-primary/10 scale-105 shadow-md"
                                             : rating === r.value
-                                                ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/20 shadow-md scale-105 z-10"
+                                                ? "border-primary bg-primary/10 ring-2 ring-primary/20 shadow-md scale-105 z-10"
                                                 : "border-border bg-background"
                                     )}
                                 >
@@ -783,7 +783,7 @@ export function PublicReviewFlow({
                                     <span className={cn(
                                         "text-[10px] sm:text-xs font-semibold tracking-tight transition-all duration-300",
                                         hoverRating === r.value || rating === r.value
-                                            ? "text-blue-700"
+                                            ? "text-primary"
                                             : "text-muted-foreground",
                                         rating === r.value && "opacity-0"
                                     )}>
@@ -830,11 +830,11 @@ export function PublicReviewFlow({
                                     onMouseLeave={() => setHoverRating(null)}
                                     className={cn(
                                         "w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-lg sm:text-xl font-bold transition-all duration-200 shadow-sm",
-                                        "border-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                                        "border-2 focus:outline-none focus:ring-2 focus:ring-primary/40",
                                         rating === num
-                                            ? "border-blue-600 bg-blue-600 text-white scale-110 shadow-md ring-4 ring-blue-500/20 z-10"
+                                            ? "border-primary bg-primary text-primary-foreground scale-110 shadow-md ring-4 ring-primary/20 z-10"
                                             : hoverRating === num
-                                                ? "border-blue-400 bg-blue-50 text-blue-700 scale-105"
+                                                ? "border-primary/50 bg-primary/10 text-primary scale-105"
                                                 : "border-border bg-background text-muted-foreground hover:border-foreground/30"
                                     )}
                                 >
@@ -863,7 +863,7 @@ export function PublicReviewFlow({
                                     setHoverRating(null);
                                     handleRate(val);
                                 }}
-                                className="w-full cursor-pointer h-3 bg-muted rounded-lg appearance-none accent-blue-600 hover:accent-blue-500 transition-all touch-none"
+                                className="w-full cursor-pointer h-3 bg-muted rounded-lg appearance-none accent-primary hover:accent-primary transition-all touch-none"
                                 style={{ touchAction: "none" }}
                             />
                             <div className="flex justify-between text-xs sm:text-sm font-semibold text-muted-foreground px-1 uppercase tracking-wider">
@@ -881,21 +881,21 @@ export function PublicReviewFlow({
                                     onClick={() => handleRate(r.value)}
                                     className={cn(
                                         "flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 w-full text-left",
-                                        "focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98]",
+                                        "focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-[0.98]",
                                         rating === r.value
-                                            ? "border-blue-600 bg-blue-50/80 shadow-sm"
-                                            : "border-border bg-background hover:border-blue-300 hover:bg-muted"
+                                            ? "border-primary bg-primary/10 shadow-sm"
+                                            : "border-border bg-background hover:border-primary/40 hover:bg-muted"
                                     )}
                                 >
                                     <div className={cn(
                                         "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-                                        rating === r.value ? "border-blue-600" : "border-border"
+                                        rating === r.value ? "border-primary" : "border-border"
                                     )}>
-                                        {rating === r.value && <div className="h-3 w-3 rounded-full bg-blue-600 animate-in zoom-in duration-200" />}
+                                        {rating === r.value && <div className="h-3 w-3 rounded-full bg-primary animate-in zoom-in duration-200" />}
                                     </div>
                                     <span className={cn(
                                         "font-medium text-lg",
-                                        rating === r.value ? "text-blue-900" : "text-foreground"
+                                        rating === r.value ? "text-primary" : "text-foreground"
                                     )}>
                                         {r.label}
                                     </span>
@@ -1011,8 +1011,8 @@ export function PublicReviewFlow({
                         <button
                             className={cn(
                                 "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
-                                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800",
-                                "shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30",
+                                "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
+                                "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                                 "active:scale-[0.98] flex items-center justify-center gap-2"
                             )}
                             onClick={handleTagsContinue}
@@ -1044,14 +1044,14 @@ export function PublicReviewFlow({
             <div className="px-8 py-20 text-center space-y-6">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
-                        <div className="h-1.5 flex-1 bg-blue-400 rounded-full animate-pulse" />
+                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
+                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
+                        <div className="h-1.5 flex-1 bg-primary/70 rounded-full animate-pulse" />
                     </div>
 
                     <div className="flex justify-center">
                         <div className="relative">
-                            <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse">
+                            <div className="h-16 w-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse">
                                 <Sparkles className="h-8 w-8 text-white" />
                             </div>
                             <div className="absolute -top-1 -right-1 h-4 w-4 bg-yellow-400 rounded-full animate-ping" />
@@ -1071,9 +1071,9 @@ export function PublicReviewFlow({
             <div className="px-8 py-10 space-y-8 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
-                        <div className="h-1.5 flex-1 bg-blue-600 rounded-full" />
+                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
+                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
+                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
                     </div>
 
                     <div className="text-center space-y-1">
@@ -1086,7 +1086,7 @@ export function PublicReviewFlow({
                     {/* AI Generated Review */}
                     <div className="relative">
                         <div className="absolute -top-3 left-4 bg-background px-2">
-                            <div className="flex items-center gap-1 text-xs font-semibold text-blue-600">
+                            <div className="flex items-center gap-1 text-xs font-semibold text-primary">
                                 <Sparkles className="h-3.5 w-3.5" />
                                 AI Generated
                             </div>
@@ -1094,7 +1094,7 @@ export function PublicReviewFlow({
                         <textarea
                             value={reviewText}
                             onChange={(e) => setReviewText(e.target.value)}
-                            className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-blue-200 focus:border-blue-500 focus:ring-0 outline-none resize-none transition-colors bg-blue-50/30 leading-relaxed"
+                            className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-primary/20 focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-primary/10 leading-relaxed"
                         />
                     </div>
 
@@ -1115,7 +1115,7 @@ export function PublicReviewFlow({
                             <>
                                 {/* Progress Bar Animation */}
                                 <div
-                                    className="absolute top-0 left-0 h-full bg-blue-200/50 z-0 ease-linear"
+                                    className="absolute top-0 left-0 h-full bg-primary/20 z-0 ease-linear"
                                     style={{
                                         width: `${progress}%`,
                                         transition: "width 2s linear"

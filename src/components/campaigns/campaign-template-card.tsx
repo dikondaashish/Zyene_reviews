@@ -17,7 +17,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
 
     return (
         <Card className={cn(
-            "group transition-all duration-300 border-dashed border-2 hover:border-solid hover:border-blue-200",
+            "group transition-all duration-300 border-dashed border-2 hover:border-solid hover:border-primary/25",
             compact ? "p-0" : "p-2"
         )}>
             <CardContent className={cn("p-4 flex flex-col h-full", compact && "p-3")}>
@@ -28,7 +28,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                     <Icon className="w-5 h-5" />
                 </div>
                 
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-blue-600 transition-colors">
+                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                     {template.name}
                 </h3>
                 
@@ -40,7 +40,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                     asChild 
                     variant="outline" 
                     size="sm" 
-                    className="w-full rounded-lg border-border hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all group/btn"
+                    className="w-full rounded-lg border-border hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all group/btn"
                 >
                     <Link href={`/campaigns/new?templateId=${template.id}`}>
                         Use Template

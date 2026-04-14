@@ -39,8 +39,8 @@ export function SmartInsightsCard() {
         return (
             <div className="rounded-xl border border-border bg-card p-6">
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Sparkles className="h-5 w-5 text-blue-500" />
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                         <h3 className="font-semibold text-base text-foreground">Smart Review Insights</h3>
@@ -48,7 +48,7 @@ export function SmartInsightsCard() {
                     </div>
                 </div>
                 <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+                    <Loader2 className="h-6 w-6 animate-spin text-primary/70" />
                 </div>
             </div>
         );
@@ -66,8 +66,8 @@ export function SmartInsightsCard() {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Sparkles className="h-5 w-5 text-blue-500" />
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                         <h3 className="font-semibold text-base text-foreground">Smart Review Insights</h3>
@@ -76,7 +76,7 @@ export function SmartInsightsCard() {
                         </p>
                     </div>
                 </div>
-                <span className="text-xs font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-1 rounded-md">
+                <span className="text-xs font-medium text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-md">
                     Smart
                 </span>
             </div>
@@ -92,7 +92,7 @@ export function SmartInsightsCard() {
                 <ul className="space-y-2.5">
                     {visibleThemes.map((theme, i) => (
                         <li key={i} className="flex items-start gap-2.5">
-                            <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
+                            <span className="mt-1.5 h-2 w-2 rounded-full bg-primary/60 flex-shrink-0" />
                             <span className="text-sm text-foreground leading-relaxed">{theme}</span>
                         </li>
                     ))}

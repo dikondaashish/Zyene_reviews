@@ -155,7 +155,7 @@ export default async function RequestsPage({
 
         switch (status) {
             case "queued": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
-            case "sent": return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200">Sent</Badge>;
+            case "sent": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">Sent</Badge>;
             case "delivered": return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Delivered</Badge>;
             case "clicked": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">Clicked</Badge>;
             case "failed": return <Badge variant="destructive">Failed</Badge>;

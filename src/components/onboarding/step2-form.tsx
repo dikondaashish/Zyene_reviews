@@ -277,7 +277,7 @@ export function Step2Form({
       {/* Google connect card */}
       <div className="relative rounded-2xl overflow-hidden">
         {/* Subtle gradient border */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-green-500/10 rounded-2xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 rounded-2xl" />
         <div className="relative bg-background/60 backdrop-blur-sm border border-primary/20 rounded-2xl p-6 sm:p-8 space-y-5">
 
           {googleState.status === "idle" && (
@@ -288,7 +288,7 @@ export function Step2Form({
               <Button
                 type="button"
                 onClick={handleConnectClick}
-                className="w-full h-14 text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-2xl transition-all font-semibold cursor-pointer group"
+                className="w-full h-14 text-base rounded-2xl border border-border bg-card text-foreground transition-colors font-semibold cursor-pointer group hover:bg-muted/50"
               >
                 <GoogleIcon />
                 <span className="ml-2.5">Connect Google Business</span>

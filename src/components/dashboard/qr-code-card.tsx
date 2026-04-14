@@ -265,10 +265,10 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
-                                <div className="bg-card p-6 rounded-[2rem] border-[4px] border-border flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-blue-100 duration-300 h-[228px] w-[228px]">
+                                <div className="bg-card p-6 rounded-[2rem] border-[4px] border-border flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-primary/25 duration-300 h-[228px] w-[228px]">
                                     <QrCode className="h-[140px] w-[140px] text-foreground" strokeWidth={1} />
                                 </div>
-                                <p className="text-[13px] text-foreground font-medium text-center group-hover:text-blue-600 transition-colors">
+                                <p className="text-[13px] text-foreground font-medium text-center group-hover:text-primary transition-colors">
                                     {dict.qr.tap_icon}
                                 </p>
                             </div>
@@ -323,7 +323,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                     <Printer className="h-4 w-4 mr-2" />
                                     {dict.qr.print_short}
                                 </Button>
-                                <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white">
+                                <Button onClick={() => toast.info("Order QR coming soon!")} className="w-full text-xs font-medium h-10 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
                                     <ShoppingCart className="h-4 w-4 mr-2" />
                                     {dict.qr.order_now}
                                 </Button>

@@ -129,7 +129,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                     <div className="flex flex-wrap gap-1 max-w-[200px]">
                         {tags.length > 0 ? (
                             tags.map((tag) => (
-                                <Badge key={tag} variant="secondary" className="px-1.5 py-0 text-[10px] font-medium bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 transition-colors">
+                                <Badge key={tag} variant="secondary" className="px-1.5 py-0 text-[10px] font-medium bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-colors">
                                     {tag}
                                 </Badge>
                             ))
@@ -294,7 +294,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className="border-border transition-colors hover:bg-muted/30 data-[state=selected]:bg-blue-50/30"
+                                    className="border-border transition-colors hover:bg-muted/30 data-[state=selected]:bg-primary/10"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className="py-4 align-middle h-auto">

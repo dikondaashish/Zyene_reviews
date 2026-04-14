@@ -344,7 +344,7 @@ export function ReviewCard({
     return (
         <div className={cn(
             "bg-card rounded-xl border border-border p-4 transition-all duration-300 relative group",
-            isSelected && "border-blue-200 bg-blue-50/20"
+            isSelected && "border-primary/30 bg-primary/10"
         )}>
             {/* Selection Checkbox */}
             {onSelect && (
@@ -356,7 +356,7 @@ export function ReviewCard({
                         type="checkbox"
                         checked={isSelected}
                         onChange={(e) => onSelect(review.id, e.target.checked)}
-                        className="w-4 h-4 rounded border-border text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer"
                     />
                 </div>
             )}
@@ -387,7 +387,7 @@ export function ReviewCard({
                                     {new Date(review.review_date || review.published_at || review.created_at || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </span>
                             )}
-                            <span className="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide border border-blue-100">{review.platform || 'Google'}</span>
+                            <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide border border-primary/20">{review.platform || 'Google'}</span>
                         </div>
                     </div>
                 </div>
@@ -423,7 +423,7 @@ export function ReviewCard({
                 <div className="text-sm text-muted-foreground leading-relaxed">
                     <p className={cn(!isExpanded && "line-clamp-3")}>{displayContent}</p>
                     {displayContent.length > 200 && (
-                        <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-600 text-xs font-medium mt-1 hover:underline focus:outline-none">
+                        <button onClick={() => setIsExpanded(!isExpanded)} className="text-primary text-xs font-medium mt-1 hover:underline focus:outline-none">
                             {isExpanded ? "Show less" : "Read more"}
                         </button>
                     )}
@@ -502,7 +502,7 @@ export function ReviewCard({
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Served by:</span>
                         <div className="flex flex-wrap gap-1">
                             {review.selected_staff.map(staff => (
-                                <Badge key={staff} variant="secondary" className="px-2 py-0 h-4 text-[9px] bg-blue-50 text-blue-700 border-blue-100 font-medium">
+                                <Badge key={staff} variant="secondary" className="px-2 py-0 h-4 text-[9px] bg-primary/10 text-primary border-primary/20 font-medium">
                                     {staff}
                                 </Badge>
                             ))}
@@ -513,7 +513,7 @@ export function ReviewCard({
 
             {/* Existing Response */}
             {review.response_status === 'responded' && review.response_text && !isEditingReply && (
-                <div className="mt-5 bg-muted rounded-md p-3 text-sm border-l-2 border-blue-500 ml-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="mt-5 bg-muted rounded-md p-3 text-sm border-l-2 border-primary ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground min-w-0">
                             <CornerDownRight className="w-3 h-3 text-muted-foreground shrink-0" />
@@ -623,7 +623,7 @@ export function ReviewCard({
                                     <div className="flex items-center gap-2">
                                         <Button
                                             size="sm"
-                                            className="h-9 text-xs font-semibold px-6 bg-blue-600 hover:bg-blue-700 text-white"
+                                            className="h-9 text-xs font-semibold px-6 bg-primary hover:bg-primary/90 text-primary-foreground"
                                             onClick={() => setIsReplying(true)}
                                         >
                                             <MessageSquare className="w-3.5 h-3.5 mr-2" />
@@ -729,7 +729,7 @@ export function ReviewCard({
                                                 href={googleMapsHref}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:underline"
+                                                className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
                                             >
                                                 <ExternalLink className="w-3.5 h-3.5" aria-hidden />
                                                 Open listing on Google Maps
@@ -821,7 +821,7 @@ export function ReviewCard({
                         <Textarea
                             placeholder="Write a response or click a tone above for an AI draft..."
                             className={cn(
-                                "min-h-[120px] bg-background text-sm resize-none focus-visible:ring-blue-500 border-border focus:border-blue-500 placeholder:text-muted-foreground",
+                                "min-h-[120px] bg-background text-sm resize-none focus-visible:ring-primary border-border focus:border-primary placeholder:text-muted-foreground",
                                 isAiTyping && "border-violet-200 ring-1 ring-violet-100"
                             )}
                             value={replyText}
@@ -853,8 +853,8 @@ export function ReviewCard({
                             disabled={isSubmitting || !replyText.trim()}
                             className={cn(
                                 "min-w-[7.5rem] px-6 font-semibold rounded-lg",
-                                "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-                                "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+                                "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/95",
+                                "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                                 "disabled:opacity-100 disabled:bg-muted disabled:text-muted-foreground disabled:hover:bg-muted"
                             )}
                         >

@@ -44,7 +44,7 @@ export default async function BusinessesPage() {
                     <Button className="gap-2" variant={atLimit ? "outline" : "default"}>
                         {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                         Add a business
-                        {atLimit && <Badge variant="secondary" className="ml-1 bg-blue-100 text-blue-700 border-blue-200">Upgrade</Badge>}
+                        {atLimit && <Badge variant="secondary" className="ml-1 bg-primary/10 text-primary border-primary/20">Upgrade</Badge>}
                     </Button>
                 </Link>
             </div>

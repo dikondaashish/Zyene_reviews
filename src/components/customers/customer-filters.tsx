@@ -57,10 +57,10 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
             <div className="flex flex-col md:flex-row items-center gap-4">
                 {/* Search Bar */}
                 <div className="relative flex-1 w-full group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted-foreground transition-colors group-focus-within:text-blue-500" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
                         placeholder="Search by name, email, or phone..."
-                        className="pl-11 h-12 bg-background border-border rounded-2xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm font-medium"
+                        className="pl-11 h-12 bg-background border-border rounded-2xl focus:ring-2 focus:ring-primary/15 focus:border-primary/60 transition-all text-sm font-medium"
                         value={searchValue}
                         onChange={(e) => {
                             setSearchValue(e.target.value);
@@ -72,7 +72,7 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                 {/* Segment Selector */}
                 <div className="w-full md:w-[220px]">
                     <Select defaultValue="all" onValueChange={(v) => onSegmentChange(v as CustomerSegment)}>
-                        <SelectTrigger className="h-12 bg-background border-border rounded-2xl focus:ring-2 focus:ring-blue-100 text-sm font-medium px-4">
+                        <SelectTrigger className="h-12 bg-background border-border rounded-2xl focus:ring-2 focus:ring-primary/15 text-sm font-medium px-4">
                             <div className="flex items-center gap-2">
                                 <Users className="h-4 w-4 text-muted-foreground" />
                                 <SelectValue placeholder="All Customers" />
@@ -81,7 +81,7 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                         <SelectContent className="rounded-xl border-border">
                             <SelectItem value="all" className="py-2.5">
                                 <div className="flex items-center gap-2">
-                                    <Users className="h-4 w-4 text-blue-500" />
+                                    <Users className="h-4 w-4 text-primary" />
                                     <span>All Customers</span>
                                 </div>
                             </SelectItem>
@@ -135,11 +135,11 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                             onClick={() => toggleTag(tag)}
                             className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
                                 selectedTags.includes(tag)
-                                    ? "bg-blue-600 text-white ring-2 ring-blue-100"
+                                    ? "bg-primary text-primary-foreground ring-2 ring-primary/20"
                                     : "bg-muted text-muted-foreground hover:bg-border"
                             }`}
                         >
-                            <TagIcon className={`h-3 w-3 ${selectedTags.includes(tag) ? "text-blue-100" : "text-muted-foreground"}`} />
+                            <TagIcon className={`h-3 w-3 ${selectedTags.includes(tag) ? "text-primary-foreground/80" : "text-muted-foreground"}`} />
                             {tag}
                         </button>
                     ))}

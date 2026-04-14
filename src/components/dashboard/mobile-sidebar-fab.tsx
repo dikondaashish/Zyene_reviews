@@ -20,7 +20,7 @@ export function MobileSidebarFAB() {
             onClick={() => toggleSidebar()}
             className={`
                 fixed bottom-6 right-6 rounded-full
-                bg-blue-600 hover:bg-blue-700 text-white
+                bg-primary hover:bg-primary/90 text-primary-foreground
                 h-14 w-14 p-0 z-40
                 transition-all duration-200
             `}

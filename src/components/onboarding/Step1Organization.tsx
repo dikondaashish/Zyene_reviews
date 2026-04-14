@@ -116,7 +116,7 @@ export function Step1Organization({ onSuccess }: Step1OrganizationProps) {
 
       {/* Progress indicator */}
       <div className="mt-8 flex justify-center gap-2">
-        <div className="h-2 w-8 bg-blue-600 rounded-full" />
+        <div className="h-2 w-8 bg-primary rounded-full" />
         <div className="h-2 w-8 bg-muted rounded-full" />
         <div className="h-2 w-8 bg-muted rounded-full" />
         <div className="h-2 w-8 bg-muted rounded-full" />

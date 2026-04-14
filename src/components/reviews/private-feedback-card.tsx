@@ -145,7 +145,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                         <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Served by:</span>
                         <div className="flex flex-wrap gap-1">
                             {feedback.selected_staff.map(staff => (
-                                <Badge key={staff} variant="outline" className="px-2 py-0 h-4 text-[10px] bg-blue-50 text-blue-700 border-blue-100">
+                                <Badge key={staff} variant="outline" className="px-2 py-0 h-4 text-[10px] bg-primary/10 text-primary border-primary/20">
                                     {staff}
                                 </Badge>
                             ))}

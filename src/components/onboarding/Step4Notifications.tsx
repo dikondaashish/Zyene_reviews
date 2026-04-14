@@ -126,7 +126,7 @@ export function Step4Notifications({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Email Alerts */}
           <div className="space-y-4">
-            <div className="rounded-lg border border-blue-100 bg-blue-50 p-4">
+            <div className="rounded-lg border border-primary/20 bg-primary/10 p-4">
               <FormField
                 control={form.control}
                 name="emailAlerts"
@@ -233,10 +233,10 @@ export function Step4Notifications({
 
       {/* Progress indicator */}
       <div className="mt-8 flex justify-center gap-2">
-        <div className="h-2 w-8 bg-blue-600 rounded-full" />
-        <div className="h-2 w-8 bg-blue-600 rounded-full" />
-        <div className="h-2 w-8 bg-blue-600 rounded-full" />
-        <div className="h-2 w-8 bg-blue-600 rounded-full" />
+        <div className="h-2 w-8 bg-primary rounded-full" />
+        <div className="h-2 w-8 bg-primary rounded-full" />
+        <div className="h-2 w-8 bg-primary rounded-full" />
+        <div className="h-2 w-8 bg-primary rounded-full" />
       </div>
     </div>
   );

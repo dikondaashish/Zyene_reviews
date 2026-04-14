@@ -246,7 +246,7 @@ export function AppSidebar({
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-sidebar-primary-foreground">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground shadow-sm">
                                     <span className="text-lg font-bold text-white">Z</span>
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">

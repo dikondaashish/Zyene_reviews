@@ -46,7 +46,7 @@ export function GoogleConnectEmptyState() {
 
       {/* Button */}
       <Link href="/integrations">
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
           Connect Google →
         </Button>
       </Link>

@@ -52,7 +52,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4 duration-300">
             <div className="bg-foreground text-background rounded-full px-4 py-2 flex items-center gap-4 border border-border">
                 <div className="flex items-center gap-2 border-r border-border/40 pr-4">
-                    <div className="bg-blue-600 text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
+                    <div className="bg-primary text-primary-foreground text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
                         {selectedIds.length}
                     </div>
                     <span className="text-xs font-medium">Selected</span>

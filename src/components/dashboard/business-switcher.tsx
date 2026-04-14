@@ -75,7 +75,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                         >
                             <span className="truncate">{biz.name}</span>
                             {biz.id === activeBusinessId && (
-                                <Check className="h-4 w-4 text-blue-600 shrink-0" />
+                                <Check className="h-4 w-4 text-primary shrink-0" />
                             )}
                         </DropdownMenuItem>
                     ))
@@ -89,13 +89,13 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                     {businesses.length >= maxBusinesses ? (
                         <Link 
                             href="/settings/billing?status=limit_reached" 
-                            className="flex items-center justify-between w-full cursor-pointer text-blue-600 font-medium"
+                            className="flex items-center justify-between w-full cursor-pointer text-primary font-medium"
                         >
                             <div className="flex items-center gap-2">
                                 <Plus className="h-4 w-4" />
                                 Add a Business
                             </div>
-                            <span className="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Upgrade</span>
+                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">Upgrade</span>
                         </Link>
                     ) : (
                         <Link href="/businesses/add" className="flex items-center gap-2 cursor-pointer">

@@ -39,13 +39,13 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
             id: "google", 
             name: "Google", 
             icon: <Chrome className="w-4 h-4 text-[#4285F4]" />,
-            color: "text-blue-500"
+            color: "text-primary"
         },
         { 
             id: "facebook", 
             name: "Facebook", 
             icon: <Facebook className="w-4 h-4 text-[#1877F2]" />,
-            color: "text-blue-600"
+            color: "text-primary"
         },
     ];
 

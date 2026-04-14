@@ -74,7 +74,7 @@ function ChannelBadge({ channel }: { channel: string }) {
         sms: {
             label: "SMS",
             icon: MessageSquare,
-            color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+            color: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
         },
         email: {
             label: "Email",

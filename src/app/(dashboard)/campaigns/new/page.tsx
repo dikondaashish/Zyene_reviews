@@ -307,7 +307,7 @@ function NewCampaignForm() {
                                             Preview
                                         </div>
                                         <div className="relative max-w-[280px]">
-                                            <div className="rounded-2xl rounded-bl-sm bg-blue-600 px-4 py-3 text-white text-sm">
+                                            <div className="rounded-2xl rounded-bl-sm bg-primary px-4 py-3 text-primary-foreground text-sm">
                                                 {previewSMS}
                                             </div>
                                         </div>

@@ -161,7 +161,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                                     variant="outline"
                                     className={`font-mono text-[10px] shrink-0 ${ep.method === "POST"
                                             ? "text-green-700 border-green-300 dark:text-green-400 dark:border-green-800"
-                                            : "text-blue-700 border-blue-300 dark:text-blue-400 dark:border-blue-800"
+                                            : "text-primary border-primary/30 dark:text-primary dark:border-primary/40"
                                         }`}
                                 >
                                     {ep.method}

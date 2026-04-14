@@ -104,7 +104,7 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
                     <div
                         className={cn(
                             "h-full rounded-full transition-all",
-                            isNearLimit ? "bg-primary" : "bg-blue-500"
+                            isNearLimit ? "bg-primary" : "bg-primary/70"
                         )}
                         style={{ width: `${percentage}%` }}
                     />
@@ -410,7 +410,7 @@ export function BillingClient({
                             variant={isPaidPlan ? (planStatus === "trialing" ? "secondary" : "default") : "secondary"}
                             className={cn(
                                 "text-sm px-3 py-1 w-fit",
-                                planStatus === "trialing" && "bg-blue-50 text-blue-700 border-blue-200"
+                                planStatus === "trialing" && "bg-primary/10 text-primary border-primary/20"
                             )}
                         >
                             {isPaidPlan
@@ -502,17 +502,17 @@ export function BillingClient({
                 )}
 
                 {!isPaidPlan && !hasStripeCustomer && (
-                    <CardFooter className="bg-blue-50/50 dark:bg-blue-950/20 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
-                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0 hidden sm:block" />
+                    <CardFooter className="bg-primary/10 dark:bg-primary/15 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
+                        <Sparkles className="h-5 w-5 text-primary shrink-0 hidden sm:block" />
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">{b.starter_msg}</p>
-                            <p className="text-xs text-blue-800/90 dark:text-blue-200/90">
+                            <p className="text-sm font-medium text-primary">{b.starter_msg}</p>
+                            <p className="text-xs text-primary/90">
                                 {checkoutOffersTrial ? b.starter_price : b.starter_price_no_trial}
                             </p>
                         </div>
                         <Button
                             size="sm"
-                            className="bg-blue-600 hover:bg-blue-700 gap-1 shrink-0 text-white"
+                            className="bg-primary hover:bg-primary/90 gap-1 shrink-0 text-primary-foreground"
                             onClick={() => document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" })}
                         >
                             {b.upgrade} <ArrowRight className="h-3.5 w-3.5" />

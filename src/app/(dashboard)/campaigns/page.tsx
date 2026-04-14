@@ -226,7 +226,7 @@ export default function CampaignsPage() {
                                 Automated SMS/Email
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
                                 Smart Triggers
                             </div>
                             <div className="flex items-center gap-2">

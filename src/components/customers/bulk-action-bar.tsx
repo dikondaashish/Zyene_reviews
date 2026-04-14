@@ -31,7 +31,7 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onSendRequests
             >
                 <div className="bg-foreground text-background rounded-3xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 pointer-events-auto border border-border backdrop-blur-xl">
                     <div className="flex items-center gap-3 pl-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white ring-4 ring-blue-500/20">
+                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground ring-4 ring-primary/20">
                             <span className="text-xs font-bold leading-none">{selectedCount}</span>
                         </div>
                         <div className="flex flex-col">
@@ -45,7 +45,7 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onSendRequests
                             variant="ghost" 
                             size="sm" 
                             onClick={onSendRequests}
-                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl h-10 px-4 transition-all hover:scale-105 active:scale-95 border-none"
+                            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl h-10 px-4 transition-all hover:scale-105 active:scale-95 border-none"
                         >
                             <Send className="mr-2 h-3.5 w-3.5" />
                             Send Requests

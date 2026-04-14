@@ -27,7 +27,7 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
         name: "Appointment Follow-up",
         description: "Perfect for services, clinics, and salons. Optimized for appointments.",
         icon: Calendar,
-        color: "text-blue-600 bg-blue-50 border-blue-100",
+        color: "text-primary bg-primary/10 border-primary/20",
         defaultValues: {
             name: "Service Follow-up",
             channel: "both",
