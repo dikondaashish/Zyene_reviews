@@ -254,3 +254,23 @@ export function planAllowsAiReviewFeatures(
     if (!tier) return false;
     return hasActiveOrTrialingStatus(planStatus);
 }
+
+/**
+ * Team seat cap by subscription family.
+ * - Starter: 5
+ * - Professional: 15
+ * - Enterprise: unlimited (-1)
+ * Non-active/trialing subscriptions fall back to unsubscribed/free seats.
+ */
+export function teamMemberLimitForPlan(
+    plan: string | null | undefined,
+    planStatus: string | null | undefined
+): number {
+    const tier = planProductTier(plan);
+    if (!tier || !hasActiveOrTrialingStatus(planStatus)) {
+        return FREE_LIMITS.teamMembers;
+    }
+    if (tier === "starter") return 5;
+    if (tier === "professional") return 15;
+    return -1;
+}

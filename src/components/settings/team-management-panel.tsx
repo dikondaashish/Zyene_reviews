@@ -114,7 +114,11 @@ export function TeamManagementPanel({
                 ) : null}
             </div>
 
-            {maxMembers > 0 ? (
+            {maxMembers === -1 ? (
+                <div className="rounded-xl border border-border/80 bg-card px-4 py-3">
+                    <p className="text-base font-semibold">Unlimited seats on your Enterprise plan</p>
+                </div>
+            ) : maxMembers > 0 ? (
                 <div className="rounded-xl border border-border/80 bg-card px-4 py-3">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                         <p className="text-base font-semibold">

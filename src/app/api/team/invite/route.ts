@@ -5,6 +5,7 @@ import { deliverTeamInviteEmail } from "@/lib/team/deliver-team-invite-email";
 import { z } from "zod";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { canManageBusinessTeam, INVITE_ROLE_VALUES } from "@/lib/team/business-team";
+import { teamMemberLimitForPlan } from "@/services/stripe/plans";
 
 const inviteRoleSchema = z.preprocess(
     (v) => (typeof v === "string" ? v.trim().toLowerCase() : v),
@@ -76,16 +77,18 @@ export async function POST(request: Request) {
     if (!resolvedOrganizationId) {
         return apiError("Organization not found for active business", { status: 400 });
     }
-    let maxMembersRaw: unknown = organization?.max_team_members;
-    if (maxMembersRaw == null || Number.isNaN(Number(maxMembersRaw))) {
+    let planRaw: string | null | undefined = organization?.plan;
+    let planStatusRaw: string | null | undefined = organization?.plan_status;
+    if (!planRaw || !planStatusRaw) {
         const { data: orgRow } = await supabase
             .from("organizations")
-            .select("max_team_members")
+            .select("plan, plan_status")
             .eq("id", resolvedOrganizationId)
             .maybeSingle();
-        maxMembersRaw = orgRow?.max_team_members ?? 1;
+        planRaw = orgRow?.plan ?? null;
+        planStatusRaw = orgRow?.plan_status ?? null;
     }
-    const maxMembers = Number(maxMembersRaw);
+    const maxMembers = teamMemberLimitForPlan(planRaw, planStatusRaw);
 
     const { data: existingMembers } = await supabase
         .from("business_members")
@@ -112,7 +115,7 @@ export async function POST(request: Request) {
         .is("accepted_at", null);
 
     const totalSeats = Number(currentMemberCount || 0) + Number(pendingInviteCount || 0);
-    if (totalSeats >= maxMembers) {
+    if (maxMembers !== -1 && totalSeats >= maxMembers) {
         return apiError("Team member limit reached. Please upgrade your plan.", { status: 403 });
     }
 

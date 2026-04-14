@@ -10,6 +10,7 @@ import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-erro
 import { canManageBusinessTeam } from "@/lib/team/business-team";
 import { TeamManagementPanel } from "@/components/settings/team-management-panel";
 import { buildTeamInviteSignupLink } from "@/lib/team/deliver-team-invite-email";
+import { teamMemberLimitForPlan } from "@/services/stripe/plans";
 import { Users } from "lucide-react";
 
 export default async function TeamSettingsPage() {
@@ -110,7 +111,10 @@ export default async function TeamSettingsPage() {
 
     const activeMembersCount = (members || []).length;
     const pendingInvitesCount = (invites || []).length;
-    const maxMembers = Number(organization?.max_team_members ?? 1);
+    const maxMembers = teamMemberLimitForPlan(
+        organization?.plan ?? null,
+        organization?.plan_status ?? null
+    );
 
     const newestPendingInvite = [...(invites || [])]
         .sort((a: any, b: any) => {
