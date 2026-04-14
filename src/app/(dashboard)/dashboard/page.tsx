@@ -699,9 +699,6 @@ export default async function DashboardPage() {
                 {isGoogleConnected && <SyncButton />}
             </div>
 
-            {/* Smart Review Insights */}
-            <SmartInsightsCard />
-
             {/* QR Code Card */}
             {business.slug && (
                 <QRCodeCard
@@ -710,6 +707,9 @@ export default async function DashboardPage() {
                     businessName={business.name || "Business"}
                 />
             )}
+
+            {/* Smart Review Insights */}
+            <SmartInsightsCard />
 
             {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
             {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
