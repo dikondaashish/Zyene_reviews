@@ -20,6 +20,7 @@ import {
     Target,
     Globe,
     Plus,
+    X,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -37,6 +38,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
+    useSidebar,
 } from "@/components/ui/sidebar"
 import {
     Collapsible,
@@ -53,35 +55,66 @@ type NavItem = {
 
 function navButtonClass(isActive: boolean) {
     return `
-        transition-all duration-150
+        h-11 rounded-xl px-2 transition-all duration-150
         ${isActive
-            ? "bg-sidebar-accent text-primary border-l-2 border-l-primary"
-            : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            ? "bg-sidebar-accent text-primary font-semibold"
+            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         }
     `
 }
 
 function MainNavItems({ items, pathname }: { items: NavItem[]; pathname: string }) {
+    const primaryItems = items.filter((item) =>
+        ["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
+    )
+    const secondaryItems = items.filter(
+        (item) => !["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
+    )
+
     return (
-        <SidebarMenu>
-            {items.map((item) => {
-                const isActive = pathname === item.url || pathname.startsWith(item.url + "/")
-                return (
-                    <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
-                        <SidebarMenuButton
-                            asChild
-                            tooltip={item.title}
-                            className={navButtonClass(isActive)}
-                        >
-                            <Link href={item.url}>
-                                <item.icon className={isActive ? "text-primary" : ""} />
-                                <span className={isActive ? "font-semibold" : ""}>{item.title}</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                )
-            })}
-        </SidebarMenu>
+        <div className="space-y-4">
+            <SidebarMenu>
+                {primaryItems.map((item) => {
+                    const isActive = pathname === item.url || pathname.startsWith(item.url + "/")
+                    return (
+                        <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
+                            <SidebarMenuButton
+                                asChild
+                                tooltip={item.title}
+                                className={navButtonClass(isActive)}
+                            >
+                                <Link href={item.url}>
+                                    <item.icon className={isActive ? "text-primary" : ""} />
+                                    <span>{item.title}</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
+            </SidebarMenu>
+
+            <div className="mx-2 border-t border-sidebar-border" />
+
+            <SidebarMenu>
+                {secondaryItems.map((item) => {
+                    const isActive = pathname === item.url || pathname.startsWith(item.url + "/")
+                    return (
+                        <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
+                            <SidebarMenuButton
+                                asChild
+                                tooltip={item.title}
+                                className={navButtonClass(isActive)}
+                            >
+                                <Link href={item.url}>
+                                    <item.icon className={isActive ? "text-primary" : ""} />
+                                    <span>{item.title}</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
+            </SidebarMenu>
+        </div>
     )
 }
 
@@ -142,6 +175,7 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & { hideGoogleQaNav?: boolean }) {
     const pathname = usePathname()
     const { dict } = useLanguage()
+    const { setOpenMobile } = useSidebar()
     const isSettingsActive = pathname.startsWith("/settings")
 
     // Memoize menu metadata so child renders only depend on pathname/language changes.
@@ -240,8 +274,8 @@ export function AppSidebar({
     ], [dict])
 
     return (
-        <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border">
-            <SidebarHeader>
+        <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border bg-[#f9f7f3]">
+            <SidebarHeader className="relative gap-3 border-b border-sidebar-border p-4">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
@@ -257,13 +291,28 @@ export function AppSidebar({
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
+                <button
+                    type="button"
+                    className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted/50 md:hidden"
+                    aria-label="Close sidebar"
+                    onClick={() => setOpenMobile(false)}
+                >
+                    <X className="h-5 w-5" />
+                </button>
+                <Link
+                    href="/campaigns/new"
+                    className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                >
+                    <Plus className="h-4 w-4" />
+                    Create
+                </Link>
             </SidebarHeader>
 
-            <SidebarContent data-tour-target="tour-sidebar">
+            <SidebarContent data-tour-target="tour-sidebar" className="px-2 py-3">
                 <MainNavItems items={items} pathname={pathname} />
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="border-t border-sidebar-border p-2">
                 <SettingsNavItems
                     items={settingsItems}
                     pathname={pathname}

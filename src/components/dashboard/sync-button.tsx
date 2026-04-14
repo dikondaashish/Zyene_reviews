@@ -71,6 +71,7 @@ export function SyncButton({ businessId }: { businessId?: string }) {
                 size="sm"
                 onClick={() => handleSync(false)}
                 disabled={isSyncing}
+                className="bg-[#695be8] text-white hover:bg-[#5d50cf] border-[#695be8] hover:border-[#5d50cf]"
             >
                 <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
                 {isSyncing ? "Syncing..." : "Sync Reviews"}
