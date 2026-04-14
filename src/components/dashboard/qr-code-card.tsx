@@ -206,14 +206,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
 
     return (
         <Card className="overflow-hidden bg-card border-border/60 border mt-2">
-            <CardContent className="p-0 flex flex-col md:flex-row">
+            <CardContent className="p-0 flex min-w-0 flex-col md:flex-row">
                 {/* Left Section: Text Content */}
-                <div className="flex-1 p-6 md:py-10 md:pl-16 lg:pl-24 md:pr-8 flex flex-col justify-center">
+                <div className="flex min-w-0 flex-1 flex-col justify-center p-6 md:py-10 md:pl-16 md:pr-8 lg:pl-24">
                     <div className="flex items-start gap-4">
                         <div className="mt-1 flex-shrink-0 text-muted-foreground">
                             <QrCode className="w-8 h-8" strokeWidth={1.5} />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                             <h2 className="text-3xl font-bold text-foreground tracking-tight mb-2">
                                 {businessName}
                             </h2>
@@ -226,9 +226,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                             
                             <div 
                                 onClick={handleCopyLink}
-                                className="flex items-center text-sm font-mono text-muted-foreground hover:text-foreground cursor-pointer transition-colors w-fit"
+                                className="flex max-w-full items-center text-sm font-mono text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                             >
-                                {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                <span
+                                    className="truncate"
+                                    title={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/${businessSlug}`}
+                                >
+                                    {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                </span>
                                 {copied ? <Check className="w-4 h-4 ml-2 text-green-500" /> : <Copy className="w-4 h-4 ml-2" />}
                             </div>
                         </div>
@@ -236,7 +241,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Middle Action Buttons */}
-                <div className="px-6 py-8 flex flex-col justify-center gap-3 md:border-r border-border/60 min-w-[180px] md:pr-8 lg:pr-12">
+                <div className="w-full px-6 py-6 flex flex-col justify-center gap-3 border-t border-border/60 md:w-auto md:border-t-0 md:border-r md:min-w-[180px] md:py-8 md:pr-8 lg:pr-12">
                     <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
                         <Download className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.download}
@@ -256,7 +261,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="p-6 md:py-10 md:pl-8 lg:pl-12 md:pr-16 lg:pr-24 flex flex-col items-center justify-center min-w-[280px] bg-card">
+                <div className="w-full bg-card p-6 flex flex-col items-center justify-center border-t border-border/60 md:w-auto md:border-t-0 md:min-w-[280px] md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
@@ -268,7 +273,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                 </p>
                             </div>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-md rounded-2xl p-8 border-none">
+                        <DialogContent className="sm:max-w-md rounded-2xl p-4 sm:p-8 border-none">
                             <DialogTitle className="sr-only">QR Code for {businessName}</DialogTitle>
                             <div className="flex flex-col items-center mb-2">
                                 <h2 className="text-2xl font-bold text-foreground text-center mb-2">
@@ -276,9 +281,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
                                 </h2>
                                 <div 
                                     onClick={handleCopyLink}
-                                    className="flex items-center text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors w-fit mx-auto"
+                                    className="flex max-w-full items-center text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors mx-auto"
                                 >
-                                    {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                    <span
+                                        className="truncate"
+                                        title={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/${businessSlug}`}
+                                    >
+                                        {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                    </span>
                                     {copied ? <Check className="w-3.5 h-3.5 ml-1.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 ml-1.5" />}
                                 </div>
                             </div>

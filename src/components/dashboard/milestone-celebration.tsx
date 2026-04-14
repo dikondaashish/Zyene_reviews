@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { useReducedMotion } from "framer-motion";
 import { toast, type ToastT } from "sonner";
 import { Sparkles, Trophy } from "lucide-react";
 
@@ -22,7 +21,6 @@ const MILESTONES = {
 export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: MilestoneCelebrationProps) {
     const [lastMilestone, setLastMilestone] = useState<number | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
         if (isDemo) return;
@@ -56,25 +54,24 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
     }, [currentCount, type, lastMilestone, isInitialized]);
 
     const triggerCelebration = (milestone: number, milestoneType: string) => {
-        if (!shouldReduceMotion) {
-            const duration = 5 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+        // Confetti!
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
 
-            const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-            const interval: ReturnType<typeof setInterval> = setInterval(() => {
-                const timeLeft = animationEnd - Date.now();
+        const interval: ReturnType<typeof setInterval> = setInterval(() => {
+            const timeLeft = animationEnd - Date.now();
 
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
 
-                const particleCount = 50 * (timeLeft / duration);
-                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-            }, 250);
-        }
+            const particleCount = 50 * (timeLeft / duration);
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
 
         // Toast Notification
         const message = milestoneType === "reviews" 
@@ -84,7 +81,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
             : `Phenomenal! Your business maintains a ${milestone} star rating! ⭐`;
 
         toast.custom((id) => (
-            <div className="animate-in fade-in zoom-in max-w-[420px] min-w-[320px] w-[calc(100vw-32px)] bg-background border-2 border-primary rounded-2xl pointer-events-auto flex flex-row ring-1 ring-border overflow-hidden transition-all duration-300">
+            <div className="animate-in fade-in zoom-in w-[calc(100vw-1rem)] min-w-0 max-w-[420px] bg-background border-2 border-primary shadow-2xl rounded-xl sm:rounded-2xl pointer-events-auto flex flex-col sm:flex-row ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-300">
                 <div className="flex-1 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
@@ -102,11 +99,11 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
                         </div>
                     </div>
                 </div>
-                <div className="flex border-l border-muted/50">
+                <div className="flex border-t border-muted/50 sm:border-t-0 sm:border-l">
                     <button
                         type="button"
                         onClick={() => toast.dismiss(id)}
-                        className="w-full min-h-11 border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer active:bg-primary/10 whitespace-nowrap"
+                        className="w-full border border-transparent rounded-none rounded-b-xl p-4 sm:rounded-b-none sm:rounded-r-2xl flex min-h-11 items-center justify-center text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus:outline-none cursor-pointer active:bg-primary/10"
                     >
                         Awesome!
                     </button>

@@ -45,7 +45,7 @@ interface AnimatedReviewCardsProps {
 }
 
 const cardVariants = cva(
-  "absolute h-[300px] w-[300px] overflow-hidden rounded-lg bg-background sm:w-[350px] md:h-[250px] md:w-[550px]",
+  "absolute h-[300px] w-[calc(100vw-2rem)] max-w-[300px] overflow-hidden rounded-lg bg-background sm:w-[350px] sm:max-w-none md:h-[250px] md:w-[550px]",
   {
     variants: {
       theme: {

@@ -83,7 +83,7 @@ export function AddCompetitorDialog({
                     Track Competitor
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-106.25">
+            <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Add a Competitor</DialogTitle>
@@ -93,11 +93,11 @@ export function AddCompetitorDialog({
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         {/* Competitor Name Field */}
-                        <div className="grid grid-cols-4 items-start gap-4">
-                            <Label htmlFor="name" className="text-right pt-2">
+                        <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-4 sm:gap-4">
+                            <Label htmlFor="name" className="pt-0 text-left sm:pt-2 sm:text-right">
                                 Name *
                             </Label>
-                            <div className="col-span-3">
+                            <div className="sm:col-span-3">
                                 <Input
                                     id="name"
                                     value={name}
@@ -122,11 +122,11 @@ export function AddCompetitorDialog({
                         </div>
 
                         {/* Google Maps URL Field */}
-                        <div className="grid grid-cols-4 items-start gap-4">
-                            <Label htmlFor="url" className="text-right pt-2">
+                        <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-4 sm:gap-4">
+                            <Label htmlFor="url" className="pt-0 text-left sm:pt-2 sm:text-right">
                                 Google Maps URL
                             </Label>
-                            <div className="col-span-3">
+                            <div className="sm:col-span-3">
                                 <Input
                                     id="url"
                                     value={googleUrl}
@@ -152,7 +152,7 @@ export function AddCompetitorDialog({
                             </div>
                         </div>
 
-                        <p className="text-xs text-muted-foreground col-span-4 pl-16">
+                        <p className="text-xs text-muted-foreground sm:col-span-4 sm:pl-16">
                             We'll monitor their rating and review count automatically. First sync may take a few minutes.
                         </p>
                     </div>

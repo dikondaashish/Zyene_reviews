@@ -118,8 +118,16 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
         }
     }
 
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const protocol =
+        typeof window !== "undefined"
+            ? window.location.protocol
+            : rootDomain.includes("localhost")
+                ? "http:"
+                : "https:";
+
     const reviewLink = businessSlug
-        ? `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${businessSlug}`
+        ? `${protocol}//${rootDomain}/${businessSlug}`
         : "";
 
     const handleCopyLink = async () => {
@@ -262,7 +270,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                 />
 
                                 <DialogFooter>
-                                    <Button type="submit" disabled={isLoading}>
+                                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
                                         {isLoading ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -279,13 +287,13 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                     <TabsContent value="link" className="space-y-4 pt-2">
                         {businessSlug ? (
                             <>
-                                <div className="flex items-center gap-2 p-3 bg-muted rounded-lg border border-border">
-                                    <span className="font-mono text-xs bg-muted px-2 py-1 rounded">
-                                        {process.env.NEXT_PUBLIC_ROOT_DOMAIN}/{businessSlug}
+                                <div className="flex min-w-0 items-center gap-2 p-3 bg-muted rounded-lg border border-border">
+                                    <span className="min-w-0 flex-1 truncate font-mono text-xs bg-muted px-2 py-1 rounded" title={reviewLink}>
+                                        {rootDomain}/{businessSlug}
                                     </span>
                                     <button
                                         onClick={handleCopyLink}
-                                        className="flex-shrink-0 p-1.5 rounded hover:bg-border transition-colors"
+                                        className="flex-shrink-0 rounded-md p-2 hover:bg-border transition-colors"
                                     >
                                         {linkCopied ? (
                                             <Check className="h-4 w-4 text-green-500" />

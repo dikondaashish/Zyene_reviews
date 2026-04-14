@@ -89,7 +89,7 @@ export default function Pricing() {
           <Tabs
             defaultValue="monthly"
             onValueChange={(v) => setBillingPeriod(v as "monthly" | "yearly")}
-            className="w-[300px]"
+            className="w-full max-w-[300px]"
           >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="monthly">Monthly</TabsTrigger>

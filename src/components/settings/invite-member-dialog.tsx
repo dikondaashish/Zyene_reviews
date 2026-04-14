@@ -151,7 +151,7 @@ export function InviteMemberDialog() {
                     Invite Member
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-106.25">
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Invite Member</DialogTitle>
                     <DialogDescription>
@@ -159,8 +159,8 @@ export function InviteMemberDialog() {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">
+                    <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-4 sm:gap-4">
+                        <Label htmlFor="email" className="text-left sm:text-right">
                             Email
                         </Label>
                         <Input
@@ -168,16 +168,16 @@ export function InviteMemberDialog() {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="col-span-3"
+                            className="sm:col-span-3"
                             placeholder="colleague@example.com"
                         />
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="role" className="text-right">
+                    <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-4 sm:gap-4">
+                        <Label htmlFor="role" className="text-left sm:text-right">
                             Role
                         </Label>
                         <Select value={role} onValueChange={setRole}>
-                            <SelectTrigger className="col-span-3">
+                            <SelectTrigger className="sm:col-span-3">
                                 <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                             <SelectContent>
