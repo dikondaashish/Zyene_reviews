@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Link from "next/link";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -15,7 +16,7 @@ export function DashboardLayoutClient({
     children,
     header,
 }: DashboardLayoutClientProps) {
-    const { open, setOpen } = useSidebar();
+    const { setOpen } = useSidebar();
 
     // Desktop: always open (≥1024px)
     const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -34,6 +35,40 @@ export function DashboardLayoutClient({
             setOpen(false); // Hidden
         }
     }, [isDesktop, isTablet, isMobile, setOpen]);
+
+    const handleManageCookies = () => {
+        const w = window as Window & {
+            OneTrust?: { ToggleInfoDisplay?: () => void };
+            Cookiebot?: { renew?: () => void };
+            UC_UI?: { showSecondLayer?: () => void };
+            openCookiePreferences?: () => void;
+        };
+
+        if (typeof w.OneTrust?.ToggleInfoDisplay === "function") {
+            w.OneTrust.ToggleInfoDisplay();
+            return;
+        }
+        if (typeof w.Cookiebot?.renew === "function") {
+            w.Cookiebot.renew();
+            return;
+        }
+        if (typeof w.UC_UI?.showSecondLayer === "function") {
+            w.UC_UI.showSecondLayer();
+            return;
+        }
+        if (typeof w.openCookiePreferences === "function") {
+            w.openCookiePreferences();
+            return;
+        }
+        window.dispatchEvent(new Event("zyene:open-cookie-preferences"));
+
+        // Final fallback: open privacy policy section with cookie info
+        setTimeout(() => {
+            if (typeof w.openCookiePreferences !== "function") {
+                window.location.href = "/privacy";
+            }
+        }, 100);
+    };
 
     return (
         <>
@@ -62,6 +97,24 @@ export function DashboardLayoutClient({
             <main className="flex min-w-0 flex-1 flex-col gap-4 bg-[#f7f5ef] p-4 lg:p-6 dark:bg-background min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
+            <footer className="border-t border-border/70 bg-card px-4 py-4">
+                <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                    <span>© {new Date().getFullYear()} Zyene Inc.</span>
+                    <Link href="/terms" className="transition-colors hover:text-[#695be8]">
+                        Legal
+                    </Link>
+                    <Link href="/privacy" className="transition-colors hover:text-[#695be8]">
+                        Privacy
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={handleManageCookies}
+                        className="transition-colors hover:text-[#695be8]"
+                    >
+                        Manage cookies
+                    </button>
+                </div>
+            </footer>
         </>
     );
 }

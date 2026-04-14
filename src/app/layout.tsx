@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LanguageProvider } from "@/lib/language-context";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
@@ -63,6 +64,7 @@ export default function RootLayout({
             <QueryProvider>
               {children}
               <Toaster />
+              <CookieBanner />
               <Analytics />
               <SpeedInsights />
             </QueryProvider>

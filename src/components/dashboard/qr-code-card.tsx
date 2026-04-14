@@ -205,7 +205,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
     };
 
     return (
-        <Card className="overflow-hidden bg-[#f9f7f3] border-border/60 border mt-2">
+        <Card className="mt-2 overflow-hidden border border-border/60 bg-[#f9f7f3] dark:bg-[#1f1d1a]">
             <CardContent className="p-0 flex min-w-0 flex-col md:flex-row">
                 {/* Left Section: Text Content */}
                 <div className="flex min-w-0 flex-1 flex-col justify-center p-6 md:py-10 md:pl-16 md:pr-8 lg:pl-24">
@@ -242,30 +242,30 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
 
                 {/* Middle Action Buttons */}
                 <div className="w-full px-6 py-6 flex flex-col justify-center gap-3 border-t border-border/60 md:w-auto md:border-t-0 md:border-r md:min-w-[180px] md:py-8 md:pr-8 lg:pr-12">
-                    <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
+                    <Button variant="outline" size="sm" onClick={handleDownload} disabled={!qrDataUrl} className="h-9 w-full justify-center rounded-md border-border bg-muted/50 text-xs font-medium text-foreground hover:bg-muted dark:bg-card/70 dark:hover:bg-card">
                         <Download className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.download}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
+                    <Button variant="outline" size="sm" onClick={handlePrint} disabled={!qrDataUrl} className="h-9 w-full justify-center rounded-md border-border bg-muted/50 text-xs font-medium text-foreground hover:bg-muted dark:bg-card/70 dark:hover:bg-card">
                         <Printer className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.print}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
+                    <Button variant="outline" size="sm" onClick={() => toast.info("Order QR coming soon!")} className="h-9 w-full justify-center rounded-md border-border bg-muted/50 text-xs font-medium text-foreground hover:bg-muted dark:bg-card/70 dark:hover:bg-card">
                         <QrCode className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.order}
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleShare} className="w-full justify-center text-xs font-medium h-9 rounded-md bg-muted/50 hover:bg-muted border-border text-foreground">
+                    <Button variant="outline" size="sm" onClick={handleShare} className="h-9 w-full justify-center rounded-md border-border bg-muted/50 text-xs font-medium text-foreground hover:bg-muted dark:bg-card/70 dark:hover:bg-card">
                         <Share2 className="h-3.5 w-3.5 mr-2" />
                         {dict.qr.share}
                     </Button>
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="w-full bg-[#f9f7f3] p-6 flex flex-col items-center justify-center border-t border-border/60 md:w-auto md:border-t-0 md:min-w-[280px] md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
+                <div className="flex w-full flex-col items-center justify-center border-t border-border/60 bg-[#f9f7f3] p-6 dark:bg-[#1f1d1a] md:w-auto md:min-w-[280px] md:border-t-0 md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
-                                <div className="bg-card p-6 rounded-[2rem] border-[4px] border-border flex items-center justify-center mb-6 transition-all group-hover:scale-105 group-hover:border-primary/25 duration-300 h-[228px] w-[228px]">
+                                <div className="mb-6 flex h-[228px] w-[228px] items-center justify-center rounded-[2rem] border-[4px] border-border bg-card p-6 transition-all duration-300 group-hover:scale-105 group-hover:border-primary/25 dark:bg-[#26221d]">
                                     <QrCode className="h-[140px] w-[140px] text-foreground" strokeWidth={1} />
                                 </div>
                                 <p className="text-[13px] text-foreground font-medium text-center group-hover:text-primary transition-colors">
