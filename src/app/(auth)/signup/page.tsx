@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
@@ -19,6 +19,50 @@ function SignupForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [checkingExistingSession, setCheckingExistingSession] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function handleExistingSession() {
+            const supabase = createClient();
+            const { data } = await supabase.auth.getUser();
+            const user = data.user;
+
+            if (!user) {
+                if (!cancelled) setCheckingExistingSession(false);
+                return;
+            }
+
+            // Already signed in: if this is an invite link, accept it and go to app.
+            if (inviteToken) {
+                try {
+                    const acceptRes = await fetch("/api/team/accept-invite", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: inviteToken }),
+                    });
+                    if (!acceptRes.ok) {
+                        const payload = await acceptRes.json().catch(() => ({}));
+                        toast.error("Invite acceptance failed", {
+                            description: payload?.error || "Please ask for a new invite.",
+                        });
+                    }
+                } catch {
+                    toast.error("Invite acceptance failed");
+                }
+            }
+
+            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+            const protocol = rootDomain.includes("localhost") ? "http" : "https";
+            window.location.href = `${protocol}://app.${rootDomain}/dashboard`;
+        }
+
+        void handleExistingSession();
+        return () => {
+            cancelled = true;
+        };
+    }, [inviteToken]);
 
     async function handleGoogleSignup() {
         setIsLoading(true);
@@ -107,6 +151,14 @@ function SignupForm() {
                         ← Back to Login
                     </button>
                 </Link>
+            </div>
+        );
+    }
+
+    if (checkingExistingSession) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
         );
     }
