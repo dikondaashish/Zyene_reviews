@@ -1348,6 +1348,7 @@ export async function savePlanSelection(
         plan: data.plan,
         plan_status: data.plan === "none" ? "active" : "trialing", // Trialing for paid plans
         max_businesses: limits.maxLocations,
+        max_team_members: limits.teamMembers,
         max_review_requests_per_month:
           limits.emailRequestsPerMonth +
           limits.smsRequestsPerMonth +
