@@ -235,3 +235,22 @@ export function planAllowsAutoCommenter(plan: string | null | undefined): boolea
     if (p.startsWith("professional_")) return true;
     return false;
 }
+
+export function hasActiveOrTrialingStatus(planStatus: string | null | undefined): boolean {
+    if (!planStatus) return false;
+    const status = String(planStatus).toLowerCase().trim();
+    return status === "active" || status === "trialing";
+}
+
+/**
+ * Strict eligibility for AI review features requested by product:
+ * Starter / Professional / Enterprise + active/trialing subscription status.
+ */
+export function planAllowsAiReviewFeatures(
+    plan: string | null | undefined,
+    planStatus: string | null | undefined
+): boolean {
+    const tier = planProductTier(plan);
+    if (!tier) return false;
+    return hasActiveOrTrialingStatus(planStatus);
+}

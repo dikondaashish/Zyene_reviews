@@ -3,10 +3,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const requestSchema = z.object({
     /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
     reviewRequestId: z.string().uuid().optional(),
+    businessId: z.string().uuid().optional(),
     businessName: z.string().min(1).max(200),
     businessCategory: z.string().min(1).max(120),
     rating: z.number().int().min(4).max(5),
@@ -42,7 +44,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const { reviewRequestId, businessName, businessCategory, rating, selectedTags, selectedStaff } =
+        const { reviewRequestId, businessId, businessName, businessCategory, rating, selectedTags, selectedStaff } =
             parsed.data;
         const tagsString = selectedTags.join(", ");
         const staffString =
@@ -51,6 +53,7 @@ export async function POST(request: Request) {
                 : "";
 
         let recentReviewsContext = "";
+        let resolvedBusinessId: string | null = null;
         if (reviewRequestId) {
             try {
                 const supabase = createAdminClient();
@@ -61,6 +64,7 @@ export async function POST(request: Request) {
                     .maybeSingle();
 
                 if (!rrErr && rr?.business_id) {
+                    resolvedBusinessId = rr.business_id;
                     const { data: reviews } = await supabase
                         .from("reviews")
                         .select("text")
@@ -78,6 +82,38 @@ export async function POST(request: Request) {
             } catch (err) {
                 console.error("Failed to fetch context reviews:", err);
             }
+        }
+
+        if (!resolvedBusinessId && businessId) {
+            resolvedBusinessId = businessId;
+        }
+
+        if (!resolvedBusinessId) {
+            return NextResponse.json(
+                { error: "AI review draft requires an eligible paid plan.", code: "AI_REVIEW_DRAFT_PLAN_REQUIRED" },
+                { status: 403 }
+            );
+        }
+
+        try {
+            const supabase = createAdminClient();
+            const { data: biz } = await supabase
+                .from("businesses")
+                .select("organizations!inner(plan, plan_status)")
+                .eq("id", resolvedBusinessId)
+                .maybeSingle();
+            const org = (biz as any)?.organizations ?? null;
+            if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
+                return NextResponse.json(
+                    { error: "AI review draft requires an active Starter, Professional, or Enterprise plan.", code: "AI_REVIEW_DRAFT_PLAN_REQUIRED" },
+                    { status: 403 }
+                );
+            }
+        } catch {
+            return NextResponse.json(
+                { error: "AI review draft requires an eligible paid plan.", code: "AI_REVIEW_DRAFT_PLAN_REQUIRED" },
+                { status: 403 }
+            );
         }
 
         const prompt = `You are a customer writing a short, natural Google review. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.

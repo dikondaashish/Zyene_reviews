@@ -2,6 +2,7 @@ import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { inngest } from "@/services/inngest/client";
 import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const DEFAULT_LIMIT = 500;
 const MAX_LIMIT = 2000;
@@ -30,6 +31,8 @@ export async function POST(request: Request) {
             .from("organization_members")
             .select(`
                 organizations (
+                    plan,
+                    plan_status,
                     businesses (
                         id
                     )
@@ -43,6 +46,12 @@ export async function POST(request: Request) {
         }
 
         const typed = memberData as any;
+        if (!planAllowsAiReviewFeatures(typed.organizations?.plan ?? null, typed.organizations?.plan_status ?? null)) {
+            return apiError(
+                "AI review analysis requires an active Starter, Professional, or Enterprise plan.",
+                { status: 403, code: "AI_ANALYSIS_PLAN_REQUIRED" }
+            );
+        }
         const businesses = (typed.organizations?.businesses || []) as Array<{ id: string }>;
         const business = requestedBusinessId
             ? businesses.find((entry) => entry.id === requestedBusinessId)

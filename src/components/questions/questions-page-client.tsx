@@ -26,6 +26,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { UpgradeModal } from "@/components/settings/upgrade-modal";
 
 export type GbpQuestionRow = {
     id: string;
@@ -81,6 +82,7 @@ export function QuestionsPageClient({
     const [answerText, setAnswerText] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [suggesting, setSuggesting] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     const rows = isDemo ? DEMO_QUESTIONS : questions;
 
@@ -110,6 +112,10 @@ export function QuestionsPageClient({
                 body: JSON.stringify({ questionId: activeId }),
             });
             const data = await res.json();
+            if (!res.ok && data?.code === "AI_QA_PLAN_REQUIRED") {
+                setShowUpgradeModal(true);
+                return;
+            }
             if (!res.ok) throw new Error(data.error || "Suggestion failed");
             const text = typeof data.answer === "string" ? data.answer : "";
             setAnswerText(text);
@@ -272,6 +278,13 @@ export function QuestionsPageClient({
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                title="Upgrade for AI suggestions"
+                description="AI review features are available on active Starter, Professional, and Enterprise plans."
+            />
         </div>
     );
 }

@@ -7,6 +7,7 @@ import {
 import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { Schema, Type as SchemaType } from "@google/genai";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const sentimentSchema: Schema = {
     type: SchemaType.OBJECT,
@@ -36,6 +37,7 @@ const categorySchema: Schema = {
 
 type ReviewForAnalysis = {
     id: string;
+    business_id?: string | null;
     rating?: number | null;
     content?: string | null;
     text?: string | null;
@@ -52,6 +54,20 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
     if (!review.content && !review.text) return;
 
     try {
+        const admin = createAdminClient();
+        const businessId = review.business_id ?? null;
+        if (businessId) {
+            const { data: biz } = await admin
+                .from("businesses")
+                .select("organizations!inner(plan, plan_status)")
+                .eq("id", businessId)
+                .maybeSingle();
+            const org = (biz as any)?.organizations ?? null;
+            if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
+                return null;
+            }
+        }
+
         const text = review.content || review.text || "";
         const prompt = SENTIMENT_PROMPT
             .replace("{rating}", (review.rating || 0).toString())
@@ -67,7 +83,6 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
 
         const parsed = JSON.parse(content) as SentimentAnalysisResult;
 
-        const admin = createAdminClient();
         await admin.from("reviews").update({
             sentiment: normalizeSentimentForDb(parsed.sentiment),
             urgency_score: normalizeUrgencyForDb(parsed.urgency),

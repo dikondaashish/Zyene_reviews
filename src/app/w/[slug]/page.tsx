@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
 import { notFound } from "next/navigation";
+import { AccessError } from "@/components/public/access-error";
 
 export const dynamic = "force-dynamic";
 
@@ -16,10 +17,31 @@ export default async function WidgetPage({
     const { slug } = await params;
     const admin = createAdminClient();
 
-    const { data: business } = await admin.from("businesses").select("id, name").eq("slug", slug).maybeSingle();
+    const { data: business } = await admin
+        .from("businesses")
+        .select(`
+            id,
+            name,
+            organization:organizations (
+                plan,
+                plan_status
+            )
+        `)
+        .eq("slug", slug)
+        .maybeSingle();
 
     if (!business) {
         notFound();
+    }
+
+    const org = (business as any).organization;
+    const paidPlans = ["starter", "professional", "enterprise"];
+    const hasEmbedAccess =
+        paidPlans.includes(org?.plan) &&
+        ["active", "trialing"].includes(org?.plan_status);
+
+    if (!hasEmbedAccess) {
+        return <AccessError type="subscription" businessName={business.name} />;
     }
 
     const { data: reviews } = await admin

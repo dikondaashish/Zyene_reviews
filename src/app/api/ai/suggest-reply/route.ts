@@ -6,7 +6,7 @@ import { checkLimit } from "@/lib/stripe/check-limits";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import { planAllowsAutoCommenter } from "@/services/stripe/plans";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const requestSchema = z.object({
     reviewId: z.string().uuid(),
@@ -15,6 +15,7 @@ const requestSchema = z.object({
 
 interface OrgWithPlan {
     plan: string;
+    plan_status: string | null;
     ai_replies_used_this_month: number;
 }
 
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
                 organizations!inner(
                     id,
                     plan,
+                    plan_status,
                     organization_members!inner(user_id)
                 )
             )
@@ -74,7 +76,8 @@ export async function POST(request: Request) {
     if (!orgId) return apiError("Organization not found", { status: 404, details: requestId });
 
     const orgPlan = reviewTyped.businesses?.organizations?.plan;
-    if (!planAllowsAutoCommenter(orgPlan)) {
+    const orgPlanStatus = reviewTyped.businesses?.organizations?.plan_status ?? null;
+    if (!planAllowsAiReviewFeatures(orgPlan, orgPlanStatus)) {
         return apiError("AI reply suggestions require a Starter, Professional, or Enterprise plan.", {
             status: 403,
             code: "AI_REPLY_PLAN_REQUIRED",

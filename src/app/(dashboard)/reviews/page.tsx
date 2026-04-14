@@ -4,7 +4,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { ReviewsPageClient } from "@/components/reviews/reviews-page-client";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
-import { planAllowsAutoCommenter } from "@/services/stripe/plans";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { MessageSquareQuote } from "lucide-react";
@@ -19,7 +19,10 @@ export default async function ReviewsPage(props: {
     if (!user) redirect("/login");
 
     const { businessId, business, organization } = await getActiveBusinessId();
-    const autoCommenterPlanOk = planAllowsAutoCommenter(organization?.plan ?? null);
+    const autoCommenterPlanOk = planAllowsAiReviewFeatures(
+        organization?.plan ?? null,
+        (organization as { plan_status?: string | null } | null)?.plan_status ?? null
+    );
 
     const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
     const isDemo = !isGoogleConnected;

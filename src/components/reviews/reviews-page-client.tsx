@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Lock, Download, Loader2, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { toast } from "sonner";
+import { UpgradeModal } from "@/components/settings/upgrade-modal";
 
 interface ReviewsPageClientProps {
     businessId: string;
@@ -61,6 +62,7 @@ export function ReviewsPageClient({
     const [isPending, startTransition] = useTransition();
     const [isFetching, setIsFetching] = useState(false);
     const [isBackfillingAi, setIsBackfillingAi] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     const loading = isPending || isFetching;
 
@@ -173,6 +175,10 @@ export function ReviewsPageClient({
             });
             const payload = await response.json();
             if (!response.ok) {
+                if (payload?.code === "AI_ANALYSIS_PLAN_REQUIRED") {
+                    setShowUpgradeModal(true);
+                    return;
+                }
                 throw new Error(payload?.error || "Failed to queue AI analysis");
             }
             const queued = payload?.data?.queued ?? payload?.queued ?? 0;
@@ -350,6 +356,13 @@ export function ReviewsPageClient({
                     </Button>
                 </div>
             )}
+
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                title="Upgrade for AI review analysis"
+                description="AI review features are available on active Starter, Professional, and Enterprise plans."
+            />
         </>
     );
 }

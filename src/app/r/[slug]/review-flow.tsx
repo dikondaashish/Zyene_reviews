@@ -219,6 +219,7 @@ export function PublicReviewFlow({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     reviewRequestId: requestId,
+                    businessId,
                     businessName,
                     businessCategory: categoryKey,
                     rating,

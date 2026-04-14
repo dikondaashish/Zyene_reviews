@@ -5,6 +5,7 @@ import { categorizePrivateFeedback } from "@/domains/ai/services/AiAnalysisServi
 import { sendEmail } from "@/services/resend/send-email";
 import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
 import { z } from "zod";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const contactModeSchema = z.enum(["hidden", "optional", "required"]);
 
@@ -83,6 +84,17 @@ export async function POST(request: Request) {
             business_id = bodyBusinessId;
         }
 
+        const { data: bizPlanRow } = await supabase
+            .from("businesses")
+            .select("organizations!inner(plan, plan_status)")
+            .eq("id", business_id)
+            .maybeSingle();
+        const org = (bizPlanRow as any)?.organizations ?? null;
+        const canUseAiFeedbackCategorization = planAllowsAiReviewFeatures(
+            org?.plan ?? null,
+            org?.plan_status ?? null
+        );
+
         const { data: bizSettings, error: bizSettingsErr } = await supabase
             .from("businesses")
             .select("private_feedback_email_mode, private_feedback_phone_mode")
@@ -115,9 +127,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
         }
 
-        console.log("🤖 Categorizing private feedback...");
-        const category = await categorizePrivateFeedback(content);
-        console.log("🏷️ Category assigned:", category);
+        let category = "Other";
+        if (canUseAiFeedbackCategorization) {
+            console.log("🤖 Categorizing private feedback...");
+            category = await categorizePrivateFeedback(content);
+            console.log("🏷️ Category assigned:", category);
+        }
 
         const { data: feedback, error } = await supabase
             .from("private_feedback")

@@ -7,6 +7,7 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 
 const requestSchema = z.object({
     questionId: z.string().uuid(),
@@ -14,6 +15,7 @@ const requestSchema = z.object({
 
 interface OrgRow {
     plan: string;
+    plan_status: string | null;
     ai_replies_used_this_month: number;
 }
 
@@ -76,7 +78,7 @@ export async function POST(request: Request) {
 
     const { data: org, error: orgErr } = await supabase
         .from("organizations")
-        .select("plan, ai_replies_used_this_month")
+        .select("plan, plan_status, ai_replies_used_this_month")
         .eq("id", orgId)
         .single();
 
@@ -84,19 +86,13 @@ export async function POST(request: Request) {
         return apiError("Organization not found", { status: 404, details: requestId });
     }
 
-    const planLimits: Record<string, number> = {
-        free: 0,
-        starter: 50,
-        growth: 200,
-        agency_starter: 500,
-        agency_pro: 1000,
-        agency_scale: 9999,
-    };
-
     const orgTyped = org as unknown as OrgRow;
-    const limit = planLimits[orgTyped.plan] ?? 0;
-    if (orgTyped.ai_replies_used_this_month >= limit) {
-        return apiError("Monthly AI reply limit reached. Please upgrade your plan.", { status: 403, details: requestId });
+    if (!planAllowsAiReviewFeatures(orgTyped.plan, orgTyped.plan_status)) {
+        return apiError("AI Q&A suggestions require an active Starter, Professional, or Enterprise plan.", {
+            status: 403,
+            code: "AI_QA_PLAN_REQUIRED",
+            details: requestId,
+        });
     }
 
     const knowledgeBase = (bizTyped.knowledge_base as string) || "No special knowledge base provided.";
