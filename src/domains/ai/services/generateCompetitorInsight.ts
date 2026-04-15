@@ -19,17 +19,42 @@ const competitorInsightSchema: Schema = {
             type: SchemaType.NUMBER,
             description: "0 to 1 confidence score.",
         },
+        why_it_matters: {
+            type: SchemaType.STRING,
+            description: "One short sentence on business impact.",
+        },
+        owner_suggestion: {
+            type: SchemaType.STRING,
+            description: "Suggested owner: owner, manager, or ops.",
+        },
+        actions: {
+            type: SchemaType.ARRAY,
+            items: {
+                type: SchemaType.OBJECT,
+                properties: {
+                    title: { type: SchemaType.STRING },
+                    impact: { type: SchemaType.STRING },
+                    effort: { type: SchemaType.STRING },
+                    priority: { type: SchemaType.STRING },
+                },
+                required: ["title", "impact", "effort", "priority"],
+            },
+            description: "Up to 3 actionable items.",
+        },
         recommendations: {
             type: SchemaType.ARRAY,
             items: { type: SchemaType.STRING },
             description: "Up to 3 practical actions.",
         },
     },
-    required: ["summary", "priority", "confidence", "recommendations"],
+    required: ["summary", "priority", "confidence", "why_it_matters", "owner_suggestion", "actions", "recommendations"],
 };
 
 export type CompetitorInsightResult = {
     summary: string;
+    whyItMatters: string;
+    ownerSuggestion: "owner" | "manager" | "ops";
+    actions: Array<{ title: string; impact: string; effort: string; priority: string }>;
     priority: "low" | "medium" | "high";
     confidence: number;
     recommendations: string[];
@@ -40,6 +65,12 @@ function normalizePriority(value: string | null | undefined): "low" | "medium" |
     if (v === "high") return "high";
     if (v === "medium") return "medium";
     return "low";
+}
+
+function normalizeOwnerSuggestion(value: string | null | undefined): "owner" | "manager" | "ops" {
+    const v = String(value || "").toLowerCase().trim();
+    if (v === "owner" || v === "manager") return v;
+    return "ops";
 }
 
 export async function generateCompetitorInsight(input: {
@@ -69,6 +100,9 @@ export async function generateCompetitorInsight(input: {
         "",
         "Rules:",
         "- summary: concise and actionable.",
+        "- why_it_matters: one short sentence.",
+        "- owner_suggestion must be one of: owner, manager, ops.",
+        "- actions: max 3 objects with title, impact, effort(low|medium|high), priority(low|medium|high).",
         "- priority must be one of: low, medium, high.",
         "- recommendations: max 3 bullets, concrete actions.",
         "- confidence from 0 to 1.",
@@ -82,6 +116,22 @@ export async function generateCompetitorInsight(input: {
 
     const fallback: CompetitorInsightResult = {
         summary: `${input.competitorName} moved by ${input.ratingDelta > 0 ? "+" : ""}${input.ratingDelta.toFixed(1)} rating and ${input.reviewsDelta > 0 ? "+" : ""}${input.reviewsDelta} reviews. Monitor this competitor and adjust your local review strategy.`,
+        whyItMatters: "This movement can affect customer choice and review momentum in your local market.",
+        ownerSuggestion: "manager",
+        actions: [
+            {
+                title: "Launch a 7-day review request push",
+                impact: "Improve near-term review velocity and rating defense.",
+                effort: "medium",
+                priority: "high",
+            },
+            {
+                title: "Audit recent low-rated reviews and response gaps",
+                impact: "Reduce conversion risk from unresolved negative feedback.",
+                effort: "low",
+                priority: "medium",
+            },
+        ],
         priority:
             Math.abs(input.ratingDelta) >= 0.3 || Math.abs(input.reviewsDelta) >= 20
                 ? "high"
@@ -105,6 +155,9 @@ export async function generateCompetitorInsight(input: {
         });
         const parsed = JSON.parse(raw) as {
             summary?: string;
+            why_it_matters?: string;
+            owner_suggestion?: string;
+            actions?: Array<{ title?: string; impact?: string; effort?: string; priority?: string }>;
             priority?: string;
             confidence?: number;
             recommendations?: string[];
@@ -120,8 +173,23 @@ export async function generateCompetitorInsight(input: {
         const recommendations = Array.isArray(parsed.recommendations)
             ? parsed.recommendations.map((r) => String(r || "").trim()).filter(Boolean).slice(0, 3)
             : [];
+        const whyItMatters = String(parsed.why_it_matters || "").trim() || "This change can influence local customer decisions.";
+        const actions = Array.isArray(parsed.actions)
+            ? parsed.actions
+                  .map((a) => ({
+                      title: String(a?.title || "").trim(),
+                      impact: String(a?.impact || "").trim(),
+                      effort: String(a?.effort || "").trim().toLowerCase() || "medium",
+                      priority: String(a?.priority || "").trim().toLowerCase() || "medium",
+                  }))
+                  .filter((a) => a.title && a.impact)
+                  .slice(0, 3)
+            : [];
         return {
             summary,
+            whyItMatters,
+            ownerSuggestion: normalizeOwnerSuggestion(parsed.owner_suggestion),
+            actions,
             priority: normalizePriority(parsed.priority),
             confidence,
             recommendations,

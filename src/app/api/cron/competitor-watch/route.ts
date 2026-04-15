@@ -22,6 +22,9 @@ function sameUtcDay(aIso: string | null | undefined, b: Date): boolean {
     );
 }
 
+const DEFAULT_RATING_ALERT_DELTA = 0.2;
+const DEFAULT_REVIEW_SPIKE_THRESHOLD = 20;
+
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {
         await pingCompetitorWatchHeartbeat(false);
@@ -79,6 +82,33 @@ export async function GET(request: Request) {
         }
         processedBusinessIds = Array.from(new Set(competitors.map((c) => c.business_id)));
 
+        const { data: watchSettingsRows } = await (admin.from("competitor_watch_settings" as never) as any)
+            .select("business_id, rating_alert_delta, review_spike_threshold")
+            .in("business_id", processedBusinessIds);
+        const settingsByBusiness = new Map<
+            string,
+            { rating_alert_delta: number; review_spike_threshold: number }
+        >();
+        for (const row of (watchSettingsRows || []) as Array<{
+            business_id: string;
+            rating_alert_delta: number;
+            review_spike_threshold: number;
+        }>) {
+            settingsByBusiness.set(row.business_id, {
+                rating_alert_delta: Number(row.rating_alert_delta ?? DEFAULT_RATING_ALERT_DELTA),
+                review_spike_threshold: Number(row.review_spike_threshold ?? DEFAULT_REVIEW_SPIKE_THRESHOLD),
+            });
+        }
+
+        const { data: businessOrgRows } = await admin
+            .from("businesses")
+            .select("id, organization_id")
+            .in("id", processedBusinessIds);
+        const orgByBusiness = new Map<string, string>();
+        for (const row of businessOrgRows || []) {
+            if (row.organization_id) orgByBusiness.set(row.id, row.organization_id);
+        }
+
         const competitorIds = competitors.map((c) => c.id);
         const { data: existingSnapshots, error: snapshotsErr } = await (admin
             .from("competitor_snapshots" as never) as any)
@@ -127,6 +157,14 @@ export async function GET(request: Request) {
             event_delta: number;
             metadata: Record<string, unknown>;
             created_at: string;
+        }> = [];
+        const appEventsToInsert: Array<{
+            organization_id: string;
+            business_id: string;
+            event_type: string;
+            entity_type: string;
+            entity_id: string;
+            metadata: Record<string, unknown>;
         }> = [];
         const insightInputByCompetitor = new Map<
             string,
@@ -177,6 +215,8 @@ export async function GET(request: Request) {
                     }
                 }
             }
+            const provider = liveMetrics?.provider ?? "db_fallback";
+            const providerPlaceId = liveMetrics?.placeId ?? null;
             const prevRating = Number(latest?.average_rating || 0);
             const prevReviews = Number(latest?.total_reviews || 0);
             const ratingDelta = Number((currRating - prevRating).toFixed(1));
@@ -200,6 +240,8 @@ export async function GET(request: Request) {
                     previous_reviews: prevReviews,
                     rating_delta: ratingDelta,
                     reviews_delta: reviewsDelta,
+                    provider,
+                    provider_place_id: providerPlaceId,
                 },
             });
 
@@ -231,6 +273,61 @@ export async function GET(request: Request) {
                     created_at: now.toISOString(),
                 };
                 eventsToInsert.push(evt);
+            }
+
+            if (latest) {
+                const settings = settingsByBusiness.get(competitor.business_id) ?? {
+                    rating_alert_delta: DEFAULT_RATING_ALERT_DELTA,
+                    review_spike_threshold: DEFAULT_REVIEW_SPIKE_THRESHOLD,
+                };
+                if (ratingDelta >= settings.rating_alert_delta) {
+                    eventsToInsert.push({
+                        competitor_id: competitor.id,
+                        business_id: competitor.business_id,
+                        event_type: "competitor.alert.rating_surge",
+                        title: `${competitor.name} rating surge alert`,
+                        summary: `${competitor.name} rating increased by ${ratingDelta.toFixed(1)} (threshold ${settings.rating_alert_delta.toFixed(1)}).`,
+                        event_value: currRating,
+                        event_delta: ratingDelta,
+                        metadata: { threshold: settings.rating_alert_delta, provider },
+                        created_at: now.toISOString(),
+                    });
+                    const orgId = orgByBusiness.get(competitor.business_id);
+                    if (orgId) {
+                        appEventsToInsert.push({
+                            organization_id: orgId,
+                            business_id: competitor.business_id,
+                            event_type: "competitor.alert.rating_surge",
+                            entity_type: "competitor",
+                            entity_id: competitor.id,
+                            metadata: { name: competitor.name, delta: ratingDelta, threshold: settings.rating_alert_delta },
+                        });
+                    }
+                }
+                if (reviewsDelta >= settings.review_spike_threshold) {
+                    eventsToInsert.push({
+                        competitor_id: competitor.id,
+                        business_id: competitor.business_id,
+                        event_type: "competitor.alert.review_spike",
+                        title: `${competitor.name} review spike alert`,
+                        summary: `${competitor.name} review volume increased by ${reviewsDelta} (threshold ${settings.review_spike_threshold}).`,
+                        event_value: currReviews,
+                        event_delta: reviewsDelta,
+                        metadata: { threshold: settings.review_spike_threshold, provider },
+                        created_at: now.toISOString(),
+                    });
+                    const orgId = orgByBusiness.get(competitor.business_id);
+                    if (orgId) {
+                        appEventsToInsert.push({
+                            organization_id: orgId,
+                            business_id: competitor.business_id,
+                            event_type: "competitor.alert.review_spike",
+                            entity_type: "competitor",
+                            entity_id: competitor.id,
+                            metadata: { name: competitor.name, delta: reviewsDelta, threshold: settings.review_spike_threshold },
+                        });
+                    }
+                }
             }
 
             if (latest && (ratingDelta !== 0 || reviewsDelta !== 0)) {
@@ -285,6 +382,14 @@ export async function GET(request: Request) {
                 return NextResponse.json({ error: insertEventsErr.message }, { status: 500 });
             }
         }
+        if (appEventsToInsert.length > 0) {
+            const { error: insertAppEventsErr } = await (admin.from("events" as never) as any).insert(
+                appEventsToInsert
+            );
+            if (insertAppEventsErr) {
+                console.error("[cron/competitor-watch] app events insert failed:", insertAppEventsErr);
+            }
+        }
 
         const insightRowsToInsert: Array<{
             competitor_id: string;
@@ -293,6 +398,9 @@ export async function GET(request: Request) {
             summary: string;
             priority: string;
             confidence: number;
+            why_it_matters: string;
+            owner_suggestion: string;
+            actions: Array<{ title: string; impact: string; effort: string; priority: string }>;
             recommendations: string[];
             model: string;
             created_at: string;
@@ -315,6 +423,9 @@ export async function GET(request: Request) {
                 summary: insight.summary,
                 priority: insight.priority,
                 confidence: Number(insight.confidence.toFixed(2)),
+                why_it_matters: insight.whyItMatters,
+                owner_suggestion: insight.ownerSuggestion,
+                actions: insight.actions,
                 recommendations: insight.recommendations,
                 model: process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview",
                 created_at: now.toISOString(),

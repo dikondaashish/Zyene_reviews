@@ -46,7 +46,8 @@ export async function fetchCompetitorMetricsFromGoogle(params: {
     timeoutMs?: number;
     retries?: number;
 }): Promise<ExternalCompetitorMetrics | null> {
-    const apiKey = process.env.GOOGLE_MAPS_API_KEY?.trim();
+    const apiKey =
+        process.env.GOOGLE_MAPS_API_KEY?.trim() || process.env.GOOGLE_API_KEY?.trim();
     if (!apiKey) {
         return null;
     }

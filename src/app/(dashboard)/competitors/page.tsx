@@ -67,9 +67,15 @@ export default async function CompetitorsPage({
         .eq("business_id", businessId)
         .order("created_at", { ascending: false });
 
+    const { data: ownBusiness } = await supabase
+        .from("businesses")
+        .select("id, name, average_rating, total_reviews")
+        .eq("id", businessId)
+        .maybeSingle();
+
     const snapshotsPromise = (supabase
         .from("competitor_snapshots" as never) as any)
-        .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source")
+        .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source, metadata")
         .eq("business_id", businessId)
         .gte("captured_at", rangeStart.toISOString())
         .order("captured_at", { ascending: false })
@@ -85,7 +91,7 @@ export default async function CompetitorsPage({
 
     const insightsPromise = (supabase
         .from("competitor_insights" as never) as any)
-        .select("id, competitor_id, business_id, range_key, summary, priority, confidence, recommendations, model, created_at")
+        .select("id, competitor_id, business_id, range_key, summary, why_it_matters, owner_suggestion, actions, priority, confidence, recommendations, model, created_at")
         .eq("business_id", businessId)
         .order("created_at", { ascending: false })
         .limit(100);
@@ -100,14 +106,46 @@ export default async function CompetitorsPage({
         .limit(1)
         .maybeSingle();
 
-    const [snapshotsRes, eventsRes, insightsRes, latestRunRes] = await Promise.all([
+    const latestSuccessRunPromise = (supabase
+        .from("competitor_watch_runs" as never) as any)
+        .select(
+            "id, run_id, business_id, status, scanned, external_updates, snapshots_created, events_created, insights_created, error_message, started_at, finished_at, created_at"
+        )
+        .eq("business_id", businessId)
+        .eq("status", "success")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    const latestFailedRunPromise = (supabase
+        .from("competitor_watch_runs" as never) as any)
+        .select(
+            "id, run_id, business_id, status, scanned, external_updates, snapshots_created, events_created, insights_created, error_message, started_at, finished_at, created_at"
+        )
+        .eq("business_id", businessId)
+        .eq("status", "failed")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    const [snapshotsRes, eventsRes, insightsRes, latestRunRes, latestSuccessRunRes, latestFailedRunRes] = await Promise.all([
         snapshotsPromise,
         eventsPromise,
         insightsPromise,
         latestRunPromise,
+        latestSuccessRunPromise,
+        latestFailedRunPromise,
     ]);
 
-    if (competitorsError || snapshotsRes.error || eventsRes.error || insightsRes.error || latestRunRes.error) {
+    if (
+        competitorsError ||
+        snapshotsRes.error ||
+        eventsRes.error ||
+        insightsRes.error ||
+        latestRunRes.error ||
+        latestSuccessRunRes.error ||
+        latestFailedRunRes.error
+    ) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
             <div className="flex-1 space-y-6 p-8 pt-6">
@@ -142,6 +180,7 @@ export default async function CompetitorsPage({
                     average_rating: number;
                     total_reviews: number;
                     source: string;
+                    metadata: Record<string, unknown> | null;
                 }>}
                 eventRows={(eventsRes.data || []) as Array<{
                     id: string;
@@ -160,6 +199,9 @@ export default async function CompetitorsPage({
                     business_id: string;
                     range_key: string;
                     summary: string;
+                    why_it_matters: string | null;
+                    owner_suggestion: string | null;
+                    actions: Array<{ title?: string; impact?: string; effort?: string; priority?: string }> | null;
                     priority: string;
                     confidence: number | null;
                     recommendations: string[] | null;
@@ -183,6 +225,45 @@ export default async function CompetitorsPage({
                         created_at: string;
                     } | null) ?? null
                 }
+                latestSuccessRun={
+                    (latestSuccessRunRes.data as {
+                        id: string;
+                        run_id: string;
+                        business_id: string;
+                        status: string;
+                        scanned: number;
+                        external_updates: number;
+                        snapshots_created: number;
+                        events_created: number;
+                        insights_created: number;
+                        error_message: string | null;
+                        started_at: string;
+                        finished_at: string;
+                        created_at: string;
+                    } | null) ?? null
+                }
+                latestFailedRun={
+                    (latestFailedRunRes.data as {
+                        id: string;
+                        run_id: string;
+                        business_id: string;
+                        status: string;
+                        scanned: number;
+                        external_updates: number;
+                        snapshots_created: number;
+                        events_created: number;
+                        insights_created: number;
+                        error_message: string | null;
+                        started_at: string;
+                        finished_at: string;
+                        created_at: string;
+                    } | null) ?? null
+                }
+                ownBusiness={{
+                    name: ownBusiness?.name || "Your business",
+                    averageRating: Number(ownBusiness?.average_rating || 0),
+                    totalReviews: Number(ownBusiness?.total_reviews || 0),
+                }}
             />
         </div>
     );

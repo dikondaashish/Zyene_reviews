@@ -45,6 +45,7 @@ type CompetitorSnapshot = {
     average_rating: number;
     total_reviews: number;
     source: string;
+    metadata: Record<string, unknown> | null;
 };
 type CompetitorEvent = {
     id: string;
@@ -63,6 +64,9 @@ type CompetitorInsight = {
     business_id: string;
     range_key: string;
     summary: string;
+    why_it_matters?: string | null;
+    owner_suggestion?: string | null;
+    actions?: Array<{ title?: string; impact?: string; effort?: string; priority?: string }> | null;
     priority: string;
     confidence: number | null;
     recommendations: string[] | null;
@@ -94,6 +98,9 @@ export function CompetitorsList({
     eventRows,
     insightRows,
     latestRun,
+    latestSuccessRun,
+    latestFailedRun,
+    ownBusiness,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
@@ -102,6 +109,13 @@ export function CompetitorsList({
     eventRows: CompetitorEvent[];
     insightRows: CompetitorInsight[];
     latestRun: CompetitorWatchRun | null;
+    latestSuccessRun: CompetitorWatchRun | null;
+    latestFailedRun: CompetitorWatchRun | null;
+    ownBusiness: {
+        name: string;
+        averageRating: number;
+        totalReviews: number;
+    };
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -202,6 +216,21 @@ export function CompetitorsList({
         });
     }, [competitors, snapshotRows]);
 
+    const latestSnapshotByCompetitor = useMemo(() => {
+        const map = new Map<string, CompetitorSnapshot>();
+        for (const row of snapshotRows) {
+            const existing = map.get(row.competitor_id);
+            if (!existing) {
+                map.set(row.competitor_id, row);
+                continue;
+            }
+            if (new Date(row.captured_at).getTime() > new Date(existing.captured_at).getTime()) {
+                map.set(row.competitor_id, row);
+            }
+        }
+        return map;
+    }, [snapshotRows]);
+
     const latestInsightByCompetitor = useMemo(() => {
         const byCompetitor = new Map<string, CompetitorInsight>();
         for (const row of insightRows) {
@@ -230,6 +259,35 @@ export function CompetitorsList({
         if (s === "success") return "default";
         return "secondary";
     };
+
+    const benchmark = useMemo(() => {
+        if (competitors.length === 0) {
+            return {
+                marketAvgRating: 0,
+                marketAvgReviews: 0,
+                yourRatingDelta: 0,
+                yourReviewDelta: 0,
+                rank: null as number | null,
+                total: 0,
+            };
+        }
+        const ratingVals = competitors.map((c) => Number(c.average_rating || 0));
+        const reviewVals = competitors.map((c) => Number(c.total_reviews || 0));
+        const marketAvgRating = ratingVals.reduce((s, n) => s + n, 0) / ratingVals.length;
+        const marketAvgReviews = reviewVals.reduce((s, n) => s + n, 0) / reviewVals.length;
+        const yourRatingDelta = ownBusiness.averageRating - marketAvgRating;
+        const yourReviewDelta = ownBusiness.totalReviews - marketAvgReviews;
+        const allRatings = [ownBusiness.averageRating, ...ratingVals].slice().sort((a, b) => b - a);
+        const rank = allRatings.findIndex((v) => v === ownBusiness.averageRating) + 1;
+        return {
+            marketAvgRating,
+            marketAvgReviews,
+            yourRatingDelta,
+            yourReviewDelta,
+            rank,
+            total: allRatings.length,
+        };
+    }, [competitors, ownBusiness.averageRating, ownBusiness.totalReviews]);
 
     return (
         <div className="space-y-8">
@@ -276,6 +334,16 @@ export function CompetitorsList({
                                 <span className="text-sm text-muted-foreground">
                                     Finished <TimeAgo date={latestRun.finished_at} />
                                 </span>
+                                {latestSuccessRun ? (
+                                    <span className="text-xs text-muted-foreground">
+                                        Last success <TimeAgo date={latestSuccessRun.finished_at} />
+                                    </span>
+                                ) : null}
+                                {latestFailedRun ? (
+                                    <span className="text-xs text-muted-foreground">
+                                        Last failure <TimeAgo date={latestFailedRun.finished_at} />
+                                    </span>
+                                ) : null}
                             </div>
                             <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
                                 <div className="rounded border p-2">
@@ -302,6 +370,14 @@ export function CompetitorsList({
                             {latestRun.error_message ? (
                                 <p className="text-xs text-rose-700 dark:text-rose-300">
                                     {latestRun.error_message}
+                                </p>
+                            ) : null}
+                            {latestSuccessRun ? (
+                                <p className="text-xs text-muted-foreground">
+                                    Data freshness: latest successful sync was <TimeAgo date={latestSuccessRun.finished_at} />.
+                                    {Date.now() - new Date(latestSuccessRun.finished_at).getTime() > 24 * 60 * 60 * 1000
+                                        ? " Data may be stale (>24h)."
+                                        : ""}
                                 </p>
                             ) : null}
                         </div>
@@ -356,6 +432,44 @@ export function CompetitorsList({
             ) : (
                 <div className="grid gap-6 md:grid-cols-2">
                     {/* Data Table */}
+                    <Card className="col-span-1 md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>Market Benchmark</CardTitle>
+                            <CardDescription>
+                                Your business versus tracked competitor averages in the selected market.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                                <div className="rounded-lg border p-3">
+                                    <p className="text-xs text-muted-foreground">Your rank (rating)</p>
+                                    <p className="text-xl font-semibold">
+                                        {benchmark.rank ? `#${benchmark.rank}` : "—"}
+                                        <span className="text-sm text-muted-foreground"> / {benchmark.total || "—"}</span>
+                                    </p>
+                                </div>
+                                <div className="rounded-lg border p-3">
+                                    <p className="text-xs text-muted-foreground">Rating vs market avg</p>
+                                    <p className="text-xl font-semibold">
+                                        {benchmark.yourRatingDelta > 0 ? "+" : ""}
+                                        {benchmark.yourRatingDelta.toFixed(1)}
+                                    </p>
+                                </div>
+                                <div className="rounded-lg border p-3">
+                                    <p className="text-xs text-muted-foreground">Reviews vs market avg</p>
+                                    <p className="text-xl font-semibold">
+                                        {benchmark.yourReviewDelta > 0 ? "+" : ""}
+                                        {Math.round(benchmark.yourReviewDelta)}
+                                    </p>
+                                </div>
+                                <div className="rounded-lg border p-3">
+                                    <p className="text-xs text-muted-foreground">Market average rating</p>
+                                    <p className="text-xl font-semibold">{benchmark.marketAvgRating.toFixed(1)}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     <Card className="col-span-1 md:col-span-2">
                         <CardHeader>
                             <CardTitle>Tracked Competitors</CardTitle>
@@ -425,7 +539,16 @@ export function CompetitorsList({
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-sm text-muted-foreground">
-                                                    {updatedAt}
+                                                    <div className="space-y-1">
+                                                        <div>{updatedAt}</div>
+                                                        <div className="text-[11px]">
+                                                            Source:{" "}
+                                                            {String(
+                                                                latestSnapshotByCompetitor.get(competitor.id)?.metadata?.provider ||
+                                                                    "db_fallback"
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <Button
@@ -524,6 +647,36 @@ export function CompetitorsList({
                                                         </Badge>
                                                     </div>
                                                     <p className="text-sm mt-2">{insight.summary}</p>
+                                                    {insight.why_it_matters ? (
+                                                        <p className="text-xs mt-2 text-muted-foreground">
+                                                            Why it matters: {insight.why_it_matters}
+                                                        </p>
+                                                    ) : null}
+                                                    {insight.owner_suggestion ? (
+                                                        <p className="text-xs mt-1 text-muted-foreground">
+                                                            Suggested owner: {String(insight.owner_suggestion).toUpperCase()}
+                                                        </p>
+                                                    ) : null}
+                                                    {Array.isArray(insight.actions) &&
+                                                    insight.actions.length > 0 ? (
+                                                        <div className="mt-2 space-y-2">
+                                                            {insight.actions.slice(0, 3).map((action, idx: number) => (
+                                                                <div
+                                                                    key={`${insight.id}-action-${idx}`}
+                                                                    className="rounded border p-2 bg-muted/20"
+                                                                >
+                                                                    <p className="text-xs font-medium">{action.title}</p>
+                                                                    <p className="text-[11px] text-muted-foreground mt-1">
+                                                                        Impact: {action.impact}
+                                                                    </p>
+                                                                    <p className="text-[11px] text-muted-foreground">
+                                                                        Effort: {String(action.effort || "").toUpperCase()} • Priority:{" "}
+                                                                        {String(action.priority || "").toUpperCase()}
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : null}
                                                     {Array.isArray(insight.recommendations) &&
                                                     insight.recommendations.length > 0 ? (
                                                         <div className="mt-2 space-y-1">
