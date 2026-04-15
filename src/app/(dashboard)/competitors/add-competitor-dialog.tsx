@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Loader2, AlertCircle } from "lucide-react";
+import { Plus, Loader2, AlertCircle, MapPinned, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { addCompetitor } from "@/app/actions/competitor";
 import { Database } from "@/lib/db/supabase/database.types";
@@ -83,80 +83,80 @@ export function AddCompetitorDialog({
                     Track Competitor
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[640px] p-0 overflow-hidden">
                 <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>Add a Competitor</DialogTitle>
+                    <DialogHeader className="px-6 pt-6 pb-2">
+                        <DialogTitle className="text-3xl tracking-tight">Add a Competitor</DialogTitle>
                         <DialogDescription>
                             Enter the details of the competitor you want to track.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-5 px-6 py-4">
                         {/* Competitor Name Field */}
-                        <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-4 sm:gap-4">
-                            <Label htmlFor="name" className="pt-0 text-left sm:pt-2 sm:text-right">
-                                Name *
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
+                                <Building2 className="h-4 w-4 text-muted-foreground" />
+                                Competitor name <span className="text-destructive">*</span>
                             </Label>
-                            <div className="sm:col-span-3">
-                                <Input
-                                    id="name"
-                                    value={name}
-                                    onChange={(e) => {
-                                        setName(e.target.value);
-                                        if (fieldErrors.name) {
-                                            setFieldErrors({ ...fieldErrors, name: "" });
-                                        }
-                                    }}
-                                    placeholder="Local Plumber LLC"
-                                    required
-                                    disabled={isSubmitting}
-                                    className={fieldErrors.name ? "border-red-500" : ""}
-                                />
-                                {fieldErrors.name && (
-                                    <div className="flex items-center gap-1 mt-1 text-sm text-red-600">
-                                        <AlertCircle className="h-3 w-3" />
-                                        {fieldErrors.name}
-                                    </div>
-                                )}
-                            </div>
+                            <Input
+                                id="name"
+                                value={name}
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                    if (fieldErrors.name) {
+                                        setFieldErrors({ ...fieldErrors, name: "" });
+                                    }
+                                }}
+                                placeholder="Local Plumber LLC"
+                                required
+                                disabled={isSubmitting}
+                                className={fieldErrors.name ? "border-red-500 focus-visible:ring-red-500/30" : "h-11"}
+                            />
+                            {fieldErrors.name && (
+                                <div className="flex items-center gap-1 text-sm text-red-600">
+                                    <AlertCircle className="h-3 w-3" />
+                                    {fieldErrors.name}
+                                </div>
+                            )}
                         </div>
 
                         {/* Google Maps URL Field */}
-                        <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-4 sm:gap-4">
-                            <Label htmlFor="url" className="pt-0 text-left sm:pt-2 sm:text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="url" className="text-sm font-semibold flex items-center gap-2">
+                                <MapPinned className="h-4 w-4 text-muted-foreground" />
                                 Google Maps URL
                             </Label>
-                            <div className="sm:col-span-3">
-                                <Input
-                                    id="url"
-                                    value={googleUrl}
-                                    onChange={(e) => {
-                                        setGoogleUrl(e.target.value);
-                                        if (fieldErrors.googleUrl) {
-                                            setFieldErrors({ ...fieldErrors, googleUrl: "" });
-                                        }
-                                    }}
-                                    placeholder="https://maps.google.com/..."
-                                    disabled={isSubmitting}
-                                    className={fieldErrors.googleUrl ? "border-red-500" : ""}
-                                />
-                                {fieldErrors.googleUrl && (
-                                    <div className="flex items-start gap-1 mt-1 text-xs text-red-600">
-                                        <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
-                                        {fieldErrors.googleUrl}
-                                    </div>
-                                )}
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    Example: https://maps.google.com/maps/place/...
-                                </p>
-                            </div>
+                            <Input
+                                id="url"
+                                value={googleUrl}
+                                onChange={(e) => {
+                                    setGoogleUrl(e.target.value);
+                                    if (fieldErrors.googleUrl) {
+                                        setFieldErrors({ ...fieldErrors, googleUrl: "" });
+                                    }
+                                }}
+                                placeholder="https://maps.google.com/maps/place/..."
+                                disabled={isSubmitting}
+                                className={fieldErrors.googleUrl ? "border-red-500 focus-visible:ring-red-500/30" : "h-11"}
+                            />
+                            {fieldErrors.googleUrl && (
+                                <div className="flex items-start gap-1 text-xs text-red-600">
+                                    <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
+                                    {fieldErrors.googleUrl}
+                                </div>
+                            )}
+                            <p className="text-xs text-muted-foreground">
+                                Optional. Add it to help verify competitor profile quickly.
+                            </p>
                         </div>
 
-                        <p className="text-xs text-muted-foreground sm:col-span-4 sm:pl-16">
+                        <div className="rounded-md border bg-muted/40 px-3 py-2">
+                            <p className="text-xs text-muted-foreground">
                             We'll monitor their rating and review count automatically. First sync may take a few minutes.
-                        </p>
+                            </p>
+                        </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="px-6 pb-6 pt-2 gap-3">
                         <Button
                             type="button"
                             variant="outline"
@@ -168,7 +168,7 @@ export function AddCompetitorDialog({
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting} className="min-w-[170px]">
                             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {isSubmitting ? "Adding..." : "Add Competitor"}
                         </Button>
