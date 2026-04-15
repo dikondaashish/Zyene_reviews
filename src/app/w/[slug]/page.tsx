@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
 import { notFound } from "next/navigation";
 import { AccessError } from "@/components/public/access-error";
+import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +35,9 @@ export default async function WidgetPage({
         notFound();
     }
 
-    const org = (business as any).organization;
-    const paidPlans = ["starter", "professional", "enterprise"];
-    const hasEmbedAccess =
-        paidPlans.includes(org?.plan) &&
-        ["active", "trialing"].includes(org?.plan_status);
+    const org = (business as { organization?: { plan?: string | null; plan_status?: string | null } }).organization;
 
-    if (!hasEmbedAccess) {
+    if (!planAllowsPublicReviewWidget(org?.plan ?? null, org?.plan_status ?? null)) {
         return <AccessError type="subscription" businessName={business.name} />;
     }
 

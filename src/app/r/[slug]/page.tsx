@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 import { AccessError } from "@/components/public/access-error";
+import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 
 export default async function RequestPage({
     params,
@@ -74,15 +75,10 @@ export default async function RequestPage({
 
     console.log(`[Review Flow] Loading for ${business.slug}. Staff Selection: ${business.enable_staff_selection}, Names Count: ${business.staff_names?.length ?? 0}`);
 
-    // Access Control 1: Subscription Check
-    // Paid plans are valid when active or trialing.
-    const org = business.organization as any;
-    const hasActiveSubscription =
-        org?.plan &&
-        org.plan !== "none" &&
-        ["active", "trialing"].includes(org.plan_status);
+    // Access Control 1: Subscription Check (Stripe plan ids like starter_monthly, not display names)
+    const org = business.organization as { plan?: string | null; plan_status?: string | null };
 
-    if (!hasActiveSubscription) {
+    if (!planAllowsPublicReviewWidget(org?.plan ?? null, org?.plan_status ?? null)) {
         return <AccessError type="subscription" businessName={business.name} />;
     }
 

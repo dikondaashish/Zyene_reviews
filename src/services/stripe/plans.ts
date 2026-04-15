@@ -243,6 +243,19 @@ export function hasActiveOrTrialingStatus(planStatus: string | null | undefined)
 }
 
 /**
+ * Public embed widget (/w/...) and similar surfaces: paid SKU (same rules as auto-commenter,
+ * e.g. starter_monthly, professional_yearly, enterprise, growth, agency_*) plus active/trialing status.
+ * Do not use a short allowlist of display names — DB stores Stripe plan ids.
+ */
+export function planAllowsPublicReviewWidget(
+    plan: string | null | undefined,
+    planStatus: string | null | undefined
+): boolean {
+    if (!hasActiveOrTrialingStatus(planStatus)) return false;
+    return planAllowsAutoCommenter(plan);
+}
+
+/**
  * Strict eligibility for AI review features requested by product:
  * Starter / Professional / Enterprise + active/trialing subscription status.
  */
