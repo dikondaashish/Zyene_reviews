@@ -11,13 +11,15 @@ function wait(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function normalizeRating(value: unknown): number {
+/** Exported for unit tests (Places API field normalization). */
+export function normalizeCompetitorPlacesRating(value: unknown): number {
     const n = Number(value);
     if (!Number.isFinite(n)) return 0;
     return Math.min(5, Math.max(0, Number(n.toFixed(1))));
 }
 
-function normalizeReviewCount(value: unknown): number {
+/** Exported for unit tests. */
+export function normalizeCompetitorPlacesReviewCount(value: unknown): number {
     const n = Number(value);
     if (!Number.isFinite(n) || n < 0) return 0;
     return Math.round(n);
@@ -96,8 +98,8 @@ export async function fetchCompetitorMetricsFromGoogle(params: {
             }
 
             return {
-                averageRating: normalizeRating(place.rating),
-                totalReviews: normalizeReviewCount(place.userRatingCount),
+                averageRating: normalizeCompetitorPlacesRating(place.rating),
+                totalReviews: normalizeCompetitorPlacesReviewCount(place.userRatingCount),
                 provider: "google_places",
                 placeId: typeof place.id === "string" ? place.id : null,
             };

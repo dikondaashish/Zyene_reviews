@@ -11,6 +11,7 @@ import {
     Settings2,
     Users,
     Globe,
+    Target,
 } from "lucide-react";
 
 interface SettingsLayoutProps {
@@ -45,6 +46,11 @@ const businessNavItems = [
         title: "Notifications",
         href: "/settings/notifications",
         icon: Bell,
+    },
+    {
+        title: "Competitor alerts",
+        href: "/settings/competitor-alerts",
+        icon: Target,
     },
     {
         title: "Team",

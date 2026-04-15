@@ -1,5 +1,11 @@
 import { Schema, Type as SchemaType } from "@google/genai";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import {
+    parseCompetitorInsightPayload,
+    type CompetitorInsightResult,
+} from "@/lib/competitors/competitor-insight-result";
+
+export type { CompetitorInsightResult };
 
 const COMPETITOR_INSIGHT_MODEL =
     process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview";
@@ -49,29 +55,6 @@ const competitorInsightSchema: Schema = {
     },
     required: ["summary", "priority", "confidence", "why_it_matters", "owner_suggestion", "actions", "recommendations"],
 };
-
-export type CompetitorInsightResult = {
-    summary: string;
-    whyItMatters: string;
-    ownerSuggestion: "owner" | "manager" | "ops";
-    actions: Array<{ title: string; impact: string; effort: string; priority: string }>;
-    priority: "low" | "medium" | "high";
-    confidence: number;
-    recommendations: string[];
-};
-
-function normalizePriority(value: string | null | undefined): "low" | "medium" | "high" {
-    const v = String(value || "").toLowerCase().trim();
-    if (v === "high") return "high";
-    if (v === "medium") return "medium";
-    return "low";
-}
-
-function normalizeOwnerSuggestion(value: string | null | undefined): "owner" | "manager" | "ops" {
-    const v = String(value || "").toLowerCase().trim();
-    if (v === "owner" || v === "manager") return v;
-    return "ops";
-}
 
 export async function generateCompetitorInsight(input: {
     competitorName: string;
@@ -153,47 +136,7 @@ export async function generateCompetitorInsight(input: {
             maxOutputTokens: 320,
             temperature: 0.25,
         });
-        const parsed = JSON.parse(raw) as {
-            summary?: string;
-            why_it_matters?: string;
-            owner_suggestion?: string;
-            actions?: Array<{ title?: string; impact?: string; effort?: string; priority?: string }>;
-            priority?: string;
-            confidence?: number;
-            recommendations?: string[];
-        };
-        const summary = String(parsed.summary || "").trim();
-        if (!summary) {
-            throw new Error("Missing summary from model output");
-        }
-        const confidenceRaw = Number(parsed.confidence);
-        const confidence = Number.isFinite(confidenceRaw)
-            ? Math.min(1, Math.max(0, confidenceRaw))
-            : 0.5;
-        const recommendations = Array.isArray(parsed.recommendations)
-            ? parsed.recommendations.map((r) => String(r || "").trim()).filter(Boolean).slice(0, 3)
-            : [];
-        const whyItMatters = String(parsed.why_it_matters || "").trim() || "This change can influence local customer decisions.";
-        const actions = Array.isArray(parsed.actions)
-            ? parsed.actions
-                  .map((a) => ({
-                      title: String(a?.title || "").trim(),
-                      impact: String(a?.impact || "").trim(),
-                      effort: String(a?.effort || "").trim().toLowerCase() || "medium",
-                      priority: String(a?.priority || "").trim().toLowerCase() || "medium",
-                  }))
-                  .filter((a) => a.title && a.impact)
-                  .slice(0, 3)
-            : [];
-        return {
-            summary,
-            whyItMatters,
-            ownerSuggestion: normalizeOwnerSuggestion(parsed.owner_suggestion),
-            actions,
-            priority: normalizePriority(parsed.priority),
-            confidence,
-            recommendations,
-        } as CompetitorInsightResult;
+        return parseCompetitorInsightPayload(JSON.parse(raw));
     };
 
     try {

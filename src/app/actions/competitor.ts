@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { canManageCompetitors } from "@/lib/competitors/watch-access";
 
 // Validation schema
 const addCompetitorSchema = z.object({
@@ -89,7 +90,7 @@ export async function addCompetitor(
             };
         }
 
-        if (member.role !== 'owner' && member.role !== 'admin') {
+        if (!canManageCompetitors(member.role)) {
             return {
                 success: false,
                 error: "You don't have permission to add competitors for this business.",
@@ -193,7 +194,7 @@ export async function deleteCompetitor(
             };
         }
 
-        if (member.role !== 'owner' && member.role !== 'admin') {
+        if (!canManageCompetitors(member.role)) {
             return {
                 success: false,
                 error: "You don't have permission to remove competitors.",

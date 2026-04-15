@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "verify:critical-flows": "tsx scripts/verify-critical-flows.ts",
+    "verify:competitor-watch": "tsx scripts/verify-competitor-watch-week1.ts",
     "email:test": "npx tsx --env-file=.env.local scripts/mail-tester.ts",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },

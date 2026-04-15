@@ -371,6 +371,44 @@ export type Database = {
           },
         ]
       }
+      competitor_watch_settings: {
+        Row: {
+          business_id: string
+          created_at: string
+          email_alerts_enabled: boolean
+          id: string
+          rating_alert_delta: number
+          review_spike_threshold: number
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          email_alerts_enabled?: boolean
+          id?: string
+          rating_alert_delta?: number
+          review_spike_threshold?: number
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          email_alerts_enabled?: boolean
+          id?: string
+          rating_alert_delta?: number
+          review_spike_threshold?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_watch_settings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_contacts: {
         Row: {
           business_id: string

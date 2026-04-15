@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
 import { generateCompetitorInsight } from "@/domains/ai/services/generateCompetitorInsight";
 import { fetchCompetitorMetricsFromGoogle } from "@/services/competitors/external-metrics";
+import { sendCompetitorAlertEmail } from "@/lib/notifications/send-competitor-alert-email";
 
 export const dynamic = "force-dynamic";
 
@@ -83,20 +84,28 @@ export async function GET(request: Request) {
         processedBusinessIds = Array.from(new Set(competitors.map((c) => c.business_id)));
 
         const { data: watchSettingsRows } = await (admin.from("competitor_watch_settings" as never) as any)
-            .select("business_id, rating_alert_delta, review_spike_threshold")
+            .select("business_id, rating_alert_delta, review_spike_threshold, email_alerts_enabled")
             .in("business_id", processedBusinessIds);
         const settingsByBusiness = new Map<
             string,
-            { rating_alert_delta: number; review_spike_threshold: number }
+            { rating_alert_delta: number; review_spike_threshold: number; email_alerts_enabled: boolean }
         >();
+        const alertEmailQueue: Array<{
+            businessId: string;
+            title: string;
+            summary: string;
+            eventType: string;
+        }> = [];
         for (const row of (watchSettingsRows || []) as Array<{
             business_id: string;
             rating_alert_delta: number;
             review_spike_threshold: number;
+            email_alerts_enabled?: boolean | null;
         }>) {
             settingsByBusiness.set(row.business_id, {
                 rating_alert_delta: Number(row.rating_alert_delta ?? DEFAULT_RATING_ALERT_DELTA),
                 review_spike_threshold: Number(row.review_spike_threshold ?? DEFAULT_REVIEW_SPIKE_THRESHOLD),
+                email_alerts_enabled: row.email_alerts_enabled !== false,
             });
         }
 
@@ -279,14 +288,17 @@ export async function GET(request: Request) {
                 const settings = settingsByBusiness.get(competitor.business_id) ?? {
                     rating_alert_delta: DEFAULT_RATING_ALERT_DELTA,
                     review_spike_threshold: DEFAULT_REVIEW_SPIKE_THRESHOLD,
+                    email_alerts_enabled: true,
                 };
                 if (ratingDelta >= settings.rating_alert_delta) {
+                    const title = `${competitor.name} rating surge alert`;
+                    const summary = `${competitor.name} rating increased by ${ratingDelta.toFixed(1)} (threshold ${settings.rating_alert_delta.toFixed(1)}).`;
                     eventsToInsert.push({
                         competitor_id: competitor.id,
                         business_id: competitor.business_id,
                         event_type: "competitor.alert.rating_surge",
-                        title: `${competitor.name} rating surge alert`,
-                        summary: `${competitor.name} rating increased by ${ratingDelta.toFixed(1)} (threshold ${settings.rating_alert_delta.toFixed(1)}).`,
+                        title,
+                        summary,
                         event_value: currRating,
                         event_delta: ratingDelta,
                         metadata: { threshold: settings.rating_alert_delta, provider },
@@ -303,14 +315,24 @@ export async function GET(request: Request) {
                             metadata: { name: competitor.name, delta: ratingDelta, threshold: settings.rating_alert_delta },
                         });
                     }
+                    if (settings.email_alerts_enabled) {
+                        alertEmailQueue.push({
+                            businessId: competitor.business_id,
+                            title,
+                            summary,
+                            eventType: "competitor.alert.rating_surge",
+                        });
+                    }
                 }
                 if (reviewsDelta >= settings.review_spike_threshold) {
+                    const title = `${competitor.name} review spike alert`;
+                    const summary = `${competitor.name} review volume increased by ${reviewsDelta} (threshold ${settings.review_spike_threshold}).`;
                     eventsToInsert.push({
                         competitor_id: competitor.id,
                         business_id: competitor.business_id,
                         event_type: "competitor.alert.review_spike",
-                        title: `${competitor.name} review spike alert`,
-                        summary: `${competitor.name} review volume increased by ${reviewsDelta} (threshold ${settings.review_spike_threshold}).`,
+                        title,
+                        summary,
                         event_value: currReviews,
                         event_delta: reviewsDelta,
                         metadata: { threshold: settings.review_spike_threshold, provider },
@@ -325,6 +347,14 @@ export async function GET(request: Request) {
                             entity_type: "competitor",
                             entity_id: competitor.id,
                             metadata: { name: competitor.name, delta: reviewsDelta, threshold: settings.review_spike_threshold },
+                        });
+                    }
+                    if (settings.email_alerts_enabled) {
+                        alertEmailQueue.push({
+                            businessId: competitor.business_id,
+                            title,
+                            summary,
+                            eventType: "competitor.alert.review_spike",
                         });
                     }
                 }
@@ -380,6 +410,13 @@ export async function GET(request: Request) {
                 console.error("[cron/competitor-watch] events insert failed:", insertEventsErr);
                 await pingCompetitorWatchHeartbeat(false);
                 return NextResponse.json({ error: insertEventsErr.message }, { status: 500 });
+            }
+        }
+        for (const payload of alertEmailQueue) {
+            try {
+                await sendCompetitorAlertEmail(payload);
+            } catch (e) {
+                console.error("[cron/competitor-watch] competitor alert email failed:", e);
             }
         }
         if (appEventsToInsert.length > 0) {

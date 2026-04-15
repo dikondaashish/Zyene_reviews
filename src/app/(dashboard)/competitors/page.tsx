@@ -5,29 +5,20 @@ import { CompetitorsList } from "./competitors-list";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { TrendingUp } from "lucide-react";
+import {
+    marketAverageEndRating,
+    averageRatingFromReviewRatings,
+} from "@/lib/competitors/range-benchmark";
+import {
+    competitorRangeLabel,
+    getCompetitorRangeStart,
+    normalizeCompetitorRange,
+} from "@/lib/competitors/date-range";
 
 export const metadata = {
     title: "Competitors - Zyene Reviews",
     description: "Monitor your competitors' ratings and performance.",
 };
-
-type RangeKey = "7d" | "30d" | "90d" | "12m";
-
-function normalizeRange(raw: string | undefined): RangeKey {
-    if (raw === "7d" || raw === "30d" || raw === "90d" || raw === "12m") return raw;
-    return "30d";
-}
-
-function getRangeStart(range: RangeKey): Date {
-    const now = new Date();
-    if (range === "12m") {
-        const d = new Date(now);
-        d.setFullYear(d.getFullYear() - 1);
-        return d;
-    }
-    const days = range === "7d" ? 7 : range === "90d" ? 90 : 30;
-    return new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-}
 
 export default async function CompetitorsPage({
     searchParams,
@@ -36,8 +27,8 @@ export default async function CompetitorsPage({
 }) {
     const supabase = await createClient();
     const sp = await searchParams;
-    const range = normalizeRange(sp.range);
-    const rangeStart = getRangeStart(range);
+    const range = normalizeCompetitorRange(sp.range);
+    const rangeStart = getCompetitorRangeStart(range);
 
     const {
         data: { user },
@@ -128,13 +119,37 @@ export default async function CompetitorsPage({
         .limit(1)
         .maybeSingle();
 
-    const [snapshotsRes, eventsRes, insightsRes, latestRunRes, latestSuccessRunRes, latestFailedRunRes] = await Promise.all([
+    const recentAlertsCountPromise = (supabase.from("competitor_events" as never) as any)
+        .select("id", { count: "exact", head: true })
+        .eq("business_id", businessId)
+        .gte("created_at", rangeStart.toISOString())
+        .like("event_type", "competitor.alert.%");
+
+    const ownReviewsInRangePromise = supabase
+        .from("reviews")
+        .select("rating")
+        .eq("business_id", businessId)
+        .eq("is_visible", true)
+        .gte("review_date", rangeStart.toISOString());
+
+    const [
+        snapshotsRes,
+        eventsRes,
+        insightsRes,
+        latestRunRes,
+        latestSuccessRunRes,
+        latestFailedRunRes,
+        recentAlertsCountRes,
+        ownReviewsInRangeRes,
+    ] = await Promise.all([
         snapshotsPromise,
         eventsPromise,
         insightsPromise,
         latestRunPromise,
         latestSuccessRunPromise,
         latestFailedRunPromise,
+        recentAlertsCountPromise,
+        ownReviewsInRangePromise,
     ]);
 
     if (
@@ -144,7 +159,9 @@ export default async function CompetitorsPage({
         insightsRes.error ||
         latestRunRes.error ||
         latestSuccessRunRes.error ||
-        latestFailedRunRes.error
+        latestFailedRunRes.error ||
+        recentAlertsCountRes.error ||
+        ownReviewsInRangeRes.error
     ) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
@@ -157,31 +174,76 @@ export default async function CompetitorsPage({
         );
     }
 
+    const snapshotRowsTyped = (snapshotsRes.data || []) as Array<{
+        id: string;
+        competitor_id: string;
+        business_id: string;
+        captured_at: string;
+        average_rating: number;
+        total_reviews: number;
+        source: string;
+        metadata: Record<string, unknown> | null;
+    }>;
+    const competitorsList = competitors || [];
+    const ownRatings = (ownReviewsInRangeRes.data || []).map((r: { rating: number }) => Number(r.rating));
+    const ownAvgInRange = averageRatingFromReviewRatings(ownRatings);
+    const { avgEnd: marketEndAvgRating, usedFallback: marketEndUsedFallback } = marketAverageEndRating(
+        competitorsList.map((c) => ({
+            id: c.id,
+            average_rating: c.average_rating,
+            total_reviews: c.total_reviews,
+        })),
+        snapshotRowsTyped.map((s) => ({
+            competitor_id: s.competitor_id,
+            captured_at: s.captured_at,
+            average_rating: s.average_rating,
+            total_reviews: s.total_reviews,
+        }))
+    );
+
+    const yourRatingForRank =
+        ownAvgInRange !== null ? ownAvgInRange : Number(ownBusiness?.average_rating || 0);
+    const competitorEndRatings = competitorsList.map((c) => {
+        const rows = snapshotRowsTyped
+            .filter((s) => s.competitor_id === c.id)
+            .sort((a, b) => new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime());
+        const last = rows[rows.length - 1];
+        return last ? Number(last.average_rating || 0) : Number(c.average_rating || 0);
+    });
+    const combinedForRank = [yourRatingForRank, ...competitorEndRatings];
+    const sortedForRank = combinedForRank.slice().sort((a, b) => b - a);
+    const rankInRange =
+        sortedForRank.length > 0
+            ? sortedForRank.findIndex((v) => Math.abs(v - yourRatingForRank) < 0.001) + 1
+            : null;
+
     return (
         <div className="flex-1 space-y-6 p-8 pt-6">
-            <div className="flex items-center justify-between space-y-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight">Competitor Monitoring</h2>
                     <p className="text-muted-foreground">
                         Keep track of your competitors' review performance to stay ahead.
                     </p>
                 </div>
+                {(recentAlertsCountRes.count ?? 0) > 0 ? (
+                    <a
+                        href="#competitor-alerts"
+                        className="inline-flex items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm font-medium hover:bg-muted/60"
+                    >
+                        <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+                            {recentAlertsCountRes.count}
+                        </span>
+                        Alerts in period
+                    </a>
+                ) : null}
             </div>
 
             <CompetitorsList
                 businessId={businessId}
                 initialCompetitors={competitors || []}
                 range={range}
-                snapshotRows={(snapshotsRes.data || []) as Array<{
-                    id: string;
-                    competitor_id: string;
-                    business_id: string;
-                    captured_at: string;
-                    average_rating: number;
-                    total_reviews: number;
-                    source: string;
-                    metadata: Record<string, unknown> | null;
-                }>}
+                snapshotRows={snapshotRowsTyped}
                 eventRows={(eventsRes.data || []) as Array<{
                     id: string;
                     competitor_id: string;
@@ -259,10 +321,37 @@ export default async function CompetitorsPage({
                         created_at: string;
                     } | null) ?? null
                 }
-                ownBusiness={{
-                    name: ownBusiness?.name || "Your business",
-                    averageRating: Number(ownBusiness?.average_rating || 0),
-                    totalReviews: Number(ownBusiness?.total_reviews || 0),
+                ownBusinessInRange={{
+                    avgRating: ownAvgInRange,
+                    reviewCount: ownRatings.length,
+                }}
+                benchmarkRange={{
+                    label: competitorRangeLabel(range),
+                    marketEndAvgRating,
+                    marketEndUsedFallback,
+                    yourRatingForRank,
+                    rank: rankInRange,
+                    totalRanked: combinedForRank.length,
+                    yourAvgVsMarketEnd:
+                        ownAvgInRange !== null ? ownAvgInRange - marketEndAvgRating : null,
+                    yourReviewsInRange: ownRatings.length,
+                    marketAvgReviewGain: (() => {
+                        const gains = competitorsList.map((c) => {
+                            const rows = snapshotRowsTyped
+                                .filter((s) => s.competitor_id === c.id)
+                                .sort(
+                                    (a, b) =>
+                                        new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime()
+                                );
+                            if (rows.length < 2) return null;
+                            const first = rows[0];
+                            const last = rows[rows.length - 1];
+                            return Number(last.total_reviews) - Number(first.total_reviews);
+                        });
+                        const nums = gains.filter((g): g is number => g !== null);
+                        if (nums.length === 0) return null;
+                        return nums.reduce((a, b) => a + b, 0) / nums.length;
+                    })(),
                 }}
             />
         </div>

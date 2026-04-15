@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUp, Minus, Trash2, ExternalLink, Star, Loader2 } from "lucide-react";
+import {
+    ArrowDown,
+    ArrowUp,
+    Minus,
+    Trash2,
+    ExternalLink,
+    Star,
+    Loader2,
+    Download,
+} from "lucide-react";
 import {
     Table,
     TableBody,
@@ -35,6 +44,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { TimeAgo } from "@/components/ui/time-ago";
 import { Database } from "@/lib/db/supabase/database.types";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { isCompetitorAlertEventType } from "@/lib/competitors/range-benchmark";
+import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
+import { computeCompetitorMovementRows } from "@/lib/competitors/snapshot-movement";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 type CompetitorSnapshot = {
@@ -88,8 +101,6 @@ type CompetitorWatchRun = {
     finished_at: string;
     created_at: string;
 };
-type RangeKey = "7d" | "30d" | "90d" | "12m";
-
 export function CompetitorsList({
     businessId,
     initialCompetitors,
@@ -100,21 +111,32 @@ export function CompetitorsList({
     latestRun,
     latestSuccessRun,
     latestFailedRun,
-    ownBusiness,
+    ownBusinessInRange,
+    benchmarkRange,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
-    range: RangeKey;
+    range: CompetitorRangeKey;
     snapshotRows: CompetitorSnapshot[];
     eventRows: CompetitorEvent[];
     insightRows: CompetitorInsight[];
     latestRun: CompetitorWatchRun | null;
     latestSuccessRun: CompetitorWatchRun | null;
     latestFailedRun: CompetitorWatchRun | null;
-    ownBusiness: {
-        name: string;
-        averageRating: number;
-        totalReviews: number;
+    ownBusinessInRange: {
+        avgRating: number | null;
+        reviewCount: number;
+    };
+    benchmarkRange: {
+        label: string;
+        marketEndAvgRating: number;
+        marketEndUsedFallback: boolean;
+        yourRatingForRank: number;
+        rank: number | null;
+        totalRanked: number;
+        yourAvgVsMarketEnd: number | null;
+        yourReviewsInRange: number;
+        marketAvgReviewGain: number | null;
     };
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
@@ -128,7 +150,7 @@ export function CompetitorsList({
         setMounted(true);
     }, []);
 
-    const rangeOptions: Array<{ value: RangeKey; label: string }> = [
+    const rangeOptions: Array<{ value: CompetitorRangeKey; label: string }> = [
         { value: "7d", label: "7 Days" },
         { value: "30d", label: "30 Days" },
         { value: "90d", label: "90 Days" },
@@ -137,7 +159,7 @@ export function CompetitorsList({
 
     const rangeLabel = rangeOptions.find((r) => r.value === range)?.label || "30 Days";
 
-    const setRange = (nextRange: RangeKey) => {
+    const setRange = (nextRange: CompetitorRangeKey) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set("range", nextRange);
         router.push(`?${params.toString()}`, { scroll: false });
@@ -184,37 +206,14 @@ export function CompetitorsList({
             reviews: c.total_reviews || 0,
         }));
 
-    const movementCards = useMemo(() => {
-        const byCompetitor = new Map<string, CompetitorSnapshot[]>();
-        for (const s of snapshotRows) {
-            if (!byCompetitor.has(s.competitor_id)) byCompetitor.set(s.competitor_id, []);
-            byCompetitor.get(s.competitor_id)!.push(s);
-        }
-
-        return competitors.map((c) => {
-            const rows = (byCompetitor.get(c.id) || [])
-                .slice()
-                .sort((a, b) => new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime());
-            const first = rows[0];
-            const last = rows[rows.length - 1];
-            if (!first || !last) {
-                return {
-                    competitorId: c.id,
-                    name: c.name,
-                    ratingDelta: null as number | null,
-                    reviewsDelta: null as number | null,
-                    hasBaseline: false,
-                };
-            }
-            return {
-                competitorId: c.id,
-                name: c.name,
-                ratingDelta: Number(last.average_rating) - Number(first.average_rating),
-                reviewsDelta: Number(last.total_reviews) - Number(first.total_reviews),
-                hasBaseline: rows.length > 1,
-            };
-        });
-    }, [competitors, snapshotRows]);
+    const movementCards = useMemo(
+        () =>
+            computeCompetitorMovementRows(
+                competitors.map((c) => ({ id: c.id, name: c.name })),
+                snapshotRows
+            ),
+        [competitors, snapshotRows]
+    );
 
     const latestSnapshotByCompetitor = useMemo(() => {
         const map = new Map<string, CompetitorSnapshot>();
@@ -260,34 +259,10 @@ export function CompetitorsList({
         return "secondary";
     };
 
-    const benchmark = useMemo(() => {
-        if (competitors.length === 0) {
-            return {
-                marketAvgRating: 0,
-                marketAvgReviews: 0,
-                yourRatingDelta: 0,
-                yourReviewDelta: 0,
-                rank: null as number | null,
-                total: 0,
-            };
-        }
-        const ratingVals = competitors.map((c) => Number(c.average_rating || 0));
-        const reviewVals = competitors.map((c) => Number(c.total_reviews || 0));
-        const marketAvgRating = ratingVals.reduce((s, n) => s + n, 0) / ratingVals.length;
-        const marketAvgReviews = reviewVals.reduce((s, n) => s + n, 0) / reviewVals.length;
-        const yourRatingDelta = ownBusiness.averageRating - marketAvgRating;
-        const yourReviewDelta = ownBusiness.totalReviews - marketAvgReviews;
-        const allRatings = [ownBusiness.averageRating, ...ratingVals].slice().sort((a, b) => b - a);
-        const rank = allRatings.findIndex((v) => v === ownBusiness.averageRating) + 1;
-        return {
-            marketAvgRating,
-            marketAvgReviews,
-            yourRatingDelta,
-            yourReviewDelta,
-            rank,
-            total: allRatings.length,
-        };
-    }, [competitors, ownBusiness.averageRating, ownBusiness.totalReviews]);
+    const alertEvents = useMemo(
+        () => eventRows.filter((e) => isCompetitorAlertEventType(e.event_type)),
+        [eventRows]
+    );
 
     return (
         <div className="space-y-8">
@@ -307,10 +282,22 @@ export function CompetitorsList({
                         );
                     })}
                 </div>
-                <AddCompetitorDialog
-                    businessId={businessId}
-                    onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
-                />
+                <div className="flex flex-wrap items-center gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                        <a
+                            href={`/api/competitors/export?range=${range}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Download className="h-4 w-4 sm:mr-2" />
+                            <span className="hidden sm:inline">Export CSV</span>
+                        </a>
+                    </Button>
+                    <AddCompetitorDialog
+                        businessId={businessId}
+                        onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
+                    />
+                </div>
             </div>
 
             <Card>
@@ -385,6 +372,33 @@ export function CompetitorsList({
                 </CardContent>
             </Card>
 
+            {alertEvents.length > 0 ? (
+                <Card id="competitor-alerts">
+                    <CardHeader>
+                        <CardTitle>Threshold alerts ({rangeLabel})</CardTitle>
+                        <CardDescription>
+                            Fired when a competitor crosses your{" "}
+                            <Link href="/settings/competitor-alerts" className="text-primary underline underline-offset-2">
+                                alert thresholds
+                            </Link>
+                            . Emails go to team members with email notifications enabled.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="space-y-2">
+                            {alertEvents.slice(0, 15).map((ev) => (
+                                <li key={ev.id} className="flex flex-col gap-0.5 rounded-lg border p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+                                    <span className="font-medium">{ev.title}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                        <TimeAgo date={ev.created_at} />
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </CardContent>
+                </Card>
+            ) : null}
+
             {competitors.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
@@ -434,37 +448,59 @@ export function CompetitorsList({
                     {/* Data Table */}
                     <Card className="col-span-1 md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Market Benchmark</CardTitle>
+                            <CardTitle>Market Benchmark ({benchmarkRange.label})</CardTitle>
                             <CardDescription>
-                                Your business versus tracked competitor averages in the selected market.
+                                Your average rating uses reviews received in this period. Competitors use the latest
+                                snapshot in this period (or current totals if no snapshot yet).{" "}
+                                {benchmarkRange.marketEndUsedFallback
+                                    ? "Some competitors fell back to live totals where snapshots were missing."
+                                    : null}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                                 <div className="rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Your rank (rating)</p>
+                                    <p className="text-xs text-muted-foreground">Your rank (by period rating)</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmark.rank ? `#${benchmark.rank}` : "—"}
-                                        <span className="text-sm text-muted-foreground"> / {benchmark.total || "—"}</span>
+                                        {benchmarkRange.rank ? `#${benchmarkRange.rank}` : "—"}
+                                        <span className="text-sm text-muted-foreground">
+                                            {" "}
+                                            / {benchmarkRange.totalRanked || "—"}
+                                        </span>
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Rating vs market avg</p>
+                                    <p className="text-xs text-muted-foreground">Your avg rating ({benchmarkRange.label})</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmark.yourRatingDelta > 0 ? "+" : ""}
-                                        {benchmark.yourRatingDelta.toFixed(1)}
+                                        {ownBusinessInRange.avgRating !== null
+                                            ? ownBusinessInRange.avgRating.toFixed(1)
+                                            : "—"}
+                                    </p>
+                                    <p className="text-[11px] text-muted-foreground mt-1">
+                                        {ownBusinessInRange.reviewCount} reviews in period
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Reviews vs market avg</p>
+                                    <p className="text-xs text-muted-foreground">You vs market end (rating)</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmark.yourReviewDelta > 0 ? "+" : ""}
-                                        {Math.round(benchmark.yourReviewDelta)}
+                                        {benchmarkRange.yourAvgVsMarketEnd === null
+                                            ? "—"
+                                            : `${benchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${benchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
+                                    </p>
+                                    <p className="text-[11px] text-muted-foreground mt-1">
+                                        Market end avg {benchmarkRange.marketEndAvgRating.toFixed(1)}
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Market average rating</p>
-                                    <p className="text-xl font-semibold">{benchmark.marketAvgRating.toFixed(1)}</p>
+                                    <p className="text-xs text-muted-foreground">Avg competitor review gain</p>
+                                    <p className="text-xl font-semibold">
+                                        {benchmarkRange.marketAvgReviewGain === null
+                                            ? "—"
+                                            : `${benchmarkRange.marketAvgReviewGain > 0 ? "+" : ""}${Math.round(benchmarkRange.marketAvgReviewGain)}`}
+                                    </p>
+                                    <p className="text-[11px] text-muted-foreground mt-1">
+                                        Mean first→last snapshot in {benchmarkRange.label}
+                                    </p>
                                 </div>
                             </div>
                         </CardContent>
