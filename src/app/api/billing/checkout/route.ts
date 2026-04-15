@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
 const checkoutSchema = z.object({
     priceId: z.string().min(1).max(120).optional(),
@@ -86,10 +87,10 @@ export async function POST(request: Request) {
             return apiError("No organization found", { status: 404, details: requestId });
         }
 
-        // Security: Only owners, admins, and managers can manage billing
+        // Security: Only organization owners can manage billing
         const memberTyped = member as unknown as OrgMemberWithRole;
         const memberRole = memberTyped.role;
-        if (!memberRole || !["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(memberRole)) {
+        if (!isOrganizationOwnerRole(memberRole)) {
             return apiError("You don't have permission to manage billing. Contact your organization owner.", {
                 status: 403,
                 details: requestId,

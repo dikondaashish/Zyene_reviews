@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
 export async function POST() {
     const supabase = await createClient();
@@ -39,10 +40,10 @@ export async function POST() {
             );
         }
 
-        // Security: Only owners and managers can manage billing
+        // Security: Only organization owners can manage billing
         const memberTyped = member as unknown as OrgMemberWithRole;
         const memberRole = memberTyped.role || "";
-        if (!["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(memberRole)) {
+        if (!isOrganizationOwnerRole(memberRole)) {
             return NextResponse.json(
                 { error: "You don't have permission to manage billing. Contact your organization owner." },
                 { status: 403 }

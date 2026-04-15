@@ -13,15 +13,7 @@ import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
 import { PastDuePaymentBanner } from "@/components/dashboard/past-due-payment-banner";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
-
-const BILLING_MANAGER_ROLES = new Set([
-    "owner",
-    "admin",
-    "manager",
-    "ORG_OWNER",
-    "ORG_ADMIN",
-    "ORG_MANAGER",
-]);
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
 export default async function DashboardLayout({
     children,
@@ -58,7 +50,7 @@ export default async function DashboardLayout({
             .eq("user_id", user.id)
             .maybeSingle();
         const role = orgMember?.role ?? "";
-        canManageBilling = BILLING_MANAGER_ROLES.has(role);
+        canManageBilling = isOrganizationOwnerRole(role);
     }
 
     const stripeCustomerId =

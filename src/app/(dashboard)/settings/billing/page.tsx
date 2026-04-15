@@ -7,6 +7,7 @@ import { PLANS } from "@/services/stripe/plans";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 import { reconcileOrganizationBillingFromStripe } from "@/services/stripe/organization-billing-sync";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
 export default async function BillingPage() {
     const supabase = await createClient();
@@ -46,14 +47,7 @@ export default async function BillingPage() {
     }
 
     const memberRole = (memberData as { role?: string } | null)?.role ?? "";
-    const canManageBilling = [
-        "owner",
-        "admin",
-        "manager",
-        "ORG_OWNER",
-        "ORG_ADMIN",
-        "ORG_MANAGER",
-    ].includes(memberRole);
+    const canManageBilling = isOrganizationOwnerRole(memberRole);
 
     const org = (memberData as any)?.organizations;
 
