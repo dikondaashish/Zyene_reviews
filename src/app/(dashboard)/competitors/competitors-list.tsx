@@ -44,7 +44,16 @@ import { Badge } from "@/components/ui/badge";
 import { AddCompetitorDialog } from "./add-competitor-dialog";
 import { deleteCompetitor } from "@/app/actions/competitor";
 import { toast } from "sonner";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    Cell,
+} from "recharts";
 import { TimeAgo } from "@/components/ui/time-ago";
 import { Database } from "@/lib/db/supabase/database.types";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -149,6 +158,7 @@ export function CompetitorsList({
     keywordDiscoverySplit,
     placesMetaByCompetitorId,
     marketBriefLatest,
+    ownBusinessChart,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
@@ -168,6 +178,12 @@ export function CompetitorsList({
     keywordDiscoverySplit: { discoveryPct: number; directPct: number };
     placesMetaByCompetitorId: Record<string, CompetitorPlacesRowMeta>;
     marketBriefLatest: CompetitorMarketBriefLatest | null;
+    /** Stored listing aggregates for the active business (same basis as competitor totals from Places). */
+    ownBusinessChart: {
+        name: string;
+        averageRating: number | null;
+        totalReviews: number | null;
+    };
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -271,14 +287,31 @@ export function CompetitorsList({
         }
     };
 
-    // Chart Data (exclude syncing competitors)
-    const chartData = competitors
-        .filter(c => !isSyncing(c))
-        .map(c => ({
-            name: c.name,
-            rating: Number(c.average_rating) || 0,
-            reviews: c.total_reviews || 0,
-        }));
+    const truncateLabel = (s: string, max = 16) => {
+        const t = s.trim();
+        return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+    };
+
+    const chartData = useMemo(() => {
+        const ownName = (ownBusinessChart.name || "Your business").trim();
+        const ownRow = {
+            name: truncateLabel(ownName, 18),
+            fullName: ownName,
+            rating: ownBusinessChart.averageRating != null ? Number(ownBusinessChart.averageRating) : 0,
+            reviews: ownBusinessChart.totalReviews != null ? Number(ownBusinessChart.totalReviews) : 0,
+            isOwn: true,
+        };
+        const compRows = competitors
+            .filter((c) => !isSyncing(c))
+            .map((c) => ({
+                name: truncateLabel(c.name, 18),
+                fullName: c.name,
+                rating: Number(c.average_rating) || 0,
+                reviews: c.total_reviews || 0,
+                isOwn: false,
+            }));
+        return [ownRow, ...compRows];
+    }, [competitors, ownBusinessChart, mounted]);
 
     const movementCards = useMemo(
         () =>
@@ -1080,17 +1113,76 @@ export function CompetitorsList({
                             <Card className="col-span-1 md:col-span-2 lg:col-span-1">
                                 <CardHeader>
                                     <CardTitle>Rating Comparison</CardTitle>
-                                    <CardDescription>Average rating across tracked competitors</CardDescription>
+                                    <CardDescription>
+                                        Your business vs tracked competitors (stored average ratings, typically from
+                                        Google).
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-75 w-full">
+                                    <p className="text-[11px] text-muted-foreground mb-2">
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-primary align-middle mr-1" />{" "}
+                                        Your business ·{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mx-1" />{" "}
+                                        Competitors
+                                    </p>
+                                    <div className="h-75 w-full min-h-[220px]">
                                         <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                                            <BarChart
+                                                data={chartData}
+                                                margin={{ top: 12, right: 12, left: 0, bottom: 28 }}
+                                            >
                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                                                <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} axisLine={false} tickLine={false} />
-                                                <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px' }} />
-                                                <Bar dataKey="rating" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                                                <XAxis
+                                                    dataKey="name"
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    interval={0}
+                                                    tick={{ fontSize: 11 }}
+                                                    height={40}
+                                                />
+                                                <YAxis
+                                                    domain={[0, 5]}
+                                                    ticks={[1, 2, 3, 4, 5]}
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                />
+                                                <Tooltip
+                                                    cursor={{ fill: "transparent" }}
+                                                    content={({ active, payload }) => {
+                                                        if (!active || !payload?.length) return null;
+                                                        const row = payload[0].payload as {
+                                                            fullName?: string;
+                                                            name: string;
+                                                            rating: number;
+                                                            isOwn?: boolean;
+                                                        };
+                                                        const label = row.fullName || row.name;
+                                                        return (
+                                                            <div className="rounded-lg border bg-background px-3 py-2 text-sm shadow-md">
+                                                                <p className="font-semibold">
+                                                                    {label}
+                                                                    {row.isOwn ? (
+                                                                        <span className="font-normal text-muted-foreground">
+                                                                            {" "}
+                                                                            (your business)
+                                                                        </span>
+                                                                    ) : null}
+                                                                </p>
+                                                                <p className="text-muted-foreground text-xs mt-0.5">
+                                                                    Avg rating: {Number(row.rating).toFixed(1)}
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    }}
+                                                />
+                                                <Bar dataKey="rating" radius={[4, 4, 0, 0]} maxBarSize={52}>
+                                                    {chartData.map((entry, index) => (
+                                                        <Cell
+                                                            key={`rating-${index}`}
+                                                            fill={entry.isOwn ? "hsl(var(--primary))" : "#f59e0b"}
+                                                        />
+                                                    ))}
+                                                </Bar>
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
@@ -1101,17 +1193,71 @@ export function CompetitorsList({
                             <Card className="col-span-1 md:col-span-2 lg:col-span-1">
                                 <CardHeader>
                                     <CardTitle>Review Volume Comparison</CardTitle>
-                                    <CardDescription>Total number of reviews across tracked competitors</CardDescription>
+                                    <CardDescription>
+                                        Your total Google reviews vs competitors (public totals from sync).
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="h-75 w-full">
+                                    <p className="text-[11px] text-muted-foreground mb-2">
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-primary align-middle mr-1" />{" "}
+                                        Your business ·{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mx-1" />{" "}
+                                        Competitors
+                                    </p>
+                                    <div className="h-75 w-full min-h-[220px]">
                                         <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                                            <BarChart
+                                                data={chartData}
+                                                margin={{ top: 12, right: 12, left: 0, bottom: 28 }}
+                                            >
                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                                                <XAxis
+                                                    dataKey="name"
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    interval={0}
+                                                    tick={{ fontSize: 11 }}
+                                                    height={40}
+                                                />
                                                 <YAxis axisLine={false} tickLine={false} />
-                                                <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px' }} />
-                                                <Bar dataKey="reviews" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                                                <Tooltip
+                                                    cursor={{ fill: "transparent" }}
+                                                    content={({ active, payload }) => {
+                                                        if (!active || !payload?.length) return null;
+                                                        const row = payload[0].payload as {
+                                                            fullName?: string;
+                                                            name: string;
+                                                            reviews: number;
+                                                            isOwn?: boolean;
+                                                        };
+                                                        const label = row.fullName || row.name;
+                                                        return (
+                                                            <div className="rounded-lg border bg-background px-3 py-2 text-sm shadow-md">
+                                                                <p className="font-semibold">
+                                                                    {label}
+                                                                    {row.isOwn ? (
+                                                                        <span className="font-normal text-muted-foreground">
+                                                                            {" "}
+                                                                            (your business)
+                                                                        </span>
+                                                                    ) : null}
+                                                                </p>
+                                                                <p className="text-muted-foreground text-xs mt-0.5">
+                                                                    Total reviews:{" "}
+                                                                    {Number(row.reviews).toLocaleString()}
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    }}
+                                                />
+                                                <Bar dataKey="reviews" radius={[4, 4, 0, 0]} maxBarSize={52}>
+                                                    {chartData.map((entry, index) => (
+                                                        <Cell
+                                                            key={`reviews-${index}`}
+                                                            fill={entry.isOwn ? "hsl(var(--primary))" : "#f59e0b"}
+                                                        />
+                                                    ))}
+                                                </Bar>
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>

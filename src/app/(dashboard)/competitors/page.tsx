@@ -460,6 +460,13 @@ export default async function CompetitorsPage({
                 keywordDiscoverySplit={keywordDiscoverySplit}
                 placesMetaByCompetitorId={placesMetaByCompetitorId}
                 marketBriefLatest={marketBriefLatest}
+                ownBusinessChart={{
+                    name: ownBusiness?.name ?? "Your business",
+                    averageRating:
+                        ownBusiness?.average_rating != null ? Number(ownBusiness.average_rating) : null,
+                    totalReviews:
+                        ownBusiness?.total_reviews != null ? Number(ownBusiness.total_reviews) : null,
+                }}
             />
         </div>
     );
