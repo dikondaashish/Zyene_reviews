@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
 
 export const dynamic = "force-dynamic";
 
 function isAuthorizedCronRequest(request: Request): boolean {
     const authHeader = request.headers.get("authorization");
     const hasSecret = typeof process.env.CRON_SECRET === "string" && process.env.CRON_SECRET.length > 0;
-    const hasValidBearer = hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-    const isVercelCron = request.headers.get("x-vercel-cron") === "1";
-    return Boolean(hasValidBearer || isVercelCron);
+    return Boolean(hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`);
 }
 
 function sameUtcDay(aIso: string | null | undefined, b: Date): boolean {
@@ -23,6 +22,7 @@ function sameUtcDay(aIso: string | null | undefined, b: Date): boolean {
 
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {
+        await pingCompetitorWatchHeartbeat(false);
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -37,10 +37,12 @@ export async function GET(request: Request) {
 
         if (competitorsErr) {
             console.error("[cron/competitor-watch] competitors fetch failed:", competitorsErr);
+            await pingCompetitorWatchHeartbeat(false);
             return NextResponse.json({ error: competitorsErr.message }, { status: 500 });
         }
 
         if (!competitors || competitors.length === 0) {
+            await pingCompetitorWatchHeartbeat(true);
             return NextResponse.json({
                 success: true,
                 scanned: 0,
@@ -59,6 +61,7 @@ export async function GET(request: Request) {
 
         if (snapshotsErr) {
             console.error("[cron/competitor-watch] snapshots fetch failed:", snapshotsErr);
+            await pingCompetitorWatchHeartbeat(false);
             return NextResponse.json({ error: snapshotsErr.message }, { status: 500 });
         }
 
@@ -164,6 +167,7 @@ export async function GET(request: Request) {
             );
             if (insertSnapshotsErr) {
                 console.error("[cron/competitor-watch] snapshots insert failed:", insertSnapshotsErr);
+                await pingCompetitorWatchHeartbeat(false);
                 return NextResponse.json({ error: insertSnapshotsErr.message }, { status: 500 });
             }
         }
@@ -174,9 +178,12 @@ export async function GET(request: Request) {
             );
             if (insertEventsErr) {
                 console.error("[cron/competitor-watch] events insert failed:", insertEventsErr);
+                await pingCompetitorWatchHeartbeat(false);
                 return NextResponse.json({ error: insertEventsErr.message }, { status: 500 });
             }
         }
+
+        await pingCompetitorWatchHeartbeat(true);
 
         return NextResponse.json({
             success: true,
@@ -187,6 +194,7 @@ export async function GET(request: Request) {
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Internal server error";
         console.error("[cron/competitor-watch] unexpected error:", error);
+        await pingCompetitorWatchHeartbeat(false);
         return NextResponse.json({ error: message }, { status: 500 });
     }
 }
