@@ -97,10 +97,12 @@ export default async function AnalyticsPage({
         );
     }
 
+    const isZyenePlatform = platform === "zyene";
+
     // 1. Fetch Reviews (current + previous)
     let reviewsQuery = supabase
         .from("reviews")
-        .select("*")
+        .select("id, created_at, platform, rating, response_status, responded_at, sentiment, themes")
         .eq("business_id", businessId)
         .gte("created_at", previousStart.toISOString())
         .order("created_at", { ascending: true });
@@ -112,15 +114,23 @@ export default async function AnalyticsPage({
     }
 
     // 2. Fetch Review Requests (current + previous)
-    // For Zyene platform, we fetch all columns for rich analytics
-    const requestsQuery = supabase
-        .from("review_requests")
-        .select("*")
-        .eq("business_id", businessId)
-        .gte("created_at", previousStart.toISOString());
+    // Pull full request payload only for Own Platform analytics.
+    const requestsQuery: PromiseLike<{ data: any[] | null; error: any }> = isZyenePlatform
+        ? supabase
+              .from("review_requests")
+              .select(
+                  "id,status,channel,trigger_source,created_at,sent_at,delivered_at,opened_at,clicked_at,completed_at,rating_given,tags_selected,review_left,customer_name,customer_email,follow_up_sent_at,ai_review_text"
+              )
+              .eq("business_id", businessId)
+              .gte("created_at", previousStart.toISOString())
+        : supabase
+              .from("review_requests")
+              .select("id,created_at")
+              .eq("business_id", businessId)
+              .gte("created_at", previousStart.toISOString());
 
     // 3. Fetch Private Feedback (only when Zyene platform selected)
-    const privateFeedbackQuery = platform === "zyene"
+    const privateFeedbackQuery = isZyenePlatform
         ? supabase
               .from("private_feedback")
               .select("id,rating,content,created_at")
