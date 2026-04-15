@@ -12,6 +12,9 @@ import {
     Loader2,
     Download,
     RefreshCw,
+    Hash,
+    Globe,
+    Sparkles,
 } from "lucide-react";
 import {
     Table,
@@ -50,6 +53,8 @@ import { isCompetitorAlertEventType } from "@/lib/competitors/range-benchmark";
 import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
 import { computeCompetitorMovementRows } from "@/lib/competitors/snapshot-movement";
 import { syncCompetitorWatchNow } from "@/app/actions/competitor-watch-sync";
+import { generateCompetitorMarketBriefNow } from "@/app/actions/competitor-market-brief";
+import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 type CompetitorSnapshot = {
@@ -104,6 +109,17 @@ type CompetitorWatchRun = {
     created_at: string;
 };
 
+export type CompetitorMarketBriefLatest = {
+    id: string;
+    headline: string;
+    overview: string;
+    positioning_bullets: string[];
+    opportunity_actions: Array<{ title: string; detail: string }>;
+    data_limitations: string | null;
+    model: string | null;
+    created_at: string;
+};
+
 export type CompetitorWatchBenchmarkRange = {
     label: string;
     marketEndAvgRating: number;
@@ -129,6 +145,10 @@ export function CompetitorsList({
     latestFailedRun,
     ownBusinessInRange,
     benchmarkRange,
+    ownSearchKeywords,
+    keywordDiscoverySplit,
+    placesMetaByCompetitorId,
+    marketBriefLatest,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
@@ -144,12 +164,17 @@ export function CompetitorsList({
         reviewCount: number;
     };
     benchmarkRange: CompetitorWatchBenchmarkRange;
+    ownSearchKeywords: Array<{ keyword: string; impressions: number; monthStart: string }>;
+    keywordDiscoverySplit: { discoveryPct: number; directPct: number };
+    placesMetaByCompetitorId: Record<string, CompetitorPlacesRowMeta>;
+    marketBriefLatest: CompetitorMarketBriefLatest | null;
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
     const [syncWatchLoading, setSyncWatchLoading] = useState(false);
+    const [briefGenLoading, setBriefGenLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -188,6 +213,23 @@ export function CompetitorsList({
         const now = new Date();
         const minutesAgo = (now.getTime() - createdAt.getTime()) / (1000 * 60);
         return minutesAgo < 2;
+    };
+
+    const handleGenerateMarketBrief = async () => {
+        setBriefGenLoading(true);
+        try {
+            const result = await generateCompetitorMarketBriefNow(businessId);
+            if (result.success) {
+                toast.success("Market positioning brief saved.");
+                router.refresh();
+            } else {
+                toast.error(result.error || "Could not generate brief.");
+            }
+        } catch (e: unknown) {
+            toast.error(e instanceof Error ? e.message : "Could not generate brief.");
+        } finally {
+            setBriefGenLoading(false);
+        }
     };
 
     const handleSyncCompetitorWatch = async () => {
@@ -346,6 +388,154 @@ export function CompetitorsList({
                     />
                 </div>
             </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Hash className="h-5 w-5 text-muted-foreground" />
+                        Your Google search terms
+                    </CardTitle>
+                    <CardDescription>
+                        Monthly search impressions for <strong>your</strong> listing (from Google Business Profile
+                        Performance). Rival businesses do not share their private search-keyword data; compare using
+                        categories and positioning below instead.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {ownSearchKeywords.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                            No keyword data yet. Connect Google and run a performance sync from Integrations, or open{" "}
+                            <Link href="/analytics" className="text-primary underline underline-offset-2">
+                                Analytics
+                            </Link>{" "}
+                            after data has synced.
+                        </p>
+                    ) : (
+                        <>
+                            {keywordDiscoverySplit.directPct + keywordDiscoverySplit.discoveryPct > 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                    Rough split (by impressions):{" "}
+                                    <span className="font-medium text-foreground">
+                                        {keywordDiscoverySplit.discoveryPct}% discovery
+                                    </span>{" "}
+                                    vs{" "}
+                                    <span className="font-medium text-foreground">
+                                        {keywordDiscoverySplit.directPct}% name/brand
+                                    </span>{" "}
+                                    — heuristic based on whether the query contains your business name tokens.
+                                </p>
+                            ) : null}
+                            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                                {ownSearchKeywords.slice(0, 12).map((k) => (
+                                    <li
+                                        key={`${k.monthStart}-${k.keyword}`}
+                                        className="flex items-center justify-between gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
+                                    >
+                                        <span className="truncate font-medium" title={k.keyword}>
+                                            {k.keyword}
+                                        </span>
+                                        <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                                            {k.impressions.toLocaleString()} imp.
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <p className="text-xs text-muted-foreground">
+                                <Link href="/analytics" className="text-primary underline underline-offset-2">
+                                    View full keyword list in Analytics
+                                </Link>
+                            </p>
+                        </>
+                    )}
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
+                    <div className="space-y-1.5">
+                        <CardTitle className="flex items-center gap-2">
+                            <Sparkles className="h-5 w-5 text-amber-500" />
+                            AI market positioning brief
+                        </CardTitle>
+                        <CardDescription>
+                            Gemini synthesizes your Google search-term data and public competitor listing fields we
+                            store. It cannot access competitors&apos; private Business Profile analytics.
+                        </CardDescription>
+                    </div>
+                    {competitors.length > 0 ? (
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            className="shrink-0"
+                            disabled={briefGenLoading}
+                            onClick={() => void handleGenerateMarketBrief()}
+                        >
+                            {briefGenLoading ? (
+                                <Loader2 className="h-4 w-4 animate-spin sm:mr-2" />
+                            ) : (
+                                <Sparkles className="h-4 w-4 sm:mr-2" />
+                            )}
+                            <span className="hidden sm:inline">
+                                {marketBriefLatest ? "Regenerate brief" : "Generate brief"}
+                            </span>
+                        </Button>
+                    ) : null}
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {competitors.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                            Add tracked competitors to generate a positioning brief.
+                        </p>
+                    ) : !marketBriefLatest ? (
+                        <p className="text-sm text-muted-foreground">
+                            Run once to get a concise comparison of how you show up versus competitors, grounded in
+                            ratings, reviews, categories, and your top search queries.
+                        </p>
+                    ) : (
+                        <>
+                            <div>
+                                <h4 className="text-lg font-semibold leading-snug">{marketBriefLatest.headline}</h4>
+                                <p className="text-sm text-muted-foreground mt-2">{marketBriefLatest.overview}</p>
+                            </div>
+                            {marketBriefLatest.positioning_bullets.length > 0 ? (
+                                <ul className="list-disc pl-5 space-y-1.5 text-sm">
+                                    {marketBriefLatest.positioning_bullets.map((b, i) => (
+                                        <li key={`${marketBriefLatest.id}-b-${i}`}>{b}</li>
+                                    ))}
+                                </ul>
+                            ) : null}
+                            {marketBriefLatest.opportunity_actions.length > 0 ? (
+                                <div className="space-y-2">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                        Suggested moves
+                                    </p>
+                                    <ul className="space-y-2">
+                                        {marketBriefLatest.opportunity_actions.map((a, i) => (
+                                            <li
+                                                key={`${marketBriefLatest.id}-a-${i}`}
+                                                className="rounded-lg border bg-muted/30 px-3 py-2 text-sm"
+                                            >
+                                                <span className="font-medium">{a.title}</span>
+                                                <p className="text-xs text-muted-foreground mt-1">{a.detail}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) : null}
+                            {marketBriefLatest.data_limitations ? (
+                                <p className="text-[11px] text-muted-foreground border-t pt-3">
+                                    {marketBriefLatest.data_limitations}
+                                </p>
+                            ) : null}
+                            <p className="text-[11px] text-muted-foreground">
+                                {marketBriefLatest.model ? `${marketBriefLatest.model} · ` : null}
+                                Generated <TimeAgo date={marketBriefLatest.created_at} />
+                            </p>
+                        </>
+                    )}
+                </CardContent>
+            </Card>
 
             <Card>
                 <CardHeader>
@@ -567,18 +757,22 @@ export function CompetitorsList({
                         <CardHeader>
                             <CardTitle>Tracked Competitors</CardTitle>
                             <CardDescription>
-                                Your competitors' ratings and reviews. Stats are updated periodically.
+                                Ratings and reviews from Google Places. Primary category, website, and short
+                                description come from public listing data after sync — not competitors&apos; private
+                                search-keyword reports.
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="overflow-x-auto">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Competitor Name</TableHead>
+                                        <TableHead className="min-w-[140px]">Competitor Name</TableHead>
+                                        <TableHead className="min-w-[120px]">Primary category</TableHead>
                                         <TableHead>Avg Rating</TableHead>
                                         <TableHead>Total Reviews</TableHead>
-                                        <TableHead>Google Link</TableHead>
-                                        <TableHead>Last Updated</TableHead>
+                                        <TableHead className="min-w-[90px]">Website</TableHead>
+                                        <TableHead className="min-w-[90px]">Maps</TableHead>
+                                        <TableHead className="min-w-[120px]">Last Updated</TableHead>
                                         <TableHead className="text-right">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -588,21 +782,43 @@ export function CompetitorsList({
                                         const updatedAt = competitor.updated_at 
                                             ? <TimeAgo date={competitor.updated_at} />
                                             : "—";
+                                        const places = placesMetaByCompetitorId[competitor.id];
                                         
                                         return (
                                             <TableRow key={competitor.id}>
-                                                <TableCell className="font-medium">
-                                                    <div className="flex items-center gap-2">
-                                                        {competitor.name}
-                                                        {syncing && (
-                                                            <Badge variant="secondary" className="flex items-center gap-1">
-                                                                <Loader2 className="h-3 w-3 animate-spin" />
-                                                                Syncing...
-                                                            </Badge>
-                                                        )}
+                                                <TableCell className="font-medium align-top">
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            {competitor.name}
+                                                            {syncing && (
+                                                                <Badge variant="secondary" className="flex items-center gap-1">
+                                                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                                                    Syncing...
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                        {places?.summary ? (
+                                                            <p
+                                                                className="text-[11px] font-normal text-muted-foreground line-clamp-2 max-w-[280px]"
+                                                                title={places.summary}
+                                                            >
+                                                                {places.summary}
+                                                            </p>
+                                                        ) : null}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-top text-sm text-muted-foreground">
+                                                    {syncing ? (
+                                                        "—"
+                                                    ) : places?.primaryType ? (
+                                                        <span title={places.typesPreview ?? undefined}>
+                                                            {places.primaryType}
+                                                        </span>
+                                                    ) : (
+                                                        "—"
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="align-top">
                                                     <div className="flex items-center text-sm">
                                                         {syncing ? (
                                                             <span className="text-muted-foreground">—</span>
@@ -614,16 +830,31 @@ export function CompetitorsList({
                                                         )}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-top">
                                                     {syncing ? <span className="text-muted-foreground">—</span> : competitor.total_reviews || 0}
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="align-top">
+                                                    {!syncing && places?.websiteUrl ? (
+                                                        <a
+                                                            href={places.websiteUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
+                                                        >
+                                                            <Globe className="h-3.5 w-3.5 shrink-0" />
+                                                            Site
+                                                        </a>
+                                                    ) : (
+                                                        <span className="text-muted-foreground text-xs">—</span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="align-top">
                                                     {competitor.google_url ? (
                                                         <a
                                                             href={competitor.google_url}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="flex items-center text-primary hover:underline"
+                                                            className="flex items-center text-primary hover:underline text-xs"
                                                         >
                                                             View <ExternalLink className="h-3 w-3 ml-1" />
                                                         </a>
@@ -631,7 +862,7 @@ export function CompetitorsList({
                                                         <span className="text-muted-foreground text-xs">N/A</span>
                                                     )}
                                                 </TableCell>
-                                                <TableCell className="text-sm text-muted-foreground">
+                                                <TableCell className="text-sm text-muted-foreground align-top">
                                                     <div className="space-y-1">
                                                         <div>{updatedAt}</div>
                                                         <div className="text-[11px]">

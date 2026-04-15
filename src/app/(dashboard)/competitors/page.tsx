@@ -15,6 +15,11 @@ import {
     getCompetitorRangeStart,
     normalizeCompetitorRange,
 } from "@/lib/competitors/date-range";
+import {
+    parsePlacesMetaFromSnapshot,
+    type CompetitorPlacesRowMeta,
+} from "@/lib/competitors/places-snapshot-meta";
+import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
 
 export const metadata = {
     title: "Competitors - Zyene Reviews",
@@ -133,6 +138,22 @@ export default async function CompetitorsPage({
         .eq("is_visible", true)
         .gte("review_date", rangeStart.toISOString());
 
+    const latestSnapshotsForPlacesMetaPromise = (supabase
+        .from("competitor_snapshots" as never) as any)
+        .select("competitor_id, captured_at, metadata")
+        .eq("business_id", businessId)
+        .order("captured_at", { ascending: false })
+        .limit(400);
+
+    const latestMarketBriefPromise = (supabase.from("competitor_market_briefs" as never) as any)
+        .select(
+            "id, headline, overview, positioning_bullets, opportunity_actions, data_limitations, model, created_at"
+        )
+        .eq("business_id", businessId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
     const [
         snapshotsRes,
         eventsRes,
@@ -142,6 +163,9 @@ export default async function CompetitorsPage({
         latestFailedRunRes,
         recentAlertsCountRes,
         ownReviewsInRangeRes,
+        latestSnapshotsForPlacesMetaRes,
+        ownSearchKeywords,
+        latestMarketBriefRes,
     ] = await Promise.all([
         snapshotsPromise,
         eventsPromise,
@@ -151,6 +175,9 @@ export default async function CompetitorsPage({
         latestFailedRunPromise,
         recentAlertsCountPromise,
         ownReviewsInRangePromise,
+        latestSnapshotsForPlacesMetaPromise,
+        getGoogleSearchKeywords(supabase, businessId, 15),
+        latestMarketBriefPromise,
     ]);
 
     if (
@@ -162,7 +189,9 @@ export default async function CompetitorsPage({
         latestSuccessRunRes.error ||
         latestFailedRunRes.error ||
         recentAlertsCountRes.error ||
-        ownReviewsInRangeRes.error
+        ownReviewsInRangeRes.error ||
+        latestSnapshotsForPlacesMetaRes.error ||
+        latestMarketBriefRes.error
     ) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
@@ -269,6 +298,54 @@ export default async function CompetitorsPage({
             return nums.reduce((a, b) => a + b, 0) / nums.length;
         })(),
     };
+
+    const keywordDiscoverySplit = estimateDiscoverySplit(
+        ownSearchKeywords.map((k) => ({ keyword: k.keyword, impressions: k.impressions })),
+        ownBusiness?.name ?? ""
+    );
+
+    const placesMetaByCompetitorId: Record<string, CompetitorPlacesRowMeta> = {};
+    const latestSnapRows = (latestSnapshotsForPlacesMetaRes.data || []) as Array<{
+        competitor_id: string;
+        captured_at: string;
+        metadata: Record<string, unknown> | null;
+    }>;
+    for (const row of latestSnapRows) {
+        if (placesMetaByCompetitorId[row.competitor_id]) continue;
+        const parsed = parsePlacesMetaFromSnapshot(row.metadata);
+        if (parsed && (parsed.primaryType || parsed.websiteUrl || parsed.summary || parsed.typesPreview)) {
+            placesMetaByCompetitorId[row.competitor_id] = parsed;
+        }
+    }
+
+    const rawBrief = latestMarketBriefRes.data as Record<string, unknown> | null;
+    const marketBriefLatest = (() => {
+        if (!rawBrief || typeof rawBrief !== "object" || !rawBrief.id) return null;
+        const bullets = Array.isArray(rawBrief.positioning_bullets)
+            ? rawBrief.positioning_bullets.map((x) => String(x ?? "")).filter(Boolean)
+            : [];
+        const actions = Array.isArray(rawBrief.opportunity_actions)
+            ? rawBrief.opportunity_actions
+                  .map((a) => {
+                      const o = a as Record<string, unknown>;
+                      return {
+                          title: String(o.title ?? "").trim(),
+                          detail: String(o.detail ?? "").trim(),
+                      };
+                  })
+                  .filter((a) => a.title && a.detail)
+            : [];
+        return {
+            id: String(rawBrief.id),
+            headline: String(rawBrief.headline ?? ""),
+            overview: String(rawBrief.overview ?? ""),
+            positioning_bullets: bullets,
+            opportunity_actions: actions,
+            data_limitations: rawBrief.data_limitations != null ? String(rawBrief.data_limitations) : null,
+            model: rawBrief.model != null ? String(rawBrief.model) : null,
+            created_at: String(rawBrief.created_at ?? ""),
+        };
+    })();
 
     return (
         <div className="flex-1 space-y-6 p-8 pt-6">
@@ -379,6 +456,10 @@ export default async function CompetitorsPage({
                     reviewCount: ownRatings.length,
                 }}
                 benchmarkRange={benchmarkRangePayload}
+                ownSearchKeywords={ownSearchKeywords}
+                keywordDiscoverySplit={keywordDiscoverySplit}
+                placesMetaByCompetitorId={placesMetaByCompetitorId}
+                marketBriefLatest={marketBriefLatest}
             />
         </div>
     );

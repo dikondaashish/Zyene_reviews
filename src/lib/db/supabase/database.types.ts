@@ -330,6 +330,50 @@ export type Database = {
           },
         ]
       }
+      competitor_market_briefs: {
+        Row: {
+          business_id: string
+          created_at: string
+          data_limitations: string | null
+          headline: string
+          id: string
+          model: string | null
+          opportunity_actions: unknown
+          overview: string
+          positioning_bullets: unknown
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          data_limitations?: string | null
+          headline: string
+          id?: string
+          model?: string | null
+          opportunity_actions?: unknown
+          overview: string
+          positioning_bullets?: unknown
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          data_limitations?: string | null
+          headline?: string
+          id?: string
+          model?: string | null
+          opportunity_actions?: unknown
+          overview?: string
+          positioning_bullets?: unknown
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_market_briefs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competitors: {
         Row: {
           average_rating: number | null

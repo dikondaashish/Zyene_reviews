@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
     fetchCompetitorMetricsFromGoogle,
+    fetchCompetitorPlaceEnrichment,
+    competitorEnrichmentToSnapshotMetadata,
     type ExternalCompetitorMetrics,
 } from "@/services/competitors/external-metrics";
 
@@ -82,6 +84,11 @@ export async function applyGooglePlacesMetricsToCompetitor(
         return { metrics: live, updated: true, snapshotInserted: false };
     }
 
+    const enrichment = live.placeId
+        ? await fetchCompetitorPlaceEnrichment({ placeResourceName: live.placeId })
+        : null;
+    const placesExtra = enrichment ? competitorEnrichmentToSnapshotMetadata(enrichment) : {};
+
     const { error: snapErr } = await (supabase.from("competitor_snapshots" as never) as any).insert({
         competitor_id: competitor.id,
         business_id: competitor.business_id,
@@ -96,6 +103,7 @@ export async function applyGooglePlacesMetricsToCompetitor(
             reviews_delta: reviewsDelta,
             provider: live.provider,
             provider_place_id: live.placeId,
+            ...placesExtra,
         },
     });
 

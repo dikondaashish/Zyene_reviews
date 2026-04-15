@@ -14,6 +14,7 @@ const MIGRATIONS = [
   "supabase/migrations/20260415230000_competitor_watch_runs.sql",
   "supabase/migrations/20260416000500_competitor_week1_upgrade.sql",
   "supabase/migrations/20260416120000_competitor_watch_email_alerts.sql",
+  "supabase/migrations/20260420120000_competitor_market_briefs.sql",
 ];
 
 const FILES = [
@@ -26,6 +27,8 @@ const FILES = [
   "src/app/actions/competitor-watch-settings.ts",
   "src/app/(dashboard)/settings/competitor-alerts/page.tsx",
   "src/app/(dashboard)/competitors/loading.tsx",
+  "src/domains/ai/services/generateMarketPositioningBrief.ts",
+  "src/app/actions/competitor-market-brief.ts",
 ];
 
 async function exists(path: string): Promise<boolean> {

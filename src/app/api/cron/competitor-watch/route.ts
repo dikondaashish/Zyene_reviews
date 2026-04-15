@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
 import { generateCompetitorInsight } from "@/domains/ai/services/generateCompetitorInsight";
-import { fetchCompetitorMetricsFromGoogle } from "@/services/competitors/external-metrics";
+import {
+    fetchCompetitorMetricsFromGoogle,
+    fetchCompetitorPlaceEnrichment,
+    competitorEnrichmentToSnapshotMetadata,
+} from "@/services/competitors/external-metrics";
 import { sendCompetitorAlertEmail } from "@/lib/notifications/send-competitor-alert-email";
 
 export const dynamic = "force-dynamic";
@@ -243,6 +247,16 @@ export async function GET(request: Request) {
                 continue;
             }
 
+            let placesExtra: Record<string, unknown> = {};
+            if (providerPlaceId) {
+                const enrichment = await fetchCompetitorPlaceEnrichment({
+                    placeResourceName: providerPlaceId,
+                });
+                if (enrichment) {
+                    placesExtra = competitorEnrichmentToSnapshotMetadata(enrichment);
+                }
+            }
+
             snapshotsToInsert.push({
                 competitor_id: competitor.id,
                 business_id: competitor.business_id,
@@ -257,6 +271,7 @@ export async function GET(request: Request) {
                     reviews_delta: reviewsDelta,
                     provider,
                     provider_place_id: providerPlaceId,
+                    ...placesExtra,
                 },
             });
 
