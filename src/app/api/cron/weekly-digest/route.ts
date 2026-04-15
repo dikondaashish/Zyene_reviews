@@ -24,6 +24,16 @@ async function pingDigestHeartbeat(ok: boolean): Promise<void> {
     await fetch(url).catch(() => {});
 }
 
+function isAuthorizedCronRequest(request: Request): boolean {
+    const authHeader = request.headers.get("authorization");
+    const hasSecret = typeof process.env.CRON_SECRET === "string" && process.env.CRON_SECRET.length > 0;
+    const hasValidBearer = hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`;
+
+    // Vercel Cron invokes with this header and no bearer token.
+    const isVercelCron = request.headers.get("x-vercel-cron") === "1";
+    return Boolean(hasValidBearer || isVercelCron);
+}
+
 /**
  * Weekly digest fan-out. Schedule externally (e.g. cron-jobs.org): every Monday 09:00
  * in your chosen timezone, GET with Authorization: Bearer CRON_SECRET.
@@ -31,8 +41,8 @@ async function pingDigestHeartbeat(ok: boolean): Promise<void> {
  * Example cron-jobs.org: "0 9 * * MON" with timezone America/Chicago (adjust as needed).
  */
 export async function GET(request: Request) {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isAuthorizedCronRequest(request)) {
+        await pingDigestHeartbeat(false);
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
