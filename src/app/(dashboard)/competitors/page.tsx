@@ -90,13 +90,24 @@ export default async function CompetitorsPage({
         .order("created_at", { ascending: false })
         .limit(100);
 
-    const [snapshotsRes, eventsRes, insightsRes] = await Promise.all([
+    const latestRunPromise = (supabase
+        .from("competitor_watch_runs" as never) as any)
+        .select(
+            "id, run_id, business_id, status, scanned, external_updates, snapshots_created, events_created, insights_created, error_message, started_at, finished_at, created_at"
+        )
+        .eq("business_id", businessId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    const [snapshotsRes, eventsRes, insightsRes, latestRunRes] = await Promise.all([
         snapshotsPromise,
         eventsPromise,
         insightsPromise,
+        latestRunPromise,
     ]);
 
-    if (competitorsError || snapshotsRes.error || eventsRes.error || insightsRes.error) {
+    if (competitorsError || snapshotsRes.error || eventsRes.error || insightsRes.error || latestRunRes.error) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
             <div className="flex-1 space-y-6 p-8 pt-6">
@@ -155,6 +166,23 @@ export default async function CompetitorsPage({
                     model: string | null;
                     created_at: string;
                 }>}
+                latestRun={
+                    (latestRunRes.data as {
+                        id: string;
+                        run_id: string;
+                        business_id: string;
+                        status: string;
+                        scanned: number;
+                        external_updates: number;
+                        snapshots_created: number;
+                        events_created: number;
+                        insights_created: number;
+                        error_message: string | null;
+                        started_at: string;
+                        finished_at: string;
+                        created_at: string;
+                    } | null) ?? null
+                }
             />
         </div>
     );

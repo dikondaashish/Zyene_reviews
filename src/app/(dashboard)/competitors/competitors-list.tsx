@@ -69,6 +69,21 @@ type CompetitorInsight = {
     model: string | null;
     created_at: string;
 };
+type CompetitorWatchRun = {
+    id: string;
+    run_id: string;
+    business_id: string;
+    status: string;
+    scanned: number;
+    external_updates: number;
+    snapshots_created: number;
+    events_created: number;
+    insights_created: number;
+    error_message: string | null;
+    started_at: string;
+    finished_at: string;
+    created_at: string;
+};
 type RangeKey = "7d" | "30d" | "90d" | "12m";
 
 export function CompetitorsList({
@@ -78,6 +93,7 @@ export function CompetitorsList({
     snapshotRows,
     eventRows,
     insightRows,
+    latestRun,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
@@ -85,6 +101,7 @@ export function CompetitorsList({
     snapshotRows: CompetitorSnapshot[];
     eventRows: CompetitorEvent[];
     insightRows: CompetitorInsight[];
+    latestRun: CompetitorWatchRun | null;
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -207,6 +224,13 @@ export function CompetitorsList({
         return "outline";
     };
 
+    const runStatusVariant = (status: string): "default" | "destructive" | "secondary" => {
+        const s = String(status || "").toLowerCase();
+        if (s === "failed") return "destructive";
+        if (s === "success") return "default";
+        return "secondary";
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -230,6 +254,60 @@ export function CompetitorsList({
                     onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
                 />
             </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Last Sync Health</CardTitle>
+                    <CardDescription>
+                        Latest competitor-watch cron status for this business.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {!latestRun ? (
+                        <p className="text-sm text-muted-foreground">
+                            No sync run has been logged yet for this business.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                                <Badge variant={runStatusVariant(latestRun.status)}>
+                                    {String(latestRun.status || "unknown").toUpperCase()}
+                                </Badge>
+                                <span className="text-sm text-muted-foreground">
+                                    Finished <TimeAgo date={latestRun.finished_at} />
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
+                                <div className="rounded border p-2">
+                                    <p className="text-muted-foreground text-xs">Scanned</p>
+                                    <p className="font-semibold">{latestRun.scanned}</p>
+                                </div>
+                                <div className="rounded border p-2">
+                                    <p className="text-muted-foreground text-xs">External updates</p>
+                                    <p className="font-semibold">{latestRun.external_updates}</p>
+                                </div>
+                                <div className="rounded border p-2">
+                                    <p className="text-muted-foreground text-xs">Snapshots</p>
+                                    <p className="font-semibold">{latestRun.snapshots_created}</p>
+                                </div>
+                                <div className="rounded border p-2">
+                                    <p className="text-muted-foreground text-xs">Events</p>
+                                    <p className="font-semibold">{latestRun.events_created}</p>
+                                </div>
+                                <div className="rounded border p-2">
+                                    <p className="text-muted-foreground text-xs">Insights</p>
+                                    <p className="font-semibold">{latestRun.insights_created}</p>
+                                </div>
+                            </div>
+                            {latestRun.error_message ? (
+                                <p className="text-xs text-rose-700 dark:text-rose-300">
+                                    {latestRun.error_message}
+                                </p>
+                            ) : null}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
             {competitors.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">

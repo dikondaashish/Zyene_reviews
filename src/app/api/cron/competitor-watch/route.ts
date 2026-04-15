@@ -30,7 +30,11 @@ export async function GET(request: Request) {
 
     const admin = createAdminClient();
     const now = new Date();
+    const runStartedAt = now.toISOString();
+    const runId = crypto.randomUUID();
     let lockAcquired = false;
+    const businessExternalUpdates = new Map<string, number>();
+    let processedBusinessIds: string[] = [];
 
     try {
         const { data: lockResult, error: lockErr } = await (admin as any).rpc(
@@ -64,12 +68,16 @@ export async function GET(request: Request) {
             await pingCompetitorWatchHeartbeat(true);
             return NextResponse.json({
                 success: true,
+                runId,
                 scanned: 0,
+                externalUpdates: 0,
                 snapshotsCreated: 0,
                 eventsCreated: 0,
+                insightsCreated: 0,
                 message: "No competitors to process",
             });
         }
+        processedBusinessIds = Array.from(new Set(competitors.map((c) => c.business_id)));
 
         const competitorIds = competitors.map((c) => c.id);
         const { data: existingSnapshots, error: snapshotsErr } = await (admin
@@ -162,6 +170,10 @@ export async function GET(request: Request) {
                         console.error("[cron/competitor-watch] competitor metrics update failed:", updErr);
                     } else {
                         externalUpdates++;
+                        businessExternalUpdates.set(
+                            competitor.business_id,
+                            (businessExternalUpdates.get(competitor.business_id) ?? 0) + 1
+                        );
                     }
                 }
             }
@@ -318,10 +330,54 @@ export async function GET(request: Request) {
             }
         }
 
+        const scannedByBusiness = new Map<string, number>();
+        for (const c of competitors) {
+            scannedByBusiness.set(c.business_id, (scannedByBusiness.get(c.business_id) ?? 0) + 1);
+        }
+
+        const snapshotsByBusiness = new Map<string, number>();
+        for (const s of snapshotsToInsert) {
+            snapshotsByBusiness.set(s.business_id, (snapshotsByBusiness.get(s.business_id) ?? 0) + 1);
+        }
+
+        const eventsByBusiness = new Map<string, number>();
+        for (const e of eventsToInsert) {
+            eventsByBusiness.set(e.business_id, (eventsByBusiness.get(e.business_id) ?? 0) + 1);
+        }
+
+        const insightsByBusiness = new Map<string, number>();
+        for (const i of insightRowsToInsert) {
+            insightsByBusiness.set(i.business_id, (insightsByBusiness.get(i.business_id) ?? 0) + 1);
+        }
+
+        const finishedAt = new Date().toISOString();
+        const runRows = processedBusinessIds.map((businessId) => ({
+            run_id: runId,
+            business_id: businessId,
+            status: "success",
+            scanned: scannedByBusiness.get(businessId) ?? 0,
+            external_updates: businessExternalUpdates.get(businessId) ?? 0,
+            snapshots_created: snapshotsByBusiness.get(businessId) ?? 0,
+            events_created: eventsByBusiness.get(businessId) ?? 0,
+            insights_created: insightsByBusiness.get(businessId) ?? 0,
+            error_message: null,
+            started_at: runStartedAt,
+            finished_at: finishedAt,
+        }));
+        if (runRows.length > 0) {
+            const { error: insertRunsErr } = await (admin.from("competitor_watch_runs" as never) as any).insert(
+                runRows
+            );
+            if (insertRunsErr) {
+                console.error("[cron/competitor-watch] run log insert failed:", insertRunsErr);
+            }
+        }
+
         await pingCompetitorWatchHeartbeat(true);
 
         return NextResponse.json({
             success: true,
+            runId,
             scanned: competitors.length,
             externalUpdates,
             snapshotsCreated: snapshotsToInsert.length,
@@ -331,6 +387,27 @@ export async function GET(request: Request) {
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Internal server error";
         console.error("[cron/competitor-watch] unexpected error:", error);
+        if (processedBusinessIds.length > 0) {
+            const failureRows = processedBusinessIds.map((businessId) => ({
+                run_id: runId,
+                business_id: businessId,
+                status: "failed",
+                scanned: 0,
+                external_updates: 0,
+                snapshots_created: 0,
+                events_created: 0,
+                insights_created: 0,
+                error_message: message.slice(0, 500),
+                started_at: runStartedAt,
+                finished_at: new Date().toISOString(),
+            }));
+            const { error: failInsertErr } = await (admin.from("competitor_watch_runs" as never) as any).insert(
+                failureRows
+            );
+            if (failInsertErr) {
+                console.error("[cron/competitor-watch] failure run log insert failed:", failInsertErr);
+            }
+        }
         await pingCompetitorWatchHeartbeat(false);
         return NextResponse.json({ error: message }, { status: 500 });
     } finally {
