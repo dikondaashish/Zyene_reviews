@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
 import { generateCompetitorInsight } from "@/domains/ai/services/generateCompetitorInsight";
+import { fetchCompetitorMetricsFromGoogle } from "@/services/competitors/external-metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -29,11 +30,28 @@ export async function GET(request: Request) {
 
     const admin = createAdminClient();
     const now = new Date();
+    let lockAcquired = false;
 
     try {
+        const { data: lockResult, error: lockErr } = await (admin as any).rpc(
+            "acquire_competitor_watch_lock"
+        );
+        if (lockErr) {
+            console.error("[cron/competitor-watch] lock acquire failed:", lockErr);
+            await pingCompetitorWatchHeartbeat(false);
+            return NextResponse.json({ error: "Lock acquisition failed" }, { status: 500 });
+        }
+        if (!lockResult) {
+            return NextResponse.json(
+                { success: true, skipped: true, reason: "already_running" },
+                { status: 200 }
+            );
+        }
+        lockAcquired = true;
+
         const { data: competitors, error: competitorsErr } = await admin
             .from("competitors")
-            .select("id, business_id, name, average_rating, total_reviews")
+            .select("id, business_id, name, google_url, average_rating, total_reviews")
             .order("created_at", { ascending: false });
 
         if (competitorsErr) {
@@ -114,11 +132,39 @@ export async function GET(request: Request) {
                 events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
             }
         >();
+        let externalUpdates = 0;
 
         for (const competitor of competitors) {
             const latest = latestByCompetitor.get(competitor.id);
-            const currRating = Number(competitor.average_rating || 0);
-            const currReviews = Number(competitor.total_reviews || 0);
+            let currRating = Number(competitor.average_rating || 0);
+            let currReviews = Number(competitor.total_reviews || 0);
+
+            const liveMetrics = await fetchCompetitorMetricsFromGoogle({
+                name: competitor.name,
+                googleUrl: (competitor as { google_url?: string | null }).google_url ?? null,
+            });
+            if (liveMetrics) {
+                currRating = Number(liveMetrics.averageRating || 0);
+                currReviews = Number(liveMetrics.totalReviews || 0);
+                if (
+                    currRating !== Number(competitor.average_rating || 0) ||
+                    currReviews !== Number(competitor.total_reviews || 0)
+                ) {
+                    const { error: updErr } = await admin
+                        .from("competitors")
+                        .update({
+                            average_rating: currRating,
+                            total_reviews: currReviews,
+                            updated_at: now.toISOString(),
+                        })
+                        .eq("id", competitor.id);
+                    if (updErr) {
+                        console.error("[cron/competitor-watch] competitor metrics update failed:", updErr);
+                    } else {
+                        externalUpdates++;
+                    }
+                }
+            }
             const prevRating = Number(latest?.average_rating || 0);
             const prevReviews = Number(latest?.total_reviews || 0);
             const ratingDelta = Number((currRating - prevRating).toFixed(1));
@@ -277,6 +323,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             success: true,
             scanned: competitors.length,
+            externalUpdates,
             snapshotsCreated: snapshotsToInsert.length,
             eventsCreated: eventsToInsert.length,
             insightsCreated: insightRowsToInsert.length,
@@ -286,5 +333,12 @@ export async function GET(request: Request) {
         console.error("[cron/competitor-watch] unexpected error:", error);
         await pingCompetitorWatchHeartbeat(false);
         return NextResponse.json({ error: message }, { status: 500 });
+    } finally {
+        if (lockAcquired) {
+            const { error: unlockErr } = await (admin as any).rpc("release_competitor_watch_lock");
+            if (unlockErr) {
+                console.error("[cron/competitor-watch] lock release failed:", unlockErr);
+            }
+        }
     }
 }

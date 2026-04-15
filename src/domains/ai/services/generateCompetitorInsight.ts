@@ -50,7 +50,7 @@ export async function generateCompetitorInsight(input: {
     reviewsDelta: number;
     events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
 }): Promise<CompetitorInsightResult | null> {
-    const prompt = [
+    const basePrompt = [
         "You are an analyst for local business competitor monitoring.",
         "Return strictly valid JSON matching the provided schema.",
         "",
@@ -74,7 +74,28 @@ export async function generateCompetitorInsight(input: {
         "- confidence from 0 to 1.",
     ].join("\n");
 
-    try {
+    const strictRetryPrompt = [
+        basePrompt,
+        "",
+        "IMPORTANT: Output ONLY raw JSON object. No markdown, no prose, no code fences.",
+    ].join("\n");
+
+    const fallback: CompetitorInsightResult = {
+        summary: `${input.competitorName} moved by ${input.ratingDelta > 0 ? "+" : ""}${input.ratingDelta.toFixed(1)} rating and ${input.reviewsDelta > 0 ? "+" : ""}${input.reviewsDelta} reviews. Monitor this competitor and adjust your local review strategy.`,
+        priority:
+            Math.abs(input.ratingDelta) >= 0.3 || Math.abs(input.reviewsDelta) >= 20
+                ? "high"
+                : Math.abs(input.ratingDelta) >= 0.1 || Math.abs(input.reviewsDelta) >= 5
+                  ? "medium"
+                  : "low",
+        confidence: 0.35,
+        recommendations: [
+            "Review recent competitor feedback themes and identify gaps in your responses.",
+            "Increase high-intent review requests this week to defend rating/review momentum.",
+        ],
+    };
+
+    const tryGenerate = async (prompt: string) => {
         const raw = await generateContentWithFallback(prompt, {
             requireJson: true,
             schema: competitorInsightSchema,
@@ -89,7 +110,9 @@ export async function generateCompetitorInsight(input: {
             recommendations?: string[];
         };
         const summary = String(parsed.summary || "").trim();
-        if (!summary) return null;
+        if (!summary) {
+            throw new Error("Missing summary from model output");
+        }
         const confidenceRaw = Number(parsed.confidence);
         const confidence = Number.isFinite(confidenceRaw)
             ? Math.min(1, Math.max(0, confidenceRaw))
@@ -102,9 +125,19 @@ export async function generateCompetitorInsight(input: {
             priority: normalizePriority(parsed.priority),
             confidence,
             recommendations,
-        };
+        } as CompetitorInsightResult;
+    };
+
+    try {
+        return await tryGenerate(basePrompt);
     } catch (error) {
-        console.error("[generateCompetitorInsight] failed:", error);
-        return null;
+        console.warn("[generateCompetitorInsight] primary parse failed, retrying strict:", error);
+    }
+
+    try {
+        return await tryGenerate(strictRetryPrompt);
+    } catch (retryError) {
+        console.error("[generateCompetitorInsight] strict retry failed, using safe fallback:", retryError);
+        return fallback;
     }
 }
