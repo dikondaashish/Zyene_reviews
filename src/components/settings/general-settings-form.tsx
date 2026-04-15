@@ -15,9 +15,15 @@ import type {
 interface GeneralSettingsFormProps {
     user: AppUserSummary;
     organization: OrganizationSettingsRecord | null;
+    /** Only organization owners may rename the org (admins/managers see read-only). */
+    canEditOrganizationName?: boolean;
 }
 
-export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormProps) {
+export function GeneralSettingsForm({
+    user,
+    organization,
+    canEditOrganizationName = false,
+}: GeneralSettingsFormProps) {
     const router = useRouter();
     const supabase = createClient();
 
@@ -25,8 +31,10 @@ export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormP
     const [orgName, setOrgName] = useState(organization?.name || "");
     const [isLoading, setIsLoading] = useState(false);
 
-    const hasChanges = fullName !== (user.user_metadata?.full_name || "") ||
-        (organization && orgName !== organization.name);
+    const orgNameChanged =
+        Boolean(organization && canEditOrganizationName && orgName !== organization.name);
+    const hasChanges =
+        fullName !== (user.user_metadata?.full_name || "") || orgNameChanged;
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -140,9 +148,16 @@ export function GeneralSettingsForm({ user, organization }: GeneralSettingsFormP
                                 onChange={(e) => setOrgName(e.target.value)}
                                 placeholder="Enter organization name"
                                 className="pl-9"
-                                disabled={isLoading}
+                                disabled={isLoading || !canEditOrganizationName}
+                                readOnly={!canEditOrganizationName}
                             />
                         </div>
+                        {!canEditOrganizationName ? (
+                            <p className="text-xs text-muted-foreground">
+                                Only the organization owner can change this name. Ask your owner to update it if
+                                needed.
+                            </p>
+                        ) : null}
                     </div>
                 </>
             )}

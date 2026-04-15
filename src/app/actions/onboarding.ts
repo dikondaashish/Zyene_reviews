@@ -24,6 +24,7 @@ import {
 } from "@/lib/validations/onboarding";
 import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 import { registerNotifications } from "@/services/google/notifications";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -887,6 +888,21 @@ export async function updateOrganizationName(
     if (!user) {
       return { success: false, error: "You are not authenticated." };
     }
+
+    const { data: orgMembership } = await supabase
+      .from("organization_members")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("organization_id", organizationId)
+      .maybeSingle();
+
+    if (!isOrganizationOwnerRole(orgMembership?.role)) {
+      return {
+        success: false,
+        error: "Only the organization owner can change the organization name.",
+      };
+    }
+
     const slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")

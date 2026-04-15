@@ -7,6 +7,7 @@ import { DeleteAccountSection } from "@/components/settings/delete-account-secti
 import { RestartTourSection } from "@/components/settings/restart-tour-section";
 
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
 export default async function GeneralSettingsPage() {
     const supabase = await createClient();
@@ -21,6 +22,17 @@ export default async function GeneralSettingsPage() {
 
     const { organization } = await getActiveBusinessId();
 
+    let canEditOrganizationName = false;
+    if (organization?.id) {
+        const { data: orgMembership } = await supabase
+            .from("organization_members")
+            .select("role")
+            .eq("user_id", user.id)
+            .eq("organization_id", organization.id)
+            .maybeSingle();
+        canEditOrganizationName = isOrganizationOwnerRole(orgMembership?.role);
+    }
+
     return (
         <div className="space-y-8">
             {/* Page Header */}
@@ -32,12 +44,17 @@ export default async function GeneralSettingsPage() {
             </div>
 
             {/* Combined Profile & Organization Settings Form */}
-            <GeneralSettingsForm 
-                user={user} 
-                organization={organization ? {
-                    ...organization,
-                    name: organization.name || "Your Organization"
-                } as any : null} 
+            <GeneralSettingsForm
+                user={user}
+                organization={
+                    organization ?
+                        ({
+                            ...organization,
+                            name: organization.name || "Your Organization",
+                        } as any)
+                    :   null
+                }
+                canEditOrganizationName={canEditOrganizationName}
             />
 
             {/* Product Tour */}
