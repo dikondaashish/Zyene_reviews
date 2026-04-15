@@ -187,8 +187,11 @@ export default async function AnalyticsPage({
     const prevResponseRate = prevTotalReviews > 0 ? (prevRespondedCount / prevTotalReviews) * 100 : 0;
     const prevRequestsCount = previousRequests.length;
 
-    const getDelta = (curr: number, prev: number) => {
-        if (prev === 0) return curr > 0 ? 100 : 0;
+    const getDelta = (curr: number, prev: number): number | null => {
+        // No prior baseline -> trend is undefined (avoid misleading fixed 100% badges).
+        if (prev === 0) {
+            return curr === 0 ? 0 : null;
+        }
         return ((curr - prev) / prev) * 100;
     };
 
@@ -359,28 +362,28 @@ export default async function AnalyticsPage({
                         title="New Reviews"
                         value={totalReviews}
                         description="In selected period"
-                        trend={{ value: reviewsDelta, label: "vs last period" }}
+                        trend={reviewsDelta === null ? undefined : { value: reviewsDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
                     <StatsCard 
                         title="Average Rating"
                         value={avgRating.toFixed(1)}
                         description={`Based on ${totalReviews} reviews`}
-                        trend={{ value: ratingDelta, label: "vs last period" }}
+                        trend={ratingDelta === null ? undefined : { value: ratingDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
                     <StatsCard 
                         title="Response Rate"
                         value={`${responseRate.toFixed(0)}%`}
                         description={`${respondedCount} responded`}
-                        trend={{ value: responseRateDelta, label: "vs last period" }}
+                        trend={responseRateDelta === null ? undefined : { value: responseRateDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
                     <StatsCard 
                         title="Requests Sent"
                         value={requestsCount}
                         description="Review invitations"
-                        trend={{ value: requestsDelta, label: "vs last period" }}
+                        trend={requestsDelta === null ? undefined : { value: requestsDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
                 </div>
