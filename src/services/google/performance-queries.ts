@@ -154,15 +154,20 @@ export async function getGooglePerformanceDailySeries(
 export async function getGoogleSearchKeywords(
     supabase: SupabaseClient,
     businessId: string,
-    limit: number
+    limit: number,
+    sinceMonthStart?: string
 ): Promise<Array<{ keyword: string; impressions: number; monthStart: string }>> {
-    const { data, error } = await supabase
+    let query = supabase
         .from("google_search_keyword_monthly")
         .select("keyword, impressions, month_start")
         .eq("business_id", businessId)
-        .order("month_start", { ascending: false })
-        .order("impressions", { ascending: false })
-        .limit(limit * 3);
+        .order("month_start", { ascending: false });
+
+    if (sinceMonthStart) {
+        query = query.gte("month_start", sinceMonthStart);
+    }
+
+    const { data, error } = await query.order("impressions", { ascending: false }).limit(limit * 3);
 
     if (error || !data) {
         return [];

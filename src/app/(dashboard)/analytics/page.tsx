@@ -29,43 +29,11 @@ import { ZyenePlatformAnalytics } from "@/components/analytics/zyene-platform-an
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { BarChart3 } from "lucide-react";
-
-// Helper with comparison support
-function getPeriods(range: string) {
-    const now = new Date();
-    const currentEnd = new Date(now);
-    let currentStart: Date;
-    let previousEnd: Date;
-    let previousStart: Date;
-
-    switch (range) {
-        case "7d":
-            currentStart = new Date(now.setDate(now.getDate() - 7));
-            previousEnd = new Date(currentStart);
-            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 7));
-            break;
-        case "30d":
-            currentStart = new Date(now.setDate(now.getDate() - 30));
-            previousEnd = new Date(currentStart);
-            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 30));
-            break;
-        case "90d":
-            currentStart = new Date(now.setDate(now.getDate() - 90));
-            previousEnd = new Date(currentStart);
-            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 90));
-            break;
-        case "12m":
-            currentStart = new Date(now.setFullYear(now.getFullYear() - 1));
-            previousEnd = new Date(currentStart);
-            previousStart = new Date(new Date(currentStart).setFullYear(currentStart.getFullYear() - 1));
-            break;
-        default:
-            currentStart = new Date(now.setDate(now.getDate() - 30));
-            previousEnd = new Date(currentStart);
-            previousStart = new Date(new Date(currentStart).setDate(currentStart.getDate() - 30));
-    }
-    return { currentStart, currentEnd, previousStart, previousEnd };
-}
+import {
+    analyticsRangeLabel,
+    getAnalyticsPeriods,
+    toMonthStartIso,
+} from "@/lib/analytics/date-range";
 
 export default async function AnalyticsPage({
     searchParams,
@@ -85,7 +53,7 @@ export default async function AnalyticsPage({
     const sp = await searchParams;
     const range = sp.range || "30d";
     const platform = sp.platform || "all";
-    const { currentStart, currentEnd, previousStart } = getPeriods(range);
+    const { range: normalizedRange, currentStart, currentEnd, previousStart } = getAnalyticsPeriods(range);
 
     if (!businessId) {
         return (
@@ -105,6 +73,7 @@ export default async function AnalyticsPage({
         .select("id, created_at, platform, rating, response_status, responded_at, sentiment, themes")
         .eq("business_id", businessId)
         .gte("created_at", previousStart.toISOString())
+        .lte("created_at", currentEnd.toISOString())
         .order("created_at", { ascending: true });
 
     if (platform === "zyene") {
@@ -123,11 +92,13 @@ export default async function AnalyticsPage({
               )
               .eq("business_id", businessId)
               .gte("created_at", previousStart.toISOString())
+              .lte("created_at", currentEnd.toISOString())
         : supabase
               .from("review_requests")
               .select("id,created_at")
               .eq("business_id", businessId)
-              .gte("created_at", previousStart.toISOString());
+              .gte("created_at", previousStart.toISOString())
+              .lte("created_at", currentEnd.toISOString());
 
     // 3. Fetch Private Feedback (only when Zyene platform selected)
     const privateFeedbackQuery = isZyenePlatform
@@ -283,7 +254,8 @@ export default async function AnalyticsPage({
     if (businessId && isGoogleConnected) {
         perfTotals = await getGooglePerformanceTotals(supabase, businessId, currentStart, currentEnd);
         perfSeries = await getGooglePerformanceDailySeries(supabase, businessId, currentStart, currentEnd);
-        searchKeywords = await getGoogleSearchKeywords(supabase, businessId, 30);
+        const keywordSinceMonth = toMonthStartIso(currentStart);
+        searchKeywords = await getGoogleSearchKeywords(supabase, businessId, 30, keywordSinceMonth);
         discoverySplit = estimateDiscoverySplit(
             searchKeywords.map((k) => ({ keyword: k.keyword, impressions: k.impressions })),
             (business as { name?: string })?.name || ""
@@ -303,7 +275,7 @@ export default async function AnalyticsPage({
         },
     ];
 
-    const rangeLabel = range === "7d" ? "Last 7 Days" : range === "30d" ? "Last 30 Days" : range === "90d" ? "Last 90 Days" : "Last 12 Months";
+    const rangeLabel = analyticsRangeLabel(normalizedRange);
 
     return (
         <div className="flex flex-1 flex-col gap-8 p-4 md:p-8 overflow-x-hidden relative text-foreground">

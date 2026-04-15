@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { getAnalyticsPeriods } from "@/lib/analytics/date-range";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
@@ -18,23 +19,15 @@ export async function GET(request: Request) {
 
     if (!business) return new NextResponse("No business found", { status: 403 });
 
-    // Helper to get start date
-    const now = new Date();
-    let startDate: Date;
-    switch (range) {
-        case "7d": startDate = new Date(now.setDate(now.getDate() - 7)); break;
-        case "30d": startDate = new Date(now.setDate(now.getDate() - 30)); break;
-        case "90d": startDate = new Date(now.setDate(now.getDate() - 90)); break;
-        case "12m": startDate = new Date(now.setFullYear(now.getFullYear() - 1)); break;
-        default: startDate = new Date(now.setDate(now.getDate() - 30));
-    }
+    const { currentStart, currentEnd } = getAnalyticsPeriods(range);
 
     // Fetch Reviews for Export
     const { data: reviews } = await supabase
         .from("reviews")
         .select("*")
         .eq("business_id", business.id)
-        .gte("created_at", startDate.toISOString())
+        .gte("created_at", currentStart.toISOString())
+        .lte("created_at", currentEnd.toISOString())
         .order("created_at", { ascending: true });
 
     // Aggregate Daily Trends for the CSV
