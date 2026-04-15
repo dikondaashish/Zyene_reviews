@@ -34,6 +34,7 @@ import {
     getAnalyticsPeriods,
     toMonthStartIso,
 } from "@/lib/analytics/date-range";
+import { displaySentimentLabel, effectiveReviewAt } from "@/lib/analytics/review-timeline";
 
 export default async function AnalyticsPage({
     searchParams,
@@ -68,13 +69,15 @@ export default async function AnalyticsPage({
     const isZyenePlatform = platform === "zyene";
 
     // 1. Fetch Reviews (current + previous)
+    // Use review_date for time window — created_at is often sync time (wrong for trends after bulk import).
     let reviewsQuery = supabase
         .from("reviews")
-        .select("id, created_at, platform, rating, response_status, responded_at, sentiment, themes")
+        .select("id, created_at, review_date, platform, rating, response_status, responded_at, sentiment, themes, is_visible")
         .eq("business_id", businessId)
-        .gte("created_at", previousStart.toISOString())
-        .lte("created_at", currentEnd.toISOString())
-        .order("created_at", { ascending: true });
+        .or("is_visible.is.null,is_visible.eq.true")
+        .gte("review_date", previousStart.toISOString())
+        .lte("review_date", currentEnd.toISOString())
+        .order("review_date", { ascending: true });
 
     if (platform === "zyene") {
         reviewsQuery = reviewsQuery.or('platform.eq.zyene,platform.is.null');
@@ -148,8 +151,12 @@ export default async function AnalyticsPage({
 
     const connectedPlatforms = (reviewPlatforms || []).map(p => p.platform);
 
-    const currentReviews = (allReviews || []).filter(r => new Date(r.created_at) >= currentStart);
-    const previousReviews = (allReviews || []).filter(r => new Date(r.created_at) < currentStart);
+    const currentReviews = (allReviews || []).filter(
+        (r) => effectiveReviewAt(r) >= currentStart
+    );
+    const previousReviews = (allReviews || []).filter(
+        (r) => effectiveReviewAt(r) < currentStart
+    );
     const currentRequests = (allRequests || []).filter(r => new Date(r.created_at) >= currentStart);
     const previousRequests = (allRequests || []).filter(r => new Date(r.created_at) < currentStart);
 
@@ -183,7 +190,7 @@ export default async function AnalyticsPage({
 
     const dateMap = new Map<string, { date: string; ratingSum: number; count: number; positive: number; neutral: number; negative: number }>();
     currentReviews.forEach((r) => {
-        const date = new Date(r.created_at).toISOString().split('T')[0];
+        const date = effectiveReviewAt(r).toISOString().split("T")[0];
         if (!dateMap.has(date)) {
             dateMap.set(date, { date, ratingSum: 0, count: 0, positive: 0, neutral: 0, negative: 0 });
         }
@@ -209,10 +216,10 @@ export default async function AnalyticsPage({
 
     const sentimentCounts = { positive: 0, neutral: 0, negative: 0, mixed: 0 };
     currentReviews.forEach((r) => {
-        const s = (r.sentiment || "").toLowerCase();
-        if (s === "positive") sentimentCounts.positive++;
-        else if (s === "negative") sentimentCounts.negative++;
-        else if (s === "mixed") sentimentCounts.mixed++;
+        const label = displaySentimentLabel(r);
+        if (label === "positive") sentimentCounts.positive++;
+        else if (label === "negative") sentimentCounts.negative++;
+        else if (label === "mixed") sentimentCounts.mixed++;
         else sentimentCounts.neutral++;
     });
 
@@ -343,14 +350,14 @@ export default async function AnalyticsPage({
                     <StatsCard 
                         title="New Reviews"
                         value={totalReviews}
-                        description="In selected period"
+                        description="Reviews whose review date falls in this period"
                         trend={reviewsDelta === null ? undefined : { value: reviewsDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
                     <StatsCard 
                         title="Average Rating"
                         value={avgRating.toFixed(1)}
-                        description={`Based on ${totalReviews} reviews`}
+                        description={`Based on ${totalReviews} reviews (same date window)`}
                         trend={ratingDelta === null ? undefined : { value: ratingDelta, label: "vs last period" }}
                         isDemo={isDemo}
                     />
@@ -499,7 +506,19 @@ export default async function AnalyticsPage({
                                                     <div className="h-1.5 w-32 bg-muted/40 rounded-full overflow-hidden hidden sm:block">
                                                         <div 
                                                             className="h-full bg-primary/40 group-hover/item:bg-primary transition-all duration-1000"
-                                                            style={{ width: `${Math.min(100, (Number(k.impressions) / Math.max(...searchKeywords.map(sk => Number(sk.impressions)))) * 100)}%` }}
+                                                            style={{
+                                                            width: `${Math.min(
+                                                                100,
+                                                                (Number(k.impressions) /
+                                                                    Math.max(
+                                                                        1,
+                                                                        ...searchKeywords.map((sk) =>
+                                                                            Number(sk.impressions)
+                                                                        )
+                                                                    )) *
+                                                                    100
+                                                            )}%`,
+                                                        }}
                                                         />
                                                     </div>
                                                     <span className="text-sm font-mono font-bold text-muted-foreground group-hover/item:text-primary transition-colors">{Number(k.impressions).toLocaleString()}</span>

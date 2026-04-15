@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   averageRatingFromReviewRatings,
   firstLastSnapshotsByCompetitor,
+  hasSyncedCompetitorMetrics,
   isCompetitorAlertEventType,
   marketAverageEndRating,
 } from "../../src/lib/competitors/range-benchmark";
@@ -66,5 +67,44 @@ describe("range-benchmark", () => {
   it("isCompetitorAlertEventType matches prefix", () => {
     expect(isCompetitorAlertEventType("competitor.alert.rating_surge")).toBe(true);
     expect(isCompetitorAlertEventType("competitor.snapshot")).toBe(false);
+  });
+
+  it("hasSyncedCompetitorMetrics is false for seeded-only placeholders", () => {
+    expect(
+      hasSyncedCompetitorMetrics(
+        [{ id: "a", average_rating: 0, total_reviews: 0 }],
+        [
+          {
+            competitor_id: "a",
+            captured_at: "2026-01-01T00:00:00.000Z",
+            average_rating: 0,
+            total_reviews: 0,
+            source: "manual",
+          },
+        ]
+      )
+    ).toBe(false);
+  });
+
+  it("hasSyncedCompetitorMetrics is true when competitor row has metrics", () => {
+    expect(hasSyncedCompetitorMetrics([{ id: "a", average_rating: 4.2, total_reviews: 0 }], [])).toBe(true);
+    expect(hasSyncedCompetitorMetrics([{ id: "a", average_rating: 0, total_reviews: 3 }], [])).toBe(true);
+  });
+
+  it("hasSyncedCompetitorMetrics is true with google_places snapshots", () => {
+    expect(
+      hasSyncedCompetitorMetrics(
+        [{ id: "a", average_rating: 0, total_reviews: 0 }],
+        [
+          {
+            competitor_id: "a",
+            captured_at: "2026-01-01T00:00:00.000Z",
+            average_rating: 4.5,
+            total_reviews: 10,
+            source: "google_places",
+          },
+        ]
+      )
+    ).toBe(true);
   });
 });

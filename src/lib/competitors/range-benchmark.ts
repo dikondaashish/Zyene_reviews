@@ -7,6 +7,8 @@ export type SnapshotRow = {
     captured_at: string;
     average_rating: number;
     total_reviews: number;
+    /** When present (e.g. from DB), used to tell Places-backed data from seeded rows. */
+    source?: string;
 };
 
 export type CompetitorRow = {
@@ -35,6 +37,21 @@ export function firstLastSnapshotsByCompetitor(
 }
 
 /** Average of end-of-period ratings (last snapshot per competitor), with fallback to current competitor row. */
+/**
+ * True when at least one competitor has non-zero stored metrics or a Google Places snapshot
+ * in the given rows — i.e. we are not only showing seeded 0/0 placeholders before a sync.
+ */
+export function hasSyncedCompetitorMetrics(
+    competitors: CompetitorRow[],
+    snapshots: SnapshotRow[]
+): boolean {
+    const anyLiveRow = competitors.some(
+        (c) => Number(c.average_rating ?? 0) > 0 || Number(c.total_reviews ?? 0) > 0
+    );
+    const anyPlacesSnapshot = snapshots.some((s) => s.source === "google_places");
+    return anyLiveRow || anyPlacesSnapshot;
+}
+
 export function marketAverageEndRating(
     competitors: CompetitorRow[],
     snapshots: SnapshotRow[]

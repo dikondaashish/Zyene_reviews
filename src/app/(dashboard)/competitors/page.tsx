@@ -1,13 +1,14 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { CompetitorsList } from "./competitors-list";
+import { CompetitorsList, type CompetitorWatchBenchmarkRange } from "./competitors-list";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { TrendingUp } from "lucide-react";
 import {
     marketAverageEndRating,
     averageRatingFromReviewRatings,
+    hasSyncedCompetitorMetrics,
 } from "@/lib/competitors/range-benchmark";
 import {
     competitorRangeLabel,
@@ -198,8 +199,26 @@ export default async function CompetitorsPage({
             captured_at: s.captured_at,
             average_rating: s.average_rating,
             total_reviews: s.total_reviews,
+            source: s.source,
         }))
     );
+
+    const marketBenchmarkAvailable =
+        competitorsList.length === 0 ||
+        hasSyncedCompetitorMetrics(
+            competitorsList.map((c) => ({
+                id: c.id,
+                average_rating: c.average_rating,
+                total_reviews: c.total_reviews,
+            })),
+            snapshotRowsTyped.map((s) => ({
+                competitor_id: s.competitor_id,
+                captured_at: s.captured_at,
+                average_rating: s.average_rating,
+                total_reviews: s.total_reviews,
+                source: s.source,
+            }))
+        );
 
     const yourRatingForRank =
         ownAvgInRange !== null ? ownAvgInRange : Number(ownBusiness?.average_rating || 0);
@@ -213,9 +232,43 @@ export default async function CompetitorsPage({
     const combinedForRank = [yourRatingForRank, ...competitorEndRatings];
     const sortedForRank = combinedForRank.slice().sort((a, b) => b - a);
     const rankInRange =
-        sortedForRank.length > 0
-            ? sortedForRank.findIndex((v) => Math.abs(v - yourRatingForRank) < 0.001) + 1
-            : null;
+        !marketBenchmarkAvailable && competitorsList.length > 0
+            ? null
+            : sortedForRank.length > 0
+              ? sortedForRank.findIndex((v) => Math.abs(v - yourRatingForRank) < 0.001) + 1
+              : null;
+
+    const benchmarkRangePayload: CompetitorWatchBenchmarkRange = {
+        label: competitorRangeLabel(range),
+        marketEndAvgRating,
+        marketEndUsedFallback,
+        marketBenchmarkAvailable,
+        yourRatingForRank,
+        rank: rankInRange,
+        totalRanked: combinedForRank.length,
+        yourAvgVsMarketEnd:
+            ownAvgInRange !== null && marketBenchmarkAvailable
+                ? ownAvgInRange - marketEndAvgRating
+                : null,
+        yourReviewsInRange: ownRatings.length,
+        marketAvgReviewGain: (() => {
+            const gains = competitorsList.map((c) => {
+                const rows = snapshotRowsTyped
+                    .filter((s) => s.competitor_id === c.id)
+                    .sort(
+                        (a, b) =>
+                            new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime()
+                    );
+                if (rows.length < 2) return null;
+                const first = rows[0];
+                const last = rows[rows.length - 1];
+                return Number(last.total_reviews) - Number(first.total_reviews);
+            });
+            const nums = gains.filter((g): g is number => g !== null);
+            if (nums.length === 0) return null;
+            return nums.reduce((a, b) => a + b, 0) / nums.length;
+        })(),
+    };
 
     return (
         <div className="flex-1 space-y-6 p-8 pt-6">
@@ -325,34 +378,7 @@ export default async function CompetitorsPage({
                     avgRating: ownAvgInRange,
                     reviewCount: ownRatings.length,
                 }}
-                benchmarkRange={{
-                    label: competitorRangeLabel(range),
-                    marketEndAvgRating,
-                    marketEndUsedFallback,
-                    yourRatingForRank,
-                    rank: rankInRange,
-                    totalRanked: combinedForRank.length,
-                    yourAvgVsMarketEnd:
-                        ownAvgInRange !== null ? ownAvgInRange - marketEndAvgRating : null,
-                    yourReviewsInRange: ownRatings.length,
-                    marketAvgReviewGain: (() => {
-                        const gains = competitorsList.map((c) => {
-                            const rows = snapshotRowsTyped
-                                .filter((s) => s.competitor_id === c.id)
-                                .sort(
-                                    (a, b) =>
-                                        new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime()
-                                );
-                            if (rows.length < 2) return null;
-                            const first = rows[0];
-                            const last = rows[rows.length - 1];
-                            return Number(last.total_reviews) - Number(first.total_reviews);
-                        });
-                        const nums = gains.filter((g): g is number => g !== null);
-                        if (nums.length === 0) return null;
-                        return nums.reduce((a, b) => a + b, 0) / nums.length;
-                    })(),
-                }}
+                benchmarkRange={benchmarkRangePayload}
             />
         </div>
     );

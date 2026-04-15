@@ -11,6 +11,7 @@ import {
     Star,
     Loader2,
     Download,
+    RefreshCw,
 } from "lucide-react";
 import {
     Table,
@@ -48,6 +49,7 @@ import Link from "next/link";
 import { isCompetitorAlertEventType } from "@/lib/competitors/range-benchmark";
 import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
 import { computeCompetitorMovementRows } from "@/lib/competitors/snapshot-movement";
+import { syncCompetitorWatchNow } from "@/app/actions/competitor-watch-sync";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 type CompetitorSnapshot = {
@@ -101,6 +103,20 @@ type CompetitorWatchRun = {
     finished_at: string;
     created_at: string;
 };
+
+export type CompetitorWatchBenchmarkRange = {
+    label: string;
+    marketEndAvgRating: number;
+    marketEndUsedFallback: boolean;
+    marketBenchmarkAvailable: boolean;
+    yourRatingForRank: number;
+    rank: number | null;
+    totalRanked: number;
+    yourAvgVsMarketEnd: number | null;
+    yourReviewsInRange: number;
+    marketAvgReviewGain: number | null;
+};
+
 export function CompetitorsList({
     businessId,
     initialCompetitors,
@@ -127,28 +143,23 @@ export function CompetitorsList({
         avgRating: number | null;
         reviewCount: number;
     };
-    benchmarkRange: {
-        label: string;
-        marketEndAvgRating: number;
-        marketEndUsedFallback: boolean;
-        yourRatingForRank: number;
-        rank: number | null;
-        totalRanked: number;
-        yourAvgVsMarketEnd: number | null;
-        yourReviewsInRange: number;
-        marketAvgReviewGain: number | null;
-    };
+    benchmarkRange: CompetitorWatchBenchmarkRange;
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
+    const [syncWatchLoading, setSyncWatchLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        setCompetitors(initialCompetitors);
+    }, [initialCompetitors]);
 
     const rangeOptions: Array<{ value: CompetitorRangeKey; label: string }> = [
         { value: "7d", label: "7 Days" },
@@ -177,6 +188,27 @@ export function CompetitorsList({
         const now = new Date();
         const minutesAgo = (now.getTime() - createdAt.getTime()) / (1000 * 60);
         return minutesAgo < 2;
+    };
+
+    const handleSyncCompetitorWatch = async () => {
+        setSyncWatchLoading(true);
+        try {
+            const result = await syncCompetitorWatchNow(businessId);
+            if (result.success) {
+                toast.success(
+                    `Synced ${result.scanned ?? 0} competitor(s)${
+                        result.snapshots != null ? ` · ${result.snapshots} new snapshot(s)` : ""
+                    }.`
+                );
+                router.refresh();
+            } else {
+                toast.error(result.error || "Sync failed.");
+            }
+        } catch (e: unknown) {
+            toast.error(e instanceof Error ? e.message : "Sync failed.");
+        } finally {
+            setSyncWatchLoading(false);
+        }
     };
 
     const handleDelete = async (id: string) => {
@@ -283,6 +315,21 @@ export function CompetitorsList({
                     })}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
+                    {competitors.length > 0 ? (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={syncWatchLoading}
+                            onClick={() => void handleSyncCompetitorWatch()}
+                        >
+                            {syncWatchLoading ? (
+                                <Loader2 className="h-4 w-4 animate-spin sm:mr-2" />
+                            ) : (
+                                <RefreshCw className="h-4 w-4 sm:mr-2" />
+                            )}
+                            <span className="hidden sm:inline">Sync from Google</span>
+                        </Button>
+                    ) : null}
                     <Button variant="outline" size="sm" asChild>
                         <a
                             href={`/api/competitors/export?range=${range}`}
@@ -304,7 +351,8 @@ export function CompetitorsList({
                 <CardHeader>
                     <CardTitle>Last Sync Health</CardTitle>
                     <CardDescription>
-                        Latest competitor-watch cron status for this business.
+                        Scheduled job status for this business. Use &quot;Sync from Google&quot; above to refresh
+                        ratings without waiting for the schedule (requires a server Google Maps API key).
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -452,9 +500,14 @@ export function CompetitorsList({
                             <CardDescription>
                                 Your average rating uses reviews received in this period. Competitors use the latest
                                 snapshot in this period (or current totals if no snapshot yet).{" "}
-                                {benchmarkRange.marketEndUsedFallback
-                                    ? "Some competitors fell back to live totals where snapshots were missing."
-                                    : null}
+                                {!benchmarkRange.marketBenchmarkAvailable && competitors.length > 0 ? (
+                                    <span className="text-amber-700 dark:text-amber-300">
+                                        Competitor ratings are not loaded yet — run Sync from Google or wait for the
+                                        next sync.
+                                    </span>
+                                ) : benchmarkRange.marketEndUsedFallback ? (
+                                    "Some competitors fell back to live totals where snapshots were missing."
+                                ) : null}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -488,7 +541,11 @@ export function CompetitorsList({
                                             : `${benchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${benchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
                                     </p>
                                     <p className="text-[11px] text-muted-foreground mt-1">
-                                        Market end avg {benchmarkRange.marketEndAvgRating.toFixed(1)}
+                                        {benchmarkRange.marketBenchmarkAvailable ? (
+                                            <>Market end avg {benchmarkRange.marketEndAvgRating.toFixed(1)}</>
+                                        ) : (
+                                            <>Market average unavailable until competitor data syncs</>
+                                        )}
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
@@ -579,10 +636,22 @@ export function CompetitorsList({
                                                         <div>{updatedAt}</div>
                                                         <div className="text-[11px]">
                                                             Source:{" "}
-                                                            {String(
-                                                                latestSnapshotByCompetitor.get(competitor.id)?.metadata?.provider ||
-                                                                    "db_fallback"
-                                                            )}
+                                                            {(() => {
+                                                                const snap = latestSnapshotByCompetitor.get(
+                                                                    competitor.id
+                                                                );
+                                                                const meta = snap?.metadata as
+                                                                    | { provider?: string; seeded_on_create?: boolean }
+                                                                    | null
+                                                                    | undefined;
+                                                                if (meta?.provider) return String(meta.provider);
+                                                                if (snap?.source === "google_places")
+                                                                    return "google_places";
+                                                                if (snap?.source === "manual" && meta?.seeded_on_create) {
+                                                                    return "Pending sync";
+                                                                }
+                                                                return snap?.source || "—";
+                                                            })()}
                                                         </div>
                                                     </div>
                                                 </TableCell>

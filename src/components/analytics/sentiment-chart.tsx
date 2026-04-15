@@ -76,7 +76,16 @@ export function SentimentChart({ data }: { data: SentimentDataPoint[] }) {
                         align="center"
                         iconType="circle"
                         iconSize={8}
-                        wrapperStyle={{ paddingTop: '20px', fontSize: '11px', fontWeight: 600 }}
+                        wrapperStyle={{
+                            paddingTop: 20,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 12,
+                            justifyContent: "center",
+                            rowGap: 8,
+                        }}
                     />
                 </PieChart>
             </ResponsiveContainer>

@@ -1,4 +1,4 @@
-type ExternalCompetitorMetrics = {
+export type ExternalCompetitorMetrics = {
     averageRating: number;
     totalReviews: number;
     provider: "google_places";

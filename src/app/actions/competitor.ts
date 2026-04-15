@@ -4,6 +4,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
+import { applyGooglePlacesMetricsToCompetitor } from "@/lib/competitors/apply-google-places-metrics";
 
 // Validation schema
 const addCompetitorSchema = z.object({
@@ -123,30 +124,45 @@ export async function addCompetitor(
             };
         }
 
-        // Seed baseline history immediately so charts/timelines have a trusted starting point.
+        // Try Google Places first so ratings/reviews populate without waiting for cron.
         try {
-            const competitorId = (data as { id?: string } | null)?.id;
-            if (competitorId) {
+            const row = data as {
+                id: string;
+                business_id: string;
+                name: string;
+                google_url: string | null;
+                average_rating: number | null;
+                total_reviews: number | null;
+            };
+            const applied = await applyGooglePlacesMetricsToCompetitor(supabase, {
+                id: row.id,
+                business_id: businessId,
+                name: row.name,
+                google_url: googleUrl || null,
+                average_rating: row.average_rating,
+                total_reviews: row.total_reviews,
+            });
+
+            if (!applied.metrics) {
                 await supabase.from("competitor_snapshots" as never).insert({
-                    competitor_id: competitorId,
+                    competitor_id: row.id,
                     business_id: businessId,
                     average_rating: 0,
                     total_reviews: 0,
                     source: "manual",
-                    metadata: { seeded_on_create: true },
-                } as never);
-
-                await supabase.from("competitor_events" as never).insert({
-                    competitor_id: competitorId,
-                    business_id: businessId,
-                    event_type: "competitor.added",
-                    title: "Competitor added",
-                    summary: `${name.trim()} was added to competitor watch.`,
-                    metadata: { google_url: googleUrl || null },
+                    metadata: { seeded_on_create: true, note: "Places lookup unavailable — use Sync or wait for cron" },
                 } as never);
             }
+
+            await supabase.from("competitor_events" as never).insert({
+                competitor_id: row.id,
+                business_id: businessId,
+                event_type: "competitor.added",
+                title: "Competitor added",
+                summary: `${name.trim()} was added to competitor watch.`,
+                metadata: { google_url: googleUrl || null },
+            } as never);
         } catch (historyError) {
-            // Non-blocking: competitor row is already created.
             console.error("Failed to write competitor snapshot/event:", historyError);
         }
 

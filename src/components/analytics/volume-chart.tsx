@@ -79,7 +79,16 @@ export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
                         align="right" 
                         iconType="circle" 
                         iconSize={8}
-                        wrapperStyle={{ paddingBottom: '20px', fontSize: '11px', fontWeight: 500 }}
+                        wrapperStyle={{
+                            paddingBottom: 20,
+                            fontSize: 11,
+                            fontWeight: 500,
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: 10,
+                            justifyContent: "flex-end",
+                            rowGap: 6,
+                        }}
                     />
                     <Bar 
                         dataKey="negative" 
