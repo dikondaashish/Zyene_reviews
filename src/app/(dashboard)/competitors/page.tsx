@@ -38,7 +38,7 @@ export default async function CompetitorsPage() {
     // Fetch competitors
     const { data: competitors, error: competitorsError } = await supabase
         .from("competitors")
-        .select("*")
+        .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
         .eq("business_id", businessId)
         .order("created_at", { ascending: false });
 

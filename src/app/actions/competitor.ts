@@ -122,6 +122,33 @@ export async function addCompetitor(
             };
         }
 
+        // Seed baseline history immediately so charts/timelines have a trusted starting point.
+        try {
+            const competitorId = (data as { id?: string } | null)?.id;
+            if (competitorId) {
+                await supabase.from("competitor_snapshots" as never).insert({
+                    competitor_id: competitorId,
+                    business_id: businessId,
+                    average_rating: 0,
+                    total_reviews: 0,
+                    source: "manual",
+                    metadata: { seeded_on_create: true },
+                } as never);
+
+                await supabase.from("competitor_events" as never).insert({
+                    competitor_id: competitorId,
+                    business_id: businessId,
+                    event_type: "competitor.added",
+                    title: "Competitor added",
+                    summary: `${name.trim()} was added to competitor watch.`,
+                    metadata: { google_url: googleUrl || null },
+                } as never);
+            }
+        } catch (historyError) {
+            // Non-blocking: competitor row is already created.
+            console.error("Failed to write competitor snapshot/event:", historyError);
+        }
+
         revalidatePath("/competitors");
         return {
             success: true,
@@ -171,6 +198,29 @@ export async function deleteCompetitor(
                 success: false,
                 error: "You don't have permission to remove competitors.",
             };
+        }
+
+        const { data: businessRow } = await supabase
+            .from("businesses")
+            .select("organization_id")
+            .eq("id", businessId)
+            .maybeSingle();
+        const organizationId = businessRow?.organization_id ?? null;
+
+        try {
+            if (organizationId) {
+                await supabase.from("events").insert({
+                    organization_id: organizationId,
+                    business_id: businessId,
+                    user_id: user.id,
+                    event_type: "competitor.removed",
+                    entity_type: "competitor",
+                    entity_id: id,
+                    metadata: {},
+                });
+            }
+        } catch (eventError) {
+            console.error("Failed to write competitor removal audit event:", eventError);
         }
 
         const { error } = await supabase
