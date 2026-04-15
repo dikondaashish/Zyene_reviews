@@ -8,6 +8,22 @@ import { inngest } from "@/services/inngest/client";
 /** Rolling window of reviews to include in the weekly digest (matches email copy). */
 const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 
+function digestHeartbeatBaseUrl(): string | null {
+    const raw =
+        process.env.BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL ||
+        process.env.BETTERSTACK_DAILY_DIGEST_HEARTBEAT_URL ||
+        "";
+    const base = raw.trim();
+    return base ? base.replace(/\/+$/, "") : null;
+}
+
+async function pingDigestHeartbeat(ok: boolean): Promise<void> {
+    const base = digestHeartbeatBaseUrl();
+    if (!base) return;
+    const url = ok ? base : `${base}/fail`;
+    await fetch(url).catch(() => {});
+}
+
 /**
  * Weekly digest fan-out. Schedule externally (e.g. cron-jobs.org): every Monday 09:00
  * in your chosen timezone, GET with Authorization: Bearer CRON_SECRET.
@@ -46,12 +62,12 @@ export async function GET(request: Request) {
             .order("created_at", { ascending: false });
 
         if (reviewError) {
-            await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ/fail").catch(() => { });
+            await pingDigestHeartbeat(false);
             return NextResponse.json({ error: reviewError.message }, { status: 500 });
         }
 
         if (!recentReviews || recentReviews.length === 0) {
-            await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
+            await pingDigestHeartbeat(true);
             return NextResponse.json({ message: "No new reviews in the digest window" });
         }
 
@@ -68,7 +84,7 @@ export async function GET(request: Request) {
             );
         }
 
-        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ").catch(() => { });
+        await pingDigestHeartbeat(true);
 
         return NextResponse.json({
             success: true,
@@ -77,7 +93,7 @@ export async function GET(request: Request) {
         });
     } catch (error: unknown) {
         console.error("Weekly Digest CRON Error:", error);
-        await fetch("https://uptime.betterstack.com/api/v1/heartbeat/LPHbuasz252vU4nWUvMhUiNZ/fail").catch(() => { });
+        await pingDigestHeartbeat(false);
         const message = error instanceof Error ? error.message : "Internal server error";
         return NextResponse.json({ error: message }, { status: 500 });
     }
