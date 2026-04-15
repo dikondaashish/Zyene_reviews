@@ -57,6 +57,18 @@ type CompetitorEvent = {
     event_delta: number | null;
     created_at: string;
 };
+type CompetitorInsight = {
+    id: string;
+    competitor_id: string;
+    business_id: string;
+    range_key: string;
+    summary: string;
+    priority: string;
+    confidence: number | null;
+    recommendations: string[] | null;
+    model: string | null;
+    created_at: string;
+};
 type RangeKey = "7d" | "30d" | "90d" | "12m";
 
 export function CompetitorsList({
@@ -65,12 +77,14 @@ export function CompetitorsList({
     range,
     snapshotRows,
     eventRows,
+    insightRows,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
     range: RangeKey;
     snapshotRows: CompetitorSnapshot[];
     eventRows: CompetitorEvent[];
+    insightRows: CompetitorInsight[];
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -170,6 +184,28 @@ export function CompetitorsList({
             };
         });
     }, [competitors, snapshotRows]);
+
+    const latestInsightByCompetitor = useMemo(() => {
+        const byCompetitor = new Map<string, CompetitorInsight>();
+        for (const row of insightRows) {
+            const current = byCompetitor.get(row.competitor_id);
+            if (!current) {
+                byCompetitor.set(row.competitor_id, row);
+                continue;
+            }
+            if (new Date(row.created_at).getTime() > new Date(current.created_at).getTime()) {
+                byCompetitor.set(row.competitor_id, row);
+            }
+        }
+        return byCompetitor;
+    }, [insightRows]);
+
+    const priorityBadgeVariant = (priority: string): "destructive" | "secondary" | "outline" => {
+        const p = String(priority || "").toLowerCase();
+        if (p === "high") return "destructive";
+        if (p === "medium") return "secondary";
+        return "outline";
+    };
 
     return (
         <div className="space-y-8">
@@ -379,6 +415,56 @@ export function CompetitorsList({
                                     );
                                 })}
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="col-span-1 md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>AI Competitor Insights</CardTitle>
+                            <CardDescription>
+                                Latest Gemini-generated insights from recent competitor movement.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {latestInsightByCompetitor.size === 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                    Insights will appear automatically after movement is detected.
+                                </p>
+                            ) : (
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    {competitors
+                                        .map((c) => ({ competitor: c, insight: latestInsightByCompetitor.get(c.id) }))
+                                        .filter((row) => !!row.insight)
+                                        .map(({ competitor, insight }) => {
+                                            if (!insight) return null;
+                                            return (
+                                                <div key={insight.id} className="rounded-lg border p-4 bg-card">
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <p className="font-semibold text-sm">{competitor.name}</p>
+                                                        <Badge variant={priorityBadgeVariant(insight.priority)}>
+                                                            {String(insight.priority || "low").toUpperCase()}
+                                                        </Badge>
+                                                    </div>
+                                                    <p className="text-sm mt-2">{insight.summary}</p>
+                                                    {Array.isArray(insight.recommendations) &&
+                                                    insight.recommendations.length > 0 ? (
+                                                        <div className="mt-2 space-y-1">
+                                                            {insight.recommendations.slice(0, 3).map((rec, idx) => (
+                                                                <p key={`${insight.id}-${idx}`} className="text-xs text-muted-foreground">
+                                                                    - {rec}
+                                                                </p>
+                                                            ))}
+                                                        </div>
+                                                    ) : null}
+                                                    <p className="text-[11px] text-muted-foreground mt-3">
+                                                        Confidence {Math.round((insight.confidence ?? 0.5) * 100)}% •{" "}
+                                                        <TimeAgo date={insight.created_at} />
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 

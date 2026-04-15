@@ -83,9 +83,20 @@ export default async function CompetitorsPage({
         .order("created_at", { ascending: false })
         .limit(200);
 
-    const [snapshotsRes, eventsRes] = await Promise.all([snapshotsPromise, eventsPromise]);
+    const insightsPromise = (supabase
+        .from("competitor_insights" as never) as any)
+        .select("id, competitor_id, business_id, range_key, summary, priority, confidence, recommendations, model, created_at")
+        .eq("business_id", businessId)
+        .order("created_at", { ascending: false })
+        .limit(100);
 
-    if (competitorsError || snapshotsRes.error || eventsRes.error) {
+    const [snapshotsRes, eventsRes, insightsRes] = await Promise.all([
+        snapshotsPromise,
+        eventsPromise,
+        insightsPromise,
+    ]);
+
+    if (competitorsError || snapshotsRes.error || eventsRes.error || insightsRes.error) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
             <div className="flex-1 space-y-6 p-8 pt-6">
@@ -130,6 +141,18 @@ export default async function CompetitorsPage({
                     summary: string | null;
                     event_value: number | null;
                     event_delta: number | null;
+                    created_at: string;
+                }>}
+                insightRows={(insightsRes.data || []) as Array<{
+                    id: string;
+                    competitor_id: string;
+                    business_id: string;
+                    range_key: string;
+                    summary: string;
+                    priority: string;
+                    confidence: number | null;
+                    recommendations: string[] | null;
+                    model: string | null;
                     created_at: string;
                 }>}
             />

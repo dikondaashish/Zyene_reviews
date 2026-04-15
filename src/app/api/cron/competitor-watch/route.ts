@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
+import { generateCompetitorInsight } from "@/domains/ai/services/generateCompetitorInsight";
 
 export const dynamic = "force-dynamic";
 
@@ -101,6 +102,18 @@ export async function GET(request: Request) {
             metadata: Record<string, unknown>;
             created_at: string;
         }> = [];
+        const insightInputByCompetitor = new Map<
+            string,
+            {
+                competitorName: string;
+                businessId: string;
+                ratingNow: number;
+                reviewsNow: number;
+                ratingDelta: number;
+                reviewsDelta: number;
+                events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
+            }
+        >();
 
         for (const competitor of competitors) {
             const latest = latestByCompetitor.get(competitor.id);
@@ -133,7 +146,7 @@ export async function GET(request: Request) {
             });
 
             if (latest && ratingDelta !== 0) {
-                eventsToInsert.push({
+                const evt = {
                     competitor_id: competitor.id,
                     business_id: competitor.business_id,
                     event_type: "competitor.rating_changed",
@@ -143,11 +156,12 @@ export async function GET(request: Request) {
                     event_delta: ratingDelta,
                     metadata: { previous_rating: prevRating, current_rating: currRating },
                     created_at: now.toISOString(),
-                });
+                };
+                eventsToInsert.push(evt);
             }
 
             if (latest && reviewsDelta !== 0) {
-                eventsToInsert.push({
+                const evt = {
                     competitor_id: competitor.id,
                     business_id: competitor.business_id,
                     event_type: "competitor.review_count_changed",
@@ -157,7 +171,38 @@ export async function GET(request: Request) {
                     event_delta: reviewsDelta,
                     metadata: { previous_reviews: prevReviews, current_reviews: currReviews },
                     created_at: now.toISOString(),
-                });
+                };
+                eventsToInsert.push(evt);
+            }
+
+            if (latest && (ratingDelta !== 0 || reviewsDelta !== 0)) {
+                const existing = insightInputByCompetitor.get(competitor.id);
+                if (!existing) {
+                    insightInputByCompetitor.set(competitor.id, {
+                        competitorName: competitor.name,
+                        businessId: competitor.business_id,
+                        ratingNow: currRating,
+                        reviewsNow: currReviews,
+                        ratingDelta,
+                        reviewsDelta,
+                        events: [],
+                    });
+                }
+                const input = insightInputByCompetitor.get(competitor.id)!;
+                if (ratingDelta !== 0) {
+                    input.events.push({
+                        title: `${competitor.name} rating changed`,
+                        summary: `${competitor.name} rating moved by ${ratingDelta > 0 ? "+" : ""}${ratingDelta} to ${currRating.toFixed(1)}.`,
+                        delta: ratingDelta,
+                    });
+                }
+                if (reviewsDelta !== 0) {
+                    input.events.push({
+                        title: `${competitor.name} review volume changed`,
+                        summary: `${competitor.name} review count changed by ${reviewsDelta > 0 ? "+" : ""}${reviewsDelta} to ${currReviews}.`,
+                        delta: reviewsDelta,
+                    });
+                }
             }
         }
 
@@ -183,6 +228,50 @@ export async function GET(request: Request) {
             }
         }
 
+        const insightRowsToInsert: Array<{
+            competitor_id: string;
+            business_id: string;
+            range_key: string;
+            summary: string;
+            priority: string;
+            confidence: number;
+            recommendations: string[];
+            model: string;
+            created_at: string;
+        }> = [];
+
+        for (const [competitorId, input] of insightInputByCompetitor.entries()) {
+            const insight = await generateCompetitorInsight({
+                competitorName: input.competitorName,
+                ratingNow: input.ratingNow,
+                reviewsNow: input.reviewsNow,
+                ratingDelta: input.ratingDelta,
+                reviewsDelta: input.reviewsDelta,
+                events: input.events,
+            });
+            if (!insight) continue;
+            insightRowsToInsert.push({
+                competitor_id: competitorId,
+                business_id: input.businessId,
+                range_key: "30d",
+                summary: insight.summary,
+                priority: insight.priority,
+                confidence: Number(insight.confidence.toFixed(2)),
+                recommendations: insight.recommendations,
+                model: process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview",
+                created_at: now.toISOString(),
+            });
+        }
+
+        if (insightRowsToInsert.length > 0) {
+            const { error: insertInsightsErr } = await (admin.from("competitor_insights" as never) as any).insert(
+                insightRowsToInsert
+            );
+            if (insertInsightsErr) {
+                console.error("[cron/competitor-watch] insights insert failed:", insertInsightsErr);
+            }
+        }
+
         await pingCompetitorWatchHeartbeat(true);
 
         return NextResponse.json({
@@ -190,6 +279,7 @@ export async function GET(request: Request) {
             scanned: competitors.length,
             snapshotsCreated: snapshotsToInsert.length,
             eventsCreated: eventsToInsert.length,
+            insightsCreated: insightRowsToInsert.length,
         });
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Internal server error";
