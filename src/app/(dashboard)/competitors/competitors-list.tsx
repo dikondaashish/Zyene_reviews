@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Trash2, ExternalLink, Star, Loader2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Minus, Trash2, ExternalLink, Star, Loader2 } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -35,24 +34,69 @@ import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TimeAgo } from "@/components/ui/time-ago";
 import { Database } from "@/lib/db/supabase/database.types";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
+type CompetitorSnapshot = {
+    id: string;
+    competitor_id: string;
+    business_id: string;
+    captured_at: string;
+    average_rating: number;
+    total_reviews: number;
+    source: string;
+};
+type CompetitorEvent = {
+    id: string;
+    competitor_id: string;
+    business_id: string;
+    event_type: string;
+    title: string;
+    summary: string | null;
+    event_value: number | null;
+    event_delta: number | null;
+    created_at: string;
+};
+type RangeKey = "7d" | "30d" | "90d" | "12m";
 
 export function CompetitorsList({
     businessId,
-    initialCompetitors
+    initialCompetitors,
+    range,
+    snapshotRows,
+    eventRows,
 }: {
     businessId: string;
     initialCompetitors: Competitor[];
+    range: RangeKey;
+    snapshotRows: CompetitorSnapshot[];
+    eventRows: CompetitorEvent[];
 }) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const rangeOptions: Array<{ value: RangeKey; label: string }> = [
+        { value: "7d", label: "7 Days" },
+        { value: "30d", label: "30 Days" },
+        { value: "90d", label: "90 Days" },
+        { value: "12m", label: "12 Months" },
+    ];
+
+    const rangeLabel = rangeOptions.find((r) => r.value === range)?.label || "30 Days";
+
+    const setRange = (nextRange: RangeKey) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("range", nextRange);
+        router.push(`?${params.toString()}`, { scroll: false });
+    };
 
     const isSyncing = (competitor: Competitor): boolean => {
         if (competitor.average_rating !== 0 && competitor.average_rating !== null) return false;
@@ -95,9 +139,56 @@ export function CompetitorsList({
             reviews: c.total_reviews || 0,
         }));
 
+    const movementCards = useMemo(() => {
+        const byCompetitor = new Map<string, CompetitorSnapshot[]>();
+        for (const s of snapshotRows) {
+            if (!byCompetitor.has(s.competitor_id)) byCompetitor.set(s.competitor_id, []);
+            byCompetitor.get(s.competitor_id)!.push(s);
+        }
+
+        return competitors.map((c) => {
+            const rows = (byCompetitor.get(c.id) || [])
+                .slice()
+                .sort((a, b) => new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime());
+            const first = rows[0];
+            const last = rows[rows.length - 1];
+            if (!first || !last) {
+                return {
+                    competitorId: c.id,
+                    name: c.name,
+                    ratingDelta: null as number | null,
+                    reviewsDelta: null as number | null,
+                    hasBaseline: false,
+                };
+            }
+            return {
+                competitorId: c.id,
+                name: c.name,
+                ratingDelta: Number(last.average_rating) - Number(first.average_rating),
+                reviewsDelta: Number(last.total_reviews) - Number(first.total_reviews),
+                hasBaseline: rows.length > 1,
+            };
+        });
+    }, [competitors, snapshotRows]);
+
     return (
         <div className="space-y-8">
-            <div className="flex justify-end">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2 rounded-lg border bg-muted/30 p-1 w-fit">
+                    {rangeOptions.map((opt) => {
+                        const active = range === opt.value;
+                        return (
+                            <Button
+                                key={opt.value}
+                                size="sm"
+                                variant={active ? "default" : "ghost"}
+                                onClick={() => setRange(opt.value)}
+                            >
+                                {opt.label}
+                            </Button>
+                        );
+                    })}
+                </div>
                 <AddCompetitorDialog
                     businessId={businessId}
                     onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
@@ -242,6 +333,91 @@ export function CompetitorsList({
                                     })}
                                 </TableBody>
                             </Table>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="col-span-1 md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>Market Movement ({rangeLabel})</CardTitle>
+                            <CardDescription>
+                                Rating and review-count movement based on recorded competitor snapshots.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                {movementCards.map((m) => {
+                                    const hasData = m.hasBaseline && m.ratingDelta !== null && m.reviewsDelta !== null;
+                                    const ratingUp = (m.ratingDelta ?? 0) > 0;
+                                    const reviewsUp = (m.reviewsDelta ?? 0) > 0;
+                                    return (
+                                        <div key={m.competitorId} className="rounded-lg border p-3 bg-card">
+                                            <p className="font-semibold text-sm mb-2 truncate">{m.name}</p>
+                                            {!hasData ? (
+                                                <p className="text-xs text-muted-foreground">
+                                                    Need at least two snapshots in this range to compute movement.
+                                                </p>
+                                            ) : (
+                                                <div className="space-y-2 text-sm">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-muted-foreground">Rating change</span>
+                                                        <span className="inline-flex items-center gap-1 font-medium">
+                                                            {ratingUp ? <ArrowUp className="h-3 w-3 text-emerald-600" /> : (m.ratingDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-rose-600" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
+                                                            {(m.ratingDelta ?? 0).toFixed(1)}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-muted-foreground">Review change</span>
+                                                        <span className="inline-flex items-center gap-1 font-medium">
+                                                            {reviewsUp ? <ArrowUp className="h-3 w-3 text-emerald-600" /> : (m.reviewsDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-rose-600" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
+                                                            {(m.reviewsDelta ?? 0) > 0 ? "+" : ""}
+                                                            {m.reviewsDelta ?? 0}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="col-span-1 md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>Recent Competitor Events ({rangeLabel})</CardTitle>
+                            <CardDescription>
+                                Event timeline generated from competitor monitoring workflows.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {eventRows.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                    No events recorded in this period yet.
+                                </p>
+                            ) : (
+                                <div className="space-y-3">
+                                    {eventRows.slice(0, 20).map((event) => {
+                                        const competitorName =
+                                            competitors.find((c) => c.id === event.competitor_id)?.name || "Competitor";
+                                        return (
+                                            <div key={event.id} className="rounded-lg border p-3">
+                                                <div className="flex items-center justify-between gap-2">
+                                                    <p className="text-sm font-medium">{event.title || event.event_type}</p>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        <TimeAgo date={event.created_at} />
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground mt-1">
+                                                    {competitorName}
+                                                </p>
+                                                {event.summary ? (
+                                                    <p className="text-sm mt-1">{event.summary}</p>
+                                                ) : null}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 

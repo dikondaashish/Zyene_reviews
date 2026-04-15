@@ -11,8 +11,33 @@ export const metadata = {
     description: "Monitor your competitors' ratings and performance.",
 };
 
-export default async function CompetitorsPage() {
+type RangeKey = "7d" | "30d" | "90d" | "12m";
+
+function normalizeRange(raw: string | undefined): RangeKey {
+    if (raw === "7d" || raw === "30d" || raw === "90d" || raw === "12m") return raw;
+    return "30d";
+}
+
+function getRangeStart(range: RangeKey): Date {
+    const now = new Date();
+    if (range === "12m") {
+        const d = new Date(now);
+        d.setFullYear(d.getFullYear() - 1);
+        return d;
+    }
+    const days = range === "7d" ? 7 : range === "90d" ? 90 : 30;
+    return new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+}
+
+export default async function CompetitorsPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ range?: string }>;
+}) {
     const supabase = await createClient();
+    const sp = await searchParams;
+    const range = normalizeRange(sp.range);
+    const rangeStart = getRangeStart(range);
 
     const {
         data: { user },
@@ -42,7 +67,25 @@ export default async function CompetitorsPage() {
         .eq("business_id", businessId)
         .order("created_at", { ascending: false });
 
-    if (competitorsError) {
+    const snapshotsPromise = (supabase
+        .from("competitor_snapshots" as never) as any)
+        .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source")
+        .eq("business_id", businessId)
+        .gte("captured_at", rangeStart.toISOString())
+        .order("captured_at", { ascending: false })
+        .limit(1000);
+
+    const eventsPromise = (supabase
+        .from("competitor_events" as never) as any)
+        .select("id, competitor_id, business_id, event_type, title, summary, event_value, event_delta, created_at")
+        .eq("business_id", businessId)
+        .gte("created_at", rangeStart.toISOString())
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+    const [snapshotsRes, eventsRes] = await Promise.all([snapshotsPromise, eventsPromise]);
+
+    if (competitorsError || snapshotsRes.error || eventsRes.error) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
             <div className="flex-1 space-y-6 p-8 pt-6">
@@ -68,6 +111,27 @@ export default async function CompetitorsPage() {
             <CompetitorsList
                 businessId={businessId}
                 initialCompetitors={competitors || []}
+                range={range}
+                snapshotRows={(snapshotsRes.data || []) as Array<{
+                    id: string;
+                    competitor_id: string;
+                    business_id: string;
+                    captured_at: string;
+                    average_rating: number;
+                    total_reviews: number;
+                    source: string;
+                }>}
+                eventRows={(eventsRes.data || []) as Array<{
+                    id: string;
+                    competitor_id: string;
+                    business_id: string;
+                    event_type: string;
+                    title: string;
+                    summary: string | null;
+                    event_value: number | null;
+                    event_delta: number | null;
+                    created_at: string;
+                }>}
             />
         </div>
     );
