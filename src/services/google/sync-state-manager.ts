@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import type { Json } from "@/lib/db/supabase/database.types";
 
 export type SyncState = {
     last_sync_status?: "partial" | "complete" | "failed";
@@ -52,7 +53,7 @@ export class SyncStateManager {
             last_sync_status: "partial",
         };
 
-        await admin.from("review_platforms").update({ sync_state: next }).eq("id", platformId);
+        await admin.from("review_platforms").update({ sync_state: next as Json }).eq("id", platformId);
     }
 
     async checkpointSync(platformId: string, cursor: string, reviewsProcessed: number): Promise<void> {
@@ -69,7 +70,7 @@ export class SyncStateManager {
             reviews_processed: reviewsProcessed,
         };
 
-        await admin.from("review_platforms").update({ sync_state: next }).eq("id", platformId);
+        await admin.from("review_platforms").update({ sync_state: next as Json }).eq("id", platformId);
     }
 
     async completeSync(platformId: string, newHighWaterMark: string, totalReviews: number): Promise<void> {
@@ -92,7 +93,7 @@ export class SyncStateManager {
             .from("review_platforms")
             .update({
                 last_review_update_time: newHighWaterMark,
-                sync_state: next,
+                sync_state: next as Json,
             })
             .eq("id", platformId);
     }
@@ -111,7 +112,7 @@ export class SyncStateManager {
             last_error: error,
         };
 
-        await admin.from("review_platforms").update({ sync_state: next }).eq("id", platformId);
+        await admin.from("review_platforms").update({ sync_state: next as Json }).eq("id", platformId);
     }
 }
 

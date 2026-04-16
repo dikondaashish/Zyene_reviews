@@ -1274,9 +1274,11 @@ export type Database = {
           google_qa_synced_at: string | null
           google_qa_unavailable: boolean
           id: string
+          last_review_update_time: string | null
           last_synced_at: string | null
           platform: string
           refresh_token: string | null
+          sync_state: Json | null
           sync_status: string
           token_expires_at: string | null
           total_reviews: number
@@ -1301,9 +1303,11 @@ export type Database = {
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
           id?: string
+          last_review_update_time?: string | null
           last_synced_at?: string | null
           platform: string
           refresh_token?: string | null
+          sync_state?: Json | null
           sync_status?: string
           token_expires_at?: string | null
           total_reviews?: number
@@ -1328,9 +1332,11 @@ export type Database = {
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
           id?: string
+          last_review_update_time?: string | null
           last_synced_at?: string | null
           platform?: string
           refresh_token?: string | null
+          sync_state?: Json | null
           sync_status?: string
           token_expires_at?: string | null
           total_reviews?: number
@@ -1453,11 +1459,13 @@ export type Database = {
           author_avatar_url: string | null
           author_name: string | null
           business_id: string
+          content_hash: string | null
           created_at: string
           external_id: string | null
           external_url: string | null
           google_attribute_chips: string[] | null
           google_place_context: string[] | null
+          google_update_time: string | null
           id: string
           is_visible: boolean | null
           platform: string
@@ -1482,11 +1490,13 @@ export type Database = {
           author_avatar_url?: string | null
           author_name?: string | null
           business_id: string
+          content_hash?: string | null
           created_at?: string
           external_id?: string | null
           external_url?: string | null
           google_attribute_chips?: string[] | null
           google_place_context?: string[] | null
+          google_update_time?: string | null
           id?: string
           is_visible?: boolean | null
           platform: string
@@ -1511,11 +1521,13 @@ export type Database = {
           author_avatar_url?: string | null
           author_name?: string | null
           business_id?: string
+          content_hash?: string | null
           created_at?: string
           external_id?: string | null
           external_url?: string | null
           google_attribute_chips?: string[] | null
           google_place_context?: string[] | null
+          google_update_time?: string | null
           id?: string
           is_visible?: boolean | null
           platform?: string

@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import type { Json } from "@/lib/db/supabase/database.types";
 import { refreshGoogleToken, listAccounts, listLocations, listReviews, type GoogleReview } from "./business-profile";
 import {
     AI_ANALYSIS_BATCH_SIZE,
@@ -45,7 +46,7 @@ async function clearForceFullSyncFlag(platformId: string): Promise<void> {
     const obj = syncStateObject(data?.sync_state);
     if (!("force_full_sync" in obj)) return;
     const { force_full_sync: _ignored, ...rest } = obj as Record<string, unknown>;
-    await admin.from("review_platforms").update({ sync_state: rest }).eq("id", platformId);
+    await admin.from("review_platforms").update({ sync_state: rest as Json }).eq("id", platformId);
 }
 
 function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): SyncError {
