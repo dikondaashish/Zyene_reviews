@@ -22,8 +22,12 @@ export const PAGINATION_DELAY_MS = 300;
 /** Number of reviews to batch for AI analysis */
 export const AI_ANALYSIS_BATCH_SIZE = 5;
 
-/** Stale lock timeout — locks older than this are force-released (10 minutes) */
-export const STALE_LOCK_TIMEOUT_MINUTES = 10;
+/**
+ * Lock TTL passed to `acquire_platform_lock`. Must exceed worst-case Google review sync
+ * (many pages + API delays); otherwise `locked_until` expires mid-run and overlapping jobs
+ * or retries see spurious "Sync already in progress" / stolen locks.
+ */
+export const STALE_LOCK_TIMEOUT_MINUTES = 45;
 
 // --- Performance Sync ---
 /** Default number of days for daily performance metrics */

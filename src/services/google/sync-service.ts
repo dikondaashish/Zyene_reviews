@@ -17,6 +17,8 @@ import {
     type AutoReplyBusinessSettings,
 } from "@/services/reviews/auto-reply-eligibility";
 import { registerNotifications } from "./notifications";
+
+export { isGoogleSyncConflictError } from "./sync-lock-utils";
 import {
     isZyeneOriginatedReplySource,
     REVIEW_RESPONSE_SOURCE_GOOGLE,
@@ -208,6 +210,16 @@ export async function refreshGoogleReviewRollupsFromDb(
     } catch (e) {
         console.error("[Google] Business rollup update failed:", e);
     }
+}
+
+/** Push `locked_until` forward while a long sync is still running (avoids TTL expiry mid-pagination). */
+async function extendSyncLockTtl(admin: AdminClient, platformId: string): Promise<void> {
+    const until = new Date(Date.now() + STALE_LOCK_TIMEOUT_MINUTES * 60 * 1000).toISOString();
+    await admin
+        .from("review_platforms")
+        .update({ locked_until: until, updated_at: new Date().toISOString() })
+        .eq("id", platformId)
+        .eq("sync_status", "running");
 }
 
 export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: string) {
@@ -671,6 +683,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             pageToken = lastResp.nextPageToken;
             totalSynced += lastResp.synced;
             pageCount++;
+
+            if (pageCount % 5 === 0) {
+                await extendSyncLockTtl(admin, platformId);
+            }
 
             if (pageToken && pageCount < MAX_REVIEW_PAGES) {
                 await new Promise((r) => setTimeout(r, PAGINATION_DELAY_MS));

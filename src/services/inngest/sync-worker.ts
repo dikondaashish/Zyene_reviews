@@ -1,6 +1,7 @@
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
+import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { weeklyDigestEmail } from "@/services/resend/templates/weekly-digest-email";
@@ -35,6 +36,13 @@ export const syncPlatformWorker = inngest.createFunction(
         await pingReviewSyncHeartbeat(true);
         return result;
       } catch (error) {
+        if (platformType === "google" && isGoogleSyncConflictError(error)) {
+          console.warn(
+            `[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}`
+          );
+          await pingReviewSyncHeartbeat(true);
+          return { skipped: true, reason: "sync_lock_conflict" };
+        }
         console.error(`[Worker] Sync failed for ${platformType} (${platformId}):`, error);
         throw error; // Rethrow for Inngest retries
       }
