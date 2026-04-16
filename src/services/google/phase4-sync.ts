@@ -49,7 +49,11 @@ export async function syncGoogleLodgingForPlatform(platformId: string): Promise<
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         const status = (e as Error & { statusCode?: number })?.statusCode;
-        const notLodging = status === 404 || /\b404\b|not found/i.test(msg);
+        const notLodging =
+            status === 404 ||
+            /\b404\b|not found/i.test(msg) ||
+            (/FAILED_PRECONDITION|can_operate_lodging_data|not supported for this location/i.test(msg) &&
+                /\b400\b/.test(msg));
 
         if (notLodging) {
             const now = new Date().toISOString();

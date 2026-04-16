@@ -6,7 +6,12 @@ import {
     processAutoReplyReview,
     syncGoogleReviews,
 } from "@/services/inngest/functions";
-import { syncPlatformWorker, weeklyDigestWorker, followUpWorker } from "@/services/inngest/sync-worker";
+import {
+    syncPlatformWorker,
+    weeklyDigestWorker,
+    followUpWorker,
+    syncGooglePerformanceWorker,
+} from "@/services/inngest/sync-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -37,6 +42,7 @@ export const { GET, POST, PUT } = serve({
         syncPlatformWorker,
         weeklyDigestWorker,
         followUpWorker,
+        syncGooglePerformanceWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

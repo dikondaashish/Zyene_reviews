@@ -50,6 +50,12 @@ type AutoReplyEvent = {
     };
 };
 
+type CronGooglePerformanceRunEvent = {
+    data: {
+        trigger: "cron-jobs.org" | "manual" | "api";
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -58,6 +64,7 @@ type Events = {
     "cron/weekly-digest.business": WeeklyDigestEvent;
     "cron/follow-up.campaign": FollowUpEvent;
     "review/auto-reply": AutoReplyEvent;
+    "cron/google-performance.run": CronGooglePerformanceRunEvent;
 };
 
 // Create a client to send and receive events

@@ -85,6 +85,25 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
         return { success: true, count: rows.length };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
+        const qaUnsupported =
+            /\b501\b/.test(msg) &&
+            (/API_UNSUPPORTED|UNIMPLEMENTED|no longer supported/i.test(msg) ||
+                /mybusinessqanda\.googleapis\.com/i.test(msg));
+        if (qaUnsupported) {
+            try {
+                await admin
+                    .from("review_platforms")
+                    .update({
+                        google_qa_synced_at: new Date().toISOString(),
+                        google_qa_unavailable: true,
+                    })
+                    .eq("id", platformId);
+            } catch (dbErr) {
+                console.error("[Phase2] Failed to persist google_qa_unavailable:", dbErr);
+            }
+            // Q&A API has been sunset by Google; treat as unavailable, not as job failure.
+            return { success: true, count: 0 };
+        }
         console.error("[Phase2] Q&A sync failed:", msg);
         Sentry.captureException(e);
         return { success: false, count: 0, error: msg };
