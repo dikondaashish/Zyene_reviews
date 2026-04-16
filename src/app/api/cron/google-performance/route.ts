@@ -45,6 +45,7 @@ export async function GET(request: Request) {
         /** GBP Performance API + DB upsert (listing metrics / keywords) */
         performanceOk: boolean;
         performanceError?: string;
+        emptyDailySeries?: boolean;
         dailyRowsUpserted?: number;
         keywordRowsUpserted?: number;
         /** Legacy: true only if performance + phase2 Q&A both succeeded (for dashboards that assumed one flag) */
@@ -116,6 +117,7 @@ export async function GET(request: Request) {
                 syncStatus: (p as { sync_status?: string | null }).sync_status ?? null,
                 performanceOk,
                 performanceError: r.error,
+                emptyDailySeries: r.emptyDailySeries,
                 dailyRowsUpserted: r.dailyRowsUpserted,
                 keywordRowsUpserted: r.keywordRowsUpserted,
                 ok: combinedOk,

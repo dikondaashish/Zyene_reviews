@@ -30,8 +30,8 @@ export const AI_ANALYSIS_BATCH_SIZE = 5;
 export const STALE_LOCK_TIMEOUT_MINUTES = 45;
 
 // --- Performance Sync ---
-/** Default number of days for daily performance metrics */
-export const PERFORMANCE_DAILY_DAYS = 30;
+/** Default number of days for daily performance metrics (covers ~13 months for "Last 12 Months" charts). */
+export const PERFORMANCE_DAILY_DAYS = 400;
 
 /** Default number of months for keyword metrics */
 export const PERFORMANCE_KEYWORD_MONTHS = 3;

@@ -2,6 +2,24 @@ import { fetchWithRetry } from "./business-profile";
 
 const BASE_PERFORMANCE = "https://businessprofileperformance.googleapis.com/v1";
 
+/**
+ * Performance API paths expect `locations/{unobfuscatedId}`. Stored values may be the raw id,
+ * a `locations/...` resource name, or a full accounts path — normalize to the listing id segment.
+ */
+export function normalizePerformanceLocationId(raw: string | null | undefined): string | null {
+    if (raw == null || typeof raw !== "string") return null;
+    let t = raw.trim();
+    if (!t) return null;
+    const locPrefix = "locations/";
+    if (t.startsWith(locPrefix)) {
+        t = t.slice(locPrefix.length);
+    }
+    if (t.includes("/")) {
+        t = t.split("/").pop() || t;
+    }
+    return t || null;
+}
+
 /** Daily metrics we sync (aligned with Phase 1 dashboard + analytics). */
 export const DAILY_METRICS_SYNCED = [
     "BUSINESS_IMPRESSIONS_DESKTOP_MAPS",
@@ -75,12 +93,17 @@ export async function fetchMultiDailyMetricsTimeSeries(
     start: Date,
     end: Date
 ): Promise<FetchMultiDailyMetricsResponse> {
+    const loc = normalizePerformanceLocationId(googleLocationId);
+    if (!loc) {
+        throw new Error("Invalid or empty google_location_id for Performance API");
+    }
+
     const params = buildDailyRangeParams(start, end);
     for (const m of DAILY_METRICS_SYNCED) {
         params.append("dailyMetrics", m);
     }
 
-    const url = `${BASE_PERFORMANCE}/locations/${encodeURIComponent(googleLocationId)}:fetchMultiDailyMetricsTimeSeries?${params.toString()}`;
+    const url = `${BASE_PERFORMANCE}/locations/${encodeURIComponent(loc)}:fetchMultiDailyMetricsTimeSeries?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -114,6 +137,11 @@ export async function listSearchKeywordImpressionsMonthly(
     endMonth: DateParts,
     pageToken?: string
 ): Promise<ListSearchKeywordsMonthlyResponse> {
+    const loc = normalizePerformanceLocationId(googleLocationId);
+    if (!loc) {
+        throw new Error("Invalid or empty google_location_id for Performance API (keywords)");
+    }
+
     const params = buildMonthlyRangeParams(startMonth, endMonth);
     params.set("pageSize", "100");
     if (pageToken) {
@@ -121,7 +149,7 @@ export async function listSearchKeywordImpressionsMonthly(
     }
 
     const url = `${BASE_PERFORMANCE}/locations/${encodeURIComponent(
-        googleLocationId
+        loc
     )}/searchkeywords/impressions/monthly?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {

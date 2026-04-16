@@ -61,6 +61,7 @@ export async function getGooglePerformanceTotals(
         .lte("metric_date", endStr);
 
     if (error) {
+        console.error("[getGooglePerformanceTotals] Supabase error:", error);
         return null;
     }
     if (!data?.length) {
@@ -120,7 +121,11 @@ export async function getGooglePerformanceDailySeries(
         .gte("metric_date", startStr)
         .lte("metric_date", endStr);
 
-    if (error || !data?.length) {
+    if (error) {
+        console.error("[getGooglePerformanceDailySeries] Supabase error:", error);
+        return [];
+    }
+    if (!data?.length) {
         return [];
     }
 

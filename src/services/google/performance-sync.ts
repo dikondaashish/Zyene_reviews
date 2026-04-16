@@ -4,6 +4,7 @@ import {
     fetchMultiDailyMetricsTimeSeries,
     flattenDailyMetricsResponse,
     listSearchKeywordImpressionsMonthly,
+    normalizePerformanceLocationId,
     parseKeywordImpressions,
     type DateParts,
 } from "./performance";
@@ -19,6 +20,8 @@ export interface PerformanceSyncResult {
     dailyRowsUpserted: number;
     keywordRowsUpserted: number;
     error?: string;
+    /** API returned 200 but no daily points were parsed (wrong location id, empty range, or response shape drift). */
+    emptyDailySeries?: boolean;
 }
 
 /** First day of calendar month */
@@ -56,6 +59,15 @@ export async function syncGooglePerformanceForPlatform(
 
     const locationId = platform.google_location_id;
     const businessId = platform.business_id;
+    const normalizedLoc = normalizePerformanceLocationId(locationId);
+    if (!normalizedLoc) {
+        return {
+            success: false,
+            dailyRowsUpserted: 0,
+            keywordRowsUpserted: 0,
+            error: "Invalid google_location_id for Performance API",
+        };
+    }
 
     try {
         const { accessToken } = await getValidGoogleToken(platformId);
@@ -70,6 +82,18 @@ export async function syncGooglePerformanceForPlatform(
 
         const raw = await fetchMultiDailyMetricsTimeSeries(accessToken, locationId, start, end);
         const flat = flattenDailyMetricsResponse(raw);
+
+        if (flat.length === 0) {
+            const preview = JSON.stringify(raw).slice(0, 800);
+            console.warn(
+                `[PerformanceSync] No daily metric points for platform ${platformId} (location ${normalizedLoc}). Raw preview:`,
+                preview
+            );
+            Sentry.captureMessage("Google Performance API returned empty daily series", {
+                level: "warning",
+                extra: { platformId, normalizedLocationId: normalizedLoc, rawPreview: preview },
+            });
+        }
 
         const dailyRows = flat.map((r) => ({
             review_platform_id: platformId,
@@ -108,7 +132,7 @@ export async function syncGooglePerformanceForPlatform(
             do {
                 const kwResp = await listSearchKeywordImpressionsMonthly(
                     accessToken,
-                    locationId,
+                    normalizedLoc,
                     startParts,
                     endParts,
                     pageToken
@@ -153,6 +177,7 @@ export async function syncGooglePerformanceForPlatform(
             success: true,
             dailyRowsUpserted: dailyUpserted,
             keywordRowsUpserted: keywordUpserted,
+            emptyDailySeries: flat.length === 0,
         };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
