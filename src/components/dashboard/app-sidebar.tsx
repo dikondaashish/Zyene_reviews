@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import {
     BarChart3,
     Bell,
@@ -284,8 +285,15 @@ export function AppSidebar({
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground shadow-sm">
-                                    <span className="text-lg font-bold text-white">Z</span>
+                                <div className="flex aspect-square size-9 items-center justify-center overflow-hidden rounded-lg shadow-sm ring-1 ring-border/60">
+                                    <Image
+                                        src="/Main%20logo.png"
+                                        alt="Zyene Reviews"
+                                        width={36}
+                                        height={36}
+                                        className="h-full w-full object-cover"
+                                        priority
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">Zyene Reviews</span>

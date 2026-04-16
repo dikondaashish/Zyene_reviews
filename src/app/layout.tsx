@@ -31,6 +31,11 @@ export const metadata: Metadata = {
   title: "Zyene Reviews - Reputation Management for Local Businesses",
   description: "Automate your customer reviews and grow your business with Zyene Reviews.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/Main%20logo.png",
+    apple: "/Main%20logo.png",
+    shortcut: "/Main%20logo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

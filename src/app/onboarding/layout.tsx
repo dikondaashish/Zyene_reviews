@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default async function OnboardingLayout({
@@ -38,9 +39,15 @@ export default async function OnboardingLayout({
             <header className="relative z-10 border-b border-primary/20 bg-background/50 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
-                        {/* Brand logo mark */}
-                        <div className="w-9 h-9 bg-gradient-to-br from-[oklch(0.7_0.22_60)] to-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 ring-1 ring-background/40">
-                            <span className="text-white font-bold text-sm tracking-tight text-white">ZR</span>
+                        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl shadow-lg shadow-primary/20 ring-1 ring-background/40">
+                            <Image
+                                src="/Main%20logo.png"
+                                alt="Zyene Reviews"
+                                width={40}
+                                height={40}
+                                className="h-full w-full object-cover"
+                                priority
+                            />
                         </div>
                         <span className="text-lg font-bold text-[#262626] tracking-tight">
                             Zyene <span className="text-[oklch(0.7_0.22_60)]">Reviews</span>
