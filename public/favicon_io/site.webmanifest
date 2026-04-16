@@ -1,11 +1,6 @@
 {
   "name": "Zyene Reviews",
   "short_name": "Zyene",
-  "description": "Reputation Management for Local Businesses",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ff4f00",
   "icons": [
     {
       "src": "/favicon_io/android-chrome-192x192.png",
@@ -17,5 +12,8 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "theme_color": "#ff4f00",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }

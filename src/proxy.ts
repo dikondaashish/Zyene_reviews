@@ -385,6 +385,7 @@ export async function proxy(request: NextRequest) {
             "/_next",
             "/static",
             "/favicon.ico",
+            "/favicon_io",
             "/login",
             "/signup",
             "/forgot-password",
