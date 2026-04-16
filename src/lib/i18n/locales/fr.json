@@ -69,7 +69,15 @@
     "review_trend": "Tendance des Avis",
     "review_trend_desc": "Avis reçus ces 30 derniers jours",
     "rating_distribution": "Distribution des Notes",
-    "rating_distribution_desc": "Répartition de toutes les notes"
+    "rating_distribution_desc": "Répartition de toutes les notes",
+    "review_spotlight_title": "Avis en vedette",
+    "review_spotlight_desc": "Vue interactive de vos derniers retours",
+    "review_spotlight_hint": "Faites glisser la carte du dessus ou utilisez les flèches. Le défilement automatique se met en pause au survol ou au focus.",
+    "review_spotlight_prev": "Avis précédent",
+    "review_spotlight_next": "Avis suivant",
+    "review_spotlight_view_inbox": "Voir dans la boîte",
+    "review_spotlight_empty": "Pas encore d’avis à mettre en avant",
+    "review_spotlight_manage_all": "Tout gérer"
   },
   "qr": {
     "portal": "Votre portail de avis et commandes",

@@ -69,7 +69,15 @@
     "review_trend": "Review Trend",
     "review_trend_desc": "Reviews received over the last 30 days",
     "rating_distribution": "Rating Distribution",
-    "rating_distribution_desc": "Breakdown of all review ratings"
+    "rating_distribution_desc": "Breakdown of all review ratings",
+    "review_spotlight_title": "Review Spotlight",
+    "review_spotlight_desc": "Interactive view of your latest feedback",
+    "review_spotlight_hint": "Drag the top card or use arrows. Auto-advance pauses while you hover here or focus controls.",
+    "review_spotlight_prev": "Previous review",
+    "review_spotlight_next": "Next review",
+    "review_spotlight_view_inbox": "View in inbox",
+    "review_spotlight_empty": "No reviews to spotlight yet",
+    "review_spotlight_manage_all": "Manage all"
   },
   "qr": {
     "portal": "Your Review & Order Portal",

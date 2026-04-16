@@ -69,7 +69,15 @@
     "review_trend": "Bewertungstrend",
     "review_trend_desc": "Erhaltene Bewertungen (letzte 30 Tage)",
     "rating_distribution": "Bewertungsverteilung",
-    "rating_distribution_desc": "Aufschlüsselung aller Bewertungen"
+    "rating_distribution_desc": "Aufschlüsselung aller Bewertungen",
+    "review_spotlight_title": "Review-Spotlight",
+    "review_spotlight_desc": "Interaktive Ansicht Ihrer neuesten Rückmeldungen",
+    "review_spotlight_hint": "Ziehen Sie die oberste Karte oder nutzen Sie die Pfeile. Auto-Wechsel pausiert bei Hover oder Fokus.",
+    "review_spotlight_prev": "Vorherige Bewertung",
+    "review_spotlight_next": "Nächste Bewertung",
+    "review_spotlight_view_inbox": "Im Posteingang anzeigen",
+    "review_spotlight_empty": "Noch keine Bewertungen für das Spotlight",
+    "review_spotlight_manage_all": "Alle verwalten"
   },
   "qr": {
     "portal": "Ihr Bewertungs- und Bestellportal",

@@ -69,7 +69,15 @@
     "review_trend": "Beoordelingstrend",
     "review_trend_desc": "Ontvangen beoordelingen (laatste 30 dagen)",
     "rating_distribution": "Verdeling van ratings",
-    "rating_distribution_desc": "Uitsplitsing van alle ratings"
+    "rating_distribution_desc": "Uitsplitsing van alle ratings",
+    "review_spotlight_title": "Review-spotlight",
+    "review_spotlight_desc": "Interactief overzicht van je nieuwste feedback",
+    "review_spotlight_hint": "Sleep de bovenste kaart of gebruik de pijlen. Automatisch wisselen pauzeert bij hover of focus.",
+    "review_spotlight_prev": "Vorige review",
+    "review_spotlight_next": "Volgende review",
+    "review_spotlight_view_inbox": "Bekijk in inbox",
+    "review_spotlight_empty": "Nog geen reviews om uit te lichten",
+    "review_spotlight_manage_all": "Alles beheren"
   },
   "qr": {
     "portal": "Uw beoordelings- en bestelportaal",

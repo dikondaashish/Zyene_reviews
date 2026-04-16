@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
 import { applyGooglePlacesMetricsToCompetitor } from "@/lib/competitors/apply-google-places-metrics";
+import { isCompetitorOwnBusiness } from "@/lib/competitors/own-business-guard";
 
 // Validation schema
 const addCompetitorSchema = z.object({
@@ -95,6 +96,36 @@ export async function addCompetitor(
             return {
                 success: false,
                 error: "You don't have permission to add competitors for this business.",
+            };
+        }
+
+        const { data: ownBiz } = await supabase
+            .from("businesses")
+            .select("name, google_review_url")
+            .eq("id", businessId)
+            .single();
+
+        const { data: ownGooglePlatform } = await supabase
+            .from("review_platforms")
+            .select("external_url, google_location_id")
+            .eq("business_id", businessId)
+            .eq("platform", "google")
+            .maybeSingle();
+
+        if (
+            isCompetitorOwnBusiness(
+                {
+                    businessName: ownBiz?.name ?? "",
+                    googleUrls: [ownBiz?.google_review_url, ownGooglePlatform?.external_url],
+                    googleLocationId: ownGooglePlatform?.google_location_id,
+                },
+                validationResult.data.name,
+                validationResult.data.googleUrl || null
+            )
+        ) {
+            return {
+                success: false,
+                error: "You can’t add your own business as a competitor. Track other locations instead.",
             };
         }
 

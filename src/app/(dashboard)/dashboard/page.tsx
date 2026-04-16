@@ -1088,15 +1088,16 @@ export default async function DashboardPage() {
                             <div>
                                 <CardTitle className="flex items-center gap-2">
                                     <Star className="h-4 w-4 text-primary" />
-                                    Review Spotlight
+                                    {dict.dashboard.review_spotlight_title}
                                 </CardTitle>
                                 <CardDescription>
-                                    Interactive view of your latest feedback
+                                    {dict.dashboard.review_spotlight_desc}
                                 </CardDescription>
                             </div>
                             <Link href="/reviews">
                                 <Button variant="ghost" size="sm" className="gap-1">
-                                    Manage all <ArrowRight className="h-3 w-3" />
+                                    {dict.dashboard.review_spotlight_manage_all}{" "}
+                                    <ArrowRight className="h-3 w-3" />
                                 </Button>
                             </Link>
                         </div>
@@ -1105,21 +1106,33 @@ export default async function DashboardPage() {
                         {recentReviews.length > 0 ? (
                             <div className="py-4">
                                 <AnimatedReviewCards 
-                                    reviews={recentReviews.map((r: any) => ({
+                                    reviews={recentReviews.slice(0, 5).map((r: any) => ({
                                         id: r.id,
                                         name: r.author_name || "Anonymous",
                                         avatar: r.author_avatar_url || "",
                                         text: r.text || "No review content provided.",
-                                        rating: r.rating
+                                        rating: r.rating,
+                                        reviewedAt: r.review_date,
+                                        platform: r.platform,
+                                        sentiment: r.sentiment,
                                     }))}
                                     theme="default"
                                     interactionType="drag"
+                                    rotateInterval={8000}
+                                    labels={{
+                                        hint: dict.dashboard.review_spotlight_hint,
+                                        prev: dict.dashboard.review_spotlight_prev,
+                                        next: dict.dashboard.review_spotlight_next,
+                                        viewInReviews: dict.dashboard.review_spotlight_view_inbox,
+                                    }}
                                 />
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 bg-card/30 rounded-2xl border border-dashed border-border">
                                 <MessageSquare className="h-10 w-10 text-muted-foreground/30 mb-4" />
-                                <p className="text-muted-foreground text-sm">No reviews to spotlight yet</p>
+                                <p className="text-muted-foreground text-sm">
+                                    {dict.dashboard.review_spotlight_empty}
+                                </p>
                             </div>
                         )}
                     </CardContent>

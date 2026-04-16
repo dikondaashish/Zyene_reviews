@@ -69,7 +69,15 @@
     "review_trend": "Tendência de Avaliações",
     "review_trend_desc": "Avaliações recebidas nos últimos 30 dias",
     "rating_distribution": "Distribuição de Notas",
-    "rating_distribution_desc": "Detalhamento de todas as notas"
+    "rating_distribution_desc": "Detalhamento de todas as notas",
+    "review_spotlight_title": "Destaque de avaliações",
+    "review_spotlight_desc": "Visualização interativa do seu feedback mais recente",
+    "review_spotlight_hint": "Arraste o cartão de cima ou use as setas. O avanço automático pausa ao passar o mouse ou focar.",
+    "review_spotlight_prev": "Avaliação anterior",
+    "review_spotlight_next": "Próxima avaliação",
+    "review_spotlight_view_inbox": "Ver na caixa de entrada",
+    "review_spotlight_empty": "Ainda não há avaliações em destaque",
+    "review_spotlight_manage_all": "Gerir tudo"
   },
   "qr": {
     "portal": "Seu Portal de Avaliações e Pedidos",

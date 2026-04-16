@@ -13,6 +13,7 @@ export const DASHBOARD_DEMO_DATA = {
             id: "demo-1",
             author_name: "Sarah Jenkins",
             rating: 5,
+            platform: "google",
             text: "Absolutely fantastic service! The team was professional and the results exceeded my expectations. Highly recommend to everyone in the area.",
             sentiment: "positive",
             review_date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
@@ -22,6 +23,7 @@ export const DASHBOARD_DEMO_DATA = {
             id: "demo-2",
             author_name: "Michael Chen",
             rating: 5,
+            platform: "google",
             text: "Great experience from start to finish. Very responsive and helpful staff.",
             sentiment: "positive",
             review_date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
@@ -31,6 +33,7 @@ export const DASHBOARD_DEMO_DATA = {
             id: "demo-3",
             author_name: "Emily Rodriguez",
             rating: 4,
+            platform: "google",
             text: "Very good service, just took a little longer than expected but the quality was worth it.",
             sentiment: "positive",
             review_date: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
