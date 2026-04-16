@@ -100,21 +100,21 @@ export default async function BusinessesPage() {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-1">
-                                                <Badge
-                                                    variant={
-                                                        business.status === "active"
-                                                            ? "default"
-                                                            : "secondary"
-                                                    }
-                                                    className="text-xs"
-                                                >
-                                                    {business.status}
-                                                </Badge>
                                                 {isActive && (
-                                                    <span className="text-[10px] text-primary font-medium">
-                                                        Active
-                                                    </span>
+                                                    <Badge
+                                                        variant="default"
+                                                        className="text-xs font-medium"
+                                                        title="This location is selected in Zyene (header switcher uses it for dashboard, reviews, etc.)"
+                                                    >
+                                                        Current
+                                                    </Badge>
                                                 )}
+                                                {business.status &&
+                                                    String(business.status).toLowerCase() !== "active" && (
+                                                        <Badge variant="secondary" className="text-xs capitalize">
+                                                            {business.status}
+                                                        </Badge>
+                                                    )}
                                             </div>
                                         </div>
 
@@ -148,7 +148,9 @@ export default async function BusinessesPage() {
                                     </button>
                                 </form>
                                 <div className="relative z-10 flex items-center justify-between border-t bg-muted/50 px-4 py-2 transition-colors duration-300 group-hover:bg-primary/5">
-                                    <span className="text-[11px] text-muted-foreground">Click card to switch active business</span>
+                                    <span className="text-[11px] text-muted-foreground">
+                                        Click card to set as current location
+                                    </span>
                                     <DeleteBusinessButton
                                         businessId={business.id}
                                         businessName={business.name}
