@@ -210,6 +210,13 @@ export async function proxy(request: NextRequest) {
 
     // --- APP SUBDOMAIN (app.domain) ---
     if (hostname === `app.${rootDomain}`) {
+        // Docs should live on apex domain, not app subdomain.
+        if (pathname.startsWith("/docs")) {
+            return createResponse(
+                NextResponse.redirect(new URL(`https://${rootDomain}${pathname}`, request.url))
+            );
+        }
+
         // Public review carousel embed — no login; must not redirect to auth (iframes break).
         if (pathname.startsWith("/w/")) {
             return createResponse(supabaseResponse);
@@ -387,6 +394,7 @@ export async function proxy(request: NextRequest) {
             "/help",
             "/about",
             "/contact",
+            "/docs",
             "/r/", // Keep legacy paths working
             "/w/", // Embeddable widgets
         ];
