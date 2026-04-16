@@ -241,7 +241,8 @@ export default async function DashboardPage() {
             // ── Precompute date boundaries (used by multiple queries) ──
             const now = new Date();
             const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const startOfThisYear = new Date(now.getFullYear(), 0, 1);
+            const startOfLastYear = new Date(now.getFullYear() - 1, 0, 1);
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -296,12 +297,12 @@ export default async function DashboardPage() {
                     .or("rating.lte.2,urgency_score.gte.7")
                     .order("urgency_score", { ascending: false, nullsFirst: false })
                     .limit(5),
-                // 5. Monthly trend data (since start of last month)
+                // 5. Yearly trend data (since start of last year)
                 supabase
                     .from("reviews")
                     .select("review_date, rating")
                     .eq("business_id", business.id)
-                    .gte("review_date", startOfLastMonth.toISOString()),
+                    .gte("review_date", startOfLastYear.toISOString()),
                 // 6. 30-day Chart Data
                 supabase
                     .from("reviews")
@@ -412,28 +413,30 @@ export default async function DashboardPage() {
             // 4. Attention
             attentionReviews = attentionResult.data || [];
 
-            // 5. Monthly Trends
+            // 5. Yearly Trends
             const monthData = (monthResult.data || []) as Array<{
                 review_date: string;
                 rating: number;
             }>;
             if (monthData) {
-                const thisMonthReviews = monthData.filter((r) => new Date(r.review_date) >= startOfThisMonth);
-                const lastMonthReviews = monthData.filter((r) => new Date(r.review_date) < startOfThisMonth && new Date(r.review_date) >= startOfLastMonth);
+                const thisYearReviews = monthData.filter((r) => new Date(r.review_date) >= startOfThisYear);
+                const lastYearReviews = monthData.filter(
+                    (r) => new Date(r.review_date) < startOfThisYear && new Date(r.review_date) >= startOfLastYear
+                );
 
-                totalReviewsTrend = thisMonthReviews.length - lastMonthReviews.length;
+                totalReviewsTrend = thisYearReviews.length - lastYearReviews.length;
 
-                const thisMonthAvg = thisMonthReviews.length > 0
-                    ? thisMonthReviews.reduce((sum: number, r) => sum + r.rating, 0) / thisMonthReviews.length
+                const thisYearAvg = thisYearReviews.length > 0
+                    ? thisYearReviews.reduce((sum: number, r) => sum + r.rating, 0) / thisYearReviews.length
                     : 0;
-                const lastMonthAvg = lastMonthReviews.length > 0
-                    ? lastMonthReviews.reduce((sum: number, r) => sum + r.rating, 0) / lastMonthReviews.length
+                const lastYearAvg = lastYearReviews.length > 0
+                    ? lastYearReviews.reduce((sum: number, r) => sum + r.rating, 0) / lastYearReviews.length
                     : 0;
 
-                if (thisMonthAvg > 0 && lastMonthAvg > 0) {
-                    averageRatingTrend = thisMonthAvg - lastMonthAvg;
-                } else if (thisMonthAvg > 0) {
-                    averageRatingTrend = thisMonthAvg;
+                if (thisYearAvg > 0 && lastYearAvg > 0) {
+                    averageRatingTrend = thisYearAvg - lastYearAvg;
+                } else if (thisYearAvg > 0) {
+                    averageRatingTrend = thisYearAvg;
                 }
             }
 
@@ -729,7 +732,7 @@ export default async function DashboardPage() {
                     iconName="reviews"
                     description={!isGoogleConnected ? dict.dashboard.connect_google : dict.dashboard.from_google}
                     trend={totalReviewsTrend}
-                    trendLabel={dict.dashboard.vs_last_month}
+                    trendLabel={(dict.dashboard as Record<string, string>).vs_last_year || "vs last year"}
                     delay={0.1}
                 />
                 <ProStatCard

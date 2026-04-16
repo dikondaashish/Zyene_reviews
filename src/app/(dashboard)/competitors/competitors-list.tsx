@@ -469,14 +469,14 @@ export function CompetitorsList({
             </Card>
             )}
 
-            <Card>
+            <Card className="border-[#3a2a2a] bg-[#201515] text-zinc-100">
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-amber-500" />
+                            <Sparkles className="h-5 w-5 text-amber-400" />
                             AI market positioning brief
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-zinc-300">
                             Competitive analysis based on your search terms and public listing data.
                         </CardDescription>
                     </div>
@@ -502,11 +502,11 @@ export function CompetitorsList({
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {competitors.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-zinc-300">
                             Add tracked competitors to generate a positioning brief.
                         </p>
                     ) : !marketBriefLatest ? (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-zinc-300">
                             Run once to get a concise comparison of how you show up versus competitors, grounded in
                             ratings, reviews, categories, and your top search queries.
                         </p>
@@ -514,7 +514,7 @@ export function CompetitorsList({
                         <>
                             <div>
                                 <h4 className="text-lg font-semibold leading-snug">{marketBriefLatest.headline}</h4>
-                                <p className="text-sm text-muted-foreground mt-2">{marketBriefLatest.overview}</p>
+                                <p className="mt-2 text-sm text-zinc-300">{marketBriefLatest.overview}</p>
                             </div>
                             {marketBriefLatest.positioning_bullets.length > 0 ? (
                                 <ul className="list-disc pl-5 space-y-1.5 text-sm">
@@ -532,20 +532,20 @@ export function CompetitorsList({
                                         {marketBriefLatest.opportunity_actions.map((a, i) => (
                                             <li
                                                 key={`${marketBriefLatest.id}-a-${i}`}
-                                                className="rounded-lg border bg-muted/30 px-3 py-2 text-sm"
+                                                className="rounded-lg border border-[#4b3535] bg-[#2a1e1e] px-3 py-2 text-sm"
                                             >
                                                 <span className="font-medium">{a.title}</span>
-                                                <p className="text-xs text-muted-foreground mt-1">{a.detail}</p>
+                                                <p className="mt-1 text-xs text-zinc-300">{a.detail}</p>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             ) : null}
-                            <p className="text-[11px] text-muted-foreground border-t pt-3">
+                            <p className="border-t border-[#4b3535] pt-3 text-[11px] text-zinc-300">
                                 AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
                                 {marketBriefLatest.data_limitations ? (
                                     <span
-                                        className="ml-1.5 cursor-help border-b border-dotted border-muted-foreground/50"
+                                        className="ml-1.5 cursor-help border-b border-dotted border-zinc-400/70"
                                         title={marketBriefLatest.data_limitations}
                                     >
                                         ℹ limitations

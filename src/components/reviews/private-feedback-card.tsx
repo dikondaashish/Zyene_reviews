@@ -79,11 +79,11 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
     return (
         <div className={cn(
             "group relative overflow-hidden bg-card border border-border rounded-lg p-5 space-y-4 transition-all duration-300 border-l-4",
-            "hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/40",
+            "hover:-translate-y-0.5 hover:shadow-lg hover:border-[#201515]/60",
             status === "open" ? "border-l-red-500" : 
             status === "contacted" ? "border-l-primary" : "border-l-primary opacity-90"
         )}>
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#201515]/35 via-[#201515]/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             {/* Header */}
             <div className="relative z-10 flex justify-between items-start">
                 <div className="flex gap-3">
