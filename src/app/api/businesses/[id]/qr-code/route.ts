@@ -51,6 +51,13 @@ export async function GET(
         );
     }
 
+    // Fetch branding fields
+    const { data: brandingData } = await supabase
+        .from("businesses")
+        .select("logo_url, brand_color")
+        .eq("id", businessId)
+        .single();
+
     // Build review URL
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
     const protocol = rootDomain.includes("localhost") ? "http" : "https";
@@ -58,7 +65,12 @@ export async function GET(
 
     try {
         const qrCodeDataUrl = await generateQRCodeDataURL(reviewUrl);
-        return NextResponse.json({ qrCodeDataUrl, reviewUrl });
+        return NextResponse.json({
+            qrCodeDataUrl,
+            reviewUrl,
+            logoUrl: brandingData?.logo_url ?? null,
+            brandColor: brandingData?.brand_color ?? null,
+        });
     } catch (error) {
         console.error("QR generation error:", error);
         return NextResponse.json(

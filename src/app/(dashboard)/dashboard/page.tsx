@@ -708,6 +708,8 @@ export default async function DashboardPage() {
                     businessId={business.id}
                     businessSlug={business.slug}
                     businessName={business.name || "Business"}
+                    businessLogoUrl={(business as any).logo_url ?? null}
+                    brandColor={(business as any).brand_color ?? null}
                 />
             )}
 

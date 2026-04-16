@@ -24,15 +24,38 @@ interface QRCodeCardProps {
     businessId: string;
     businessSlug: string;
     businessName: string;
+    businessLogoUrl?: string | null;
+    brandColor?: string | null;
 }
 
-export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCardProps) {
+/** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
+function resolveBrandColor(color?: string | null): string {
+    return color && /^#([0-9a-fA-F]{3}){1,2}$/.test(color) ? color : "#0f172a";
+}
+
+/** Compute a readable text color (white or dark) for a hex background. */
+function contrastText(hex: string): string {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    // Relative luminance (sRGB)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
+}
+
+export function QRCodeCard({ businessId, businessSlug, businessName, businessLogoUrl, brandColor }: QRCodeCardProps) {
     const { dict } = useLanguage();
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [reviewUrl, setReviewUrl] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    // Branding from API (may override prop values if fresher)
+    const [apiLogoUrl, setApiLogoUrl] = useState<string | null>(null);
+    const [apiBrandColor, setApiBrandColor] = useState<string | null>(null);
+
+    const logoUrl = apiLogoUrl ?? businessLogoUrl ?? null;
+    const resolvedColor = resolveBrandColor(apiBrandColor ?? brandColor);
 
     const fetchQRCode = async () => {
         setLoading(true);
@@ -43,6 +66,8 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
             const data = await res.json();
             setQrDataUrl(data.qrCodeDataUrl);
             setReviewUrl(data.reviewUrl);
+            if (data.logoUrl) setApiLogoUrl(data.logoUrl);
+            if (data.brandColor) setApiBrandColor(data.brandColor);
         } catch {
             setError(true);
         } finally {
@@ -66,6 +91,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
         }
     };
 
+    /* ───────── Branded Download (Canvas) ───────── */
     const handleDownload = () => {
         if (!qrDataUrl) return;
 
@@ -73,110 +99,275 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const width = 500;
-        const height = 650;
-        canvas.width = width;
-        canvas.height = height;
+        const W = 600;
+        const H = 820;
+        canvas.width = W;
+        canvas.height = H;
 
-        // Background
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.roundRect(0, 0, width, height, 16);
-        ctx.fill();
+        const accent = resolvedColor;
+        const accentFg = contrastText(accent);
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
 
-        // Border
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.roundRect(20, 20, width - 40, height - 40, 16);
-        ctx.stroke();
-
-        // Title: "Review Us on Google"
-        ctx.fillStyle = "#000000";
-        ctx.font = "bold 32px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Review Us on Google", width / 2, 90);
-
-        // QR Code image
-        const qrImg = new Image();
-        qrImg.onload = () => {
-            const qrSize = 300;
-            const qrX = (width - qrSize) / 2;
-            const qrY = 120;
-            ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-
-            // URL text
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
-            ctx.fillStyle = "#666666";
-            ctx.font = "14px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText(`${rootDomain}/${businessSlug}`, width / 2, 470);
-
-            // "Powered by Zyene"
-            ctx.fillStyle = "#999999";
-            ctx.font = "bold 12px sans-serif";
-            ctx.fillText("Powered by Zyene", width / 2, 520);
-
-            // Download
-            const link = document.createElement("a");
-            link.href = canvas.toDataURL("image/png");
-            link.download = `${businessSlug}-qr-code.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            toast.success("QR code downloaded!");
+        // Helper to draw rounded rect
+        const roundRect = (x: number, y: number, w: number, h: number, r: number | number[]) => {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, r);
         };
-        qrImg.src = qrDataUrl;
+
+        const drawCard = (logo: HTMLImageElement | null) => {
+            // — Outer card with subtle shadow illusion
+            roundRect(0, 0, W, H, 24);
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+
+            // — Top accent strip
+            ctx.save();
+            roundRect(0, 0, W, 10, [24, 24, 0, 0]);
+            ctx.clip();
+            ctx.fillStyle = accent;
+            ctx.fillRect(0, 0, W, 10);
+            ctx.restore();
+
+            // — Bottom accent strip
+            ctx.save();
+            roundRect(0, H - 10, W, 10, [0, 0, 24, 24]);
+            ctx.clip();
+            ctx.fillStyle = accent;
+            ctx.fillRect(0, H - 10, W, 10);
+            ctx.restore();
+
+            // — Inner border
+            roundRect(20, 20, W - 40, H - 40, 16);
+            ctx.strokeStyle = "#e5e5e5";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            let cursorY = 50;
+
+            // — Logo (if available)
+            if (logo) {
+                const maxLogoH = 64;
+                const maxLogoW = 200;
+                const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
+                const lw = logo.width * scale;
+                const lh = logo.height * scale;
+                const lx = (W - lw) / 2;
+                cursorY += 10;
+                ctx.drawImage(logo, lx, cursorY, lw, lh);
+                cursorY += lh + 16;
+            } else {
+                cursorY += 20;
+            }
+
+            // — Business name
+            ctx.fillStyle = "#111111";
+            ctx.font = "bold 28px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(businessName, W / 2, cursorY + 28);
+            cursorY += 52;
+
+            // — Divider line
+            ctx.strokeStyle = "#e5e5e5";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(60, cursorY);
+            ctx.lineTo(W - 60, cursorY);
+            ctx.stroke();
+            cursorY += 20;
+
+            // — CTA pill
+            const ctaText = "Scan to Leave Us a Review";
+            ctx.font = "600 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            const ctaMetrics = ctx.measureText(ctaText);
+            const pillW = ctaMetrics.width + 40;
+            const pillH = 36;
+            const pillX = (W - pillW) / 2;
+            roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
+            ctx.fillStyle = accent;
+            ctx.fill();
+            ctx.fillStyle = accentFg;
+            ctx.textAlign = "center";
+            ctx.fillText(ctaText, W / 2, cursorY + 24);
+            cursorY += pillH + 24;
+
+            // — QR Code
+            const qrImg = new Image();
+            qrImg.onload = () => {
+                const qrSize = 300;
+                const qrX = (W - qrSize) / 2;
+
+                // QR container with rounded border
+                roundRect(qrX - 12, cursorY - 12, qrSize + 24, qrSize + 24, 16);
+                ctx.strokeStyle = "#e5e5e5";
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.fillStyle = "#ffffff";
+                ctx.fill();
+
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(qrImg, qrX, cursorY, qrSize, qrSize);
+                cursorY += qrSize + 28;
+
+                // — URL text
+                ctx.fillStyle = "#888888";
+                ctx.font = "14px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(`${rootDomain}/${businessSlug}`, W / 2, cursorY);
+                cursorY += 30;
+
+                // — Powered by Zyene
+                ctx.fillStyle = "#aaaaaa";
+                ctx.font = "bold 11px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.fillText("Powered by Zyene", W / 2, cursorY);
+
+                // — Trigger download
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = `${businessSlug}-qr-code.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                toast.success("QR code downloaded!");
+            };
+            qrImg.src = qrDataUrl;
+        };
+
+        // Load logo first (if available), then draw
+        if (logoUrl) {
+            const logoImg = new Image();
+            logoImg.crossOrigin = "anonymous";
+            logoImg.onload = () => drawCard(logoImg);
+            logoImg.onerror = () => drawCard(null); // Fallback: render without logo
+            logoImg.src = logoUrl;
+        } else {
+            drawCard(null);
+        }
     };
 
+    /* ───────── Branded Print (HTML popup) ───────── */
     const handlePrint = () => {
-        const printWindow = window.open("", "_blank", "width=400,height=600");
+        const printWindow = window.open("", "_blank", "width=500,height=700");
         if (!printWindow) {
             toast.error("Please allow popups to print.");
             return;
         }
+
+        const accent = resolvedColor;
+        const accentFg = contrastText(accent);
+        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+
+        const logoHtml = logoUrl
+            ? `<img src="${logoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />`
+            : "";
+
         printWindow.document.write(
             `
             <html>
                 <head>
                     <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
                         body {
-                            font-family: sans-serif;
+                            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-height: 100vh;
+                            background: #f5f5f5;
+                            padding: 24px;
+                        }
+                        .card {
+                            background: #ffffff;
+                            border-radius: 24px;
+                            overflow: hidden;
+                            max-width: 420px;
+                            width: 100%;
+                            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+                        }
+                        .accent-top {
+                            height: 8px;
+                            background: ${accent};
+                        }
+                        .accent-bottom {
+                            height: 8px;
+                            background: ${accent};
+                        }
+                        .inner {
+                            padding: 36px 32px 28px;
                             text-align: center;
-                            padding: 40px;
-                        }
-                        .container {
-                            border: 2px solid #000;
-                            padding: 40px;
-                            display: inline-block;
-                            border-radius: 16px;
-                        }
-                        h1 { margin-bottom: 20px; }
-                        img {
-                            width: 300px;
-                            height: 300px;
-                            image-rendering: pixelated;
-                        }
-                        .url {
-                            margin-top: 20px;
-                            color: #666;
-                            font-size: 14px;
                         }
                         .logo {
-                            font-weight: bold;
-                            margin-top: 30px;
-                            font-size: 12px;
-                            color: #999;
+                            max-height: 56px;
+                            max-width: 180px;
+                            object-fit: contain;
+                            margin-bottom: 16px;
+                        }
+                        .biz-name {
+                            font-size: 24px;
+                            font-weight: 700;
+                            color: #111;
+                            margin-bottom: 16px;
+                        }
+                        .divider {
+                            height: 1px;
+                            background: #e5e5e5;
+                            margin: 0 20px 20px;
+                        }
+                        .cta-pill {
+                            display: inline-block;
+                            padding: 8px 24px;
+                            border-radius: 999px;
+                            background: ${accent};
+                            color: ${accentFg};
+                            font-weight: 600;
+                            font-size: 14px;
+                            margin-bottom: 24px;
+                        }
+                        .qr-frame {
+                            display: inline-block;
+                            border: 1.5px solid #e5e5e5;
+                            border-radius: 16px;
+                            padding: 12px;
+                            margin-bottom: 20px;
+                        }
+                        .qr-frame img {
+                            width: 260px;
+                            height: 260px;
+                            image-rendering: pixelated;
+                            display: block;
+                        }
+                        .url {
+                            color: #888;
+                            font-size: 13px;
+                            margin-bottom: 20px;
+                        }
+                        .powered {
+                            font-weight: 700;
+                            font-size: 11px;
+                            color: #aaa;
+                            margin-bottom: 8px;
+                        }
+                        @media print {
+                            body { background: #fff; padding: 0; }
+                            .card { box-shadow: none; max-width: 100%; }
                         }
                     </style>
                 </head>
                 <body>
-                    <div class="container">
-                        <h1>Review Us on Google</h1>
-                        <img src="${qrDataUrl}" />
-                        <p class="url">${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${businessSlug}</p>
-                        <p class="logo">Powered by Zyene</p>
+                    <div class="card">
+                        <div class="accent-top"></div>
+                        <div class="inner">
+                            ${logoHtml}
+                            <div class="biz-name">${businessName}</div>
+                            <div class="divider"></div>
+                            <div class="cta-pill">Scan to Leave Us a Review</div>
+                            <div class="qr-frame">
+                                <img src="${qrDataUrl}" alt="QR Code" />
+                            </div>
+                            <div class="url">${rootDomain}/${businessSlug}</div>
+                            <div class="powered">Powered by Zyene</div>
+                        </div>
+                        <div class="accent-bottom"></div>
                     </div>
                 </body>
             </html>
@@ -186,7 +377,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName }: QRCodeCar
         printWindow.focus();
         setTimeout(() => {
             printWindow.print();
-        }, 300);
+        }, 400);
     };
 
     const handleShare = async () => {
