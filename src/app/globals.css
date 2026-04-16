@@ -168,6 +168,55 @@
     @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
            transition-colors duration-200 ease-out hover:brightness-95 active:brightness-90;
   }
+
+  /* Professional Documentation Typography */
+  .prose-docs {
+    @apply text-foreground;
+  }
+  .prose-docs h1 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight mb-8 mt-2;
+  }
+  .prose-docs h2 {
+    @apply text-2xl font-semibold tracking-tight mt-12 mb-4 border-b border-border pb-2;
+  }
+  .prose-docs h3 {
+    @apply text-xl font-semibold tracking-tight mt-8 mb-4;
+  }
+  /* Adjusted paragraph rules to enforce tighter spacing logic similar to GitHub */
+  .prose-docs p {
+    @apply leading-7 [&:not(:last-child)]:mb-6 text-muted-foreground text-sm md:text-base;
+  }
+  .prose-docs > ul {
+    @apply my-6 ml-6 list-disc space-y-2 text-muted-foreground text-sm md:text-base;
+  }
+  .prose-docs > ol {
+    @apply my-6 ml-6 list-decimal space-y-2 text-muted-foreground text-sm md:text-base;
+  }
+  .prose-docs li {
+    @apply leading-7;
+  }
+  /* Fix p inside li */
+  .prose-docs li > p {
+    @apply mb-0;
+  }
+  .prose-docs strong {
+    @apply font-semibold text-foreground;
+  }
+  .prose-docs a {
+    @apply font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors;
+  }
+  .prose-docs code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm md:text-sm font-mono text-foreground;
+  }
+  .prose-docs pre {
+    @apply my-6 overflow-x-auto rounded-xl bg-card border border-border p-4;
+  }
+  .prose-docs pre code {
+    @apply border-0 bg-transparent p-0 text-sm font-mono text-muted-foreground;
+  }
+  .prose-docs blockquote {
+    @apply mt-6 border-l-2 border-primary pl-6 italic text-muted-foreground;
+  }
 }
 
 /* BetterStack Announcement Banner Custom CSS */
