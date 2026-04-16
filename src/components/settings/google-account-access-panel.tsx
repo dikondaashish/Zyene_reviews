@@ -28,6 +28,11 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
     const [admins, setAdmins] = useState<AdminRow[]>([]);
     const [linkedLocationId, setLinkedLocationId] = useState<string | null>(null);
 
+    const unwrapApiData = <T,>(payload: unknown): T => {
+        const root = payload as { data?: T } & T;
+        return (root?.data ?? root) as T;
+    };
+
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -36,8 +41,13 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
                 const res = await fetch(
                     `/api/google/account-access?businessId=${encodeURIComponent(businessId)}`
                 );
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || "Failed to load");
+                const payload = await res.json();
+                if (!res.ok) throw new Error(payload.error || "Failed to load");
+                const data = unwrapApiData<{
+                    accounts?: AccountSummary[];
+                    admins?: AdminRow[];
+                    linkedLocationId?: string | null;
+                }>(payload);
                 if (!cancelled) {
                     setAccounts(data.accounts || []);
                     setAdmins(data.admins || []);

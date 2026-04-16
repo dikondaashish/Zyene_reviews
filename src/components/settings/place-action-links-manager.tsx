@@ -53,6 +53,11 @@ export function PlaceActionLinksManager({
     const [creating, setCreating] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
+    const unwrapApiData = <T,>(payload: unknown): T => {
+        const root = payload as { data?: T } & T;
+        return (root?.data ?? root) as T;
+    };
+
     useEffect(() => {
         setLinks(initialLinks);
     }, [initialLinks]);
@@ -65,9 +70,10 @@ export function PlaceActionLinksManager({
                 const res = await fetch(
                     `/api/google/place-actions?businessId=${encodeURIComponent(businessId)}`
                 );
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || "Failed to load link types");
-                const list = (data.types as MetaType[]) || [];
+                const payload = await res.json();
+                if (!res.ok) throw new Error(payload.error || "Failed to load link types");
+                const data = unwrapApiData<{ types?: MetaType[] }>(payload);
+                const list = data.types || [];
                 if (!cancelled) {
                     setTypes(list);
                     setPlaceActionType((prev) => prev || list[0]?.placeActionType || "");

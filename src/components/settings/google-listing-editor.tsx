@@ -40,22 +40,42 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
         hasRegularHours: boolean;
     } | null>(null);
 
+    const unwrapApiData = <T,>(payload: unknown): T => {
+        const root = payload as { data?: T } & T;
+        return (root?.data ?? root) as T;
+    };
+
     const load = useCallback(async () => {
         setLoading(true);
         setNotConnected(false);
         try {
             const res = await fetch(`/api/google/listing?businessId=${encodeURIComponent(businessId)}`);
-            const data = await res.json();
+            const payload = await res.json();
             
             if (!res.ok) {
-                if (res.status === 404 || data.code === "GOOGLE_NOT_CONNECTED") {
+                if (res.status === 404 || payload.code === "GOOGLE_NOT_CONNECTED") {
                     setNotConnected(true);
                     return; // Fail gracefully
                 }
-                throw new Error(data.error || "Failed to load listing");
+                throw new Error(payload.error || "Failed to load listing");
             }
-            
-            const L = data.listing;
+
+            const data = unwrapApiData<{
+                listing?: {
+                    title?: string;
+                    websiteUri?: string;
+                    primaryPhone?: string;
+                    description?: string;
+                    primaryCategoryDisplay?: string;
+                    mapsUri?: string;
+                    hasRegularHours?: boolean;
+                };
+                profileHealth?: { score: number; checks: ProfileHealthCheck[] };
+            }>(payload);
+            const L = data?.listing;
+            if (!L) {
+                throw new Error("Google listing payload missing listing details");
+            }
             const next: ListingForm = {
                 title: L.title || "",
                 websiteUri: L.websiteUri || "",
@@ -64,7 +84,7 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
             };
             setForm(next);
             initialRef.current = { ...next };
-            setProfileHealth(data.profileHealth);
+            setProfileHealth(data.profileHealth ?? null);
             setMeta({
                 primaryCategoryDisplay: L.primaryCategoryDisplay || "",
                 mapsUri: L.mapsUri || "",
@@ -104,8 +124,17 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Update failed");
+            const payload = await res.json();
+            if (!res.ok) throw new Error(payload.error || "Update failed");
+            const data = unwrapApiData<{
+                listing?: {
+                    title?: string;
+                    websiteUri?: string;
+                    primaryPhone?: string;
+                    description?: string;
+                };
+                profileHealth?: { score: number; checks: ProfileHealthCheck[] };
+            }>(payload);
 
             toast.success("Google listing updated");
             if (data.listing) {
