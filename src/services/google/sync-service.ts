@@ -17,6 +17,8 @@ import {
     type AutoReplyBusinessSettings,
 } from "@/services/reviews/auto-reply-eligibility";
 import { registerNotifications } from "./notifications";
+import { computeReviewHash } from "@/utils/review-hash";
+import { SyncStateManager } from "@/services/google/sync-state-manager";
 
 export { isGoogleSyncConflictError } from "./sync-lock-utils";
 import {
@@ -27,6 +29,24 @@ import {
 type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
 type AdminClient = ReturnType<typeof createAdminClient>;
 type ReviewPlatformRef = { id: string; business_id: string };
+
+function syncStateObject(syncState: unknown): Record<string, unknown> {
+    if (syncState && typeof syncState === "object" && !Array.isArray(syncState)) return syncState as Record<string, unknown>;
+    return {};
+}
+
+async function clearForceFullSyncFlag(platformId: string): Promise<void> {
+    const admin = createAdminClient();
+    const { data } = await admin
+        .from("review_platforms")
+        .select("sync_state")
+        .eq("id", platformId)
+        .maybeSingle();
+    const obj = syncStateObject(data?.sync_state);
+    if (!("force_full_sync" in obj)) return;
+    const { force_full_sync: _ignored, ...rest } = obj as Record<string, unknown>;
+    await admin.from("review_platforms").update({ sync_state: rest }).eq("id", platformId);
+}
 
 function createSyncError(message: string, code: "RATE_LIMIT" | "CONFLICT"): SyncError {
     const error = new Error(message) as SyncError;
@@ -266,9 +286,34 @@ async function fetchGoogleReviewsPaginated(
     let apiTotalReviews: number | undefined = undefined;
     let apiAverageRating: number | undefined = undefined;
     let pageCount = 0;
+    let sortByUpdateTime = true;
 
     do {
-        const apiResp = await listReviews(accessToken, googleAccountId, googleLocationId, pageToken);
+        let apiResp;
+        try {
+            apiResp = await listReviews(
+                accessToken,
+                googleAccountId,
+                googleLocationId,
+                pageToken,
+                sortByUpdateTime
+            );
+        } catch (error) {
+            if (!sortByUpdateTime || !isOrderByUnsupportedError(error)) {
+                throw error;
+            }
+            console.warn(
+                `[Sync] Full-sync fallback: orderBy=updateTime desc unsupported for account ${googleAccountId}/location ${googleLocationId}.`
+            );
+            sortByUpdateTime = false;
+            apiResp = await listReviews(
+                accessToken,
+                googleAccountId,
+                googleLocationId,
+                pageToken,
+                false
+            );
+        }
         googleReviews.push(...apiResp.reviews);
 
         // Capture totals from first page payload only.
@@ -419,6 +464,65 @@ export interface GoogleSyncContext {
     accessToken: string;
     googleAccountId: string;
     googleLocationId: string;
+    lastReviewUpdateTime: string | null;
+    syncStateManager: SyncStateManager;
+    /** Mutable counter used for checkpointing. */
+    reviewsProcessed: number;
+    /** Highest review.updateTime seen during this sync run. */
+    highestReviewUpdateTime: string | null;
+    /** True when Google accepts orderBy=updateTime desc for this location. */
+    orderByUpdateTimeEnabled: boolean;
+}
+
+function isOrderByUnsupportedError(error: unknown): boolean {
+    const msg = error instanceof Error ? error.message : String(error);
+    return (
+        /Failed to list reviews:\s*400/i.test(msg) ||
+        /INVALID_ARGUMENT/i.test(msg) ||
+        /orderBy/i.test(msg)
+    );
+}
+
+async function listReviewsWithOrderByFallback(
+    context: GoogleSyncContext,
+    pageToken?: string
+) {
+    if (!context.orderByUpdateTimeEnabled) {
+        return listReviews(
+            context.accessToken,
+            context.googleAccountId,
+            context.googleLocationId,
+            pageToken,
+            false
+        );
+    }
+
+    try {
+        return await listReviews(
+            context.accessToken,
+            context.googleAccountId,
+            context.googleLocationId,
+            pageToken,
+            true
+        );
+    } catch (error) {
+        if (!isOrderByUnsupportedError(error)) {
+            throw error;
+        }
+        console.warn(
+            `[Sync] orderBy=updateTime desc unsupported for platform ${context.platform.id}. Falling back to unsorted review fetch.`
+        );
+        context.orderByUpdateTimeEnabled = false;
+        // Disable early-stop optimization if source isn't sorted.
+        context.lastReviewUpdateTime = null;
+        return listReviews(
+            context.accessToken,
+            context.googleAccountId,
+            context.googleLocationId,
+            pageToken,
+            false
+        );
+    }
 }
 
 /**
@@ -495,7 +599,12 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
             platform: validPlatform,
             accessToken: accessToken!,
             googleAccountId: googleAccountId!,
-            googleLocationId: googleLocationId!
+            googleLocationId: googleLocationId!,
+            lastReviewUpdateTime: (validPlatform as any)?.last_review_update_time ?? null,
+            syncStateManager: new SyncStateManager(),
+            reviewsProcessed: 0,
+            highestReviewUpdateTime: (validPlatform as any)?.last_review_update_time ?? null,
+            orderByUpdateTimeEnabled: true,
         };
     } catch (err) {
         // Cleanup lock if setup fails
@@ -517,15 +626,11 @@ export async function syncGoogleReviewsPage(
     avgRating: number;
     /** Google `reviewId` values on this page — used to reconcile deletions after a full sync. */
     externalIdsOnPage: string[];
+    earlyExit: boolean;
 }> {
     const admin = createAdminClient();
 
-    const apiResp = await listReviews(
-        context.accessToken, 
-        context.googleAccountId, 
-        context.googleLocationId, 
-        pageToken
-    );
+    const apiResp = await listReviewsWithOrderByFallback(context, pageToken);
 
     const { data: autoReplyRow } = await admin
         .from("businesses")
@@ -536,10 +641,44 @@ export async function syncGoogleReviewsPage(
 
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];
+    const externalIdsOnPage: string[] = [];
+    let earlyExit = false;
 
     let newReviewsCount = 0;
     for (const review of apiResp.reviews) {
-        const stats = await processGoogleReview(admin, context.platform, review, autoReplySettings);
+        if (
+            review.updateTime &&
+            (!context.highestReviewUpdateTime ||
+                new Date(review.updateTime).getTime() > new Date(context.highestReviewUpdateTime).getTime())
+        ) {
+            context.highestReviewUpdateTime = review.updateTime;
+        }
+
+        const contentHash = computeReviewHash(review);
+
+        if (context.lastReviewUpdateTime && new Date(review.updateTime).getTime() <= new Date(context.lastReviewUpdateTime).getTime()) {
+            earlyExit = true;
+            break;
+        }
+
+        const { data: existing } = await admin
+            .from("reviews")
+            .select("content_hash, response_source, response_text")
+            .eq("business_id", context.platform.business_id)
+            .eq("platform", "google")
+            .eq("external_id", review.reviewId)
+            .maybeSingle();
+
+        if (existing?.content_hash && existing.content_hash === contentHash) {
+            console.log(`[Sync] hash_match: skip review ${review.reviewId}`);
+            continue;
+        }
+
+        const stats = await processGoogleReview(admin, context.platform, review, autoReplySettings, {
+            existing,
+            contentHash,
+            googleUpdateTime: review.updateTime,
+        });
         if (stats.upserted) {
             syncedCount++;
             if (stats.id && stats.needsAnalysis) {
@@ -548,6 +687,9 @@ export async function syncGoogleReviewsPage(
             if (stats.isNew) {
                 newReviewsCount++;
             }
+        }
+        if (review.reviewId) {
+            externalIdsOnPage.push(review.reviewId);
         }
     }
 
@@ -564,16 +706,20 @@ export async function syncGoogleReviewsPage(
         }
     }
 
-    const externalIdsOnPage = apiResp.reviews
-        .map((r) => r.reviewId)
-        .filter((id): id is string => typeof id === "string" && id.length > 0);
+    context.reviewsProcessed += syncedCount;
+    await context.syncStateManager.checkpointSync(
+        context.platform.id,
+        earlyExit ? "__EARLY_EXIT__" : apiResp.nextPageToken ?? "",
+        context.reviewsProcessed
+    );
 
     return {
-        nextPageToken: apiResp.nextPageToken,
+        nextPageToken: earlyExit ? undefined : apiResp.nextPageToken,
         synced: syncedCount,
         total: apiResp.totalReviewCount || 0,
         avgRating: apiResp.averageRating || 0,
         externalIdsOnPage,
+        earlyExit,
     };
 }
 
@@ -667,20 +813,86 @@ export async function enqueueMissingGoogleReviewAnalysis(
 export async function syncGoogleReviewsForPlatform(platformId: string): Promise<SyncResult> {
     const context = await prepareGoogleSync(platformId);
     const admin = createAdminClient();
+    const incrementalEnabled = process.env.ENABLE_INCREMENTAL_REVIEW_SYNC === "true";
+    const stateObj = syncStateObject((context.platform as any)?.sync_state);
+    const forceFullSync = stateObj.force_full_sync === true;
+    const usingIncremental = incrementalEnabled && !forceFullSync;
+    console.log(
+        `[Sync] Mode selected for platform ${platformId}: ${usingIncremental ? "incremental" : "full"} ` +
+            `(flag=${incrementalEnabled}, force_full_sync=${forceFullSync})`
+    );
 
     try {
+        // Default to full-sync behavior unless explicitly enabled.
+        if (!incrementalEnabled || forceFullSync) {
+            const { googleReviews, apiTotalReviews, apiAverageRating } = await fetchGoogleReviewsPaginated(
+                context.accessToken,
+                context.googleAccountId,
+                context.googleLocationId
+            );
+
+            const { data: autoReplyRow } = await admin
+                .from("businesses")
+                .select("auto_reply_enabled, auto_reply_enabled_at, auto_reply_min_rating, auto_reply_tone")
+                .eq("id", context.platform.business_id)
+                .single();
+            const autoReplySettings = (autoReplyRow || null) as AutoReplyBusinessSettings | null;
+
+            let totalSyncedFull = 0;
+            const seenGoogleExternalIds = new Set<string>();
+
+            for (const review of googleReviews) {
+                const stats = await processGoogleReview(admin, context.platform, review, autoReplySettings);
+                if (stats.upserted) totalSyncedFull++;
+                if (review.reviewId) seenGoogleExternalIds.add(review.reviewId);
+            }
+
+            // Safe to reconcile only if we likely fetched the complete list (not truncated by MAX_REVIEW_PAGES).
+            const reconciliationSafe =
+                typeof apiTotalReviews === "number" && apiTotalReviews >= 0
+                    ? googleReviews.length >= apiTotalReviews
+                    : false;
+            await hideGoogleReviewsRemovedFromSource(admin, {
+                businessId: context.platform.business_id,
+                platformId: context.platform.id,
+                googleExternalIdsSeen: seenGoogleExternalIds,
+                reconciliationSafe,
+            });
+
+            await finalizeGoogleSync(
+                platformId,
+                context.platform.business_id,
+                apiTotalReviews,
+                apiAverageRating
+            );
+            await enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
+
+            if (forceFullSync) {
+                await clearForceFullSyncFlag(platformId);
+            }
+
+            return {
+                success: true,
+                total: totalSyncedFull,
+                fetched: totalSyncedFull,
+                analyzed: 0,
+                alerts: 0,
+            };
+        }
+
         let pageToken: string | undefined = undefined;
         let totalSynced = 0;
         let lastResp = null;
         let pageCount = 0;
         const seenGoogleExternalIds = new Set<string>();
+        await context.syncStateManager.beginSync(platformId);
 
         do {
             lastResp = await syncGoogleReviewsPage(context, pageToken);
             for (const id of lastResp.externalIdsOnPage) {
                 seenGoogleExternalIds.add(id);
             }
-            pageToken = lastResp.nextPageToken;
+            pageToken = lastResp.earlyExit ? undefined : lastResp.nextPageToken;
             totalSynced += lastResp.synced;
             pageCount++;
 
@@ -693,13 +905,26 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             }
         } while (pageToken && pageCount < MAX_REVIEW_PAGES);
 
-        const fullListFetched = !pageToken;
+        const fullListFetched = !pageToken && !lastResp?.earlyExit;
         await hideGoogleReviewsRemovedFromSource(admin, {
             businessId: context.platform.business_id,
             platformId: context.platform.id,
             googleExternalIdsSeen: seenGoogleExternalIds,
             reconciliationSafe: fullListFetched,
         });
+
+        const newHighWaterMark =
+            context.highestReviewUpdateTime ??
+            context.lastReviewUpdateTime ??
+            new Date().toISOString();
+        console.log(
+            `[Sync] Incremental complete for platform ${platformId}: high-water mark -> ${newHighWaterMark}, processed=${context.reviewsProcessed}`
+        );
+        await context.syncStateManager.completeSync(
+            platformId,
+            newHighWaterMark,
+            context.reviewsProcessed
+        );
 
         await finalizeGoogleSync(platformId, context.platform.business_id, lastResp?.total, lastResp?.avgRating);
         await enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
@@ -713,6 +938,14 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         };
     } catch (error) {
         console.error("[Sync] Error in compatibility wrapper:", error);
+        if (usingIncremental) {
+            try {
+                const message = error instanceof Error ? error.message : String(error);
+                await context.syncStateManager.failSync(platformId, message);
+            } catch (stateErr) {
+                console.error("[Sync] Failed to mark sync_state failure:", stateErr);
+            }
+        }
         // Release lock on error
         const admin = createAdminClient();
         await admin.from("review_platforms").update({ sync_status: 'idle', locked_until: null }).eq("id", platformId);
@@ -731,18 +964,26 @@ export async function processGoogleReview(
     admin: AdminClient,
     platform: ReviewPlatformRef,
     review: GoogleReview,
-    autoReplySettings?: AutoReplyBusinessSettings | null
+    autoReplySettings?: AutoReplyBusinessSettings | null,
+    opts?: {
+        existing?: { content_hash?: string | null; response_source?: string | null; response_text?: string | null } | null;
+        contentHash?: string;
+        googleUpdateTime?: string;
+    }
 ) {
     const ratingMap: Record<string, number> = { "FIVE": 5, "FOUR": 4, "THREE": 3, "TWO": 2, "ONE": 1 };
     const numericRating = ratingMap[review.starRating] || 0;
 
-    const { data: existing } = await admin
-        .from("reviews")
-        .select("response_source, response_text")
-        .eq("business_id", platform.business_id)
-        .eq("platform", "google")
-        .eq("external_id", review.reviewId)
-        .maybeSingle();
+    const { data: existing } =
+        opts && "existing" in opts && opts.existing !== undefined
+            ? { data: opts.existing }
+            : await admin
+                  .from("reviews")
+                  .select("content_hash, response_source, response_text")
+                  .eq("business_id", platform.business_id)
+                  .eq("platform", "google")
+                  .eq("external_id", review.reviewId)
+                  .maybeSingle();
 
     const googleReplyText = review.reviewReply?.comment ?? "";
     let responseSource: string | null = null;
@@ -754,6 +995,7 @@ export async function processGoogleReview(
         responseSource = preserveZyene ? existing.response_source! : REVIEW_RESPONSE_SOURCE_GOOGLE;
     }
 
+    const resolvedContentHash = opts?.contentHash ?? computeReviewHash(review);
     const reviewData = {
         business_id: platform.business_id,
         platform: "google",
@@ -764,6 +1006,8 @@ export async function processGoogleReview(
         rating: numericRating,
         text: review.comment || "",
         review_date: review.createTime,
+        google_update_time: opts?.googleUpdateTime ?? review.updateTime,
+        content_hash: resolvedContentHash,
         response_status: review.reviewReply ? "responded" : "pending",
         response_text: review.reviewReply?.comment || null,
         responded_at: review.reviewReply?.updateTime || null,

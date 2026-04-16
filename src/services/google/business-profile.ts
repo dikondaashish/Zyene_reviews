@@ -238,7 +238,8 @@ export async function listReviews(
     accessToken: string, 
     accountId: string, 
     locationId: string,
-    pageToken?: string
+    pageToken?: string,
+    sortByUpdateTime: boolean = true
 ): Promise<{ reviews: GoogleReview[], averageRating?: number, totalReviewCount?: number, nextPageToken?: string }> {
     // URL: https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews
     // Note: accountId and locationId are raw IDs, not "accounts/{id}"
@@ -246,11 +247,10 @@ export async function listReviews(
     // We need to parse.
     // Actually, v4 API takes `accounts/{accountId}/locations/{locationId}/reviews` as PATH.
     // Let's verify format.
-
-    let url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews`;
-    if (pageToken) {
-        url += `?pageToken=${encodeURIComponent(pageToken)}`;
-    }
+    const params = new URLSearchParams();
+    if (sortByUpdateTime) params.set("orderBy", "updateTime desc");
+    if (pageToken) params.set("pageToken", pageToken);
+    let url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
