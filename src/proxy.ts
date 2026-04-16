@@ -2,6 +2,18 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { globalApiRateLimit } from "@/lib/auth/rate-limit";
 
+/** True when the browser Origin matches this request's Host (same deployment / custom review domains like collectratings.com). */
+function originMatchesRequestHost(origin: string | null | undefined, hostHeader: string): boolean {
+    if (!origin || !hostHeader) return false;
+    try {
+        const url = new URL(origin);
+        const requestHost = hostHeader.split(":")[0]?.toLowerCase() ?? "";
+        return url.hostname.toLowerCase() === requestHost;
+    } catch {
+        return false;
+    }
+}
+
 export async function proxy(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
         request,
@@ -147,10 +159,10 @@ export async function proxy(request: NextRequest) {
                 `https://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
             ];
 
-            if (
-                ["POST", "PUT", "DELETE", "PATCH"].includes(request.method) &&
-                !allowedOrigins.includes(origin ?? "")
-            ) {
+            const csrfAllowed =
+                allowedOrigins.includes(origin ?? "") || originMatchesRequestHost(origin, hostname);
+
+            if (["POST", "PUT", "DELETE", "PATCH"].includes(request.method) && !csrfAllowed) {
                 return NextResponse.json({ error: "Forbidden" }, { status: 403 });
             }
         }
