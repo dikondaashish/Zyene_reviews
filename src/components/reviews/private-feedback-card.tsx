@@ -78,12 +78,14 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
     return (
         <div className={cn(
-            "bg-card border border-border rounded-lg p-5 space-y-4 transition-all duration-200 border-l-4",
+            "group relative overflow-hidden bg-card border border-border rounded-lg p-5 space-y-4 transition-all duration-300 border-l-4",
+            "hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/40",
             status === "open" ? "border-l-red-500" : 
             status === "contacted" ? "border-l-primary" : "border-l-primary opacity-90"
         )}>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             {/* Header */}
-            <div className="flex justify-between items-start">
+            <div className="relative z-10 flex justify-between items-start">
                 <div className="flex gap-3">
                     <div className={cn(
                         "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border",
@@ -135,7 +137,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
             </div>
 
             {/* Content */}
-            <div className="space-y-3">
+            <div className="relative z-10 space-y-3">
                 <div className="text-sm text-foreground leading-relaxed bg-muted p-3 rounded-md border border-border italic">
                     "{feedback.content}"
                 </div>
@@ -172,7 +174,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
             </div>
             
             {status === "resolved" && (
-                <div className="pt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                <div className="relative z-10 pt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600">
                     <CheckCircle className="w-3 h-3" />
                     Conversation marked as recovered
                 </div>

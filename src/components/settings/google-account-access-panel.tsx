@@ -22,6 +22,15 @@ type AdminRow = {
     pendingInvitation?: boolean;
 };
 
+function parseAdminIdentity(a: AdminRow): { label: string; email?: string } {
+    const raw = (a.admin || a.name || "").trim();
+    if (!raw) return { label: "—" };
+    if (raw.includes("@")) return { label: raw };
+    const email = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0];
+    if (email) return { label: email, email };
+    return { label: raw.replace(/^accounts\/[^/]+\/admins\//, "") || raw };
+}
+
 export function GoogleAccountAccessPanel({ businessId }: { businessId: string }) {
     const [loading, setLoading] = useState(true);
     const [accounts, setAccounts] = useState<AccountSummary[]>([]);
@@ -138,7 +147,7 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
                     <ul className="text-sm space-y-1 border rounded-md divide-y max-h-48 overflow-y-auto">
                         {admins.map((a, i) => (
                             <li key={a.name || i} className="px-3 py-2 flex flex-wrap gap-2 items-center">
-                                <span className="font-mono text-xs break-all">{a.admin || a.name || "—"}</span>
+                                <span className="text-sm break-all">{parseAdminIdentity(a).label}</span>
                                 {a.role && (
                                     <Badge variant="outline" className="text-[10px]">
                                         {a.role}

@@ -343,13 +343,15 @@ export function ReviewCard({
 
     return (
         <div className={cn(
-            "bg-card rounded-xl border border-border p-4 transition-all duration-300 relative group",
-            isSelected && "border-primary/30 bg-primary/10"
+            "bg-card rounded-xl border border-border p-4 transition-all duration-300 relative group overflow-hidden",
+            "hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/40",
+            isSelected && "border-primary/30 bg-primary/10 shadow-sm"
         )}>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             {/* Selection Checkbox */}
             {onSelect && (
                 <div className={cn(
-                    "absolute left-4 top-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity",
+                    "absolute left-4 top-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity",
                     isSelected && "opacity-100"
                 )}>
                     <input
@@ -361,7 +363,7 @@ export function ReviewCard({
                 </div>
             )}
 
-            <div className={cn("flex justify-between items-start mb-3", onSelect && "pl-7")}>
+            <div className={cn("relative z-10 flex justify-between items-start mb-3", onSelect && "pl-7")}>
                 <div className="flex gap-3">
                     <Avatar
                         size="lg"
@@ -419,7 +421,7 @@ export function ReviewCard({
             </div>
 
             {/* Content & Themes */}
-            <div className="space-y-2">
+            <div className="relative z-10 space-y-2">
                 <div className="text-sm text-muted-foreground leading-relaxed">
                     <p className={cn(!isExpanded && "line-clamp-3")}>{displayContent}</p>
                     {displayContent.length > 200 && (
@@ -513,7 +515,7 @@ export function ReviewCard({
 
             {/* Existing Response */}
             {review.response_status === 'responded' && review.response_text && !isEditingReply && (
-                <div className="mt-5 bg-muted rounded-md p-3 text-sm border-l-2 border-primary ml-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="relative z-10 mt-5 bg-muted rounded-md p-3 text-sm border-l-2 border-primary ml-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground min-w-0">
                             <CornerDownRight className="w-3 h-3 text-muted-foreground shrink-0" />
@@ -579,7 +581,7 @@ export function ReviewCard({
             )}
 
             {/* Actions */}
-            <div className="flex items-center gap-2 pt-2 border-t border-border mt-1">
+            <div className="relative z-10 flex items-center gap-2 pt-2 border-t border-border mt-1">
                 {review.response_status !== 'responded' && (
                     <div className="flex items-center gap-2">
                         {review.platform === 'yelp' ? (
@@ -775,7 +777,7 @@ export function ReviewCard({
 
             {/* Reply Area with Tone Tabs */}
             {showReplyComposer && (
-                <div className="bg-muted p-5 rounded-xl border border-border mt-4 animate-in slide-in-from-top-2 duration-200">
+                <div className="relative z-10 bg-muted p-5 rounded-xl border border-border mt-4 animate-in slide-in-from-top-2 duration-200">
                     {isEditingReply && (
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                             Edit reply

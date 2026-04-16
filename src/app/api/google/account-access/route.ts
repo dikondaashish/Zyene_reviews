@@ -1,7 +1,7 @@
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { listAccounts, listLocations } from "@/services/google/business-profile";
-import { listAccountAdmins } from "@/services/google/account-management";
+import { listAccountAdmins, listLocationAdmins } from "@/services/google/account-management";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
@@ -87,7 +87,22 @@ export async function GET(request: NextRequest) {
         if (linkedAccountId) {
             try {
                 admins = await listAccountAdmins(accessToken, `accounts/${linkedAccountId}`);
-            } catch {
+            } catch (e) {
+                console.warn("[google/account-access] account admins fetch failed, falling back to location admins", {
+                    linkedAccountId,
+                    linkedLocId,
+                    error: e instanceof Error ? e.message : String(e),
+                });
+            }
+        }
+        if (admins.length === 0) {
+            try {
+                admins = await listLocationAdmins(accessToken, `locations/${linkedLocId}`);
+            } catch (e) {
+                console.warn("[google/account-access] location admins fetch failed", {
+                    linkedLocId,
+                    error: e instanceof Error ? e.message : String(e),
+                });
                 admins = [];
             }
         }

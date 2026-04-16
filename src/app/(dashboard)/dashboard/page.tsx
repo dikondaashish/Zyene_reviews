@@ -639,7 +639,7 @@ export default async function DashboardPage() {
               : "xl:grid-cols-2";
 
     if (!useDemoData && business.id && isGoogleConnected) {
-        const { start, end } = dateRangeLastNDays(30);
+        const { start, end } = dateRangeLastNDays(365);
         googlePerf = await getGooglePerformanceTotals(supabase, business.id, start, end);
         perfSyncedAt =
             (googlePlatform as { google_performance_synced_at?: string | null })
@@ -882,14 +882,14 @@ export default async function DashboardPage() {
                 </div>
             )}
 
-            {/* Google Business Profile performance (last 30 days) */}
+            {/* Google Business Profile performance (last 12 months) */}
             {(useDemoData || isGoogleConnected) && googlePerf && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
                         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                             Google listing performance
                         </h2>
-                        <span className="text-xs text-muted-foreground">Last 30 days</span>
+                        <span className="text-xs text-muted-foreground">Last 12 months</span>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <Card>

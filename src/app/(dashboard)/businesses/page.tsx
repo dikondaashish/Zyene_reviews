@@ -63,9 +63,13 @@ export default async function BusinessesPage() {
                         return (
                             <div
                                 key={business.id}
-                                className={`border rounded-xl bg-card overflow-hidden transition-all cursor-pointer ${isActive ? "ring-2 ring-primary border-primary/40" : "hover:border-primary/40"
+                                className={`group relative border rounded-xl bg-card overflow-hidden transition-all duration-300 cursor-pointer ${
+                                    isActive
+                                        ? "ring-2 ring-primary border-primary/40 shadow-sm"
+                                        : "hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
                                     }`}
                             >
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                                 <form
                                     action={async () => {
                                         "use server";
@@ -73,7 +77,10 @@ export default async function BusinessesPage() {
                                         redirect("/dashboard");
                                     }}
                                 >
-                                    <button type="submit" className="w-full text-left p-5 flex flex-col gap-3 hover:bg-muted/50 transition-colors cursor-pointer">
+                                    <button
+                                        type="submit"
+                                        className="relative z-10 w-full text-left p-5 flex flex-col gap-3 transition-colors duration-300 hover:bg-primary/5 cursor-pointer"
+                                    >
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
                                                 <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${isActive ? "bg-primary/15" : "bg-primary/10"
@@ -140,7 +147,7 @@ export default async function BusinessesPage() {
                                         </div>
                                     </button>
                                 </form>
-                                <div className="flex items-center justify-between border-t bg-muted/50 px-4 py-2">
+                                <div className="relative z-10 flex items-center justify-between border-t bg-muted/50 px-4 py-2 transition-colors duration-300 group-hover:bg-primary/5">
                                     <span className="text-[11px] text-muted-foreground">Click card to switch active business</span>
                                     <DeleteBusinessButton
                                         businessId={business.id}

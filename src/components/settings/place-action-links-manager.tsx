@@ -96,6 +96,17 @@ export function PlaceActionLinksManager({
         return m?.displayName || t;
     };
 
+    const prettyUrl = (raw: string) => {
+        try {
+            const u = new URL(raw);
+            const host = u.hostname.replace(/^www\./, "");
+            const path = `${u.pathname}${u.search}`;
+            return { host, path: path.length > 70 ? `${path.slice(0, 67)}...` : path };
+        } catch {
+            return { host: raw, path: "" };
+        }
+    };
+
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!placeActionType || !uri.trim()) {
@@ -223,58 +234,72 @@ export function PlaceActionLinksManager({
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Type</TableHead>
+                                    <TableHead className="w-[220px]">Type</TableHead>
                                     <TableHead>URL</TableHead>
-                                    <TableHead>Flags</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
+                                    <TableHead className="w-[170px]">Flags</TableHead>
+                                    <TableHead className="w-[72px] text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {links.map((row) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell className="text-sm">
-                                            {displayForType(row.place_action_type)}
-                                        </TableCell>
-                                        <TableCell className="max-w-[280px]">
-                                            <a
-                                                href={row.uri}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1 text-sm text-primary underline-offset-4 hover:underline break-all"
-                                            >
-                                                {row.uri}
-                                                <ExternalLink className="h-3 w-3 shrink-0" />
-                                            </a>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-wrap gap-1">
-                                                {row.is_preferred && (
-                                                    <Badge variant="secondary">Preferred</Badge>
-                                                )}
-                                                {row.is_broken && (
-                                                    <Badge variant="destructive">Possibly broken</Badge>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-destructive hover:text-destructive"
-                                                onClick={() => handleDelete(row.id)}
-                                                disabled={deletingId === row.id}
-                                                aria-label="Remove link"
-                                            >
-                                                {deletingId === row.id ? (
-                                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                                ) : (
-                                                    <Trash2 className="h-4 w-4" />
-                                                )}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                {links.map((row) => {
+                                    const parsedUrl = prettyUrl(row.uri);
+                                    return (
+                                        <TableRow key={row.id}>
+                                            <TableCell className="align-top text-sm font-medium">
+                                                {displayForType(row.place_action_type)}
+                                            </TableCell>
+                                            <TableCell className="align-top min-w-[360px] max-w-[640px]">
+                                                <a
+                                                    href={row.uri}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="group inline-flex max-w-full items-start gap-1 text-sm text-primary hover:underline"
+                                                    title={row.uri}
+                                                >
+                                                    <span className="min-w-0">
+                                                        <span className="block truncate font-medium">{parsedUrl.host}</span>
+                                                        {parsedUrl.path ? (
+                                                            <span className="block truncate text-xs text-muted-foreground group-hover:text-primary/80">
+                                                                {parsedUrl.path}
+                                                            </span>
+                                                        ) : null}
+                                                    </span>
+                                                    <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                                </a>
+                                            </TableCell>
+                                            <TableCell className="align-top">
+                                                <div className="flex min-h-8 flex-wrap gap-1">
+                                                    {row.is_preferred && (
+                                                        <Badge variant="secondary">Preferred</Badge>
+                                                    )}
+                                                    {row.is_broken && (
+                                                        <Badge variant="destructive">Possibly broken</Badge>
+                                                    )}
+                                                    {!row.is_preferred && !row.is_broken ? (
+                                                        <span className="text-xs text-muted-foreground">—</span>
+                                                    ) : null}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="align-top text-right">
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-destructive hover:text-destructive"
+                                                    onClick={() => handleDelete(row.id)}
+                                                    disabled={deletingId === row.id}
+                                                    aria-label="Remove link"
+                                                >
+                                                    {deletingId === row.id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <Trash2 className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                             </TableBody>
                         </Table>
                     </div>
