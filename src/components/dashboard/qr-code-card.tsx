@@ -43,6 +43,11 @@ function contrastText(hex: string): string {
     return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
 }
 
+function getDisplayDomain(): string {
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    return rootDomain.includes("localhost") ? rootDomain : "www.collectratings.com";
+}
+
 export function QRCodeCard({ businessId, businessSlug, businessName, businessLogoUrl, brandColor }: QRCodeCardProps) {
     const { dict } = useLanguage();
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -106,7 +111,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
         const accent = resolvedColor;
         const accentFg = contrastText(accent);
-        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+        const rootDomain = getDisplayDomain();
 
         // Helper to draw rounded rect
         const roundRect = (x: number, y: number, w: number, h: number, r: number | number[]) => {
@@ -254,7 +259,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
         const accent = resolvedColor;
         const accentFg = contrastText(accent);
-        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+        const rootDomain = getDisplayDomain();
 
         const logoHtml = logoUrl
             ? `<img src="${logoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />`
@@ -427,9 +432,9 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             >
                                 <span
                                     className="truncate"
-                                    title={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/${businessSlug}`}
+                                    title={`${getDisplayDomain()}/${businessSlug}`}
                                 >
-                                    {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                    {getDisplayDomain()}/{businessSlug}
                                 </span>
                                 {copied ? <Check className="w-4 h-4 ml-2 text-green-500" /> : <Copy className="w-4 h-4 ml-2" />}
                             </div>
@@ -482,9 +487,9 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                                 >
                                     <span
                                         className="truncate"
-                                        title={`${process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/${businessSlug}`}
+                                        title={`${getDisplayDomain()}/${businessSlug}`}
                                     >
-                                        {process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com"}/{businessSlug}
+                                        {getDisplayDomain()}/{businessSlug}
                                     </span>
                                     {copied ? <Check className="w-3.5 h-3.5 ml-1.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 ml-1.5" />}
                                 </div>

@@ -282,6 +282,29 @@ export async function proxy(request: NextRequest) {
         return supabaseResponse;
     }
 
+    // --- REVIEW CAPTURE DOMAINS ---
+    const reviewDomains = [
+        "collectratings.com",
+        "www.collectratings.com",
+        "ratingcollect.com",
+        "www.ratingcollect.com"
+    ];
+
+    if (reviewDomains.includes(hostname)) {
+        // Redirect root to main marketing site
+        if (pathname === "/") {
+            return createResponse(
+                NextResponse.redirect(new URL(`https://${rootDomain}`, request.url))
+            );
+        }
+
+        // Rewrite everything else to the /r/[slug] review path
+        console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
+        return createResponse(
+            NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
+        );
+    }
+
     // --- ROOT DOMAIN (domain) ---
     if (hostname === rootDomain || hostname === `www.${rootDomain}`) {
         // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
