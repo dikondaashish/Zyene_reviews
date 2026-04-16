@@ -291,11 +291,9 @@ export async function proxy(request: NextRequest) {
     ];
 
     if (reviewDomains.includes(hostname)) {
-        // Redirect root to main marketing site
+        // Leave the root empty (return 404 or just simple text) to prevent users from finding the platform
         if (pathname === "/") {
-            return createResponse(
-                NextResponse.redirect(new URL(`https://${rootDomain}`, request.url))
-            );
+            return new NextResponse("", { status: 404 });
         }
 
         // Rewrite everything else to the /r/[slug] review path
