@@ -46,6 +46,22 @@ export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
 export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
 
 /**
+ * Browser-facing origin for the signed-in app (dashboard, integrations, etc.).
+ * In production this should be `https://app.<ROOT_DOMAIN>` via NEXT_PUBLIC_APP_URL.
+ */
+export function getAppBaseUrl(): string {
+    return NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
+}
+
+export function getAppDashboardUrl(): string {
+    return `${getAppBaseUrl()}/dashboard`;
+}
+
+export function getAppIntegrationsUrl(): string {
+    return `${getAppBaseUrl()}/integrations`;
+}
+
+/**
  * Cookie domain: "localhost" for dev, ".yourdomain.com" for prod.
  */
 export const COOKIE_DOMAIN = ROOT_DOMAIN.includes("localhost")

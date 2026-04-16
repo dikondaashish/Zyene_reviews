@@ -32,6 +32,9 @@ export default function MarketingLayout({
                         <Link href="#pricing" className="hover:text-primary transition-colors">
                             Pricing
                         </Link>
+                        <Link href="/docs" className="hover:text-primary transition-colors">
+                            Docs
+                        </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-primary transition-colors">
                             Log In
                         </Link>
@@ -78,6 +81,7 @@ export default function MarketingLayout({
                     <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
                         <Link href="#features" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
                         <Link href="#pricing" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
+                        <Link href="/docs" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Docs</Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2">
                             Log In
                         </Link>
@@ -139,6 +143,7 @@ export default function MarketingLayout({
                             <ul className="space-y-2 text-sm text-[#c5c0b1]">
                                 <li><Link href="/#features" className="hover:text-[#fffefb]">Features</Link></li>
                                 <li><Link href="/#pricing" className="hover:text-[#fffefb]">Pricing</Link></li>
+                                <li><Link href="/docs" className="hover:text-[#fffefb]">Docs</Link></li>
                                 <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-[#fffefb]">Log In</Link></li>
                             </ul>
                         </div>

@@ -1,6 +1,7 @@
-import { DocToc, TocItem } from "@/components/docs/doc-toc";
-import { Copy } from "lucide-react";
 import Link from "next/link";
+import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
+import { DocToc, type TocItem } from "@/components/docs/doc-toc";
+import { getAppBaseUrl, getAppIntegrationsUrl } from "@/config/env";
 
 type Endpoint = {
     method: "GET" | "POST";
@@ -9,91 +10,112 @@ type Endpoint = {
     example: string;
 };
 
-const endpoints: Endpoint[] = [
-    {
-        method: "POST",
-        path: "/api/v1/requests/send",
-        description: "Send a review request via SMS/link using your API key.",
-        example: `curl -X POST "$BASE_URL/api/v1/requests/send" \\
+function buildEndpoints(apiOrigin: string): Endpoint[] {
+    const base = apiOrigin.replace(/\/$/, "");
+    return [
+        {
+            method: "POST",
+            path: "/api/v1/requests/send",
+            description: "Send a review request via SMS or email using your API key.",
+            example: `curl -X POST "${base}/api/v1/requests/send" \\
   -H "X-API-Key: zy_..." \\
   -H "Content-Type: application/json" \\
   -d '{"customerName":"Alex","customerPhone":"+18165551234","channel":"sms"}'`,
-    },
-    {
-        method: "GET",
-        path: "/api/v1/reviews",
-        description: "List public reviews for your connected business.",
-        example: `curl "$BASE_URL/api/v1/reviews?page=1&limit=20&status=pending&minRating=4" \\
+        },
+        {
+            method: "GET",
+            path: "/api/v1/reviews",
+            description: "List reviews for the business linked to your API key (supports pagination and filters).",
+            example: `curl "${base}/api/v1/reviews?page=1&limit=20&status=pending&minRating=4" \\
   -H "X-API-Key: zy_..."`,
-    },
-    {
-        method: "GET",
-        path: "/api/v1/analytics",
-        description: "Get review/request analytics summary.",
-        example: `curl "$BASE_URL/api/v1/analytics?days=30" \\
+        },
+        {
+            method: "GET",
+            path: "/api/v1/analytics",
+            description: "Aggregate review and request activity for a time window.",
+            example: `curl "${base}/api/v1/analytics?days=30" \\
   -H "X-API-Key: zy_..."`,
-    },
-];
+        },
+    ];
+}
 
 export default function DeveloperApiDocsPage() {
+    const apiOrigin = getAppBaseUrl();
+    const endpoints = buildEndpoints(apiOrigin);
     const tocItems: TocItem[] = [
         { title: "Authentication", href: "#authentication" },
+        { title: "Base URL", href: "#base-url" },
         { title: "Endpoints", href: "#endpoints" },
     ];
 
     return (
         <div className="flex w-full items-start">
-            <main className="flex-1 w-full max-w-3xl min-w-0 py-8 px-6 lg:px-12 prose-docs">
-                <div className="flex items-center text-sm text-muted-foreground mb-4">
-                    Developer Platform 
-                    <span className="mx-2">&gt;</span> 
-                    <span className="text-foreground font-medium">API Reference</span>
+            <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
+                <div className="mb-4 flex items-center text-sm text-muted-foreground">
+                    Developer Platform
+                    <span className="mx-2">&gt;</span>
+                    <span className="font-medium text-foreground">API Reference</span>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                    <h1 className="mb-0 mt-0">Developer API</h1>
-                    <button className="hidden md:flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors shadow-sm text-foreground">
-                        <Copy className="h-3.5 w-3.5" />
-                        Copy page
-                    </button>
+                <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-start">
+                    <div id="doc-page-content" className="min-w-0 flex-1">
+                        <h1 className="mb-0 mt-0">Developer API</h1>
+                        <p className="text-muted-foreground">
+                            These routes are implemented in this application. Examples use{" "}
+                            <code className="text-foreground">{apiOrigin}</code> from{" "}
+                            <code className="text-foreground">NEXT_PUBLIC_APP_URL</code> (your deployed app origin).
+                        </p>
+
+                        <h2 id="authentication">Authentication</h2>
+                        <p>
+                            Create or rotate a key under{" "}
+                            <strong>Integrations → Developer API</strong> in the dashboard. Send it on every request as{" "}
+                            <code>X-API-Key: zy_…</code> or <code>Authorization: Bearer zy_…</code>.
+                        </p>
+
+                        <h2 id="base-url">Base URL</h2>
+                        <p>
+                            Point clients at the same host that serves your dashboard (for example <code>{apiOrigin}</code>).
+                            Cross-origin calls from browsers must satisfy the API CORS rules configured for your deployment.
+                        </p>
+
+                        <h2 id="endpoints">Endpoints</h2>
+                        <div className="not-prose mt-8 space-y-6">
+                            {endpoints.map((ep) => (
+                                <section key={ep.path} className="rounded-xl border border-border bg-card p-4 shadow-sm">
+                                    <div className="mb-3 flex items-center gap-3">
+                                        <span
+                                            className={`rounded px-2.5 py-1 text-xs font-bold ${
+                                                ep.method === "POST"
+                                                    ? "bg-primary/10 text-primary"
+                                                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                            }`}
+                                        >
+                                            {ep.method}
+                                        </span>
+                                        <code className="font-mono text-sm font-medium text-foreground">{ep.path}</code>
+                                    </div>
+                                    <p className="mb-4 text-sm text-muted-foreground">{ep.description}</p>
+                                    <pre className="overflow-x-auto rounded-lg border border-border bg-muted p-3 text-xs">
+                                        <code className="font-mono text-muted-foreground">{ep.example}</code>
+                                    </pre>
+                                </section>
+                            ))}
+                        </div>
+
+                        <p className="mt-12 border-t border-border pt-6 text-sm text-muted-foreground">
+                            Need a new key? Open{" "}
+                            <Link
+                                href={getAppIntegrationsUrl()}
+                                className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+                            >
+                                Integrations
+                            </Link>{" "}
+                            in the app (you must be signed in).
+                        </p>
+                    </div>
+                    <DocCopyPageButton containerId="doc-page-content" className="shrink-0" />
                 </div>
-
-                <h2 id="authentication">Authentication</h2>
-                <p>
-                    Use your API key from your project settings. Send it via the `X-API-Key` header or as a standard `Authorization: Bearer &lt;key&gt;` token format in your requests.
-                </p>
-
-                <h2 id="endpoints">Endpoints</h2>
-                <div className="mt-8 space-y-6 not-prose">
-                    {endpoints.map((ep) => (
-                        <section key={ep.path} className="rounded-xl border bg-card p-4 shadow-sm">
-                            <div className="flex items-center gap-3 mb-3">
-                                <span
-                                    className={`rounded px-2.5 py-1 text-xs font-bold ${
-                                        ep.method === "POST"
-                                            ? "bg-primary/10 text-primary"
-                                            : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
-                                    }`}
-                                >
-                                    {ep.method}
-                                </span>
-                                <code className="text-sm font-mono text-foreground font-medium">{ep.path}</code>
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-4">{ep.description}</p>
-                            <pre className="overflow-x-auto rounded-lg bg-muted border border-border p-3 text-xs">
-                                <code className="text-muted-foreground font-mono">{ep.example}</code>
-                            </pre>
-                        </section>
-                    ))}
-                </div>
-
-                <p className="mt-12 text-sm text-muted-foreground border-t border-border pt-6">
-                    Need support? Go to{" "}
-                    <Link href="/integrations" className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors">
-                        Integrations
-                    </Link>{" "}
-                    and regenerate your key if needed.
-                </p>
             </main>
 
             <DocToc items={tocItems} />

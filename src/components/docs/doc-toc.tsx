@@ -55,7 +55,7 @@ export function DocToc({ items }: { items: TocItem[] }) {
                         >
                             {item.title}
                         </Link>
-                    )
+                    );
                 })}
             </div>
             
