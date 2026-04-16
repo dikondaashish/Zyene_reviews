@@ -58,9 +58,11 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
     // Branding from API (may override prop values if fresher)
     const [apiLogoUrl, setApiLogoUrl] = useState<string | null>(null);
     const [apiBrandColor, setApiBrandColor] = useState<string | null>(null);
+    const [apiPageBg, setApiPageBg] = useState<string | null>(null);
 
     const logoUrl = apiLogoUrl ?? businessLogoUrl ?? null;
     const resolvedColor = resolveBrandColor(apiBrandColor ?? brandColor);
+    const resolvedBgColor = apiPageBg ?? "#ffffff";
 
     const fetchQRCode = async () => {
         setLoading(true);
@@ -73,6 +75,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             setReviewUrl(data.reviewUrl);
             if (data.logoUrl) setApiLogoUrl(data.logoUrl);
             if (data.brandColor) setApiBrandColor(data.brandColor);
+            if (data.reviewPageBackgroundColor) setApiPageBg(data.reviewPageBackgroundColor);
         } catch {
             setError(true);
         } finally {
@@ -95,6 +98,8 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             toast.error("Failed to copy");
         }
     };
+
+    const GOOGLE_G_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRjMCAzLjg4LjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==";
 
     /* ───────── Branded Download (Canvas) ───────── */
     const handleDownload = () => {
@@ -119,10 +124,10 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             ctx.roundRect(x, y, w, h, r);
         };
 
-        const drawCard = (logo: HTMLImageElement | null) => {
+        const drawCard = (logo: HTMLImageElement | null, googleIcon: HTMLImageElement) => {
             // — Outer card with subtle shadow illusion
             roundRect(0, 0, W, H, 24);
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = resolvedBgColor;
             ctx.fill();
 
             // — Top accent strip
@@ -143,7 +148,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
             // — Inner border
             roundRect(20, 20, W - 40, H - 40, 16);
-            ctx.strokeStyle = "#e5e5e5";
+            ctx.strokeStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.3)";
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
@@ -165,14 +170,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             }
 
             // — Business name
-            ctx.fillStyle = "#111111";
+            ctx.fillStyle = contrastText(resolvedBgColor);
             ctx.font = "bold 28px 'Inter', 'Segoe UI', system-ui, sans-serif";
             ctx.textAlign = "center";
             ctx.fillText(businessName, W / 2, cursorY + 28);
             cursorY += 52;
 
             // — Divider line
-            ctx.strokeStyle = "#e5e5e5";
+            ctx.strokeStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.3)";
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(60, cursorY);
@@ -180,19 +185,29 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             ctx.stroke();
             cursorY += 20;
 
-            // — CTA pill
-            const ctaText = "Scan to Leave Us a Review";
-            ctx.font = "600 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            // — CTA pill (with Google Icon)
+            const ctaText = "Scan to Leave Us a Google Review";
+            ctx.font = "600 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
             const ctaMetrics = ctx.measureText(ctaText);
-            const pillW = ctaMetrics.width + 40;
-            const pillH = 36;
+            const iconSize = 22;
+            const gap = 8;
+            const innerW = iconSize + gap + ctaMetrics.width;
+            const pillW = innerW + 56;
+            const pillH = 46;
             const pillX = (W - pillW) / 2;
             roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
             ctx.fillStyle = accent;
             ctx.fill();
+
+            // Draw Google Icon
+            const iconX = pillX + 28;
+            const iconY = cursorY + (pillH - iconSize) / 2;
+            ctx.drawImage(googleIcon, iconX, iconY, iconSize, iconSize);
+
+            // Draw text
             ctx.fillStyle = accentFg;
-            ctx.textAlign = "center";
-            ctx.fillText(ctaText, W / 2, cursorY + 24);
+            ctx.textAlign = "left";
+            ctx.fillText(ctaText, iconX + iconSize + gap, cursorY + 28);
             cursorY += pillH + 24;
 
             // — QR Code
@@ -201,9 +216,9 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                 const qrSize = 300;
                 const qrX = (W - qrSize) / 2;
 
-                // QR container with rounded border
+                // QR container with rounded border (always white so code is scannable)
                 roundRect(qrX - 12, cursorY - 12, qrSize + 24, qrSize + 24, 16);
-                ctx.strokeStyle = "#e5e5e5";
+                ctx.strokeStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.3)";
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
                 ctx.fillStyle = "#ffffff";
@@ -214,14 +229,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                 cursorY += qrSize + 28;
 
                 // — URL text
-                ctx.fillStyle = "#888888";
+                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#888888" : "rgba(255,255,255,0.7)";
                 ctx.font = "14px 'Inter', 'Segoe UI', system-ui, sans-serif";
                 ctx.textAlign = "center";
                 ctx.fillText(`${rootDomain}/${businessSlug}`, W / 2, cursorY);
                 cursorY += 30;
 
                 // — Powered by Zyene
-                ctx.fillStyle = "#aaaaaa";
+                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#aaaaaa" : "rgba(255,255,255,0.5)";
                 ctx.font = "bold 11px 'Inter', 'Segoe UI', system-ui, sans-serif";
                 ctx.fillText("Powered by Zyene", W / 2, cursorY);
 
@@ -237,16 +252,21 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             qrImg.src = qrDataUrl;
         };
 
-        // Load logo first (if available), then draw
-        if (logoUrl) {
-            const logoImg = new Image();
-            logoImg.crossOrigin = "anonymous";
-            logoImg.onload = () => drawCard(logoImg);
-            logoImg.onerror = () => drawCard(null); // Fallback: render without logo
-            logoImg.src = logoUrl;
-        } else {
-            drawCard(null);
-        }
+        // Load images
+        const googleImg = new Image();
+        googleImg.crossOrigin = "anonymous";
+        googleImg.onload = () => {
+            if (logoUrl) {
+                const logoImg = new Image();
+                logoImg.crossOrigin = "anonymous";
+                logoImg.onload = () => drawCard(logoImg, googleImg);
+                logoImg.onerror = () => drawCard(null, googleImg);
+                logoImg.src = logoUrl;
+            } else {
+                drawCard(null, googleImg);
+            }
+        };
+        googleImg.src = GOOGLE_G_SVG;
     };
 
     /* ───────── Branded Print (HTML popup) ───────── */
@@ -278,11 +298,11 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             align-items: center;
                             justify-content: center;
                             min-height: 100vh;
-                            background: #f5f5f5;
+                            background: ${resolvedBgColor};
                             padding: 24px;
                         }
                         .card {
-                            background: #ffffff;
+                            background: ${resolvedBgColor};
                             border-radius: 24px;
                             overflow: hidden;
                             max-width: 420px;
@@ -310,28 +330,36 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                         .biz-name {
                             font-size: 24px;
                             font-weight: 700;
-                            color: #111;
+                            color: ${contrastText(resolvedBgColor)};
                             margin-bottom: 16px;
                         }
                         .divider {
                             height: 1px;
-                            background: #e5e5e5;
+                            background: ${resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.2)"};
                             margin: 0 20px 20px;
                         }
                         .cta-pill {
-                            display: inline-block;
-                            padding: 8px 24px;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 10px;
+                            padding: 10px 28px;
                             border-radius: 999px;
                             background: ${accent};
                             color: ${accentFg};
                             font-weight: 600;
-                            font-size: 14px;
+                            font-size: 15px;
                             margin-bottom: 24px;
+                        }
+                        .cta-pill img {
+                            width: 22px;
+                            height: 22px;
                         }
                         .qr-frame {
                             display: inline-block;
-                            border: 1.5px solid #e5e5e5;
+                            border: 1.5px solid ${resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.3)"};
                             border-radius: 16px;
+                            background: #ffffff;
                             padding: 12px;
                             margin-bottom: 20px;
                         }
@@ -342,14 +370,14 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             display: block;
                         }
                         .url {
-                            color: #888;
+                            color: ${resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#888" : "rgba(255,255,255,0.7)"};
                             font-size: 13px;
                             margin-bottom: 20px;
                         }
                         .powered {
                             font-weight: 700;
                             font-size: 11px;
-                            color: #aaa;
+                            color: ${resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#aaa" : "rgba(255,255,255,0.5)"};
                             margin-bottom: 8px;
                         }
                         @page {
@@ -357,7 +385,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                         }
                         @media print {
                             body { 
-                                background: #fff; 
+                                background: ${resolvedBgColor}; 
                                 padding: 1.5cm; 
                                 -webkit-print-color-adjust: exact;
                                 print-color-adjust: exact;
@@ -377,7 +405,10 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             ${logoHtml}
                             <div class="biz-name">${businessName}</div>
                             <div class="divider"></div>
-                            <div class="cta-pill">Scan to Leave Us a Review</div>
+                            <div class="cta-pill">
+                                <img src="${GOOGLE_G_SVG}" alt="Google" />
+                                <span>Scan to Leave Us a Google Review</span>
+                            </div>
                             <div class="qr-frame">
                                 <img src="${qrDataUrl}" alt="QR Code" />
                             </div>

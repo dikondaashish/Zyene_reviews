@@ -54,7 +54,7 @@ export async function GET(
     // Fetch branding fields
     const { data: brandingData } = await supabase
         .from("businesses")
-        .select("logo_url, brand_color")
+        .select("logo_url, brand_color, review_page_background_color")
         .eq("id", businessId)
         .single();
 
@@ -71,6 +71,7 @@ export async function GET(
             reviewUrl,
             logoUrl: brandingData?.logo_url ?? null,
             brandColor: brandingData?.brand_color ?? null,
+            reviewPageBackgroundColor: brandingData?.review_page_background_color ?? null,
         });
     } catch (error) {
         console.error("QR generation error:", error);
