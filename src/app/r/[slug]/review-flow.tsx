@@ -702,7 +702,7 @@ export function PublicReviewFlow({
                             <ArrowLeft className="h-3.5 w-3.5" />
                             Back
                         </button>
-                        {googleUrl && isPreview && (
+                        {googleUrl && (
                             <a
                                 href={googleUrl}
                                 target="_blank"
