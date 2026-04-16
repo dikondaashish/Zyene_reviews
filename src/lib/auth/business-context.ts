@@ -30,13 +30,16 @@ export async function getGoogleQaUnavailableForActiveBusiness(businessId: string
  * Validates that the business belongs to the current user's organization.
  * Falls back to the first business if no valid cookie is set.
  */
-export async function getActiveBusinessId(): Promise<{
+export async function getActiveBusinessId(options?: {
+    skipCache?: boolean;
+}): Promise<{
     businessId: string | null;
     business: BusinessContextBusiness | null;
     organization: BusinessContextOrganization | null;
     businesses: BusinessContextBusiness[];
 }> {
     const supabase = await createClient();
+    const skipCache = options?.skipCache === true;
 
     const {
         data: { user },
@@ -51,16 +54,18 @@ export async function getActiveBusinessId(): Promise<{
     let organization: BusinessContextOrganization | null = null;
     let businesses: BusinessContextBusiness[] = [];
 
-    try {
-        const { redis } = await import("@/lib/db/redis");
-        const cached = await redis.get(cacheKey);
-        if (cached) {
-            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-            organization = (parsed.organization as BusinessContextOrganization | null) ?? null;
-            businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
+    if (!skipCache) {
+        try {
+            const { redis } = await import("@/lib/db/redis");
+            const cached = await redis.get(cacheKey);
+            if (cached) {
+                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+                organization = (parsed.organization as BusinessContextOrganization | null) ?? null;
+                businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
+            }
+        } catch (e) {
+            console.error("Redis cache error:", e);
         }
-    } catch (e) {
-        console.error("Redis cache error:", e);
     }
 
     if (!organization || businesses.length === 0) {
@@ -125,7 +130,7 @@ export async function getActiveBusinessId(): Promise<{
             businesses = organization.businesses.filter((business) => business.status !== "archived");
         }
 
-        if (organization) {
+        if (organization && !skipCache) {
             try {
                 const { redis } = await import("@/lib/db/redis");
                 await redis.set(cacheKey, JSON.stringify({ organization, businesses }), { ex: 300 }); // 5 min TTL

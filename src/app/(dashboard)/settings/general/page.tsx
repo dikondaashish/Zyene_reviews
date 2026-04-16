@@ -20,7 +20,7 @@ export default async function GeneralSettingsPage() {
         redirect("/login");
     }
 
-    const { organization } = await getActiveBusinessId();
+    const { organization } = await getActiveBusinessId({ skipCache: true });
 
     let canEditOrganizationName = false;
     if (organization?.id) {

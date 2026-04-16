@@ -63,12 +63,16 @@ export function GeneralSettingsForm({
                 if (!trimmed) {
                     throw new Error("Organization name cannot be empty");
                 }
-                const { error } = await supabase
+                const { data, error } = await supabase
                     .from("organizations")
                     .update({ name: trimmed })
+                    .select("id")
                     .eq("id", organization.id);
 
                 if (error) throw error;
+                if (!data || data.length === 0) {
+                    throw new Error("Organization update was not applied. Please check your permissions.");
+                }
             }
 
             toast.success("Settings updated successfully");
