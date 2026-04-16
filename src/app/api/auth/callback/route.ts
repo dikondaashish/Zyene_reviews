@@ -17,6 +17,7 @@ import type {
 } from "@/types/api-routes";
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
+import { inngest } from "@/services/inngest/client";
 
 function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): string | null {
     const raw = user.user_metadata?.phone;
@@ -281,6 +282,15 @@ export async function GET(request: Request) {
                         },
                         { onConflict: "business_id,user_id" }
                     );
+
+                    try {
+                        await inngest.send({
+                            name: "google-seo-aeo/sync.run",
+                            data: { businessId: newBusiness.id, trigger: "onboarding" },
+                        });
+                    } catch (e) {
+                        console.error("[Auth Callback] Failed to queue Google SEO/AEO sync:", e);
+                    }
                 }
 
                 // If the OAuth switched to a DIFFERENT auth user (different Google account),
@@ -560,6 +570,14 @@ export async function GET(request: Request) {
                         } else if (newPlatform?.id) {
                             await reattachOrphanedGoogleReviews(admin, businessId, newPlatform.id);
                             await refreshGoogleReviewRollupsFromDb(admin, businessId, newPlatform.id);
+                            try {
+                                await inngest.send({
+                                    name: "google-seo-aeo/sync.run",
+                                    data: { businessId, trigger: "onboarding" },
+                                });
+                            } catch (e) {
+                                console.error("[Auth Callback] Failed to queue Google SEO/AEO sync:", e);
+                            }
                         }
                     }
 

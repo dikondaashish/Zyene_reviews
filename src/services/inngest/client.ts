@@ -56,6 +56,27 @@ type CronGooglePerformanceRunEvent = {
     };
 };
 
+type GoogleSeoAeoAiVisibilityRunEvent = {
+    data: {
+        businessId: string;
+        query: string;
+    };
+};
+
+type GoogleSeoAeoHeatmapRunEvent = {
+    data: {
+        businessId: string;
+        keyword: string;
+    };
+};
+
+type GoogleSeoAeoSyncRunEvent = {
+    data: {
+        businessId: string;
+        trigger: "manual" | "onboarding";
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -65,6 +86,9 @@ type Events = {
     "cron/follow-up.campaign": FollowUpEvent;
     "review/auto-reply": AutoReplyEvent;
     "cron/google-performance.run": CronGooglePerformanceRunEvent;
+    "google-seo-aeo/ai-visibility.run": GoogleSeoAeoAiVisibilityRunEvent;
+    "google-seo-aeo/heatmap.run": GoogleSeoAeoHeatmapRunEvent;
+    "google-seo-aeo/sync.run": GoogleSeoAeoSyncRunEvent;
 };
 
 // Create a client to send and receive events

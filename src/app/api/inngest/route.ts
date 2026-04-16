@@ -11,6 +11,9 @@ import {
     weeklyDigestWorker,
     followUpWorker,
     syncGooglePerformanceWorker,
+    googleSeoAeoAiVisibilityWorker,
+    googleSeoAeoHeatmapWorker,
+    googleSeoAeoSyncWorker,
 } from "@/services/inngest/sync-worker";
 
 /**
@@ -43,6 +46,9 @@ export const { GET, POST, PUT } = serve({
         weeklyDigestWorker,
         followUpWorker,
         syncGooglePerformanceWorker,
+        googleSeoAeoAiVisibilityWorker,
+        googleSeoAeoHeatmapWorker,
+        googleSeoAeoSyncWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

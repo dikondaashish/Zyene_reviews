@@ -228,6 +228,11 @@ export function AppSidebar({
             tourTarget: "tour-analytics-nav",
         },
         {
+            title: (dict.nav as Record<string, string>).google_seo_aeo || "Google SEO/AEO",
+            url: "/google-seo-aeo",
+            icon: Globe,
+        },
+        {
             title: dict.nav.integrations,
             url: "/integrations",
             icon: Plug,
