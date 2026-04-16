@@ -453,8 +453,8 @@ export default async function AnalyticsPage({
                             <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20 overflow-hidden">
+                        <div className="flex flex-col gap-6">
+                            <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20 overflow-hidden">
                                 <CardHeader className="pb-2">
                                     <div className="space-y-1">
                                         <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -468,8 +468,8 @@ export default async function AnalyticsPage({
                                     <GooglePerformanceProfileChart data={perfSeries} />
                                 </CardContent>
                             </Card>
-                            
-                            <EngagementFunnelCard 
+
+                            <EngagementFunnelCard
                                 profileViews={perfTotals?.profileViews ?? 0}
                                 websiteClicks={perfTotals?.websiteClicks ?? 0}
                                 callClicks={perfTotals?.callClicks ?? 0}
