@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -11,9 +12,10 @@ import {
     Code2,
     RefreshCw,
     Loader2,
-    ExternalLink,
     Eye,
     EyeOff,
+    BookOpen,
+    Terminal,
 } from "lucide-react";
 import {
     AlertDialog,
@@ -27,6 +29,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { BASE_URL, getAppBaseUrl } from "@/config/env";
 
 interface DeveloperApiCardProps {
     businessId: string;
@@ -36,8 +39,14 @@ interface DeveloperApiCardProps {
 export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperApiCardProps) {
     const [apiKey, setApiKey] = useState(initialKey || null);
     const [copied, setCopied] = useState(false);
+    const [baseCopied, setBaseCopied] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [showKey, setShowKey] = useState(false);
+
+    const apiBase = getAppBaseUrl();
+    const docsRoot = BASE_URL;
+    const docsApiUrl = `${docsRoot}/docs/api`;
+    const docsCookbookUrl = `${docsRoot}/docs/cookbook`;
 
     const handleCopy = () => {
         if (!apiKey) return;
@@ -45,6 +54,13 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
         setCopied(true);
         toast.success("API key copied to clipboard");
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleCopyBaseUrl = () => {
+        navigator.clipboard.writeText(apiBase);
+        setBaseCopied(true);
+        toast.success("API base URL copied");
+        setTimeout(() => setBaseCopied(false), 2000);
     };
 
     const handleGenerate = async () => {
@@ -149,6 +165,39 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                     )}
                 </div>
 
+                {/* Base URL + auth — customers need this for curl / Postman */}
+                <div className="rounded-lg border bg-muted/20 p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            API base URL
+                        </span>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-muted-foreground"
+                            onClick={handleCopyBaseUrl}
+                        >
+                            {baseCopied ? (
+                                <Check className="h-3.5 w-3.5 text-green-600" />
+                            ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                            )}
+                            <span className="ml-1.5">Copy</span>
+                        </Button>
+                    </div>
+                    <code className="block break-all rounded-md bg-background/80 px-2 py-1.5 font-mono text-[11px] text-foreground ring-1 ring-border/60">
+                        {apiBase}
+                    </code>
+                    <p className="text-[11px] leading-relaxed text-muted-foreground">
+                        Send <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">X-API-Key: zy_…</code> or{" "}
+                        <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">Authorization: Bearer zy_…</code>.
+                        Successful JSON looks like{" "}
+                        <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">{`{ "success": true, "data": … }`}</code>.
+                        Prefer calling the API from your server so the key never ships to browsers.
+                    </p>
+                </div>
+
                 {/* Endpoints */}
                 <div>
                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 block">
@@ -173,38 +222,48 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-between gap-2 pt-0">
-                {apiKey && (
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                                <RefreshCw className="mr-2 h-3.5 w-3.5" />
-                                Regenerate Key
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Regenerate API Key?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This will invalidate your current API key. Any applications using it
-                                    will stop working until updated with the new key.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleGenerate}>
-                                    Regenerate
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                )}
-                <a href="/docs/api" className="ml-auto">
-                    <Button variant="outline" size="sm">
-                        <ExternalLink className="mr-2 h-3.5 w-3.5" />
-                        Full Documentation
+            <CardFooter className="flex flex-col gap-3 border-t bg-muted/5 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-2">
+                    {apiKey && (
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="ghost" size="sm" className="text-muted-foreground">
+                                    <RefreshCw className="mr-2 h-3.5 w-3.5" />
+                                    Regenerate Key
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Regenerate API Key?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This will invalidate your current API key. Any applications using it
+                                        will stop working until updated with the new key.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleGenerate}>
+                                        Regenerate
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    )}
+                </div>
+                <div className="flex flex-wrap items-center justify-end gap-2 sm:ml-auto">
+                    <Button variant="outline" size="sm" asChild>
+                        <Link href={docsCookbookUrl} target="_blank" rel="noopener noreferrer">
+                            <Terminal className="mr-2 h-3.5 w-3.5" />
+                            Cookbook
+                        </Link>
                     </Button>
-                </a>
+                    <Button variant="outline" size="sm" asChild>
+                        <Link href={docsApiUrl} target="_blank" rel="noopener noreferrer">
+                            <BookOpen className="mr-2 h-3.5 w-3.5" />
+                            Full Documentation
+                        </Link>
+                    </Button>
+                </div>
             </CardFooter>
         </Card>
     );
