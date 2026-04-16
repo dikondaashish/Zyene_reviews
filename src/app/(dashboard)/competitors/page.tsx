@@ -282,15 +282,19 @@ export default async function CompetitorsPage({
         yourReviewsInRange: ownRatings.length,
         marketAvgReviewGain: (() => {
             const gains = competitorsList.map((c) => {
-                const rows = snapshotRowsTyped
-                    .filter((s) => s.competitor_id === c.id)
+                const meaningful = snapshotRowsTyped
+                    .filter(
+                        (s) =>
+                            s.competitor_id === c.id &&
+                            (Number(s.total_reviews) > 0 || Number(s.average_rating) > 0)
+                    )
                     .sort(
                         (a, b) =>
                             new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime()
                     );
-                if (rows.length < 2) return null;
-                const first = rows[0];
-                const last = rows[rows.length - 1];
+                if (meaningful.length < 2) return null;
+                const first = meaningful[0];
+                const last = meaningful[meaningful.length - 1];
                 return Number(last.total_reviews) - Number(first.total_reviews);
             });
             const nums = gains.filter((g): g is number => g !== null);

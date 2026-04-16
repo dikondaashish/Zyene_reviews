@@ -422,6 +422,7 @@ export function CompetitorsList({
                 </div>
             </div>
 
+            {ownSearchKeywords.length > 0 && (
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -429,59 +430,44 @@ export function CompetitorsList({
                         Your Google search terms
                     </CardTitle>
                     <CardDescription>
-                        Monthly search impressions for <strong>your</strong> listing (from Google Business Profile
-                        Performance). Rival businesses do not share their private search-keyword data; compare using
-                        categories and positioning below instead.
+                        Monthly search impressions for your listing from Google Business Profile.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {ownSearchKeywords.length === 0 ? (
+                    {keywordDiscoverySplit.directPct + keywordDiscoverySplit.discoveryPct > 0 ? (
                         <p className="text-sm text-muted-foreground">
-                            No keyword data yet. Connect Google and run a performance sync from Integrations, or open{" "}
-                            <Link href="/analytics" className="text-primary underline underline-offset-2">
-                                Analytics
-                            </Link>{" "}
-                            after data has synced.
+                            <span className="font-medium text-foreground">
+                                {keywordDiscoverySplit.discoveryPct}% discovery
+                            </span>{" "}
+                            vs{" "}
+                            <span className="font-medium text-foreground">
+                                {keywordDiscoverySplit.directPct}% name/brand
+                            </span>
                         </p>
-                    ) : (
-                        <>
-                            {keywordDiscoverySplit.directPct + keywordDiscoverySplit.discoveryPct > 0 ? (
-                                <p className="text-sm text-muted-foreground">
-                                    Rough split (by impressions):{" "}
-                                    <span className="font-medium text-foreground">
-                                        {keywordDiscoverySplit.discoveryPct}% discovery
-                                    </span>{" "}
-                                    vs{" "}
-                                    <span className="font-medium text-foreground">
-                                        {keywordDiscoverySplit.directPct}% name/brand
-                                    </span>{" "}
-                                    — heuristic based on whether the query contains your business name tokens.
-                                </p>
-                            ) : null}
-                            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {ownSearchKeywords.slice(0, 12).map((k) => (
-                                    <li
-                                        key={`${k.monthStart}-${k.keyword}`}
-                                        className="flex items-center justify-between gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
-                                    >
-                                        <span className="truncate font-medium" title={k.keyword}>
-                                            {k.keyword}
-                                        </span>
-                                        <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                                            {k.impressions.toLocaleString()} imp.
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-                            <p className="text-xs text-muted-foreground">
-                                <Link href="/analytics" className="text-primary underline underline-offset-2">
-                                    View full keyword list in Analytics
-                                </Link>
-                            </p>
-                        </>
-                    )}
+                    ) : null}
+                    <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {ownSearchKeywords.slice(0, 12).map((k) => (
+                            <li
+                                key={`${k.monthStart}-${k.keyword}`}
+                                className="flex items-center justify-between gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
+                            >
+                                <span className="truncate font-medium" title={k.keyword}>
+                                    {k.keyword}
+                                </span>
+                                <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                                    {k.impressions.toLocaleString()} imp.
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="text-xs text-muted-foreground">
+                        <Link href="/analytics" className="text-primary underline underline-offset-2">
+                            View full keyword list in Analytics
+                        </Link>
+                    </p>
                 </CardContent>
             </Card>
+            )}
 
             <Card>
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
@@ -491,8 +477,7 @@ export function CompetitorsList({
                             AI market positioning brief
                         </CardTitle>
                         <CardDescription>
-                            Gemini synthesizes your Google search-term data and public competitor listing fields we
-                            store. It cannot access competitors&apos; private Business Profile analytics.
+                            Competitive analysis based on your search terms and public listing data.
                         </CardDescription>
                     </div>
                     {competitors.length > 0 ? (
@@ -556,14 +541,16 @@ export function CompetitorsList({
                                     </ul>
                                 </div>
                             ) : null}
-                            {marketBriefLatest.data_limitations ? (
-                                <p className="text-[11px] text-muted-foreground border-t pt-3">
-                                    {marketBriefLatest.data_limitations}
-                                </p>
-                            ) : null}
-                            <p className="text-[11px] text-muted-foreground">
-                                {marketBriefLatest.model ? `${marketBriefLatest.model} · ` : null}
-                                Generated <TimeAgo date={marketBriefLatest.created_at} />
+                            <p className="text-[11px] text-muted-foreground border-t pt-3">
+                                AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
+                                {marketBriefLatest.data_limitations ? (
+                                    <span
+                                        className="ml-1.5 cursor-help border-b border-dotted border-muted-foreground/50"
+                                        title={marketBriefLatest.data_limitations}
+                                    >
+                                        ℹ limitations
+                                    </span>
+                                ) : null}
                             </p>
                         </>
                     )}
@@ -988,19 +975,15 @@ export function CompetitorsList({
                         </CardContent>
                     </Card>
 
+                    {latestInsightByCompetitor.size > 0 && (
                     <Card className="col-span-1 md:col-span-2">
                         <CardHeader>
                             <CardTitle>AI Competitor Insights</CardTitle>
                             <CardDescription>
-                                Latest Gemini-generated insights from recent competitor movement.
+                                Latest AI-generated insights from recent competitor movement.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {latestInsightByCompetitor.size === 0 ? (
-                                <p className="text-sm text-muted-foreground">
-                                    Insights will appear automatically after movement is detected.
-                                </p>
-                            ) : (
                                 <div className="grid gap-3 sm:grid-cols-2">
                                     {competitors
                                         .map((c) => ({ competitor: c, insight: latestInsightByCompetitor.get(c.id) }))
@@ -1064,9 +1047,9 @@ export function CompetitorsList({
                                             );
                                         })}
                                 </div>
-                            )}
                         </CardContent>
                     </Card>
+                    )}
 
                     <Card className="col-span-1 md:col-span-2">
                         <CardHeader>

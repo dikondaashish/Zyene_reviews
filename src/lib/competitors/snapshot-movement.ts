@@ -32,9 +32,11 @@ export function computeCompetitorMovementRows(
         const rows = (byCompetitor.get(c.id) || [])
             .slice()
             .sort((a, b) => new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime());
-        const first = rows[0];
-        const last = rows[rows.length - 1];
-        if (!first || !last) {
+
+        const meaningful = rows.filter((r) => Number(r.total_reviews) > 0 || Number(r.average_rating) > 0);
+        const first = meaningful[0];
+        const last = meaningful[meaningful.length - 1];
+        if (!first || !last || meaningful.length < 2) {
             return {
                 competitorId: c.id,
                 name: c.name,
@@ -48,7 +50,7 @@ export function computeCompetitorMovementRows(
             name: c.name,
             ratingDelta: Number(last.average_rating) - Number(first.average_rating),
             reviewsDelta: Number(last.total_reviews) - Number(first.total_reviews),
-            hasBaseline: rows.length > 1,
+            hasBaseline: true,
         };
     });
 }

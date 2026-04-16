@@ -15,7 +15,7 @@ describe("snapshot-movement", () => {
     ]);
   });
 
-  it("single snapshot: zero deltas, no baseline", () => {
+  it("single meaningful snapshot: null deltas, no baseline", () => {
     const rows = computeCompetitorMovementRows(
       [{ id: "a", name: "A" }],
       [
@@ -27,8 +27,31 @@ describe("snapshot-movement", () => {
         },
       ]
     );
-    expect(rows[0].ratingDelta).toBe(0);
-    expect(rows[0].reviewsDelta).toBe(0);
+    expect(rows[0].ratingDelta).toBeNull();
+    expect(rows[0].reviewsDelta).toBeNull();
+    expect(rows[0].hasBaseline).toBe(false);
+  });
+
+  it("ignores zero-value seed snapshots when computing deltas", () => {
+    const rows = computeCompetitorMovementRows(
+      [{ id: "a", name: "A" }],
+      [
+        {
+          competitor_id: "a",
+          captured_at: "2026-01-01T00:00:00.000Z",
+          average_rating: 0,
+          total_reviews: 0,
+        },
+        {
+          competitor_id: "a",
+          captured_at: "2026-01-05T00:00:00.000Z",
+          average_rating: 4.2,
+          total_reviews: 9702,
+        },
+      ]
+    );
+    expect(rows[0].ratingDelta).toBeNull();
+    expect(rows[0].reviewsDelta).toBeNull();
     expect(rows[0].hasBaseline).toBe(false);
   });
 
