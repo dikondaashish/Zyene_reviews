@@ -141,15 +141,15 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
     return (
         <div className="animate-in fade-in duration-500">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                <div className="space-y-2">
+            <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                <div className="space-y-1">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="p-2 bg-primary/10 rounded-xl border border-primary/20">
-                            <Users className="h-5 w-5 text-primary" />
+                        <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
+                            <Users className="h-4 w-4 text-primary" />
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Customers</h1>
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground">Customers</h1>
                     </div>
-                    <p className="text-muted-foreground text-lg font-medium">
+                    <p className="text-sm text-muted-foreground">
                         Manage your customer database and trigger review campaigns.
                     </p>
                 </div>
@@ -158,50 +158,50 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     <Button 
                         variant="outline" 
                         onClick={() => setIsImportModalOpen(true)}
-                        className="rounded-2xl border-border h-11 px-5 font-semibold text-muted-foreground hover:bg-muted/50 transition-all flex items-center gap-2 cursor-pointer"
+                        className="h-9 rounded-lg border-border px-4 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50"
                     >
                         <Upload className="h-4 w-4" />
                         Import CSV
                     </Button>
                     <Button 
                         onClick={() => setIsAddModalOpen(true)}
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl h-11 px-6 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+                        className="h-9 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90"
                     >
-                        <UserPlus className="h-4.5 w-4.5" />
+                        <UserPlus className="h-4 w-4" />
                         Add Customer
                     </Button>
                 </div>
             </div>
 
             {/* Quick Stats / Overview Banner */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-primary" />
+            <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-3">
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
+                        <Users className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Customers</p>
-                        <h3 className="text-2xl font-bold text-foreground">{customerStats.totalCustomers}</h3>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Total Customers</p>
+                        <h3 className="text-xl font-semibold text-foreground">{customerStats.totalCustomers}</h3>
                     </div>
                 </div>
-                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                        <RefreshCcw className="h-6 w-6 text-emerald-600" />
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
+                        <RefreshCcw className="h-4 w-4 text-emerald-600" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Requests Total</p>
-                        <h3 className="text-2xl font-bold text-foreground">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Requests Total</p>
+                        <h3 className="text-xl font-semibold text-foreground">
                             {customerStats.totalRequests}
                         </h3>
                     </div>
                 </div>
-                <div className="bg-card p-6 rounded-3xl border border-border flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-amber-600" />
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
+                        <Users className="h-4 w-4 text-amber-600" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Loyal Customers</p>
-                        <h3 className="text-2xl font-bold text-foreground">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Loyal Customers</p>
+                        <h3 className="text-xl font-semibold text-foreground">
                             {customerStats.loyalCustomers}
                         </h3>
                     </div>

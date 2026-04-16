@@ -95,7 +95,6 @@ export function ZyenePlatformAnalytics({
     privateFeedback,
     dateRange,
 }: ZyenePlatformAnalyticsProps) {
-    const BAR_COLOR = "#c5c0b1";
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
@@ -160,11 +159,11 @@ export function ZyenePlatformAnalytics({
     }));
     const maxRatingCount = Math.max(...ratingDist.map((d) => d.count), 1);
     const ratingColors: Record<number, string> = {
-        5: BAR_COLOR,
-        4: BAR_COLOR,
-        3: BAR_COLOR,
-        2: BAR_COLOR,
-        1: BAR_COLOR,
+        5: "#10b981",
+        4: "#34d399",
+        3: "#f59e0b",
+        2: "var(--primary)",
+        1: "#ef4444",
     };
 
     // ── Popular Tags ───────────────────────────────────────────────────
@@ -288,7 +287,7 @@ export function ZyenePlatformAnalytics({
                     </div>
 
                     {/* Funnel flow bar */}
-                    <div className="mt-6 h-3 w-full bg-muted/30 rounded-full overflow-hidden flex">
+                    <div className="mt-6 h-3 w-full bg-[#c5c0b1] rounded-full overflow-hidden flex">
                         {funnelSteps.map((step, idx) => {
                             const widthPct = totalSent > 0 ? (step.count / totalSent) * 100 : 0;
                             return (
@@ -299,7 +298,7 @@ export function ZyenePlatformAnalytics({
                                     transition={{ duration: 1, delay: 0.3 + idx * 0.1, ease: "easeOut" }}
                                     className="h-full first:rounded-l-full last:rounded-r-full"
                                     style={{
-                                        backgroundColor: BAR_COLOR,
+                                        backgroundColor: step.color,
                                         opacity: 1 - idx * 0.12,
                                     }}
                                 />
@@ -572,30 +571,27 @@ export function ZyenePlatformAnalytics({
                                         </div>
                                     </div>
                                     {/* Stacked progress bar */}
-                                    <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden flex">
+                                    <div className="h-2 w-full bg-[#c5c0b1] rounded-full overflow-hidden flex">
                                         <div
-                                            className="h-full rounded-l-full transition-all duration-700"
+                                            className="h-full bg-primary rounded-l-full transition-all duration-700"
                                             style={{
-                                                backgroundColor: BAR_COLOR,
                                                 width: `${ch.sent > 0 ? (ch.completed / ch.sent) * 100 : 0}%`,
                                             }}
                                         />
                                         <div
-                                            className="h-full transition-all duration-700"
+                                            className="h-full bg-primary/40 transition-all duration-700"
                                             style={{
-                                                backgroundColor: BAR_COLOR,
                                                 width: `${ch.sent > 0 ? ((ch.clicked - ch.completed) / ch.sent) * 100 : 0}%`,
-                                                opacity: 0.65,
                                             }}
                                         />
                                     </div>
                                     <div className="flex items-center gap-4 text-[10px] font-semibold text-muted-foreground">
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BAR_COLOR }} />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                                             {ch.completed} completed
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BAR_COLOR, opacity: 0.65 }} />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
                                             {ch.clicked - ch.completed} clicked only
                                         </span>
                                     </div>
@@ -631,7 +627,7 @@ export function ZyenePlatformAnalytics({
                         {ratingDist.map((d) => (
                             <div key={d.star} className="flex items-center gap-3">
                                 <span className="text-sm font-bold w-8 text-right">{d.star}</span>
-                                <div className="flex-1 h-6 bg-muted/20 rounded-lg overflow-hidden">
+                                <div className="flex-1 h-6 bg-[#c5c0b1] rounded-lg overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{
@@ -642,7 +638,7 @@ export function ZyenePlatformAnalytics({
                                         style={{ backgroundColor: ratingColors[d.value] }}
                                     >
                                         {d.count > 0 && (
-                                            <span className="text-[10px] font-bold text-[#2b251d]">
+                                            <span className="text-[10px] font-bold text-white">
                                                 {d.count}
                                             </span>
                                         )}

@@ -1103,9 +1103,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1158,11 +1158,16 @@ export function CompetitorsList({
                                                         );
                                                     }}
                                                 />
-                                                <Bar dataKey="rating" radius={[4, 4, 0, 0]} maxBarSize={52}>
+                                                <Bar
+                                                    dataKey="rating"
+                                                    radius={[4, 4, 0, 0]}
+                                                    maxBarSize={52}
+                                                    background={{ fill: "#c5c0b1", radius: 4 }}
+                                                >
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`rating-${index}`}
-                                                            fill="#c5c0b1"
+                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
                                                         />
                                                     ))}
                                                 </Bar>
@@ -1182,9 +1187,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1233,11 +1238,16 @@ export function CompetitorsList({
                                                         );
                                                     }}
                                                 />
-                                                <Bar dataKey="reviews" radius={[4, 4, 0, 0]} maxBarSize={52}>
+                                                <Bar
+                                                    dataKey="reviews"
+                                                    radius={[4, 4, 0, 0]}
+                                                    maxBarSize={52}
+                                                    background={{ fill: "#c5c0b1", radius: 4 }}
+                                                >
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`reviews-${index}`}
-                                                            fill="#c5c0b1"
+                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
                                                         />
                                                     ))}
                                                 </Bar>

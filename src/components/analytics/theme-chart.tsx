@@ -72,11 +72,17 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                             return null;
                         }}
                     />
-                    <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={24} minPointSize={2}>
+                    <Bar
+                        dataKey="count"
+                        radius={[0, 6, 6, 0]}
+                        barSize={24}
+                        minPointSize={2}
+                        background={{ fill: "#c5c0b1", radius: 6 }}
+                    >
                         {data.map((entry, index) => (
                             <Cell 
                                 key={`cell-${index}`} 
-                                fill="#c5c0b1" 
+                                fill={entry.sentimentScore >= 0 ? "#10b981" : "#f43f5e"} 
                                 fillOpacity={0.8}
                             />
                         ))}

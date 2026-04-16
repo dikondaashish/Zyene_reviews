@@ -268,14 +268,14 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
 
     return (
         <div className="w-full">
-            <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <Table>
-                    <TableHeader className="bg-muted/50">
+                    <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id} className="hover:bg-transparent border-border">
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="py-4 text-muted-foreground font-semibold h-auto">
+                                        <TableHead key={header.id} className="h-auto py-2.5 text-[12px] font-semibold text-muted-foreground">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -294,10 +294,10 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className="border-border transition-colors hover:bg-muted/30 data-[state=selected]:bg-primary/10"
+                                    className="border-border transition-colors hover:bg-muted/20 data-[state=selected]:bg-primary/10"
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="py-4 align-middle h-auto">
+                                        <TableCell key={cell.id} className="h-auto py-2.5 align-middle">
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
@@ -310,7 +310,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-32 text-center text-muted-foreground"
+                                    className="h-24 text-center text-muted-foreground"
                                 >
                                     No customers found.
                                 </TableCell>
@@ -319,8 +319,8 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between space-x-2 py-6">
-                <div className="text-sm text-muted-foreground font-medium">
+            <div className="flex items-center justify-between space-x-2 py-3">
+                <div className="text-xs text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
@@ -330,7 +330,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                         size="sm"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
-                        className="rounded-xl border-border text-muted-foreground font-medium h-9 px-4 transition-all hover:bg-muted"
+                        className="h-8 rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted"
                     >
                         Previous
                     </Button>
@@ -339,7 +339,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
-                        className="rounded-xl border-border text-muted-foreground font-medium h-9 px-4 transition-all hover:bg-muted"
+                        className="h-8 rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted"
                     >
                         Next
                     </Button>
