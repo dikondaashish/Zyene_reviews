@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { getAppBaseUrl, getAppIntegrationsUrl } from "@/config/env";
@@ -96,9 +97,7 @@ export default function DeveloperApiDocsPage() {
                                         <code className="font-mono text-sm font-medium text-foreground">{ep.path}</code>
                                     </div>
                                     <p className="mb-4 text-sm text-muted-foreground">{ep.description}</p>
-                                    <pre className="overflow-x-auto rounded-lg border border-border bg-muted p-3 text-xs">
-                                        <code className="font-mono text-muted-foreground">{ep.example}</code>
-                                    </pre>
+                                    <DocCodeBlock code={ep.example} language="bash" className="my-0" />
                                 </section>
                             ))}
                         </div>

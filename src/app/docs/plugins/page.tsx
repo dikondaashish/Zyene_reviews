@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
 
 export default function DocsPluginsPage() {
+    const embedBase = `${BASE_URL}/w`;
     const toc: TocItem[] = [
         { title: "Embeds", href: "#embeds" },
         { title: "Automations", href: "#automations" },
@@ -28,13 +30,15 @@ export default function DocsPluginsPage() {
 
                         <h2 id="embeds">Embeds</h2>
                         <p>
-                            Carousel and badge widgets load from your deployment host (for example{" "}
-                            <code>
-                                {BASE_URL}
-                                /w/...
-                            </code>
-                            ). Use the in-app Integrations experience to copy the exact snippet for each business.
+                            Carousel and badge widgets load from your deployment host. Replace <code>your-business-slug</code> with
+                            the slug from Settings; copy the full iframe snippet from{" "}
+                            <strong>Integrations</strong> for pixel-perfect embed options.
                         </p>
+                        <DocCodeBlock
+                            language="bash"
+                            code={`# Example widget base URL (iframe src uses the same origin + path)
+${embedBase}/your-business-slug`}
+                        />
 
                         <h2 id="automations">Automations</h2>
                         <p>

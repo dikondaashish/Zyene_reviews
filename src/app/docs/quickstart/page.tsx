@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { getAppBaseUrl, getAppIntegrationsUrl } from "@/config/env";
@@ -51,10 +52,11 @@ export default function DocsQuickstartPage() {
 
                         <h2 id="first-request">First request</h2>
                         <p>List recent reviews:</p>
-                        <pre className="not-prose overflow-x-auto rounded-lg border border-border bg-muted p-3 text-xs">
-                            <code className="font-mono text-muted-foreground">{`curl "${base}/api/v1/reviews?page=1&limit=5" \\
-  -H "X-API-Key: zy_..."`}</code>
-                        </pre>
+                        <DocCodeBlock
+                            language="bash"
+                            code={`curl "${base}/api/v1/reviews?page=1&limit=5" \\
+  -H "X-API-Key: zy_..."`}
+                        />
                         <p>
                             Then read the{" "}
                             <Link href="/docs/api" className="text-primary underline underline-offset-4">
