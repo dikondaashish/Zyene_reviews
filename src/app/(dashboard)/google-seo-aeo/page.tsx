@@ -18,8 +18,41 @@ type AuditItem = {
     label: string;
     status: "pass" | "fail" | "pending";
     detail: string;
-    fixHref: string;
 };
+
+type AuditFixAction = {
+    href: string;
+    label: string;
+};
+
+function getAuditFixAction(auditId: string): AuditFixAction {
+    switch (auditId) {
+        case "business-description":
+            return { href: "/google-seo-aeo#description-optimizer", label: "Optimize" };
+        case "review-frequency":
+            return { href: "/campaigns", label: "Create campaign" };
+        case "google-rating":
+            return { href: "/requests", label: "Request reviews" };
+        case "review-replies":
+            return { href: "/reviews", label: "Reply now" };
+        case "profile-performance":
+            return { href: "/analytics", label: "View analytics" };
+        case "images":
+            return { href: "/settings/business-information#photos", label: "Add photos" };
+        case "post-frequency":
+            return { href: "/settings/business-information#posts", label: "Manage posts" };
+        case "post-keywords":
+            return { href: "/settings/business-information#posts", label: "Optimize posts" };
+        case "services-list":
+            return { href: "/settings/business-information#services", label: "Update services" };
+        case "service-descriptions":
+            return { href: "/settings/business-information#services", label: "Edit descriptions" };
+        case "service-area":
+            return { href: "/settings/business-information#service-area", label: "Edit area" };
+        default:
+            return { href: "/settings/business-information", label: "Fix" };
+    }
+}
 
 function calcKeywordCoverage(description: string, keywords: string[]): number {
     const low = description.toLowerCase();
@@ -136,28 +169,24 @@ export default async function GoogleSeoAeoPage() {
                 listingDescription.length === 0
                     ? "No Google description found."
                     : `${keywordCoverage} target keywords found in description.`,
-            fixHref: "/settings/business-information",
         },
         {
             id: "review-frequency",
             label: "Review Frequency (30d)",
             status: reviews.length >= 10 ? "pass" : "fail",
             detail: `${reviews.length} Google reviews in last 30 days.`,
-            fixHref: "/campaigns",
         },
         {
             id: "google-rating",
             label: "Google Rating",
             status: Number(platform.average_rating || 0) >= 4.2 ? "pass" : "fail",
             detail: `${Number(platform.average_rating || 0).toFixed(1)} / 5`,
-            fixHref: "/reviews",
         },
         {
             id: "review-replies",
             label: "Review Replies (30d)",
             status: replyRate >= 0.8 ? "pass" : "fail",
             detail: `${Math.round(replyRate * 100)}% replied (${responded}/${reviews.length})`,
-            fixHref: "/reviews",
         },
         {
             id: "profile-performance",
@@ -167,49 +196,42 @@ export default async function GoogleSeoAeoPage() {
                     ? "pass"
                     : "fail",
             detail: `${perfTotals?.profileViews?.toLocaleString() || 0} profile views`,
-            fixHref: "/analytics",
         },
         {
             id: "images",
             label: "# of Images",
             status: "pending",
             detail: "Not measured yet (Google media audit pending implementation).",
-            fixHref: "/settings/business-information",
         },
         {
             id: "post-frequency",
             label: "Post Frequency",
             status: "pending",
             detail: "Not measured yet (Google posts audit pending implementation).",
-            fixHref: "/settings/business-information",
         },
         {
             id: "post-keywords",
             label: "Post Keyword Optimization",
             status: "pending",
             detail: "Not measured yet (post keyword parsing pending implementation).",
-            fixHref: "/settings/business-information",
         },
         {
             id: "services-list",
             label: "Action Links Coverage (proxy)",
             status: inferredServicesCount >= auditMinServicesTarget ? "pass" : "fail",
             detail: `Detected ${inferredServicesCount} place action links (proxy signal). Target: ${auditMinServicesTarget}+`,
-            fixHref: "/settings/business-information",
         },
         {
             id: "service-descriptions",
             label: "Service Descriptions",
             status: "pending",
             detail: "Not measured yet (service description sync pending implementation).",
-            fixHref: "/settings/business-information",
         },
         {
             id: "service-area",
             label: "Service Area",
             status: "pending",
             detail: "Not measured yet (service area distance audit pending implementation).",
-            fixHref: "/settings/business-information",
         },
     ];
 
@@ -322,19 +344,26 @@ export default async function GoogleSeoAeoPage() {
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-1">{a.detail}</p>
                             </div>
+                            {(() => {
+                                const fixAction = getAuditFixAction(a.id);
+                                return (
                             <Button asChild size="sm" variant="outline">
-                                <Link href={a.fixHref}>Fix</Link>
+                                <Link href={fixAction.href}>{fixAction.label}</Link>
                             </Button>
+                                );
+                            })()}
                         </div>
                     ))}
                 </CardContent>
             </Card>
 
-            <DescriptionOptimizerCard
-                businessId={businessId}
-                currentDescription={listingDescription}
-                topKeywords={topKeywordList}
-            />
+            <div id="description-optimizer">
+                <DescriptionOptimizerCard
+                    businessId={businessId}
+                    currentDescription={listingDescription}
+                    topKeywords={topKeywordList}
+                />
+            </div>
 
             <Card>
                 <CardHeader>
