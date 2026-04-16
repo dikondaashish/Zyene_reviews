@@ -20,6 +20,7 @@ import {
     MonitorPlay
 } from "lucide-react";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
+import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 
 // ── Brand Icons ──
 
@@ -108,7 +109,7 @@ export default async function IntegrationsPage() {
     }
 
     // Get active business from context
-    const { business } = await getActiveBusinessId();
+    const { business, organization } = await getActiveBusinessId();
 
     if (!business) {
         return (
@@ -141,6 +142,10 @@ export default async function IntegrationsPage() {
         yelpPlatform,
         facebookPlatform,
     ].filter((p) => !!p);
+    const canUsePublicWidget = planAllowsPublicReviewWidget(
+        (organization as any)?.plan ?? null,
+        (organization as any)?.plan_status ?? null
+    );
     const connectedCount = connectedPlatforms.length;
 
     const totalReviews = connectedPlatforms.reduce(
@@ -282,20 +287,24 @@ export default async function IntegrationsPage() {
                 </div>
             </section>
 
-            {/* ── Divider ── */}
-            <hr className="border-border/50" />
+            {canUsePublicWidget && (
+                <>
+                    {/* ── Divider ── */}
+                    <hr className="border-border/50" />
 
-            {/* ── Section 3: Website Elements ── */}
-            <section className="space-y-5">
-                <SectionHeader
-                    title="Website Elements"
-                    description="Embed your top reviews directly on your own website"
-                    icon={MonitorPlay}
-                />
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-                    <WidgetCard businessSlug={business.slug || ""} />
-                </div>
-            </section>
+                    {/* ── Section 3: Website Elements ── */}
+                    <section className="space-y-5">
+                        <SectionHeader
+                            title="Website Elements"
+                            description="Embed your top reviews directly on your own website"
+                            icon={MonitorPlay}
+                        />
+                        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+                            <WidgetCard businessSlug={business.slug || ""} />
+                        </div>
+                    </section>
+                </>
+            )}
         </div>
     );
 }

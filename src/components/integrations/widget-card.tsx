@@ -1,28 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Code2 } from "lucide-react";
+import { Check, Copy, Code2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 export function WidgetCard({ businessSlug }: { businessSlug: string }) {
-    const [copied, setCopied] = useState(false);
+    const [copiedType, setCopiedType] = useState<"carousel" | "badge" | null>(null);
+    const [previewType, setPreviewType] = useState<"carousel" | "badge" | null>(null);
 
     // Always use the public apex domain for iframes — app.* requires login and redirects to auth.* (breaks embeds).
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
     const protocol = rootDomain.includes("localhost") ? "http" : "https";
     const embedBase = `${protocol}://${rootDomain}`;
     const embedUrl = `${embedBase}/w/${businessSlug}`;
+    const carouselPreviewUrl = embedUrl;
+    const badgePreviewUrl = `${embedUrl}?type=badge`;
 
-    const embedCode = `<iframe src="${embedUrl}" width="100%" height="400px" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>`;
+    const carouselEmbedCode = `<iframe src="${embedUrl}" width="100%" height="400px" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>`;
+    const badgeEmbedCode = `<iframe src="${embedUrl}?type=badge" style="width: 100%; border: none; min-height: 300px;" title="Reviews Widget"></iframe>`;
 
-    const handleCopy = async () => {
+    const handleCopy = async (type: "carousel" | "badge") => {
+        const code = type === "badge" ? badgeEmbedCode : carouselEmbedCode;
         try {
-            await navigator.clipboard.writeText(embedCode);
-            setCopied(true);
+            await navigator.clipboard.writeText(code);
+            setCopiedType(type);
             toast.success("Embed code copied to clipboard");
-            setTimeout(() => setCopied(false), 2000);
+            setTimeout(() => setCopiedType(null), 2000);
         } catch (err) {
             toast.error("Failed to copy code");
         }
@@ -35,32 +47,76 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                     <Code2 className="h-6 w-6" />
                 </div>
                 <div>
-                    <CardTitle className="text-xl">Website Carousel</CardTitle>
-                    <CardDescription>Embed your best 4.5+ star reviews</CardDescription>
+                    <CardTitle className="text-xl">Website Widgets</CardTitle>
+                    <CardDescription>Embed a review carousel or rating badge</CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                    Showcase your top reviews directly on your website to build trust and increase conversions. It updates automatically.
+                    Showcase your top reviews directly on your website to build trust and increase conversions. Both widgets update automatically.
                 </p>
 
                 <div className="space-y-2 mt-auto">
-                    <div className="relative group/code">
-                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono relative">
-                            {embedCode}
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Carousel embed</p>
+                    <div className="space-y-2">
+                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono">
+                            {carouselEmbedCode}
                         </pre>
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity"
-                            onClick={handleCopy}
-                        >
-                            {copied ? <Check className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />}
-                            {copied ? "Copied" : "Copy"}
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setPreviewType("carousel")}>
+                                <Eye className="mr-1 h-4 w-4" />
+                                Preview
+                            </Button>
+                            <Button variant="secondary" size="sm" onClick={() => handleCopy("carousel")}>
+                                {copiedType === "carousel" ? <Check className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />}
+                                {copiedType === "carousel" ? "Copied" : "Copy"}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Badge embed</p>
+                    <div className="space-y-2">
+                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono">
+                            {badgeEmbedCode}
+                        </pre>
+                        <div className="flex items-center justify-end gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setPreviewType("badge")}>
+                                <Eye className="mr-1 h-4 w-4" />
+                                Preview
+                            </Button>
+                            <Button variant="secondary" size="sm" onClick={() => handleCopy("badge")}>
+                                {copiedType === "badge" ? <Check className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />}
+                                {copiedType === "badge" ? "Copied" : "Copy"}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </CardContent>
+
+            <Dialog open={previewType !== null} onOpenChange={(open) => !open && setPreviewType(null)}>
+                <DialogContent className="sm:max-w-5xl">
+                    <DialogHeader>
+                        <DialogTitle>
+                            {previewType === "badge" ? "Badge Widget Preview" : "Carousel Widget Preview"}
+                        </DialogTitle>
+                        <DialogDescription>
+                            Live preview of your embeddable widget for this business.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="w-full overflow-hidden rounded-lg border border-border bg-background">
+                        {previewType ? (
+                            <iframe
+                                src={previewType === "badge" ? badgePreviewUrl : carouselPreviewUrl}
+                                title={previewType === "badge" ? "Badge preview" : "Carousel preview"}
+                                className="w-full border-0"
+                                style={{ minHeight: previewType === "badge" ? 360 : 440 }}
+                            />
+                        ) : null}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </Card>
     );
 }

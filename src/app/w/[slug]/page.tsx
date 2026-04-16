@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
+import { ReviewBadge } from "@/components/widgets/review-badge";
 import { notFound } from "next/navigation";
 import { AccessError } from "@/components/public/access-error";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
@@ -12,10 +13,14 @@ export const dynamic = "force-dynamic";
  */
 export default async function WidgetPage({
     params,
+    searchParams,
 }: {
     params: Promise<{ slug: string }>;
+    searchParams?: Promise<{ type?: string }>;
 }) {
     const { slug } = await params;
+    const resolvedSearch = searchParams ? await searchParams : undefined;
+    const widgetType = (resolvedSearch?.type || "carousel").toLowerCase();
     const admin = createAdminClient();
 
     const { data: business } = await admin
@@ -23,6 +28,8 @@ export default async function WidgetPage({
         .select(`
             id,
             name,
+            average_rating,
+            total_reviews,
             organization:organizations (
                 plan,
                 plan_status
@@ -67,9 +74,26 @@ export default async function WidgetPage({
         created_at: r.created_at,
     }));
 
+    const reviewCount = Number((business as { total_reviews?: number | null }).total_reviews ?? 0);
+    const averageRatingFromBusiness = Number((business as { average_rating?: number | null }).average_rating ?? 0);
+    const averageRating =
+        averageRatingFromBusiness > 0
+            ? averageRatingFromBusiness
+            : formattedReviews.length > 0
+            ? formattedReviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) / formattedReviews.length
+            : 5;
+
     return (
         <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0">
-            <ReviewCarousel reviews={formattedReviews} businessName={business.name ?? "Reviews"} />
+            {widgetType === "badge" ? (
+                <ReviewBadge
+                    businessName={business.name ?? "Reviews"}
+                    avgRating={averageRating}
+                    totalReviews={reviewCount}
+                />
+            ) : (
+                <ReviewCarousel reviews={formattedReviews} businessName={business.name ?? "Reviews"} />
+            )}
         </div>
     );
 }
