@@ -352,9 +352,21 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             color: #aaa;
                             margin-bottom: 8px;
                         }
+                        @page {
+                            margin: 0;
+                        }
                         @media print {
-                            body { background: #fff; padding: 0; }
-                            .card { box-shadow: none; max-width: 100%; }
+                            body { 
+                                background: #fff; 
+                                padding: 1.5cm; 
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                            .card { 
+                                box-shadow: none; 
+                                max-width: 100%; 
+                                border: none;
+                            }
                         }
                     </style>
                 </head>

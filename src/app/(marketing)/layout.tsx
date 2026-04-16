@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, X } from "lucide-react";
 import { useState } from "react";
@@ -19,9 +20,26 @@ export default function MarketingLayout({
                 <div className="container mx-auto flex h-16 min-w-0 max-w-full items-center justify-between gap-2 px-4 sm:px-8 max-w-7xl">
                     <Link
                         href="/"
-                        className="flex min-w-0 shrink-0 items-center gap-2 font-bold text-xl text-foreground"
+                        className="flex min-w-0 shrink-0 items-center gap-2 group"
                     >
-                        <span className="text-primary">Zyene</span> Reviews
+                        <div className="flex aspect-square size-9 items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60 group-hover:ring-primary/50 transition-colors">
+                            <Image
+                                src="/Main%20logo.png"
+                                alt="Zyene Reviews logo"
+                                width={36}
+                                height={36}
+                                className="h-full w-full object-cover"
+                                priority
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="font-bold text-xl text-foreground leading-none tracking-tight">
+                                <span className="text-primary">Zyene</span> Reviews
+                            </span>
+                            <span className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase leading-none mt-1">
+                                Grow local to global
+                            </span>
+                        </div>
                     </Link>
 
                     {/* Desktop Nav */}
