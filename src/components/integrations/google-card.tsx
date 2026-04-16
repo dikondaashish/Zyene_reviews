@@ -51,6 +51,7 @@ import type {
     ApiErrorResponse,
     GoogleLocationSelectorResponse,
 } from "@/types/components";
+import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
 
 interface GoogleCardProps {
     platform?: {
@@ -103,8 +104,14 @@ function timeAgo(date: string) {
 
 export function GoogleIntegrationCard({ platform, businessId, businessName }: GoogleCardProps) {
     const router = useRouter();
-    const [isSyncing, setIsSyncing] = useState(false);
+    const [isPosting, setIsPosting] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
+    const { remoteStatus, isSyncBusy, markManualSyncStarted } = useGoogleSyncRemoteState({
+        businessId,
+        initialSyncStatus: platform?.sync_status ?? null,
+        initialLastSyncedAt: platform?.last_synced_at ?? null,
+    });
+    const syncButtonBusy = isPosting || isSyncBusy;
     const [mounted, setMounted] = useState(false);
     const [isPickingLocation, setIsPickingLocation] = useState(false);
     const [isLoadingLocations, setIsLoadingLocations] = useState(false);
@@ -201,7 +208,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
 
     const handleSync = async (force = false) => {
         if (!platform) return;
-        setIsSyncing(true);
+        setIsPosting(true);
         try {
             const res = await fetch("/api/sync/google", { 
                 method: "POST",
@@ -230,25 +237,25 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 toast.error(msg, { description: description || undefined, duration: 12_000 });
                 return;
             }
+            markManualSyncStarted();
             toast.success("Background sync started");
             router.refresh();
         } catch (err: unknown) {
             console.error("[Google Sync] Error:", err);
             toast.error(err instanceof Error ? err.message : "Failed to start sync");
         } finally {
-            setIsSyncing(false);
+            setIsPosting(false);
         }
     };
 
-    // Auto-polling when syncing
     useEffect(() => {
-        if (platform?.sync_status === "running") {
+        if (remoteStatus === "running") {
             const interval = setInterval(() => {
                 router.refresh();
-            }, 3000); // Poll every 3 seconds
+            }, 3000);
             return () => clearInterval(interval);
         }
-    }, [platform?.sync_status, router]);
+    }, [remoteStatus, router]);
 
     const handleDisconnect = async () => {
         if (!platform) return;
@@ -414,9 +421,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                         variant="secondary"
                         size="sm"
                         onClick={() => handleSync()}
-                        disabled={isSyncing || isDisconnecting || needsLocation}
+                        disabled={syncButtonBusy || isDisconnecting || needsLocation}
                     >
-                        {isSyncing ? (
+                        {syncButtonBusy ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
                             <RefreshCw className="mr-2 h-4 w-4" />

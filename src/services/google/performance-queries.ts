@@ -1,5 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+/** Local calendar YYYY-MM-DD — matches how GBP daily metrics are bucketed (avoid UTC day shift from toISOString). */
+export function formatLocalYmd(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+}
+
 /** Inclusive last N calendar days (local) for dashboard defaults. */
 export function dateRangeLastNDays(n: number): { start: Date; end: Date } {
     const end = new Date();
@@ -42,8 +50,8 @@ export async function getGooglePerformanceTotals(
     start: Date,
     end: Date
 ): Promise<GooglePerformanceTotals | null> {
-    const startStr = start.toISOString().slice(0, 10);
-    const endStr = end.toISOString().slice(0, 10);
+    const startStr = formatLocalYmd(start);
+    const endStr = formatLocalYmd(end);
 
     const { data, error } = await supabase
         .from("google_performance_metrics")
@@ -102,8 +110,8 @@ export async function getGooglePerformanceDailySeries(
     start: Date,
     end: Date
 ): Promise<DailyMetricPoint[]> {
-    const startStr = start.toISOString().slice(0, 10);
-    const endStr = end.toISOString().slice(0, 10);
+    const startStr = formatLocalYmd(start);
+    const endStr = formatLocalYmd(end);
 
     const { data, error } = await supabase
         .from("google_performance_metrics")

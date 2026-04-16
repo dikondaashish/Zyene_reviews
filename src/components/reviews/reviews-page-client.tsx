@@ -307,7 +307,7 @@ export function ReviewsPageClient({
                                         ? "Connect your Google Business Profile to import and manage your reviews."
                                         : "Try adjusting your filters or sync your reviews."}
                                 </p>
-                                <SyncButton />
+                                <SyncButton businessId={businessId} />
                             </div>
                         )}
                     </div>

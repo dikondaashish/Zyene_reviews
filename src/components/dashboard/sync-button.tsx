@@ -5,34 +5,37 @@ import { RefreshCw } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state"
 
 export function SyncButton({ businessId }: { businessId?: string }) {
-    const [isSyncing, setIsSyncing] = useState(false)
+    const [isPosting, setIsPosting] = useState(false)
     const [showForce, setShowForce] = useState(false)
     const router = useRouter()
+    const { isSyncBusy, markManualSyncStarted } = useGoogleSyncRemoteState({ businessId })
+
+    const busy = isPosting || isSyncBusy
 
     const handleSync = async (force = false) => {
-        setIsSyncing(true)
+        setIsPosting(true)
         if (force) setShowForce(false)
 
         try {
-            const res = await fetch("/api/sync/google", { 
+            const res = await fetch("/api/sync/google", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ businessId, force })
+                body: JSON.stringify({ businessId, force }),
             })
             const data = await res.json()
-            
+
             if (!res.ok) {
                 const msg = (data as { error?: string }).error || "Sync failed"
-                const code = (data as any).code
-                
-                // If conflict, show "Force" option
+                const code = (data as { code?: string }).code
+
                 if (res.status === 409 || code === "CONFLICT") {
                     setShowForce(true)
-                    toast.error("Sync already in progress", { 
+                    toast.error("Sync already in progress", {
                         description: "If it's been stuck for a while, try a Force Sync.",
-                        duration: 6000 
+                        duration: 6000,
                     })
                 } else {
                     const details = (data as { details?: string }).details
@@ -43,12 +46,13 @@ export function SyncButton({ businessId }: { businessId?: string }) {
                 return
             }
 
+            markManualSyncStarted()
             toast.success(force ? "Force sync started!" : "Sync started in background")
             router.refresh()
         } catch (error: unknown) {
             toast.error("Failed to sync reviews", { description: error instanceof Error ? error.message : undefined })
         } finally {
-            setIsSyncing(false)
+            setIsPosting(false)
         }
     }
 
@@ -59,10 +63,10 @@ export function SyncButton({ businessId }: { businessId?: string }) {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleSync(true)}
-                    disabled={isSyncing}
+                    disabled={busy}
                     className="animate-in fade-in slide-in-from-right-2"
                 >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
+                    <RefreshCw className={`mr-2 h-4 w-4 ${busy ? "animate-spin" : ""}`} />
                     Force Reset & Sync
                 </Button>
             )}
@@ -70,11 +74,11 @@ export function SyncButton({ businessId }: { businessId?: string }) {
                 variant={showForce ? "secondary" : "outline"}
                 size="sm"
                 onClick={() => handleSync(false)}
-                disabled={isSyncing}
+                disabled={busy}
                 className="bg-[#695be8] text-white hover:bg-[#5d50cf] border-[#695be8] hover:border-[#5d50cf]"
             >
-                <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
-                {isSyncing ? "Syncing..." : "Sync Reviews"}
+                <RefreshCw className={`mr-2 h-4 w-4 ${busy ? "animate-spin" : ""}`} />
+                {busy ? "Syncing..." : "Sync Reviews"}
             </Button>
         </div>
     )

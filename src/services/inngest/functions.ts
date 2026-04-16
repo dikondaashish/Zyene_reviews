@@ -14,6 +14,7 @@ import {
     hideGoogleReviewsRemovedFromSource,
 } from "@/services/google/sync-service";
 import { MAX_REVIEW_PAGES } from "@/services/google/constants";
+import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import {
     normalizeSentimentForDb,
     normalizeThemesForDb,
@@ -506,6 +507,18 @@ export const syncGoogleReviews = inngest.createFunction(
                     lastResp?.total,
                     lastResp?.avgRating
                 );
+            });
+
+            // Listing performance + search keywords (same data as daily cron `/api/cron/google-performance`)
+            await step.run("sync-google-performance", async () => {
+                const r = await syncGooglePerformanceForPlatform(platformId);
+                if (!r.success) {
+                    console.warn(
+                        `[Inngest] Google Business Profile performance sync failed for ${platformId}:`,
+                        r.error
+                    );
+                }
+                return r;
             });
 
             await step.run("enqueue-missing-analysis", async () => {

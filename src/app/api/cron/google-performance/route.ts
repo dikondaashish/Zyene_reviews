@@ -23,11 +23,14 @@ export async function GET(request: Request) {
 
     const admin = createAdminClient();
 
+    // Include healthy-ish rows: `idle` after review sync, `active` after token refresh / location save,
+    // `pending` from older rows. Skip `running` and anything `error*`.
     const { data: platforms, error } = await admin
         .from("review_platforms")
-        .select("id")
+        .select("id, sync_status")
         .eq("platform", "google")
-        .eq("sync_status", "active")
+        .neq("sync_status", "running")
+        .not("sync_status", "like", "error%")
         .not("google_location_id", "is", null);
 
     if (error) {
@@ -38,6 +41,13 @@ export async function GET(request: Request) {
 
     const results: Array<{
         platformId: string;
+        syncStatus?: string | null;
+        /** GBP Performance API + DB upsert (listing metrics / keywords) */
+        performanceOk: boolean;
+        performanceError?: string;
+        dailyRowsUpserted?: number;
+        keywordRowsUpserted?: number;
+        /** Legacy: true only if performance + phase2 Q&A both succeeded (for dashboards that assumed one flag) */
         ok: boolean;
         error?: string;
         daily?: number;
@@ -99,9 +109,16 @@ export async function GET(request: Request) {
                 Sentry.captureException(e);
             }
 
+            const performanceOk = r.success;
+            const combinedOk = r.success && (phase2?.ok ?? false);
             results.push({
                 platformId: p.id,
-                ok: r.success && (phase2?.ok ?? false),
+                syncStatus: (p as { sync_status?: string | null }).sync_status ?? null,
+                performanceOk,
+                performanceError: r.error,
+                dailyRowsUpserted: r.dailyRowsUpserted,
+                keywordRowsUpserted: r.keywordRowsUpserted,
+                ok: combinedOk,
                 error: [r.error, phase2?.error].filter(Boolean).join(" | ") || undefined,
                 daily: r.dailyRowsUpserted,
                 keywords: r.keywordRowsUpserted,
@@ -112,7 +129,12 @@ export async function GET(request: Request) {
             await new Promise((res) => setTimeout(res, 250));
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
-            results.push({ platformId: p.id, ok: false, error: msg });
+            results.push({
+                platformId: p.id,
+                performanceOk: false,
+                ok: false,
+                error: msg,
+            });
             Sentry.captureException(e);
         }
     }
