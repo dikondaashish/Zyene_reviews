@@ -95,6 +95,7 @@ export function ZyenePlatformAnalytics({
     privateFeedback,
     dateRange,
 }: ZyenePlatformAnalyticsProps) {
+    const BAR_COLOR = "#c5c0b1";
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
@@ -159,11 +160,11 @@ export function ZyenePlatformAnalytics({
     }));
     const maxRatingCount = Math.max(...ratingDist.map((d) => d.count), 1);
     const ratingColors: Record<number, string> = {
-        5: "#10b981",
-        4: "#34d399",
-        3: "#f59e0b",
-        2: "var(--primary)",
-        1: "#ef4444",
+        5: BAR_COLOR,
+        4: BAR_COLOR,
+        3: BAR_COLOR,
+        2: BAR_COLOR,
+        1: BAR_COLOR,
     };
 
     // ── Popular Tags ───────────────────────────────────────────────────
@@ -298,7 +299,7 @@ export function ZyenePlatformAnalytics({
                                     transition={{ duration: 1, delay: 0.3 + idx * 0.1, ease: "easeOut" }}
                                     className="h-full first:rounded-l-full last:rounded-r-full"
                                     style={{
-                                        backgroundColor: step.color,
+                                        backgroundColor: BAR_COLOR,
                                         opacity: 1 - idx * 0.12,
                                     }}
                                 />
@@ -573,25 +574,28 @@ export function ZyenePlatformAnalytics({
                                     {/* Stacked progress bar */}
                                     <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden flex">
                                         <div
-                                            className="h-full bg-primary rounded-l-full transition-all duration-700"
+                                            className="h-full rounded-l-full transition-all duration-700"
                                             style={{
+                                                backgroundColor: BAR_COLOR,
                                                 width: `${ch.sent > 0 ? (ch.completed / ch.sent) * 100 : 0}%`,
                                             }}
                                         />
                                         <div
-                                            className="h-full bg-primary/40 transition-all duration-700"
+                                            className="h-full transition-all duration-700"
                                             style={{
+                                                backgroundColor: BAR_COLOR,
                                                 width: `${ch.sent > 0 ? ((ch.clicked - ch.completed) / ch.sent) * 100 : 0}%`,
+                                                opacity: 0.65,
                                             }}
                                         />
                                     </div>
                                     <div className="flex items-center gap-4 text-[10px] font-semibold text-muted-foreground">
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BAR_COLOR }} />
                                             {ch.completed} completed
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
+                                            <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BAR_COLOR, opacity: 0.65 }} />
                                             {ch.clicked - ch.completed} clicked only
                                         </span>
                                     </div>
@@ -638,7 +642,7 @@ export function ZyenePlatformAnalytics({
                                         style={{ backgroundColor: ratingColors[d.value] }}
                                     >
                                         {d.count > 0 && (
-                                            <span className="text-[10px] font-bold text-white">
+                                            <span className="text-[10px] font-bold text-[#2b251d]">
                                                 {d.count}
                                             </span>
                                         )}

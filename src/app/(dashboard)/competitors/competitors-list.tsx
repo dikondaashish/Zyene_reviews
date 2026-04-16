@@ -469,14 +469,14 @@ export function CompetitorsList({
             </Card>
             )}
 
-            <Card className="border-[#3a2a2a] bg-[#201515] text-zinc-100">
+            <Card className="border-[#e7e2d7] bg-[#f9f7f3] text-zinc-900">
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-amber-400" />
+                            <Sparkles className="h-5 w-5 text-amber-600" />
                             AI market positioning brief
                         </CardTitle>
-                        <CardDescription className="text-zinc-300">
+                        <CardDescription className="text-zinc-600">
                             Competitive analysis based on your search terms and public listing data.
                         </CardDescription>
                     </div>
@@ -502,11 +502,11 @@ export function CompetitorsList({
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {competitors.length === 0 ? (
-                        <p className="text-sm text-zinc-300">
+                        <p className="text-sm text-zinc-600">
                             Add tracked competitors to generate a positioning brief.
                         </p>
                     ) : !marketBriefLatest ? (
-                        <p className="text-sm text-zinc-300">
+                        <p className="text-sm text-zinc-600">
                             Run once to get a concise comparison of how you show up versus competitors, grounded in
                             ratings, reviews, categories, and your top search queries.
                         </p>
@@ -514,7 +514,7 @@ export function CompetitorsList({
                         <>
                             <div>
                                 <h4 className="text-lg font-semibold leading-snug">{marketBriefLatest.headline}</h4>
-                                <p className="mt-2 text-sm text-zinc-300">{marketBriefLatest.overview}</p>
+                                <p className="mt-2 text-sm text-zinc-700">{marketBriefLatest.overview}</p>
                             </div>
                             {marketBriefLatest.positioning_bullets.length > 0 ? (
                                 <ul className="list-disc pl-5 space-y-1.5 text-sm">
@@ -532,20 +532,20 @@ export function CompetitorsList({
                                         {marketBriefLatest.opportunity_actions.map((a, i) => (
                                             <li
                                                 key={`${marketBriefLatest.id}-a-${i}`}
-                                                className="rounded-lg border border-[#4b3535] bg-[#2a1e1e] px-3 py-2 text-sm"
+                                                className="rounded-lg border border-[#e2ddcf] bg-[#f3f0e8] px-3 py-2 text-sm"
                                             >
                                                 <span className="font-medium">{a.title}</span>
-                                                <p className="mt-1 text-xs text-zinc-300">{a.detail}</p>
+                                                <p className="mt-1 text-xs text-zinc-600">{a.detail}</p>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             ) : null}
-                            <p className="border-t border-[#4b3535] pt-3 text-[11px] text-zinc-300">
+                            <p className="border-t border-[#e2ddcf] pt-3 text-[11px] text-zinc-600">
                                 AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
                                 {marketBriefLatest.data_limitations ? (
                                     <span
-                                        className="ml-1.5 cursor-help border-b border-dotted border-zinc-400/70"
+                                        className="ml-1.5 cursor-help border-b border-dotted border-zinc-500/70"
                                         title={marketBriefLatest.data_limitations}
                                     >
                                         ℹ limitations
@@ -1103,9 +1103,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1162,7 +1162,7 @@ export function CompetitorsList({
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`rating-${index}`}
-                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
+                                                            fill="#c5c0b1"
                                                         />
                                                     ))}
                                                 </Bar>
@@ -1182,9 +1182,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-[#c5c0b1] align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1237,7 +1237,7 @@ export function CompetitorsList({
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`reviews-${index}`}
-                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
+                                                            fill="#c5c0b1"
                                                         />
                                                     ))}
                                                 </Bar>

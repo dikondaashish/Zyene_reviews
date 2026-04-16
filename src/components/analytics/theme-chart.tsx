@@ -76,7 +76,7 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                         {data.map((entry, index) => (
                             <Cell 
                                 key={`cell-${index}`} 
-                                fill={entry.sentimentScore >= 0 ? "#10b981" : "#f43f5e"} 
+                                fill="#c5c0b1" 
                                 fillOpacity={0.8}
                             />
                         ))}

@@ -94,21 +94,21 @@ export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
                         dataKey="negative" 
                         name="Negative (1-2★)" 
                         stackId="a" 
-                        fill="#f43f5e" 
+                        fill="#c5c0b1" 
                         radius={[0, 0, 0, 0]} 
                     />
                     <Bar 
                         dataKey="neutral" 
                         name="Neutral (3★)" 
                         stackId="a" 
-                        fill="#94a3b8" 
+                        fill="#c5c0b1" 
                         radius={[0, 0, 0, 0]} 
                     />
                     <Bar 
                         dataKey="positive" 
                         name="Positive (4-5★)" 
                         stackId="a" 
-                        fill="#10b981" 
+                        fill="#c5c0b1" 
                         radius={[4, 4, 0, 0]} 
                     />
                 </BarChart>

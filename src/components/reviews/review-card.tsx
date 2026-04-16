@@ -344,10 +344,10 @@ export function ReviewCard({
     return (
         <div className={cn(
             "bg-card rounded-xl border border-border p-4 transition-all duration-300 relative group overflow-hidden",
-            "hover:-translate-y-0.5 hover:shadow-lg hover:border-[#201515]/60",
+            "hover:-translate-y-0.5 hover:shadow-lg hover:border-[#f9f7f3]/60",
             isSelected && "border-primary/30 bg-primary/10 shadow-sm"
         )}>
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#201515]/35 via-[#201515]/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#f9f7f3]/35 via-[#f9f7f3]/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             {/* Selection Checkbox */}
             {onSelect && (
                 <div className={cn(
