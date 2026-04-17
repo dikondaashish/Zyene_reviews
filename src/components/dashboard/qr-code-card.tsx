@@ -110,9 +110,6 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
         if (!ctx) return;
 
         const W = 600;
-        const H = 820;
-        canvas.width = W;
-        canvas.height = H;
 
         const accent = resolvedColor;
         const accentFg = contrastText(accent);
@@ -125,6 +122,31 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
         };
 
         const drawCard = (logo: HTMLImageElement | null, googleIcon: HTMLImageElement) => {
+            // Compute dynamic height
+            let H = 50; // top padding
+            let lh = 0;
+            let lw = 0;
+            if (logo) {
+                const maxLogoH = 64;
+                const maxLogoW = 200;
+                const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
+                lw = logo.width * scale;
+                lh = logo.height * scale;
+                H += 10 + lh + 16;
+            } else {
+                H += 20;
+            }
+            H += 80; // Business Name
+            H += 20; // Divider
+            H += 70; // CTA pill
+            H += 328; // QR Code (24 pad + 300 size + 28 margin but actually 300)
+            H += 36; // URL
+            H += 30; // Powered by 
+            H += 30; // Bottom padding
+
+            canvas.width = W;
+            canvas.height = H;
+
             // — Outer card with subtle shadow illusion
             roundRect(0, 0, W, H, 24);
             ctx.fillStyle = resolvedBgColor;
@@ -156,11 +178,6 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
             // — Logo (if available)
             if (logo) {
-                const maxLogoH = 64;
-                const maxLogoW = 200;
-                const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
-                const lw = logo.width * scale;
-                const lh = logo.height * scale;
                 const lx = (W - lw) / 2;
                 cursorY += 10;
                 ctx.drawImage(logo, lx, cursorY, lw, lh);
@@ -171,9 +188,9 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
             // — Business name
             ctx.fillStyle = contrastText(resolvedBgColor);
-            ctx.font = "bold 28px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.font = "bold 32px 'Inter', 'Segoe UI', system-ui, sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(businessName, W / 2, cursorY + 28);
+            ctx.fillText(businessName, W / 2, cursorY + 32);
             cursorY += 52;
 
             // — Divider line
@@ -187,13 +204,13 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
             // — CTA pill (with Google Icon)
             const ctaText = "Scan to Leave Us a Google Review";
-            ctx.font = "600 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.font = "600 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
             const ctaMetrics = ctx.measureText(ctaText);
-            const iconSize = 22;
-            const gap = 8;
+            const iconSize = 24;
+            const gap = 10;
             const innerW = iconSize + gap + ctaMetrics.width;
             const pillW = innerW + 56;
-            const pillH = 46;
+            const pillH = 48;
             const pillX = (W - pillW) / 2;
             roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
             ctx.fillStyle = accent;
@@ -207,7 +224,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             // Draw text
             ctx.fillStyle = accentFg;
             ctx.textAlign = "left";
-            ctx.fillText(ctaText, iconX + iconSize + gap, cursorY + 28);
+            ctx.fillText(ctaText, iconX + iconSize + gap, cursorY + 30);
             cursorY += pillH + 24;
 
             // — QR Code
@@ -226,24 +243,24 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
 
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(qrImg, qrX, cursorY, qrSize, qrSize);
-                cursorY += qrSize + 28;
+                cursorY += qrSize + 36;
 
                 // — URL text
-                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#888888" : "rgba(255,255,255,0.7)";
-                ctx.font = "14px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#888888" : "rgba(255,255,255,0.85)";
+                ctx.font = "500 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
                 ctx.textAlign = "center";
                 ctx.fillText(`${rootDomain}/${businessSlug}`, W / 2, cursorY);
-                cursorY += 30;
+                cursorY += 32;
 
                 // — Powered by Zyene
-                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#aaaaaa" : "rgba(255,255,255,0.5)";
-                ctx.font = "bold 11px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#aaaaaa" : "rgba(255,255,255,0.6)";
+                ctx.font = "bold 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
                 ctx.fillText("Powered by Zyene", W / 2, cursorY);
 
                 // — Trigger download
                 const link = document.createElement("a");
                 link.href = canvas.toDataURL("image/png");
-                link.download = `${businessSlug}-qr-code.png`;
+                link.download = `${businessSlug}-qr-poster.png`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
