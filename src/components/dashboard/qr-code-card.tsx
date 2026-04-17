@@ -348,7 +348,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             align-items: center;
                             justify-content: center;
                             min-height: 100vh;
-                            background: ${resolvedBgColor};
+                            background: #f5f5f5;
                             padding: 24px;
                         }
                         .card {
@@ -445,7 +445,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                         }
                         @media print {
                             body { 
-                                background: ${resolvedBgColor}; 
+                                background: #ffffff; 
                                 padding: 1.5cm; 
                                 -webkit-print-color-adjust: exact;
                                 print-color-adjust: exact;
