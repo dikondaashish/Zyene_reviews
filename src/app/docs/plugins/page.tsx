@@ -30,9 +30,9 @@ export default function DocsPluginsPage() {
 
                         <h2 id="embeds">Embeds</h2>
                         <p>
-                            Carousel and badge widgets load from your deployment host. Replace <code>your-business-slug</code> with
-                            the slug from Settings; copy the full iframe snippet from{" "}
-                            <strong>Integrations</strong> for pixel-perfect embed options.
+                            Carousel and badge widgets load from your Zyene site (same host as the dashboard). Replace{" "}
+                            <code>your-business-slug</code> with the slug from Settings; copy the full iframe snippet from{" "}
+                            <strong>Integrations</strong> when you want the exact markup.
                         </p>
                         <DocCodeBlock
                             language="bash"

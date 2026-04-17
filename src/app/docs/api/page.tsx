@@ -53,7 +53,7 @@ export default function DeveloperApiDocsPage() {
         <div className="flex w-full items-start">
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
-                    Developer Platform
+                    Reference
                     <span className="mx-2">&gt;</span>
                     <span className="font-medium text-foreground">API Reference</span>
                 </div>
@@ -62,9 +62,8 @@ export default function DeveloperApiDocsPage() {
                     <div id="doc-page-content" className="min-w-0 flex-1">
                         <h1 className="mb-0 mt-0">Developer API</h1>
                         <p className="text-muted-foreground">
-                            These routes are implemented in this application. Examples use{" "}
-                            <code className="text-foreground">{apiOrigin}</code> from{" "}
-                            <code className="text-foreground">NEXT_PUBLIC_APP_URL</code> (your deployed app origin).
+                            JSON over HTTPS on your Zyene workspace. Examples below use{" "}
+                            <code className="text-foreground">{apiOrigin}</code>—the same host as the dashboard.
                         </p>
 
                         <h2 id="authentication">Authentication</h2>

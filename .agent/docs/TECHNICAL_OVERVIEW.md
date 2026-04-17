@@ -2,8 +2,8 @@
 
 > **Version**: 2.0.0  
 > **Last Updated**: February 17, 2026  
-> **Repository**: [https://github.com/dikondaashish/Zyene_reviews.git](https://github.com/dikondaashish/Zyene_reviews.git)  
-> **Branch**: `main`
+> **Source**: Private — proprietary codebase; access only via your organization’s version control.  
+> **Default branch**: `main`
 
 ---
 
@@ -1498,7 +1498,7 @@ Based on production setup (e.g., EasyCron/Vercel Cron):
 
 ### Production Deployment (Vercel)
 
-1. **Connect Repository**: Link GitHub repo to Vercel.
+1. **Connect repository**: Link your **private** Git host (for example GitHub) to Vercel with deploy credentials your org controls.
 2. **Environment Variables**: Copy all variables from `.env.local` to Vercel Project Settings.
 3. **Domain Configuration**:
    - Add `zyene.in` (Production Root)
@@ -1540,15 +1540,15 @@ Key settings:
 ### Getting Started
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/dikondaashish/Zyene_reviews.git
-cd Zyene_reviews
+# 1. Clone from your org’s private remote (URL from your team; not a public distribution)
+git clone <YOUR_PRIVATE_REMOTE_URL>
+cd <REPO_DIRECTORY>
 
 # 2. Install dependencies
 pnpm install
 
-# 3. Set up environment variables
-cp .env.local.example .env.local
+# 3. Environment variables
+cp .env.example .env.local
 # Edit .env.local with your credentials
 
 # 4. Run the development server

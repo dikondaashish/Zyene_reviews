@@ -31,7 +31,7 @@ export const DOC_NAV_GROUPS: DocNavGroup[] = [
         items: [
             { title: "Overview", href: "/docs", icon: "file" },
             { title: "Quickstart", href: "/docs/quickstart", icon: "zap" },
-            { title: "Install with AI", href: "/docs/install", icon: "sparkles" },
+            { title: "Use with AI", href: "/docs/install", icon: "sparkles" },
         ],
     },
     {

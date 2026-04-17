@@ -27,8 +27,8 @@ export default function DocsQuickstartPage() {
                         <h1 className="mb-0 mt-0">Quickstart</h1>
 
                         <p>
-                            Connect your workspace, issue an API key, and call a live endpoint in a few minutes. All examples assume
-                            your app is deployed at <code>{base}</code> (<code>NEXT_PUBLIC_APP_URL</code>).
+                            Connect your workspace, create an API key, and call a live endpoint in a few minutes. Curl examples use
+                            your Zyene API host—the same origin you use to sign in to the dashboard (<code>{base}</code>).
                         </p>
 
                         <h2 id="prerequisites">Prerequisites</h2>

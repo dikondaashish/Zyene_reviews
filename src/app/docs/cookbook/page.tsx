@@ -23,7 +23,7 @@ export default function DocsCookbookPage() {
                 <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div id="doc-page-content" className="min-w-0 flex-1">
                         <h1 className="mb-0 mt-0">Cookbook</h1>
-                        <p>Short recipes against the live Developer API.</p>
+                        <p>Short curl examples against your workspace API. The host matches your signed-in Zyene URL.</p>
 
                         <h2 id="send-request">Send a request</h2>
                         <DocCodeBlock

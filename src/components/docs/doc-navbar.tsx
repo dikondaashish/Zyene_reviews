@@ -39,7 +39,7 @@ export function DocNavbar() {
 
                 <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
                     <Link href="/docs" className="text-primary transition-colors hover:text-primary">
-                        Developer Platform
+                        Docs
                     </Link>
                     <Link
                         href={integrationsHref}

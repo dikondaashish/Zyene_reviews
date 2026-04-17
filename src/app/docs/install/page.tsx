@@ -3,23 +3,14 @@ import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
 
-const CLONE_SNIPPET = `# 1. Clone the Zyene Reviews repo
-git clone https://github.com/dikondaashish/Zyene_reviews.git
-cd Zyene_reviews
-
-# 2. Install dependencies
-pnpm install
-
-# 3. Copy environment file and start the dev server
-cp .env.example .env.local
-pnpm dev`;
-
 export default function DocsInstallWithAiPage() {
     const docsApiUrl = `${BASE_URL}/docs/api`;
+    const docsCookbookUrl = `${BASE_URL}/docs/cookbook`;
     const toc: TocItem[] = [
-        { title: "Clone & run", href: "#clone" },
-        { title: "Prompt bundle", href: "#prompt" },
-        { title: "Safety", href: "#safety" },
+        { title: "Overview", href: "#overview" },
+        { title: "Doc URLs", href: "#urls" },
+        { title: "What to paste", href: "#prompt" },
+        { title: "Keys & safety", href: "#safety" },
     ];
 
     return (
@@ -28,42 +19,52 @@ export default function DocsInstallWithAiPage() {
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Getting Started
                     <span className="mx-2">&gt;</span>
-                    <span className="font-medium text-foreground">Install with AI</span>
+                    <span className="font-medium text-foreground">Use with AI</span>
                 </div>
 
                 <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div id="doc-page-content" className="min-w-0 flex-1">
-                        <h1 className="mb-0 mt-0">Install with AI</h1>
+                        <h1 className="mb-0 mt-0">Use with AI</h1>
                         <p>
-                            Run the product locally for development, then use your editor&apos;s AI assistant (Cursor, Copilot,
-                            etc.) against the live <code>/docs/api</code> contract.
+                            Zyene Reviews is <strong>hosted, proprietary software</strong>. You do not run our codebase—you integrate
+                            from <strong>your</strong> project (Node, Python, workers, automation tools) using the public HTTP API and
+                            an API key from the dashboard. Use this page when you want Cursor, Copilot, or similar tools to follow our
+                            docs while you build.
                         </p>
 
-                        <h2 id="clone">Clone &amp; run</h2>
-                        <p>From a terminal on your machine:</p>
-                        <DocCodeBlock code={CLONE_SNIPPET} language="bash" />
-
-                        <h2 id="prompt">Prompt bundle</h2>
-                        <p>Give the model:</p>
+                        <h2 id="overview">Overview</h2>
                         <ul>
-                            <li>
-                                The <strong>API Reference</strong> page for authentication rules and example curl commands.
-                            </li>
-                            <li>Your business constraints (SMS vs email, rate limits, PII handling).</li>
-                            <li>
-                                A requirement to read secrets from environment variables — never hard-code <code>zy_</code> keys.
-                            </li>
+                            <li>Add our doc URLs as context in your editor.</li>
+                            <li>Generate code that calls <code>/api/v1/…</code> on your Zyene host.</li>
+                            <li>Store <code>zy_</code> keys only in your secrets—never in source or chat logs.</li>
                         </ul>
+
+                        <h2 id="urls">Doc URLs</h2>
+                        <p>Paste into your AI tool or attach as documentation context:</p>
                         <DocCodeBlock
                             language="bash"
-                            code={`# Paste this URL into Cursor / your AI workspace (attach as context)
-# ${docsApiUrl}`}
+                            code={`# API Reference — auth, payloads, errors
+${docsApiUrl}
+
+# Cookbook — curl recipes
+${docsCookbookUrl}`}
                         />
 
-                        <h2 id="safety">Safety</h2>
+                        <h2 id="prompt">What to paste</h2>
+                        <p>Tell the model:</p>
+                        <ul>
+                            <li>To follow the API Reference for headers (<code>X-API-Key</code> or Bearer) and JSON bodies.</li>
+                            <li>Your rules: SMS vs email, rate limits, PII handling, idempotency.</li>
+                            <li>
+                                To read the real key from <strong>your</strong> environment (for example <code>ZYENE_API_KEY</code>),
+                                never inline a production key.
+                            </li>
+                        </ul>
+
+                        <h2 id="safety">Keys &amp; safety</h2>
                         <p>
-                            Keys are scoped to a single business via the Integrations binding. Rotate keys if they leak, and prefer
-                            server-side calls so keys never ship to browsers.
+                            Keys are bound to one business. Rotate in Integrations if a key leaks. Prefer server-to-server calls so
+                            keys never ship to browsers or client analytics.
                         </p>
                     </div>
                     <DocCopyPageButton containerId="doc-page-content" className="shrink-0" />

@@ -23,8 +23,8 @@ export default function DocsChangelogPage() {
 
                         <h2 id="2026-04">2026-04</h2>
                         <ul>
-                            <li>Docs IA: sidebar, command palette search, and copy-to-clipboard on long-form pages.</li>
-                            <li>API reference examples track <code>NEXT_PUBLIC_APP_URL</code> for accurate curl bases.</li>
+                            <li>Docs: sidebar navigation, ⌘K search, and copy-page on long-form articles.</li>
+                            <li>API reference and cookbook curls use the live dashboard origin as the API base URL.</li>
                             <li>Navigation uses the signed-in app host for Dashboard and Integrations links.</li>
                         </ul>
 
