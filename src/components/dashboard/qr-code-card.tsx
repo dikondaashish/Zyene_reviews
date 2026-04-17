@@ -285,10 +285,10 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                 ctx.fillText(`${rootDomain}/${businessSlug}`, W / 2, cursorY);
                 cursorY += 32;
 
-                // — Powered by Zyene
+                // — Powered by
                 ctx.fillStyle = resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#aaaaaa" : "rgba(255,255,255,0.6)";
                 ctx.font = "bold 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
-                ctx.fillText("Powered by Zyene", W / 2, cursorY);
+                ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY);
 
                 // — Trigger download
                 const link = document.createElement("a");
@@ -476,7 +476,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                                 <img src="${qrDataUrl}" alt="QR Code" />
                             </div>
                             <div class="url">${rootDomain}/${businessSlug}</div>
-                            <div class="powered">Powered by Zyene</div>
+                            <div class="powered">Powered by Zyene Reviews</div>
                         </div>
                         <div class="accent-bottom"></div>
                     </div>
