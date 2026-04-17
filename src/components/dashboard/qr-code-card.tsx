@@ -138,7 +138,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             }
             H += 80; // Business Name
             H += 20; // Divider
-            H += 70; // CTA pill
+            H += 108; // CTA pill + 5 stars
             H += 328; // QR Code (24 pad + 300 size + 28 margin but actually 300)
             H += 36; // URL
             H += 30; // Powered by 
@@ -225,7 +225,40 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
             ctx.fillStyle = accentFg;
             ctx.textAlign = "left";
             ctx.fillText(ctaText, iconX + iconSize + gap, cursorY + 30);
-            cursorY += pillH + 24;
+            cursorY += pillH + 16; // Add space before stars
+
+            // Draw 5 stars
+            const drawStar = (cx: number, cy: number, spikes = 5, outerRadius = 11, innerRadius = 5) => {
+                let rot = Math.PI / 2 * 3;
+                let x = cx;
+                let y = cy;
+                const step = Math.PI / spikes;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - outerRadius);
+                for (let i = 0; i < spikes; i++) {
+                    x = cx + Math.cos(rot) * outerRadius;
+                    y = cy + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+
+                    x = cx + Math.cos(rot) * innerRadius;
+                    y = cy + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                }
+                ctx.lineTo(cx, cy - outerRadius);
+                ctx.closePath();
+                ctx.fillStyle = "#FFC107";
+                ctx.fill();
+            };
+
+            const starSpacing = 30;
+            const starStartX = (W - (4 * starSpacing)) / 2;
+            for (let i = 0; i < 5; i++) {
+                drawStar(starStartX + (i * starSpacing), cursorY + 11);
+            }
+            cursorY += 24 + 18; // Advance cursor past stars before QR
 
             // — QR Code
             const qrImg = new Image();
@@ -372,6 +405,16 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             width: 22px;
                             height: 22px;
                         }
+                        .stars {
+                            display: flex;
+                            justify-content: center;
+                            gap: 10px;
+                            margin-bottom: 24px;
+                        }
+                        .stars svg {
+                            width: 24px;
+                            height: 24px;
+                        }
                         .qr-frame {
                             display: inline-block;
                             border: 1.5px solid ${resolvedBgColor === "#ffffff" || resolvedBgColor === "#f5f5f5" ? "#e5e5e5" : "rgba(255,255,255,0.3)"};
@@ -425,6 +468,9 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             <div class="cta-pill">
                                 <img src="${GOOGLE_G_SVG}" alt="Google" />
                                 <span>Scan to Leave Us a Google Review</span>
+                            </div>
+                            <div class="stars">
+                                ${Array(5).fill('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFC107"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>').join('')}
                             </div>
                             <div class="qr-frame">
                                 <img src="${qrDataUrl}" alt="QR Code" />
