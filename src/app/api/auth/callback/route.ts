@@ -372,7 +372,7 @@ export async function GET(request: Request) {
                     inviteParam: inviteParamForAccept || null,
                 });
                 if (invited.accepted) {
-                    return NextResponse.redirect(`${appUrl}/dashboard`);
+                    return NextResponse.redirect(`${appUrl}/`);
                 }
 
                 const { data: org, error: orgError } = await admin
@@ -592,7 +592,7 @@ export async function GET(request: Request) {
                 }
             }
 
-            // Preserve the caller intent (e.g. integrations page -> /dashboard/integrations).
+            // Preserve the caller intent (e.g. integrations page -> /integrations).
             return NextResponse.redirect(`${appUrl}${next}`);
         }
         return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);

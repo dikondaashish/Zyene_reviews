@@ -63,19 +63,26 @@ function navButtonClass(isActive: boolean) {
     `
 }
 
+function navItemIsActive(pathname: string, itemUrl: string) {
+    if (itemUrl === "/dashboard") {
+        return pathname === "/dashboard" || pathname === "/"
+    }
+    return pathname === itemUrl || pathname.startsWith(`${itemUrl}/`)
+}
+
 function MainNavItems({ items, pathname }: { items: NavItem[]; pathname: string }) {
     const primaryItems = items.filter((item) =>
-        ["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
+        ["/", "/businesses", "/customers", "/campaigns"].includes(item.url)
     )
     const secondaryItems = items.filter(
-        (item) => !["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
+        (item) => !["/", "/businesses", "/customers", "/campaigns"].includes(item.url)
     )
 
     return (
         <div className="space-y-4">
             <SidebarMenu>
                 {primaryItems.map((item) => {
-                    const isActive = pathname === item.url || pathname.startsWith(item.url + "/")
+                    const isActive = navItemIsActive(pathname, item.url)
                     return (
                         <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
                             <SidebarMenuButton

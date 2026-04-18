@@ -282,12 +282,8 @@ export async function proxy(request: NextRequest) {
             console.error("Onboarding status check failed:", error);
         }
 
-        // Redirect /dashboard to / for clean URL
-        if (pathname === "/dashboard") {
-            return createResponse(
-                NextResponse.redirect(new URL("/", request.url))
-            );
-        }
+        // `/` rewrites to dashboard content; keep `/dashboard` as a first-class URL (no redirect) so
+        // client navigations from other app pages avoid an extra round trip and full reload.
 
         // Rewrite root to /dashboard
         if (pathname === "/") {
