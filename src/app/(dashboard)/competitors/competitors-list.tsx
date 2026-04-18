@@ -469,14 +469,14 @@ export function CompetitorsList({
             </Card>
             )}
 
-            <Card className="border-[#e7e2d7] bg-[#f9f7f3] text-zinc-900">
+            <Card className="border-border bg-canvas-elevated text-foreground">
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5 text-amber-600" />
                             AI market positioning brief
                         </CardTitle>
-                        <CardDescription className="text-zinc-600">
+                        <CardDescription className="text-muted-foreground">
                             Competitive analysis based on your search terms and public listing data.
                         </CardDescription>
                     </div>
@@ -502,11 +502,11 @@ export function CompetitorsList({
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {competitors.length === 0 ? (
-                        <p className="text-sm text-zinc-600">
+                        <p className="text-sm text-muted-foreground">
                             Add tracked competitors to generate a positioning brief.
                         </p>
                     ) : !marketBriefLatest ? (
-                        <p className="text-sm text-zinc-600">
+                        <p className="text-sm text-muted-foreground">
                             Run once to get a concise comparison of how you show up versus competitors, grounded in
                             ratings, reviews, categories, and your top search queries.
                         </p>
@@ -514,7 +514,7 @@ export function CompetitorsList({
                         <>
                             <div>
                                 <h4 className="text-lg font-semibold leading-snug">{marketBriefLatest.headline}</h4>
-                                <p className="mt-2 text-sm text-zinc-700">{marketBriefLatest.overview}</p>
+                                <p className="mt-2 text-sm text-foreground/90">{marketBriefLatest.overview}</p>
                             </div>
                             {marketBriefLatest.positioning_bullets.length > 0 ? (
                                 <ul className="list-disc pl-5 space-y-1.5 text-sm">
@@ -532,16 +532,16 @@ export function CompetitorsList({
                                         {marketBriefLatest.opportunity_actions.map((a, i) => (
                                             <li
                                                 key={`${marketBriefLatest.id}-a-${i}`}
-                                                className="rounded-lg border border-[#e2ddcf] bg-[#f3f0e8] px-3 py-2 text-sm"
+                                                className="rounded-lg border border-border bg-muted/80 px-3 py-2 text-sm"
                                             >
                                                 <span className="font-medium">{a.title}</span>
-                                                <p className="mt-1 text-xs text-zinc-600">{a.detail}</p>
+                                                <p className="mt-1 text-xs text-muted-foreground">{a.detail}</p>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             ) : null}
-                            <p className="border-t border-[#e2ddcf] pt-3 text-[11px] text-zinc-600">
+                            <p className="border-t border-border pt-3 text-[11px] text-muted-foreground">
                                 AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
                                 {marketBriefLatest.data_limitations ? (
                                     <span
@@ -665,7 +665,7 @@ export function CompetitorsList({
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="w-20 h-20 bg-gradient-to-tr from-primary to-primary/70 rounded-2xl flex items-center justify-center mb-8 rotate-2 transform transition-transform hover:rotate-0 duration-500">
-                            <Star className="h-10 w-10 text-white fill-white" />
+                            <Star className="h-10 w-10 text-primary-foreground fill-primary-foreground" />
                         </div>
                         
                         <h3 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
@@ -1162,12 +1162,12 @@ export function CompetitorsList({
                                                     dataKey="rating"
                                                     radius={[4, 4, 0, 0]}
                                                     maxBarSize={52}
-                                                    background={{ fill: "#c5c0b1", radius: 4 }}
+                                                    background={{ fill: "var(--border)", radius: 4 }}
                                                 >
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`rating-${index}`}
-                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
+                                                            fill={entry.isOwn ? "var(--primary)" : "var(--muted-foreground)"}
                                                         />
                                                     ))}
                                                 </Bar>
@@ -1242,12 +1242,12 @@ export function CompetitorsList({
                                                     dataKey="reviews"
                                                     radius={[4, 4, 0, 0]}
                                                     maxBarSize={52}
-                                                    background={{ fill: "#c5c0b1", radius: 4 }}
+                                                    background={{ fill: "var(--border)", radius: 4 }}
                                                 >
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`reviews-${index}`}
-                                                            fill={entry.isOwn ? "#f59e0b" : "#64748b"}
+                                                            fill={entry.isOwn ? "var(--primary)" : "var(--muted-foreground)"}
                                                         />
                                                     ))}
                                                 </Bar>

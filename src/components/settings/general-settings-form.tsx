@@ -171,7 +171,7 @@ export function GeneralSettingsForm({
                 <Button
                     type="submit"
                     disabled={isLoading || !hasChanges}
-                    className="bg-zinc-900 hover:bg-zinc-800 text-white"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Save Changes

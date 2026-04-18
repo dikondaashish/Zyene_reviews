@@ -38,6 +38,12 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  /* App shell (dashboard main area + elevated panels) */
+  --color-canvas: var(--canvas);
+  --color-canvas-elevated: var(--canvas-elevated);
+  --color-brand-google: var(--brand-google);
+  --color-brand-facebook: var(--brand-facebook);
+  --color-sync-action: var(--sync-action);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -48,7 +54,7 @@
   
   /* Pro Custom Tokens */
   --pro-glass: blur(12px);
-  --pro-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  --pro-shadow: 0 8px 32px 0 color-mix(in srgb, var(--foreground) 12%, transparent);
 }
 
 :root {
@@ -86,6 +92,19 @@
   --sidebar-accent-foreground: #201515;
   --sidebar-border: #c5c0b1;
   --sidebar-ring: #ff4f00;
+  --canvas: #f7f5ef;
+  --canvas-elevated: #f9f7f3;
+  --marketing-footer-bg: #201515;
+  --marketing-footer-fg: #fffefb;
+  --marketing-footer-muted: #c5c0b1;
+  --marketing-footer-subtle: #939084;
+  --marketing-footer-border: #36342e;
+  --embed-widget-rating: #241a59;
+  --marketing-footer-list: #eceae3;
+  --brand-google: #4285f4;
+  --brand-facebook: #1877f2;
+  --sync-action: #695be8;
+  --sync-action-hover: color-mix(in oklab, #695be8 88%, black);
 }
 
 .dark {
@@ -122,6 +141,20 @@
   --sidebar-accent-foreground: #fffefb;
   --sidebar-border: #4a4540;
   --sidebar-ring: #ff4f00;
+  --canvas: var(--background);
+  --canvas-elevated: var(--card);
+  --marketing-footer-bg: var(--card);
+  --marketing-footer-fg: var(--card-foreground);
+  --marketing-footer-muted: var(--muted-foreground);
+  --marketing-footer-subtle: var(--muted-foreground);
+  --marketing-footer-border: var(--border);
+  --embed-widget-rating: #ddd6fe;
+  --marketing-footer-list: color-mix(in oklab, var(--marketing-footer-fg) 88%, transparent);
+  --brand-google: #8ab4f8;
+  --brand-facebook: #8cb4ff;
+  --sync-action: #8b7cf6;
+  --sync-action-hover: #a78bfa;
+  --pro-shadow: 0 8px 32px 0 color-mix(in srgb, black 55%, transparent);
 }
 
 @layer base {
@@ -219,6 +252,14 @@
   }
 }
 
-/* BetterStack Announcement Banner Custom CSS */
-.betteruptime-announcement { top: unset; bottom: 0; background: white; }
-.betteruptime-announcement__message { color: black }
+/* BetterStack Announcement Banner — follow app theme */
+.betteruptime-announcement {
+  top: unset;
+  bottom: 0;
+  background: var(--card);
+  color: var(--card-foreground);
+  border-top: 1px solid var(--border);
+}
+.betteruptime-announcement__message {
+  color: var(--card-foreground);
+}

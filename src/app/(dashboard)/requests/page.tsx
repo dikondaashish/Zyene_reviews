@@ -198,7 +198,7 @@ export default async function RequestsPage({
                         <div className="text-2xl font-bold">{totalSent}</div>
                     </CardContent>
                 </Card>
-                <Card className="border-l-4 border-l-[#22c55e]">
+                <Card className="border-l-4 border-l-emerald-500">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -210,7 +210,7 @@ export default async function RequestsPage({
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="border-l-4 border-l-[#d97706]">
+                <Card className="border-l-4 border-l-amber-600">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
                         <MousePointerClick className="h-4 w-4 text-amber-500" />
@@ -222,7 +222,7 @@ export default async function RequestsPage({
                         </p>
                     </CardContent>
                 </Card>
-                <Card className="border-l-4 border-l-[#ca8a04]">
+                <Card className="border-l-4 border-l-yellow-500">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Review Conversion</CardTitle>
                         <Star className="h-4 w-4 text-yellow-500" />

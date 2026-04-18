@@ -325,9 +325,9 @@ export default function OnboardingPage() {
                   className={`
                     w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
                     ${isCompleted
-                      ? "bg-[oklch(0.7_0.22_60)] text-white shadow-lg shadow-orange-500/25"
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                       : isActive
-                        ? "bg-[oklch(0.7_0.22_60)]/10 text-[oklch(0.7_0.22_60)] ring-2 ring-[oklch(0.7_0.22_60)]/30 shadow-sm"
+                        ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
                         : "bg-secondary/60 text-muted-foreground"
                     }
                   `}
@@ -343,7 +343,7 @@ export default function OnboardingPage() {
                   )}
                 </motion.div>
                 <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
-                  isActive ? "text-[oklch(0.7_0.22_60)]" : isCompleted ? "text-primary/70" : "text-muted-foreground"
+                  isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
                 }`}>
                   {step.label}
                 </span>
@@ -353,7 +353,7 @@ export default function OnboardingPage() {
               {index < STEPS.length - 1 && (
                 <div className="w-8 sm:w-12 h-[2px] mx-1 sm:mx-2 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
                   <motion.div
-                    className="h-full bg-[oklch(0.7_0.22_60)] rounded-full"
+                    className="h-full bg-primary rounded-full"
                     initial={false}
                     animate={{ width: isCompleted ? "100%" : "0%" }}
                     transition={{ duration: 0.4 }}

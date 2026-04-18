@@ -136,7 +136,7 @@ function PlatformBadge({ platform, theme }: { platform: string; theme: ThemeColo
     p === "google" ? "Google" : p === "yelp" ? "Yelp" : p === "facebook" ? "Facebook" : p === "zyene" ? "Zyene" : platform
   const subtle =
     theme === "vibrant"
-      ? "border-white/30 bg-white/10 text-white"
+      ? "border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
       : "border-border/60 bg-muted/50 text-muted-foreground"
   return (
     <Badge variant="outline" className={cn("text-[10px] font-medium px-1.5 py-0 h-5", subtle)}>
@@ -161,7 +161,7 @@ function SentimentPill({ sentiment, theme }: { sentiment: string; theme: ThemeCo
             ? "bg-amber-500/30 text-amber-50"
             : "bg-amber-500/15 text-amber-800 dark:text-amber-400"
           : theme === "vibrant"
-            ? "bg-white/20 text-white"
+            ? "bg-primary-foreground/20 text-primary-foreground"
             : "bg-muted text-muted-foreground"
   return (
     <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium capitalize", colors)}>

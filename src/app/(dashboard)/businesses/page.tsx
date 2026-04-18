@@ -66,10 +66,10 @@ export default async function BusinessesPage() {
                                 className={`group relative border rounded-xl bg-card overflow-hidden transition-all duration-300 cursor-pointer ${
                                     isActive
                                         ? "ring-2 ring-primary border-primary/40 shadow-sm"
-                                        : "hover:-translate-y-0.5 hover:border-[#f9f7f3]/60 hover:shadow-lg"
+                                        : "hover:-translate-y-0.5 hover:border-canvas-elevated/60 hover:shadow-lg"
                                     }`}
                             >
-                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#f9f7f3]/35 via-[#f9f7f3]/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-canvas-elevated/35 via-canvas-elevated/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                                 <form
                                     action={async () => {
                                         "use server";
@@ -79,7 +79,7 @@ export default async function BusinessesPage() {
                                 >
                                     <button
                                         type="submit"
-                                        className="relative z-10 w-full text-left p-5 flex flex-col gap-3 transition-colors duration-300 hover:bg-[#f9f7f3]/10 cursor-pointer"
+                                        className="relative z-10 w-full text-left p-5 flex flex-col gap-3 transition-colors duration-300 hover:bg-canvas-elevated/10 cursor-pointer"
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
@@ -147,7 +147,7 @@ export default async function BusinessesPage() {
                                         </div>
                                     </button>
                                 </form>
-                                <div className="relative z-10 flex items-center justify-between border-t bg-muted/50 px-4 py-2 transition-colors duration-300 group-hover:bg-[#f9f7f3]/10">
+                                <div className="relative z-10 flex items-center justify-between border-t bg-muted/50 px-4 py-2 transition-colors duration-300 group-hover:bg-canvas-elevated/10">
                                     <span className="text-[11px] text-muted-foreground">
                                         Click card to set as current location
                                     </span>

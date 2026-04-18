@@ -93,11 +93,16 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             loading: `Processing bulk ${action}...`,
             success: (response) => {
                 if (action === "request") {
+                    const root = document.documentElement;
+                    const cs = getComputedStyle(root);
+                    const c1 = cs.getPropertyValue("--chart-1").trim() || "var(--primary)";
+                    const c2 = cs.getPropertyValue("--chart-2").trim() || "var(--primary)";
+                    const c3 = cs.getPropertyValue("--chart-3").trim() || "var(--primary)";
                     confetti({
                         particleCount: 150,
                         spread: 70,
                         origin: { y: 0.6 },
-                        colors: ["#3b82f6", "#60a5fa", "#93c5fd"]
+                        colors: [c1, c2, c3],
                     });
                     return "Review requests sent successfully!";
                 }

@@ -30,7 +30,7 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-[#f5f5f4]">
+        <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-muted">
             {/* Ambient gradient blobs */}
             <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-primary/15 blur-[100px]" />
@@ -49,8 +49,8 @@ export default async function OnboardingLayout({
                                 priority
                             />
                         </div>
-                        <span className="text-lg font-bold text-[#262626] tracking-tight">
-                            Zyene <span className="text-[oklch(0.7_0.22_60)]">Reviews</span>
+                        <span className="text-lg font-bold text-foreground tracking-tight">
+                            Zyene <span className="text-primary">Reviews</span>
                         </span>
                     </div>
                 </div>

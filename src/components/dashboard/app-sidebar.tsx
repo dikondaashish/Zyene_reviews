@@ -72,10 +72,10 @@ function navItemIsActive(pathname: string, itemUrl: string) {
 
 function MainNavItems({ items, pathname }: { items: NavItem[]; pathname: string }) {
     const primaryItems = items.filter((item) =>
-        ["/", "/businesses", "/customers", "/campaigns"].includes(item.url)
+        ["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
     )
     const secondaryItems = items.filter(
-        (item) => !["/", "/businesses", "/customers", "/campaigns"].includes(item.url)
+        (item) => !["/dashboard", "/businesses", "/customers", "/campaigns"].includes(item.url)
     )
 
     return (
@@ -286,7 +286,7 @@ export function AppSidebar({
     ], [dict])
 
     return (
-        <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border bg-[#f9f7f3]">
+        <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border bg-canvas-elevated">
             <SidebarHeader className="relative gap-3 border-b border-sidebar-border p-4">
                 <SidebarMenu>
                     <SidebarMenuItem>

@@ -599,20 +599,20 @@ export default function MarketingPage() {
             </motion.div>
 
             {/* Professional */}
-            <motion.div variants={fadeInUp} className="bg-[#201515] text-white border-2 border-primary rounded-lg p-8 flex flex-col relative">
+            <motion.div variants={fadeInUp} className="bg-[color:var(--marketing-footer-bg)] text-[color:var(--marketing-footer-fg)] border-2 border-primary rounded-lg p-8 flex flex-col relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
               <div className="flex items-center gap-2 mb-2">
                 <Crown className="h-5 w-5 text-primary" />
                 <h3 className="text-xl font-semibold">Professional</h3>
               </div>
-              <p className="text-sm text-[#c5c0b1] mb-6">For growing multi-location businesses</p>
+              <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-6">For growing multi-location businesses</p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-lg line-through text-muted-foreground">$89.99</span>
+                <span className="text-lg line-through text-[color:var(--marketing-footer-muted)]">$89.99</span>
                 <span className="text-4xl font-bold">$59.99</span>
-                <span className="text-[#c5c0b1]">/mo</span>
+                <span className="text-[color:var(--marketing-footer-muted)]">/mo</span>
               </div>
               <p className="text-sm text-primary font-medium mb-6">7-day free trial included</p>
-              <ul className="space-y-3 text-sm text-[#eceae3] flex-1 mb-8">
+              <ul className="space-y-3 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
                 {["Everything in Starter, plus:", "3 Locations", "3,000 email requests/month per location", "3,000 SMS requests/month per location", "6,000 review link requests/month per location", "Priority support"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -699,10 +699,10 @@ export default function MarketingPage() {
       </section>
 
       {/* 8. FINAL CTA */}
-      <section className="w-full py-32 px-4 bg-[#f3f4f6]">
+      <section className="w-full py-32 px-4 bg-muted">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
-          className="container mx-auto max-w-5xl bg-[#201515] rounded-[2rem] p-12 md:p-20 text-center text-white relative overflow-hidden border border-border"
+          className="container mx-auto max-w-5xl bg-[color:var(--marketing-footer-bg)] rounded-[2rem] p-12 md:p-20 text-center text-[color:var(--marketing-footer-fg)] relative overflow-hidden border border-border"
         >
           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-primary opacity-20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-primary opacity-20 rounded-full blur-3xl"></div>
@@ -710,7 +710,7 @@ export default function MarketingPage() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight mb-8 relative z-10 leading-tight">
             Ready to grow your business?
           </h2>
-          <p className="text-[#c5c0b1] text-xl mb-12 max-w-2xl mx-auto font-light relative z-10">
+          <p className="text-[color:var(--marketing-footer-muted)] text-xl mb-12 max-w-2xl mx-auto font-light relative z-10">
             Join local businesses who are managing their reputation and saving time every day.
           </p>
           <div className="flex items-center justify-center relative z-10">

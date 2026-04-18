@@ -81,7 +81,7 @@ function SettingsTabLinks({
                         className={cn(
                             "flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px",
                             isActive
-                                    ? "border-[#ff4f00] text-[#ff4f00]"
+                                    ? "border-primary text-primary"
                                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                         )}
                     >

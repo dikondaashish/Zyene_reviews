@@ -38,13 +38,13 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
         { 
             id: "google", 
             name: "Google", 
-            icon: <Chrome className="w-4 h-4 text-[#4285F4]" />,
+            icon: <Chrome className="w-4 h-4 text-brand-google" />,
             color: "text-primary"
         },
         { 
             id: "facebook", 
             name: "Facebook", 
-            icon: <Facebook className="w-4 h-4 text-[#1877F2]" />,
+            icon: <Facebook className="w-4 h-4 text-brand-facebook" />,
             color: "text-primary"
         },
     ];
@@ -74,8 +74,8 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
                             onClick={() => handlePlatformChange(platform.id)}
                             className={cn(
                                 "relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
-                                isActive 
-                                    ? "text-white" 
+                                isActive
+                                    ? "text-primary"
                                     : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                             )}
                         >

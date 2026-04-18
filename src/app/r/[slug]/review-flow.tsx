@@ -812,7 +812,7 @@ export function PublicReviewFlow({
                                         className={cn(
                                             "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
                                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
-                                                ? "fill-[#F59E0B] text-[#F59E0B]"
+                                                ? "fill-amber-500 text-amber-500"
                                                 : "fill-muted text-muted-foreground/40"
                                         )}
                                     />

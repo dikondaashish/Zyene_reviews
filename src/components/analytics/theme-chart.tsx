@@ -39,14 +39,14 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                     <YAxis
                         dataKey="theme"
                         type="category"
-                        tick={{ fontSize: 11, fontWeight: 700, fill: "hsl(var(--muted-foreground))" }}
+                        tick={{ fontSize: 11, fontWeight: 700, fill: "var(--muted-foreground)" }}
                         width={90}
                         axisLine={false}
                         tickLine={false}
                         tickFormatter={(value) => value.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
                     />
                     <Tooltip
-                        cursor={{ fill: "hsl(var(--muted)/0.2)", radius: 4 }}
+                        cursor={{ fill: "color-mix(in oklab, var(--muted) 28%, transparent)", radius: 4 }}
                         content={({ active, payload }) => {
                             if (active && payload && payload.length) {
                                 const data = payload[0].payload as ThemeDataPoint;
@@ -77,12 +77,12 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                         radius={[0, 6, 6, 0]}
                         barSize={24}
                         minPointSize={2}
-                        background={{ fill: "#c5c0b1", radius: 6 }}
+                        background={{ fill: "var(--border)", radius: 6 }}
                     >
                         {data.map((entry, index) => (
                             <Cell 
                                 key={`cell-${index}`} 
-                                fill={entry.sentimentScore >= 0 ? "#10b981" : "#f43f5e"} 
+                                fill={entry.sentimentScore >= 0 ? "var(--chart-2)" : "var(--destructive)"} 
                                 fillOpacity={0.8}
                             />
                         ))}

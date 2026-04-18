@@ -53,7 +53,7 @@ function HighlightedShellLine({ line }: { line: string }) {
         return (
             <span className="block whitespace-pre">
                 {leading}
-                <span className="text-[#7a756c] dark:text-zinc-500">{trimmed}</span>
+                <span className="text-muted-foreground">{trimmed}</span>
             </span>
         );
     }
@@ -67,10 +67,10 @@ function HighlightedShellLine({ line }: { line: string }) {
                     {leading}
                     <span className="font-semibold text-primary">{cmd}</span>
                     {gap}
-                    <span className="text-[#1c1b19] dark:text-zinc-200">
+                    <span className="text-foreground">
                         {splitWithUrls(after).map((seg, i) =>
                             seg.url ? (
-                                <span key={i} className="text-sky-800 underline decoration-sky-800/30 dark:text-sky-400 dark:decoration-sky-400/30">
+                                <span key={i} className="text-primary underline decoration-primary/30">
                                     {seg.text}
                                 </span>
                             ) : (
@@ -84,10 +84,10 @@ function HighlightedShellLine({ line }: { line: string }) {
     }
 
     return (
-        <span className="block whitespace-pre text-[#1c1b19] dark:text-zinc-200">
+        <span className="block whitespace-pre text-foreground">
             {splitWithUrls(line).map((seg, i) =>
                 seg.url ? (
-                    <span key={i} className="text-sky-800 underline decoration-sky-800/30 dark:text-sky-400 dark:decoration-sky-400/30">
+                    <span key={i} className="text-primary underline decoration-primary/30">
                         {seg.text}
                     </span>
                 ) : (
@@ -127,12 +127,12 @@ export function DocCodeBlock({ code, language, className }: DocCodeBlockProps) {
     return (
         <div
             className={cn(
-                "not-prose relative my-6 rounded-xl border border-[#e8e4dc] bg-[#f6f4ef] shadow-sm dark:border-zinc-800 dark:bg-zinc-950/80",
+                "not-prose relative my-6 rounded-xl border border-border bg-muted/70 shadow-sm",
                 className
             )}
         >
             {language ? (
-                <div className="absolute left-3 top-2.5 text-[11px] font-medium uppercase tracking-wide text-[#7a756c] dark:text-zinc-500">
+                <div className="absolute left-3 top-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                     {language}
                 </div>
             ) : null}
@@ -140,12 +140,12 @@ export function DocCodeBlock({ code, language, className }: DocCodeBlockProps) {
                 type="button"
                 onClick={copy}
                 aria-label="Copy code"
-                className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-md text-[#5c5852] transition-colors hover:bg-black/[0.04] hover:text-foreground dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-zinc-100"
+                className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
             >
                 {copied ? <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="h-4 w-4" />}
             </button>
             <pre
-                className="max-h-[min(28rem,70vh)] overflow-auto px-4 pb-4 pt-10 font-mono text-[13px] leading-[1.65] text-[#1c1b19] dark:text-zinc-200"
+                className="max-h-[min(28rem,70vh)] overflow-auto px-4 pb-4 pt-10 font-mono text-[13px] leading-[1.65] text-foreground"
             >
                 <code>
                     {lines.map((line, i) => (

@@ -10,6 +10,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "./globals.css";
 
+/** Inline before paint — keeps `class="dark"` in sync with localStorage + system (next-themes). */
+const themeInitScript = `(()=>{try{var t=localStorage.getItem('theme');var d=document.documentElement.classList;var dark=t==='dark'||(t!=='light'&&(!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);d.toggle('dark',!!dark);}catch(e){}})();`;
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -49,7 +52,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ff4f00",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fffefb" },
+    { media: "(prefers-color-scheme: dark)", color: "#201515" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
@@ -64,6 +70,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${geistMono.variable} ${syneDisplay.variable} antialiased`}
       >
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

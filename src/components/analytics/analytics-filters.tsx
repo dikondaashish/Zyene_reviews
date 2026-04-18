@@ -34,7 +34,7 @@ export function AnalyticsFilters() {
                         onClick={() => setRange(range.value)}
                         className={cn(
                             "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                            isActive ? "text-white" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                            isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                         )}
                     >
                         {isActive && (

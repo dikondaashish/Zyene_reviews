@@ -26,7 +26,7 @@ export function ReviewBadge({
                 </div>
 
                 <div className="mb-5 flex items-center justify-center gap-4">
-                    <span className="text-5xl font-semibold tracking-tight text-[#241a59]">{rating.toFixed(1)}</span>
+                    <span className="text-5xl font-semibold tracking-tight text-[color:var(--embed-widget-rating)]">{rating.toFixed(1)}</span>
                     <div
                         className="flex items-center gap-1"
                         aria-label={`${rating.toFixed(1)} out of 5 stars`}

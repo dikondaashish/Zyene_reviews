@@ -507,13 +507,13 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
     };
 
     const secondaryActionClass =
-        "h-10 w-full justify-start rounded-xl border border-border/70 bg-white/80 px-3 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-[#201515]/20 hover:bg-white hover:shadow-md dark:border-border dark:bg-card/80 dark:hover:bg-card";
+        "h-10 w-full justify-start rounded-xl border border-border/70 bg-card/80 px-3 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md";
 
     const primaryActionClass =
-        "h-10 w-full justify-start rounded-xl bg-[#201515] px-3 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#201515] hover:shadow-md";
+        "h-10 w-full justify-start rounded-xl bg-foreground px-3 text-sm font-medium text-background shadow-sm transition-all duration-200 hover:bg-foreground/90";
 
     return (
-        <Card className="mt-2 overflow-hidden border border-border/60 bg-[#f9f7f3] dark:bg-[#1f1d1a]">
+        <Card className="mt-2 overflow-hidden border border-border/60 bg-canvas-elevated">
             <CardContent className="p-0 flex min-w-0 flex-col md:flex-row">
                 {/* Left Section: Text Content */}
                 <div className="flex min-w-0 flex-1 flex-col justify-center p-6 md:py-10 md:pl-16 md:pr-8 lg:pl-24">
@@ -569,11 +569,11 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                 </div>
 
                 {/* Right Section: Big QR Code */}
-                <div className="flex w-full flex-col items-center justify-center border-t border-border/60 bg-[#f9f7f3] p-6 dark:bg-[#1f1d1a] md:w-auto md:min-w-[280px] md:border-t-0 md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
+                <div className="flex w-full flex-col items-center justify-center border-t border-border/60 bg-canvas-elevated p-6 md:w-auto md:min-w-[280px] md:border-t-0 md:py-10 md:pl-8 md:pr-16 lg:pl-12 lg:pr-24">
                     <Dialog>
                         <DialogTrigger asChild>
                             <div className="group cursor-pointer flex flex-col items-center justify-center">
-                                <div className="mb-6 flex h-[228px] w-[228px] items-center justify-center rounded-[2rem] border-[4px] border-border bg-card p-6 transition-all duration-300 group-hover:scale-105 group-hover:border-primary/25 dark:bg-[#26221d]">
+                                <div className="mb-6 flex h-[228px] w-[228px] items-center justify-center rounded-[2rem] border-[4px] border-border bg-muted/60 p-6 transition-all duration-300 group-hover:scale-105 group-hover:border-primary/25">
                                     <QrCode className="h-[140px] w-[140px] text-foreground" strokeWidth={1} />
                                 </div>
                                 <p className="text-[13px] text-foreground font-medium text-center group-hover:text-primary transition-colors">
@@ -619,19 +619,19 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
                             </div>
                             
                             <div className="grid grid-cols-2 gap-3 mt-2">
-                                <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="h-10 w-full rounded-xl border border-border/70 bg-white/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-[#201515]/20 hover:bg-white hover:shadow-md dark:border-border dark:bg-card/80 dark:hover:bg-card">
+                                <Button variant="outline" onClick={handleDownload} disabled={!qrDataUrl} className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md">
                                     <Download className="h-4 w-4 mr-2" />
                                     {dict.qr.download_short}
                                 </Button>
-                                <Button variant="outline" onClick={handleShare} className="h-10 w-full rounded-xl border border-border/70 bg-white/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-[#201515]/20 hover:bg-white hover:shadow-md dark:border-border dark:bg-card/80 dark:hover:bg-card">
+                                <Button variant="outline" onClick={handleShare} className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md">
                                     <Share2 className="h-4 w-4 mr-2" />
                                     {dict.qr.share_link}
                                 </Button>
-                                <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="h-10 w-full rounded-xl border border-border/70 bg-white/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-[#201515]/20 hover:bg-white hover:shadow-md dark:border-border dark:bg-card/80 dark:hover:bg-card">
+                                <Button variant="outline" onClick={handlePrint} disabled={!qrDataUrl} className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md">
                                     <Printer className="h-4 w-4 mr-2" />
                                     {dict.qr.print_short}
                                 </Button>
-                                <Button onClick={() => toast.info("Order QR coming soon!")} className="h-10 w-full rounded-xl bg-[#201515] text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#201515] hover:shadow-md">
+                                <Button onClick={() => toast.info("Order QR coming soon!")} className="h-10 w-full rounded-xl bg-foreground text-sm font-medium text-background shadow-sm transition-all duration-200 hover:bg-foreground/90">
                                     <ShoppingCart className="h-4 w-4 mr-2" />
                                     {dict.qr.order_now}
                                 </Button>

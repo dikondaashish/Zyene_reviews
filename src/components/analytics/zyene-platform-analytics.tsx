@@ -159,11 +159,11 @@ export function ZyenePlatformAnalytics({
     }));
     const maxRatingCount = Math.max(...ratingDist.map((d) => d.count), 1);
     const ratingColors: Record<number, string> = {
-        5: "#10b981",
-        4: "#34d399",
-        3: "#f59e0b",
+        5: "var(--chart-2)",
+        4: "var(--chart-3)",
+        3: "var(--chart-5)",
         2: "var(--primary)",
-        1: "#ef4444",
+        1: "var(--destructive)",
     };
 
     // ── Popular Tags ───────────────────────────────────────────────────
@@ -209,10 +209,10 @@ export function ZyenePlatformAnalytics({
     const funnelSteps = [
         { label: "Sent", count: totalSent, icon: Send, color: "var(--primary)" },
         { label: "Delivered", count: totalDelivered, icon: CheckCircle2, color: "var(--primary)" },
-        { label: "Opened", count: totalOpened, icon: Eye, color: "#ff7a45" },
-        { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "#ff7a45" },
-        { label: "Completed", count: totalCompleted, icon: Sparkles, color: "#c2410c" },
-        { label: "Posted to Google", count: totalReviewLeft, icon: Star, color: "#10b981" },
+        { label: "Opened", count: totalOpened, icon: Eye, color: "var(--primary)" },
+        { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "var(--primary)" },
+        { label: "Completed", count: totalCompleted, icon: Sparkles, color: "var(--chart-5)" },
+        { label: "Posted to Google", count: totalReviewLeft, icon: Star, color: "var(--chart-2)" },
     ];
 
     if (!mounted) return <div className="h-[600px] w-full" />;
@@ -251,7 +251,7 @@ export function ZyenePlatformAnalytics({
                                         <div
                                             className="h-10 w-10 rounded-xl flex items-center justify-center transition-colors"
                                             style={{
-                                                backgroundColor: `${step.color}15`,
+                                                backgroundColor: `color-mix(in oklab, ${step.color} 18%, transparent)`,
                                             }}
                                         >
                                             <step.icon
@@ -287,7 +287,7 @@ export function ZyenePlatformAnalytics({
                     </div>
 
                     {/* Funnel flow bar */}
-                    <div className="mt-6 h-3 w-full bg-[#c5c0b1] rounded-full overflow-hidden flex">
+                    <div className="mt-6 h-3 w-full bg-border rounded-full overflow-hidden flex">
                         {funnelSteps.map((step, idx) => {
                             const widthPct = totalSent > 0 ? (step.count / totalSent) * 100 : 0;
                             return (
@@ -427,23 +427,23 @@ export function ZyenePlatformAnalytics({
                                                 <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="gradClicked" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#ff7a45" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#ff7a45" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="gradCompleted" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
                                             vertical={false}
-                                            stroke="hsl(var(--border))"
+                                            stroke="var(--border)"
                                             opacity={0.5}
                                         />
                                         <XAxis
                                             dataKey="date"
-                                            tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                                            tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                                             tickLine={false}
                                             axisLine={false}
                                             tickFormatter={(v) => {
@@ -454,14 +454,14 @@ export function ZyenePlatformAnalytics({
                                             dy={10}
                                         />
                                         <YAxis
-                                            tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                                            tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                                             tickLine={false}
                                             axisLine={false}
                                         />
                                         <Tooltip
                                             contentStyle={{
-                                                backgroundColor: "hsl(var(--card))",
-                                                border: "1px solid hsl(var(--border))",
+                                                backgroundColor: "var(--card)",
+                                                border: "1px solid var(--border)",
                                                 borderRadius: "12px",
                                                 padding: "8px 12px",
                                             }}
@@ -491,29 +491,29 @@ export function ZyenePlatformAnalytics({
                                             fillOpacity={1}
                                             fill="url(#gradSent)"
                                             animationDuration={1500}
-                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                                         />
                                         <Area
                                             type="monotone"
                                             dataKey="clicked"
                                             name="Clicked"
-                                            stroke="#ff7a45"
+                                            stroke="var(--primary)"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#gradClicked)"
                                             animationDuration={1500}
-                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                                         />
                                         <Area
                                             type="monotone"
                                             dataKey="completed"
                                             name="Completed"
-                                            stroke="#10b981"
+                                            stroke="var(--chart-2)"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#gradCompleted)"
                                             animationDuration={1500}
-                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                                            activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -571,7 +571,7 @@ export function ZyenePlatformAnalytics({
                                         </div>
                                     </div>
                                     {/* Stacked progress bar */}
-                                    <div className="h-2 w-full bg-[#c5c0b1] rounded-full overflow-hidden flex">
+                                    <div className="h-2 w-full bg-border rounded-full overflow-hidden flex">
                                         <div
                                             className="h-full bg-primary rounded-l-full transition-all duration-700"
                                             style={{
@@ -627,7 +627,7 @@ export function ZyenePlatformAnalytics({
                         {ratingDist.map((d) => (
                             <div key={d.star} className="flex items-center gap-3">
                                 <span className="text-sm font-bold w-8 text-right">{d.star}</span>
-                                <div className="flex-1 h-6 bg-[#c5c0b1] rounded-lg overflow-hidden">
+                                <div className="flex-1 h-6 bg-border rounded-lg overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{
@@ -638,7 +638,7 @@ export function ZyenePlatformAnalytics({
                                         style={{ backgroundColor: ratingColors[d.value] }}
                                     >
                                         {d.count > 0 && (
-                                            <span className="text-[10px] font-bold text-white">
+                                            <span className="text-[10px] font-bold text-primary-foreground">
                                                 {d.count}
                                             </span>
                                         )}

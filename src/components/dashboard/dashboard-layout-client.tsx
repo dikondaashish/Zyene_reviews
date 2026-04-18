@@ -94,22 +94,22 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-4 bg-[#f7f5ef] p-4 lg:p-6 dark:bg-background min-h-[calc(100vh-4rem)]">
+            <main className="flex min-w-0 flex-1 flex-col gap-4 bg-canvas p-4 lg:p-6 min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
             <footer className="border-t border-border/70 bg-card px-4 py-4">
                 <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
                     <span>© {new Date().getFullYear()} Zyene Inc.</span>
-                    <Link href="/terms" className="transition-colors hover:text-[#695be8]">
+                    <Link href="/terms" className="transition-colors hover:text-primary">
                         Legal
                     </Link>
-                    <Link href="/privacy" className="transition-colors hover:text-[#695be8]">
+                    <Link href="/privacy" className="transition-colors hover:text-primary">
                         Privacy
                     </Link>
                     <button
                         type="button"
                         onClick={handleManageCookies}
-                        className="transition-colors hover:text-[#695be8]"
+                        className="transition-colors hover:text-primary"
                     >
                         Manage cookies
                     </button>
