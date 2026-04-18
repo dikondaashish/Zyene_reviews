@@ -23,6 +23,8 @@ interface ProStatCardProps {
   iconName: "reviews" | "rating" | "response" | "pending" | "qa" | "links" | "completeness" | "lodging" | "alert"
   description?: string
   trend?: number
+  /** How to render `trend`: percent change (default) or raw star average delta (±0.1). */
+  trendFormat?: "percent" | "star_delta"
   trendLabel?: string
   prefix?: string
   suffix?: string
@@ -97,6 +99,7 @@ export function ProStatCard({
   iconName,
   description,
   trend,
+  trendFormat = "percent",
   trendLabel,
   prefix = "",
   suffix = "",
@@ -106,8 +109,9 @@ export function ProStatCard({
 }: ProStatCardProps) {
   const Icon = ICON_MAP[iconName] || MessageSquare
   const hasTrend = typeof trend === "number"
-  const isPositive = hasTrend && trend > 0
-  const isNegative = hasTrend && trend < 0
+  const isStarDelta = trendFormat === "star_delta"
+  const isPositive = hasTrend && (trend as number) > 0
+  const isNegative = hasTrend && (trend as number) < 0
   const showRatingStars = iconName === "rating" && Number.isFinite(value) && value > 0
   const ratingClamped = showRatingStars ? Math.max(0, Math.min(5, value)) : 0
 
@@ -136,7 +140,18 @@ export function ProStatCard({
             "bg-muted text-muted-foreground"
           )}>
             <span className="flex items-center">
-              {isPositive ? "+" : ""}{trend}%
+              {isStarDelta ? (
+                <>
+                  {(trend as number) > 0 ? "+" : ""}
+                  {(trend as number).toFixed(1)}
+                  <span className="ml-0.5 opacity-90">pts</span>
+                </>
+              ) : (
+                <>
+                  {isPositive ? "+" : ""}
+                  {trend}%
+                </>
+              )}
               {isPositive ? (
                 <TrendUpGlyph />
               ) : isNegative ? (

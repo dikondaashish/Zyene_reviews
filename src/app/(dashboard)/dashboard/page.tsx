@@ -76,6 +76,56 @@ function Stars({ rating }: { rating: number }) {
     );
 }
 
+/** Compare YTD (Jan 1 → today) vs the same calendar span last year; return % change in review count and avg rating delta. */
+function computeYtdReviewTrends(
+    rows: Array<{ review_date: string; rating: number }>,
+    now: Date
+): { totalPct: number; ratingDelta: number } {
+    const startOfThisYear = new Date(now.getFullYear(), 0, 1);
+    const startYtdPriorYear = new Date(now.getFullYear() - 1, 0, 1);
+    const endYtdLastYear = new Date(
+        now.getFullYear() - 1,
+        now.getMonth(),
+        now.getDate(),
+        23,
+        59,
+        59,
+        999
+    );
+
+    const thisYtd = rows.filter((r) => {
+        const d = new Date(r.review_date);
+        return d >= startOfThisYear && d <= now;
+    });
+    const priorYtd = rows.filter((r) => {
+        const d = new Date(r.review_date);
+        return d >= startYtdPriorYear && d <= endYtdLastYear;
+    });
+
+    const nThis = thisYtd.length;
+    const nPrior = priorYtd.length;
+
+    let totalPct = 0;
+    if (nPrior > 0) {
+        totalPct = Math.round(((nThis - nPrior) / nPrior) * 100);
+        totalPct = Math.max(-100, Math.min(1000, totalPct));
+    } else if (nThis > 0) {
+        totalPct = 100;
+    }
+
+    let ratingDelta = 0;
+    if (nThis > 0 && nPrior > 0) {
+        const avg = (arr: typeof thisYtd) =>
+            arr.reduce((sum, r) => sum + r.rating, 0) / arr.length;
+        ratingDelta = avg(thisYtd) - avg(priorYtd);
+    }
+
+    return {
+        totalPct,
+        ratingDelta: Math.round(ratingDelta * 100) / 100,
+    };
+}
+
 // Sentiment badge helper
 function SentimentBadge({ sentiment }: { sentiment: string | null }) {
     if (!sentiment) return null;
@@ -241,7 +291,6 @@ export default async function DashboardPage() {
             // ── Precompute date boundaries (used by multiple queries) ──
             const now = new Date();
             const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            const startOfThisYear = new Date(now.getFullYear(), 0, 1);
             const startOfLastYear = new Date(now.getFullYear() - 1, 0, 1);
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -413,31 +462,15 @@ export default async function DashboardPage() {
             // 4. Attention
             attentionReviews = attentionResult.data || [];
 
-            // 5. Yearly Trends
+            // 5. YTD vs same period last year (avoid comparing partial year to full prior year)
             const monthData = (monthResult.data || []) as Array<{
                 review_date: string;
                 rating: number;
             }>;
-            if (monthData) {
-                const thisYearReviews = monthData.filter((r) => new Date(r.review_date) >= startOfThisYear);
-                const lastYearReviews = monthData.filter(
-                    (r) => new Date(r.review_date) < startOfThisYear && new Date(r.review_date) >= startOfLastYear
-                );
-
-                totalReviewsTrend = thisYearReviews.length - lastYearReviews.length;
-
-                const thisYearAvg = thisYearReviews.length > 0
-                    ? thisYearReviews.reduce((sum: number, r) => sum + r.rating, 0) / thisYearReviews.length
-                    : 0;
-                const lastYearAvg = lastYearReviews.length > 0
-                    ? lastYearReviews.reduce((sum: number, r) => sum + r.rating, 0) / lastYearReviews.length
-                    : 0;
-
-                if (thisYearAvg > 0 && lastYearAvg > 0) {
-                    averageRatingTrend = thisYearAvg - lastYearAvg;
-                } else if (thisYearAvg > 0) {
-                    averageRatingTrend = thisYearAvg;
-                }
+            if (monthData.length > 0) {
+                const ytd = computeYtdReviewTrends(monthData, now);
+                totalReviewsTrend = ytd.totalPct;
+                averageRatingTrend = ytd.ratingDelta;
             }
 
             // 6. 30-day Chart
@@ -613,6 +646,8 @@ export default async function DashboardPage() {
         perfSyncedAt = new Date().toISOString();
         unansweredQaCount = 3;
         brokenPlaceLinksCount = 1;
+        totalReviewsTrend = 12;
+        averageRatingTrend = 0.1;
     }
 
     let googleLodgingHealthScore: number | null = null;
@@ -743,8 +778,11 @@ export default async function DashboardPage() {
                     iconName="rating"
                     precision={1}
                     description={dict.dashboard.based_on_google}
-                    trend={Math.round(averageRatingTrend * 10)}
-                    trendLabel={dict.dashboard.pts}
+                    trend={averageRatingTrend}
+                    trendFormat="star_delta"
+                    trendLabel={
+                        (dict.dashboard as Record<string, string>).vs_last_year || "vs last year"
+                    }
                     delay={0.2}
                 />
                 <ProStatCard

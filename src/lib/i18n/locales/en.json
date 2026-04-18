@@ -28,6 +28,7 @@
     "google_metrics": "Google listing metrics: ",
     "total_reviews": "Total Reviews",
     "from_google": "From Google Reviews",
+    "vs_last_year": "vs same period last year",
     "connect_google": "Connect Google to import reviews",
     "vs_last_month": "vs last month",
     "average_rating": "Average Rating",
