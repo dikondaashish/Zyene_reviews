@@ -438,19 +438,24 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
     });
       runId = run.id;
 
-      const labels = [
-        "Kansas City, MO",
-        "North Kansas City, MO",
-        "River Market, Kansas City, MO",
-        "Downtown Kansas City, MO",
-        "Columbus Park, Kansas City, MO",
-        "Kansas City, KS",
-      ];
       const { data: business } = await admin
         .from("businesses")
-        .select("average_rating, total_reviews")
+        .select("average_rating, total_reviews, city, state")
         .eq("id", businessId)
         .maybeSingle();
+
+      const cityVal = business?.city || "Local Area";
+      const stateVal = business?.state ? `, ${business.state}` : "";
+      
+      const labels = [
+        `${cityVal}${stateVal}`,
+        `North ${cityVal}${stateVal}`,
+        `Downtown ${cityVal}${stateVal}`,
+        `East ${cityVal}${stateVal}`,
+        `West ${cityVal}${stateVal}`,
+        `South ${cityVal}${stateVal}`,
+      ];
+
       const base = Math.max(1, Math.min(20, Math.round(21 - Number(business?.average_rating || 4))));
 
       await step.run("store-heatmap-cells", async () => {
@@ -490,6 +495,8 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
   }
 );
 
+import { getGoogleSearchKeywords } from "@/services/google/performance-queries";
+
 export const googleSeoAeoSyncWorker = inngest.createFunction(
   {
     id: "google-seo-aeo-sync-worker",
@@ -499,8 +506,22 @@ export const googleSeoAeoSyncWorker = inngest.createFunction(
   { event: "google-seo-aeo/sync.run" },
   async ({ event, step }) => {
     const { businessId } = event.data;
-    const query = "Best Restaurants in Kansas City";
-    const keyword = "Best restaurants in Kansas City";
+    
+    const { query, keyword } = await step.run("determine-keyword", async () => {
+      const admin = createAdminClient();
+      const keywords = await getGoogleSearchKeywords(admin, businessId, 1);
+      
+      let term = "Best local business near me";
+      if (keywords && keywords.length > 0) {
+        term = keywords[0].keyword;
+      } else {
+        const { data: business } = await admin.from("businesses").select("city").eq("id", businessId).maybeSingle();
+        if (business?.city) {
+           term = `Best businesses in ${business.city}`;
+        }
+      }
+      return { query: term, keyword: term };
+    });
 
     await step.run("enqueue-ai-visibility", async () => {
       await inngest.send({
