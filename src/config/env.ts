@@ -25,7 +25,9 @@ function getDefaultAppUrl(): string {
         .replace(/\/$/, "");
 
     if (rootDomain.includes("localhost")) {
-        return "http://localhost:3000";
+        return process.env.NODE_ENV === "production"
+            ? "https://app.zyenereviews.com"
+            : "http://localhost:3000";
     }
 
     return `https://app.${rootDomain.replace(/^app\./, "")}`;
