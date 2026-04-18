@@ -1,31 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-function buildSuggestion(current: string, topKeywords: string[]): string {
-    const text = current.trim();
-    const usableKeywords = topKeywords
-        .map((k) => k.trim())
-        .filter((k) => k.length > 1)
-        .slice(0, 8);
-    if (!usableKeywords.length) return text;
-
-    const lower = text.toLowerCase();
-    const missing = usableKeywords.filter((k) => !lower.includes(k.toLowerCase())).slice(0, 4);
-    if (!missing.length) return text;
-
-    const keywordTail = missing.join(", ");
-    if (!text) {
-        return `Locally trusted service for ${keywordTail}. Visit us for fast, friendly help and consistent quality.`;
-    }
-    return `${text}\n\nPopular searches we serve: ${keywordTail}.`;
-}
 
 export function DescriptionOptimizerCard({
     businessId,
@@ -37,14 +18,40 @@ export function DescriptionOptimizerCard({
     topKeywords: string[];
 }) {
     const [draft, setDraft] = useState(currentDescription);
+    const [suggested, setSuggested] = useState("");
+    const [optimizing, setOptimizing] = useState(false);
     const [saving, setSaving] = useState(false);
 
-    const suggested = useMemo(
-        () => buildSuggestion(currentDescription, topKeywords),
-        [currentDescription, topKeywords]
-    );
-
     const applySuggested = () => setDraft(suggested);
+
+    const optimizeWithAi = async () => {
+        setOptimizing(true);
+        try {
+            const res = await fetch("/api/ai/optimize-business-description", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    businessId,
+                    currentDescription,
+                    topKeywords: topKeywords.slice(0, 12),
+                }),
+            });
+            const payload = await res.json();
+            if (!res.ok) {
+                throw new Error(payload.error || "Failed to optimize description");
+            }
+            const nextSuggestion = payload?.data?.optimizedDescription || payload?.optimizedDescription || "";
+            if (!nextSuggestion.trim()) {
+                throw new Error("AI returned an empty suggestion");
+            }
+            setSuggested(nextSuggestion);
+            toast.success("AI suggestion is ready. Review and apply if it looks good.");
+        } catch (e: unknown) {
+            toast.error(e instanceof Error ? e.message : "Failed to optimize description");
+        } finally {
+            setOptimizing(false);
+        }
+    };
 
     const saveToGoogle = async () => {
         setSaving(true);
@@ -84,15 +91,29 @@ export function DescriptionOptimizerCard({
                 <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-medium">Suggested SEO-optimized description</p>
-                        <Button type="button" size="sm" variant="outline" onClick={applySuggested}>
+                        <Button type="button" size="sm" variant="outline" onClick={applySuggested} disabled={!suggested}>
                             Apply suggestion
                         </Button>
                     </div>
+                    <Button type="button" onClick={optimizeWithAi} disabled={optimizing} className="w-fit">
+                        {optimizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Optimize with AI
+                    </Button>
+                    <Textarea
+                        value={suggested}
+                        readOnly
+                        rows={6}
+                        placeholder="Click “Optimize with AI” to generate an improved SEO/AEO description."
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <p className="text-sm font-medium">Editable draft (what will be saved)</p>
                     <Textarea
                         value={draft}
                         onChange={(e) => setDraft(e.target.value)}
                         rows={6}
-                        placeholder="Suggested description will appear here"
+                        placeholder="Apply the AI suggestion, then edit before saving if needed."
                     />
                     <div className="flex flex-wrap gap-1.5">
                         {topKeywords.slice(0, 8).map((k) => (
