@@ -1,6 +1,6 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { FractionalStar } from "@/components/ui/fractional-star";
 
 export function ReviewBadge({
     businessName,
@@ -11,7 +11,7 @@ export function ReviewBadge({
     avgRating: number;
     totalReviews: number;
 }) {
-    const rounded = Math.max(0, Math.min(5, Math.round(avgRating)));
+    const rating = Math.max(0, Math.min(5, avgRating));
 
     return (
         <div className="flex min-h-[280px] w-full items-center justify-center bg-transparent p-6 font-sans">
@@ -26,12 +26,16 @@ export function ReviewBadge({
                 </div>
 
                 <div className="mb-5 flex items-center justify-center gap-4">
-                    <span className="text-5xl font-semibold tracking-tight text-[#241a59]">{avgRating.toFixed(1)}</span>
-                    <div className="flex items-center gap-1">
+                    <span className="text-5xl font-semibold tracking-tight text-[#241a59]">{rating.toFixed(1)}</span>
+                    <div
+                        className="flex items-center gap-1"
+                        aria-label={`${rating.toFixed(1)} out of 5 stars`}
+                    >
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
+                            <FractionalStar
                                 key={i}
-                                className={`h-10 w-10 ${i < rounded ? "fill-yellow-400 text-yellow-400" : "fill-muted text-muted-foreground/30"}`}
+                                fill={Math.min(1, Math.max(0, rating - i))}
+                                starClassName="h-10 w-10"
                             />
                         ))}
                     </div>
