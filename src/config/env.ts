@@ -19,6 +19,18 @@ function optional(name: string, fallback: string): string {
     return process.env[name] || fallback;
 }
 
+function getDefaultAppUrl(): string {
+    const rootDomain = (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000")
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
+
+    if (rootDomain.includes("localhost")) {
+        return "http://localhost:3000";
+    }
+
+    return `https://app.${rootDomain.replace(/^app\./, "")}`;
+}
+
 // --- Public (exposed to browser) ---
 
 export const NEXT_PUBLIC_SUPABASE_URL =
@@ -27,7 +39,7 @@ export const NEXT_PUBLIC_SUPABASE_ANON_KEY =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 export const NEXT_PUBLIC_APP_URL = optional(
     "NEXT_PUBLIC_APP_URL",
-    "http://localhost:3000"
+    getDefaultAppUrl()
 );
 export const NEXT_PUBLIC_ROOT_DOMAIN = optional(
     "NEXT_PUBLIC_ROOT_DOMAIN",
