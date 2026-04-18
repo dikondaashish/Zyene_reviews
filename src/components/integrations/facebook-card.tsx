@@ -19,7 +19,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import {
-    Facebook,
     CheckCircle2,
     XCircle,
     ExternalLink,
@@ -30,6 +29,7 @@ import {
     AlertTriangle,
     Loader2,
 } from "lucide-react";
+import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
 import { toast } from "sonner";
 import type {
     FacebookPageOption,
@@ -186,7 +186,7 @@ export function FacebookIntegrationCard({
                     <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <Facebook className="h-5 w-5 text-primary" />
+                                <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
                                 <CardTitle className="text-base">
                                     Facebook
                                 </CardTitle>
@@ -321,7 +321,7 @@ export function FacebookIntegrationCard({
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Facebook className="h-5 w-5 text-primary" />
+                                    <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
                             <CardTitle className="text-base">
                                 Facebook
                             </CardTitle>
@@ -369,7 +369,7 @@ export function FacebookIntegrationCard({
             <Card>
                 <CardHeader className="pb-3">
                     <div className="flex items-center gap-2">
-                        <Facebook className="h-5 w-5 text-primary" />
+                        <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
                         <CardTitle className="text-base">Facebook</CardTitle>
                     </div>
                     <CardDescription>
@@ -394,7 +394,7 @@ export function FacebookIntegrationCard({
                         {connecting ? (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                         ) : (
-                            <Facebook className="h-4 w-4 mr-2" />
+                            <FacebookBrandIcon className="h-4 w-4 mr-2 shrink-0" aria-hidden />
                         )}
                         Connect Facebook Page
                     </Button>
@@ -423,7 +423,7 @@ export function FacebookIntegrationCard({
                                 disabled={confirmingPage === page.pageId}
                             >
                                 <div className="h-10 w-10 rounded-full bg-primary/15 dark:bg-primary/20 flex items-center justify-center shrink-0">
-                                    <Facebook className="h-5 w-5 text-primary" />
+                                    <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="font-medium text-sm truncate">
