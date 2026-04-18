@@ -29,7 +29,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { BASE_URL, getAppBaseUrl } from "@/config/env";
+import { getAppBaseUrl } from "@/config/env";
 
 interface DeveloperApiCardProps {
     businessId: string;
@@ -44,9 +44,9 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
     const [showKey, setShowKey] = useState(false);
 
     const apiBase = getAppBaseUrl();
-    const docsRoot = BASE_URL;
-    const docsApiUrl = `${docsRoot}/docs/api`;
-    const docsCookbookUrl = `${docsRoot}/docs/cookbook`;
+    /** Same deployment as the dashboard — use relative paths so links work on app.*, www.*, or localhost. */
+    const docsCookbookPath = "/docs/cookbook";
+    const docsApiPath = "/docs/api";
 
     const handleCopy = () => {
         if (!apiKey) return;
@@ -252,13 +252,13 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                 </div>
                 <div className="flex flex-wrap items-center justify-end gap-2 sm:ml-auto">
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={docsCookbookUrl} target="_blank" rel="noopener noreferrer">
+                        <Link href={docsCookbookPath}>
                             <Terminal className="mr-2 h-3.5 w-3.5" />
                             Cookbook
                         </Link>
                     </Button>
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={docsApiUrl} target="_blank" rel="noopener noreferrer">
+                        <Link href={docsApiPath}>
                             <BookOpen className="mr-2 h-3.5 w-3.5" />
                             Full Documentation
                         </Link>
