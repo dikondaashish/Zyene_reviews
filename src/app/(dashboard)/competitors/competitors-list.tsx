@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
     ArrowDown,
@@ -57,6 +57,7 @@ import {
 import { TimeAgo } from "@/components/ui/time-ago";
 import { Database } from "@/lib/db/supabase/database.types";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { isCompetitorAlertEventType } from "@/lib/competitors/range-benchmark";
 import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
@@ -64,6 +65,8 @@ import { computeCompetitorMovementRows } from "@/lib/competitors/snapshot-moveme
 import { syncCompetitorWatchNow } from "@/app/actions/competitor-watch-sync";
 import { generateCompetitorMarketBriefNow } from "@/app/actions/competitor-market-brief";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
+import { dateRangeKeys, type RangeKey } from "@/lib/query/date-range-keys";
+import { useCompetitorsFullRangeQuery } from "@/hooks/use-range-queries";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 type CompetitorSnapshot = {
@@ -117,6 +120,16 @@ type CompetitorWatchRun = {
     finished_at: string;
     created_at: string;
 };
+
+async function prefetchCompetitorsRange(range: CompetitorRangeKey) {
+    const response = await fetch(`/api/competitors/range-meta?range=${range}`, {
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to prefetch competitors range");
+    }
+    return response.json();
+}
 
 export type CompetitorMarketBriefLatest = {
     id: string;
@@ -191,7 +204,10 @@ export function CompetitorsList({
     const [mounted, setMounted] = useState(false);
     const [syncWatchLoading, setSyncWatchLoading] = useState(false);
     const [briefGenLoading, setBriefGenLoading] = useState(false);
+    const [optimisticRange, setOptimisticRange] = useState<CompetitorRangeKey>(range);
+    const rangeDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const router = useRouter();
+    const queryClient = useQueryClient();
     const searchParams = useSearchParams();
 
     useEffect(() => {
@@ -202,6 +218,18 @@ export function CompetitorsList({
         setCompetitors(initialCompetitors);
     }, [initialCompetitors]);
 
+    useEffect(() => {
+        setOptimisticRange(range);
+    }, [range]);
+
+    useEffect(() => {
+        return () => {
+            if (rangeDebounceRef.current) {
+                clearTimeout(rangeDebounceRef.current);
+            }
+        };
+    }, []);
+
     const rangeOptions: Array<{ value: CompetitorRangeKey; label: string }> = [
         { value: "7d", label: "7 Days" },
         { value: "30d", label: "30 Days" },
@@ -209,12 +237,55 @@ export function CompetitorsList({
         { value: "12m", label: "12 Months" },
     ];
 
-    const rangeLabel = rangeOptions.find((r) => r.value === range)?.label || "30 Days";
+    const rangeLabel = rangeOptions.find((r) => r.value === optimisticRange)?.label || "30 Days";
+    const { data: fullRangeData } = useCompetitorsFullRangeQuery(businessId, optimisticRange as RangeKey);
+    const activeSnapshotRows =
+        (fullRangeData?.snapshotRows as CompetitorSnapshot[] | undefined) ?? snapshotRows;
+    const activeEventRows =
+        (fullRangeData?.eventRows as CompetitorEvent[] | undefined) ?? eventRows;
+    const activeInsightRows =
+        (fullRangeData?.insightRows as CompetitorInsight[] | undefined) ?? insightRows;
+    const activeOwnBusinessInRange = fullRangeData?.ownBusinessInRange ?? ownBusinessInRange;
+    const activeBenchmarkRange =
+        (fullRangeData?.benchmarkRange as CompetitorWatchBenchmarkRange | undefined) ?? benchmarkRange;
+    const activeOwnSearchKeywords = fullRangeData?.ownSearchKeywords ?? ownSearchKeywords;
+    const activeKeywordDiscoverySplit =
+        fullRangeData?.keywordDiscoverySplit ?? keywordDiscoverySplit;
+    const activePlacesMetaByCompetitorId =
+        (fullRangeData?.placesMetaByCompetitorId as Record<string, CompetitorPlacesRowMeta> | undefined) ??
+        placesMetaByCompetitorId;
+
+    useEffect(() => {
+        const incoming = fullRangeData?.initialCompetitors as Competitor[] | undefined;
+        if (incoming) setCompetitors(incoming);
+    }, [fullRangeData]);
+
+    useEffect(() => {
+        for (const option of rangeOptions) {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("range", option.value);
+            router.prefetch(`?${params.toString()}`);
+            void queryClient.prefetchQuery({
+                queryKey: dateRangeKeys.competitors(businessId, option.value as RangeKey),
+                queryFn: () => prefetchCompetitorsRange(option.value),
+                staleTime: 60_000,
+            });
+        }
+    }, [router, searchParams, queryClient, businessId]);
 
     const setRange = (nextRange: CompetitorRangeKey) => {
+        setOptimisticRange(nextRange);
         const params = new URLSearchParams(searchParams.toString());
         params.set("range", nextRange);
-        router.push(`?${params.toString()}`, { scroll: false });
+        void queryClient.prefetchQuery({
+            queryKey: dateRangeKeys.competitors(businessId, nextRange as RangeKey),
+            queryFn: () => prefetchCompetitorsRange(nextRange),
+            staleTime: 60_000,
+        });
+        if (rangeDebounceRef.current) clearTimeout(rangeDebounceRef.current);
+        rangeDebounceRef.current = setTimeout(() => {
+            router.push(`?${params.toString()}`, { scroll: false });
+        }, 120);
     };
 
     const isSyncing = (competitor: Competitor): boolean => {
@@ -317,14 +388,14 @@ export function CompetitorsList({
         () =>
             computeCompetitorMovementRows(
                 competitors.map((c) => ({ id: c.id, name: c.name })),
-                snapshotRows
+                activeSnapshotRows
             ),
-        [competitors, snapshotRows]
+        [competitors, activeSnapshotRows]
     );
 
     const latestSnapshotByCompetitor = useMemo(() => {
         const map = new Map<string, CompetitorSnapshot>();
-        for (const row of snapshotRows) {
+        for (const row of activeSnapshotRows) {
             const existing = map.get(row.competitor_id);
             if (!existing) {
                 map.set(row.competitor_id, row);
@@ -335,11 +406,11 @@ export function CompetitorsList({
             }
         }
         return map;
-    }, [snapshotRows]);
+    }, [activeSnapshotRows]);
 
     const latestInsightByCompetitor = useMemo(() => {
         const byCompetitor = new Map<string, CompetitorInsight>();
-        for (const row of insightRows) {
+        for (const row of activeInsightRows) {
             const current = byCompetitor.get(row.competitor_id);
             if (!current) {
                 byCompetitor.set(row.competitor_id, row);
@@ -350,7 +421,7 @@ export function CompetitorsList({
             }
         }
         return byCompetitor;
-    }, [insightRows]);
+    }, [activeInsightRows]);
 
     const priorityBadgeVariant = (priority: string): "destructive" | "secondary" | "outline" => {
         const p = String(priority || "").toLowerCase();
@@ -367,8 +438,8 @@ export function CompetitorsList({
     };
 
     const alertEvents = useMemo(
-        () => eventRows.filter((e) => isCompetitorAlertEventType(e.event_type)),
-        [eventRows]
+        () => activeEventRows.filter((e) => isCompetitorAlertEventType(e.event_type)),
+        [activeEventRows]
     );
 
     return (
@@ -376,7 +447,7 @@ export function CompetitorsList({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2 rounded-lg border bg-muted/30 p-1 w-fit">
                     {rangeOptions.map((opt) => {
-                        const active = range === opt.value;
+                        const active = optimisticRange === opt.value;
                         return (
                             <Button
                                 key={opt.value}
@@ -407,7 +478,7 @@ export function CompetitorsList({
                     ) : null}
                     <Button variant="outline" size="sm" asChild>
                         <a
-                            href={`/api/competitors/export?range=${range}`}
+                            href={`/api/competitors/export?range=${optimisticRange}`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -422,7 +493,7 @@ export function CompetitorsList({
                 </div>
             </div>
 
-            {ownSearchKeywords.length > 0 && (
+            {activeOwnSearchKeywords.length > 0 && (
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -434,19 +505,19 @@ export function CompetitorsList({
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {keywordDiscoverySplit.directPct + keywordDiscoverySplit.discoveryPct > 0 ? (
+                    {activeKeywordDiscoverySplit.directPct + activeKeywordDiscoverySplit.discoveryPct > 0 ? (
                         <p className="text-sm text-muted-foreground">
                             <span className="font-medium text-foreground">
-                                {keywordDiscoverySplit.discoveryPct}% discovery
+                                {activeKeywordDiscoverySplit.discoveryPct}% discovery
                             </span>{" "}
                             vs{" "}
                             <span className="font-medium text-foreground">
-                                {keywordDiscoverySplit.directPct}% name/brand
+                                {activeKeywordDiscoverySplit.directPct}% name/brand
                             </span>
                         </p>
                     ) : null}
                     <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        {ownSearchKeywords.slice(0, 12).map((k) => (
+                        {activeOwnSearchKeywords.slice(0, 12).map((k) => (
                             <li
                                 key={`${k.monthStart}-${k.keyword}`}
                                 className="flex items-center justify-between gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
@@ -706,16 +777,16 @@ export function CompetitorsList({
                     {/* Data Table */}
                     <Card className="col-span-1 md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Market Benchmark ({benchmarkRange.label})</CardTitle>
+                            <CardTitle>Market Benchmark ({activeBenchmarkRange.label})</CardTitle>
                             <CardDescription>
                                 Your average rating uses reviews received in this period. Competitors use the latest
                                 snapshot in this period (or current totals if no snapshot yet).{" "}
-                                {!benchmarkRange.marketBenchmarkAvailable && competitors.length > 0 ? (
+                                {!activeBenchmarkRange.marketBenchmarkAvailable && competitors.length > 0 ? (
                                     <span className="text-chart-4 dark:text-chart-4">
                                         Competitor ratings are not loaded yet — run Sync from Google or wait for the
                                         next sync.
                                     </span>
-                                ) : benchmarkRange.marketEndUsedFallback ? (
+                                ) : activeBenchmarkRange.marketEndUsedFallback ? (
                                     "Some competitors fell back to live totals where snapshots were missing."
                                 ) : null}
                             </CardDescription>
@@ -725,34 +796,34 @@ export function CompetitorsList({
                                 <div className="rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">Your rank (by period rating)</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmarkRange.rank ? `#${benchmarkRange.rank}` : "—"}
+                                        {activeBenchmarkRange.rank ? `#${activeBenchmarkRange.rank}` : "—"}
                                         <span className="text-sm text-muted-foreground">
                                             {" "}
-                                            / {benchmarkRange.totalRanked || "—"}
+                                            / {activeBenchmarkRange.totalRanked || "—"}
                                         </span>
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Your avg rating ({benchmarkRange.label})</p>
+                                    <p className="text-xs text-muted-foreground">Your avg rating ({activeBenchmarkRange.label})</p>
                                     <p className="text-xl font-semibold">
-                                        {ownBusinessInRange.avgRating !== null
-                                            ? ownBusinessInRange.avgRating.toFixed(1)
+                                        {activeOwnBusinessInRange.avgRating !== null
+                                            ? activeOwnBusinessInRange.avgRating.toFixed(1)
                                             : "—"}
                                     </p>
                                     <p className="text-[11px] text-muted-foreground mt-1">
-                                        {ownBusinessInRange.reviewCount} reviews in period
+                                        {activeOwnBusinessInRange.reviewCount} reviews in period
                                     </p>
                                 </div>
                                 <div className="rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">You vs market end (rating)</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmarkRange.yourAvgVsMarketEnd === null
+                                        {activeBenchmarkRange.yourAvgVsMarketEnd === null
                                             ? "—"
-                                            : `${benchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${benchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
+                                            : `${activeBenchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${activeBenchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
                                     </p>
                                     <p className="text-[11px] text-muted-foreground mt-1">
-                                        {benchmarkRange.marketBenchmarkAvailable ? (
-                                            <>Market end avg {benchmarkRange.marketEndAvgRating.toFixed(1)}</>
+                                        {activeBenchmarkRange.marketBenchmarkAvailable ? (
+                                            <>Market end avg {activeBenchmarkRange.marketEndAvgRating.toFixed(1)}</>
                                         ) : (
                                             <>Market average unavailable until competitor data syncs</>
                                         )}
@@ -761,12 +832,12 @@ export function CompetitorsList({
                                 <div className="rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">Avg competitor review gain</p>
                                     <p className="text-xl font-semibold">
-                                        {benchmarkRange.marketAvgReviewGain === null
+                                        {activeBenchmarkRange.marketAvgReviewGain === null
                                             ? "—"
-                                            : `${benchmarkRange.marketAvgReviewGain > 0 ? "+" : ""}${Math.round(benchmarkRange.marketAvgReviewGain)}`}
+                                            : `${activeBenchmarkRange.marketAvgReviewGain > 0 ? "+" : ""}${Math.round(activeBenchmarkRange.marketAvgReviewGain)}`}
                                     </p>
                                     <p className="text-[11px] text-muted-foreground mt-1">
-                                        Mean first→last snapshot in {benchmarkRange.label}
+                                        Mean first→last snapshot in {activeBenchmarkRange.label}
                                     </p>
                                 </div>
                             </div>
@@ -802,7 +873,7 @@ export function CompetitorsList({
                                         const updatedAt = competitor.updated_at 
                                             ? <TimeAgo date={competitor.updated_at} />
                                             : "—";
-                                        const places = placesMetaByCompetitorId[competitor.id];
+                                        const places = activePlacesMetaByCompetitorId[competitor.id];
                                         
                                         return (
                                             <TableRow key={competitor.id}>
@@ -1059,13 +1130,13 @@ export function CompetitorsList({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {eventRows.length === 0 ? (
+                            {activeEventRows.length === 0 ? (
                                 <p className="text-sm text-muted-foreground">
                                     No events recorded in this period yet.
                                 </p>
                             ) : (
                                 <div className="space-y-3">
-                                    {eventRows.slice(0, 20).map((event) => {
+                                    {activeEventRows.slice(0, 20).map((event) => {
                                         const competitorName =
                                             competitors.find((c) => c.id === event.competitor_id)?.name || "Competitor";
                                         return (

@@ -179,12 +179,19 @@ export async function GET(request: NextRequest) {
 
         if (error) throw error;
 
-        return apiOk({
-            customers: data,
-            total: count,
-            page,
-            limit
-        });
+        return apiOk(
+            {
+                customers: data,
+                total: count,
+                page,
+                limit,
+            },
+            {
+                headers: {
+                    "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+                },
+            }
+        );
 
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unexpected error occurred";

@@ -22,7 +22,7 @@ import {
     Globe,
     X,
 } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
 
@@ -181,6 +181,7 @@ export function AppSidebar({
     ...props
 }: React.ComponentProps<typeof Sidebar> & { hideGoogleQaNav?: boolean }) {
     const pathname = usePathname()
+    const router = useRouter()
     const { dict } = useLanguage()
     const { setOpenMobile } = useSidebar()
     const isSettingsActive = pathname.startsWith("/settings")
@@ -284,6 +285,13 @@ export function AppSidebar({
             icon: Users,
         },
     ], [dict])
+
+    React.useEffect(() => {
+        const targets = [...items.map((i) => i.url), ...settingsItems.map((i) => i.url)]
+        for (const href of targets) {
+            router.prefetch(href)
+        }
+    }, [items, settingsItems, router])
 
     return (
         <Sidebar collapsible="icon" {...props} className="border-r border-sidebar-border bg-canvas-elevated">

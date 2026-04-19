@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { cookies } from "next/headers";
+import dynamic from "next/dynamic";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
     Card,
@@ -44,9 +45,6 @@ import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { ReviewTrendChart } from "@/components/dashboard/review-trend-chart";
-import { RatingDistributionChart } from "@/components/dashboard/rating-distribution-chart";
-import { QRCodeCard } from "@/components/dashboard/qr-code-card";
 import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
 import { DASHBOARD_DEMO_DATA } from "@/constants/dashboard-demo-data";
 import {
@@ -55,9 +53,16 @@ import {
     type GooglePerformanceTotals,
 } from "@/services/google/performance-queries";
 import { ProStatCard } from "@/components/dashboard/pro-stat-card";
-import { AnimatedReviewCards } from "@/components/ui/animated-review-card";
 import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
+
+const ReviewTrendChart = dynamic(() => import("@/components/dashboard/review-trend-chart").then((m) => m.ReviewTrendChart), { ssr: false });
+const RatingDistributionChart = dynamic(
+    () => import("@/components/dashboard/rating-distribution-chart").then((m) => m.RatingDistributionChart),
+    { ssr: false }
+);
+const QRCodeCard = dynamic(() => import("@/components/dashboard/qr-code-card").then((m) => m.QRCodeCard), { ssr: false });
+const AnimatedReviewCards = dynamic(() => import("@/components/ui/animated-review-card").then((m) => m.AnimatedReviewCards), { ssr: false });
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {

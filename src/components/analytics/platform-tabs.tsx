@@ -16,9 +16,11 @@ interface PlatformTabsProps {
     platforms: string[]; // ['google', 'facebook', etc]
     activePlatform: string;
     businessSlug: string;
+    /** When set, platform switching is client-only (no Next.js navigation). */
+    onPlatformChange?: (platformId: string) => void;
 }
 
-export function PlatformTabs({ platforms, activePlatform, businessSlug }: PlatformTabsProps) {
+export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatformChange }: PlatformTabsProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -54,6 +56,10 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug }: Platfo
     );
 
     const handlePlatformChange = (id: string) => {
+        if (onPlatformChange) {
+            onPlatformChange(id);
+            return;
+        }
         const params = new URLSearchParams(searchParams.toString());
         if (id === "all") {
             params.delete("platform");

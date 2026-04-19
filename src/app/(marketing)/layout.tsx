@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { CookieBanner } from "@/components/ui/cookie-banner";
 
@@ -14,6 +15,14 @@ export default function MarketingLayout({
     children: React.ReactNode;
 }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        // Warm main navigation routes so first click feels instant.
+        ["/docs", "/login", "/signup", "/about", "/contact", "/help", "/privacy", "/terms", "/data-retention"].forEach(
+            (href) => router.prefetch(href)
+        );
+    }, [router]);
     return (
         <div className="flex min-h-screen min-w-0 flex-col overflow-x-clip bg-background text-foreground">
             <header className="sticky top-0 z-50 w-full min-w-0 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">

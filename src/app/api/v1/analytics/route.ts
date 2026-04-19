@@ -48,27 +48,34 @@ export async function GET(req: NextRequest) {
     const reviewLeft = requests.filter((r) => r.review_left).length;
 
     return withCors(
-        NextResponse.json({
-            success: true,
-            data: {
-                rangeDays: days,
-                reviews: {
-                    total: totalReviews,
-                    avgRating: Number(avgRating.toFixed(2)),
-                    responded,
-                    pending,
-                    responseRate: totalReviews > 0 ? Number(((responded / totalReviews) * 100).toFixed(1)) : 0,
-                },
-                requests: {
-                    total: requestsRes.count || 0,
-                    sent,
-                    clicked,
-                    completed,
-                    reviewLeft,
-                    clickRate: sent > 0 ? Number(((clicked / sent) * 100).toFixed(1)) : 0,
-                    completionRate: clicked > 0 ? Number(((completed / clicked) * 100).toFixed(1)) : 0,
+        NextResponse.json(
+            {
+                success: true,
+                data: {
+                    rangeDays: days,
+                    reviews: {
+                        total: totalReviews,
+                        avgRating: Number(avgRating.toFixed(2)),
+                        responded,
+                        pending,
+                        responseRate: totalReviews > 0 ? Number(((responded / totalReviews) * 100).toFixed(1)) : 0,
+                    },
+                    requests: {
+                        total: requestsRes.count || 0,
+                        sent,
+                        clicked,
+                        completed,
+                        reviewLeft,
+                        clickRate: sent > 0 ? Number(((clicked / sent) * 100).toFixed(1)) : 0,
+                        completionRate: clicked > 0 ? Number(((completed / clicked) * 100).toFixed(1)) : 0,
+                    },
                 },
             },
-        })
+            {
+                headers: {
+                    "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
+                },
+            }
+        )
     );
 }

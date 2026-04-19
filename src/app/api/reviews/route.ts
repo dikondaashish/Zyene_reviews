@@ -99,12 +99,19 @@ export async function GET(request: NextRequest) {
 
     const totalPages = count ? Math.ceil(count / pageSize) : 0;
 
-    return NextResponse.json({
-        reviews,
-        count,
-        totalPages,
-        page,
-        publicCount: publicCount || 0,
-        privateCount: privateCount || 0,
-    });
+    return NextResponse.json(
+        {
+            reviews,
+            count,
+            totalPages,
+            page,
+            publicCount: publicCount || 0,
+            privateCount: privateCount || 0,
+        },
+        {
+            headers: {
+                "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+            },
+        }
+    );
 }
