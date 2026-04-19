@@ -126,76 +126,36 @@ export default function MarketingLayout({
             </main>
             <CookieBanner />
 
-            <footer className="border-t border-[color:var(--marketing-footer-border)] bg-[color:var(--marketing-footer-bg)] py-12 text-[color:var(--marketing-footer-fg)]">
-                <div className="container mx-auto px-4 sm:px-8 max-w-7xl">
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-                        <div className="col-span-2 md:col-span-2">
-                            <Link href="/" className="font-bold text-lg text-[color:var(--marketing-footer-fg)] mb-4 block">
-                                <span className="text-primary">Zyene</span> Reviews
-                            </Link>
-                            <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-4 max-w-sm">
-                                Review management software for local businesses.
-                            </p>
-                            <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-4">
-                                © {new Date().getFullYear()}{" "}
-                                <a
-                                    href="https://zyene.com"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[color:var(--marketing-footer-muted)] hover:text-[color:var(--marketing-footer-fg)] transition-colors underline-offset-2 hover:underline"
-                                >
-                                    Zyene, Inc.
-                                </a>{" "}
-                                All rights reserved.
-                            </p>
-                            <div className="max-w-full overflow-hidden">
-                                <iframe
-                                    src="https://status.zyenereviews.com/badge?theme=light"
-                                    width="250"
-                                    height="30"
-                                    title="Service status"
-                                    className="max-w-full"
-                                    frameBorder="0"
-                                    scrolling="no"
-                                    style={{
-                                        colorScheme: "normal",
-                                        maxWidth: "100%",
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-[color:var(--marketing-footer-fg)] mb-3">Product</h3>
-                            <ul className="space-y-2 text-sm text-[color:var(--marketing-footer-muted)]">
-                                <li><Link href="/#features" className="hover:text-[color:var(--marketing-footer-fg)]">Features</Link></li>
-                                <li><Link href="/#pricing" className="hover:text-[color:var(--marketing-footer-fg)]">Pricing</Link></li>
-                                <li><Link href="/docs" className="hover:text-[color:var(--marketing-footer-fg)]">Docs</Link></li>
-                                <li><Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-[color:var(--marketing-footer-fg)]">Log In</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-[color:var(--marketing-footer-fg)] mb-3">Resources</h3>
-                            <ul className="space-y-2 text-sm text-[color:var(--marketing-footer-muted)]">
-                                <li><Link href="/about" className="hover:text-[color:var(--marketing-footer-fg)]">About Us</Link></li>
-                                <li><Link href="/contact" className="hover:text-[color:var(--marketing-footer-fg)]">Contact</Link></li>
-                                <li><Link href="/help" className="hover:text-[color:var(--marketing-footer-fg)]">Help Center</Link></li>
-                                <li><a href="https://status.zyenereviews.com" target="_blank" rel="noopener noreferrer" className="hover:text-[color:var(--marketing-footer-fg)]">System Status</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-[color:var(--marketing-footer-fg)] mb-3">Legal</h3>
-                            <ul className="space-y-2 text-sm text-[color:var(--marketing-footer-muted)]">
-                                <li><Link href="/privacy" className="hover:text-[color:var(--marketing-footer-fg)]">Privacy Policy</Link></li>
-                                <li><Link href="/terms" className="hover:text-[color:var(--marketing-footer-fg)]">Terms of Service</Link></li>
-                                <li><Link href="/data-retention" className="hover:text-[color:var(--marketing-footer-fg)]">Data Retention</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="border-t border-[color:var(--marketing-footer-border)] pt-6">
-                        <p className="text-xs text-[color:var(--marketing-footer-subtle)] text-center">
-                            Zyene Reviews is an independent platform and is not affiliated with, endorsed by, or sponsored by Google LLC.
-                        </p>
-                    </div>
+            <footer className="mt-auto border-t border-border bg-background">
+                <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-10 sm:flex-row sm:items-center sm:px-8">
+                    <p className="order-2 text-center text-sm text-muted-foreground sm:order-1 sm:text-left">
+                        © {new Date().getFullYear()} Zyene, Inc. · Local to Global
+                    </p>
+                    <nav
+                        className="order-1 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-muted-foreground sm:order-2 sm:justify-end"
+                        aria-label="Legal and privacy"
+                    >
+                        <Link href="/terms" className="transition-colors hover:text-foreground">
+                            Legal
+                        </Link>
+                        <Link href="/privacy" className="transition-colors hover:text-foreground">
+                            Privacy
+                        </Link>
+                        <button
+                            type="button"
+                            className="cursor-pointer bg-transparent p-0 text-sm font-normal text-muted-foreground transition-colors hover:text-foreground"
+                            onClick={() => {
+                                const w = window as Window & { openCookiePreferences?: () => void };
+                                if (typeof w.openCookiePreferences === "function") {
+                                    w.openCookiePreferences();
+                                } else {
+                                    window.dispatchEvent(new Event("zyene:open-cookie-preferences"));
+                                }
+                            }}
+                        >
+                            Manage cookies
+                        </button>
+                    </nav>
                 </div>
             </footer>
         </div>
