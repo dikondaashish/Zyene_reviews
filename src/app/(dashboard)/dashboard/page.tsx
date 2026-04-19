@@ -365,13 +365,13 @@ export default async function DashboardPage() {
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
                     .eq("response_status", "pending"),
-                // 3. Recent Reviews (5 most recent)
+                // 3. Recent Reviews (15 most recent — Review Spotlight carousel)
                 supabase
                     .from("reviews")
                     .select("*")
                     .eq("business_id", business.id)
                     .order("review_date", { ascending: false })
-                    .limit(5),
+                    .limit(15),
                 // 4. Needs Attention (urgent or negative, still pending)
                 supabase
                     .from("reviews")
@@ -1164,7 +1164,7 @@ export default async function DashboardPage() {
                 <div className="min-w-0">
                     {recentReviews.length > 0 ? (
                         <DashboardAnimatedReviewCardsLazy
-                            reviews={recentReviews.slice(0, 5).map((r: any) => ({
+                            reviews={recentReviews.slice(0, 15).map((r: any) => ({
                                 id: r.id,
                                 name: r.author_name || "Anonymous",
                                 avatar: r.author_avatar_url || "",
@@ -1181,7 +1181,7 @@ export default async function DashboardPage() {
                                 viewInReviews: dict.dashboard.review_spotlight_view_inbox,
                             }}
                             shellTitle={dict.dashboard.review_spotlight_title}
-                            shellSubtitle={dict.dashboard.review_spotlight_hint}
+                            shellSubtitle={dict.dashboard.review_spotlight_desc}
                             manageAllHref="/reviews"
                             manageAllLabel={dict.dashboard.review_spotlight_manage_all}
                         />

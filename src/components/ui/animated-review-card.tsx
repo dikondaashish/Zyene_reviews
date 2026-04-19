@@ -27,7 +27,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const MAX_STACK = 5;
+const MAX_STACK = 15;
 
 export interface SpotlightReview {
     id: number | string;
@@ -82,7 +82,7 @@ interface AnimatedReviewCardsProps {
 }
 
 const cardVariants = cva(
-    "absolute overflow-hidden rounded-xl border border-border bg-background shadow-sm sm:max-w-none",
+    "col-start-1 row-start-1 w-full max-w-xl justify-self-center overflow-hidden rounded-xl border border-border bg-background shadow-sm",
     {
         variants: {
             theme: {
@@ -194,9 +194,11 @@ function PlatformBadge({ platform, theme }: { platform: string; theme: ThemeColo
     const subtle =
         theme === "vibrant"
             ? "border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
-            : "border-transparent bg-muted/70 text-muted-foreground";
+            : p === "google"
+              ? "border-amber-200/70 bg-amber-100/90 text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100"
+              : "border-border/80 bg-muted/80 text-foreground/80 dark:bg-muted/60";
     return (
-        <Badge variant="outline" className={cn("h-5 rounded-full px-2 py-0 text-[11px] font-medium", subtle)}>
+        <Badge variant="outline" className={cn("h-5 shrink-0 rounded-full px-2.5 py-0 text-[11px] font-medium", subtle)}>
             {label}
         </Badge>
     );
@@ -212,11 +214,11 @@ function SentimentPill({ sentiment, theme }: { sentiment: string; theme: ThemeCo
             : s === "negative"
               ? theme === "vibrant"
                   ? "bg-destructive/30 text-destructive-foreground"
-                  : "bg-destructive/100/15 text-destructive dark:text-destructive"
-              : s === "mixed"
+                  : "bg-destructive/15 text-destructive dark:text-destructive"
+                : s === "mixed"
                 ? theme === "vibrant"
                     ? "bg-chart-4/30 text-foreground"
-                    : "bg-chart-4/120/15 text-chart-4 dark:text-chart-4"
+                    : "bg-chart-4/15 text-chart-4 dark:text-chart-4"
                 : theme === "vibrant"
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-muted text-muted-foreground";
@@ -233,7 +235,7 @@ export const AnimatedReviewCards = ({
     animationDuration = 0.3,
     scaleStep = 0.05,
     verticalSpacing = 10,
-    horizontalSpacing = 20,
+    horizontalSpacing: _horizontalSpacing = 20,
     autoRotate = true,
     rotateInterval = 8000,
     theme = "default",
@@ -266,20 +268,6 @@ export const AnimatedReviewCards = ({
     }, [initialReviewsProp]);
 
     const pauseRotation = hoverPause || focusWithin || isInteracting;
-
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
-
-        const mql = window.matchMedia("(max-width: 640px)");
-        const update = () => setIsMobile(mql.matches);
-
-        update();
-        mql.addEventListener?.("change", update);
-        return () => {
-            mql.removeEventListener?.("change", update);
-        };
-    }, []);
 
     const rotateForward = useCallback(() => {
         setReviews((prev) => {
@@ -344,11 +332,15 @@ export const AnimatedReviewCards = ({
     const showShell = Boolean(shellTitle);
     const navDisabled = reviews.length < 2;
 
+    /** Centered deck: back cards sit slightly below and smaller so edges peek without horizontal overflow. */
+    const deckYOffset = Math.min(9, Math.max(5, Math.round(verticalSpacing * 0.65)));
+    const deckScaleStep = scaleStep > 0 && scaleStep < 0.1 ? scaleStep : 0.028;
+
     const carouselRegion = (
         <div
             className={cn(
-                "relative flex w-full items-center justify-center",
-                showShell ? "h-[380px] md:h-[340px]" : "h-[400px] md:h-[350px]"
+                "relative mx-auto w-full overflow-hidden rounded-xl px-1 sm:px-2",
+                showShell ? "min-h-[300px] pb-2 pt-1 sm:min-h-[310px]" : "min-h-[360px] pb-2 pt-2 sm:min-h-[380px]"
             )}
             onMouseEnter={() => setHoverPause(true)}
             onMouseLeave={() => setHoverPause(false)}
@@ -361,44 +353,54 @@ export const AnimatedReviewCards = ({
             aria-label={shellTitle || "Review spotlight"}
             aria-live="polite"
         >
-            <AnimatePresence>
-                {reviews.map((review, index) => (
-                    <motion.div
-                        key={String(review.id)}
-                        initial={reduceMotion ? false : { scale: 0.88, y: 80, opacity: 0 }}
-                        animate={{
-                            scale: 1 + index * scaleStep,
-                            y: index * -verticalSpacing,
-                            x: !isMobile ? index * horizontalSpacing * (index % 2 === 0 ? 1 : -1) : 0,
-                            opacity: 1 - index * 0.18,
-                            zIndex: reviews.length - index,
-                        }}
-                        exit={reduceMotion ? undefined : { scale: 0.88, y: 80, opacity: 0 }}
-                        transition={{ duration: effectiveDuration }}
-                        drag={interactionType === "drag" && !reduceMotion ? "y" : false}
-                        dragConstraints={interactionType === "drag" && !reduceMotion ? { top: 0, bottom: 0 } : undefined}
-                        onDragStart={() => setIsInteracting(true)}
-                        onDragEnd={() => {
-                            setIsInteracting(false);
-                            if (interactionType === "drag") handleInteraction(index);
-                        }}
-                        onClick={() => {
-                            if (interactionType === "click") {
-                                setIsInteracting(true);
-                                handleInteraction(index);
-                                setTimeout(() => setIsInteracting(false), 300);
+            <div className="grid w-full grid-cols-1 grid-rows-1 justify-items-center">
+                <AnimatePresence>
+                    {reviews.map((review, index) => (
+                        <motion.div
+                            key={String(review.id)}
+                            initial={reduceMotion ? false : { scale: 0.92, y: 24, opacity: 0 }}
+                            animate={{
+                                scale: Math.max(0.86, 1 - index * deckScaleStep),
+                                y: index * deckYOffset,
+                                x: 0,
+                                opacity: Math.max(0.35, 1 - index * 0.14),
+                                zIndex: reviews.length - index,
+                            }}
+                            exit={reduceMotion ? undefined : { scale: 0.92, y: 24, opacity: 0 }}
+                            transition={{ duration: effectiveDuration }}
+                            drag={interactionType === "drag" && !reduceMotion && index === 0 ? "y" : false}
+                            dragConstraints={
+                                interactionType === "drag" && !reduceMotion && index === 0
+                                    ? { top: 0, bottom: 0 }
+                                    : undefined
                             }
-                        }}
-                        title={interactionType === "drag" ? "Drag to see the next review" : "Click for next review"}
-                        className={cn(
-                            cardVariants({
-                                theme,
-                                cursor: interactionType,
-                                className: classNames?.card,
-                            }),
-                            "h-[min(300px,70vh)] w-[calc(100vw-2rem)] max-w-[300px] sm:w-[350px] sm:max-w-none md:h-[250px] md:w-[min(100%,550px)]"
-                        )}
-                    >
+                            onDragStart={() => setIsInteracting(true)}
+                            onDragEnd={() => {
+                                setIsInteracting(false);
+                                if (interactionType === "drag" && index === 0) handleInteraction(index);
+                            }}
+                            onClick={() => {
+                                if (interactionType === "click" && index === 0) {
+                                    setIsInteracting(true);
+                                    handleInteraction(index);
+                                    setTimeout(() => setIsInteracting(false), 300);
+                                }
+                            }}
+                            title={
+                                interactionType === "drag"
+                                    ? "Drag to see the next review"
+                                    : "Click for next review"
+                            }
+                            className={cn(
+                                cardVariants({
+                                    theme,
+                                    cursor: interactionType,
+                                    className: classNames?.card,
+                                }),
+                                "h-[min(280px,58vh)] min-h-[220px] sm:h-[260px] sm:min-h-[240px] md:h-[252px]",
+                                index > 0 && "cursor-default"
+                            )}
+                        >
                         <div
                             className={cn(
                                 "flex h-full min-h-0 flex-col p-5 md:p-6",
@@ -591,15 +593,20 @@ export const AnimatedReviewCards = ({
                                 </div>
                             ) : null}
                         </div>
-                    </motion.div>
-                ))}
-            </AnimatePresence>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </div>
         </div>
     );
 
     const pagination = labels && stableOrderRef.current.length > 0 && (
         <div className="mt-4 flex w-full justify-center px-2">
-            <div className="flex items-center justify-center gap-1.5" role="tablist" aria-label="Review position">
+            <div
+                className="flex max-w-full flex-wrap items-center justify-center gap-1.5"
+                role="tablist"
+                aria-label="Review position"
+            >
                 {stableOrderRef.current.map((id, i) => (
                     <span
                         key={id}
