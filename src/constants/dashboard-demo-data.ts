@@ -50,5 +50,29 @@ export const DASHBOARD_DEMO_DATA = {
         { rating: 3, count: 8 },
         { rating: 2, count: 3 },
         { rating: 1, count: 2 }
-    ]
+    ],
+    attentionReviews: [
+        {
+            id: "demo-att-1",
+            author_name: "Jordan Lee",
+            rating: 2,
+            platform: "google",
+            text: "Order arrived cold and over an hour late. Packaging was damaged and part of the meal was missing.",
+            review_date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 120).toISOString(),
+            urgency_score: 10,
+            themes: ["delivery", "food_quality"],
+            response_status: "pending",
+        },
+        {
+            id: "demo-att-2",
+            author_name: "Priya N.",
+            rating: 1,
+            platform: "google",
+            text: "Staff seemed overwhelmed and we were ignored for twenty minutes. Not what we expected.",
+            review_date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14).toISOString(),
+            urgency_score: 9,
+            themes: ["wait_time", "staff_behavior"],
+            response_status: "pending",
+        },
+    ],
 };

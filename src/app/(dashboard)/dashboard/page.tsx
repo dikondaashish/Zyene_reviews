@@ -13,7 +13,6 @@ import {
     MessageSquare,
     Star,
     Clock,
-    AlertTriangle,
     ArrowRight,
     TrendingUp,
     CheckCircle,
@@ -32,6 +31,10 @@ import {
     ListChecks,
     BedDouble,
 } from "lucide-react";
+import {
+    NeedsAttention,
+    type NeedsAttentionReview,
+} from "@/components/dashboard/needs-attention";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { Progress } from "@/components/ui/progress";
@@ -145,6 +148,18 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
             {sentiment}
         </span>
     );
+}
+
+function mapAttentionRows(rows: any[]): NeedsAttentionReview[] {
+    return (rows || []).map((r) => ({
+        id: String(r.id),
+        author: r.author_name || "Anonymous",
+        rating: typeof r.rating === "number" ? r.rating : Number(r.rating) || 0,
+        urgency: Math.min(10, Math.max(1, Number(r.urgency_score) || 8)),
+        date: r.review_date || r.created_at || new Date().toISOString(),
+        text: typeof r.text === "string" ? r.text : "",
+        tags: Array.isArray(r.themes) ? r.themes : [],
+    }));
 }
 
 export default async function DashboardPage() {
@@ -634,7 +649,8 @@ export default async function DashboardPage() {
         engagementRate = DASHBOARD_DEMO_DATA.engagementRate;
         hasEngagementData = true;
         newReviews30d = DASHBOARD_DEMO_DATA.newReviews30d;
-        
+        attentionReviews = [...DASHBOARD_DEMO_DATA.attentionReviews];
+
         // Mock business stats for cards
         (business as any).total_reviews = DASHBOARD_DEMO_DATA.total_reviews;
         (business as any).average_rating = DASHBOARD_DEMO_DATA.average_rating;
@@ -1181,81 +1197,50 @@ export default async function DashboardPage() {
                 </Card>
 
                 {/* Needs Attention */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle className="flex items-center gap-2">
-                                <AlertTriangle className="h-4 w-4 text-primary" />
-                                Needs Attention
-                            </CardTitle>
-                            <CardDescription>
-                                Urgent or negative reviews awaiting response
-                            </CardDescription>
-                        </div>
-                        {attentionReviews.length > 0 && (
-                            <Link href="/reviews?status=needs_response&sort=lowest">
-                                <Button variant="ghost" size="sm" className="gap-1">
-                                    View all <ArrowRight className="h-3 w-3" />
-                                </Button>
-                            </Link>
-                        )}
-                    </CardHeader>
-                    <CardContent data-tour-target="tour-needs-attention">
-                        {attentionReviews.length > 0 ? (
-                            <div className="space-y-4">
-                                {attentionReviews.map((review: any) => (
-                                    <div
-                                        key={review.id}
-                                        className="flex flex-col gap-1.5 border-b border-border/50 pb-3 last:border-0 last:pb-0"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-medium text-sm">
-                                                    {review.author_name || "Anonymous"}
-                                                </span>
-                                                {review.urgency_score >= 7 && (
-                                                    <Badge
-                                                        variant="destructive"
-                                                        className="text-xs"
-                                                    >
-                                                        Urgency: {review.urgency_score}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            <span className="text-xs text-muted-foreground">
-                                                {review.review_date
-                                                    ? formatDistanceToNow(
-                                                        new Date(review.review_date),
-                                                        { addSuffix: true }
-                                                    )
-                                                    : ""}
-                                            </span>
-                                        </div>
-                                        <Stars rating={review.rating} />
-                                        {review.text && (
-                                            <p className="text-sm text-muted-foreground line-clamp-2">
-                                                {review.text}
-                                            </p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-10 text-center space-y-2">
-                                <div className="rounded-full bg-chart-2/10 p-3">
-                                    <CheckCircle className="h-6 w-6 text-chart-2" />
-                                </div>
-                                <p className="font-medium text-sm">
-                                    All clear!
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    No urgent reviews need your attention right
-                                    now.
-                                </p>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                <div data-tour-target="tour-needs-attention">
+                    <NeedsAttention
+                        reviews={mapAttentionRows(attentionReviews)}
+                        viewAllHref="/reviews?status=needs_response&sort=lowest"
+                        copy={{
+                            title: dict.dashboard.needs_attention_title,
+                            subtitle: (n) => {
+                                if (n === 0) {
+                                    return dict.dashboard.needs_attention_subtitle_zero;
+                                }
+                                if (n === 1) {
+                                    return dict.dashboard.needs_attention_subtitle_one;
+                                }
+                                return dict.dashboard.needs_attention_subtitle_many.replace(
+                                    "{count}",
+                                    String(n),
+                                );
+                            },
+                            viewAll: dict.dashboard.needs_attention_view_all,
+                            yourReplyLabel:
+                                dict.dashboard.needs_attention_your_reply_label,
+                            sentToGoogle: dict.dashboard.needs_attention_sent_saved,
+                            draftWithAi: dict.dashboard.needs_attention_draft_ai,
+                            drafting: dict.dashboard.needs_attention_drafting,
+                            writeYourOwn: dict.dashboard.needs_attention_write_own,
+                            regenerate: dict.dashboard.needs_attention_regenerate,
+                            adjustTone: dict.dashboard.needs_attention_adjust_tone,
+                            toneProfessional:
+                                dict.dashboard.needs_attention_tone_professional,
+                            toneWarm: dict.dashboard.needs_attention_tone_warm,
+                            toneBrief: dict.dashboard.needs_attention_tone_brief,
+                            sendReply: dict.dashboard.needs_attention_send,
+                            sent: dict.dashboard.needs_attention_sent,
+                            urgencyLabel: (score) =>
+                                dict.dashboard.needs_attention_urgency.replace(
+                                    "{score}",
+                                    String(score),
+                                ),
+                            emptyTitle: dict.dashboard.needs_attention_empty_title,
+                            emptyDescription:
+                                dict.dashboard.needs_attention_empty_desc,
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
