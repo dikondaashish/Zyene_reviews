@@ -126,24 +126,30 @@ export default function MarketingLayout({
             </main>
             <CookieBanner />
 
-            <footer className="mt-auto border-t border-border bg-background">
-                <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-10 sm:flex-row sm:items-center sm:px-8">
-                    <p className="order-2 text-center text-sm text-muted-foreground sm:order-1 sm:text-left">
+            <footer className="mt-auto border-t border-border/70 bg-canvas">
+                <div className="container mx-auto flex max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-9 sm:px-8">
+                    <p className="text-left text-[13px] font-normal leading-normal text-muted-foreground">
                         © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                     </p>
                     <nav
-                        className="order-1 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-muted-foreground sm:order-2 sm:justify-end"
+                        className="flex flex-wrap items-center justify-end gap-x-8 gap-y-1 text-[13px] font-normal leading-normal text-muted-foreground"
                         aria-label="Legal and privacy"
                     >
-                        <Link href="/terms" className="transition-colors hover:text-foreground">
+                        <Link
+                            href="/terms"
+                            className="text-muted-foreground no-underline transition-colors hover:text-foreground"
+                        >
                             Legal
                         </Link>
-                        <Link href="/privacy" className="transition-colors hover:text-foreground">
+                        <Link
+                            href="/privacy"
+                            className="text-muted-foreground no-underline transition-colors hover:text-foreground"
+                        >
                             Privacy
                         </Link>
                         <button
                             type="button"
-                            className="cursor-pointer bg-transparent p-0 text-sm font-normal text-muted-foreground transition-colors hover:text-foreground"
+                            className="cursor-pointer bg-transparent p-0 text-[13px] font-normal leading-normal text-muted-foreground no-underline transition-colors hover:text-foreground"
                             onClick={() => {
                                 const w = window as Window & { openCookiePreferences?: () => void };
                                 if (typeof w.openCookiePreferences === "function") {
