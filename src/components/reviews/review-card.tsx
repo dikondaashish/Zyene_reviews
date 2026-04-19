@@ -331,14 +331,14 @@ export function ReviewCard({
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case 'responded': return <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium border border-green-200">Responded</span>;
+            case 'responded': return <span className="text-xs px-2 py-0.5 rounded-full bg-chart-2/15 text-chart-2 font-medium border border-chart-2/30">Responded</span>;
             case 'ignored': return <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium border border-border">Ignored</span>;
-            default: return <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 font-medium border border-yellow-200">Pending</span>;
+            default: return <span className="text-xs px-2 py-0.5 rounded-full bg-chart-4/15 text-chart-4 font-medium border border-chart-4/35">Pending</span>;
         }
     };
 
     const renderStars = (rating: number) => {
-        const colorClass = rating >= 4 ? "text-green-500 fill-green-500" : rating === 3 ? "text-yellow-500 fill-yellow-500" : "text-red-500 fill-red-500";
+        const colorClass = rating >= 4 ? "text-chart-2 fill-chart-2" : rating === 3 ? "text-chart-4 fill-chart-4" : "text-destructive fill-destructive";
         return (
             <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
@@ -430,16 +430,16 @@ export function ReviewCard({
                 </div>
                 <div className="flex items-center gap-2">
                     {review.urgency_score && review.urgency_score >= 7 && (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full animate-pulse">
-                            <Zap className="w-3 h-3 fill-red-600" />
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 px-2 py-0.5 rounded-full animate-pulse">
+                            <Zap className="w-3 h-3 fill-destructive" />
                             URGENT
                         </span>
                     )}
                     {review.sentiment && (
                         <span className={cn(
                             "text-[10px] font-medium px-2 py-0.5 rounded-full border capitalize",
-                            review.sentiment === 'positive' && "bg-green-50 text-green-700 border-green-100",
-                            review.sentiment === 'negative' && "bg-red-50 text-red-700 border-red-100",
+                            review.sentiment === 'positive' && "bg-chart-2/10 text-chart-2 border-chart-2/20",
+                            review.sentiment === 'negative' && "bg-destructive/10 text-destructive border-destructive/20",
                             review.sentiment === 'neutral' && "bg-muted text-muted-foreground border-border",
                             review.sentiment === 'mixed' && "bg-primary/10 text-primary border-primary/20",
                         )}>
@@ -482,7 +482,7 @@ export function ReviewCard({
                             <Badge
                                 key={`ctx-${ctx}`}
                                 variant="secondary"
-                                className="px-2 py-0.5 h-5 text-[10px] bg-cyan-50 text-cyan-800 border-cyan-200 font-medium"
+                                className="px-2 py-0.5 h-5 text-[10px] bg-chart-1/10 text-chart-1 border-chart-1/30 font-medium"
                             >
                                 {ctx}
                             </Badge>
@@ -496,7 +496,7 @@ export function ReviewCard({
                             <Badge
                                 key={`google-chip-${chip}`}
                                 variant="secondary"
-                                className="px-2 py-0.5 h-5 text-[10px] bg-indigo-50 text-indigo-800 border-indigo-200 font-medium"
+                                className="px-2 py-0.5 h-5 text-[10px] bg-primary/10 text-primary border-primary/30 font-medium"
                             >
                                 {chip}
                             </Badge>
@@ -570,7 +570,7 @@ export function ReviewCard({
                             {review.response_source === REVIEW_RESPONSE_SOURCE_ZYENE && (
                                 <Badge
                                     variant="secondary"
-                                    className="h-5 px-2 text-[10px] font-medium bg-violet-50 text-violet-800 border-violet-200"
+                                    className="h-5 px-2 text-[10px] font-medium bg-sync-action/10 text-sync-action border-sync-action/30"
                                 >
                                     Replied via Zyene Reviews
                                 </Badge>
@@ -578,7 +578,7 @@ export function ReviewCard({
                             {review.response_source === REVIEW_RESPONSE_SOURCE_ZYENE_AUTO && (
                                 <Badge
                                     variant="secondary"
-                                    className="h-5 px-2 text-[10px] font-medium bg-indigo-50 text-indigo-900 border-indigo-200"
+                                    className="h-5 px-2 text-[10px] font-medium bg-primary/10 text-primary border-primary/30"
                                 >
                                     AI auto commenter · Zyene Reviews
                                 </Badge>
@@ -601,7 +601,7 @@ export function ReviewCard({
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        className="h-7 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        className="h-7 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
                                         onClick={() => setDeleteReplyOpen(true)}
                                     >
                                         <Trash2 className="w-3 h-3 mr-1" />
@@ -620,7 +620,7 @@ export function ReviewCard({
                 {review.response_status !== 'responded' && (
                     <div className="flex items-center gap-2">
                         {review.platform === 'yelp' ? (
-                            <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-1.5">
+                            <div className="flex items-center gap-2 text-xs text-chart-4 bg-chart-4/12 border border-chart-4/35 rounded-md px-3 py-1.5">
                                 <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
                                 <span>
                                     Replies to Yelp reviews must be made on{" "}
@@ -628,7 +628,7 @@ export function ReviewCard({
                                         href="https://biz.yelp.com"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="font-medium underline hover:text-amber-900"
+                                        className="font-medium underline hover:text-chart-4"
                                     >
                                         yelp.com
                                     </a>
@@ -803,7 +803,7 @@ export function ReviewCard({
                                         Mark as Ignored
                                     </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem className="text-xs text-red-600 focus:text-red-700 focus:bg-red-50 cursor-pointer">Report Review</DropdownMenuItem>
+                                <DropdownMenuItem className="text-xs text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">Report Review</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -823,7 +823,7 @@ export function ReviewCard({
                     {review.platform !== 'yelp' && (
                         <div className="flex items-center gap-3 mb-4">
                             <div className="flex items-center gap-2">
-                                <Sparkles className="w-4 h-4 text-violet-500" />
+                                <Sparkles className="w-4 h-4 text-sync-action" />
                                 <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">AI Tone</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -859,7 +859,7 @@ export function ReviewCard({
                             placeholder="Write a response or click a tone above for an AI draft..."
                             className={cn(
                                 "min-h-[120px] bg-background text-sm resize-none focus-visible:ring-primary border-border focus:border-primary placeholder:text-muted-foreground",
-                                isAiTyping && "border-violet-200 ring-1 ring-violet-100"
+                                isAiTyping && "border-sync-action/30 ring-1 ring-sync-action/20"
                             )}
                             value={replyText}
                             onChange={(e) => handleReplyTextChange(e.target.value)}
@@ -868,10 +868,10 @@ export function ReviewCard({
                         />
                         {isAiTyping && (
                             <span
-                                className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700 border border-violet-100"
+                                className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-sync-action/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-sync-action border border-sync-action/20"
                                 aria-live="polite"
                             >
-                                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+                                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-sync-action/100" />
                                 Writing
                             </span>
                         )}

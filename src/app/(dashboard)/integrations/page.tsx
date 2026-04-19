@@ -28,7 +28,7 @@ function TripAdvisorIcon() {
     return (
         <svg
             viewBox="0 0 24 24"
-            className="h-5 w-5 text-green-600"
+            className="h-5 w-5 text-chart-2"
             fill="currentColor"
         >
             <circle cx="6.5" cy="13.5" r="2" />
@@ -84,12 +84,12 @@ function StatusBadge({
     return (
         <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${count > 0
-                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
                 : "bg-muted text-muted-foreground"
                 }`}
         >
             {count > 0 && (
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-chart-2/100 animate-pulse" />
             )}
             {count} {label}
         </span>
@@ -178,7 +178,7 @@ export default async function IntegrationsPage() {
                             </span>
                         </div>
                         <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
-                            <Star className="h-4 w-4 text-yellow-500" />
+                            <Star className="h-4 w-4 text-chart-4" />
                             <span className="text-sm font-medium">
                                 {`${totalReviews.toLocaleString("en-US")} total reviews synced`}
                             </span>
@@ -220,7 +220,7 @@ export default async function IntegrationsPage() {
                         name="TripAdvisor"
                         description="Sync TripAdvisor reviews for hotels & businesses"
                         icon={<TripAdvisorIcon />}
-                        accentColor="bg-green-500"
+                        accentColor="bg-chart-2/100"
                     />
                 </div>
             </section>
@@ -248,9 +248,9 @@ export default async function IntegrationsPage() {
                         name="Clover"
                         description="Trigger review requests from Clover transactions"
                         icon={
-                            <CreditCard className="h-5 w-5 text-green-600" />
+                            <CreditCard className="h-5 w-5 text-chart-2" />
                         }
-                        accentColor="bg-green-600"
+                        accentColor="bg-chart-2/90"
                     />
                     <PlaceholderCard
                         name="Toast"

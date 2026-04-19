@@ -57,12 +57,12 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
                                                 {data.theme.replace(/_/g, " ")}
                                             </p>
                                             <div className="flex items-center gap-2">
-                                                <div className={`h-2 w-2 rounded-full ${data.sentimentScore >= 0 ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                                                <div className={`h-2 w-2 rounded-full ${data.sentimentScore >= 0 ? 'bg-chart-2/100' : 'bg-sync-action/100'}`} />
                                                 <p className="text-sm font-bold text-foreground">
                                                     {data.count} {data.count === 1 ? 'mention' : 'mentions'}
                                                 </p>
                                             </div>
-                                            <p className={`text-[10px] font-bold ${data.sentimentScore >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                            <p className={`text-[10px] font-bold ${data.sentimentScore >= 0 ? 'text-chart-2' : 'text-sync-action'}`}>
                                                 {data.sentimentScore >= 0 ? 'Positive Sentiment' : 'Negative Sentiment'}
                                             </p>
                                         </div>

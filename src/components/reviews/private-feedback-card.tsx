@@ -55,7 +55,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
     const renderStars = (rating: number) => {
         // 1-3 stars are usually red/orange/yellow for negative feedback
-        const colorClass = rating === 3 ? "text-yellow-500 fill-yellow-500" : "text-red-500 fill-red-500";
+        const colorClass = rating === 3 ? "text-chart-4 fill-chart-4" : "text-destructive fill-destructive";
         return (
             <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
@@ -89,8 +89,8 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                 <div className="flex gap-3">
                     <div className={cn(
                         "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border",
-                        status === "open" ? "bg-red-50 text-red-500 border-red-100" : 
-                        status === "contacted" ? "bg-yellow-50 text-yellow-600 border-yellow-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        status === "open" ? "bg-destructive/10 text-destructive border-destructive/20" : 
+                        status === "contacted" ? "bg-chart-4/12 text-chart-4 border-chart-4/30" : "bg-chart-2/10 text-chart-2 border-chart-2/20"
                     )}>
                         <User className="w-5 h-5" />
                     </div>
@@ -116,8 +116,8 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                     <Select value={status} onValueChange={handleStatusUpdate} disabled={isUpdating}>
                         <SelectTrigger className={cn(
                             "h-7 w-[110px] text-[10px] font-bold uppercase tracking-wider border-none ring-0 focus:ring-0",
-                            status === "open" ? "bg-red-50 text-red-600" : 
-                            status === "contacted" ? "bg-yellow-50 text-yellow-600" : "bg-emerald-50 text-emerald-600"
+                            status === "open" ? "bg-destructive/10 text-destructive" : 
+                            status === "contacted" ? "bg-chart-4/12 text-chart-4" : "bg-chart-2/10 text-chart-2"
                         )}>
                             <SelectValue />
                         </SelectTrigger>
@@ -174,7 +174,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
             </div>
             
             {status === "resolved" && (
-                <div className="relative z-10 pt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                <div className="relative z-10 pt-1 flex items-center gap-1 text-[10px] font-medium text-chart-2">
                     <CheckCircle className="w-3 h-3" />
                     Conversation marked as recovered
                 </div>

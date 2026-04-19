@@ -211,7 +211,7 @@ export function QuestionsPageClient({
                                         {q.has_merchant_answer ? (
                                             <Badge variant="secondary">Answered</Badge>
                                         ) : (
-                                            <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-900">
+                                            <Badge variant="outline" className="border-chart-4/35 bg-chart-4/12 text-chart-4">
                                                 Needs answer
                                             </Badge>
                                         )}

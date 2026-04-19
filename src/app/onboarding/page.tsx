@@ -268,8 +268,8 @@ export default function OnboardingPage() {
   if (loadError) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-6">
-        <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center">
-          <svg className="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div className="w-14 h-14 rounded-2xl bg-destructive/10 flex items-center justify-center">
+          <svg className="w-7 h-7 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         </div>
         <p className="text-sm font-semibold text-foreground">Something went wrong</p>
         <p className="text-sm text-muted-foreground max-w-md">{loadError}</p>
@@ -368,7 +368,7 @@ export default function OnboardingPage() {
       {/* Glass card wrapper */}
       <div className="relative">
         {/* Card glow */}
-        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-violet-500/5 rounded-[2rem] blur-sm" />
+        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
 
         <div className="relative pro-card p-7 sm:p-10">
           <AnimatePresence mode="wait">

@@ -473,7 +473,7 @@ export function CompetitorsList({
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-amber-600" />
+                            <Sparkles className="h-5 w-5 text-chart-4" />
                             AI market positioning brief
                         </CardTitle>
                         <CardDescription className="text-muted-foreground">
@@ -545,7 +545,7 @@ export function CompetitorsList({
                                 AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
                                 {marketBriefLatest.data_limitations ? (
                                     <span
-                                        className="ml-1.5 cursor-help border-b border-dotted border-zinc-500/70"
+                                        className="ml-1.5 cursor-help border-b border-dotted border-border/70"
                                         title={marketBriefLatest.data_limitations}
                                     >
                                         ℹ limitations
@@ -613,7 +613,7 @@ export function CompetitorsList({
                                 </div>
                             </div>
                             {latestRun.error_message ? (
-                                <p className="text-xs text-rose-700 dark:text-rose-300">
+                                <p className="text-xs text-sync-action dark:text-sync-action">
                                     {latestRun.error_message}
                                 </p>
                             ) : null}
@@ -661,7 +661,7 @@ export function CompetitorsList({
                 <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-100/10 dark:bg-amber-900/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-chart-4/18/10 dark:bg-chart-4/15 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="w-20 h-20 bg-gradient-to-tr from-primary to-primary/70 rounded-2xl flex items-center justify-center mb-8 rotate-2 transform transition-transform hover:rotate-0 duration-500">
@@ -687,7 +687,7 @@ export function CompetitorsList({
                                 Rating Tracking
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500"><BarChart className="h-4 w-4" /></div>
+                                <div className="p-2 bg-chart-4/120/10 rounded-lg text-chart-4"><BarChart className="h-4 w-4" /></div>
                                 Volume Growth
                             </div>
                             <div className="flex flex-col items-center gap-2">
@@ -695,7 +695,7 @@ export function CompetitorsList({
                                 Market Share
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><ExternalLink className="h-4 w-4" /></div>
+                                <div className="p-2 bg-chart-2/10 rounded-lg text-chart-2"><ExternalLink className="h-4 w-4" /></div>
                                 Direct Links
                             </div>
                         </div>
@@ -711,7 +711,7 @@ export function CompetitorsList({
                                 Your average rating uses reviews received in this period. Competitors use the latest
                                 snapshot in this period (or current totals if no snapshot yet).{" "}
                                 {!benchmarkRange.marketBenchmarkAvailable && competitors.length > 0 ? (
-                                    <span className="text-amber-700 dark:text-amber-300">
+                                    <span className="text-chart-4 dark:text-chart-4">
                                         Competitor ratings are not loaded yet — run Sync from Google or wait for the
                                         next sync.
                                     </span>
@@ -844,7 +844,7 @@ export function CompetitorsList({
                                                             <span className="text-muted-foreground">—</span>
                                                         ) : (
                                                             <>
-                                                                <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
+                                                                <Star className="h-4 w-4 text-chart-4 fill-chart-4 mr-1" />
                                                                 {competitor.average_rating || "—"}
                                                             </>
                                                         )}
@@ -912,7 +912,7 @@ export function CompetitorsList({
                                                         size="sm"
                                                         disabled={isDeleting === competitor.id}
                                                         onClick={() => setDeleteConfirm(competitor.id)}
-                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                                                     >
                                                         {isDeleting === competitor.id ? (
                                                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -954,14 +954,14 @@ export function CompetitorsList({
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-muted-foreground">Rating change</span>
                                                         <span className="inline-flex items-center gap-1 font-medium">
-                                                            {ratingUp ? <ArrowUp className="h-3 w-3 text-emerald-600" /> : (m.ratingDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-rose-600" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
+                                                            {ratingUp ? <ArrowUp className="h-3 w-3 text-chart-2" /> : (m.ratingDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-sync-action" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
                                                             {(m.ratingDelta ?? 0).toFixed(1)}
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-muted-foreground">Review change</span>
                                                         <span className="inline-flex items-center gap-1 font-medium">
-                                                            {reviewsUp ? <ArrowUp className="h-3 w-3 text-emerald-600" /> : (m.reviewsDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-rose-600" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
+                                                            {reviewsUp ? <ArrowUp className="h-3 w-3 text-chart-2" /> : (m.reviewsDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-sync-action" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
                                                             {(m.reviewsDelta ?? 0) > 0 ? "+" : ""}
                                                             {m.reviewsDelta ?? 0}
                                                         </span>
@@ -1103,9 +1103,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-chart-4/120 align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1187,9 +1187,9 @@ export function CompetitorsList({
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-amber-500 align-middle mr-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-chart-4/120 align-middle mr-1" />{" "}
                                         Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-slate-500 align-middle mx-1" />{" "}
+                                        <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
                                     <div className="h-75 w-full min-h-[220px]">
@@ -1273,7 +1273,7 @@ export function CompetitorsList({
                     <div className="flex gap-3 justify-end">
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700"
+                            className="bg-destructive hover:bg-destructive/90"
                             disabled={isDeleting === deleteConfirm}
                             onClick={() => handleDelete(deleteConfirm!)}
                         >

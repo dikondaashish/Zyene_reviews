@@ -295,7 +295,7 @@ function NewCampaignForm() {
                                     />
                                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                                         <span>
-                                            Characters: <span className={smsCharCount > 160 ? "text-red-500 font-semibold" : ""}>{smsCharCount}</span> / 160
+                                            Characters: <span className={smsCharCount > 160 ? "text-destructive font-semibold" : ""}>{smsCharCount}</span> / 160
                                             {smsCharCount > 160 && " (will send as multiple SMS)"}
                                         </span>
                                     </div>

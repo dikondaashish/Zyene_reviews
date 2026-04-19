@@ -10,6 +10,27 @@ export const REPLY_TONE_INSTRUCTIONS: Record<string, string> = {
 
 export type ReplyTone = "professional" | "friendly" | "concise";
 
+function isSparseReviewText(text: string): boolean {
+    const trimmed = text.trim();
+    if (!trimmed) return true;
+    // If the reviewer only leaves symbols/stars/emojis or very short text, avoid inferred specifics.
+    const alphaNum = trimmed.replace(/[^a-zA-Z0-9]/g, "");
+    return alphaNum.length < 12;
+}
+
+function genericPositiveReply(
+    businessName: string,
+    tone: ReplyTone
+): string {
+    if (tone === "concise") {
+        return `Thanks for the 5-star review and for supporting ${businessName}. We appreciate it and look forward to welcoming you again soon.`;
+    }
+    if (tone === "friendly") {
+        return `Thank you so much for the 5-star review and for supporting ${businessName}. We really appreciate your kindness and can't wait to welcome you back again soon.`;
+    }
+    return `Thank you for the 5-star review and for choosing ${businessName}. We truly appreciate your support and look forward to serving you again soon.`;
+}
+
 /**
  * Parse {"reply":"..."} from the model. If JSON is truncated (output token limit),
  * recover the inner string so the UI never shows raw JSON.
@@ -76,6 +97,10 @@ export async function generateReplyDraftText(input: {
     /** From organizations.plan — same as suggest-reply API */
     plan: string | null | undefined;
 }): Promise<string> {
+    if (input.rating >= 4 && isSparseReviewText(input.reviewText)) {
+        return genericPositiveReply(input.businessName, input.tone);
+    }
+
     const toneInstruction =
         REPLY_TONE_INSTRUCTIONS[input.tone] || REPLY_TONE_INSTRUCTIONS.professional;
 

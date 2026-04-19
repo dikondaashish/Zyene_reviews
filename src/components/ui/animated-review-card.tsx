@@ -109,7 +109,7 @@ const textVariants = cva("text-start text-sm leading-relaxed text-foreground/90"
 
 const starColorVariants = {
   default: {
-    active: "text-yellow-400 fill-current",
+    active: "text-chart-4 fill-current",
     inactive: "text-muted stroke-muted-foreground/20",
   },
   primary: {
@@ -150,16 +150,16 @@ function SentimentPill({ sentiment, theme }: { sentiment: string; theme: ThemeCo
   const colors =
     s === "positive"
       ? theme === "vibrant"
-        ? "bg-emerald-500/30 text-emerald-50"
-        : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+        ? "bg-chart-2/30 text-primary-foreground"
+        : "bg-chart-2/15 text-chart-2 dark:text-chart-2"
       : s === "negative"
         ? theme === "vibrant"
-          ? "bg-red-500/30 text-red-50"
-          : "bg-red-500/15 text-red-700 dark:text-red-400"
+          ? "bg-destructive/30 text-destructive-foreground"
+          : "bg-destructive/100/15 text-destructive dark:text-destructive"
         : s === "mixed"
           ? theme === "vibrant"
-            ? "bg-amber-500/30 text-amber-50"
-            : "bg-amber-500/15 text-amber-800 dark:text-amber-400"
+            ? "bg-chart-4/30 text-foreground"
+            : "bg-chart-4/120/15 text-chart-4 dark:text-chart-4"
           : theme === "vibrant"
             ? "bg-primary-foreground/20 text-primary-foreground"
             : "bg-muted text-muted-foreground"

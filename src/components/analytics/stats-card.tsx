@@ -26,8 +26,8 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
 
     let trendColor = "text-muted-foreground bg-muted/20";
     if (trend) {
-        if (isPositive) trendColor = trend.invertColor ? "text-rose-600 bg-rose-50 dark:bg-rose-950/20" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20";
-        if (isNegative) trendColor = trend.invertColor ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20" : "text-rose-600 bg-rose-50 dark:bg-rose-950/20";
+        if (isPositive) trendColor = trend.invertColor ? "text-sync-action bg-sync-action/10 dark:bg-sync-action/20" : "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20";
+        if (isNegative) trendColor = trend.invertColor ? "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20" : "text-sync-action bg-sync-action/10 dark:bg-sync-action/20";
     }
 
     return (

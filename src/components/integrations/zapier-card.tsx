@@ -35,7 +35,7 @@ export function ZapierCard({ businessId }: { businessId: string }) {
                             </p>
                         </div>
                     </div>
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 gap-1 border-0 text-xs">
+                    <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1 border-0 text-xs">
                         Available
                     </Badge>
                 </div>
@@ -53,7 +53,7 @@ export function ZapierCard({ businessId }: { businessId: string }) {
                         />
                         <Button variant="outline" size="icon" className="shrink-0" onClick={handleCopy}>
                             {copied ? (
-                                <Check className="h-4 w-4 text-green-600" />
+                                <Check className="h-4 w-4 text-chart-2" />
                             ) : (
                                 <Copy className="h-4 w-4" />
                             )}

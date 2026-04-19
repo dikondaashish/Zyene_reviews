@@ -125,10 +125,10 @@ export function Step5Form({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: item.delay, duration: 0.3 }}
-              className="flex items-center gap-3 p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100/60"
+              className="flex items-center gap-3 p-3.5 bg-chart-2/10 rounded-xl border border-chart-2/25"
             >
-              <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <div className="w-7 h-7 rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="h-4 w-4 text-chart-2" />
               </div>
               <span className="text-sm font-medium text-foreground">{item.label}</span>
             </motion.div>

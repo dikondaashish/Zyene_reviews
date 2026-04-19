@@ -151,12 +151,12 @@ export default async function RequestsPage({
 
     // Badge helper
     const getStatusBadge = (status: string, reviewLeft: boolean) => {
-        if (reviewLeft) return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-200"><Star className="w-3 h-3 mr-1 fill-yellow-500 text-yellow-500" /> Review Left</Badge>;
+        if (reviewLeft) return <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35"><Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left</Badge>;
 
         switch (status) {
             case "queued": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
             case "sent": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">Sent</Badge>;
-            case "delivered": return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Delivered</Badge>;
+            case "delivered": return <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">Delivered</Badge>;
             case "clicked": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">Clicked</Badge>;
             case "failed": return <Badge variant="destructive">Failed</Badge>;
             default: return <Badge variant="outline">{status}</Badge>;
@@ -201,7 +201,7 @@ export default async function RequestsPage({
                 <Card className="border-l-4 border-l-emerald-500">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        <CheckCircle2 className="h-4 w-4 text-chart-2" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{deliveryRate.toFixed(1)}%</div>
@@ -213,7 +213,7 @@ export default async function RequestsPage({
                 <Card className="border-l-4 border-l-amber-600">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
-                        <MousePointerClick className="h-4 w-4 text-amber-500" />
+                        <MousePointerClick className="h-4 w-4 text-chart-4" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{clickRate.toFixed(1)}%</div>
@@ -225,7 +225,7 @@ export default async function RequestsPage({
                 <Card className="border-l-4 border-l-yellow-500">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Review Conversion</CardTitle>
-                        <Star className="h-4 w-4 text-yellow-500" />
+                        <Star className="h-4 w-4 text-chart-4" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{conversionRate.toFixed(1)}%</div>

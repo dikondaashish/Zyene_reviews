@@ -64,7 +64,7 @@ export function BulkActionBar({ selectedCount, onClear, onDelete, onSendRequests
                             variant="ghost" 
                             size="sm" 
                             onClick={onDelete}
-                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-2xl h-10 px-4 transition-all"
+                            className="text-destructive hover:bg-destructive/100/10 hover:text-destructive rounded-2xl h-10 px-4 transition-all"
                         >
                             <Trash2 className="mr-2 h-3.5 w-3.5" />
                             Delete

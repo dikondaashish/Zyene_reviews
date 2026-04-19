@@ -192,8 +192,8 @@ export default function ImportCustomersPage() {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-800 flex gap-2">
-                            <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
+                        <div className="bg-chart-4/12 border border-chart-4/35 rounded-md p-3 text-sm text-chart-4 flex gap-2">
+                            <AlertTriangle className="h-5 w-5 shrink-0 text-chart-4" />
                             <p>You must map at least an <strong>Email</strong> or <strong>Phone Number</strong> so we can contact the customer.</p>
                         </div>
 
@@ -263,10 +263,10 @@ export default function ImportCustomersPage() {
             )}
 
             {step === "success" && importResults && (
-                <Card className="border-green-200">
+                <Card className="border-chart-2/30">
                     <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-                        <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                            <CheckCircle2 className="h-8 w-8 text-green-600" />
+                        <div className="h-16 w-16 bg-chart-2/15 rounded-full flex items-center justify-center mb-4">
+                            <CheckCircle2 className="h-8 w-8 text-chart-2" />
                         </div>
                         <h3 className="text-2xl font-bold text-foreground">Import Complete!</h3>
 
@@ -283,7 +283,7 @@ export default function ImportCustomersPage() {
                         </div>
 
                         {importResults.failed > 0 && (
-                            <p className="text-sm text-amber-600 mt-4 max-w-md">
+                            <p className="text-sm text-chart-4 mt-4 max-w-md">
                                 Some rows were skipped because they either already exist or were missing valid contact information.
                             </p>
                         )}

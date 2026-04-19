@@ -33,11 +33,11 @@ const CATEGORY_TAGS: Record<string, string[]> = {
 
 // ─── Emoji ratings ─────────────────────────────────────────────────────
 const RATINGS = [
-    { emoji: "😍", label: "Excellent", value: 5, color: "from-emerald-400 to-emerald-500" },
-    { emoji: "😊", label: "Good", value: 4, color: "from-green-400 to-green-500" },
-    { emoji: "😐", label: "OK", value: 3, color: "from-amber-400 to-amber-500" },
+    { emoji: "😍", label: "Excellent", value: 5, color: "from-chart-2 to-chart-2" },
+    { emoji: "😊", label: "Good", value: 4, color: "from-chart-2 to-chart-2" },
+    { emoji: "😐", label: "OK", value: 3, color: "from-chart-4 to-chart-4" },
     { emoji: "😕", label: "Bad", value: 2, color: "from-primary/70 to-primary" },
-    { emoji: "😞", label: "Awful", value: 1, color: "from-red-400 to-red-500" },
+    { emoji: "😞", label: "Awful", value: 1, color: "from-destructive to-destructive" },
 ];
 
 export type PrivateFeedbackContactMode = "hidden" | "optional" | "required";
@@ -491,10 +491,10 @@ export function PublicReviewFlow({
         return renderCardWrapper(
             <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
                 <div className="relative inline-flex">
-                    <div className="h-28 w-28 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                    <div className="h-28 w-28 bg-gradient-to-br from-chart-2 to-chart-2 rounded-full flex items-center justify-center shadow-lg shadow-chart-2/30">
                         <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
                     </div>
-                    <div className="absolute -top-1 -right-1 h-8 w-8 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-md">
+                    <div className="absolute -top-1 -right-1 h-8 w-8 bg-chart-4 rounded-full flex items-center justify-center text-lg shadow-md">
                         ✨
                     </div>
                 </div>
@@ -814,7 +814,7 @@ export function PublicReviewFlow({
                                         className={cn(
                                             "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
                                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
-                                                ? "fill-amber-500 text-amber-500"
+                                                ? "fill-chart-4 text-chart-4"
                                                 : "fill-muted text-muted-foreground/40"
                                         )}
                                     />
@@ -1057,7 +1057,7 @@ export function PublicReviewFlow({
                             <div className="h-16 w-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse">
                                 <Sparkles className="h-8 w-8 text-primary-foreground" />
                             </div>
-                            <div className="absolute -top-1 -right-1 h-4 w-4 bg-yellow-400 rounded-full animate-ping" />
+                            <div className="absolute -top-1 -right-1 h-4 w-4 bg-chart-4 rounded-full animate-ping" />
                         </div>
                     </div>
                     <div>
@@ -1126,7 +1126,7 @@ export function PublicReviewFlow({
                                 />
 
                                 <div className="relative z-10 flex items-center justify-center gap-2 text-foreground animate-in fade-in duration-300">
-                                    <div className="bg-green-100 text-green-600 rounded-full p-0.5">
+                                    <div className="bg-chart-2/15 text-chart-2 rounded-full p-0.5">
                                         <Check className="h-4 w-4" />
                                     </div>
                                     <span className="text-sm font-medium">Review copied! Redirecting...</span>

@@ -56,9 +56,9 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 };
 
 const channelConfig: Record<string, { label: string; icon: any; color: string }> = {
-    sms: { label: "SMS", icon: MessageSquare, color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" },
+    sms: { label: "SMS", icon: MessageSquare, color: "bg-chart-1/15 text-chart-1 dark:bg-chart-1/20 dark:text-chart-1" },
     email: { label: "Email", icon: Mail, color: "bg-primary/10 text-primary" },
-    both: { label: "SMS + Email", icon: MessageSquare, color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" },
+    both: { label: "SMS + Email", icon: MessageSquare, color: "bg-chart-4/18 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4" },
 };
 
 export default function CampaignsPage() {
@@ -181,7 +181,7 @@ export default function CampaignsPage() {
                 <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-100/10 dark:bg-teal-900/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-chart-1/15/10 dark:bg-chart-1/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="w-24 h-24 bg-gradient-to-tr from-primary to-primary/80 rounded-3xl flex items-center justify-center mb-8 rotate-3 transform transition-transform hover:rotate-0 duration-500">
@@ -222,7 +222,7 @@ export default function CampaignsPage() {
 
                         <div className="mt-12 flex items-center gap-8 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                                <div className="w-1.5 h-1.5 bg-chart-2/100 rounded-full"></div>
                                 Automated SMS/Email
                             </div>
                             <div className="flex items-center gap-2">
@@ -263,9 +263,9 @@ export default function CampaignsPage() {
                                                             variant={status.variant}
                                                             className={
                                                                 campaign.status === "active"
-                                                                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                                                                    ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
                                                                     : campaign.status === "paused"
-                                                                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                                                                        ? "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4"
                                                                         : ""
                                                             }
                                                         >

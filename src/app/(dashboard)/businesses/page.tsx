@@ -121,7 +121,7 @@ export default async function BusinessesPage() {
                                         {/* Rating */}
                                         {rating && (
                                             <div className="flex items-center gap-1.5 text-sm">
-                                                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                                <Star className="h-4 w-4 text-chart-4 fill-chart-4" />
                                                 <span className="font-medium">{Number(rating).toFixed(1)}</span>
                                                 {business.total_reviews > 0 && (
                                                     <span className="text-muted-foreground">
@@ -135,13 +135,13 @@ export default async function BusinessesPage() {
                                         <div className="flex items-center gap-2 text-xs pt-1 border-t mt-1">
                                             {isConnected ? (
                                                 <>
-                                                    <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                                                    <span className="text-green-700 dark:text-green-400">Google Business Profile connected</span>
+                                                    <CheckCircle2 className="h-3.5 w-3.5 text-chart-2" />
+                                                    <span className="text-chart-2 dark:text-chart-2">Google Business Profile connected</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
-                                                    <span className="text-amber-700 dark:text-amber-400">Google not connected</span>
+                                                    <AlertCircle className="h-3.5 w-3.5 text-chart-4" />
+                                                    <span className="text-chart-4 dark:text-chart-4">Google not connected</span>
                                                 </>
                                             )}
                                         </div>

@@ -293,7 +293,7 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
                                         className="flex-shrink-0 rounded-md p-2 hover:bg-border transition-colors"
                                     >
                                         {linkCopied ? (
-                                            <Check className="h-4 w-4 text-green-500" />
+                                            <Check className="h-4 w-4 text-chart-2" />
                                         ) : (
                                             <Copy className="h-4 w-4 text-muted-foreground" />
                                         )}

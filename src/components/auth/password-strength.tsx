@@ -30,9 +30,9 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
 
     const getStrengthColor = () => {
         if (strength === 0) return "bg-muted";
-        if (strength === 1) return "bg-red-500";
-        if (strength === 2) return "bg-yellow-500";
-        return "bg-green-500";
+        if (strength === 1) return "bg-destructive/100";
+        if (strength === 2) return "bg-chart-4";
+        return "bg-chart-2/100";
     };
 
     const getStrengthLabel = () => {
@@ -59,7 +59,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
             {/* Label */}
             <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
                 <span className="text-muted-foreground">Security Score:</span>
-                <span className={strength === 3 ? "text-green-600" : "text-muted-foreground"}>
+                <span className={strength === 3 ? "text-chart-2" : "text-muted-foreground"}>
                     {getStrengthLabel()}
                 </span>
             </div>
@@ -69,10 +69,10 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
                 {requirements.map((req) => (
                     <div key={req.label} className="flex items-center gap-2">
                         <div className={`flex-shrink-0 w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors ${
-                            req.met ? "bg-green-100" : "bg-muted"
+                            req.met ? "bg-chart-2/15" : "bg-muted"
                         }`}>
                             {req.met ? (
-                                <Check className="h-2 w-2 text-green-600" strokeWidth={4} />
+                                <Check className="h-2 w-2 text-chart-2" strokeWidth={4} />
                             ) : (
                                 <X className="h-2 w-2 text-muted-foreground" strokeWidth={3} />
                             )}

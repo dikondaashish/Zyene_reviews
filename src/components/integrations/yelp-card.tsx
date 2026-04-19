@@ -162,7 +162,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                 <p className="text-xs text-muted-foreground">Business reviews</p>
                             </div>
                         </div>
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-[10px]">
+                        <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-[10px]">
                             <CheckCircle2 className="w-3 h-3 mr-1" /> Connected
                         </Badge>
                     </div>
@@ -188,7 +188,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                             </p>
                         </div>
                     </div>
-                    <p className="text-[10px] text-amber-600 mt-3 flex items-center gap-1">
+                    <p className="text-[10px] text-chart-4 mt-3 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
                         Yelp API returns 3 most recent reviews per sync
                     </p>
@@ -227,7 +227,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                     </Button>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <button className="text-xs text-red-500 hover:text-red-700 hover:underline">
+                            <button className="text-xs text-destructive hover:text-destructive hover:underline">
                                 Disconnect
                             </button>
                         </AlertDialogTrigger>
@@ -240,7 +240,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDisconnect} className="bg-red-600 hover:bg-red-700">
+                                <AlertDialogAction onClick={handleDisconnect} className="bg-destructive hover:bg-destructive/90">
                                     Disconnect
                                 </AlertDialogAction>
                             </AlertDialogFooter>
@@ -254,7 +254,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
     // ── Error State ──
     if (hasError) {
         return (
-            <Card className="border border-red-200 bg-red-50/30">
+            <Card className="border border-destructive/30 bg-destructive/10/30">
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -365,7 +365,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-foreground group-hover:text-red-700 truncate">
+                                                <p className="text-sm font-medium text-foreground group-hover:text-destructive truncate">
                                                     {biz.name}
                                                 </p>
                                                 <div className="flex items-center gap-1 mt-0.5 text-[10px] text-muted-foreground">
@@ -389,7 +389,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                             {isConfirming === biz.yelpId ? (
                                                 <Loader2 className="w-4 h-4 animate-spin text-destructive" />
                                             ) : (
-                                                <CheckCircle2 className="w-4 h-4 text-muted-foreground group-hover:text-red-500 transition-colors" />
+                                                <CheckCircle2 className="w-4 h-4 text-muted-foreground group-hover:text-destructive transition-colors" />
                                             )}
                                         </div>
                                     </button>

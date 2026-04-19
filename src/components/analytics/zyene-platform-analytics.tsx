@@ -271,10 +271,10 @@ export function ZyenePlatformAnalytics({
                                                 className={cn(
                                                     "text-[9px] font-bold px-1.5 py-0",
                                                     dropOff >= 50
-                                                        ? "bg-emerald-500/10 text-emerald-600"
+                                                        ? "bg-chart-2/10 text-chart-2"
                                                         : dropOff >= 20
-                                                        ? "bg-amber-500/10 text-amber-600"
-                                                        : "bg-rose-500/10 text-rose-600"
+                                                        ? "bg-chart-4/120/10 text-chart-4"
+                                                        : "bg-sync-action/100/10 text-sync-action"
                                                 )}
                                             >
                                                 {dropOff}%
@@ -349,12 +349,12 @@ export function ZyenePlatformAnalytics({
                     let trendColor = "text-muted-foreground bg-muted/20";
                     if (isPositive)
                         trendColor = metric.invertTrend
-                            ? "text-rose-600 bg-rose-50 dark:bg-rose-950/20"
-                            : "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20";
+                            ? "text-sync-action bg-sync-action/10 dark:bg-sync-action/20"
+                            : "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20";
                     if (isNeg)
                         trendColor = metric.invertTrend
-                            ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20"
-                            : "text-rose-600 bg-rose-50 dark:bg-rose-950/20";
+                            ? "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20"
+                            : "text-sync-action bg-sync-action/10 dark:bg-sync-action/20";
 
                     return (
                         <motion.div
@@ -717,7 +717,7 @@ export function ZyenePlatformAnalytics({
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
                                 <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                    <AlertTriangle className="w-5 h-5 text-amber-500" />
+                                    <AlertTriangle className="w-5 h-5 text-chart-4" />
                                     Low Rating Alerts
                                 </CardTitle>
                                 <p className="text-xs text-muted-foreground font-medium">
@@ -725,7 +725,7 @@ export function ZyenePlatformAnalytics({
                                 </p>
                             </div>
                             {lowRatingEntries.length > 0 && (
-                                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold">
+                                <Badge className="bg-chart-4/120/10 text-chart-4 border-chart-4/30 font-bold">
                                     {lowRatings.length} total
                                 </Badge>
                             )}
@@ -759,7 +759,7 @@ export function ZyenePlatformAnalytics({
                                                                 className={cn(
                                                                     "h-3 w-3",
                                                                     i < stars
-                                                                        ? "fill-amber-400 text-amber-400"
+                                                                        ? "fill-chart-4 text-chart-4"
                                                                         : "text-muted-foreground/30"
                                                                 )}
                                                             />
@@ -790,7 +790,7 @@ export function ZyenePlatformAnalytics({
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
-                                <CheckCircle2 className="w-10 h-10 opacity-20 text-emerald-500" />
+                                <CheckCircle2 className="w-10 h-10 opacity-20 text-chart-2" />
                                 <p className="text-sm font-medium">No low ratings in this period! 🎉</p>
                                 <p className="text-xs">All your customers are happy</p>
                             </div>
@@ -848,7 +848,7 @@ export function ZyenePlatformAnalytics({
                                                                 className={cn(
                                                                     "h-3 w-3",
                                                                     i < fb.rating
-                                                                        ? "fill-amber-400 text-amber-400"
+                                                                        ? "fill-chart-4 text-chart-4"
                                                                         : "text-muted-foreground/30"
                                                                 )}
                                                             />

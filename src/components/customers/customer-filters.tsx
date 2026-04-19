@@ -87,13 +87,13 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                             </SelectItem>
                             <SelectItem value="high-value" className="py-2.5">
                                 <div className="flex items-center gap-2">
-                                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                                    <Star className="h-4 w-4 text-chart-4 fill-chart-4" />
                                     <span>High Value (VIP)</span>
                                 </div>
                             </SelectItem>
                             <SelectItem value="loyal" className="py-2.5">
                                 <div className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-purple-500 fill-purple-500" />
+                                    <Zap className="h-4 w-4 text-sync-action fill-sync-action" />
                                     <span>Loyal Customers</span>
                                 </div>
                             </SelectItem>
@@ -105,7 +105,7 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                             </SelectItem>
                             <SelectItem value="recent" className="py-2.5">
                                 <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-green-500" />
+                                    <Clock className="h-4 w-4 text-chart-2" />
                                     <span>Recent (30 Days)</span>
                                 </div>
                             </SelectItem>
@@ -117,7 +117,7 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                     <Button 
                         variant="ghost" 
                         onClick={clearFilters}
-                        className="h-9 rounded-lg px-3 text-muted-foreground transition-all hover:bg-red-50/50 hover:text-red-500"
+                        className="h-9 rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10/50 hover:text-destructive"
                     >
                         <X className="h-4 w-4 mr-2" />
                         Clear All

@@ -88,7 +88,7 @@ export default function DeveloperApiDocsPage() {
                                             className={`rounded px-2.5 py-1 text-xs font-bold ${
                                                 ep.method === "POST"
                                                     ? "bg-primary/10 text-primary"
-                                                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                                    : "bg-chart-1/10 text-chart-1 dark:text-chart-1"
                                             }`}
                                         >
                                             {ep.method}

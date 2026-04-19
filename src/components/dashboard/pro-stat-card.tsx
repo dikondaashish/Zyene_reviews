@@ -58,7 +58,7 @@ function RatingStarSlot({ fill }: { fill: number }) {
         className="absolute left-0 top-0 h-full overflow-hidden"
         style={{ width: `${f * 100}%` }}
       >
-        <Star className="pointer-events-none h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" aria-hidden />
+        <Star className="pointer-events-none h-4 w-4 shrink-0 fill-chart-4 text-chart-4" aria-hidden />
       </span>
     </span>
   )
@@ -135,8 +135,8 @@ export function ProStatCard({
         {hasTrend && (
           <div className={cn(
             "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold",
-            isPositive ? "bg-green-500/10 text-green-600" : 
-            isNegative ? "bg-red-500/10 text-red-600" : 
+            isPositive ? "bg-chart-2/10 text-chart-2" : 
+            isNegative ? "bg-destructive/100/10 text-destructive" : 
             "bg-muted text-muted-foreground"
           )}>
             <span className="flex items-center">

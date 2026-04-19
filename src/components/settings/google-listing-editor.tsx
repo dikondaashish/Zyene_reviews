@@ -204,7 +204,7 @@ export function GoogleListingEditor({ businessId }: { businessId: string }) {
                         {profileHealth.checks.map((c) => (
                             <li key={c.id} className="flex items-start gap-2 text-sm">
                                 {c.ok ? (
-                                    <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="h-4 w-4 text-chart-2 shrink-0 mt-0.5" />
                                 ) : (
                                     <Circle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
                                 )}

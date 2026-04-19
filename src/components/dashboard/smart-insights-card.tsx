@@ -114,7 +114,7 @@ export function SmartInsightsCard() {
             {/* Suggestions */}
             <div>
                 <div className="flex items-center gap-2 mb-3">
-                    <Lightbulb className="h-4 w-4 text-amber-400" />
+                    <Lightbulb className="h-4 w-4 text-chart-4" />
                     <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Suggestions
                     </span>
@@ -122,7 +122,7 @@ export function SmartInsightsCard() {
                 <ul className="space-y-2.5">
                     {visibleSuggestions.map((suggestion, i) => (
                         <li key={i} className="flex items-start gap-2.5">
-                            <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-400 flex-shrink-0" />
+                            <span className="mt-1.5 h-2 w-2 rounded-full bg-chart-4 flex-shrink-0" />
                             <span className="text-sm text-foreground leading-relaxed">{suggestion}</span>
                         </li>
                     ))}

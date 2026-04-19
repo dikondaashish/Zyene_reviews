@@ -194,8 +194,8 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                                         />
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                                             {isChecking && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-                                            {!isChecking && isAvailable === true && <Check className="h-4 w-4 text-green-500" />}
-                                            {!isChecking && isAvailable === false && <X className="h-4 w-4 text-red-500" />}
+                                            {!isChecking && isAvailable === true && <Check className="h-4 w-4 text-chart-2" />}
+                                            {!isChecking && isAvailable === false && <X className="h-4 w-4 text-destructive" />}
                                         </div>
                                     </div>
                                     <Button

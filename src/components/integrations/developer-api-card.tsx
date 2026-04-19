@@ -94,12 +94,12 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
 
     return (
         <Card className="overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-violet-500 to-indigo-500 w-full" />
+            <div className="h-1 bg-gradient-to-r from-sync-action to-primary w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                            <Code2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                            <Code2 className="h-5 w-5 text-sync-action dark:text-sync-action" />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Developer API</p>
@@ -109,7 +109,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                         </div>
                     </div>
                     {apiKey && (
-                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-0 text-xs">
+                        <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 border-0 text-xs">
                             Active
                         </Badge>
                     )}
@@ -143,7 +143,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                             </div>
                             <Button variant="outline" size="icon" className="shrink-0" onClick={handleCopy}>
                                 {copied ? (
-                                    <Check className="h-4 w-4 text-green-600" />
+                                    <Check className="h-4 w-4 text-chart-2" />
                                 ) : (
                                     <Copy className="h-4 w-4" />
                                 )}
@@ -179,7 +179,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                             onClick={handleCopyBaseUrl}
                         >
                             {baseCopied ? (
-                                <Check className="h-3.5 w-3.5 text-green-600" />
+                                <Check className="h-3.5 w-3.5 text-chart-2" />
                             ) : (
                                 <Copy className="h-3.5 w-3.5" />
                             )}
@@ -209,7 +209,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                                 <Badge
                                     variant="outline"
                                     className={`font-mono text-[10px] shrink-0 ${ep.method === "POST"
-                                            ? "text-green-700 border-green-300 dark:text-green-400 dark:border-green-800"
+                                            ? "text-chart-2 border-chart-2/40 dark:text-chart-2 dark:border-chart-2/30"
                                             : "text-primary border-primary/30 dark:text-primary dark:border-primary/40"
                                         }`}
                                 >

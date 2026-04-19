@@ -8,7 +8,7 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
         name: "Post-Visit Review",
         description: "Best for retail and restaurants. Send right after a customer leaves.",
         icon: Zap,
-        color: "text-orange-600 bg-orange-50 border-orange-100",
+        color: "text-chart-5 bg-chart-5/10 border-chart-5/20",
         defaultValues: {
             name: "Post-Visit Review Request",
             channel: "sms",
@@ -46,7 +46,7 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
         name: "Customer Re-engagement",
         description: "Bring back customers who haven't visited in a while.",
         icon: Users,
-        color: "text-purple-600 bg-purple-50 border-purple-100",
+        color: "text-sync-action bg-sync-action/10 border-sync-action/20",
         defaultValues: {
             name: "Re-engagement Campaign",
             channel: "email",

@@ -87,7 +87,7 @@ export function GettingStartedBanner({
           <Link key={index} href={item.href}>
             <div
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all border ${item.done
-                ? "bg-green-500/5 border-green-500/20 text-green-700 dark:text-green-400"
+                ? "bg-chart-2/5 border-chart-2/30 text-chart-2 dark:text-chart-2"
                 : "bg-background border-border hover:border-primary/30 pro-hover"
                 }`}
             >

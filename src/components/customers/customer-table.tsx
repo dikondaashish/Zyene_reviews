@@ -226,7 +226,7 @@ export function CustomerTable({ data, onDelete, onSendRequest, onSelectionChange
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    className="text-red-600"
+                                    className="text-destructive"
                                     onClick={() => onDelete?.(customer.id)}
                                 >
                                     <Trash2 className="mr-2 h-4 w-4" />

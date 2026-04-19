@@ -191,7 +191,7 @@ export function FacebookIntegrationCard({
                                     Facebook
                                 </CardTitle>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs font-medium text-green-600">
+                            <div className="flex items-center gap-1.5 text-xs font-medium text-chart-2">
                                 <CheckCircle2 className="h-3.5 w-3.5" />
                                 Connected
                             </div>
@@ -205,7 +205,7 @@ export function FacebookIntegrationCard({
                         <div className="grid grid-cols-3 gap-3 text-center">
                             <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                    <Star className="h-3.5 w-3.5 text-yellow-500" />
+                                    <Star className="h-3.5 w-3.5 text-chart-4" />
                                     {platform.average_rating?.toFixed(1) || "—"}
                                 </div>
                                 <div className="text-[10px] text-muted-foreground">
@@ -317,7 +317,7 @@ export function FacebookIntegrationCard({
     // ── Error state ──
     if (isError) {
         return (
-            <Card className="border-red-200 dark:border-red-900">
+            <Card className="border-destructive/30 dark:border-destructive/30">
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -326,23 +326,23 @@ export function FacebookIntegrationCard({
                                 Facebook
                             </CardTitle>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-red-600">
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-destructive">
                             <XCircle className="h-3.5 w-3.5" />
                             Error
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-start gap-2 rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm">
-                        <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                    <div className="flex items-start gap-2 rounded-lg bg-destructive/10 dark:bg-destructive/20 p-3 text-sm">
+                        <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
                         <div>
-                            <p className="font-medium text-red-700 dark:text-red-400">
+                            <p className="font-medium text-destructive dark:text-destructive">
                                 {platform?.sync_status ===
                                     "error_token_expired"
                                     ? "Access token expired"
                                     : "Sync error"}
                             </p>
-                            <p className="text-xs text-red-600/80 dark:text-red-400/70 mt-0.5">
+                            <p className="text-xs text-destructive/80 dark:text-destructive/70 mt-0.5">
                                 Reconnect your Facebook page to resume syncing.
                             </p>
                         </div>

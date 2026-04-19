@@ -319,9 +319,9 @@ export default async function GoogleSeoAeoPage() {
                             <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                     {a.status === "pass" ? (
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                                        <CheckCircle2 className="h-4 w-4 text-chart-2" />
                                     ) : a.status === "fail" ? (
-                                        <XCircle className="h-4 w-4 text-rose-600" />
+                                        <XCircle className="h-4 w-4 text-sync-action" />
                                     ) : (
                                         <span className="inline-flex h-4 w-4 rounded-full border border-muted-foreground/40" />
                                     )}

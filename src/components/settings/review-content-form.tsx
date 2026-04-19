@@ -994,7 +994,7 @@ export function ReviewContentForm({
                                                         variant="ghost"
                                                         size="sm"
                                                         type="button"
-                                                        className="h-9 px-3 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                                        className="h-9 px-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20"
                                                         onClick={removeFooterLogo}
                                                         disabled={uploadingFooterLogo}
                                                     >
@@ -1036,7 +1036,7 @@ export function ReviewContentForm({
                         {/* ── Save Button ── */}
                         <div className="border-t bg-muted/30 px-6 py-4 flex justify-end items-center gap-4">
                             {form.formState.isDirty && (
-                                <span className="text-sm text-amber-500 font-medium hidden sm:inline-block">
+                                <span className="text-sm text-chart-4 font-medium hidden sm:inline-block">
                                     Unsaved changes
                                 </span>
                             )}

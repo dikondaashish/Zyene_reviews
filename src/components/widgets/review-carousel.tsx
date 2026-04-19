@@ -97,7 +97,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                 <div className="flex items-center gap-2">
                     <div className="flex -space-x-1">
                         {[1, 2, 3, 4, 5].map((i) => (
-                            <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-500" />
+                            <Star key={i} className="w-5 h-5 fill-chart-4 text-chart-4" />
                         ))}
                     </div>
                     <span className="font-semibold text-foreground text-sm tracking-tight">{businessName}</span>
@@ -122,7 +122,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
                                             key={i}
                                             className={cn(
                                                 "w-4 h-4",
-                                                i < review.rating ? "fill-yellow-400 text-yellow-500" : "fill-muted text-muted-foreground/40"
+                                                i < review.rating ? "fill-chart-4 text-chart-4" : "fill-muted text-muted-foreground/40"
                                             )}
                                         />
                                     ))}

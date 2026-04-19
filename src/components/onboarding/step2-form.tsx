@@ -317,12 +317,12 @@ export function Step2Form({
               className="space-y-5"
             >
               <div className="flex flex-col items-center gap-3">
-                <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center ring-4 ring-emerald-100/60">
-                  <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                <div className="w-14 h-14 rounded-full bg-chart-2/10 flex items-center justify-center ring-4 ring-chart-2/25">
+                  <CheckCircle2 className="h-8 w-8 text-chart-2" />
                 </div>
                 <div className="text-center space-y-1">
-                  <p className="font-bold text-lg text-emerald-700">Profile Connected</p>
-                  <p className="text-sm text-emerald-600/80">
+                  <p className="font-bold text-lg text-chart-2">Profile Connected</p>
+                  <p className="text-sm text-chart-2/80">
                     {googleState.reviewCount != null && googleState.reviewCount > 0
                       ? `Found ${googleState.reviewCount} review${googleState.reviewCount !== 1 ? "s" : ""}`
                       : "Business profile linked"}
@@ -332,7 +332,7 @@ export function Step2Form({
               <Button
                 type="button"
                 onClick={onSaveAndNext}
-                className="w-full h-13 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-base cursor-pointer group"
+                className="w-full h-13 bg-chart-2 hover:bg-chart-2/90 rounded-2xl font-semibold text-base cursor-pointer group"
                 disabled={advancing}
               >
                 {advancing ? (
@@ -349,7 +349,7 @@ export function Step2Form({
 
           {googleState.status === "error" && (
             <div className="space-y-4">
-              <div className="p-4 bg-red-50/80 text-red-700 rounded-xl text-sm border border-red-100 font-medium">
+              <div className="p-4 bg-destructive/10/80 text-destructive rounded-xl text-sm border border-destructive/20 font-medium">
                 {googleState.errorMessage}
               </div>
               <Button

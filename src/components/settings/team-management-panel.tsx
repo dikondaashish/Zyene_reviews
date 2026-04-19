@@ -172,7 +172,7 @@ export function TeamManagementPanel({
                                         {(["owner", "admin", "manager", "member", "viewer"] as const).map((role) => (
                                             <td key={role} className="px-4 py-3 text-center">
                                                 {row[role] ? (
-                                                    <Check className="mx-auto h-4 w-4 text-emerald-600" />
+                                                    <Check className="mx-auto h-4 w-4 text-chart-2" />
                                                 ) : (
                                                     <Minus className="mx-auto h-4 w-4 text-muted-foreground/80" />
                                                 )}

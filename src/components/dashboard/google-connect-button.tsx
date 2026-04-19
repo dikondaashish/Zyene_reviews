@@ -36,7 +36,7 @@ export function GoogleConnectButton({ isConnected }: { isConnected: boolean }) {
     if (isConnected) {
         return (
             <div className="flex items-center gap-2">
-                <Button variant="outline" disabled className="text-green-600 border-green-200 bg-green-50 pointer-events-none">
+                <Button variant="outline" disabled className="text-chart-2 border-chart-2/30 bg-chart-2/10 pointer-events-none">
                     ✓ Google Connected
                 </Button>
                 <Button variant="ghost" size="sm" onClick={handleConnectGoogle} className="text-muted-foreground hover:text-foreground">

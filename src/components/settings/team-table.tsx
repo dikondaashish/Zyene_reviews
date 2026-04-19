@@ -259,7 +259,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                 </Badge>
                             </TableCell>
                             <TableCell>
-                                <Badge variant={member.status === "active" ? "default" : "secondary"} className={member.status === "active" ? "bg-green-500 hover:bg-green-600" : "bg-yellow-500 hover:bg-yellow-600"}>
+                                <Badge variant={member.status === "active" ? "default" : "secondary"} className={member.status === "active" ? "bg-chart-2 hover:bg-chart-2/90" : "bg-chart-4 hover:bg-chart-4/90"}>
                                     {member.status}
                                 </Badge>
                             </TableCell>
@@ -296,7 +296,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                                 </>
                                             )}
                                             {(showOwnerAdminRoleItems || showManagerRoleItems) && <DropdownMenuSeparator />}
-                                            <DropdownMenuItem className="text-red-600" onClick={() => handleRemove(member.id, member.type)}>
+                                            <DropdownMenuItem className="text-destructive" onClick={() => handleRemove(member.id, member.type)}>
                                                 Remove
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>

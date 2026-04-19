@@ -201,7 +201,7 @@ export function Step4SubscriptionForm({
                 Yearly
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900"
+                  className="text-xs bg-chart-2/15 text-chart-2 border-chart-2/30 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30"
                 >
                   Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
                 </Badge>
@@ -260,7 +260,7 @@ export function Step4SubscriptionForm({
                       <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                     </PricingCard.Price>
                     {checkoutOffersTrial === true && (
-                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
+                      <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-3">
                         {b.trial_included}
                       </p>
                     )}
@@ -288,7 +288,7 @@ export function Step4SubscriptionForm({
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">
                           <span className="mt-0.5 shrink-0">
                             <CheckCircle2
-                              className="h-3.5 w-3.5 text-emerald-500"
+                              className="h-3.5 w-3.5 text-chart-2"
                               aria-hidden
                             />
                           </span>
@@ -335,7 +335,7 @@ export function Step4SubscriptionForm({
                     {enterprisePlan.features.map((feature) => (
                       <PricingCard.ListItem key={feature}>
                         <span className="mt-0.5 shrink-0">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden />
+                          <CheckCircle2 className="h-4 w-4 text-chart-2" aria-hidden />
                         </span>
                         <span>{feature}</span>
                       </PricingCard.ListItem>

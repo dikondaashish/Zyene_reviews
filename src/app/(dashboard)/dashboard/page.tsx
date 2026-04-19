@@ -67,7 +67,7 @@ function Stars({ rating }: { rating: number }) {
                 <Star
                     key={i}
                     className={`h-3.5 w-3.5 ${i <= rating
-                        ? "fill-yellow-400 text-yellow-400"
+                        ? "fill-chart-4 text-chart-4"
                         : "fill-muted text-muted"
                         }`}
                 />
@@ -130,10 +130,10 @@ function computeYtdReviewTrends(
 function SentimentBadge({ sentiment }: { sentiment: string | null }) {
     if (!sentiment) return null;
     const colors: Record<string, string> = {
-        positive: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-        negative: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+        positive: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
+        negative: "bg-destructive/15 text-destructive dark:bg-destructive/20 dark:text-destructive",
         neutral: "bg-muted text-muted-foreground",
-        mixed: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+        mixed: "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4",
     };
     return (
         <span
@@ -608,7 +608,7 @@ export default async function DashboardPage() {
         const isPositive = val > 0;
         const text = isRating ? val.toFixed(1) : Math.abs(val);
         // For reviews: more is good (green). For ratings: higher is good (green).
-        const color = isPositive ? "text-green-600" : "text-red-600";
+        const color = isPositive ? "text-chart-2" : "text-destructive";
         const Icon = isPositive ? TrendingUp : TrendingUp; // Could use TrendingDown for negative but lucide TrendingUp rotated is fine or specific icons
 
         return (
@@ -799,7 +799,7 @@ export default async function DashboardPage() {
                     value={pendingCount}
                     iconName="pending"
                     description={pendingCount === 0 ? dict.dashboard.all_caught_up : dict.dashboard.awaiting_response}
-                    className={pendingCount === 0 ? "border-green-500/20 bg-green-500/5" : ""}
+                    className={pendingCount === 0 ? "border-chart-2/30 bg-chart-2/5" : ""}
                     delay={0.4}
                 />
             </div>
@@ -815,7 +815,7 @@ export default async function DashboardPage() {
                             <CardContent>
                                 <div
                                     className={`text-2xl font-bold ${
-                                        unansweredQaCount === 0 ? "text-green-600" : "text-amber-600"
+                                        unansweredQaCount === 0 ? "text-chart-2" : "text-chart-4"
                                     }`}
                                 >
                                     {unansweredQaCount}
@@ -839,7 +839,7 @@ export default async function DashboardPage() {
                         <CardContent>
                             <div
                                 className={`text-2xl font-bold ${
-                                    brokenPlaceLinksCount === 0 ? "text-green-600" : "text-red-600"
+                                    brokenPlaceLinksCount === 0 ? "text-chart-2" : "text-destructive"
                                 }`}
                             >
                                 {brokenPlaceLinksCount}
@@ -865,10 +865,10 @@ export default async function DashboardPage() {
                                     googleProfileHealthScore === null
                                         ? "text-muted-foreground"
                                         : googleProfileHealthScore >= 80
-                                          ? "text-green-600"
+                                          ? "text-chart-2"
                                           : googleProfileHealthScore >= 40
-                                            ? "text-amber-600"
-                                            : "text-red-600"
+                                            ? "text-chart-4"
+                                            : "text-destructive"
                                 }`}
                             >
                                 {googleProfileHealthScore !== null ? `${googleProfileHealthScore}` : "—"}
@@ -898,10 +898,10 @@ export default async function DashboardPage() {
                                         googleLodgingHealthScore === null
                                             ? "text-muted-foreground"
                                             : googleLodgingHealthScore >= 80
-                                              ? "text-green-600"
+                                              ? "text-chart-2"
                                               : googleLodgingHealthScore >= 40
-                                                ? "text-amber-600"
-                                                : "text-red-600"
+                                                ? "text-chart-4"
+                                                : "text-destructive"
                                     }`}
                                 >
                                     {googleLodgingHealthScore !== null ? `${googleLodgingHealthScore}` : "—"}
@@ -952,7 +952,7 @@ export default async function DashboardPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Phone calls</CardTitle>
-                                <Phone className="h-4 w-4 text-green-600" />
+                                <Phone className="h-4 w-4 text-chart-2" />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
@@ -1001,9 +1001,9 @@ export default async function DashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className={`text-2xl font-bold ${!hasSentimentData ? "text-muted-foreground" :
-                            positivePercent > 60 ? "text-green-600" :
-                                positivePercent >= 40 ? "text-yellow-600" :
-                                    "text-red-600"
+                            positivePercent > 60 ? "text-chart-2" :
+                                positivePercent >= 40 ? "text-chart-4" :
+                                    "text-destructive"
                             }`}>
                             {hasSentimentData ? `${positivePercent.toFixed(0)}%` : "—"}
                         </div>
@@ -1046,8 +1046,8 @@ export default async function DashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center justify-between">
-                            <div className={`text-2xl font-bold ${maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-red-600" :
-                                maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-yellow-600" : ""
+                            <div className={`text-2xl font-bold ${maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-destructive" :
+                                maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-chart-4" : ""
                                 }`}>
                                 {requestsThisMonth} / {maxRequestsPerMonth}
                             </div>
@@ -1243,8 +1243,8 @@ export default async function DashboardPage() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-10 text-center space-y-2">
-                                <div className="rounded-full bg-green-500/10 p-3">
-                                    <CheckCircle className="h-6 w-6 text-green-500" />
+                                <div className="rounded-full bg-chart-2/10 p-3">
+                                    <CheckCircle className="h-6 w-6 text-chart-2" />
                                 </div>
                                 <p className="font-medium text-sm">
                                     All clear!

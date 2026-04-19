@@ -144,7 +144,7 @@ export function OnboardingCompletionScreen({
                 delay: 0.6 + index * 0.3,
                 ease: "easeOut",
               }}
-              className="flex items-start gap-3 text-left bg-green-50 p-3 rounded-lg"
+              className="flex items-start gap-3 text-left bg-chart-2/10 p-3 rounded-lg"
             >
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
@@ -156,7 +156,7 @@ export function OnboardingCompletionScreen({
                   stiffness: 150,
                 }}
               >
-              <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+              <CheckCircle2 className="h-5 w-5 text-chart-2 shrink-0 mt-0.5" />
               </motion.div>
               <span className="text-sm text-foreground">{item.label}</span>
             </motion.div>

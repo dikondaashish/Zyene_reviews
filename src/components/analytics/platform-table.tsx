@@ -80,11 +80,11 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                         variant="outline"
                                         className={cn(
                                             "font-bold tabular-nums",
-                                            row.responseRate >= 90 
-                                                ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
+                                            row.responseRate >= 90
+                                                ? "bg-chart-2/10 text-chart-2 border-chart-2/30 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30"
                                                 : row.responseRate >= 50 
                                                     ? "bg-primary/10 text-primary border-primary/20" 
-                                                    : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30"
+                                                    : "bg-sync-action/10 text-sync-action border-sync-action/30 dark:bg-sync-action/20 dark:text-sync-action dark:border-sync-action/30"
                                         )}
                                     >
                                         {row.responseRate.toFixed(0)}%

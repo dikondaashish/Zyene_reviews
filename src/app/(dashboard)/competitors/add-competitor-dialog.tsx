@@ -202,7 +202,7 @@ export function AddCompetitorDialog({
                                     autoComplete="off"
                                     className={cn(
                                         "h-11 pl-10",
-                                        fieldErrors.name ? "border-red-500 focus-visible:ring-red-500/30" : ""
+                                        fieldErrors.name ? "border-destructive focus-visible:ring-destructive/30" : ""
                                     )}
                                 />
                                 {loadingSearch ? (
@@ -242,7 +242,7 @@ export function AddCompetitorDialog({
                                 ) : null}
                             </div>
                             {fieldErrors.name ? (
-                                <div className="flex items-center gap-1 text-sm text-red-600">
+                                <div className="flex items-center gap-1 text-sm text-destructive">
                                     <AlertCircle className="h-3 w-3" />
                                     {fieldErrors.name}
                                 </div>
@@ -273,11 +273,11 @@ export function AddCompetitorDialog({
                                 disabled={isSubmitting}
                                 className={cn(
                                     "h-11",
-                                    fieldErrors.googleUrl ? "border-red-500 focus-visible:ring-red-500/30" : ""
+                                    fieldErrors.googleUrl ? "border-destructive focus-visible:ring-destructive/30" : ""
                                 )}
                             />
                             {fieldErrors.googleUrl ? (
-                                <div className="flex items-start gap-1 text-xs text-red-600">
+                                <div className="flex items-start gap-1 text-xs text-destructive">
                                     <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
                                     {fieldErrors.googleUrl}
                                 </div>

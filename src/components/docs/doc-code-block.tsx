@@ -142,7 +142,7 @@ export function DocCodeBlock({ code, language, className }: DocCodeBlockProps) {
                 aria-label="Copy code"
                 className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
             >
-                {copied ? <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                {copied ? <Check className="h-4 w-4 text-chart-2 dark:text-chart-2" /> : <Copy className="h-4 w-4" />}
             </button>
             <pre
                 className="max-h-[min(28rem,70vh)] overflow-auto px-4 pb-4 pt-10 font-mono text-[13px] leading-[1.65] text-foreground"

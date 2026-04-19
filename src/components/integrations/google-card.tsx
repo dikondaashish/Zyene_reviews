@@ -280,8 +280,8 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     // ── Error state ──
     if (isConnected && isError) {
         return (
-            <Card className="border-red-200 dark:border-red-900/50 overflow-hidden">
-                <div className="h-1 bg-red-500 w-full" />
+            <Card className="border-destructive/30 dark:border-destructive/30 overflow-hidden">
+                <div className="h-1 bg-destructive/100 w-full" />
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -300,8 +300,8 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                     </div>
                 </CardHeader>
                 <CardContent className="pb-3">
-                    <div className="rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 p-3">
-                        <p className="text-sm text-red-700 dark:text-red-300">
+                    <div className="rounded-lg bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/30 p-3">
+                        <p className="text-sm text-destructive dark:text-destructive">
                             Your Google connection encountered an error. This usually happens when permissions expire. Please reconnect to resume syncing.
                         </p>
                     </div>
@@ -319,8 +319,8 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     // ── Connected state ──
     if (isConnected) {
         return (
-            <Card className="border-green-200/70 dark:border-green-900/50 overflow-hidden">
-                <div className="h-1 bg-green-500 w-full" />
+            <Card className="border-chart-2/30/70 dark:border-chart-2/30 overflow-hidden">
+                <div className="h-1 bg-chart-2/100 w-full" />
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -334,7 +334,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 )}
                             </div>
                         </div>
-                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 gap-1.5 border-0">
+                        <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1.5 border-0">
                             <CheckCircle2 className="h-3 w-3" />
                             Connected
                         </Badge>
@@ -342,9 +342,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                 </CardHeader>
                 <CardContent className="pb-3 space-y-3">
                     {needsLocation && (
-                        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                        <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 p-3 text-sm text-chart-4">
                             <p className="font-medium">Action required: choose your Google location</p>
-                            <p className="text-xs mt-1 text-amber-700">
+                            <p className="text-xs mt-1 text-chart-4">
                                 This business is connected to Google, but no GBP location has been selected yet.
                             </p>
                             <div className="mt-2">
@@ -393,7 +393,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <button
-                                className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors font-medium"
+                                className="text-xs text-destructive hover:text-destructive dark:text-destructive dark:hover:text-destructive transition-colors font-medium"
                                 disabled={isDisconnecting}
                             >
                                 {isDisconnecting ? "Disconnecting…" : "Disconnect"}
@@ -410,7 +410,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
                                     onClick={handleDisconnect}
-                                    className="bg-red-600 hover:bg-red-700"
+                                    className="bg-destructive hover:bg-destructive/90"
                                 >
                                     Disconnect
                                 </AlertDialogAction>

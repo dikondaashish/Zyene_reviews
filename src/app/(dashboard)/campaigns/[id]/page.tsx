@@ -78,11 +78,11 @@ interface ReviewRequest {
 const statusColors: Record<string, string> = {
     sent: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
     delivered: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
-    opened: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    opened: "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4",
     clicked: "bg-primary/10 text-primary",
-    review_left: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-    completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-    failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    review_left: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
+    completed: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
+    failed: "bg-destructive/15 text-destructive dark:bg-destructive/20 dark:text-destructive",
     sending: "bg-muted text-muted-foreground",
     queued: "bg-muted text-muted-foreground",
 };
@@ -236,9 +236,9 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const totalCompleted = campaign.total_completed || campaign.total_reviews_received || 0;
     const funnelStages = [
         { label: "Sent", value: campaign.total_sent, icon: Send, color: "bg-primary" },
-        { label: "Opened", value: campaign.total_opened, icon: Eye, color: "bg-yellow-500" },
+        { label: "Opened", value: campaign.total_opened, icon: Eye, color: "bg-chart-4" },
         { label: "Clicked", value: campaign.total_clicked, icon: MousePointerClick, color: "bg-primary" },
-        { label: "Completed", value: totalCompleted, icon: CheckCircle, color: "bg-green-500" },
+        { label: "Completed", value: totalCompleted, icon: CheckCircle, color: "bg-chart-2/100" },
     ];
     const maxFunnel = Math.max(campaign.total_sent, 1);
 
@@ -257,9 +257,9 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                 variant={campaign.status === "active" ? "default" : "secondary"}
                                 className={
                                     campaign.status === "active"
-                                        ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                                        ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
                                         : campaign.status === "paused"
-                                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                                            ? "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4"
                                             : ""
                                 }
                             >

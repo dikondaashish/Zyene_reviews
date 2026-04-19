@@ -24,7 +24,7 @@ export function FractionalStar({
                 aria-hidden
             />
             <span className="absolute left-0 top-0 h-full overflow-hidden" style={{ width: `${f * 100}%` }}>
-                <Star className={cn("pointer-events-none shrink-0 fill-yellow-400 text-yellow-400", size)} aria-hidden />
+                <Star className={cn("pointer-events-none shrink-0 fill-chart-4 text-chart-4", size)} aria-hidden />
             </span>
         </span>
     );

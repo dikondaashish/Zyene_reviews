@@ -18,8 +18,8 @@ export default function DashboardError({
 
     return (
         <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center animate-in fade-in duration-500 bg-card">
-            <div className="rounded-full bg-red-100 p-3">
-                <AlertCircle className="h-8 w-8 text-red-600" />
+            <div className="rounded-full bg-destructive/15 p-3">
+                <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
             <div className="space-y-2 max-w-sm">
                 <h2 className="text-2xl font-semibold tracking-tight">

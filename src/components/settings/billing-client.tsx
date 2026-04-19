@@ -112,7 +112,7 @@ function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat; icon?
                 </div>
             )}
             {isUnlimited && (
-                <div className="h-2 rounded-full bg-gradient-to-r from-green-500/20 to-green-500/5" />
+                <div className="h-2 rounded-full bg-gradient-to-r from-chart-2/20 to-chart-2/5" />
             )}
         </div>
     );
@@ -365,7 +365,7 @@ export function BillingClient({
             </div>
 
             {!canManageBilling && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/40 px-4 py-3 flex gap-3 text-sm text-amber-900 dark:text-amber-100">
+                <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 dark:bg-chart-4/20 dark:border-chart-4/40 px-4 py-3 flex gap-3 text-sm text-chart-4 dark:text-chart-4">
                     <Lock className="h-4 w-4 shrink-0 mt-0.5" aria-hidden />
                     <p>{b.no_billing_permission}</p>
                 </div>
@@ -576,7 +576,7 @@ export function BillingClient({
                                 Yearly
                                 <Badge
                                     variant="secondary"
-                                    className="text-xs bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900"
+                                    className="text-xs bg-chart-2/15 text-chart-2 border-chart-2/30 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30"
                                 >
                                     Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
                                 </Badge>
@@ -665,7 +665,7 @@ export function BillingClient({
                                             <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                                         </PricingCard.Price>
                                         {!treatsAsReturningForCta && checkoutOffersTrial && (
-                                            <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-3">
+                                            <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-3">
                                                 {b.trial_included}
                                             </p>
                                         )}
@@ -701,7 +701,7 @@ export function BillingClient({
                                             </Button>
                                         )}
                                         {showTrialEndsOnUpgradeHint && (
-                                            <p className="text-xs text-amber-800 dark:text-amber-200 mt-2 leading-snug">
+                                            <p className="text-xs text-chart-4 dark:text-chart-4 mt-2 leading-snug">
                                                 {b.trial_ends_on_upgrade_notice}
                                             </p>
                                         )}
@@ -712,7 +712,7 @@ export function BillingClient({
                                                 <PricingCard.ListItem key={feature} className="text-xs gap-2">
                                                     <span className="mt-0.5 shrink-0">
                                                         <CheckCircle2
-                                                            className="h-3.5 w-3.5 text-emerald-500"
+                                                            className="h-3.5 w-3.5 text-chart-2"
                                                             aria-hidden
                                                         />
                                                     </span>
@@ -771,7 +771,7 @@ export function BillingClient({
                                             <PricingCard.ListItem key={feature}>
                                                 <span className="mt-0.5 shrink-0">
                                                     <CheckCircle2
-                                                        className="h-4 w-4 text-emerald-500"
+                                                        className="h-4 w-4 text-chart-2"
                                                         aria-hidden
                                                     />
                                                 </span>
@@ -824,7 +824,7 @@ export function BillingClient({
                                 {confirmPlanChange &&
                                     planStatus === "trialing" &&
                                     isPaidPlanTierUpgrade(currentPlan?.id, confirmPlanChange.plan.id) && (
-                                        <p className="text-amber-900 dark:text-amber-100 font-medium">
+                                        <p className="text-chart-4 dark:text-chart-4 font-medium">
                                             {b.trial_ends_on_upgrade_notice}
                                         </p>
                                     )}

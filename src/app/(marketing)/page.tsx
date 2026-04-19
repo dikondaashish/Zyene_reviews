@@ -350,7 +350,7 @@ export default function MarketingPage() {
                   </div>
                   <div>
                     <div className="h-4 w-24 bg-border rounded-full mb-2"></div>
-                    <div className="flex gap-1 text-yellow-400 mb-2">
+                    <div className="flex gap-1 text-chart-4 mb-2">
                       <Star className="w-4 h-4 fill-current" />
                       <Star className="w-4 h-4 fill-current" />
                       <Star className="w-4 h-4 fill-current" />
@@ -440,7 +440,7 @@ export default function MarketingPage() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="grid md:grid-cols-3 gap-8">
             {/* Testimonial 1 */}
             <motion.div variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
-              <div className="flex gap-1 text-yellow-500 mb-6">
+              <div className="flex gap-1 text-chart-4 mb-6">
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
               </div>
               <p className="text-lg text-muted-foreground mb-8 font-light leading-relaxed">
@@ -460,7 +460,7 @@ export default function MarketingPage() {
 
             {/* Testimonial 2 */}
             <motion.div variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
-              <div className="flex gap-1 text-yellow-500 mb-6">
+              <div className="flex gap-1 text-chart-4 mb-6">
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
               </div>
               <p className="text-lg text-muted-foreground mb-8 font-light leading-relaxed">
@@ -480,7 +480,7 @@ export default function MarketingPage() {
 
             {/* Testimonial 3 */}
             <motion.div variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
-              <div className="flex gap-1 text-yellow-500 mb-6">
+              <div className="flex gap-1 text-chart-4 mb-6">
                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
               </div>
               <p className="text-lg text-muted-foreground mb-8 font-light leading-relaxed">

@@ -153,7 +153,7 @@ export function CSVImportDialog({ open, onOpenChange, onImport, isImporting }: C
                     </div>
                 ) : (
                     <div className="space-y-6 py-4">
-                        <div className="flex items-center gap-2 text-sm bg-green-50 text-green-700 p-3 rounded-lg border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900/30">
+                        <div className="flex items-center gap-2 text-sm bg-chart-2/10 text-chart-2 p-3 rounded-lg border border-chart-2/20 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30">
                             <Check className="h-4 w-4" />
                             File parsed successfully: {csvData.length} rows found.
                         </div>
@@ -200,7 +200,7 @@ export function CSVImportDialog({ open, onOpenChange, onImport, isImporting }: C
                         </div>
 
                         {!mapping.email && !mapping.phone && (
-                            <div className="flex items-start gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-lg dark:bg-amber-900/20 dark:text-amber-400">
+                            <div className="flex items-start gap-2 text-xs text-chart-4 bg-chart-4/12 p-3 rounded-lg dark:bg-chart-4/20 dark:text-chart-4">
                                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                                 Please map at least one contact method (Email or Phone).
                             </div>

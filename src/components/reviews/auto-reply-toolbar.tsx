@@ -129,7 +129,7 @@ export function AutoReplyToolbar({
         />
         <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">
-                <Bot className="h-4 w-4 shrink-0 text-violet-600" aria-hidden />
+                <Bot className="h-4 w-4 shrink-0 text-sync-action" aria-hidden />
                 <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-foreground cursor-pointer">
                     Auto commenter
                 </Label>
@@ -138,7 +138,7 @@ export function AutoReplyToolbar({
                         <TooltipTrigger asChild>
                             <button
                                 type="button"
-                                className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-1"
+                                className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                                 aria-label="How auto commenter works"
                             >
                                 <CircleHelp className="h-3.5 w-3.5" aria-hidden />

@@ -27,6 +27,9 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
+      - name: Color Guard
+        run: pnpm run check:colors
+
       - name: Test
         run: pnpm run test
 
