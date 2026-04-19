@@ -503,11 +503,10 @@ export function NeedsAttention({
                                             {Array.from({ length: 5 }).map((_, i) => (
                                                 <Star
                                                     key={i}
+                                                    strokeWidth={i < rating ? 0 : 1.35}
                                                     className={cn(
-                                                        "h-2.5 w-2.5",
-                                                        i < rating
-                                                            ? "fill-chart-4 text-chart-4"
-                                                            : "fill-muted text-muted"
+                                                        "h-2.5 w-2.5 shrink-0 text-chart-4",
+                                                        i < rating ? "fill-chart-4" : "fill-none"
                                                     )}
                                                     aria-hidden
                                                 />

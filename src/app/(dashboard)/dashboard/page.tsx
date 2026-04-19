@@ -1217,7 +1217,12 @@ export default async function DashboardPage() {
                 {/* Needs Attention */}
                 <div data-tour-target="tour-needs-attention">
                     <NeedsAttention
-                        reviews={mapAttentionRows(attentionReviews)}
+                        reviews={mapAttentionRows(
+                            attentionReviews.filter(
+                                (r: { response_status?: string }) =>
+                                    (r?.response_status ?? "pending") === "pending",
+                            ),
+                        )}
                         viewAllHref="/reviews?status=needs_response&sort=lowest"
                         planAllowsAiReplies={planAllowsAiReplies}
                         isDemo={useDemoData}

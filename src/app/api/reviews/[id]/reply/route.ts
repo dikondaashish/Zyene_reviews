@@ -4,6 +4,7 @@ import { deleteReviewReply, replyToReview, listAccounts } from "@/services/googl
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { REVIEW_RESPONSE_SOURCE_ZYENE } from "@/lib/reviews/response-source";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 import { z } from "zod";
 
 const replySchema = z.object({
@@ -91,6 +92,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         if (updateError) throw updateError;
 
+        await invalidateDashboardStatsCache(
+            (review as { business_id?: string | null }).business_id ?? undefined,
+        );
+
         return apiOk({ replied: true });
 
     } catch (error: any) {
@@ -174,6 +179,10 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
             .eq("id", review.id);
 
         if (updateError) throw updateError;
+
+        await invalidateDashboardStatsCache(
+            (review as { business_id?: string | null }).business_id ?? undefined,
+        );
 
         return apiOk({ deleted: true });
     } catch (error: unknown) {
