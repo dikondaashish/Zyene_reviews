@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { cookies } from "next/headers";
-import dynamic from "next/dynamic";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
     Card,
@@ -55,14 +54,12 @@ import {
 import { ProStatCard } from "@/components/dashboard/pro-stat-card";
 import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
-
-const ReviewTrendChart = dynamic(() => import("@/components/dashboard/review-trend-chart").then((m) => m.ReviewTrendChart), { ssr: false });
-const RatingDistributionChart = dynamic(
-    () => import("@/components/dashboard/rating-distribution-chart").then((m) => m.RatingDistributionChart),
-    { ssr: false }
-);
-const QRCodeCard = dynamic(() => import("@/components/dashboard/qr-code-card").then((m) => m.QRCodeCard), { ssr: false });
-const AnimatedReviewCards = dynamic(() => import("@/components/ui/animated-review-card").then((m) => m.AnimatedReviewCards), { ssr: false });
+import {
+    DashboardAnimatedReviewCardsLazy,
+    DashboardQrCodeLazy,
+    DashboardRatingDistributionChartLazy,
+    DashboardReviewTrendChartLazy,
+} from "@/components/dashboard/dashboard-ssr-false-blocks";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -744,7 +741,7 @@ export default async function DashboardPage() {
 
             {/* QR Code Card */}
             {business.slug && (
-                <QRCodeCard
+                <DashboardQrCodeLazy
                     businessId={business.id}
                     businessSlug={business.slug}
                     businessName={business.name || "Business"}
@@ -1107,7 +1104,7 @@ export default async function DashboardPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <ReviewTrendChart data={trendData} />
+                        <DashboardReviewTrendChartLazy data={trendData} />
                     </CardContent>
                 </Card>
 
@@ -1122,7 +1119,7 @@ export default async function DashboardPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <RatingDistributionChart data={ratingData} />
+                        <DashboardRatingDistributionChartLazy data={ratingData} />
                     </CardContent>
                 </Card>
             </div>
@@ -1153,7 +1150,7 @@ export default async function DashboardPage() {
                     <CardContent className="px-0 relative">
                         {recentReviews.length > 0 ? (
                             <div className="py-4">
-                                <AnimatedReviewCards 
+                                <DashboardAnimatedReviewCardsLazy
                                     reviews={recentReviews.slice(0, 5).map((r: any) => ({
                                         id: r.id,
                                         name: r.author_name || "Anonymous",
@@ -1164,9 +1161,6 @@ export default async function DashboardPage() {
                                         platform: r.platform,
                                         sentiment: r.sentiment,
                                     }))}
-                                    theme="default"
-                                    interactionType="drag"
-                                    rotateInterval={8000}
                                     labels={{
                                         hint: dict.dashboard.review_spotlight_hint,
                                         prev: dict.dashboard.review_spotlight_prev,
