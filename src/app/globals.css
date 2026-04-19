@@ -68,7 +68,8 @@
   --popover: #fffefb;
   --popover-foreground: #201515;
   --primary: #ff4f00;
-  --primary-foreground: #1a1212;
+  /* Light text on saturated primary — matches intent of .text-primary-foreground on orange */
+  --primary-foreground: #ffffff;
   --cta: #ff4f00;
   --cta-foreground: #fffefb;
   --secondary: #eceae3;
@@ -90,7 +91,7 @@
   --sidebar: #fffefb;
   --sidebar-foreground: #201515;
   --sidebar-primary: #ff4f00;
-  --sidebar-primary-foreground: #1a1212;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #eceae3;
   --sidebar-accent-foreground: #201515;
   --sidebar-border: #c5c0b1;
