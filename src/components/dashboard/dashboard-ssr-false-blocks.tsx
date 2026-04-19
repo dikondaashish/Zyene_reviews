@@ -57,6 +57,10 @@ export type SpotlightReviewCard = {
 export function DashboardAnimatedReviewCardsLazy({
     reviews,
     labels,
+    shellTitle,
+    shellSubtitle,
+    manageAllHref,
+    manageAllLabel,
 }: {
     reviews: SpotlightReviewCard[];
     labels: {
@@ -65,6 +69,10 @@ export function DashboardAnimatedReviewCardsLazy({
         next: string;
         viewInReviews: string;
     };
+    shellTitle?: string;
+    shellSubtitle?: string;
+    manageAllHref?: string;
+    manageAllLabel?: string;
 }) {
     return (
         <AnimatedReviewCards
@@ -73,6 +81,10 @@ export function DashboardAnimatedReviewCardsLazy({
             interactionType="drag"
             rotateInterval={8000}
             labels={labels}
+            shellTitle={shellTitle}
+            shellSubtitle={shellSubtitle}
+            manageAllHref={manageAllHref}
+            manageAllLabel={manageAllLabel}
         />
     );
 }
