@@ -32,14 +32,19 @@ export type NeedsAttentionReview = {
     avatar?: string;
     rating: number;
     urgency: number;
-    date: string | Date;
+    /** ISO string — must be JSON-serializable when passed from a Server Component. */
+    date: string;
     text: string;
     tags: string[];
 };
 
+/** Plain strings only (no functions) so `copy` can cross the RSC → client boundary. */
 export type NeedsAttentionCopy = {
     title: string;
-    subtitle: (urgentCount: number) => string;
+    subtitleZero: string;
+    subtitleOne: string;
+    /** Use `{count}` placeholder for counts greater than 1. */
+    subtitleMany: string;
     viewAll: string;
     yourReplyLabel: string;
     sentToGoogle: string;
@@ -53,19 +58,27 @@ export type NeedsAttentionCopy = {
     toneBrief: string;
     sendReply: string;
     sent: string;
-    urgencyLabel: (score: number) => string;
+    /** Use `{score}` placeholder. */
+    urgencyLabel: string;
     emptyTitle: string;
     emptyDescription: string;
 };
 
+function subtitleFor(copy: NeedsAttentionCopy, urgentCount: number): string {
+    if (urgentCount <= 0) return copy.subtitleZero;
+    if (urgentCount === 1) return copy.subtitleOne;
+    return copy.subtitleMany.replace("{count}", String(urgentCount));
+}
+
+function urgencyText(copy: NeedsAttentionCopy, score: number): string {
+    return copy.urgencyLabel.replace("{score}", String(score));
+}
+
 const DEFAULT_COPY: NeedsAttentionCopy = {
     title: "Needs your attention",
-    subtitle: (n) =>
-        n === 0
-            ? "No urgent reviews right now"
-            : n === 1
-              ? "1 urgent review — we can draft a response for you"
-              : `${n} urgent reviews — we can draft responses for you`,
+    subtitleZero: "No urgent reviews right now",
+    subtitleOne: "1 urgent review — we can draft a response for you",
+    subtitleMany: "{count} urgent reviews — we can draft responses for you",
     viewAll: "View all",
     yourReplyLabel: "Your reply as owner",
     sentToGoogle: "Saved as draft",
@@ -79,7 +92,7 @@ const DEFAULT_COPY: NeedsAttentionCopy = {
     toneBrief: "Brief",
     sendReply: "Send reply",
     sent: "Sent",
-    urgencyLabel: (score) => `Urgency ${score}`,
+    urgencyLabel: "Urgency {score}",
     emptyTitle: "All clear!",
     emptyDescription: "No urgent reviews need your attention right now.",
 };
@@ -168,7 +181,7 @@ export function NeedsAttention({
                         </div>
                         <div>
                             <p className="text-[13.5px] font-semibold tracking-tight text-foreground">{copy.title}</p>
-                            <p className="text-[11.5px] text-muted-foreground">{copy.subtitle(0)}</p>
+                            <p className="text-[11.5px] text-muted-foreground">{subtitleFor(copy, 0)}</p>
                         </div>
                     </div>
                 </div>
@@ -198,7 +211,7 @@ export function NeedsAttention({
                     </div>
                     <div className="min-w-0">
                         <p className="text-[13.5px] font-semibold tracking-tight text-foreground">{copy.title}</p>
-                        <p className="truncate text-[11.5px] text-muted-foreground">{copy.subtitle(urgentCount)}</p>
+                        <p className="truncate text-[11.5px] text-muted-foreground">{subtitleFor(copy, urgentCount)}</p>
                     </div>
                 </div>
                 {viewAllHref ? (
@@ -223,8 +236,7 @@ export function NeedsAttention({
                     const showUrgency = urgency >= 8;
                     const dateLabel = (() => {
                         try {
-                            const d = typeof review.date === "string" ? new Date(review.date) : review.date;
-                            return formatDistanceToNow(d, { addSuffix: true });
+                            return formatDistanceToNow(new Date(review.date), { addSuffix: true });
                         } catch {
                             return "";
                         }
@@ -270,7 +282,7 @@ export function NeedsAttention({
                                         {showUrgency ? (
                                             <span className="inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2 py-0.5 text-[11.5px] font-semibold tracking-[0.02em] text-destructive dark:bg-destructive/25 dark:text-destructive-foreground">
                                                 <Flame className="h-3 w-3" aria-hidden />
-                                                {copy.urgencyLabel(urgency)}
+                                                {urgencyText(copy, urgency)}
                                             </span>
                                         ) : null}
                                         {isSent ? (

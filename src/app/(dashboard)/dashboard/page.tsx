@@ -150,13 +150,21 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
     );
 }
 
+function attentionReviewIsoDate(value: unknown): string {
+    if (typeof value === "string" && value.trim()) return value.trim();
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return value.toISOString();
+    }
+    return new Date().toISOString();
+}
+
 function mapAttentionRows(rows: any[]): NeedsAttentionReview[] {
     return (rows || []).map((r) => ({
         id: String(r.id),
         author: r.author_name || "Anonymous",
         rating: typeof r.rating === "number" ? r.rating : Number(r.rating) || 0,
         urgency: Math.min(10, Math.max(1, Number(r.urgency_score) || 8)),
-        date: r.review_date || r.created_at || new Date().toISOString(),
+        date: attentionReviewIsoDate(r.review_date ?? r.created_at),
         text: typeof r.text === "string" ? r.text : "",
         tags: Array.isArray(r.themes) ? r.themes : [],
     }));
@@ -1203,18 +1211,9 @@ export default async function DashboardPage() {
                         viewAllHref="/reviews?status=needs_response&sort=lowest"
                         copy={{
                             title: dict.dashboard.needs_attention_title,
-                            subtitle: (n) => {
-                                if (n === 0) {
-                                    return dict.dashboard.needs_attention_subtitle_zero;
-                                }
-                                if (n === 1) {
-                                    return dict.dashboard.needs_attention_subtitle_one;
-                                }
-                                return dict.dashboard.needs_attention_subtitle_many.replace(
-                                    "{count}",
-                                    String(n),
-                                );
-                            },
+                            subtitleZero: dict.dashboard.needs_attention_subtitle_zero,
+                            subtitleOne: dict.dashboard.needs_attention_subtitle_one,
+                            subtitleMany: dict.dashboard.needs_attention_subtitle_many,
                             viewAll: dict.dashboard.needs_attention_view_all,
                             yourReplyLabel:
                                 dict.dashboard.needs_attention_your_reply_label,
@@ -1230,11 +1229,7 @@ export default async function DashboardPage() {
                             toneBrief: dict.dashboard.needs_attention_tone_brief,
                             sendReply: dict.dashboard.needs_attention_send,
                             sent: dict.dashboard.needs_attention_sent,
-                            urgencyLabel: (score) =>
-                                dict.dashboard.needs_attention_urgency.replace(
-                                    "{score}",
-                                    String(score),
-                                ),
+                            urgencyLabel: dict.dashboard.needs_attention_urgency,
                             emptyTitle: dict.dashboard.needs_attention_empty_title,
                             emptyDescription:
                                 dict.dashboard.needs_attention_empty_desc,
