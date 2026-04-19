@@ -48,6 +48,7 @@ import { redirect } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { DASHBOARD_DEMO_DATA } from "@/constants/dashboard-demo-data";
 import {
     dateRangeLastNDays,
@@ -162,11 +163,16 @@ function mapAttentionRows(rows: any[]): NeedsAttentionReview[] {
     return (rows || []).map((r) => ({
         id: String(r.id),
         author: r.author_name || "Anonymous",
+        avatarUrl:
+            typeof r.author_avatar_url === "string" && r.author_avatar_url.trim()
+                ? r.author_avatar_url.trim()
+                : null,
         rating: typeof r.rating === "number" ? r.rating : Number(r.rating) || 0,
         urgency: Math.min(10, Math.max(1, Number(r.urgency_score) || 8)),
         date: attentionReviewIsoDate(r.review_date ?? r.created_at),
         text: typeof r.text === "string" ? r.text : "",
         tags: Array.isArray(r.themes) ? r.themes : [],
+        platform: typeof r.platform === "string" ? r.platform : "google",
     }));
 }
 
@@ -201,6 +207,10 @@ export default async function DashboardPage() {
     // Determine plan status
     const planStatus = organization?.plan_status || "inactive";
     const isPaidPlan = (planStatus === "active" || planStatus === "trialing") && organization?.plan !== "none";
+    const planAllowsAiReplies = planAllowsAiReviewFeatures(
+        organization?.plan ?? null,
+        (organization as { plan_status?: string | null } | null)?.plan_status ?? null,
+    );
 
     // If no plan, set limit to 0 (user request)
     const totalOrgLimit = isPaidPlan ? (organization?.max_review_requests_per_month || 5000) : 0;
@@ -1209,6 +1219,8 @@ export default async function DashboardPage() {
                     <NeedsAttention
                         reviews={mapAttentionRows(attentionReviews)}
                         viewAllHref="/reviews?status=needs_response&sort=lowest"
+                        planAllowsAiReplies={planAllowsAiReplies}
+                        isDemo={useDemoData}
                         copy={{
                             title: dict.dashboard.needs_attention_title,
                             subtitleZero: dict.dashboard.needs_attention_subtitle_zero,
@@ -1225,14 +1237,15 @@ export default async function DashboardPage() {
                             adjustTone: dict.dashboard.needs_attention_adjust_tone,
                             toneProfessional:
                                 dict.dashboard.needs_attention_tone_professional,
-                            toneWarm: dict.dashboard.needs_attention_tone_warm,
-                            toneBrief: dict.dashboard.needs_attention_tone_brief,
+                            toneFriendly: dict.dashboard.needs_attention_tone_friendly,
+                            toneConcise: dict.dashboard.needs_attention_tone_concise,
                             sendReply: dict.dashboard.needs_attention_send,
                             sent: dict.dashboard.needs_attention_sent,
                             urgencyLabel: dict.dashboard.needs_attention_urgency,
                             emptyTitle: dict.dashboard.needs_attention_empty_title,
                             emptyDescription:
                                 dict.dashboard.needs_attention_empty_desc,
+                            demoSendHint: dict.dashboard.needs_attention_demo_send_hint,
                         }}
                     />
                 </div>
