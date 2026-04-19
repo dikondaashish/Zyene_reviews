@@ -197,7 +197,7 @@ export function AutoReplyToolbar({
                                 className={cn(
                                     "px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-colors",
                                     tone === t.id
-                                        ? "bg-violet-600 text-white border-violet-600"
+                                        ? "bg-primary text-primary-foreground border-primary"
                                         : "bg-background text-muted-foreground border-border hover:border-foreground/30"
                                 )}
                             >

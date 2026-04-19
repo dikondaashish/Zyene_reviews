@@ -34,11 +34,20 @@ export function Step5Form({
     try {
       const confettiModule = await import("canvas-confetti");
       const confetti = confettiModule.default;
+      const root = document.documentElement;
+      const cs = getComputedStyle(root);
+      const themeColors = (["--chart-1", "--chart-2", "--chart-3", "--chart-4"] as const)
+        .map((v) => cs.getPropertyValue(v).trim())
+        .filter(Boolean);
+      const colors =
+        themeColors.length >= 4
+          ? themeColors
+          : [cs.getPropertyValue("--primary").trim(), cs.getPropertyValue("--sync-action").trim()].filter(Boolean);
       confetti({
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#7C3AED", "#F97316", "#10b981", "#3B82F6"],
+        colors: colors.length ? colors : undefined,
       });
     } catch {
       // Optional visual effect failed; onboarding flow can continue.

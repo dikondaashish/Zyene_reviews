@@ -24,7 +24,7 @@ import type { IntegrationPlatformSummary } from "@/types/components";
 // Yelp Icon
 function YelpIcon({ className }: { className?: string }) {
     return (
-        <svg viewBox="0 0 24 24" fill="currentColor" className={className || "h-6 w-6 text-red-600"}>
+        <svg viewBox="0 0 24 24" fill="currentColor" className={className || "h-6 w-6 text-destructive"}>
             <path d="M20.16 12.594l-4.995 1.433c-.96.276-1.74-.8-1.176-1.63l2.874-4.304c.564-.846 1.94-.546 2.128.46l.6 3.022c.094.503-.096 1.012-.432 1.02zm-7.127 5.246l.696 4.072c.126.744-.606 1.37-1.33 1.136l-3.61-1.17c-.846-.273-1.07-1.346-.384-1.872l3.61-2.79c.654-.497 1.576.035 1.018.624zm-3.76-3.136l-4.05 2.48c-.82.503-1.88-.22-1.62-1.106l.696-2.39c.178-.61.76-.96 1.37-.83l3.616.782c.96.208.97 1.4-.013 1.064zm.84-5.688L7.8 4.488c-.41-.604-.086-1.436.63-1.61l2.95-.72c.814-.198 1.5.544 1.24 1.336l-1.15 3.484c-.298.898-1.546.898-1.358.04zM12 10.96c-1.656 0-3-1.344-3-3s1.344-3 3-3 3 1.344 3 3-1.344 3-3 3z" />
         </svg>
     );
@@ -156,7 +156,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <YelpIcon className="h-6 w-6 text-red-600" />
+                            <YelpIcon className="h-6 w-6 text-destructive" />
                             <div>
                                 <h3 className="font-semibold text-sm">Yelp</h3>
                                 <p className="text-xs text-muted-foreground">Business reviews</p>
@@ -258,24 +258,24 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <YelpIcon className="h-6 w-6 text-red-600" />
+                            <YelpIcon className="h-6 w-6 text-destructive" />
                             <div>
                                 <h3 className="font-semibold text-sm">Yelp</h3>
                                 <p className="text-xs text-muted-foreground">Business reviews</p>
                             </div>
                         </div>
-                        <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 text-[10px]">
+                        <Badge variant="outline" className="border-destructive/40 bg-destructive/10 text-destructive text-[10px]">
                             <AlertTriangle className="w-3 h-3 mr-1" /> Error
                         </Badge>
                     </div>
                 </CardHeader>
                 <CardContent className="pb-3">
-                    <p className="text-xs text-red-700">
+                    <p className="text-xs text-destructive">
                         There was an error syncing your Yelp reviews. This may be due to API rate limits or an invalid Yelp API key.
                     </p>
                 </CardContent>
                 <CardFooter className="pt-0">
-                    <Button size="sm" className="h-8 text-xs w-full bg-red-600 hover:bg-red-700 text-white"
+                    <Button size="sm" variant="destructive" className="h-8 text-xs w-full"
                         onClick={() => setShowConnect(true)}>
                         Reconnect
                     </Button>
@@ -290,7 +290,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpIcon className="h-6 w-6 text-red-600" />
+                        <YelpIcon className="h-6 w-6 text-destructive" />
                         <div>
                             <h3 className="font-semibold text-sm">Yelp</h3>
                             <p className="text-xs text-muted-foreground">
@@ -307,10 +307,11 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                             Connect your Yelp business to sync and monitor reviews.
                         </p>
                         <Button
-                            className="h-9 text-sm bg-red-600 hover:bg-red-700 text-white"
+                            className="h-9 text-sm"
+                            variant="destructive"
                             onClick={() => setShowConnect(true)}
                         >
-                            <YelpIcon className="h-4 w-4 mr-2 text-white" />
+                            <YelpIcon className="h-4 w-4 mr-2 text-destructive-foreground" />
                             Connect Yelp
                         </Button>
                     </div>
@@ -358,7 +359,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                 {searchResults.map((biz) => (
                                     <button
                                         key={biz.yelpId}
-                                        className="w-full text-left p-2.5 border border-border rounded-md hover:bg-muted hover:border-red-200 transition-colors group"
+                                        className="w-full text-left p-2.5 border border-border rounded-md hover:bg-muted hover:border-destructive/30 transition-colors group"
                                         onClick={() => handleConfirm(biz)}
                                         disabled={isConfirming !== null}
                                     >
@@ -386,7 +387,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName }: Yelp
                                                 </div>
                                             </div>
                                             {isConfirming === biz.yelpId ? (
-                                                <Loader2 className="w-4 h-4 animate-spin text-red-600" />
+                                                <Loader2 className="w-4 h-4 animate-spin text-destructive" />
                                             ) : (
                                                 <CheckCircle2 className="w-4 h-4 text-muted-foreground group-hover:text-red-500 transition-colors" />
                                             )}

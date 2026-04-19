@@ -90,7 +90,7 @@ export function OnboardingCompletionScreen({
                 cx="50"
                 cy="50"
                 r="45"
-                fill="#ECFDF5"
+                fill="color-mix(in oklab, var(--chart-2) 12%, var(--background))"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
@@ -99,7 +99,7 @@ export function OnboardingCompletionScreen({
               {/* Checkmark */}
               <motion.path
                 d="M 30 50 L 45 65 L 70 35"
-                stroke="#10b981"
+                stroke="var(--chart-2)"
                 strokeWidth="6"
                 strokeLinecap="round"
                 strokeLinejoin="round"

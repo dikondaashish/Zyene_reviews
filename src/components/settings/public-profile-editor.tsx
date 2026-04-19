@@ -8,6 +8,7 @@ import { ReviewContentForm } from "./review-content-form";
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
 import { cn } from "@/lib/utils";
 import {
+    DEFAULT_BRAND_COLOR_HEX,
     DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
     reviewPageBackdropGradient,
 } from "@/lib/utils/review-page-background";
@@ -34,7 +35,7 @@ interface PublicProfileEditorProps {
 export function PublicProfileEditor({ business, initialSlug }: PublicProfileEditorProps) {
     const [previewState, setPreviewState] = useState<PublicProfilePreviewValues>({
         slug: initialSlug,
-        brand_color: business.brand_color || "#0f172a",
+        brand_color: business.brand_color || DEFAULT_BRAND_COLOR_HEX,
         review_page_background_color:
             (business.review_page_background_color &&
                 /^#([0-9A-F]{3}){1,2}$/i.test(business.review_page_background_color) &&
@@ -350,7 +351,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                         className={cn(
                             "shrink-0 font-semibold px-5 transition-all",
                             copied
-                                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                                ? "bg-chart-2 hover:bg-chart-2/90 text-primary-foreground"
                                 : "bg-primary hover:bg-primary/90 text-primary-foreground"
                         )}
                         onClick={handleShare}

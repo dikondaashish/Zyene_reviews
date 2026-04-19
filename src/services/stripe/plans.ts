@@ -223,7 +223,11 @@ export function isPaidPlanTierDowngrade(
     return PAID_TIER_ORDER[to] < PAID_TIER_ORDER[from];
 }
 
-export function planAllowsAutoCommenter(plan: string | null | undefined): boolean {
+export function planAllowsAutoCommenter(
+    plan: string | null | undefined,
+    planStatus?: string | null
+): boolean {
+    if (planStatus !== undefined && !hasActiveOrTrialingStatus(planStatus)) return false;
     if (plan == null || plan === "") return false;
     const p = String(plan).toLowerCase().trim();
     if (p === "free" || p === "none") return false;

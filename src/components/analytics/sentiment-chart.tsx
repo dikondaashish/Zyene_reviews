@@ -22,10 +22,10 @@ export function SentimentChart({ data }: { data: SentimentDataPoint[] }) {
 
     // Refined colors
     const colorMap: Record<string, string> = {
-        Positive: "#10b981",
-        Neutral: "#94a3b8",
-        Negative: "#f43f5e",
-        Mixed: "#f59e0b"
+        Positive: "var(--chart-2)",
+        Neutral: "var(--chart-3)",
+        Negative: "var(--destructive)",
+        Mixed: "var(--chart-5)",
     };
 
     const displayData = data.map(d => ({
@@ -62,10 +62,10 @@ export function SentimentChart({ data }: { data: SentimentDataPoint[] }) {
                     </Pie>
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
+                            backgroundColor: "var(--card)",
+                            border: "1px solid var(--border)",
                             borderRadius: "12px",
-                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                            boxShadow: "var(--pro-shadow)",
                             padding: "8px 12px",
                         }}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}

@@ -69,9 +69,9 @@ const cardVariants = cva(
         default: "border-border bg-background",
         primary: "bg-primary/5 border border-primary/20",
         elegant:
-          "border border-zinc-200 bg-zinc-50 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100",
+          "border border-border bg-muted/60 text-foreground dark:bg-muted/40 dark:text-foreground",
         vibrant:
-          "border border-fuchsia-400 bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white dark:border-fuchsia-700 dark:from-fuchsia-600 dark:to-pink-600",
+          "border border-chart-1/40 bg-gradient-to-br from-chart-1 via-sync-action to-chart-5 text-primary-foreground dark:border-chart-1/30",
         minimal: "border border-border bg-muted text-foreground dark:border-border dark:bg-muted dark:text-foreground",
       },
       cursor: {
@@ -88,8 +88,8 @@ const nameVariants = cva("text-base font-semibold leading-tight", {
       default: "text-foreground",
       primary: "text-primary",
       secondary: "text-secondary",
-      elegant: "text-zinc-900 dark:text-zinc-100",
-      vibrant: "text-white",
+      elegant: "text-foreground",
+      vibrant: "text-primary-foreground",
       minimal: "text-foreground dark:text-foreground",
     },
   },
@@ -100,8 +100,8 @@ const textVariants = cva("text-start text-sm leading-relaxed text-foreground/90"
     theme: {
       default: "",
       primary: "text-primary/90",
-      elegant: "text-zinc-600 dark:text-zinc-300",
-      vibrant: "text-white/95",
+      elegant: "text-muted-foreground",
+      vibrant: "text-primary-foreground/95",
       minimal: "text-muted-foreground dark:text-muted-foreground",
     },
   },
@@ -117,12 +117,12 @@ const starColorVariants = {
     inactive: "text-primary/20",
   },
   elegant: {
-    active: "text-zinc-700 dark:text-zinc-300 fill-current",
-    inactive: "text-zinc-300 dark:text-zinc-600",
+    active: "text-foreground fill-current",
+    inactive: "text-muted-foreground/50",
   },
   vibrant: {
-    active: "text-white fill-current",
-    inactive: "text-white/40",
+    active: "text-primary-foreground fill-current",
+    inactive: "text-primary-foreground/40",
   },
   minimal: {
     active: "text-foreground dark:text-foreground fill-current",

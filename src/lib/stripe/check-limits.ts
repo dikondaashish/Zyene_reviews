@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { planProductTier } from "@/services/stripe/plans";
+import { FREE_LIMITS, hasActiveOrTrialingStatus, planProductTier } from "@/services/stripe/plans";
 
 interface LimitCheckResult {
     allowed: boolean;
@@ -39,7 +39,7 @@ export async function checkLimit(
     const { data: org, error: orgError } = await supabase
         .from("organizations")
         .select(
-            "plan, max_businesses, max_review_requests_per_month, max_ai_replies_per_month, max_email_requests_per_month, max_sms_requests_per_month, max_link_requests_per_month"
+            "plan, plan_status, max_businesses, max_review_requests_per_month, max_ai_replies_per_month, max_email_requests_per_month, max_sms_requests_per_month, max_link_requests_per_month"
         )
         .eq("id", organizationId)
         .single();
@@ -54,7 +54,8 @@ export async function checkLimit(
         .eq("organization_id", organizationId);
 
     const businessCount = businessCountRaw ?? 0;
-    const maxBiz = org.max_businesses ?? 1;
+    const subscriptionIsActive = hasActiveOrTrialingStatus(org.plan_status ?? null);
+    const maxBiz = subscriptionIsActive ? (org.max_businesses ?? 1) : FREE_LIMITS.maxLocations;
     const mult = perLocationMultiplier(org.plan, businessCount, maxBiz);
 
     // Determine the max for this limit type
@@ -64,25 +65,35 @@ export async function checkLimit(
             max = maxBiz;
             break;
         case "email_requests":
-            max = org.max_email_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            max = subscriptionIsActive
+                ? (org.max_email_requests_per_month ?? org.max_review_requests_per_month ?? 100)
+                : FREE_LIMITS.emailRequestsPerMonth;
             if (max !== -1) max *= mult;
             break;
         case "sms_requests":
-            max = org.max_sms_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            max = subscriptionIsActive
+                ? (org.max_sms_requests_per_month ?? org.max_review_requests_per_month ?? 100)
+                : FREE_LIMITS.smsRequestsPerMonth;
             if (max !== -1) max *= mult;
             break;
         case "link_requests":
-            max = org.max_link_requests_per_month ?? org.max_review_requests_per_month ?? 100;
+            max = subscriptionIsActive
+                ? (org.max_link_requests_per_month ?? org.max_review_requests_per_month ?? 100)
+                : FREE_LIMITS.linkRequestsPerMonth;
             if (max !== -1) max *= mult;
             break;
         case "review_requests": {
-            const base = org.max_review_requests_per_month ?? 100;
+            const base = subscriptionIsActive
+                ? (org.max_review_requests_per_month ?? 100)
+                : (FREE_LIMITS.emailRequestsPerMonth + FREE_LIMITS.smsRequestsPerMonth + FREE_LIMITS.linkRequestsPerMonth);
             max = base;
             if (max !== -1) max *= mult;
             break;
         }
         case "smart_replies":
-            max = org.max_ai_replies_per_month ?? 0;
+            max = subscriptionIsActive
+                ? (org.max_ai_replies_per_month ?? 0)
+                : FREE_LIMITS.smartRepliesPerMonth;
             break;
         default:
             max = 0;

@@ -44,24 +44,24 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
         <div className="w-full h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
                     <XAxis 
                         dataKey="label" 
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }} 
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }} 
                         tickLine={false}
                         axisLine={false}
                         minTickGap={30}
                         dy={10}
                     />
                     <YAxis 
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }} 
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }} 
                         tickLine={false}
                         axisLine={false}
                     />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
+                            backgroundColor: "var(--card)",
+                            border: "1px solid var(--border)",
                             borderRadius: "12px",
                             padding: "8px 12px",
                         }}
@@ -87,37 +87,37 @@ export function GooglePerformanceProfileChart({ data }: { data: DailyMetricPoint
                         stroke="var(--primary)" 
                         strokeWidth={3} 
                         dot={false} 
-                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                         animationDuration={1500}
                     />
                     <Line 
                         type="monotone" 
                         dataKey="websiteClicks" 
                         name="Website clicks" 
-                        stroke="#ff7a45" 
+                        stroke="var(--primary)" 
                         strokeWidth={3} 
                         dot={false} 
-                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                         animationDuration={1500}
                     />
                     <Line 
                         type="monotone" 
                         dataKey="calls" 
                         name="Calls" 
-                        stroke="#10b981" 
+                        stroke="var(--chart-2)" 
                         strokeWidth={3} 
                         dot={false} 
-                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                         animationDuration={1500}
                     />
                     <Line 
                         type="monotone" 
                         dataKey="directions" 
                         name="Directions" 
-                        stroke="#f59e0b" 
+                        stroke="var(--chart-5)" 
                         strokeWidth={3} 
                         dot={false} 
-                        activeDot={{ r: 4, strokeWidth: 2, stroke: "white" }}
+                        activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                         animationDuration={1500}
                     />
                 </LineChart>

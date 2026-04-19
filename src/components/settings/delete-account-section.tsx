@@ -75,7 +75,7 @@ export function DeleteAccountSection() {
 
                 <AlertDialog open={open} onOpenChange={setOpen}>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm" className="shrink-0 text-white">
+                        <Button variant="destructive" size="sm" className="shrink-0 text-destructive-foreground">
                             Delete Account
                         </Button>
                     </AlertDialogTrigger>
@@ -109,7 +109,7 @@ export function DeleteAccountSection() {
                                     void handleDeleteAccount();
                                 }}
                                 disabled={!isConfirmed || isDeleting}
-                                className="bg-destructive text-white hover:bg-destructive/90"
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             >
                                 {isDeleting ? (
                                     <>

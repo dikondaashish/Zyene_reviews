@@ -93,12 +93,12 @@ export function GettingStartedBanner({
             >
               <div
                 className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${item.done
-                  ? "border-green-500 bg-green-500"
+                  ? "border-chart-2 bg-chart-2"
                   : "border-border bg-background"
                   }`}
               >
                 {item.done ? (
-                  <Check className="h-4 w-4 text-white" />
+                  <Check className="h-4 w-4 text-primary-foreground" />
                 ) : (
                   <span className="text-[10px] font-bold text-muted-foreground">{index + 1}</span>
                 )}

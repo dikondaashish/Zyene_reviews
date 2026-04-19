@@ -87,8 +87,8 @@ export function ProChartContainer({
 export const chartConfig = {
   tooltip: {
     contentStyle: {
-      backgroundColor: "oklch(var(--card))",
-      border: "1px solid oklch(var(--border) / 0.1)",
+      backgroundColor: "var(--card)",
+      border: "1px solid color-mix(in oklab, var(--border) 65%, transparent)",
       borderRadius: "12px",
       fontSize: "12px",
       boxShadow: "var(--pro-shadow)",
@@ -96,25 +96,25 @@ export const chartConfig = {
       padding: "12px",
     },
     itemStyle: {
-      color: "oklch(var(--foreground))",
+      color: "var(--foreground)",
       fontWeight: 600,
     },
     labelStyle: {
-      color: "oklch(var(--muted-foreground))",
+      color: "var(--muted-foreground)",
       marginBottom: "4px",
     },
   },
   grid: {
-    stroke: "oklch(var(--border) / 0.05)",
+    stroke: "color-mix(in oklab, var(--border) 45%, transparent)",
     strokeDasharray: "4 4",
   },
   xAxis: {
-    tick: { fill: "oklch(var(--muted-foreground))", fontSize: 11 },
+    tick: { fill: "var(--muted-foreground)", fontSize: 11 },
     axisLine: false,
     tickLine: false,
   },
   yAxis: {
-    tick: { fill: "oklch(var(--muted-foreground))", fontSize: 11 },
+    tick: { fill: "var(--muted-foreground)", fontSize: 11 },
     axisLine: false,
     tickLine: false,
   },

@@ -5,9 +5,10 @@ import { apiError, apiOk } from "@/app/api/_shared/responses";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { sanitizeSlug } from "@/lib/utils";
+import { DEFAULT_REVIEW_PAGE_BACKGROUND_HEX } from "@/lib/utils/review-page-background";
 import { z } from "zod";
 
-const DEFAULT_REVIEW_PAGE_BG = "#1a2b5a" as const;
+const DEFAULT_REVIEW_PAGE_BG = DEFAULT_REVIEW_PAGE_BACKGROUND_HEX;
 
 const businessPatchSchema = z
     .object({
@@ -112,7 +113,7 @@ export async function PATCH(
             .from("businesses")
             .select(`
                 auto_reply_enabled,
-                organizations ( plan )
+                organizations ( plan, plan_status )
             `)
             .eq("id", id)
             .single();
@@ -127,6 +128,9 @@ export async function PATCH(
 
         const orgPlan =
             (currentBiz.organizations as { plan?: string | null } | null)?.plan ?? null;
+        const orgPlanStatus =
+            (currentBiz.organizations as { plan_status?: string | null } | null)
+                ?.plan_status ?? null;
         const nextAutoReplyEnabled =
             body.auto_reply_enabled !== undefined
                 ? body.auto_reply_enabled
@@ -136,7 +140,11 @@ export async function PATCH(
             body.auto_reply_min_rating !== undefined ||
             body.auto_reply_tone !== undefined;
 
-        if (touchesAutoReply && nextAutoReplyEnabled && !planAllowsAutoCommenter(orgPlan)) {
+        if (
+            touchesAutoReply &&
+            nextAutoReplyEnabled &&
+            !planAllowsAutoCommenter(orgPlan, orgPlanStatus)
+        ) {
             throw new ApiRouteError(
                 "Auto commenter requires a Starter, Professional, or Enterprise plan.",
                 {

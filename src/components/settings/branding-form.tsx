@@ -23,6 +23,10 @@ import { useRouter } from "next/navigation";
 import { Loader2, Upload, Trash } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
 import type { BusinessUpdatePayload } from "@/types/components";
+import {
+    DEFAULT_BRAND_COLOR_HEX,
+    DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
+} from "@/lib/utils/review-page-background";
 
 const brandingSchema = z.object({
     brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, "Invalid hex color code."),
@@ -68,9 +72,9 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const form = useForm<BrandingFormValues>({
         resolver: zodResolver(brandingSchema),
         defaultValues: {
-            brand_color: (business.brand_color || "#0f172a").toLowerCase(),
+            brand_color: (business.brand_color || DEFAULT_BRAND_COLOR_HEX).toLowerCase(),
             review_page_background_color: (
-                business.review_page_background_color || "#1a2b5a"
+                business.review_page_background_color || DEFAULT_REVIEW_PAGE_BACKGROUND_HEX
             ).toLowerCase(),
         },
     });
@@ -354,7 +358,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                                 <div className="flex-1 sm:w-32">
                                                     <Input
                                                         {...field}
-                                                        placeholder="#1a2b5a"
+                                                        placeholder={DEFAULT_BRAND_COLOR_HEX}
                                                         className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
                                                     />
                                                 </div>
@@ -392,15 +396,14 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
                                                 <div className="flex-1 sm:w-32">
                                                     <Input
                                                         {...field}
-                                                        placeholder="#1a2b5a"
+                                                        placeholder={DEFAULT_REVIEW_PAGE_BACKGROUND_HEX}
                                                         className="font-mono h-11 border-border bg-muted/30 focus:bg-background transition-all"
                                                     />
                                                 </div>
                                             </div>
                                             <p className="text-xs text-muted-foreground flex-1">
-                                                Full-screen color behind your review card on the public link (e.g.{" "}
-                                                <span className="font-mono">#04112f</span>). Accent buttons still use
-                                                Brand Color above.
+                                                Full-screen color behind your review card on the public link (try a
+                                                deep navy). Accent buttons still use Brand Color above.
                                             </p>
                                         </div>
                                         <FormMessage />
@@ -410,7 +413,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
 
                             <div className="flex justify-end pt-2 items-center">
                                 {form.formState.isDirty && (
-                                    <span className="text-sm text-amber-500 mr-4 font-medium hidden sm:inline-block">Unsaved changes</span>
+                                    <span className="text-sm text-primary mr-4 font-medium hidden sm:inline-block">Unsaved changes</span>
                                 )}
                                 <Button
                                     type="submit"

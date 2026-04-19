@@ -400,7 +400,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                     <Card key={stage.label}>
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                                <div className={`rounded-lg p-2 ${stage.color} text-white`}>
+                                <div className={`rounded-lg p-2 ${stage.color} text-primary-foreground`}>
                                     <stage.icon className="h-4 w-4" />
                                 </div>
                                 <div>
@@ -431,7 +431,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                                             style={{ width: `${Math.max(pct, 2)}%` }}
                                         >
                                             {pct >= 10 && (
-                                                <span className="text-xs font-semibold text-white">{stage.value}</span>
+                                                <span className="text-xs font-semibold text-primary-foreground">{stage.value}</span>
                                             )}
                                         </div>
                                     </div>

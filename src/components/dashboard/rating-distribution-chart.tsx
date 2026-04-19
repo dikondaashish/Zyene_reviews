@@ -17,11 +17,11 @@ interface RatingData {
 }
 
 const RATING_COLORS: Record<number, string> = {
-    1: "oklch(0.6 0.2 25)", // destructive/red
-    2: "oklch(0.7 0.15 45)", // orange
-    3: "oklch(0.8 0.15 85)", // yellow
-    4: "oklch(0.75 0.16 125)", // lime
-    5: "oklch(0.7 0.15 160)", // green
+    1: "var(--destructive)",
+    2: "var(--chart-5)",
+    3: "var(--chart-4)",
+    4: "var(--chart-3)",
+    5: "var(--chart-2)",
 };
 
 export function RatingDistributionChart({ data }: { data: RatingData[] }) {

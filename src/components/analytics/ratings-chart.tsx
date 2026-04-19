@@ -47,10 +47,10 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                             <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
                     <XAxis
                         dataKey="date"
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                         tickLine={false}
                         axisLine={false}
                         tickFormatter={(value) => {
@@ -62,15 +62,15 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                     />
                     <YAxis
                         domain={[0, 5]}
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                         tickLine={false}
                         axisLine={false}
                         tickCount={6}
                     />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
+                            backgroundColor: "var(--card)",
+                            border: "1px solid var(--border)",
                             borderRadius: "12px",
                             padding: "8px 12px",
                         }}
@@ -104,7 +104,7 @@ export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; ov
                         fillOpacity={1}
                         fill="url(#colorRating)"
                         animationDuration={1500}
-                        activeDot={{ r: 5, strokeWidth: 2, stroke: "white" }}
+                        activeDot={{ r: 5, strokeWidth: 2, stroke: "var(--background)" }}
                     />
                 </AreaChart>
             </ResponsiveContainer>

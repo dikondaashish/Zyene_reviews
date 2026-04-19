@@ -185,7 +185,7 @@ export default function CampaignsPage() {
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="w-24 h-24 bg-gradient-to-tr from-primary to-primary/80 rounded-3xl flex items-center justify-center mb-8 rotate-3 transform transition-transform hover:rotate-0 duration-500">
-                            <Megaphone className="h-12 w-12 text-white" />
+                            <Megaphone className="h-12 w-12 text-primary-foreground" />
                         </div>
                         
                         <h3 className="text-3xl font-bold text-foreground mb-4 tracking-tight">

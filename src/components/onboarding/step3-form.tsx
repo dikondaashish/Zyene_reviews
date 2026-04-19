@@ -93,8 +93,8 @@ export function Step3Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-[oklch(0.7_0.22_60)]/10 flex items-center justify-center ring-1 ring-[oklch(0.7_0.22_60)]/20 mx-auto">
-            <LayoutGrid className="w-8 h-8 text-[oklch(0.7_0.22_60)]" />
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <LayoutGrid className="w-8 h-8 text-primary" />
           </div>
         </motion.div>
 
@@ -156,7 +156,7 @@ export function Step3Form({
                         animate={{ scale: 1 }}
                         className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary flex items-center justify-center"
                       >
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </motion.div>
@@ -203,8 +203,8 @@ export function Step3Form({
       </form>
 
       {/* Tip */}
-      <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.22_60)]/[0.04] border border-[oklch(0.7_0.22_60)]/10 rounded-2xl">
-        <LayoutGrid className="w-4 h-4 text-[oklch(0.7_0.22_60)] mt-0.5 shrink-0" />
+      <div className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl">
+        <LayoutGrid className="w-4 h-4 text-primary mt-0.5 shrink-0" />
         <p className="text-xs text-muted-foreground leading-relaxed">
           <span className="font-semibold text-foreground">Don&apos;t see yours?</span> Pick <strong>Other</strong> and we&apos;ll customize your setup later.
         </p>

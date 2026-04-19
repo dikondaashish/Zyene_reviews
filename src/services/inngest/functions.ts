@@ -337,7 +337,7 @@ export const processAutoReplyReview = inngest.createFunction(
                         auto_reply_enabled_at,
                         auto_reply_min_rating,
                         auto_reply_tone,
-                        organizations!inner ( id, plan )
+                        organizations!inner ( id, plan, plan_status )
                     )
                 `)
                 .eq("id", reviewId)
@@ -358,14 +358,14 @@ export const processAutoReplyReview = inngest.createFunction(
                 auto_reply_enabled_at: string | null;
                 auto_reply_min_rating: number;
                 auto_reply_tone: string;
-                organizations: { id: string; plan: string | null } | null;
+                organizations: { id: string; plan: string | null; plan_status: string | null } | null;
             };
 
             if (!biz?.auto_reply_enabled) {
                 return { ok: false as const, reason: "auto_reply_disabled" };
             }
 
-            if (!planAllowsAutoCommenter(biz.organizations?.plan)) {
+            if (!planAllowsAutoCommenter(biz.organizations?.plan, biz.organizations?.plan_status)) {
                 return { ok: false as const, reason: "plan_not_eligible" };
             }
             if (!biz.auto_reply_enabled_at) {

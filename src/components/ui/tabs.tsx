@@ -72,8 +72,8 @@ function TabsTrigger({
         "text-foreground/70 hover:text-foreground group-data-[variant=default]/tabs-list:data-[state=active]:bg-background group-data-[variant=default]/tabs-list:data-[state=active]:text-foreground dark:group-data-[variant=default]/tabs-list:data-[state=active]:border-input dark:group-data-[variant=default]/tabs-list:data-[state=active]:bg-input/30",
         /* Line / underline tabs — docs/DESIGN.md inset underline (orange active, sand hover) */
         "group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:px-4 group-data-[variant=line]/tabs-list:py-3 group-data-[variant=line]/tabs-list:text-foreground/80 group-data-[variant=line]/tabs-list:hover:text-foreground group-data-[variant=line]/tabs-list:data-[state=active]:text-foreground group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent",
-        "group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_0_-4px_0_0_#ff4f00] group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_0_-4px_0_0_#c5c0b1]",
-        "group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_4px_0_0_0_#ff4f00] group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_4px_0_0_0_#c5c0b1]",
+        "group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_0_-4px_0_0_var(--primary)] group-data-[orientation=horizontal]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_0_-4px_0_0_var(--border)]",
+        "group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=active]:shadow-[inset_4px_0_0_0_var(--primary)] group-data-[orientation=vertical]/tabs:group-data-[variant=line]/tabs-list:data-[state=inactive]:hover:shadow-[inset_4px_0_0_0_var(--border)]",
         className
       )}
       {...props}

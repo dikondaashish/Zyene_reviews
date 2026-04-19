@@ -682,7 +682,7 @@ export function BillingClient({
                                             <Button
                                                 type="button"
                                                 className={cn(
-                                                    "w-full font-semibold text-white",
+                                                    "w-full font-semibold text-primary-foreground",
                                                     "bg-primary",
                                                     "hover:bg-primary/90 disabled:opacity-60"
                                                 )}

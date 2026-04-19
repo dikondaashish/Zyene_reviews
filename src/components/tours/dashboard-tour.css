@@ -1,9 +1,7 @@
 /**
- * Custom Product Tour Styles
- * Premium SaaS-quality overlay, spotlight, tooltip, and animations
+ * Product tour — all colors reference app theme tokens (light / .dark).
  */
 
-/* ── Overlay ─────────────────────────────────── */
 .tour-overlay {
     position: fixed;
     inset: 0;
@@ -11,7 +9,6 @@
     pointer-events: all;
 }
 
-/* ── Spotlight SVG ───────────────────────────── */
 .tour-spotlight-svg {
     position: fixed;
     inset: 0;
@@ -25,27 +22,30 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Tooltip Card ────────────────────────────── */
 .tour-tooltip {
     position: fixed;
     z-index: 9999;
     width: 380px;
     max-width: calc(100vw - 32px);
     pointer-events: all;
-    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15))
-            drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 20px 40px color-mix(in srgb, var(--foreground) 18%, transparent))
+        drop-shadow(0 8px 16px color-mix(in srgb, var(--foreground) 12%, transparent));
 }
 
 .tour-tooltip-card {
-    background: #ffffff;
+    background: var(--popover);
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
 }
 
-/* ── Tooltip Header ──────────────────────────── */
 .tour-tooltip-header {
-    background: linear-gradient(135deg, #ff4f00 0%, #c2410c 50%, #9a3412 100%);
+    background: linear-gradient(
+        135deg,
+        var(--primary) 0%,
+        color-mix(in oklab, var(--primary) 55%, var(--foreground) 45%) 50%,
+        color-mix(in oklab, var(--primary) 40%, var(--foreground) 60%) 100%
+    );
     padding: 18px 20px 14px;
     position: relative;
     overflow: hidden;
@@ -58,7 +58,7 @@
     right: -30px;
     width: 100px;
     height: 100px;
-    background: rgba(255, 255, 255, 0.08);
+    background: color-mix(in oklab, var(--primary-foreground) 10%, transparent);
     border-radius: 50%;
 }
 
@@ -69,7 +69,7 @@
     left: 30%;
     width: 60px;
     height: 60px;
-    background: rgba(255, 255, 255, 0.05);
+    background: color-mix(in oklab, var(--primary-foreground) 6%, transparent);
     border-radius: 50%;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .tour-tooltip-title {
-    color: #ffffff;
+    color: var(--primary-foreground);
     font-size: 16px;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -108,8 +108,8 @@
     height: 28px;
     border-radius: 8px;
     border: none;
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
+    background: color-mix(in oklab, var(--primary-foreground) 16%, transparent);
+    color: color-mix(in oklab, var(--primary-foreground) 92%, transparent);
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
@@ -117,28 +117,26 @@
 }
 
 .tour-tooltip-close:hover {
-    background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    background: color-mix(in oklab, var(--primary-foreground) 26%, transparent);
+    color: var(--primary-foreground);
     transform: scale(1.05);
 }
 
-/* ── Tooltip Body ────────────────────────────── */
 .tour-tooltip-body {
     padding: 18px 20px;
-    color: #374151;
+    color: var(--foreground);
     font-size: 14px;
     line-height: 1.7;
     letter-spacing: 0.01em;
 }
 
-/* ── Tooltip Footer ──────────────────────────── */
 .tour-tooltip-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 14px 20px 16px;
-    border-top: 1px solid #f3f4f6;
-    background: #fafbfc;
+    border-top: 1px solid var(--border);
+    background: var(--muted);
     border-radius: 0 0 16px 16px;
 }
 
@@ -151,7 +149,7 @@
 .tour-tooltip-step-counter {
     font-size: 13px;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--muted-foreground);
     letter-spacing: 0.02em;
 }
 
@@ -164,18 +162,18 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #e5e7eb;
+    background: color-mix(in oklab, var(--muted-foreground) 35%, var(--muted) 65%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tour-tooltip-dot.active {
-    background: #ff4f00;
+    background: var(--primary);
     width: 20px;
     border-radius: 4px;
 }
 
 .tour-tooltip-dot.completed {
-    background: #fdba74;
+    background: color-mix(in oklab, var(--primary) 45%, var(--muted-foreground) 55%);
 }
 
 .tour-tooltip-actions {
@@ -183,7 +181,6 @@
     gap: 8px;
 }
 
-/* ── Buttons ─────────────────────────────────── */
 .tour-btn {
     padding: 8px 16px;
     border-radius: 10px;
@@ -197,35 +194,39 @@
 
 .tour-btn-skip {
     background: transparent;
-    color: #9ca3af;
+    color: var(--muted-foreground);
     padding: 8px 12px;
 }
 
 .tour-btn-skip:hover {
-    color: #6b7280;
-    background: #f3f4f6;
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--muted) 80%, var(--foreground) 20%);
 }
 
 .tour-btn-prev {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
+    background: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--border);
 }
 
 .tour-btn-prev:hover {
-    background: #e5e7eb;
-    border-color: #d1d5db;
+    background: color-mix(in oklab, var(--muted) 85%, var(--foreground) 15%);
+    border-color: var(--border);
 }
 
 .tour-btn-next {
-    background: linear-gradient(135deg, #ff4f00 0%, #ff7a45 100%);
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+    background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 75%, var(--foreground) 25%) 100%);
+    color: var(--primary-foreground);
+    box-shadow: 0 2px 8px color-mix(in oklab, var(--primary) 35%, transparent);
 }
 
 .tour-btn-next:hover {
-    background: linear-gradient(135deg, #ff7a45 0%, #c2410c 100%);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    background: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--primary) 88%, var(--foreground) 12%) 0%,
+        color-mix(in oklab, var(--primary) 55%, var(--foreground) 45%) 100%
+    );
+    box-shadow: 0 4px 12px color-mix(in oklab, var(--primary) 45%, transparent);
     transform: translateY(-1px);
 }
 
@@ -234,18 +235,21 @@
 }
 
 .tour-btn-finish {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, var(--chart-2) 0%, color-mix(in oklab, var(--chart-2) 65%, var(--foreground) 35%) 100%);
+    color: var(--primary-foreground);
+    box-shadow: 0 2px 8px color-mix(in oklab, var(--chart-2) 35%, transparent);
 }
 
 .tour-btn-finish:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--chart-2) 80%, var(--foreground) 20%) 0%,
+        color-mix(in oklab, var(--chart-2) 50%, var(--foreground) 50%) 100%
+    );
+    box-shadow: 0 4px 12px color-mix(in oklab, var(--chart-2) 45%, transparent);
     transform: translateY(-1px);
 }
 
-/* ── Arrow ───────────────────────────────────── */
 .tour-arrow {
     position: absolute;
     width: 14px;
@@ -258,9 +262,9 @@
     position: absolute;
     width: 14px;
     height: 14px;
-    background: #ffffff;
+    background: var(--popover);
     transform: rotate(45deg);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
 }
 
 .tour-arrow-top {
@@ -307,9 +311,9 @@
     border-right: none;
 }
 
-/* ── Spotlight Pulse Ring ────────────────────── */
 @keyframes tour-spotlight-pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 0.6;
     }
     50% {
@@ -320,15 +324,14 @@
 .tour-spotlight-ring {
     position: fixed;
     z-index: 9998;
-    border: 2px solid rgba(249, 115, 22, 0.5);
+    border: 2px solid color-mix(in oklab, var(--primary) 50%, transparent);
     border-radius: 12px;
     pointer-events: none;
     animation: tour-spotlight-pulse 2s ease-in-out infinite;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 12%, transparent);
 }
 
-/* ── Responsive ──────────────────────────────── */
 @media (max-width: 480px) {
     .tour-tooltip {
         width: calc(100vw - 24px);

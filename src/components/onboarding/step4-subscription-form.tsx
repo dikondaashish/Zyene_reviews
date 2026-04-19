@@ -266,7 +266,7 @@ export function Step4SubscriptionForm({
                     )}
                     <Button
                       className={cn(
-                        "relative z-20 w-full font-semibold text-white transition-all duration-300 cursor-pointer",
+                        "relative z-20 w-full font-semibold text-primary-foreground transition-all duration-300 cursor-pointer",
                         "bg-primary",
                         "hover:-translate-y-1 hover:brightness-110 active:translate-y-0",
                       )}

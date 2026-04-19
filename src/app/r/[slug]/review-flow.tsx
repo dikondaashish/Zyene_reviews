@@ -101,7 +101,7 @@ export function PublicReviewFlow({
     businessCategory,
     requestId,
     googleUrl,
-    brandColor = "#ff4f00", // Default primary
+    brandColor,
     reviewPageBackgroundColor,
     logoUrl,
     minStars: minStarsVal,
@@ -135,6 +135,8 @@ export function PublicReviewFlow({
     previewStep,
     className,
 }: PublicReviewFlowProps) {
+    const resolvedBrandColor =
+        typeof brandColor === "string" && brandColor.trim().length > 0 ? brandColor.trim() : "var(--primary)";
     const minStars = minStarsVal ?? 4;
     const pageBgHex = reviewPageBackgroundColor?.trim() ?? "";
     const useCustomPageBackdrop =
@@ -515,8 +517,8 @@ export function PublicReviewFlow({
         const offerBannerText =
             privateFeedbackOfferMessage?.trim() || DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT;
         const offerBrandHex =
-            typeof brandColor === "string" && /^#([0-9A-F]{3}){1,2}$/i.test(brandColor.trim())
-                ? brandColor.trim()
+            resolvedBrandColor !== "var(--primary)" && /^#([0-9A-F]{3}){1,2}$/i.test(resolvedBrandColor)
+                ? resolvedBrandColor
                 : null;
         return renderCardWrapper(
             <form
@@ -542,7 +544,7 @@ export function PublicReviewFlow({
                     <div
                         className={cn(
                             "relative overflow-hidden rounded-2xl border border-border p-5 pl-5",
-                            "bg-gradient-to-br from-background via-muted/80 to-sky-50/50",
+                            "bg-gradient-to-br from-background via-muted/80 to-primary/5",
                             "ring-1 ring-border animate-in fade-in zoom-in-95 duration-500"
                         )}
                         role="status"
@@ -552,13 +554,13 @@ export function PublicReviewFlow({
                             className="pointer-events-none absolute inset-y-4 left-3 w-1 rounded-full"
                             style={{
                                 background: offerBrandHex
-                                    ? `linear-gradient(180deg, ${offerBrandHex} 0%, #0284c7 70%, #0d9488 100%)`
-                                    : "linear-gradient(180deg, #0ea5e9 0%, #0284c7 45%, #0d9488 100%)",
+                                    ? `linear-gradient(180deg, ${offerBrandHex} 0%, var(--public-review-gradient-b) 70%, var(--public-review-gradient-c) 100%)`
+                                    : "var(--public-review-offer-strip-default)",
                             }}
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-gradient-to-br from-sky-200/35 to-teal-100/25 blur-[2px]"
+                            className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-gradient-to-br from-primary/20 to-chart-2/20 blur-[2px]"
                             aria-hidden
                         />
                         <div
@@ -566,7 +568,7 @@ export function PublicReviewFlow({
                             aria-hidden
                         />
                         <div
-                            className="pointer-events-none absolute right-20 top-3 text-sky-400/45"
+                            className="pointer-events-none absolute right-20 top-3 text-primary/35"
                             aria-hidden
                         >
                             <Sparkles className="h-4 w-4" strokeWidth={2} />
@@ -574,8 +576,8 @@ export function PublicReviewFlow({
                         <div className="relative flex gap-4 pl-3">
                             <div
                                 className={cn(
-                                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white",
-                                    "bg-gradient-to-br from-sky-600 to-teal-600 shadow-md shadow-sky-900/15 ring-2 ring-white"
+                                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-primary-foreground",
+                                    "bg-gradient-to-br from-primary to-chart-2 shadow-md shadow-foreground/10 ring-2 ring-primary-foreground/80"
                                 )}
                                 aria-hidden
                             >
@@ -586,7 +588,7 @@ export function PublicReviewFlow({
                                     <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground">
                                         Special offer
                                     </p>
-                                    <span className="inline-flex items-center rounded-full bg-sky-100/90 px-2 py-0.5 text-[10px] font-semibold text-sky-900/85 ring-1 ring-sky-200/80">
+                                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary ring-1 ring-primary/25">
                                         Exclusive
                                     </span>
                                 </div>
@@ -615,7 +617,7 @@ export function PublicReviewFlow({
                         <label className="text-sm font-semibold text-foreground">
                             Your email{" "}
                             {privateFeedbackEmailMode === "required" ? (
-                                <span className="text-red-500">*</span>
+                                <span className="text-destructive">*</span>
                             ) : (
                                 <span className="text-muted-foreground font-normal">(optional)</span>
                             )}
@@ -643,7 +645,7 @@ export function PublicReviewFlow({
                         <label className="text-sm font-semibold text-foreground">
                             Phone number{" "}
                             {privateFeedbackPhoneMode === "required" ? (
-                                <span className="text-red-500">*</span>
+                                <span className="text-destructive">*</span>
                             ) : (
                                 <span className="text-muted-foreground font-normal">(optional)</span>
                             )}
@@ -673,7 +675,7 @@ export function PublicReviewFlow({
                     <button
                         type="submit"
                         className={cn(
-                            "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                            "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-all duration-300",
                             "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
                             "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                             "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
@@ -732,8 +734,8 @@ export function PublicReviewFlow({
                             </div>
                         ) : (
                             <div
-                                className="h-20 w-20 rounded-2xl flex items-center justify-center shadow-lg text-white"
-                                style={{ backgroundColor: brandColor }}
+                                className="h-20 w-20 rounded-2xl flex items-center justify-center shadow-lg text-primary-foreground"
+                                style={{ backgroundColor: resolvedBrandColor }}
                             >
                                 <span className="text-2xl font-bold">{initials}</span>
                             </div>
@@ -915,8 +917,8 @@ export function PublicReviewFlow({
             <div className="p-8 pb-32 flex-1 flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
-                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: brandColor }} />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
                         <div className="h-1.5 flex-1 bg-muted rounded-full" />
                     </div>
 
@@ -935,12 +937,12 @@ export function PublicReviewFlow({
                                     "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
-                                        ? "text-white scale-105 shadow-md"
+                                        ? "text-primary-foreground scale-105 shadow-md"
                                         : "bg-background text-muted-foreground border-border hover:bg-muted"
                                 )}
                                 style={{
-                                    backgroundColor: selectedTags.includes(tag) ? brandColor : undefined,
-                                    borderColor: selectedTags.includes(tag) ? brandColor : undefined
+                                    backgroundColor: selectedTags.includes(tag) ? resolvedBrandColor : undefined,
+                                    borderColor: selectedTags.includes(tag) ? resolvedBrandColor : undefined
                                 }}
                             >
                                 {tag}
@@ -955,12 +957,12 @@ export function PublicReviewFlow({
                             "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
                             "border-2 active:scale-[0.98]",
                             selectedTags.includes("👍 Everything")
-                                ? "text-white shadow-md"
+                                ? "text-primary-foreground shadow-md"
                                 : "text-foreground border-border hover:bg-muted"
                         )}
                         style={{
-                            backgroundColor: selectedTags.includes("👍 Everything") ? brandColor : undefined,
-                            borderColor: selectedTags.includes("👍 Everything") ? brandColor : undefined
+                            backgroundColor: selectedTags.includes("👍 Everything") ? resolvedBrandColor : undefined,
+                            borderColor: selectedTags.includes("👍 Everything") ? resolvedBrandColor : undefined
                         }}
                     >
                         👍 Everything!
@@ -986,12 +988,12 @@ export function PublicReviewFlow({
                                             "flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
                                             "border-2 active:scale-95",
                                             selectedStaff.includes(name)
-                                                ? "text-white scale-105 shadow-md"
+                                                ? "text-primary-foreground scale-105 shadow-md"
                                                 : "bg-background text-muted-foreground border-border hover:bg-muted"
                                         )}
                                         style={{
-                                            backgroundColor: selectedStaff.includes(name) ? brandColor : undefined,
-                                            borderColor: selectedStaff.includes(name) ? brandColor : undefined
+                                            backgroundColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined,
+                                            borderColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined
                                         }}
                                     >
                                         <span>👤</span> 
@@ -1011,7 +1013,7 @@ export function PublicReviewFlow({
                     )}>
                         <button
                             className={cn(
-                                "w-full h-14 rounded-2xl text-base font-semibold text-white transition-all duration-300",
+                                "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-all duration-300",
                                 "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
                                 "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                                 "active:scale-[0.98] flex items-center justify-center gap-2"
@@ -1053,7 +1055,7 @@ export function PublicReviewFlow({
                     <div className="flex justify-center">
                         <div className="relative">
                             <div className="h-16 w-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse">
-                                <Sparkles className="h-8 w-8 text-white" />
+                                <Sparkles className="h-8 w-8 text-primary-foreground" />
                             </div>
                             <div className="absolute -top-1 -right-1 h-4 w-4 bg-yellow-400 rounded-full animate-ping" />
                         </div>
@@ -1105,10 +1107,10 @@ export function PublicReviewFlow({
                             "w-full h-14 rounded-2xl text-base font-semibold transition-all duration-300 relative overflow-hidden",
                             isRedirecting
                                 ? "bg-muted cursor-wait ring-0"
-                                : "text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+                                : "text-primary-foreground shadow-lg hover:shadow-xl active:scale-[0.98]",
                             !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                         )}
-                        style={{ backgroundColor: isRedirecting ? "#f1f5f9" : brandColor }} // slate-100 hex
+                        style={{ backgroundColor: isRedirecting ? "var(--muted)" : resolvedBrandColor }}
                         onClick={handlePostToGoogle}
                         disabled={isSubmitting || isRedirecting || !reviewText.trim()}
                     >
@@ -1132,7 +1134,7 @@ export function PublicReviewFlow({
                             </>
                         ) : (
                             isSubmitting ? (
-                                <Loader2 className="h-5 w-5 animate-spin text-white" />
+                                <Loader2 className="h-5 w-5 animate-spin text-primary-foreground" />
                             ) : (
                                 <div className="flex items-center justify-center gap-2">
                                     <Copy className="h-4 w-4" />

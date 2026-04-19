@@ -224,10 +224,10 @@ export default async function AnalyticsPage({
     });
 
     const sentimentData = [
-        { name: "Positive", value: sentimentCounts.positive, color: "#10b981" },
-        { name: "Neutral", value: sentimentCounts.neutral, color: "#94a3b8" },
-        { name: "Negative", value: sentimentCounts.negative, color: "#f43f5e" },
-        { name: "Mixed", value: sentimentCounts.mixed, color: "#f59e0b" },
+        { name: "Positive", value: sentimentCounts.positive, color: "var(--chart-2)" },
+        { name: "Neutral", value: sentimentCounts.neutral, color: "var(--chart-3)" },
+        { name: "Negative", value: sentimentCounts.negative, color: "var(--destructive)" },
+        { name: "Mixed", value: sentimentCounts.mixed, color: "var(--chart-5)" },
     ].filter(d => d.value > 0);
 
     const themeMap = new Map<string, { count: number; sentimentScore: number }>();

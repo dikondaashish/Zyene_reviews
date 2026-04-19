@@ -43,10 +43,10 @@ export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
         <div className="w-full h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 0 }} barSize={20}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
                     <XAxis
                         dataKey="date"
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                         tickLine={false}
                         axisLine={false}
                         tickFormatter={(value) => {
@@ -57,19 +57,19 @@ export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
                         dy={10}
                     />
                     <YAxis
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "hsl(var(--muted-foreground))" }}
+                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
                         tickLine={false}
                         axisLine={false}
                     />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
+                            backgroundColor: "var(--card)",
+                            border: "1px solid var(--border)",
                             borderRadius: "12px",
-                            boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                            boxShadow: "var(--pro-shadow)",
                             padding: "8px 12px",
                         }}
-                        cursor={{ fill: "hsl(var(--muted)/0.3)" }}
+                        cursor={{ fill: "color-mix(in oklab, var(--muted) 35%, transparent)" }}
                         labelClassName="font-bold text-xs mb-1"
                         labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}
@@ -94,24 +94,24 @@ export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
                         dataKey="negative" 
                         name="Negative (1-2★)" 
                         stackId="a" 
-                        fill="#f43f5e" 
-                        background={{ fill: "#c5c0b1" }}
+                        fill="var(--destructive)" 
+                        background={{ fill: "var(--border)" }}
                         radius={[0, 0, 0, 0]} 
                     />
                     <Bar 
                         dataKey="neutral" 
                         name="Neutral (3★)" 
                         stackId="a" 
-                        fill="#94a3b8" 
-                        background={{ fill: "#c5c0b1" }}
+                        fill="var(--chart-3)" 
+                        background={{ fill: "var(--border)" }}
                         radius={[0, 0, 0, 0]} 
                     />
                     <Bar 
                         dataKey="positive" 
                         name="Positive (4-5★)" 
                         stackId="a" 
-                        fill="#10b981" 
-                        background={{ fill: "#c5c0b1" }}
+                        fill="var(--chart-2)" 
+                        background={{ fill: "var(--border)" }}
                         radius={[4, 4, 0, 0]} 
                     />
                 </BarChart>

@@ -1,5 +1,8 @@
 /** Build a subtle diagonal gradient from a single brand hex (public /r/[slug] backdrop). */
 
+/** Default accent hex for buttons/links on the public review page when none is set in DB. */
+export const DEFAULT_BRAND_COLOR_HEX = "#0f172a";
+
 /** Default “seed” color for orbs and new businesses (royal blue, top-right in reference UI). */
 export const DEFAULT_REVIEW_PAGE_BACKGROUND_HEX = "#1a2b5a";
 
