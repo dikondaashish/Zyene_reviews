@@ -383,85 +383,73 @@ export function CustomerPortalCard({
                 </div>
             </div>
 
-            <div className="relative z-10 w-full mb-3 px-1">
+            <div className="relative z-10 w-full mb-4">
                 <div 
-                    className="bg-[#0052cc] rounded-[14px] px-6 py-6 flex items-center justify-between overflow-hidden relative cursor-pointer shadow-sm"
+                    className="bg-[#0052cc] rounded-[20px] px-8 py-7 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm border border-white/5"
                     onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
                 >
-                    {/* Faded Background G (Top-Left) */}
-                    <div className="absolute -left-6 -top-10 w-44 h-44 opacity-[0.08] pointer-events-none select-none">
+                    {/* Background decorative elements */}
+                    <div className="absolute -left-10 -top-10 w-48 h-48 opacity-[0.06] pointer-events-none select-none">
                         <img src={GOOGLE_LOGO_URL} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
                     </div>
+                    <div className="absolute right-0 top-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
 
-                    {/* Small '+' Decoration */}
-                    <div className="absolute left-[68%] top-[45%] opacity-40 pointer-events-none select-none">
-                        <div className="w-1.5 h-1.5 border-t border-l border-white relative">
-                            <div className="absolute top-0 left-0 w-1.5 h-[0.5px] bg-white -rotate-45 origin-top-left scale-[2]"></div>
-                            <div className="absolute top-0 left-0 w-[0.5px] h-1.5 bg-white -rotate-45 origin-top-left scale-[2]"></div>
-                        </div>
-                    </div>
-
-                    {/* Blue Blob on right */}
-                    <div className="absolute -right-4 -bottom-6 w-32 h-32 bg-[#0047b3] rounded-full blur-[40px] pointer-events-none"></div>
-
-                    <div className="relative z-10 space-y-3 flex-1">
-                        <div className="space-y-1">
-                            <h4 className="text-[19px] font-bold text-white leading-tight tracking-tight">
+                    <div className="relative z-10 flex-1 pr-4">
+                        <div className="space-y-1.5">
+                            <h4 className="text-[20px] font-bold text-white leading-tight tracking-tight">
                                 Get more reviews with an NFC card!
                             </h4>
-                            <p className="text-[12px] text-white/85 leading-snug font-medium max-w-[280px]">
+                            <p className="text-[13px] text-white/80 leading-relaxed font-medium max-w-[260px]">
                                 Customers can simply tap their phone to it to leave you a review.
                             </p>
                         </div>
-                        <div className="pt-1">
-                            <button className="bg-white text-[#0052cc] text-[15px] font-bold px-7 py-3 rounded-[12px] hover:bg-white/95 active:scale-95 transition-all shadow-md">
+                        <div className="pt-4">
+                            <button className="bg-white text-[#0052cc] text-[14px] font-bold px-6 py-2.5 rounded-[12px] hover:bg-white/95 active:scale-95 transition-all shadow-lg flex items-center justify-center min-w-[130px]">
                                 Order now
                             </button>
                         </div>
                     </div>
 
-                    {/* Right side Stacked Cards (Ultimate Fidelity matching Screenshot) */}
-                    <div className="relative w-40 h-32 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-4">
+                    {/* Right side Stacked Cards (Ultimate Physical Fidelity) */}
+                    <div className="relative w-44 h-32 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-2">
                         {(() => {
                             const GOOGLE_G = "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg";
                             const GOOGLE_WORDMARK = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg";
                             
                             const CardFront = ({ className }: { className?: string }) => (
-                                <div className={`absolute bg-white rounded-[7px] shadow-2xl flex flex-col items-center justify-between p-3 border border-black/5 ${className}`}>
-                                    {/* Big G */}
-                                    <img src={GOOGLE_G} alt="" className="w-8 h-8 mt-1" />
+                                <div className={`absolute bg-white rounded-[8px] shadow-[0_8px_25px_rgba(0,0,0,0.18)] flex flex-col items-center justify-between p-3.5 border border-black/[0.03] ${className}`}>
+                                    <img src={GOOGLE_G} alt="" className="w-9 h-9 mt-0.5" />
                                     
-                                    {/* NFC Waves Box */}
-                                    <div className="flex flex-col items-center gap-1.5 mt-2">
-                                        <div className="w-8 h-8 rounded-lg border-[1.5px] border-slate-400 flex items-center justify-center relative">
+                                    <div className="flex flex-col items-center gap-2 mt-1">
+                                        {/* NFC Symbol */}
+                                        <div className="w-9 h-9 rounded-[10px] border-[1.5px] border-slate-300 flex items-center justify-center">
                                             <div className="flex gap-[1.5px] items-center">
-                                                <div className="w-[1.5px] h-3 bg-slate-400 rounded-full opacity-40"></div>
-                                                <div className="w-[1.5px] h-4 bg-slate-500 rounded-full"></div>
-                                                <div className="w-[1.5px] h-3 bg-slate-400 rounded-full opacity-40"></div>
+                                                <div className="w-[1.2px] h-3.5 bg-slate-400 rounded-full opacity-30"></div>
+                                                <div className="w-[1.5px] h-4.5 bg-slate-500 rounded-full"></div>
+                                                <div className="w-[1.2px] h-3.5 bg-slate-400 rounded-full opacity-30"></div>
                                             </div>
                                         </div>
                                         
-                                        {/* Stars */}
-                                        <div className="flex gap-[1.5px]">
+                                        {/* Ratings */}
+                                        <div className="flex gap-[1px]">
                                             {[...Array(5)].map((_, i) => (
-                                                <span key={i} className="text-[#FFB300] text-[8px]">★</span>
+                                                <span key={i} className="text-[#FFB300] text-[9px]">★</span>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Text & Wordmark */}
-                                    <div className="flex flex-col items-center gap-1 mb-1">
-                                        <span className="text-[7.5px] font-bold text-slate-700 tracking-tight">Tap to review us</span>
-                                        <img src={GOOGLE_WORDMARK} alt="" className="w-10 h-3.5 object-contain" />
+                                    <div className="flex flex-col items-center gap-[3px] mb-1">
+                                        <span className="text-[8px] font-bold text-slate-800 tracking-tight">Tap to review us</span>
+                                        <img src={GOOGLE_WORDMARK} alt="" className="w-12 h-4 object-contain" />
                                     </div>
                                 </div>
                             );
 
                             return (
                                 <>
-                                    <CardFront className="right-[72px] top-[48px] w-[64px] h-[92px] scale-[0.6] opacity-40 rotate-[-25deg]" />
-                                    <CardFront className="right-[4px] top-[54px] w-[64px] h-[92px] scale-[0.6] opacity-60 rotate-[15deg]" />
-                                    <CardFront className="right-[22px] top-[4px] w-[76px] h-[108px] rotate-[-5deg] z-20" />
+                                    <CardFront className="right-[80px] top-[40px] w-[70px] h-[100px] scale-[0.6] opacity-30 rotate-[-28deg] blur-[0.3px]" />
+                                    <CardFront className="right-[0px] top-[50px] w-[70px] h-[100px] scale-[0.6] opacity-50 rotate-[20deg]" />
+                                    <CardFront className="right-[24px] top-[2px] w-[82px] h-[116px] rotate-[-6deg] z-20" />
                                 </>
                             );
                         })()}
