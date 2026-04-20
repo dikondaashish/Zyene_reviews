@@ -19,7 +19,7 @@ const insightsSchema: Schema = {
                 type: SchemaType.OBJECT,
                 properties: {
                     name: { type: SchemaType.STRING, description: "Short 2-3 word theme name" },
-                    mentions: { type: SchemaType.NUMBER, description: "Estimated number of mentions (1-500 scale based on frequency)" },
+                    mentions: { type: SchemaType.NUMBER, description: "Actally how many reviews from the provided list mention this theme. Must be <= total reviews." },
                     sentiment: { type: SchemaType.STRING, description: "positive, negative, or neutral" },
                     summaryQuote: { type: SchemaType.STRING, description: "A one sentence summary of what guests say" },
                     customerQuotes: {
@@ -54,7 +54,7 @@ const INSIGHTS_PROMPT = `You are an expert business analyst. Analyze the followi
 
 Extract:
 1. **Headline**: Write a catchy two-part headline summarizing the main positive and main negative (or neutral). Separate them with a period.
-2. **Key Themes** (3-5): The most prominent recurring themes. Give them short names, estimate their mentions (on a scale up to 500 based on frequency or importance), assign sentiment, write a summary quote, and include exactly two direct quotes from the provided list.
+2. **Key Themes** (3-5): The most prominent recurring themes. Give them short names, count exactly how many reviews mention this theme (must be a realistic number relative to the {count} total reviews provided), assign sentiment, write a summary quote, and include exactly two direct quotes from the provided list.
 3. **Suggestions** (2-3): Actionable, specific suggestions the business owner can implement to improve. Include an urgency tag, an effort tag, an impact tag, and a detailed description.
 
 Rules:
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     if (!businessId) return apiError("No business found", { status: 404, details: requestId });
 
     // Check cache first (Redis, 24h TTL)
-    const cacheKey = `ai_insights_v2:${businessId}`;
+    const cacheKey = `ai_insights_v3:${businessId}`;
     try {
         const { redis } = await import("@/lib/db/redis");
         const cached = await redis.get(cacheKey);
