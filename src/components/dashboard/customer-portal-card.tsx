@@ -383,6 +383,26 @@ export function CustomerPortalCard({
                 </div>
             </div>
 
+            <div className="relative z-10 w-full mb-2">
+                <div className="bg-[#1a73e8] rounded-[12px] p-4 flex items-center justify-between overflow-hidden relative group cursor-pointer" onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}>
+                    <div className="relative z-10 space-y-1 pr-12">
+                        <h4 className="text-[14px] font-bold text-white leading-tight">Get more reviews with an NFC card!</h4>
+                        <p className="text-[10px] text-white/80 leading-tight pr-4">Customers can simply tap their phone to it to leave you a review.</p>
+                        <div className="pt-2">
+                            <button className="bg-white text-[#1a73e8] text-[11px] font-bold px-3 py-1.5 rounded-full hover:bg-white/90 transition-colors">
+                                Order now
+                            </button>
+                        </div>
+                    </div>
+                    {/* Decorative NFC image mock */}
+                    <div className="absolute -right-2 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-30 transition-opacity">
+                        <svg className="w-20 h-20 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 12h.01"/><path d="M15 12h.01"/><path d="M9 12h.01"/></svg>
+                    </div>
+                    {/* Decorative Google G */}
+                    <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/5 rounded-full blur-xl"></div>
+                </div>
+            </div>
+
             <div className="relative z-10 w-full space-y-3">
                 {/* Link Box */}
                 <div className="flex items-center justify-between bg-[#2f3d2f] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[#384738] transition-colors cursor-pointer group" onClick={handleCopyLink}>
