@@ -16,6 +16,7 @@ function SignupForm() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
+    const [smsConsent, setSmsConsent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -201,7 +202,7 @@ function SignupForm() {
                     >
                         Settings → Notifications
                     </Link>{" "}
-                    if you want SMS review alerts.
+                    if you want SMS review alerts. SMS notifications are only sent after you add your phone number and provide consent.
                 </p>
 
                 <div className="relative">
@@ -251,6 +252,12 @@ function SignupForm() {
                         />
                         <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
                             <Phone className="h-3 w-3" /> Used for SMS review alerts; include your country code.
+                        </p>
+                        <p className="text-[10px] text-muted-foreground leading-normal px-1 mt-2">
+                            By providing your phone number, you agree to receive SMS messages from Zyene Reviews, including review alerts and messages sent on behalf of businesses using our platform. Message frequency varies. Message & data rates may apply. Reply STOP to unsubscribe or HELP for help. View our{" "}
+                            <Link href="https://zyenereviews.com/privacy" className="underline hover:text-foreground">Privacy Policy</Link>
+                            {" "}and{" "}
+                            <Link href="https://zyenereviews.com/terms" className="underline hover:text-foreground">Terms of Service</Link>.
                         </p>
                     </div>
 
@@ -303,6 +310,20 @@ function SignupForm() {
                             <ShieldCheck className="h-3 w-3" /> Help us protect your business with a strong, unique password.
                         </p>
                         <PasswordStrengthIndicator password={password} />
+                    </div>
+
+                    <div className="flex items-start gap-3 px-1 py-1">
+                        <input
+                            id="smsConsent"
+                            type="checkbox"
+                            checked={smsConsent}
+                            onChange={(e) => setSmsConsent(e.target.checked)}
+                            required
+                            className="mt-1 h-4 w-4 rounded border-input bg-background text-primary focus:ring-ring transition-all"
+                        />
+                        <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-normal select-none cursor-pointer">
+                            I agree to receive SMS messages as described above.
+                        </label>
                     </div>
 
                     <button
