@@ -361,7 +361,7 @@ export function CustomerPortalCard({
                 </p>
             </div>
 
-            <div className="relative z-10 flex flex-col items-center justify-center">
+            <div className="relative z-10 flex flex-col items-center justify-center mb-6">
                 <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
                 <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
                     {loading ? (
