@@ -37,7 +37,7 @@ export function DashboardQrCodeLazy(props: {
     businessLogoUrl: string | null;
     brandColor: string | null;
 }) {
-    return <CustomerPortalCard businessSlug={props.businessSlug} businessId={props.businessId} />;
+    return <CustomerPortalCard {...props} />;
 }
 
 export function DashboardReviewTrendChartLazy({ data }: { data: TrendDataPoint[] }) {

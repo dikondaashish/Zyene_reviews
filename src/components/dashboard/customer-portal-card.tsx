@@ -6,7 +6,39 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug: string, businessId: string }) {
+interface CustomerPortalCardProps {
+    businessId: string;
+    businessSlug: string;
+    businessName: string;
+    businessLogoUrl?: string | null;
+    brandColor?: string | null;
+}
+
+/** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
+function resolveBrandColor(color?: string | null): string {
+    return color && /^#([0-9a-fA-F]{3}){1,6}$/.test(color) ? color : "#223122";
+}
+
+/** Compute a readable text color (white or dark) for a hex background. */
+function contrastText(hex: string): string {
+    if (!hex.startsWith("#")) return "#ffffff";
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    // Relative luminance (sRGB)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
+}
+
+const GOOGLE_G_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRjMCAzLjg4LjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLDguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==";
+
+export function CustomerPortalCard({ 
+    businessSlug, 
+    businessId,
+    businessName,
+    businessLogoUrl,
+    brandColor
+}: CustomerPortalCardProps) {
     const [copied, setCopied] = useState(false);
     const [showQr, setShowQr] = useState(false);
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -14,6 +46,7 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
 
     const domain = "www.collectratings.com";
     const portalUrl = `https://${domain}/${businessSlug}`;
+    const resolvedBrand = resolveBrandColor(brandColor);
 
     useEffect(() => {
         if (!businessId) return;
@@ -58,8 +91,198 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
         handleCopyLink();
     };
 
+    /* ───────── Branded Download (Canvas) ───────── */
+    const handleDownload = () => {
+        if (!qrDataUrl) return;
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const W = 600;
+        const accent = resolvedBrand;
+        const accentFg = contrastText(accent);
+        const resolvedBgColor = resolvedBrand; // Poster bg matches brand color
+
+        const roundRect = (x: number, y: number, w: number, h: number, r: number | number[]) => {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, r);
+        };
+
+        const drawCard = (logo: HTMLImageElement | null, googleIcon: HTMLImageElement) => {
+            let H = 50; 
+            let lh = 0, lw = 0;
+            if (logo) {
+                const maxLogoH = 64, maxLogoW = 200;
+                const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
+                lw = logo.width * scale;
+                lh = logo.height * scale;
+                H += 10 + lh + 16;
+            } else {
+                H += 20;
+            }
+            H += 80 + 20 + 108 + 328 + 36 + 30 + 30;
+
+            canvas.width = W;
+            canvas.height = H;
+
+            roundRect(0, 0, W, H, 24);
+            ctx.fillStyle = resolvedBgColor;
+            ctx.fill();
+
+            roundRect(20, 20, W - 40, H - 40, 16);
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            let cursorY = 50;
+            if (logo) {
+                ctx.drawImage(logo, (W - lw) / 2, cursorY + 10, lw, lh);
+                cursorY += lh + 26;
+            } else {
+                cursorY += 20;
+            }
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 32px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(businessName || "Business", W / 2, cursorY + 32);
+            cursorY += 52;
+
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(60, cursorY);
+            ctx.lineTo(W - 60, cursorY);
+            ctx.stroke();
+            cursorY += 20;
+
+            const ctaText = "Scan to Leave Us a Google Review";
+            ctx.font = "600 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            const ctaMetrics = ctx.measureText(ctaText);
+            const iconSize = 24, gap = 10;
+            const pillW = iconSize + gap + ctaMetrics.width + 56, pillH = 48;
+            const pillX = (W - pillW) / 2;
+            roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
+            ctx.fillStyle = "#000000";
+            ctx.fill();
+            ctx.drawImage(googleIcon, pillX + 28, cursorY + (pillH - iconSize) / 2, iconSize, iconSize);
+            ctx.fillStyle = "#ffffff";
+            ctx.textAlign = "left";
+            ctx.fillText(ctaText, pillX + 28 + iconSize + gap, cursorY + 30);
+            cursorY += pillH + 16;
+
+            const drawStar = (cx: number, cy: number) => {
+                let rot = Math.PI / 2 * 3, x = cx, y = cy, step = Math.PI / 5;
+                ctx.beginPath(); ctx.moveTo(cx, cy - 11);
+                for (let i = 0; i < 5; i++) {
+                    x = cx + Math.cos(rot) * 11; y = cy + Math.sin(rot) * 11; ctx.lineTo(x, y); rot += step;
+                    x = cx + Math.cos(rot) * 5; y = cy + Math.sin(rot) * 5; ctx.lineTo(x, y); rot += step;
+                }
+                ctx.closePath(); ctx.fillStyle = "#FFC107"; ctx.fill();
+            };
+            const starStartX = (W - (4 * 30)) / 2;
+            for (let i = 0; i < 5; i++) drawStar(starStartX + (i * 30), cursorY + 11);
+            cursorY += 24 + 18;
+
+            const qrImg = new Image();
+            qrImg.onload = () => {
+                const qrSize = 300, qrX = (W - qrSize) / 2;
+                roundRect(qrX - 12, cursorY - 12, qrSize + 24, qrSize + 24, 16);
+                ctx.fillStyle = "#ffffff"; ctx.fill();
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(qrImg, qrX, cursorY, qrSize, qrSize);
+                cursorY += qrSize + 36;
+                ctx.fillStyle = "rgba(255,255,255,0.85)";
+                ctx.font = "500 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY);
+                cursorY += 32;
+                ctx.fillStyle = "rgba(255,255,255,0.6)";
+                ctx.font = "bold 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY);
+
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = `${businessSlug}-qr-poster.png`;
+                link.click();
+                toast.success("QR code downloaded!");
+            };
+            qrImg.src = qrDataUrl;
+        };
+
+        const googleImg = new Image();
+        googleImg.crossOrigin = "anonymous";
+        googleImg.onload = () => {
+            if (businessLogoUrl) {
+                const logoImg = new Image();
+                logoImg.crossOrigin = "anonymous";
+                logoImg.onload = () => drawCard(logoImg, googleImg);
+                logoImg.onerror = () => drawCard(null, googleImg);
+                logoImg.src = businessLogoUrl;
+            } else {
+                drawCard(null, googleImg);
+            }
+        };
+        googleImg.src = GOOGLE_G_SVG;
+    };
+
+    /* ───────── Branded Print (HTML popup) ───────── */
+    const handlePrint = () => {
+        const printWindow = window.open("", "_blank", "width=500,height=700");
+        if (!printWindow) return toast.error("Please allow popups to print.");
+
+        const accent = resolvedBrand;
+        const logoHtml = businessLogoUrl ? `<img src="${businessLogoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />` : "";
+
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body { font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f5f5; padding: 24px; }
+                        .card { background: ${resolvedBrand}; border-radius: 24px; overflow: hidden; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; color: white; padding: 36px 32px; border: 12px solid rgba(255,255,255,0.05); }
+                        .logo { max-height: 56px; max-width: 180px; object-fit: contain; margin-bottom: 16px; }
+                        .biz-name { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+                        .divider { height: 1px; background: rgba(255,255,255,0.2); margin: 0 20px 20px; }
+                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 28px; border-radius: 999px; background: #000; color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 24px; }
+                        .cta-pill img { width: 20px; height: 20px; }
+                        .stars { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+                        .stars svg { width: 22px; height: 22px; }
+                        .qr-frame { display: inline-block; border-radius: 16px; background: #ffffff; padding: 12px; margin-bottom: 20px; }
+                        .qr-frame img { width: 260px; height: 260px; image-rendering: pixelated; display: block; }
+                        .url { color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px; }
+                        .powered { font-weight: 700; font-size: 11px; color: rgba(255,255,255,0.4); }
+                        @media print { body { background: #fff; padding: 0; } .card { box-shadow: none; border: none; width: 100%; max-width: none; border-radius: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        ${logoHtml}
+                        <div class="biz-name">${businessName || 'Business'}</div>
+                        <div class="divider"></div>
+                        <div class="cta-pill">
+                            <img src="${GOOGLE_G_SVG}" alt="Google" />
+                            <span>Scan to Leave Us a Google Review</span>
+                        </div>
+                        <div class="stars">
+                            ${Array(5).fill('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFC107"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>').join('')}
+                        </div>
+                        <div class="qr-frame"><img src="${qrDataUrl}" alt="QR" /></div>
+                        <div class="url">${domain}/${businessSlug}</div>
+                        <div class="powered">Powered by Zyene Reviews</div>
+                    </div>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => { printWindow.print(); }, 500);
+    };
+
     return (
-        <div className="h-full rounded-[24px] bg-[#223122] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[#3e4a3e]/30 shadow-sm min-h-[360px]">
+        <div className="h-full rounded-[24px] bg-[#223122] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[#3e4a3e]/30 shadow-sm min-h-[360px]" style={{ backgroundColor: resolvedBrand }}>
             {/* Background decorative blob */}
             <svg className="absolute -right-8 -top-8 w-[280px] h-[280px] opacity-[0.03] text-white pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.3C91.4,-33.5,98,-18.1,97.7,-2.8C97.4,12.5,90.2,27.7,80.1,40.6C70,53.5,57.1,64.1,42.8,71.4C28.5,78.7,12.8,82.8,-1.9,86.1C-16.7,89.4,-30.3,91.9,-43.3,86.9C-56.3,81.9,-68.8,69.5,-78.1,55.1C-87.5,40.8,-93.8,24.6,-94.1,8.4C-94.4,-7.8,-88.7,-24,-79.3,-38C-69.8,-52,-56.7,-63.9,-42.6,-71C-28.5,-78.1,-13.4,-80.4,1.4,-82.9C16.3,-85.4,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
@@ -79,12 +302,12 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
 
             <div className="relative z-10 w-full space-y-3">
                 {/* Link Box */}
-                <div className="flex items-center justify-between bg-[#2f3d2f] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[#384738] transition-colors cursor-pointer group" onClick={handleCopyLink}>
+                <div className="flex items-center justify-between bg-black/20 rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-black/30 transition-colors cursor-pointer group" onClick={handleCopyLink}>
                     <div className="flex items-center gap-3 overflow-hidden text-white/80">
                         <Share2 className="w-4 h-4 text-white/40 shrink-0" />
                         <span className="text-[13px] truncate tracking-tight">{domain}/{businessSlug}</span>
                     </div>
-                    <div className="bg-[#1a251a] group-hover:bg-[#1a251a]/80 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
+                    <div className="bg-black/40 group-hover:bg-black/60 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                         {copied ? "Copied" : "Copy"}
                     </div>
                 </div>
@@ -111,15 +334,15 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
                         </DialogContent>
                     </Dialog>
 
-                    <Button variant="ghost" onClick={handleShare} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleShare} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Share2 className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Share link
                     </Button>
-                    <Button variant="ghost" onClick={() => toast.info("Download available soon.")} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Download className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Download
                     </Button>
-                    <Button variant="ghost" onClick={() => window.print()} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Printer className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Print poster
                     </Button>
@@ -128,3 +351,4 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
         </div>
     );
 }
+
