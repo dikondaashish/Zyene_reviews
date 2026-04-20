@@ -97,26 +97,35 @@ export function DashboardLayoutClient({
             <main className="flex min-w-0 flex-1 flex-col gap-4 bg-canvas p-4 lg:p-6 min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
-            <footer className="border-t border-border/70 bg-canvas px-4 py-5 lg:px-6">
-                <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 text-[13px] font-normal text-[#8a8f86]">
-                    <p className="whitespace-nowrap">
-                        © {new Date().getFullYear()} Zyene, Inc. · Local to Global
-                    </p>
-                    <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8">
-                        <Link href="/terms" className="transition-colors hover:text-foreground">
-                            Legal
-                        </Link>
-                        <Link href="/privacy" className="transition-colors hover:text-foreground">
-                            Privacy
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={handleManageCookies}
-                            className="transition-colors hover:text-foreground"
-                        >
-                            Manage cookies
-                        </button>
-                    </nav>
+            <footer
+                className="px-4 lg:px-6"
+                style={{
+                    marginTop: "16px",
+                    paddingTop: "20px",
+                    paddingBottom: "20px",
+                    borderTop: "1px solid var(--border, #e5e7eb)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    fontSize: "11.5px",
+                    color: "#8a8f86",
+                }}
+            >
+                <div>© {new Date().getFullYear()} Zyene, Inc. · Local to Global</div>
+                <div style={{ display: "flex", gap: "16px" }}>
+                    <Link href="/terms" className="transition-colors hover:text-foreground">
+                        Legal
+                    </Link>
+                    <Link href="/privacy" className="transition-colors hover:text-foreground">
+                        Privacy
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={handleManageCookies}
+                        className="transition-colors hover:text-foreground"
+                    >
+                        Manage cookies
+                    </button>
                 </div>
             </footer>
         </>

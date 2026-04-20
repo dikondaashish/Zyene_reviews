@@ -1127,32 +1127,44 @@ export default async function DashboardPage() {
 
             {/* Charts Row */}
             <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <TrendingUp className="h-4 w-4" />
-                            {dict.dashboard.review_trend}
-                        </CardTitle>
-                        <CardDescription>
-                            {dict.dashboard.review_trend_desc}
-                        </CardDescription>
+                <Card className="flex flex-col">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
+                        <div>
+                            <CardTitle className="text-base font-bold text-foreground">
+                                Review volume
+                            </CardTitle>
+                            <CardDescription className="text-[13px] mt-0.5 text-muted-foreground/80">
+                                Last 30 days &middot; hover any day for detail
+                            </CardDescription>
+                        </div>
+                        {totalReviewsTrend !== undefined && totalReviewsTrend !== 0 && (
+                            <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold ${totalReviewsTrend > 0 ? "bg-[#e5eedd] text-[#3e5f2e]" : "bg-destructive/10 text-destructive"}`}>
+                                {totalReviewsTrend > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingUp className="h-3 w-3 rotate-180" />}
+                                {Math.abs(totalReviewsTrend)}% vs 30d prior
+                            </div>
+                        )}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-1 pt-6 pb-2 px-0 pl-1">
                         <DashboardReviewTrendChartLazy data={trendData} />
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <BarChart3 className="h-4 w-4" />
-                            {dict.dashboard.rating_distribution}
-                        </CardTitle>
-                        <CardDescription>
-                            {dict.dashboard.rating_distribution_desc}
-                        </CardDescription>
+                <Card className="flex flex-col">
+                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
+                        <div>
+                            <CardTitle className="text-base font-bold text-foreground">
+                                Star distribution
+                            </CardTitle>
+                            <CardDescription className="text-[13px] mt-0.5 text-muted-foreground/80">
+                                All-time &middot; {business?.total_reviews ?? 0} reviews
+                            </CardDescription>
+                        </div>
+                        <div className="flex items-center gap-1 text-xl font-medium tracking-tight">
+                            {business?.average_rating ?? "0"}
+                            <Star className="h-4 w-4 fill-chart-4 text-chart-4" strokeWidth={1} />
+                        </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-1 pt-6 pb-6">
                         <DashboardRatingDistributionChartLazy data={ratingData} />
                     </CardContent>
                 </Card>
