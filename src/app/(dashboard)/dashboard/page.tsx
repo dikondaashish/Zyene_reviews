@@ -1161,32 +1161,34 @@ export default async function DashboardPage() {
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
                 {/* Spotlight Reviews */}
-                <div className="min-w-0">
+                <div className="min-w-0 flex flex-col h-full">
                     {recentReviews.length > 0 ? (
-                        <DashboardAnimatedReviewCardsLazy
-                            reviews={recentReviews.slice(0, 15).map((r: any) => ({
-                                id: r.id,
-                                name: r.author_name || "Anonymous",
-                                avatar: r.author_avatar_url || "",
-                                text: r.text || "No review content provided.",
-                                rating: r.rating,
-                                reviewedAt: r.review_date,
-                                platform: r.platform,
-                                sentiment: r.sentiment,
-                            }))}
-                            labels={{
-                                hint: dict.dashboard.review_spotlight_hint,
-                                prev: dict.dashboard.review_spotlight_prev,
-                                next: dict.dashboard.review_spotlight_next,
-                                viewInReviews: dict.dashboard.review_spotlight_view_inbox,
-                            }}
-                            shellTitle={dict.dashboard.review_spotlight_title}
-                            shellSubtitle={dict.dashboard.review_spotlight_desc}
-                            manageAllHref="/reviews"
-                            manageAllLabel={dict.dashboard.review_spotlight_manage_all}
-                        />
+                        <div className="flex-1 flex flex-col">
+                            <DashboardAnimatedReviewCardsLazy
+                                reviews={recentReviews.slice(0, 15).map((r: any) => ({
+                                    id: r.id,
+                                    name: r.author_name || "Anonymous",
+                                    avatar: r.author_avatar_url || "",
+                                    text: r.text || "No review content provided.",
+                                    rating: r.rating,
+                                    reviewedAt: r.review_date,
+                                    platform: r.platform,
+                                    sentiment: r.sentiment,
+                                }))}
+                                labels={{
+                                    hint: dict.dashboard.review_spotlight_hint,
+                                    prev: dict.dashboard.review_spotlight_prev,
+                                    next: dict.dashboard.review_spotlight_next,
+                                    viewInReviews: dict.dashboard.review_spotlight_view_inbox,
+                                }}
+                                shellTitle={dict.dashboard.review_spotlight_title}
+                                shellSubtitle={dict.dashboard.review_spotlight_desc}
+                                manageAllHref="/reviews"
+                                manageAllLabel={dict.dashboard.review_spotlight_manage_all}
+                            />
+                        </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/30 py-20">
+                        <div className="flex flex-col flex-1 items-center justify-center rounded-2xl border border-dashed border-border bg-card/30 py-20">
                             <MessageSquare className="mb-4 h-10 w-10 text-muted-foreground/30" />
                             <p className="text-sm text-muted-foreground">
                                 {dict.dashboard.review_spotlight_empty}

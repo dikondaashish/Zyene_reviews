@@ -668,10 +668,10 @@ export const AnimatedReviewCards = ({
     );
 
     return (
-        <div className={cn("not-prose relative w-full", classNames?.container)}>
+        <div className={cn("not-prose relative w-full h-full", classNames?.container)}>
             {showShell ? (
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-sm md:p-6">
-                    <div className="mb-1 flex flex-col gap-3 border-b border-border/60 pb-4 sm:mb-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm md:p-6">
+                    <div className="mb-1 flex shrink-0 flex-col gap-3 border-b border-border/60 pb-4 sm:mb-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                         <div className="min-w-0 flex-1 space-y-1">
                             <h2 className="text-lg font-semibold tracking-tight text-foreground">{shellTitle}</h2>
                             {shellSubtitle ? (
@@ -690,10 +690,10 @@ export const AnimatedReviewCards = ({
                             ) : null}
                         </div>
                     </div>
-                    <div className="pt-2">{body}</div>
+                    <div className="pt-2 flex-1">{body}</div>
                 </div>
             ) : (
-                <div className="flex w-full flex-col items-center">{body}</div>
+                <div className="flex flex-col h-full w-full items-center">{body}</div>
             )}
         </div>
     );
