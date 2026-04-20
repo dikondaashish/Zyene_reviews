@@ -383,23 +383,48 @@ export function CustomerPortalCard({
                 </div>
             </div>
 
-            <div className="relative z-10 w-full mb-2">
-                <div className="bg-[#1a73e8] rounded-[12px] p-4 flex items-center justify-between overflow-hidden relative group cursor-pointer" onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}>
-                    <div className="relative z-10 space-y-1 pr-12">
-                        <h4 className="text-[14px] font-bold text-white leading-tight">Get more reviews with an NFC card!</h4>
-                        <p className="text-[10px] text-white/80 leading-tight pr-4">Customers can simply tap their phone to it to leave you a review.</p>
+            <div className="relative z-10 w-full mb-3 px-1">
+                <div 
+                    className="bg-gradient-to-r from-[#1a73e8] to-[#185bcd] rounded-[16px] p-5 flex items-center justify-between overflow-hidden relative cursor-pointer shadow-sm border border-white/10"
+                    onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
+                >
+                    {/* Background Faded G */}
+                    <div className="absolute -left-8 -top-8 w-32 h-32 opacity-10 pointer-events-none select-none">
+                        <img src={GOOGLE_LOGO_URL} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
+                    </div>
+
+                    <div className="relative z-10 space-y-1.5 flex-1 max-w-[65%]">
+                        <h4 className="text-[17px] font-bold text-white leading-tight tracking-tight">
+                            Get more reviews with an NFC card!
+                        </h4>
+                        <p className="text-[11px] text-white/90 leading-snug font-medium">
+                            Customers can simply tap their phone to it to leave you a review.
+                        </p>
                         <div className="pt-2">
-                            <button className="bg-white text-[#1a73e8] text-[11px] font-bold px-3 py-1.5 rounded-full hover:bg-white/90 transition-colors">
+                            <button className="bg-white text-[#1a73e8] text-[13px] font-bold px-5 py-2 rounded-[10px] hover:bg-white/90 active:scale-95 transition-all shadow-sm">
                                 Order now
                             </button>
                         </div>
                     </div>
-                    {/* Decorative NFC image mock */}
-                    <div className="absolute -right-2 top-1/2 -translate-y-1/2 opacity-20 group-hover:opacity-30 transition-opacity">
-                        <svg className="w-20 h-20 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 12h.01"/><path d="M15 12h.01"/><path d="M9 12h.01"/></svg>
+
+                    {/* Right side Stacked Cards (CSS Replicated) */}
+                    <div className="relative w-28 h-20 shrink-0 pointer-events-none select-none hidden sm:block">
+                        {/* Card 1 (Back) */}
+                        <div className="absolute right-2 top-2 w-16 h-10 bg-white/40 rounded-[4px] rotate-[15deg] blur-[0.5px]"></div>
+                        {/* Card 2 (Middle) */}
+                        <div className="absolute right-1 top-1 w-16 h-10 bg-white/60 rounded-[4px] rotate-[5deg] flex items-center justify-center">
+                            <img src={GOOGLE_LOGO_URL} alt="" className="w-4 h-4 opacity-40" />
+                        </div>
+                        {/* Card 3 (Front) */}
+                        <div className="absolute right-6 top-3 w-20 h-13 bg-white rounded-[6px] shadow-lg -rotate-[10deg] flex flex-col items-center justify-center p-1 border border-black/5">
+                            <img src={GOOGLE_LOGO_URL} alt="" className="w-6 h-6 mb-1" />
+                            <div className="flex gap-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                    <div key={i} className="w-1.5 h-1.5 bg-[#FFC107] rounded-full"></div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    {/* Decorative Google G */}
-                    <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/5 rounded-full blur-xl"></div>
                 </div>
             </div>
 
