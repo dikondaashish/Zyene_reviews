@@ -764,11 +764,11 @@ export default async function DashboardPage() {
             </div>
 
             {/* Smart Review Insights & Customer Portal Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 min-w-0 flex flex-col">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div className="lg:col-span-3 min-w-0 flex flex-col">
                     <SmartInsightsCard businessName={business.name || ""} />
                 </div>
-                <div className="lg:col-span-1 min-w-0 flex flex-col">
+                <div className="lg:col-span-2 min-w-0 flex flex-col">
                     {business.slug ? (
                         <div className="h-full">
                             <DashboardQrCodeLazy
