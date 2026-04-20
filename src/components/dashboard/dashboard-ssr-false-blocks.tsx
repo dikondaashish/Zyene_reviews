@@ -36,6 +36,7 @@ export function DashboardQrCodeLazy(props: {
     businessName: string;
     businessLogoUrl: string | null;
     brandColor: string | null;
+    reviewPageBackgroundColor: string | null;
 }) {
     return <CustomerPortalCard {...props} />;
 }

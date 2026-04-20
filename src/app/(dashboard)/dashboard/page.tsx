@@ -750,18 +750,15 @@ export default async function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <Link href="/requests">
-                        <Button 
-                            variant="outline" 
-                            className="h-[38px] px-4 gap-2 rounded-full border-border/60 bg-background font-medium text-[13px] transition-all duration-200 hover:scale-[1.02] hover:border-primary/30 hover:bg-white hover:shadow-sm active:scale-95"
-                        >
-                            <Send className="w-3.5 h-3.5 text-primary/70 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
+                            <Send className="w-3.5 h-3.5" />
                             Request review
                         </Button>
                     </Link>
                     <SyncButton 
                         businessId={business.id} 
                         variant="outline"
-                        className="h-[38px] px-4 gap-2 rounded-full border-border/60 bg-background font-medium text-[13px] text-foreground transition-all duration-200 hover:scale-[1.02] hover:border-primary/30 hover:bg-white hover:shadow-sm active:scale-95"
+                        className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background text-foreground"
                     />
                 </div>
             </div>
@@ -780,6 +777,7 @@ export default async function DashboardPage() {
                                 businessName={business.name || "Business"}
                                 businessLogoUrl={(business as any).logo_url ?? null}
                                 brandColor={(business as any).brand_color ?? null}
+                                reviewPageBackgroundColor={(business as any).review_page_background_color ?? null}
                             />
                         </div>
                     ) : (

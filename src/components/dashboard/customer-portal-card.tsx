@@ -12,6 +12,7 @@ interface CustomerPortalCardProps {
     businessName: string;
     businessLogoUrl?: string | null;
     brandColor?: string | null;
+    reviewPageBackgroundColor?: string | null;
 }
 
 /** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
@@ -37,7 +38,8 @@ export function CustomerPortalCard({
     businessId,
     businessName,
     businessLogoUrl,
-    brandColor
+    brandColor,
+    reviewPageBackgroundColor
 }: CustomerPortalCardProps) {
     const [copied, setCopied] = useState(false);
     const [showQr, setShowQr] = useState(false);
@@ -47,6 +49,8 @@ export function CustomerPortalCard({
     const domain = "www.collectratings.com";
     const portalUrl = `https://${domain}/${businessSlug}`;
     const resolvedBrand = resolveBrandColor(brandColor);
+    const resolvedBg = resolveBrandColor(reviewPageBackgroundColor || brandColor); // Fallback chain
+    const resolvedFg = contrastText(resolvedBg);
 
     useEffect(() => {
         if (!businessId) return;
@@ -105,9 +109,8 @@ export function CustomerPortalCard({
         const W = baseW * scale;
         
         const accent = resolvedBrand;
-        const accentFg = "#ffffff"; // Always white for high contrast on dark poster
-        const resolvedBgColor = resolvedBrand; 
-
+        const posterBg = resolvedBg;
+        const posterFg = resolvedFg; // Use resolved contrast color
         // Helper to draw rounded rect with scaling
         const roundRect = (x: number, y: number, w: number, h: number, r: number | number[]) => {
             ctx.beginPath();
@@ -138,12 +141,12 @@ export function CustomerPortalCard({
 
             // Fill background
             roundRect(0, 0, baseW, baseH, 24);
-            ctx.fillStyle = resolvedBgColor;
+            ctx.fillStyle = posterBg;
             ctx.fill();
 
             // Inner border
             roundRect(20, 20, baseW - 40, baseH - 40, 16);
-            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.strokeStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
             ctx.lineWidth = 1.5 * scale;
             ctx.stroke();
 
@@ -155,13 +158,13 @@ export function CustomerPortalCard({
                 cursorY += 20;
             }
 
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = posterFg;
             ctx.font = `bold ${32 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
             ctx.textAlign = "center";
             ctx.fillText(businessName || "Business", W / 2, (cursorY + 32) * scale);
             cursorY += 52;
 
-            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.strokeStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
             ctx.lineWidth = 1 * scale;
             ctx.beginPath();
             ctx.moveTo(60 * scale, cursorY * scale);
@@ -177,7 +180,7 @@ export function CustomerPortalCard({
             const pillX = (baseW - pillW) / 2;
             
             roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
-            ctx.fillStyle = "#000000";
+            ctx.fillStyle = posterFg === "#ffffff" ? "#000000" : "rgba(0,0,0,0.85)"; // Keep CTA dark for contrast
             ctx.fill();
             
             ctx.drawImage(googleIcon, (pillX + 28) * scale, (cursorY + (pillH - iconSize) / 2) * scale, iconSize * scale, iconSize * scale);
@@ -212,13 +215,13 @@ export function CustomerPortalCard({
                 ctx.drawImage(qrImg, qrX * scale, cursorY * scale, qrSize * scale, qrSize * scale);
                 cursorY += qrSize + 36;
                 
-                ctx.fillStyle = "rgba(255,255,255,0.85)";
+                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)";
                 ctx.font = `500 ${16 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.textAlign = "center";
                 ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY * scale);
                 cursorY += 32;
                 
-                ctx.fillStyle = "rgba(255,255,255,0.6)";
+                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)";
                 ctx.font = `bold ${15 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY * scale);
 
@@ -248,11 +251,13 @@ export function CustomerPortalCard({
     };
 
     /* ───────── Branded Print (HTML popup) ───────── */
+    /* ───────── Branded Print (HTML popup) ───────── */
     const handlePrint = () => {
-        const printWindow = window.open("", "_blank", "width=500,height=700");
+        const printWindow = window.open("", "_blank", "width=600,height=800");
         if (!printWindow) return toast.error("Please allow popups to print.");
 
-        const accent = resolvedBrand;
+        const posterBg = resolvedBg;
+        const posterFg = resolvedFg;
         const logoHtml = businessLogoUrl ? `<img src="${businessLogoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />` : "";
 
         printWindow.document.write(`
@@ -262,18 +267,18 @@ export function CustomerPortalCard({
                         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
                         * { margin: 0; padding: 0; box-sizing: border-box; }
                         body { font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f5f5; padding: 24px; }
-                        .card { background: ${resolvedBrand}; border-radius: 24px; overflow: hidden; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; color: white; padding: 36px 32px; border: 12px solid rgba(255,255,255,0.05); }
+                        .card { background: ${posterBg}; border-radius: 24px; overflow: hidden; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; color: ${posterFg}; padding: 36px 32px; border: 12px solid ${posterFg === "#ffffff" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}; }
                         .logo { max-height: 56px; max-width: 180px; object-fit: contain; margin-bottom: 16px; }
                         .biz-name { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
-                        .divider { height: 1px; background: rgba(255,255,255,0.2); margin: 0 20px 20px; }
-                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 28px; border-radius: 999px; background: #000; color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 24px; }
+                        .divider { height: 1px; background: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)"}; margin: 0 20px 20px; }
+                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 28px; border-radius: 999px; background: ${posterFg === "#ffffff" ? "#000" : "rgba(0,0,0,0.85)"}; color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 24px; }
                         .cta-pill img { width: 20px; height: 20px; }
                         .stars { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
                         .stars svg { width: 22px; height: 22px; }
                         .qr-frame { display: inline-block; border-radius: 16px; background: #ffffff; padding: 12px; margin-bottom: 20px; }
                         .qr-frame img { width: 260px; height: 260px; image-rendering: pixelated; display: block; }
-                        .url { color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 16px; }
-                        .powered { font-weight: 700; font-size: 11px; color: rgba(255,255,255,0.4); }
+                        .url { color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)"}; font-size: 13px; margin-bottom: 16px; }
+                        .powered { font-weight: 700; font-size: 11px; color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)"}; }
                         @media print { body { background: #fff; padding: 0; } .card { box-shadow: none; border: none; width: 100%; max-width: none; border-radius: 0; } }
                     </style>
                 </head>
@@ -293,12 +298,18 @@ export function CustomerPortalCard({
                         <div class="url">${domain}/${businessSlug}</div>
                         <div class="powered">Powered by Zyene Reviews</div>
                     </div>
+                    <script>
+                        window.onload = () => {
+                            setTimeout(() => {
+                                window.print();
+                            }, 500);
+                        };
+                    </script>
                 </body>
             </html>
         `);
         printWindow.document.close();
         printWindow.focus();
-        setTimeout(() => { printWindow.print(); }, 500);
     };
 
     return (
