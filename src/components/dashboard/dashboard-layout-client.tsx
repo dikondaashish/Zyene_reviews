@@ -98,7 +98,7 @@ export function DashboardLayoutClient({
                 {children}
             </main>
             <footer className="border-t border-border/70 bg-canvas px-4 py-5 lg:px-6">
-                <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 text-[13px] font-normal text-muted-foreground">
+                <div className="mx-auto flex w-full max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 text-[13px] font-normal text-[#8a8f86]">
                     <p className="whitespace-nowrap">
                         © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                     </p>

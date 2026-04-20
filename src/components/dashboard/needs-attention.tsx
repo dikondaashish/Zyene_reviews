@@ -477,7 +477,7 @@ export function NeedsAttention({
                                 onClick={() => toggleRow(id)}
                                 className={cn(
                                     "flex w-full items-start gap-3.5 px-5 py-3.5 text-left transition-colors duration-200 ease-out",
-                                    "hover:bg-chart-4/15 dark:hover:bg-chart-4/10",
+                                    "hover:bg-[#f1ebde] dark:hover:bg-chart-4/10",
                                     open && "bg-chart-4/10 dark:bg-chart-4/5",
                                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                                 )}

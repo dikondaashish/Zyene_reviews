@@ -128,28 +128,28 @@ export default function MarketingLayout({
 
             <footer className="mt-auto border-t border-border/70 bg-canvas">
                 <div className="container mx-auto flex max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-9 sm:px-8">
-                    <p className="text-left text-[13px] font-normal leading-normal text-muted-foreground">
+                    <p className="text-left text-[13px] font-normal leading-normal text-[#8a8f86]">
                         © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                     </p>
                     <nav
-                        className="flex flex-wrap items-center justify-end gap-x-8 gap-y-1 text-[13px] font-normal leading-normal text-muted-foreground"
+                        className="flex flex-wrap items-center justify-end gap-x-8 gap-y-1 text-[13px] font-normal leading-normal text-[#8a8f86]"
                         aria-label="Legal and privacy"
                     >
                         <Link
                             href="/terms"
-                            className="text-muted-foreground no-underline transition-colors hover:text-foreground"
+                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
                         >
                             Legal
                         </Link>
                         <Link
                             href="/privacy"
-                            className="text-muted-foreground no-underline transition-colors hover:text-foreground"
+                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
                         >
                             Privacy
                         </Link>
                         <button
                             type="button"
-                            className="cursor-pointer bg-transparent p-0 text-[13px] font-normal leading-normal text-muted-foreground no-underline transition-colors hover:text-foreground"
+                            className="cursor-pointer bg-transparent p-0 text-[13px] font-normal leading-normal text-[#8a8f86] no-underline transition-colors hover:text-foreground"
                             onClick={() => {
                                 const w = window as Window & { openCookiePreferences?: () => void };
                                 if (typeof w.openCookiePreferences === "function") {
