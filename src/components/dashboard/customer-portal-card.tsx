@@ -31,7 +31,7 @@ function contrastText(hex: string): string {
     return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
 }
 
-const GOOGLE_G_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRjMCAzLjg4LjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLDguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==";
+const GOOGLE_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/512px-Google_%22G%22_logo.svg.png";
 
 export function CustomerPortalCard({ 
     businessSlug, 
@@ -139,6 +139,10 @@ export function CustomerPortalCard({
             canvas.width = W;
             canvas.height = H;
 
+            // Enable high-quality smoothing for logos
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
             // Fill background
             roundRect(0, 0, baseW, baseH, 24);
             ctx.fillStyle = posterBg;
@@ -215,14 +219,15 @@ export function CustomerPortalCard({
                 ctx.drawImage(qrImg, qrX * scale, cursorY * scale, qrSize * scale, qrSize * scale);
                 cursorY += qrSize + 36;
                 
+                ctx.imageSmoothingEnabled = true; // RE-ENABLE FOR TEXT
                 ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)";
                 ctx.font = `500 ${16 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.textAlign = "center";
                 ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY * scale);
                 cursorY += 32;
                 
-                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)";
-                ctx.font = `bold ${15 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
+                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
+                ctx.font = `bold ${14 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY * scale);
 
                 const link = document.createElement("a");
@@ -247,7 +252,7 @@ export function CustomerPortalCard({
                 drawCard(null, googleImg);
             }
         };
-        googleImg.src = GOOGLE_G_SVG;
+        googleImg.src = GOOGLE_LOGO_URL;
     };
 
     /* ───────── Branded Print (HTML popup) ───────── */
@@ -313,7 +318,7 @@ export function CustomerPortalCard({
                         <div class="biz-name">${businessName || 'Business'}</div>
                         <div class="divider"></div>
                         <div class="cta-pill">
-                            <img src="${GOOGLE_G_SVG}" alt="Google" />
+                            <img src="${GOOGLE_LOGO_URL}" alt="Google" />
                             <span>Scan to Leave Us a Google Review</span>
                         </div>
                         <div class="stars">
