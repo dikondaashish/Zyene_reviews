@@ -219,49 +219,36 @@ export async function initializeGoogleAuth(
     let locationInfo: { businessName?: string; address?: string; city?: string; state?: string; phone?: string; category?: string } | undefined;
 
     try {
-      // Step 1: List accounts using the CORRECT Account Management API
+      // Step 1: List all accounts
       const accountsResponse = await fetch(
         "https://mybusinessaccountmanagement.googleapis.com/v1/accounts",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      console.log("[Google API] Accounts response status:", accountsResponse.status);
+      if (accountsResponse.ok) {
+        const accountsData = await accountsResponse.json();
+        const accounts = accountsData.accounts || [];
 
-        if (accountsResponse.ok) {
-          const accountsData = await accountsResponse.json();
-          const accounts = accountsData.accounts || [];
+        if (accounts.length > 0) {
+          const allLocations: any[] = [];
+          
+          // Step 2: List locations across all accounts
+          for (const account of accounts) {
+            const locationsResponse = await fetch(
+              `https://mybusinessbusinessinformation.googleapis.com/v1/${account.name}/locations?readMask=${encodeURIComponent("title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata")}`,
+              { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
 
-          console.log("[Google API] Found accounts:", accounts.length);
-
-          if (accounts.length > 0) {
-          const accountId = accounts[0].name; // e.g. "accounts/123456"
-
-          // Step 2: List locations using Business Information API with extended readMask
-          const locationsResponse = await fetch(
-            `https://mybusinessbusinessinformation.googleapis.com/v1/${accountId}/locations?readMask=${encodeURIComponent("title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata")}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
+            if (locationsResponse.ok) {
+              const locationsData = await locationsResponse.json();
+              const locations = locationsData.locations || [];
+              allLocations.push(...locations);
             }
-          );
+          }
 
-          console.log("[Google API] Locations response status:", locationsResponse.status);
-
-          if (locationsResponse.ok) {
-            const locationsData = await locationsResponse.json();
-            const locations = locationsData.locations || [];
-
-            console.log("[Google API] Found locations:", locations.length);
-
-            if (locations.length > 0) {
-              const loc = locations[0];
-              const addr = loc.storefrontAddress;
-              const phone = loc.phoneNumbers?.primaryPhone || undefined;
-
-              // Map Google's primaryCategory.displayName to our internal category values
-              const googleCategoryName = (loc.categories?.primaryCategory?.displayName || "").toLowerCase();
-              const CATEGORY_MAP: Record<string, string> = {
+          // If multiple locations found, return them for user selection
+          if (allLocations.length > 1) {
+            const CATEGORY_MAP: Record<string, string> = {
                 restaurant: "restaurant", dining: "restaurant", food: "restaurant", eatery: "restaurant",
                 pizza: "restaurant", sushi: "restaurant", burger: "restaurant", grill: "restaurant",
                 bistro: "restaurant", steakhouse: "restaurant", bakery: "restaurant",
@@ -279,99 +266,184 @@ export async function initializeGoogleAuth(
                 doctor: "healthcare", hospital: "healthcare", clinic: "healthcare",
                 medical: "healthcare", healthcare: "healthcare", pharmacy: "healthcare",
                 veterinarian: "healthcare", chiropractor: "healthcare",
-              };
-              let mappedCategory: string | undefined;
-              for (const [keyword, value] of Object.entries(CATEGORY_MAP)) {
-                if (googleCategoryName.includes(keyword)) {
-                  mappedCategory = value;
-                  break;
+            };
+
+            const mappedLocations = allLocations.map(loc => {
+                const addr = loc.storefrontAddress;
+                const googleCategoryName = (loc.categories?.primaryCategory?.displayName || "").toLowerCase();
+                let mappedCategory = "other";
+                for (const [keyword, value] of Object.entries(CATEGORY_MAP)) {
+                    if (googleCategoryName.includes(keyword)) {
+                        mappedCategory = value;
+                        break;
+                    }
                 }
+
+                return {
+                    name: loc.name,
+                    businessName: loc.title,
+                    address: addr?.addressLines?.[0] || "",
+                    city: addr?.locality || "",
+                    state: addr?.administrativeArea || "",
+                    phone: loc.phoneNumbers?.primaryPhone || "",
+                    category: mappedCategory,
+                    fullAddress: `${addr?.addressLines?.[0] || ""}, ${addr?.locality || ""}, ${addr?.administrativeArea || ""}`.replace(/^, /, "").replace(/, , /g, ", "),
+                };
+            });
+
+            return {
+              success: true,
+              multipleLocations: true,
+              locations: mappedLocations,
+              tokens: {
+                accessToken,
+                refreshToken: tokenData.refresh_token,
+                expiresIn: tokenData.expires_in
               }
-              console.log(`[Google API] Google category: "${googleCategoryName}" → mapped: "${mappedCategory || "other"}"`);
+            };
+          }
 
-              locationInfo = {
-                businessName: loc.title || undefined,
-                address: addr?.addressLines?.join(", ") || undefined,
-                city: addr?.locality || undefined,
-                state: addr?.administrativeArea || undefined,
-                phone,
-                category: mappedCategory || "other",
-              };
-
-              console.log("[Google API] Location info:", JSON.stringify(locationInfo));
-
-              // Step 3: Fetch review summary from My Business API
-              try {
-                const locationName = loc.name; // e.g. "accounts/123/locations/456"
-                if (locationName) {
-                  const reviewsResponse = await fetch(
-                    `https://mybusiness.googleapis.com/v4/${locationName}`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                  );
-                  if (reviewsResponse.ok) {
-                    const reviewsData = await reviewsResponse.json();
-                    // metrics.totalSummary is often missing on v4 Location GET; DB totals after sync are authoritative.
-                    reviewData = {
-                      reviewCount: reviewsData.metrics?.totalSummary?.reviewCount || 0,
-                      averageRating: reviewsData.metrics?.totalSummary?.averageRating || 0,
-                    };
-                  }
-                }
-              } catch (reviewErr) {
-                console.error("[Google API] Could not fetch review count (non-fatal):", reviewErr);
+          // If only 1 location (or 0, but usually 1), proceed with auto-setup
+          if (allLocations.length === 1) {
+            return await finalizeGoogleConnection(
+              businessId, 
+              allLocations[0], 
+              { 
+                accessToken, 
+                refreshToken: tokenData.refresh_token, 
+                expiresIn: tokenData.expires_in 
               }
-
-              // Extract the ideal Review write URL
-              let googleReviewUrl = loc.metadata?.newReviewUri || loc.metadata?.mapsUri || null;
-              if (loc.metadata?.placeId) {
-                  googleReviewUrl = `https://search.google.com/local/writereview?placeid=${loc.metadata.placeId}`;
-              }
-
-              // Update business record with location data pulled from Google
-              const slug = (loc.title || "")
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, "");
-                
-              await supabase
-                .from("businesses")
-                .update({
-                  name: loc.title || undefined,
-                  address_line1: addr?.addressLines?.[0] || null,
-                  city: addr?.locality || null,
-                  state: addr?.administrativeArea || null,
-                  zip: addr?.postalCode || null,
-                  phone: phone || null,
-                  website: loc.websiteUri || null,
-                  email: user.email || null,
-                  category: mappedCategory || "other",
-                  google_review_url: googleReviewUrl,
-                  updated_at: new Date().toISOString(),
-                  ...(slug ? { slug } : {}),
-                })
-                .eq("id", businessId);
-            }
-          } else {
-            const locBody = await locationsResponse.text();
-            console.error("[Google API] Locations error body:", locBody);
+            );
           }
         }
-      } else {
-        const acctBody = await accountsResponse.text();
-        console.error("[Google API] Accounts error body:", acctBody);
       }
+      
+      return {
+        success: false,
+        error: "No Google Business locations found for this account."
+      };
+
     } catch (apiError) {
       console.error("Error fetching Google Business Profile data:", apiError);
+      return {
+        success: false,
+        error: "Failed to fetch your Google Business details. You can continue manually."
+      };
+    }
+  } catch (error: unknown) {
+    console.error("Unexpected error in initializeGoogleAuth:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+/**
+ * Finalizes the Google Business Profile connection after selection (or auto-selection).
+ */
+export async function finalizeGoogleConnection(
+  businessId: string,
+  location: any,
+  tokens: { accessToken: string; refreshToken?: string; expiresIn: number }
+) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: "Not authenticated" };
+
+    const { accessToken, refreshToken, expiresIn } = tokens;
+
+    // Review counts and basic info
+    let reviewData = { reviewCount: 0, averageRating: 0 };
+    const loc = location;
+    const addr = loc.storefrontAddress || loc.address; // 'address' if coming from client-mapped object
+    const phone = loc.phoneNumbers?.primaryPhone || loc.phone;
+
+    // Mapping Category (Reuse logic)
+    const CATEGORY_MAP: Record<string, string> = {
+        restaurant: "restaurant", dining: "restaurant", food: "restaurant", eatery: "restaurant",
+        pizza: "restaurant", sushi: "restaurant", burger: "restaurant", grill: "restaurant",
+        bistro: "restaurant", steakhouse: "restaurant", bakery: "restaurant",
+        cafe: "coffee", coffee: "coffee", "coffee shop": "coffee", tea: "coffee", "tea house": "coffee",
+        salon: "salon", beauty: "salon", barber: "salon", "hair salon": "salon",
+        "nail salon": "salon", cosmetics: "salon",
+        dentist: "dental", dental: "dental", orthodontist: "dental",
+        gym: "gym", fitness: "gym", "yoga studio": "gym", "pilates studio": "gym",
+        "personal trainer": "gym", crossfit: "gym",
+        spa: "spa", massage: "spa", wellness: "spa",
+        hotel: "hotel", motel: "hotel", resort: "hotel", inn: "hotel", "bed and breakfast": "hotel",
+        retail: "retail", store: "retail", shop: "retail", boutique: "retail", market: "retail",
+        auto: "automotive", automotive: "automotive", "car dealer": "automotive",
+        "car repair": "automotive", mechanic: "automotive", "auto repair": "automotive",
+        doctor: "healthcare", hospital: "healthcare", clinic: "healthcare",
+        medical: "healthcare", healthcare: "healthcare", pharmacy: "healthcare",
+        veterinarian: "healthcare", chiropractor: "healthcare",
+    };
+    const googleCategoryName = (loc.categories?.primaryCategory?.displayName || loc.category || "").toLowerCase();
+    let mappedCategory = "other";
+    for (const [keyword, value] of Object.entries(CATEGORY_MAP)) {
+        if (googleCategoryName.includes(keyword)) {
+            mappedCategory = value;
+            break;
+        }
     }
 
-    // Store the access token in review_platforms table.
-    // Use onConflict so the unique constraint (business_id, platform) triggers an UPDATE
-    // instead of a failing INSERT when the record already exists.
-    // Encrypt tokens before storing
-    const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: accessToken || "" });
-    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plaintext: tokenData.refresh_token || "" });
+    // Fetch review summary
+    try {
+      const locationName = loc.name; 
+      if (locationName) {
+        const reviewsResponse = await fetch(
+          `https://mybusiness.googleapis.com/v4/${locationName}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        if (reviewsResponse.ok) {
+          const reviewsData = await reviewsResponse.json();
+          reviewData = {
+            reviewCount: reviewsData.metrics?.totalSummary?.reviewCount || 0,
+            averageRating: reviewsData.metrics?.totalSummary?.averageRating || 0,
+          };
+        }
+      }
+    } catch (reviewErr) {
+      console.error("[Google API] Could not fetch review count:", reviewErr);
+    }
 
-    const { error: platformError } = await supabase
+    // Extract Review URL and Place ID
+    let googleReviewUrl = loc.metadata?.newReviewUri || loc.metadata?.mapsUri || null;
+    if (loc.metadata?.placeId) {
+        googleReviewUrl = `https://search.google.com/local/writereview?placeid=${loc.metadata.placeId}`;
+    }
+
+    // Update business record
+    const slug = (loc.title || loc.businessName || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+      
+    await supabase
+      .from("businesses")
+      .update({
+        name: loc.title || loc.businessName || undefined,
+        address_line1: addr?.addressLines?.[0] || addr || null,
+        city: addr?.locality || loc.city || null,
+        state: addr?.administrativeArea || loc.state || null,
+        zip: addr?.postalCode || null,
+        phone: phone || null,
+        website: loc.websiteUri || null,
+        email: user.email || null,
+        category: mappedCategory || "other",
+        google_review_url: googleReviewUrl,
+        updated_at: new Date().toISOString(),
+        ...(slug ? { slug } : {}),
+      })
+      .eq("id", businessId);
+
+    // Store platform tokens
+    const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: accessToken || "" });
+    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plaintext: refreshToken || "" });
+
+    await supabase
       .from("review_platforms")
       .upsert(
         {
@@ -379,7 +451,7 @@ export async function initializeGoogleAuth(
           platform: "google",
           access_token: encAccess,
           refresh_token: encRefresh || null,
-          token_expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString(),
+          token_expires_at: new Date(Date.now() + expiresIn * 1000).toISOString(),
           total_reviews: reviewData.reviewCount,
           average_rating: reviewData.averageRating,
           sync_status: "active",
@@ -388,15 +460,7 @@ export async function initializeGoogleAuth(
         { onConflict: "business_id,platform" }
       );
 
-    if (platformError) {
-      console.error("Error storing platform token:", platformError);
-      return {
-        success: false,
-        error: "Failed to store connection. Please try again.",
-      };
-    }
-
-    // Trigger review sync immediately
+    // Trigger syncs (immediately)
     const { data: platformData } = await supabase
       .from("review_platforms")
       .select("id")
@@ -405,70 +469,19 @@ export async function initializeGoogleAuth(
       .single();
 
     if (platformData?.id) {
-      console.log(`[Onboarding] Triggering sync for platform ${platformData.id}`);
-      // Initial review sync - wait for this
-      await syncGoogleReviewsForPlatform(platformData.id).catch((e) =>
-        console.error("[Onboarding] Google review sync failed:", e)
-      );
+      await syncGoogleReviewsForPlatform(platformData.id).catch(() => {});
+      syncGooglePerformanceForPlatform(platformData.id).catch(() => {});
+      syncGooglePhase2ForPlatform(platformData.id).catch(() => {});
+      syncGoogleListingProfileForPlatform(platformData.id).catch(() => {});
+      syncGoogleLodgingForPlatform(platformData.id).catch(() => {});
 
-      // Other syncs in the background
-      syncGooglePerformanceForPlatform(platformData.id).catch((e) =>
-        console.error("[Onboarding] Performance sync failed:", e)
-      );
-      syncGooglePhase2ForPlatform(platformData.id).catch((e) =>
-        console.error("[Onboarding] Q&A sync failed:", e)
-      );
-      syncGoogleListingProfileForPlatform(platformData.id).catch((e) =>
-        console.error("[Onboarding] Profile health sync failed:", e)
-      );
-      syncGoogleLodgingForPlatform(platformData.id).catch((e) =>
-        console.error("[Onboarding] Lodging sync failed:", e)
-      );
-    }
-
-    // Google v4 Location GET often returns no metrics (shows 0). After sync, totals are authoritative in DB.
-    const { data: platformAfterSync } = await supabase
-      .from("review_platforms")
-      .select("total_reviews, average_rating")
-      .eq("business_id", businessId)
-      .eq("platform", "google")
-      .maybeSingle();
-
-    if (platformAfterSync) {
-      reviewData = {
-        reviewCount: platformAfterSync.total_reviews ?? reviewData.reviewCount,
-        averageRating:
-          typeof platformAfterSync.average_rating === "number"
-            ? platformAfterSync.average_rating
-            : reviewData.averageRating,
-      };
-    }
-
-    // NEW: Register for real-time notifications via Pub/Sub
-    const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
-    if (topicName && locationInfo?.businessName) {
-      try {
-        // Find the account name from locations
-        // InitializeGoogleAuth fetches locations[0]
-        // The topic name should be pre-configured in env
-        const accountsResponse = await fetch(
-          "https://mybusinessaccountmanagement.googleapis.com/v1/accounts",
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        if (accountsResponse.ok) {
-          const accountsData = await accountsResponse.json();
-          const accountName = accountsData.accounts?.[0]?.name;
+      // Register notifications
+      const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
+      if (topicName) {
+          const accountName = loc.name?.split("/locations")[0];
           if (accountName) {
-            console.log(`[Google API] Registering notifications for account ${accountName} to topic ${topicName}`);
-            await registerNotifications(accessToken, accountName, topicName);
-            console.log(`[Google API] Notification registration successful.`);
+            await registerNotifications(accessToken, accountName, topicName).catch(() => {});
           }
-        } else {
-          console.warn(`[Google API] Could not retrieve accounts for notification registration (Status: ${accountsResponse.status})`);
-        }
-      } catch (regError) {
-        console.error("[Google API] Failed to register GBP notifications:", regError);
-        // Don't fail the whole connection, just log it.
       }
     }
 
@@ -477,14 +490,18 @@ export async function initializeGoogleAuth(
     return {
       success: true,
       reviewData,
-      locationInfo,
+      locationInfo: {
+        businessName: loc.title || loc.businessName,
+        address: addr?.addressLines?.join(", ") || addr,
+        city: addr?.locality || loc.city,
+        state: addr?.administrativeArea || loc.state,
+        phone,
+        category: mappedCategory,
+      },
     };
-  } catch (error: unknown) {
-    console.error("Unexpected error in initializeGoogleAuth:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  } catch (err) {
+    console.error("finalizeGoogleConnection error:", err);
+    return { success: false, error: "Failed to finalize connection" };
   }
 }
 

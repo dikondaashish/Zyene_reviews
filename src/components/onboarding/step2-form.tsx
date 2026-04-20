@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@/lib/validations/onboarding";
-import { updateOnboardingStep, initializeGoogleAuth, updateBusinessAndLocation } from "@/app/actions/onboarding";
+import { updateOnboardingStep, initializeGoogleAuth, updateBusinessAndLocation, finalizeGoogleConnection } from "@/app/actions/onboarding";
 import type {
   OnboardingGoogleInitResult,
   OnboardingGoogleLocationInfo,
@@ -76,6 +76,8 @@ export function Step2Form({
   const [mounted, setMounted] = useState(false);
   const [googleState, setGoogleState] = useState<GoogleConnectionState>({ status: "idle" });
   const [advancing, setAdvancing] = useState(false);
+  const [availableLocations, setAvailableLocations] = useState<OnboardingGoogleLocationInfo[]>([]);
+  const [pendingTokens, setPendingTokens] = useState<any>(null);
 
   const form = useForm<StepBusinessLocationFormData>({
     resolver: zodResolver(stepBusinessLocationSchema),
@@ -140,36 +142,21 @@ export function Step2Form({
         businessId,
         redirectUri
       )) as OnboardingGoogleInitResult;
+      
       if (result.success) {
-        setGoogleState({
-          status: "success",
-          reviewCount: result.reviewData?.reviewCount,
-          averageRating: result.reviewData?.averageRating,
-        });
-        toast.success("Google Business Profile connected!");
-        if (result.locationInfo) {
-          const locationInfo = result.locationInfo as OnboardingGoogleLocationInfo;
-          const newBusinessName = result.locationInfo.businessName || form.getValues("businessName");
-          const newAddress = result.locationInfo.address || form.getValues("address");
-          const newCity = result.locationInfo.city || form.getValues("city");
-          const newState = locationInfo.state || form.getValues("state");
-          const newPhone = locationInfo.phone || form.getValues("phone");
-          form.reset({
-            businessName: newBusinessName,
-            locationName: newBusinessName,
-            address: newAddress,
-            city: newCity,
-            state: newState,
-            phone: newPhone,
+        if (result.multipleLocations && result.locations) {
+          setAvailableLocations(result.locations);
+          setPendingTokens(result.tokens);
+          setGoogleState({ status: "success" });
+          toast.info("Multiple businesses found. Please select one.");
+        } else if (result.locationInfo) {
+          setGoogleState({
+            status: "success",
+            reviewCount: result.reviewData?.reviewCount,
+            averageRating: result.reviewData?.averageRating,
           });
-          // Propagate updated info to parent so it stays in sync
-          onBusinessUpdate?.({
-            name: newBusinessName,
-            address_line1: newAddress,
-            city: newCity,
-            state: newState,
-            category: locationInfo.category || null,
-          });
+          toast.success("Google Business Profile connected!");
+          updateFormAndParent(result.locationInfo, result.reviewData);
         }
       } else {
         setGoogleState({
@@ -182,6 +169,58 @@ export function Step2Form({
       setGoogleState({ status: "error", errorMessage: "An unexpected error occurred" });
       toast.error("An unexpected error occurred");
     }
+  };
+
+  const handleSelection = async (location: OnboardingGoogleLocationInfo) => {
+    setAdvancing(true);
+    try {
+      const result = await finalizeGoogleConnection(businessId, location, pendingTokens);
+      
+      if (result.success && result.locationInfo) {
+        setGoogleState({
+          status: "success",
+          reviewCount: result.reviewData?.reviewCount,
+          averageRating: result.reviewData?.averageRating,
+        });
+        setAvailableLocations([]);
+        setPendingTokens(null);
+        toast.success("Business profile selected and connected!");
+        updateFormAndParent(result.locationInfo, result.reviewData);
+      } else {
+        toast.error(result.error || "Failed to finalize connection");
+      }
+    } catch (err) {
+      console.error("Selection error:", err);
+      toast.error("Failed to select business");
+    } finally {
+      setAdvancing(false);
+    }
+  };
+
+  const updateFormAndParent = (info: OnboardingGoogleLocationInfo, reviews?: any) => {
+    const newBusinessName = info.businessName || form.getValues("businessName");
+    const newAddress = info.address || form.getValues("address");
+    const newCity = info.city || form.getValues("city");
+    const newState = info.state || form.getValues("state");
+    const newPhone = info.phone || form.getValues("phone");
+
+    form.reset({
+      businessName: newBusinessName,
+      locationName: newBusinessName,
+      address: newAddress,
+      city: newCity,
+      state: newState,
+      phone: newPhone,
+    });
+
+    // Propagate updated info to parent
+    onBusinessUpdate?.({
+      name: newBusinessName,
+      address_line1: newAddress,
+      city: newCity,
+      state: newState,
+      category: info.category || null,
+    });
   };
 
   const handleConnectClick = () => {
@@ -316,34 +355,77 @@ export function Step2Form({
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-5"
             >
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-14 h-14 rounded-full bg-chart-2/10 flex items-center justify-center ring-4 ring-chart-2/25">
-                  <CheckCircle2 className="h-8 w-8 text-chart-2" />
+              {availableLocations.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="flex flex-col items-center gap-2 mb-2 text-center">
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/5">
+                       <MapPin className="h-7 w-7 text-primary" />
+                    </div>
+                    <p className="font-bold text-lg text-foreground">Select your business</p>
+                    <p className="text-xs text-muted-foreground max-w-[280px]">
+                      We found {availableLocations.length} locations under your account. Select the one you want to connect.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2.5 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
+                    {availableLocations.map((loc, idx) => (
+                      <button
+                        key={loc.name || idx}
+                        type="button"
+                        onClick={() => handleSelection(loc)}
+                        disabled={advancing}
+                        className="w-full text-left p-4 rounded-2xl border border-border bg-background/50 hover:border-primary/50 hover:bg-primary/[0.02] transition-all group relative"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1 space-y-1">
+                            <p className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+                              {loc.businessName}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              {loc.fullAddress}
+                            </p>
+                          </div>
+                          <div className="w-8 h-8 rounded-full bg-secondary/80 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                            {advancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-center space-y-1">
-                  <p className="font-bold text-lg text-chart-2">Profile Connected</p>
-                  <p className="text-sm text-chart-2/80">
-                    {googleState.reviewCount != null && googleState.reviewCount > 0
-                      ? `Found ${googleState.reviewCount} review${googleState.reviewCount !== 1 ? "s" : ""}`
-                      : "Business profile linked"}
-                  </p>
-                </div>
-              </div>
-              <Button
-                type="button"
-                onClick={onSaveAndNext}
-                className="w-full h-13 bg-chart-2 hover:bg-chart-2/90 rounded-2xl font-semibold text-base cursor-pointer group"
-                disabled={advancing}
-              >
-                {advancing ? (
-                  <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
-                ) : (
-                  <>
-                    Continue with {form.getValues("businessName") || "Profile"}
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
-                  </>
-                )}
-              </Button>
+              ) : (
+                <>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-14 h-14 rounded-full bg-chart-2/10 flex items-center justify-center ring-4 ring-chart-2/25">
+                      <CheckCircle2 className="h-8 w-8 text-chart-2" />
+                    </div>
+                    <div className="text-center space-y-1">
+                      <p className="font-bold text-lg text-chart-2">Profile Connected</p>
+                      <p className="text-sm text-chart-2/80">
+                        {googleState.reviewCount != null && googleState.reviewCount > 0
+                          ? `Found ${googleState.reviewCount} review${googleState.reviewCount !== 1 ? "s" : ""}`
+                          : "Business profile linked"}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={onSaveAndNext}
+                    className="w-full h-13 bg-chart-2 hover:bg-chart-2/90 rounded-2xl font-semibold text-base cursor-pointer group"
+                    disabled={advancing}
+                  >
+                    {advancing ? (
+                      <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
+                    ) : (
+                      <>
+                        Continue with {form.getValues("businessName") || "Profile"}
+                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </motion.div>
           )}
 

@@ -63,12 +63,15 @@ export interface GoogleLocationSelectorResponse {
 }
 
 export interface OnboardingGoogleLocationInfo {
+    /** The Google resource name, e.g. "accounts/123/locations/456" */
+    name?: string;
     businessName?: string;
     address?: string;
     city?: string;
     state?: string;
     phone?: string;
     category?: string | null;
+    fullAddress?: string;
 }
 
 export interface OnboardingGoogleInitResult {
@@ -79,6 +82,14 @@ export interface OnboardingGoogleInitResult {
         averageRating?: number;
     };
     locationInfo?: OnboardingGoogleLocationInfo;
+    multipleLocations?: boolean;
+    locations?: OnboardingGoogleLocationInfo[];
+    /** Passed back for the finalization step */
+    tokens?: {
+        accessToken: string;
+        refreshToken?: string;
+        expiresIn: number;
+    };
 }
 
 export interface ReviewManagementItem {
