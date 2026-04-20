@@ -12,8 +12,8 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "collectratings.com";
-    const portalUrl = `https://${domain.replace("localhost:3000", "collectratings.com")}/${businessSlug}`;
+    const domain = "www.collectratings.com";
+    const portalUrl = `https://${domain}/${businessSlug}`;
 
     useEffect(() => {
         if (!businessId) return;
@@ -82,7 +82,7 @@ export function CustomerPortalCard({ businessSlug, businessId }: { businessSlug:
                 <div className="flex items-center justify-between bg-[#2f3d2f] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[#384738] transition-colors cursor-pointer group" onClick={handleCopyLink}>
                     <div className="flex items-center gap-3 overflow-hidden text-white/80">
                         <Share2 className="w-4 h-4 text-white/40 shrink-0" />
-                        <span className="text-[13px] truncate tracking-tight">{domain.replace("localhost:3000", "collectratings.com")}/{businessSlug}</span>
+                        <span className="text-[13px] truncate tracking-tight">{domain}/{businessSlug}</span>
                     </div>
                     <div className="bg-[#1a251a] group-hover:bg-[#1a251a]/80 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                         {copied ? "Copied" : "Copy"}
