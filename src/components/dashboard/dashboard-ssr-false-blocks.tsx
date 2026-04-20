@@ -17,6 +17,11 @@ const QRCodeCard = dynamic(
     { ssr: false }
 );
 
+const CustomerPortalCard = dynamic(
+    () => import("@/components/dashboard/customer-portal-card").then((m) => m.CustomerPortalCard),
+    { ssr: false }
+);
+
 const AnimatedReviewCards = dynamic(
     () => import("@/components/ui/animated-review-card").then((m) => m.AnimatedReviewCards),
     { ssr: false }
@@ -32,7 +37,7 @@ export function DashboardQrCodeLazy(props: {
     businessLogoUrl: string | null;
     brandColor: string | null;
 }) {
-    return <QRCodeCard {...props} />;
+    return <CustomerPortalCard businessSlug={props.businessSlug} businessId={props.businessId} />;
 }
 
 export function DashboardReviewTrendChartLazy({ data }: { data: TrendDataPoint[] }) {

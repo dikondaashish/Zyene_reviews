@@ -739,62 +739,61 @@ export default async function DashboardPage() {
             {useDemoData && <DemoModeBanner className="mb-2" />}
 
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            {dict.dashboard.title}
-                        </h1>
-                        {useDemoData && (
-                            <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1 px-2.5 py-0.5">
-                                <Eye className="w-3 h-3" />
-                                {dict.dashboard.demo_badge}
-                            </Badge>
-                        )}
-                    </div>
-                    {lastSynced && (
-                        <p className="text-sm text-muted-foreground">
-                            {dict.dashboard.last_synced}
-                            {formatDistanceToNow(new Date(lastSynced), {
-                                addSuffix: true,
-                            })}
-                            {perfSyncedAt && (
-                                <>
-                                    {" "}
-                                    · {dict.dashboard.google_metrics}
-                                    {formatDistanceToNow(new Date(perfSyncedAt), {
-                                        addSuffix: true,
-                                    })}
-                                </>
-                            )}
-                        </p>
-                    )}
+            <div className="flex items-center justify-between mb-2">
+                <div className="space-y-0.5">
+                    <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                        WELCOME BACK, {user.user_metadata?.first_name?.toUpperCase() || user.email?.split('@')[0].toUpperCase() || "OWNER"}
+                    </p>
+                    <h1 className="text-4xl font-serif text-foreground pb-1" style={{ fontFamily: "Georgia, serif", letterSpacing: "-0.02em" }}>
+                        {business.name || dict.dashboard.title}
+                    </h1>
                 </div>
-                {isGoogleConnected && <SyncButton />}
+                <div className="flex items-center gap-3">
+                    <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
+                        <Send className="w-3.5 h-3.5" />
+                        Request review
+                    </Button>
+                    <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
+                        <Link2 className="w-3.5 h-3.5" />
+                        Share portal
+                    </Button>
+                </div>
             </div>
 
-            {/* QR Code Card */}
-            {business.slug && (
-                <DashboardQrCodeLazy
-                    businessId={business.id}
-                    businessSlug={business.slug}
-                    businessName={business.name || "Business"}
-                    businessLogoUrl={(business as any).logo_url ?? null}
-                    brandColor={(business as any).brand_color ?? null}
-                />
-            )}
-
-            {/* Smart Review Insights */}
-            <SmartInsightsCard />
+            {/* Smart Review Insights & Customer Portal Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 min-w-0 flex flex-col">
+                    <SmartInsightsCard businessName={business.name || ""} />
+                </div>
+                <div className="lg:col-span-1 min-w-0 flex flex-col">
+                    {business.slug ? (
+                        <div className="h-full">
+                            <DashboardQrCodeLazy
+                                businessId={business.id}
+                                businessSlug={business.slug}
+                                businessName={business.name || "Business"}
+                                businessLogoUrl={(business as any).logo_url ?? null}
+                                brandColor={(business as any).brand_color ?? null}
+                            />
+                        </div>
+                    ) : (
+                        <div className="h-full rounded-2xl bg-[#2b3a2a] p-6 text-white/50 flex flex-col justify-center items-center">
+                            No active business configuration found.
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
             {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
-                <GettingStartedBanner
-                    googleConnected={isGoogleConnected}
-                    customerCount={customerCount}
-                    requestSent={requestsThisMonth > 0}
-                    notificationsConfigured={notificationsConfigured}
-                />
+                <div className="mt-2">
+                    <GettingStartedBanner
+                        googleConnected={isGoogleConnected}
+                        customerCount={customerCount}
+                        requestSent={requestsThisMonth > 0}
+                        notificationsConfigured={notificationsConfigured}
+                    />
+                </div>
             )}
 
             {/* Stats Cards */}

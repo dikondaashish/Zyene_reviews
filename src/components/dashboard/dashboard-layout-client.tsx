@@ -73,28 +73,29 @@ export function DashboardLayoutClient({
     return (
         <>
             <DashboardTourProvider />
-            <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-4">
-                {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
-                {(isTablet || isMobile) && (
-                    <>
-                        <SidebarTrigger className="-ml-1 shrink-0 lg:hidden" />
-                        <Separator
-                            orientation="vertical"
-                            className="mr-2 h-4 shrink-0 lg:hidden"
-                        />
-                    </>
-                )}
+            <header className="flex h-16 min-w-0 shrink-0 items-center justify-between border-b border-border/70 bg-card px-4">
+                <div className="flex items-center gap-2">
+                    {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
+                    {(isTablet || isMobile) && (
+                        <>
+                            <SidebarTrigger className="-ml-1 shrink-0 lg:hidden" />
+                            <Separator
+                                orientation="vertical"
+                                className="mr-2 h-4 shrink-0 lg:hidden"
+                            />
+                        </>
+                    )}
 
-                {isDesktop && (
-                    <div className="hidden lg:flex items-center mr-2">
-                        <Separator orientation="vertical" className="h-4" />
-                    </div>
-                )}
-
-                {header}
+                    {isDesktop && (
+                        <div className="hidden lg:flex items-center mr-2">
+                            <Separator orientation="vertical" className="h-4" />
+                        </div>
+                    )}
+                </div>
+                {header && <div>{header}</div>}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-4 bg-canvas p-4 lg:p-6 min-h-[calc(100vh-4rem)]">
+            <main className="flex min-w-0 flex-1 flex-col gap-6 bg-canvas p-4 lg:p-8 min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
             <footer
