@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     if (!businessId) return apiError("No business found", { status: 404, details: requestId });
 
     // Check cache first (Redis, 24h TTL)
-    const cacheKey = `ai_insights:${businessId}`;
+    const cacheKey = `ai_insights_v2:${businessId}`;
     try {
         const { redis } = await import("@/lib/db/redis");
         const cached = await redis.get(cacheKey);

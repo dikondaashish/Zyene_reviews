@@ -104,6 +104,7 @@ export function DashboardLayoutClient({
                     marginTop: "16px",
                     paddingTop: "20px",
                     paddingBottom: "20px",
+                    backgroundColor: "#f7f5ef",
                     borderTop: "1px solid var(--border, #e5e7eb)",
                     display: "flex",
                     alignItems: "center",
