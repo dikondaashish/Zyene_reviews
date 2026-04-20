@@ -93,7 +93,21 @@ export default function PrivacyPolicyPage() {
                         It is our policy to post any changes we make to our privacy policy on this page. If we make material changes to how we treat our users' personal information, we will notify you by email to the primary email address specified in your account.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">9. Contact Information</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">10. SMS Communications</h2>
+                    <p>
+                        If you provide your phone number, you consent to receive SMS messages from Zyene Reviews. These messages may include review alerts, account notifications, and messages sent on behalf of businesses using our platform.
+                    </p>
+                    <p className="mt-4">
+                        Message frequency varies. Message and data rates may apply.
+                    </p>
+                    <p className="mt-4">
+                        You can opt out of SMS messages at any time by replying STOP. For assistance, reply HELP or contact us at <a href="mailto:support@zyenereviews.com">support@zyenereviews.com</a>.
+                    </p>
+                    <p className="mt-4">
+                        We do not sell, rent, or share your phone number with third parties for their marketing purposes.
+                    </p>
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">11. Contact Information</h2>
                     <p>
                         To ask questions or comment about this privacy policy and our privacy practices, contact us at: <a href="mailto:support@zyenereviews.com">support@zyenereviews.com</a>.
                     </p>
