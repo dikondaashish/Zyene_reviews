@@ -266,20 +266,40 @@ export function CustomerPortalCard({
                     <style>
                         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
                         * { margin: 0; padding: 0; box-sizing: border-box; }
-                        body { font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f5f5; padding: 24px; }
-                        .card { background: ${posterBg}; border-radius: 24px; overflow: hidden; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; color: ${posterFg}; padding: 36px 32px; border: 12px solid ${posterFg === "#ffffff" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}; }
-                        .logo { max-height: 56px; max-width: 180px; object-fit: contain; margin-bottom: 16px; }
-                        .biz-name { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
-                        .divider { height: 1px; background: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)"}; margin: 0 20px 20px; }
-                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 28px; border-radius: 999px; background: ${posterFg === "#ffffff" ? "#000" : "rgba(0,0,0,0.85)"}; color: #fff; font-weight: 600; font-size: 14px; margin-bottom: 24px; }
-                        .cta-pill img { width: 20px; height: 20px; }
-                        .stars { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-                        .stars svg { width: 22px; height: 22px; }
-                        .qr-frame { display: inline-block; border-radius: 16px; background: #ffffff; padding: 12px; margin-bottom: 20px; }
-                        .qr-frame img { width: 260px; height: 260px; image-rendering: pixelated; display: block; }
-                        .url { color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)"}; font-size: 13px; margin-bottom: 16px; }
-                        .powered { font-weight: 700; font-size: 11px; color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)"}; }
-                        @media print { body { background: #fff; padding: 0; } .card { box-shadow: none; border: none; width: 100%; max-width: none; border-radius: 0; } }
+                        body { 
+                            font-family: 'Inter', system-ui, sans-serif; 
+                            background: #f5f5f5; 
+                            display: flex; justify-content: center; align-items: flex-start;
+                            padding: 40px 0;
+                        }
+                        .card { 
+                            background: ${posterBg} !important; 
+                            -webkit-print-color-adjust: exact; 
+                            print-color-adjust: exact;
+                            border-radius: 32px; 
+                            overflow: hidden; 
+                            width: 800px; 
+                            box-shadow: 0 4px 50px rgba(0,0,0,0.15); 
+                            text-align: center; 
+                            color: ${posterFg} !important; 
+                            padding: 80px 60px; 
+                            border: 15px solid ${posterFg === "#ffffff" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}; 
+                        }
+                        .logo { max-height: 80px; max-width: 280px; object-fit: contain; margin-bottom: 24px; }
+                        .biz-name { font-size: 40px; font-weight: 700; margin-bottom: 24px; }
+                        .divider { height: 1px; background: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)"}; margin: 0 40px 40px; }
+                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 15px; padding: 18px 48px; border-radius: 999px; background: ${posterFg === "#ffffff" ? "#000" : "rgba(0,0,0,0.85)"}; color: #fff; font-weight: 600; font-size: 20px; margin-bottom: 40px; }
+                        .cta-pill img { width: 32px; height: 32px; }
+                        .stars { display: flex; justify-content: center; gap: 12px; margin-bottom: 40px; }
+                        .stars svg { width: 32px; height: 32px; }
+                        .qr-frame { display: inline-block; border-radius: 20px; background: #ffffff; padding: 20px; margin-bottom: 40px; }
+                        .qr-frame img { width: 400px; height: 400px; image-rendering: pixelated; display: block; }
+                        .url { color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)"}; font-size: 20px; margin-bottom: 24px; font-weight: 500; }
+                        .powered { font-weight: 700; font-size: 16px; color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)"}; letter-spacing: 1px; }
+                        @media print { 
+                            body { background: #fff; padding: 0; } 
+                            .card { box-shadow: none; border: none; width: 100%; border-radius: 0; } 
+                        }
                     </style>
                 </head>
                 <body>
