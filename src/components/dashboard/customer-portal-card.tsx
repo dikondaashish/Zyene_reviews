@@ -385,74 +385,46 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full mb-4">
                 <div 
-                    className="bg-[#0052cc] rounded-[18px] px-6 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm border border-white/5"
+                    className="bg-[#0052cc] rounded-[22px] px-8 py-6 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
                     onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
                 >
-                    {/* Background decorative elements */}
-                    <div className="absolute -left-10 -top-10 w-44 h-44 opacity-[0.06] pointer-events-none select-none">
+                    {/* Background Ornaments */}
+                    <div className="absolute -left-12 -top-12 w-48 h-48 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-700">
                         <img src={GOOGLE_LOGO_URL} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
                     </div>
-                    <div className="absolute right-0 top-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+                    {/* Subtle Overlay Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>
 
-                    <div className="relative z-10 flex-1 pr-4">
+                    <div className="relative z-10 flex flex-col justify-center gap-4 flex-1">
                         <div className="space-y-1">
-                            <h4 className="text-[18px] font-bold text-white leading-tight tracking-tight">
+                            <h4 className="text-[19px] font-bold text-white leading-tight tracking-tight">
                                 Get more reviews with an NFC card!
                             </h4>
-                            <p className="text-[11px] text-white/80 leading-snug font-medium max-w-[240px]">
+                            <p className="text-[12px] text-white/80 leading-snug font-medium max-w-[250px]">
                                 Customers can simply tap their phone to it to leave you a review.
                             </p>
                         </div>
-                        <div className="pt-3">
-                            <button className="bg-white text-[#0052cc] text-[13px] font-bold px-5 py-2 rounded-[11px] hover:bg-white/95 active:scale-95 transition-all shadow-md flex items-center justify-center min-w-[120px]">
+                        <div className="w-fit">
+                            <button className="bg-white text-[#0052cc] text-[13.5px] font-bold px-6 py-2 rounded-[11px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
                                 Order now
                             </button>
                         </div>
                     </div>
 
-                    {/* Right side Stacked Cards (Ultimate Physical Fidelity) */}
-                    <div className="relative w-44 h-32 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-2">
-                        {(() => {
-                            const GOOGLE_G = "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg";
-                            const GOOGLE_WORDMARK = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg";
-                            
-                            const CardFront = ({ className }: { className?: string }) => (
-                                <div className={`absolute bg-white rounded-[8px] shadow-[0_8px_25px_rgba(0,0,0,0.18)] flex flex-col items-center justify-between p-3.5 border border-black/[0.03] ${className}`}>
-                                    <img src={GOOGLE_G} alt="" className="w-9 h-9 mt-0.5" />
-                                    
-                                    <div className="flex flex-col items-center gap-2 mt-1">
-                                        {/* NFC Symbol */}
-                                        <div className="w-9 h-9 rounded-[10px] border-[1.5px] border-slate-300 flex items-center justify-center">
-                                            <div className="flex gap-[1.5px] items-center">
-                                                <div className="w-[1.2px] h-3.5 bg-slate-400 rounded-full opacity-30"></div>
-                                                <div className="w-[1.5px] h-4.5 bg-slate-500 rounded-full"></div>
-                                                <div className="w-[1.2px] h-3.5 bg-slate-400 rounded-full opacity-30"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Ratings */}
-                                        <div className="flex gap-[1px]">
-                                            {[...Array(5)].map((_, i) => (
-                                                <span key={i} className="text-[#FFB300] text-[9px]">★</span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-col items-center gap-[3px] mb-1">
-                                        <span className="text-[8px] font-bold text-slate-800 tracking-tight">Tap to review us</span>
-                                        <img src={GOOGLE_WORDMARK} alt="" className="w-12 h-4 object-contain" />
-                                    </div>
-                                </div>
-                            );
-
-                            return (
-                                <>
-                                    <CardFront className="right-[80px] top-[40px] w-[70px] h-[100px] scale-[0.6] opacity-30 rotate-[-28deg] blur-[0.3px]" />
-                                    <CardFront className="right-[0px] top-[50px] w-[70px] h-[100px] scale-[0.6] opacity-50 rotate-[20deg]" />
-                                    <CardFront className="right-[24px] top-[2px] w-[82px] h-[116px] rotate-[-6deg] z-20" />
-                                </>
-                            );
-                        })()}
+                    {/* Right side Mockup using actual design asset */}
+                    <div className="relative w-44 h-32 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-1">
+                        {/* Back Card 2 */}
+                        <div className="absolute right-[82px] top-[32px] w-[68px] h-[100px] rotate-[-28deg] opacity-20 blur-[0.4px] scale-[0.9]">
+                            <img src="/google-nfc-card-design.png" alt="" className="w-full h-full object-contain rounded-lg shadow-2xl" />
+                        </div>
+                        {/* Back Card 1 */}
+                        <div className="absolute right-[4px] top-[40px] w-[68px] h-[100px] rotate-[22deg] opacity-40 blur-[0.2px] scale-[0.95]">
+                            <img src="/google-nfc-card-design.png" alt="" className="w-full h-full object-contain rounded-lg shadow-2xl" />
+                        </div>
+                        {/* Front Card */}
+                        <div className="absolute right-[22px] top-[0px] w-[80px] h-[116px] rotate-[-6deg] z-20 transition-transform duration-500 group-hover:rotate-[-4deg] group-hover:scale-[1.02]">
+                            <img src="/google-nfc-card-design.png" alt="" className="w-full h-full object-contain rounded-[9px] shadow-[0_15px_35px_rgba(0,0,0,0.25)]" />
+                        </div>
                     </div>
                 </div>
             </div>
