@@ -356,13 +356,13 @@ export function CustomerPortalCard({
                 <h2 className="text-[28px] font-serif text-white/95 leading-tight mb-3" style={{ fontFamily: "Georgia, serif" }}>
                     Share it. Collect reviews.<br/>Drive repeat orders.
                 </h2>
-                <p className="text-[13px] text-white/60 leading-relaxed max-w-[90%] mb-6">
+                <p className="text-[13px] text-white/60 leading-relaxed max-w-[90%] mb-1">
                     One link. Leave it on receipts, tables, or the door. We handle the rest.
                 </p>
             </div>
 
-            <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-2">
-                <h3 className="text-[28px] font-bold text-white mb-4">Scan to Review</h3>
+            <div className="relative z-10 flex flex-col items-center justify-center">
+                <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
                 <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
                     {loading ? (
                         <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-zinc-400 font-medium bg-zinc-900/50 rounded-xl">
