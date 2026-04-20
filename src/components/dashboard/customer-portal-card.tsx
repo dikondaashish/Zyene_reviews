@@ -420,41 +420,51 @@ export function CustomerPortalCard({
                         </div>
                     </div>
 
-                    {/* Right side Stacked Cards (Extreme High Fidelity) */}
-                    <div className="relative w-36 h-28 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-2">
-                        {/* Card 3 (Bottom-Left) */}
-                        <div className="absolute right-[64px] top-[40px] w-[54px] h-[36px] bg-white rounded-[4px] shadow-lg rotate-[-25deg] flex flex-col items-center justify-center p-0.5 border border-black/5">
-                            <img src={GOOGLE_LOGO_URL} alt="" className="w-3.5 h-3.5 mb-0.5" />
-                            <div className="flex gap-[0.5px]">
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className="w-[1px] h-[1px] bg-[#FFC107] rounded-full"></div>
-                                ))}
-                            </div>
-                        </div>
+                    {/* Right side Stacked Cards (Ultimate Fidelity matching Screenshot) */}
+                    <div className="relative w-40 h-32 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-4">
+                        {(() => {
+                            const GOOGLE_G = "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg";
+                            const GOOGLE_WORDMARK = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg";
+                            
+                            const CardFront = ({ className }: { className?: string }) => (
+                                <div className={`absolute bg-white rounded-[7px] shadow-2xl flex flex-col items-center justify-between p-3 border border-black/5 ${className}`}>
+                                    {/* Big G */}
+                                    <img src={GOOGLE_G} alt="" className="w-8 h-8 mt-1" />
+                                    
+                                    {/* NFC Waves Box */}
+                                    <div className="flex flex-col items-center gap-1.5 mt-2">
+                                        <div className="w-8 h-8 rounded-lg border-[1.5px] border-slate-400 flex items-center justify-center relative">
+                                            <div className="flex gap-[1.5px] items-center">
+                                                <div className="w-[1.5px] h-3 bg-slate-400 rounded-full opacity-40"></div>
+                                                <div className="w-[1.5px] h-4 bg-slate-500 rounded-full"></div>
+                                                <div className="w-[1.5px] h-3 bg-slate-400 rounded-full opacity-40"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Stars */}
+                                        <div className="flex gap-[1.5px]">
+                                            {[...Array(5)].map((_, i) => (
+                                                <span key={i} className="text-[#FFB300] text-[8px]">★</span>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                        {/* Card 2 (Bottom-Right) */}
-                        <div className="absolute right-[4px] top-[44px] w-[54px] h-[36px] bg-white rounded-[4px] shadow-lg rotate-[10deg] flex flex-col items-center justify-center p-0.5 border border-black/5">
-                            <img src={GOOGLE_LOGO_URL} alt="" className="w-3.5 h-3.5 mb-0.5" />
-                            <div className="flex gap-[0.5px]">
-                                {[...Array(5)].map((_, i) => (
-                                    <div key={i} className="w-[1px] h-[1px] bg-[#FFC107] rounded-full"></div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Card 1 (Main Front) */}
-                        <div className="absolute right-[18px] top-[6px] w-[72px] h-[48px] bg-white rounded-[5px] shadow-2xl rotate-[-8deg] flex flex-col items-center justify-center p-1.5 border border-black/5 z-20">
-                            <img src={GOOGLE_LOGO_URL} alt="" className="w-5 h-5 mb-1" />
-                            <div className="flex flex-col items-center gap-[2px]">
-                                <svg className="w-2.5 h-2.5 text-zinc-400 mb-[1px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M2 8.5C2 8.5 6.5 4 12 4C17.5 4 22 8.5 22 8.5"/><path d="M6 12.5C6 12.5 8.5 10 12 10C15.5 10 18 12.5 18 12.5"/><path d="M10 16.5C10 16.5 11 15.5 12 15.5C13 15.5 14 16.5 14 16.5"/></svg>
-                                <div className="flex gap-0.5">
-                                    {[...Array(5)].map((_, i) => (
-                                        <div key={i} className="w-1 h-1 bg-[#FFB300] rounded-full"></div>
-                                    ))}
+                                    {/* Text & Wordmark */}
+                                    <div className="flex flex-col items-center gap-1 mb-1">
+                                        <span className="text-[7.5px] font-bold text-slate-700 tracking-tight">Tap to review us</span>
+                                        <img src={GOOGLE_WORDMARK} alt="" className="w-10 h-3.5 object-contain" />
+                                    </div>
                                 </div>
-                                <div className="text-[1.5px] font-bold text-[#1a73e8] uppercase tracking-[0.2px] mt-[1px]">Tap to review us</div>
-                            </div>
-                        </div>
+                            );
+
+                            return (
+                                <>
+                                    <CardFront className="right-[72px] top-[48px] w-[64px] h-[92px] scale-[0.6] opacity-40 rotate-[-25deg]" />
+                                    <CardFront className="right-[4px] top-[54px] w-[64px] h-[92px] scale-[0.6] opacity-60 rotate-[15deg]" />
+                                    <CardFront className="right-[22px] top-[4px] w-[76px] h-[108px] rotate-[-5deg] z-20" />
+                                </>
+                            );
+                        })()}
                     </div>
                 </div>
             </div>
