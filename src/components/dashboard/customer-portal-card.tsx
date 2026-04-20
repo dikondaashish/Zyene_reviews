@@ -385,26 +385,26 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full mb-4">
                 <div 
-                    className="bg-[#0052cc] rounded-[20px] px-8 py-7 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm border border-white/5"
+                    className="bg-[#0052cc] rounded-[18px] px-6 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm border border-white/5"
                     onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
                 >
                     {/* Background decorative elements */}
-                    <div className="absolute -left-10 -top-10 w-48 h-48 opacity-[0.06] pointer-events-none select-none">
+                    <div className="absolute -left-10 -top-10 w-44 h-44 opacity-[0.06] pointer-events-none select-none">
                         <img src={GOOGLE_LOGO_URL} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
                     </div>
                     <div className="absolute right-0 top-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
 
                     <div className="relative z-10 flex-1 pr-4">
-                        <div className="space-y-1.5">
-                            <h4 className="text-[20px] font-bold text-white leading-tight tracking-tight">
+                        <div className="space-y-1">
+                            <h4 className="text-[18px] font-bold text-white leading-tight tracking-tight">
                                 Get more reviews with an NFC card!
                             </h4>
-                            <p className="text-[13px] text-white/80 leading-relaxed font-medium max-w-[260px]">
+                            <p className="text-[11px] text-white/80 leading-snug font-medium max-w-[240px]">
                                 Customers can simply tap their phone to it to leave you a review.
                             </p>
                         </div>
-                        <div className="pt-4">
-                            <button className="bg-white text-[#0052cc] text-[14px] font-bold px-6 py-2.5 rounded-[12px] hover:bg-white/95 active:scale-95 transition-all shadow-lg flex items-center justify-center min-w-[130px]">
+                        <div className="pt-3">
+                            <button className="bg-white text-[#0052cc] text-[13px] font-bold px-5 py-2 rounded-[11px] hover:bg-white/95 active:scale-95 transition-all shadow-md flex items-center justify-center min-w-[120px]">
                                 Order now
                             </button>
                         </div>
