@@ -7,7 +7,15 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state"
 
-export function SyncButton({ businessId }: { businessId?: string }) {
+export function SyncButton({
+    businessId,
+    className,
+    variant = "outline"
+}: {
+    businessId?: string,
+    className?: string,
+    variant?: "outline" | "secondary" | "destructive" | "default" | "ghost" | "link"
+}) {
     const [isPosting, setIsPosting] = useState(false)
     const [showForce, setShowForce] = useState(false)
     const router = useRouter()
@@ -71,11 +79,11 @@ export function SyncButton({ businessId }: { businessId?: string }) {
                 </Button>
             )}
             <Button
-                variant={showForce ? "secondary" : "outline"}
+                variant={showForce ? "secondary" : variant}
                 size="sm"
                 onClick={() => handleSync(false)}
                 disabled={busy}
-                className="border border-[color:var(--sync-action)] bg-[color:var(--sync-action)] text-primary-foreground hover:bg-[color:var(--sync-action-hover)] hover:border-[color:var(--sync-action-hover)]"
+                className={className || "border border-[color:var(--sync-action)] bg-[color:var(--sync-action)] text-primary-foreground hover:bg-[color:var(--sync-action-hover)] hover:border-[color:var(--sync-action-hover)]"}
             >
                 <RefreshCw className={`mr-2 h-4 w-4 ${busy ? "animate-spin" : ""}`} />
                 {busy ? "Syncing..." : "Sync Reviews"}

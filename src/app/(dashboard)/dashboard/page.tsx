@@ -749,14 +749,17 @@ export default async function DashboardPage() {
                     </h1>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
-                        <Send className="w-3.5 h-3.5" />
-                        Request review
-                    </Button>
-                    <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
-                        <Link2 className="w-3.5 h-3.5" />
-                        Share portal
-                    </Button>
+                    <Link href="/requests">
+                        <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
+                            <Send className="w-3.5 h-3.5" />
+                            Request review
+                        </Button>
+                    </Link>
+                    <SyncButton 
+                        businessId={business.id} 
+                        variant="outline"
+                        className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background text-foreground"
+                    />
                 </div>
             </div>
 
