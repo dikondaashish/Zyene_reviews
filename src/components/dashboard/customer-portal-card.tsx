@@ -99,114 +99,134 @@ export function CustomerPortalCard({
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const W = 600;
+        // High-resolution scaling (4x)
+        const scale = 4;
+        const baseW = 600;
+        const W = baseW * scale;
+        
         const accent = resolvedBrand;
-        const accentFg = contrastText(accent);
-        const resolvedBgColor = resolvedBrand; // Poster bg matches brand color
+        const accentFg = "#ffffff"; // Always white for high contrast on dark poster
+        const resolvedBgColor = resolvedBrand; 
 
+        // Helper to draw rounded rect with scaling
         const roundRect = (x: number, y: number, w: number, h: number, r: number | number[]) => {
             ctx.beginPath();
-            ctx.roundRect(x, y, w, h, r);
+            if (Array.isArray(r)) {
+                ctx.roundRect(x * scale, y * scale, w * scale, h * scale, r.map(v => v * scale));
+            } else {
+                ctx.roundRect(x * scale, y * scale, w * scale, h * scale, r * scale);
+            }
         };
 
         const drawCard = (logo: HTMLImageElement | null, googleIcon: HTMLImageElement) => {
-            let H = 50; 
+            let baseH = 50; 
             let lh = 0, lw = 0;
             if (logo) {
                 const maxLogoH = 64, maxLogoW = 200;
-                const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
-                lw = logo.width * scale;
-                lh = logo.height * scale;
-                H += 10 + lh + 16;
+                const imgScale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
+                lw = logo.width * imgScale;
+                lh = logo.height * imgScale;
+                baseH += 10 + lh + 16;
             } else {
-                H += 20;
+                baseH += 20;
             }
-            H += 80 + 20 + 108 + 328 + 36 + 30 + 30;
+            baseH += 80 + 20 + 108 + 328 + 36 + 30 + 30;
 
+            const H = baseH * scale;
             canvas.width = W;
             canvas.height = H;
 
-            roundRect(0, 0, W, H, 24);
+            // Fill background
+            roundRect(0, 0, baseW, baseH, 24);
             ctx.fillStyle = resolvedBgColor;
             ctx.fill();
 
-            roundRect(20, 20, W - 40, H - 40, 16);
+            // Inner border
+            roundRect(20, 20, baseW - 40, baseH - 40, 16);
             ctx.strokeStyle = "rgba(255,255,255,0.2)";
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.5 * scale;
             ctx.stroke();
 
             let cursorY = 50;
             if (logo) {
-                ctx.drawImage(logo, (W - lw) / 2, cursorY + 10, lw, lh);
+                ctx.drawImage(logo, ((baseW - lw) / 2) * scale, (cursorY + 10) * scale, lw * scale, lh * scale);
                 cursorY += lh + 26;
             } else {
                 cursorY += 20;
             }
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 32px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.font = `bold ${32 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
             ctx.textAlign = "center";
-            ctx.fillText(businessName || "Business", W / 2, cursorY + 32);
+            ctx.fillText(businessName || "Business", W / 2, (cursorY + 32) * scale);
             cursorY += 52;
 
             ctx.strokeStyle = "rgba(255,255,255,0.2)";
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 1 * scale;
             ctx.beginPath();
-            ctx.moveTo(60, cursorY);
-            ctx.lineTo(W - 60, cursorY);
+            ctx.moveTo(60 * scale, cursorY * scale);
+            ctx.lineTo((baseW - 60) * scale, cursorY * scale);
             ctx.stroke();
             cursorY += 20;
 
             const ctaText = "Scan to Leave Us a Google Review";
-            ctx.font = "600 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+            ctx.font = `600 ${16 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
             const ctaMetrics = ctx.measureText(ctaText);
             const iconSize = 24, gap = 10;
-            const pillW = iconSize + gap + ctaMetrics.width + 56, pillH = 48;
-            const pillX = (W - pillW) / 2;
+            const pillW = iconSize + gap + (ctaMetrics.width / scale) + 56, pillH = 48;
+            const pillX = (baseW - pillW) / 2;
+            
             roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
             ctx.fillStyle = "#000000";
             ctx.fill();
-            ctx.drawImage(googleIcon, pillX + 28, cursorY + (pillH - iconSize) / 2, iconSize, iconSize);
+            
+            ctx.drawImage(googleIcon, (pillX + 28) * scale, (cursorY + (pillH - iconSize) / 2) * scale, iconSize * scale, iconSize * scale);
+            
             ctx.fillStyle = "#ffffff";
             ctx.textAlign = "left";
-            ctx.fillText(ctaText, pillX + 28 + iconSize + gap, cursorY + 30);
+            ctx.fillText(ctaText, (pillX + 28 + iconSize + gap) * scale, (cursorY + 30) * scale);
             cursorY += pillH + 16;
 
             const drawStar = (cx: number, cy: number) => {
                 let rot = Math.PI / 2 * 3, x = cx, y = cy, step = Math.PI / 5;
-                ctx.beginPath(); ctx.moveTo(cx, cy - 11);
+                ctx.beginPath(); 
+                ctx.moveTo(cx * scale, (cy - 11) * scale);
                 for (let i = 0; i < 5; i++) {
-                    x = cx + Math.cos(rot) * 11; y = cy + Math.sin(rot) * 11; ctx.lineTo(x, y); rot += step;
-                    x = cx + Math.cos(rot) * 5; y = cy + Math.sin(rot) * 5; ctx.lineTo(x, y); rot += step;
+                    x = cx + Math.cos(rot) * 11; y = cy + Math.sin(rot) * 11; ctx.lineTo(x * scale, y * scale); rot += step;
+                    x = cx + Math.cos(rot) * 5; y = cy + Math.sin(rot) * 5; ctx.lineTo(x * scale, y * scale); rot += step;
                 }
                 ctx.closePath(); ctx.fillStyle = "#FFC107"; ctx.fill();
             };
-            const starStartX = (W - (4 * 30)) / 2;
+            const starStartX = (baseW - (4 * 30)) / 2;
             for (let i = 0; i < 5; i++) drawStar(starStartX + (i * 30), cursorY + 11);
             cursorY += 24 + 18;
 
             const qrImg = new Image();
             qrImg.onload = () => {
-                const qrSize = 300, qrX = (W - qrSize) / 2;
+                const qrSize = 300, qrX = (baseW - qrSize) / 2;
                 roundRect(qrX - 12, cursorY - 12, qrSize + 24, qrSize + 24, 16);
-                ctx.fillStyle = "#ffffff"; ctx.fill();
-                ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(qrImg, qrX, cursorY, qrSize, qrSize);
+                ctx.fillStyle = "#ffffff"; 
+                ctx.fill();
+                
+                ctx.imageSmoothingEnabled = false; // Keep QR sharp
+                ctx.drawImage(qrImg, qrX * scale, cursorY * scale, qrSize * scale, qrSize * scale);
                 cursorY += qrSize + 36;
+                
                 ctx.fillStyle = "rgba(255,255,255,0.85)";
-                ctx.font = "500 16px 'Inter', 'Segoe UI', system-ui, sans-serif";
+                ctx.font = `500 ${16 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.textAlign = "center";
-                ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY);
+                ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY * scale);
                 cursorY += 32;
+                
                 ctx.fillStyle = "rgba(255,255,255,0.6)";
-                ctx.font = "bold 15px 'Inter', 'Segoe UI', system-ui, sans-serif";
-                ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY);
+                ctx.font = `bold ${15 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
+                ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY * scale);
 
                 const link = document.createElement("a");
-                link.href = canvas.toDataURL("image/png");
+                link.href = canvas.toDataURL("image/png", 1.0);
                 link.download = `${businessSlug}-qr-poster.png`;
                 link.click();
-                toast.success("QR code downloaded!");
+                toast.success("High-quality QR code downloaded!");
             };
             qrImg.src = qrDataUrl;
         };
