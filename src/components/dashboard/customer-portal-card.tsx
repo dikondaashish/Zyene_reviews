@@ -282,7 +282,7 @@ export function CustomerPortalCard({
     };
 
     return (
-        <div className="h-full rounded-[24px] bg-[#223122] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[#3e4a3e]/30 shadow-sm min-h-[360px]" style={{ backgroundColor: resolvedBrand }}>
+        <div className="h-full rounded-[24px] bg-[#223122] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[#3e4a3e]/30 shadow-sm min-h-[360px]">
             {/* Background decorative blob */}
             <svg className="absolute -right-8 -top-8 w-[280px] h-[280px] opacity-[0.03] text-white pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.3C91.4,-33.5,98,-18.1,97.7,-2.8C97.4,12.5,90.2,27.7,80.1,40.6C70,53.5,57.1,64.1,42.8,71.4C28.5,78.7,12.8,82.8,-1.9,86.1C-16.7,89.4,-30.3,91.9,-43.3,86.9C-56.3,81.9,-68.8,69.5,-78.1,55.1C-87.5,40.8,-93.8,24.6,-94.1,8.4C-94.4,-7.8,-88.7,-24,-79.3,-38C-69.8,-52,-56.7,-63.9,-42.6,-71C-28.5,-78.1,-13.4,-80.4,1.4,-82.9C16.3,-85.4,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
@@ -302,12 +302,12 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full space-y-3">
                 {/* Link Box */}
-                <div className="flex items-center justify-between bg-black/20 rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-black/30 transition-colors cursor-pointer group" onClick={handleCopyLink}>
+                <div className="flex items-center justify-between bg-[#2f3d2f] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[#384738] transition-colors cursor-pointer group" onClick={handleCopyLink}>
                     <div className="flex items-center gap-3 overflow-hidden text-white/80">
                         <Share2 className="w-4 h-4 text-white/40 shrink-0" />
                         <span className="text-[13px] truncate tracking-tight">{domain}/{businessSlug}</span>
                     </div>
-                    <div className="bg-black/40 group-hover:bg-black/60 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
+                    <div className="bg-[#1a251a] group-hover:bg-[#1a251a]/80 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                         {copied ? "Copied" : "Copy"}
                     </div>
                 </div>
@@ -334,15 +334,15 @@ export function CustomerPortalCard({
                         </DialogContent>
                     </Dialog>
 
-                    <Button variant="ghost" onClick={handleShare} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleShare} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Share2 className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Share link
                     </Button>
-                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Download className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Download
                     </Button>
-                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Printer className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Print poster
                     </Button>
