@@ -742,7 +742,7 @@ export default async function DashboardPage() {
             <div className="flex items-center justify-between mb-2">
                 <div className="space-y-0.5">
                     <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
-                        WELCOME BACK, {user.user_metadata?.first_name?.toUpperCase() || user.email?.split('@')[0].toUpperCase() || "OWNER"}
+                        WELCOME BACK, {user.user_metadata?.full_name?.toUpperCase() || user.user_metadata?.first_name?.toUpperCase() || user.email?.split('@')[0].toUpperCase() || "OWNER"}
                     </p>
                     <h1 className="text-4xl font-serif text-foreground pb-1" style={{ fontFamily: "Georgia, serif", letterSpacing: "-0.02em" }}>
                         {business.name || dict.dashboard.title}
