@@ -133,7 +133,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     }
 
     return (
-        <div className="rounded-[24px] bg-gradient-to-br from-[rgb(255,255,255)] via-[rgb(255,251,243)] to-[rgba(255,171,92,0.1)] border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
+        <div className="rounded-[24px] bg-gradient-to-br from-[rgb(255,255,255)] via-[rgb(255,251,243)] to-[rgba(255,171,92,0.1)] border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden dark:from-[rgb(15,23,42)] dark:via-[rgb(17,24,39)] dark:to-[rgba(30,41,59,0.9)] dark:border-white/10">
             {/* Background noise texture or shape could go here */}
 
             {/* Header Lockup */}
@@ -150,10 +150,10 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                     </div>
 
                     <div>
-                        <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.05] tracking-[-0.02em] text-[rgb(28,46,32)]">
+                        <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.05] tracking-[-0.02em] text-[rgb(28,46,32)] dark:text-[rgb(226,232,240)]">
                             {firstPart}
                             {secondPart && (
-                                <span className="block text-[rgb(218,84,59)]">
+                                <span className="block text-[rgb(218,84,59)] dark:text-[rgb(251,146,60)]">
                                     {secondPart}
                                 </span>
                             )}
@@ -168,8 +168,8 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                 {/* Score Chart */}
                 <div className="hidden sm:flex relative items-center justify-center shrink-0" style={{ width: 112, height: 112 }}>
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                        <span className="text-2xl font-serif font-bold text-[rgb(28,46,32)]">{positivePct}%</span>
-                        <span className="text-[9px] uppercase tracking-widest text-[rgba(28,46,32,0.6)] font-bold">POSITIVE</span>
+                        <span className="text-2xl font-serif font-bold text-[rgb(28,46,32)] dark:text-[rgb(226,232,240)]">{positivePct}%</span>
+                        <span className="text-[9px] uppercase tracking-widest text-[rgba(28,46,32,0.6)] font-bold dark:text-[rgba(226,232,240,0.7)]">POSITIVE</span>
                     </div>
                     <RadialBarChart 
                         width={112} 
@@ -187,16 +187,16 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
             </div>
 
             {/* Toggle Tabs */}
-            <div className="flex items-center gap-2 mt-8 mb-6 relative z-10 bg-[rgb(244,236,224)] p-1 rounded-[12px] self-start inline-flex">
+            <div className="flex items-center gap-2 mt-8 mb-6 relative z-10 bg-[rgb(244,236,224)] p-1 rounded-[12px] self-start inline-flex dark:bg-[rgb(30,41,59)] dark:ring-1 dark:ring-white/10">
                 <button 
                     onClick={() => setActiveTab("themes")}
-                    className={`px-4 py-1.5 rounded-[8px] text-[13px] font-semibold transition-colors ${activeTab === "themes" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    className={`px-4 py-1.5 rounded-[8px] text-[13px] font-semibold transition-colors ${activeTab === "themes" ? "bg-white text-foreground shadow-sm dark:bg-[rgb(51,65,85)] dark:text-[rgb(226,232,240)]" : "text-muted-foreground hover:text-foreground dark:hover:text-[rgb(226,232,240)]"}`}
                 >
                     Key themes
                 </button>
                 <button 
                     onClick={() => setActiveTab("suggestions")}
-                    className={`px-4 py-1.5 rounded-[8px] text-[13px] font-semibold transition-colors ${activeTab === "suggestions" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    className={`px-4 py-1.5 rounded-[8px] text-[13px] font-semibold transition-colors ${activeTab === "suggestions" ? "bg-white text-foreground shadow-sm dark:bg-[rgb(51,65,85)] dark:text-[rgb(226,232,240)]" : "text-muted-foreground hover:text-foreground dark:hover:text-[rgb(226,232,240)]"}`}
                 >
                     Suggestions
                 </button>
@@ -214,8 +214,8 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                     onClick={() => setSelectedThemeIndex(i)}
                                     className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                                         selectedThemeIndex === i 
-                                        ? "bg-white border-primary/20 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)]" 
-                                        : "bg-white/40 border-transparent hover:bg-white/60"
+                                        ? "bg-white border-primary/20 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)] dark:bg-[rgb(51,65,85)] dark:border-primary/35" 
+                                        : "bg-white/40 border-transparent hover:bg-white/60 dark:bg-[rgb(30,41,59)]/80 dark:hover:bg-[rgb(51,65,85)]"
                                     }`}
                                 >
                                     <div className="flex items-center gap-3">
@@ -231,12 +231,12 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                         </div>
                         
                         {/* Theme Detail Panel */}
-                        <div className="md:col-span-3 bg-white rounded-[20px] p-6 lg:p-7 shadow-sm border border-border/40">
+                        <div className="md:col-span-3 bg-white rounded-[20px] p-6 lg:p-7 shadow-sm border border-border/40 dark:bg-[rgb(30,41,59)] dark:border-white/10">
                             <div className="flex items-center gap-2 mb-4">
                                 <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${(selectedTheme.sentiment || '').toLowerCase() === 'negative' ? 'bg-[rgba(218,84,59,0.1)] text-[rgb(218,84,59)]' : (selectedTheme.sentiment || '').toLowerCase() === 'neutral' ? 'bg-[rgba(216,163,108,0.1)] text-[rgb(216,163,108)]' : 'bg-[rgba(64,86,66,0.1)] text-[rgb(64,86,66)]'}`}>
                                     {(selectedTheme.sentiment || '').toLowerCase() === 'negative' ? 'Needs fixing' : (selectedTheme.sentiment || '').toLowerCase() === 'neutral' ? 'Mixed' : 'Guests love it'}
                                 </span>
-                                <span className="bg-muted px-2.5 py-1 rounded-md text-xs font-semibold text-muted-foreground">
+                                <span className="bg-muted px-2.5 py-1 rounded-md text-xs font-semibold text-muted-foreground dark:bg-[rgb(51,65,85)] dark:text-[rgb(203,213,225)]">
                                     {selectedTheme.mentions} mentions
                                 </span>
                             </div>
@@ -251,7 +251,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                             
                             <div className="space-y-3">
                                 {selectedTheme.customerQuotes && selectedTheme.customerQuotes.map((q, idx) => (
-                                    <div key={idx} className="bg-[rgb(252,250,247)] border-l-[3px] border-[rgba(64,86,66,0.4)] rounded-r-lg p-3.5 pr-4 pl-4 text-[13px] text-foreground/80 leading-relaxed shadow-sm">
+                                    <div key={idx} className="bg-[rgb(252,250,247)] border-l-[3px] border-[rgba(64,86,66,0.4)] rounded-r-lg p-3.5 pr-4 pl-4 text-[13px] text-foreground/80 leading-relaxed shadow-sm dark:bg-[rgb(15,23,42)] dark:border-[rgba(148,163,184,0.5)] dark:text-[rgb(226,232,240)]">
                                         {q}
                                     </div>
                                 ))}
@@ -266,7 +266,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                             return (
                                 <div 
                                     key={i}
-                                    className={`w-full text-left bg-white rounded-[16px] border border-border/40 transition-all overflow-hidden ${isExpanded ? "shadow-md" : "hover:shadow-sm"}`}
+                                    className={`w-full text-left bg-white rounded-[16px] border border-border/40 transition-all overflow-hidden dark:bg-[rgb(30,41,59)] dark:border-white/10 ${isExpanded ? "shadow-md" : "hover:shadow-sm"}`}
                                 >
                                     <div className="p-5">
                                         <div 
@@ -280,13 +280,13 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                             </div>
                                             <div className="flex-1 space-y-2">
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold tracking-tight ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'bg-[rgb(218,84,59)] text-white' : 'bg-muted text-foreground'}`}>
+                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold tracking-tight ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'bg-[rgb(218,84,59)] text-white' : 'bg-muted text-foreground dark:bg-[rgb(51,65,85)] dark:text-[rgb(226,232,240)]'}`}>
                                                         {suggestion.urgency}
                                                     </span>
-                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-[rgb(223,240,212)] text-[rgb(59,89,48)]">
+                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-[rgb(223,240,212)] text-[rgb(59,89,48)] dark:bg-[rgba(34,197,94,0.15)] dark:text-[rgb(134,239,172)]">
                                                         {suggestion.impact}
                                                     </span>
-                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-muted text-muted-foreground">
+                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-muted text-muted-foreground dark:bg-[rgb(51,65,85)] dark:text-[rgb(203,213,225)]">
                                                         Effort: {suggestion.effort}
                                                     </span>
                                                 </div>
@@ -313,7 +313,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                                     </button>
                                                     <button 
                                                         onClick={(e) => handleSeeExamples(e, suggestion.title)}
-                                                        className="bg-transparent hover:bg-[rgb(250,250,250)] border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
+                                                        className="bg-transparent hover:bg-[rgb(250,250,250)] border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95 dark:hover:bg-[rgb(51,65,85)] dark:border-white/20 dark:text-[rgb(226,232,240)]"
                                                     >
                                                         See examples
                                                     </button>

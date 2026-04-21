@@ -63,6 +63,11 @@ export default async function RequestsPage({
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
+    // Exclude anonymous tracking-only rows created by public-link / QR opens.
+    // Requests page should show outbound customer requests, not passive page-open telemetry.
+    const outboundRequestFilter =
+        "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null";
+
     const [
         totalSentRes,
         deliveredRes,
@@ -73,26 +78,31 @@ export default async function RequestsPage({
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id),
+            .eq("business_id", business.id)
+            .or(outboundRequestFilter),
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
+            .or(outboundRequestFilter)
             .eq("status", "delivered"),
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
+            .or(outboundRequestFilter)
             .or("status.eq.clicked,review_left.eq.true"),
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
+            .or(outboundRequestFilter)
             .eq("review_left", true),
         supabase
             .from("review_requests")
             .select("*")
             .eq("business_id", business.id)
+            .or(outboundRequestFilter)
             .order("created_at", { ascending: false })
             .range(from, to),
     ]);

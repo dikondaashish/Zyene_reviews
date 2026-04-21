@@ -97,33 +97,19 @@ export function DashboardLayoutClient({
             <main className="flex min-w-0 flex-1 flex-col gap-4 bg-canvas p-4 lg:p-6 min-h-[calc(100vh-4rem)]">
                 {children}
             </main>
-            <footer
-                className="px-4 lg:px-6"
-                style={{
-                    marginTop: "16px",
-                    paddingTop: "20px",
-                    paddingBottom: "20px",
-                    backgroundColor: "rgb(247,245,239)",
-                    borderTop: "1px solid rgb(229,231,235)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    fontSize: "11.5px",
-                    color: "rgb(138,143,134)",
-                }}
-            >
+            <footer className="mt-4 flex items-center justify-between border-t border-[rgb(229,231,235)] bg-[rgb(247,245,239)] px-4 py-5 text-[11.5px] text-[rgb(138,143,134)] dark:border-white/10 dark:bg-[rgb(15,23,42)] dark:text-[rgb(148,163,184)] lg:px-6">
                 <div>© {new Date().getFullYear()} Zyene, Inc. · Local to Global</div>
                 <div style={{ display: "flex", gap: "16px" }}>
-                    <Link href="/terms" className="transition-colors hover:text-foreground">
+                    <Link href="/terms" className="transition-colors hover:text-foreground dark:hover:text-[rgb(226,232,240)]">
                         Legal
                     </Link>
-                    <Link href="/privacy" className="transition-colors hover:text-foreground">
+                    <Link href="/privacy" className="transition-colors hover:text-foreground dark:hover:text-[rgb(226,232,240)]">
                         Privacy
                     </Link>
                     <button
                         type="button"
                         onClick={handleManageCookies}
-                        className="transition-colors hover:text-foreground"
+                        className="transition-colors hover:text-foreground dark:hover:text-[rgb(226,232,240)]"
                     >
                         Manage cookies
                     </button>
