@@ -260,15 +260,9 @@ export function Step4SubscriptionForm({
                       <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                     </PricingCard.Price>
                     {checkoutOffersTrial === true && (
-                      <>
-                        <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-1">
-                          {b.trial_included}
-                        </p>
-                        <p className="text-[10px] text-chart-2/70 dark:text-chart-2/70 mb-3 flex items-center justify-center gap-1">
-                          <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                          No credit card required
-                        </p>
-                      </>
+                      <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-3">
+                        {b.trial_included}
+                      </p>
                     )}
                     <Button
                       className={cn(
@@ -352,11 +346,6 @@ export function Step4SubscriptionForm({
             )}
           </div>
 
-          {/* Money-back guarantee */}
-          <p className="text-center text-xs text-muted-foreground/60 font-medium mt-4 flex items-center justify-center gap-1.5">
-            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Cancel anytime. 30-day money-back guarantee.
-          </p>
         </div>
       </div>
 
