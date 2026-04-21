@@ -12,7 +12,7 @@ import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4SubscriptionForm } from "@/components/onboarding/step4-subscription-form";
 import { Step5Form } from "@/components/onboarding/step5-form";
 import { triggerOnboardingSync, finalizeOnboardingStripeCheckout } from "@/app/actions/onboarding";
-import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper, Gem } from "lucide-react";
+import { Loader2, Building2, MapPin, LayoutGrid, PartyPopper, Gem, ArrowLeft } from "lucide-react";
 
 interface OnboardingOrganization {
   id: string;
@@ -384,6 +384,14 @@ export default function OnboardingPage() {
             )}
             {currentStep === 2 && business && (
               <motion.div key="step-2" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(1)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                  Back
+                </button>
                 <Step2Form
                   businessId={business.id}
                   businessName={business.name}
@@ -413,6 +421,14 @@ export default function OnboardingPage() {
             )}
             {currentStep === 3 && business && (
               <motion.div key="step-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(2)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                  Back
+                </button>
                 <Step3Form
                   businessId={business.id}
                   businessName={business.name}
@@ -426,6 +442,14 @@ export default function OnboardingPage() {
             )}
             {currentStep === 4 && organization && (
               <motion.div key="step-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                  Back
+                </button>
                 <Step4SubscriptionForm
                   organizationId={organization.id}
                   isGoogleConnected={googleConnected}

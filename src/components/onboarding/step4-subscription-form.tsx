@@ -165,7 +165,10 @@ export function Step4SubscriptionForm({
           )}
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-            <h3 className="text-xl font-semibold text-left">Choose a Plan</h3>
+            <div>
+              <h3 className="text-xl font-semibold text-left">Unlock the full power of Zyene</h3>
+              <p className="text-sm text-muted-foreground text-left mt-1">Your business is set up — choose a plan to start managing reviews with AI.</p>
+            </div>
 
             <div
               className="inline-flex items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
@@ -349,7 +352,7 @@ export function Step4SubscriptionForm({
         </div>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-2">
         <button
           type="button"
           onClick={handleSkip}
@@ -358,6 +361,9 @@ export function Step4SubscriptionForm({
         >
           Skip for now
         </button>
+        <p className="text-[11px] text-muted-foreground/50 max-w-xs text-center leading-relaxed">
+          Free plan: View-only access. No AI replies, no review requests, no smart insights.
+        </p>
       </div>
     </div>
   );

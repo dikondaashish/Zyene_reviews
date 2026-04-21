@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -65,6 +65,21 @@ export function Step3Form({
   }, [initialCategory, form]);
 
   const selectedCategory = form.watch("category");
+  const autoSubmitTriggered = useRef(false);
+
+  // Auto-advance: when user clicks a category (not pre-filled from Google), auto-submit after 600ms
+  useEffect(() => {
+    if (!selectedCategory || isLoading || autoSubmitTriggered.current) return;
+    // Don't auto-advance if category was pre-filled from Google on mount
+    if (initialCategory && selectedCategory === initialCategory) return;
+
+    const timer = setTimeout(() => {
+      autoSubmitTriggered.current = true;
+      form.handleSubmit(onSubmit)();
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [selectedCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = async (data: StepCategoryFormData) => {
     setIsLoading(true);

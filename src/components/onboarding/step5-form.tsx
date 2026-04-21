@@ -79,7 +79,7 @@ export function Step5Form({
 
   const checkItems = [
     { label: "Business profile created", delay: 0.1, always: true },
-    { label: "Google Business syncing", delay: 0.2, always: false, show: googleConnected },
+    { label: "Google Business syncing — reviews appear within ~1 hour", delay: 0.2, always: false, show: googleConnected },
     { label: "Review templates ready", delay: 0.3, always: true },
   ];
 

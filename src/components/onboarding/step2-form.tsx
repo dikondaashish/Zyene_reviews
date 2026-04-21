@@ -324,6 +324,18 @@ export function Step2Form({
               <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center mx-auto">
                 <GoogleIcon />
               </div>
+              <div className="space-y-1.5 text-left mx-auto max-w-[280px]">
+                {[
+                  "Auto-import all your reviews",
+                  "AI-powered response suggestions",
+                  "Real-time sync — new reviews appear instantly",
+                ].map((benefit) => (
+                  <div key={benefit} className="flex items-center gap-2 text-[12px] text-muted-foreground">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-chart-2 shrink-0" />
+                    <span>{benefit}</span>
+                  </div>
+                ))}
+              </div>
               <Button
                 type="button"
                 onClick={handleConnectClick}
