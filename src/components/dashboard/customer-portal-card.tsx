@@ -346,7 +346,7 @@ export function CustomerPortalCard({
     };
 
     return (
-        <div className="h-full rounded-[24px] bg-primary p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-primary/30 shadow-sm min-h-[360px]">
+        <div className="h-full rounded-[24px] bg-[rgb(34,49,34)] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[rgba(62,74,62,0.3)] shadow-sm min-h-[360px]">
             {/* Background decorative blob */}
             <svg className="absolute -right-8 -top-8 w-[280px] h-[280px] opacity-[0.03] text-white pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.3C91.4,-33.5,98,-18.1,97.7,-2.8C97.4,12.5,90.2,27.7,80.1,40.6C70,53.5,57.1,64.1,42.8,71.4C28.5,78.7,12.8,82.8,-1.9,86.1C-16.7,89.4,-30.3,91.9,-43.3,86.9C-56.3,81.9,-68.8,69.5,-78.1,55.1C-87.5,40.8,-93.8,24.6,-94.1,8.4C-94.4,-7.8,-88.7,-24,-79.3,-38C-69.8,-52,-56.7,-63.9,-42.6,-71C-28.5,-78.1,-13.4,-80.4,1.4,-82.9C16.3,-85.4,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
@@ -368,7 +368,7 @@ export function CustomerPortalCard({
                 <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
                 <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
                     {loading ? (
-                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-muted-foreground font-medium bg-muted/70 rounded-xl">
+                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-[rgb(161,161,170)] font-medium bg-[rgba(24,24,27,0.5)] rounded-xl">
                             Generating...
                         </div>
                     ) : qrDataUrl ? (
@@ -379,7 +379,7 @@ export function CustomerPortalCard({
                             style={{ imageRendering: 'pixelated' }}
                         />
                     ) : (
-                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-destructive/70 font-medium bg-destructive/10 rounded-xl">
+                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-[rgba(248,113,113,0.7)] font-medium bg-[rgba(69,10,10,0.1)] rounded-xl">
                             Failed to load QR
                         </div>
                     )}
@@ -388,7 +388,7 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full mb-4">
                 <div 
-                    className="bg-primary rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
+                    className="bg-[rgb(0,82,204)] rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
                     onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
                 >
                     {/* Background Ornaments */}
@@ -408,7 +408,7 @@ export function CustomerPortalCard({
                             </p>
                         </div>
                         <div className="w-fit">
-                            <button className="bg-background text-primary text-[13px] font-bold px-5 py-1.5 rounded-[10px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                            <button className="bg-white text-[rgb(0,82,204)] text-[13px] font-bold px-5 py-1.5 rounded-[10px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
                                 Order now
                             </button>
                         </div>
@@ -434,12 +434,12 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full space-y-3">
                 {/* Link Box */}
-                <div className="flex items-center justify-between bg-primary/80 rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-primary/70 transition-colors cursor-pointer group" onClick={handleCopyLink}>
+                <div className="flex items-center justify-between bg-[rgb(47,61,47)] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[rgb(56,71,56)] transition-colors cursor-pointer group" onClick={handleCopyLink}>
                     <div className="flex items-center gap-3 overflow-hidden text-white/80">
                         <Share2 className="w-4 h-4 text-white/40 shrink-0" />
                         <span className="text-[13px] truncate tracking-tight">{domain}/{businessSlug}</span>
                     </div>
-                    <div className="bg-primary/90 group-hover:bg-primary/75 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
+                    <div className="bg-[rgb(26,37,26)] group-hover:bg-[rgba(26,37,26,0.8)] text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                         {copied ? "Copied" : "Copy"}
                     </div>
                 </div>
@@ -447,7 +447,7 @@ export function CustomerPortalCard({
                 {/* 4 Action Grid */}
                 <div className="grid grid-cols-2 gap-2">
                     <Dialog open={showQr} onOpenChange={setShowQr}>
-                        <Button variant="ghost" onClick={() => setShowQr(true)} className="w-full bg-destructive hover:bg-destructive/90 text-white hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                        <Button variant="ghost" onClick={() => setShowQr(true)} className="w-full bg-[rgb(214,93,69)] hover:bg-[rgb(194,81,58)] text-white hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                             <QrCode className="w-3.5 h-3.5 mr-2" />
                             Show QR code
                         </Button>
@@ -466,15 +466,15 @@ export function CustomerPortalCard({
                         </DialogContent>
                     </Dialog>
 
-                    <Button variant="ghost" onClick={handleShare} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleShare} className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Share2 className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Share link
                     </Button>
-                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Download className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Download
                     </Button>
-                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Printer className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Print poster
                     </Button>
