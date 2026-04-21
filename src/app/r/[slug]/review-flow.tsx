@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useState, useEffect, FormEvent, useRef, useCallback } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -165,12 +165,17 @@ export function PublicReviewFlow({
 
     const [activeRequestId, setActiveRequestId] = useState<string | undefined>(requestId);
     const hasTrackedOpenRef = useRef(false);
+    const trackOpenInFlightRef = useRef<Promise<string | undefined> | null>(null);
 
-    useEffect(() => {
-        if (isPreview || hasTrackedOpenRef.current) return;
-        hasTrackedOpenRef.current = true;
+    const ensureActiveRequestId = useCallback(async (): Promise<string | undefined> => {
+        if (isPreview) return undefined;
+        if (activeRequestId) return activeRequestId;
 
-        const trackOpen = async () => {
+        if (trackOpenInFlightRef.current) {
+            return trackOpenInFlightRef.current;
+        }
+
+        trackOpenInFlightRef.current = (async () => {
             try {
                 const res = await fetch("/api/track/review-open", {
                     method: "POST",
@@ -184,22 +189,35 @@ export function PublicReviewFlow({
                 const data = await res.json().catch(() => ({}));
                 if (res.ok && typeof data.requestId === "string" && data.requestId.length > 0) {
                     setActiveRequestId(data.requestId);
+                    return data.requestId as string;
                 }
             } catch (error) {
                 console.error("Open tracking failed:", error);
+            } finally {
+                trackOpenInFlightRef.current = null;
             }
-        };
 
-        void trackOpen();
-    }, [businessId, isPreview, requestId]);
+            return undefined;
+        })();
+
+        return trackOpenInFlightRef.current;
+    }, [activeRequestId, businessId, isPreview, requestId]);
+
+    useEffect(() => {
+        if (isPreview || hasTrackedOpenRef.current) return;
+        hasTrackedOpenRef.current = true;
+        void ensureActiveRequestId();
+    }, [ensureActiveRequestId, isPreview]);
 
     const trackRequestUpdate = async (trackData: Record<string, unknown>) => {
-        if (isPreview || !activeRequestId) return;
+        if (isPreview) return;
+        const requestIdToUse = activeRequestId ?? (await ensureActiveRequestId());
+        if (!requestIdToUse) return;
         try {
             await fetch("/api/track/review", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "update", requestId: activeRequestId, trackData }),
+                body: JSON.stringify({ action: "update", requestId: requestIdToUse, trackData }),
             });
         } catch (error) {
             console.error("Tracking update failed:", error);

@@ -212,7 +212,7 @@ export function ZyenePlatformAnalytics({
     const ratingDist = [5, 4, 3, 2, 1].map((star) => ({
         star: `${star}★`,
         value: star,
-        count: requestFlow.filter((r) => r.rating_given === star).length,
+        count: allSourceRequests.filter((r) => r.rating_given === star).length,
     }));
     const maxRatingCount = Math.max(...ratingDist.map((d) => d.count), 1);
     const ratingColors: Record<number, string> = {
@@ -713,11 +713,11 @@ export function ZyenePlatformAnalytics({
                                     </motion.div>
                                 </div>
                                 <span className="text-xs font-semibold text-muted-foreground w-10 text-right">
-                                    {pct(d.count, ratingsGiven.length)}%
+                                    {pct(d.count, allSourceRatingsGiven.length)}%
                                 </span>
                             </div>
                         ))}
-                        {ratingsGiven.length === 0 && (
+                        {allSourceRatingsGiven.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-2">
                                 <Star className="w-8 h-8 opacity-20" />
                                 <p className="text-sm">No ratings given yet</p>
