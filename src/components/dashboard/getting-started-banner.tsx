@@ -36,7 +36,7 @@ export function GettingStartedBanner({
     { label: "Connect Google Business Profile", done: googleConnected, href: "/integrations" },
     { label: "Add your first customer", done: customerCount > 0, href: "/customers" },
     { label: "Send your first review request", done: requestSent, href: "/requests" },
-    { label: "Set up notification preferences", done: notificationsConfigured, href: "/settings?tab=notifications" },
+    { label: "Set up notification preferences", done: notificationsConfigured, href: "/settings/notifications" },
   ];
 
   const completedCount = items.filter((item) => item.done).length;

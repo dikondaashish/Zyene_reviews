@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -318,16 +318,16 @@ export const AnimatedReviewCards = ({
     const [hoverPause, setHoverPause] = useState(false);
     const [focusWithin, setFocusWithin] = useState(false);
 
-    const stableOrderRef = useRef<string[]>([]);
+    const [stableOrder, setStableOrder] = useState<string[]>([]);
 
     useEffect(() => {
         const next = initialReviewsProp.slice(0, MAX_STACK);
         setReviews(next);
         const ids = next.map((r) => String(r.id));
-        if (ids.join("|") !== stableOrderRef.current.join("|")) {
-            stableOrderRef.current = ids;
+        if (ids.join("|") !== stableOrder.join("|")) {
+            setStableOrder(ids);
         }
-    }, [initialReviewsProp]);
+    }, [initialReviewsProp, stableOrder]);
 
     const pauseRotation = hoverPause || focusWithin || isInteracting;
 
@@ -374,11 +374,11 @@ export const AnimatedReviewCards = ({
     }, [effectiveAutoRotate, rotateInterval, pauseRotation, reviews.length, rotateForward]);
 
     const rawActiveIndex =
-        reviews[0] && stableOrderRef.current.length > 0
-            ? stableOrderRef.current.findIndex((id) => id === String(reviews[0].id))
+        reviews[0] && stableOrder.length > 0
+            ? stableOrder.findIndex((id) => id === String(reviews[0].id))
             : 0;
     const activeDotIndex = rawActiveIndex < 0 ? 0 : rawActiveIndex;
-    const orderLen = stableOrderRef.current.length || reviews.length || 1;
+    const orderLen = stableOrder.length || reviews.length || 1;
     const counterCurrent = reviews.length ? Math.min(activeDotIndex + 1, orderLen) : 0;
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -662,14 +662,14 @@ export const AnimatedReviewCards = ({
         </div>
     );
 
-    const pagination = labels && stableOrderRef.current.length > 0 && (
+    const pagination = labels && stableOrder.length > 0 && (
         <div className="mt-4 flex w-full justify-center px-2">
             <div
                 className="flex max-w-full flex-wrap items-center justify-center gap-1.5"
                 role="tablist"
                 aria-label="Review position"
             >
-                {stableOrderRef.current.map((id, i) => (
+                {stableOrder.map((id, i) => (
                     <span
                         key={id}
                         role="presentation"

@@ -195,7 +195,10 @@ export function CustomerPortalCard({
             cursorY += pillH + 16;
 
             const drawStar = (cx: number, cy: number) => {
-                let rot = Math.PI / 2 * 3, x = cx, y = cy, step = Math.PI / 5;
+                let rot = (Math.PI / 2) * 3;
+                let x = cx;
+                let y = cy;
+                const step = Math.PI / 5;
                 ctx.beginPath(); 
                 ctx.moveTo(cx * scale, (cy - 11) * scale);
                 for (let i = 0; i < 5; i++) {

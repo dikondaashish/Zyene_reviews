@@ -250,7 +250,7 @@ export async function listReviews(
     const params = new URLSearchParams();
     if (sortByUpdateTime) params.set("orderBy", "updateTime desc");
     if (pageToken) params.set("pageToken", pageToken);
-    let url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews?${params.toString()}`;
+    const url = `${BASE_URL_REVIEWS}/accounts/${accountId}/locations/${locationId}/reviews?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },

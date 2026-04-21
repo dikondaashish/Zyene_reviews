@@ -71,7 +71,7 @@ export async function acceptBusinessInvitationAdmin(params: {
     const emailNorm = userEmail.trim().toLowerCase();
     const invitationsTable = admin.from("invitations" as never);
 
-    let inviteResult = await invitationsTable
+    const inviteResult = await invitationsTable
         .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
         .eq("token", raw)
         .is("accepted_at", null)

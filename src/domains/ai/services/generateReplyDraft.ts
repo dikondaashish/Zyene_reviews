@@ -48,7 +48,7 @@ export function extractReplyFromModelOutput(content: string): string {
 
     const prefix = trimmed.match(/^\s*\{\s*"reply"\s*:\s*"/);
     if (prefix) {
-        let inner = trimmed.slice(prefix[0].length);
+        const inner = trimmed.slice(prefix[0].length);
         let out = "";
         for (let i = 0; i < inner.length; i++) {
             const c = inner[i];

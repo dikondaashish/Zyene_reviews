@@ -22,38 +22,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
     const [lastMilestone, setLastMilestone] = useState<number | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    useEffect(() => {
-        if (isDemo) return;
-        
-        // Initialize from localStorage to avoid repeats
-        const storageKey = `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`;
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-            setLastMilestone(Number(saved));
-        }
-        setIsInitialized(true);
-    }, [type, scopeKey]);
-
-    useEffect(() => {
-        if (isDemo || !isInitialized || currentCount === 0) return;
-
-        const milestones = MILESTONES[type];
-        const reachedMilestone = milestones.findLast(m => currentCount >= m);
-
-        if (reachedMilestone && (!lastMilestone || reachedMilestone > lastMilestone)) {
-            // Trigger celebration!
-            triggerCelebration(reachedMilestone, type);
-            
-            // Save to state and storage
-            setLastMilestone(reachedMilestone);
-            localStorage.setItem(
-                `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`,
-                reachedMilestone.toString()
-            );
-        }
-    }, [currentCount, type, lastMilestone, isInitialized]);
-
-    const triggerCelebration = (milestone: number, milestoneType: string) => {
+    function triggerCelebration(milestone: number, milestoneType: string) {
         // Confetti!
         const duration = 5 * 1000;
         const animationEnd = Date.now() + duration;
@@ -110,7 +79,38 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
                 </div>
             </div>
         ), { duration: 6000 });
-    };
+    }
+
+    useEffect(() => {
+        if (isDemo) return;
+        
+        // Initialize from localStorage to avoid repeats
+        const storageKey = `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`;
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+            setLastMilestone(Number(saved));
+        }
+        setIsInitialized(true);
+    }, [type, scopeKey]);
+
+    useEffect(() => {
+        if (isDemo || !isInitialized || currentCount === 0) return;
+
+        const milestones = MILESTONES[type];
+        const reachedMilestone = milestones.findLast(m => currentCount >= m);
+
+        if (reachedMilestone && (!lastMilestone || reachedMilestone > lastMilestone)) {
+            // Trigger celebration!
+            triggerCelebration(reachedMilestone, type);
+            
+            // Save to state and storage
+            setLastMilestone(reachedMilestone);
+            localStorage.setItem(
+                `zyene-milestone-${type}${scopeKey ? `-${scopeKey}` : ""}`,
+                reachedMilestone.toString()
+            );
+        }
+    }, [currentCount, type, lastMilestone, isInitialized]);
 
     return null; // Side-effect only component
 }

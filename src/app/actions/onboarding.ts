@@ -215,7 +215,7 @@ export async function initializeGoogleAuth(
     // Account list: mybusinessaccountmanagement API (NOT businessinformation)
     // Location details: mybusinessbusinessinformation API
     // Review counts: mybusiness API (separate endpoint)
-    let reviewData = { reviewCount: 0, averageRating: 0 };
+    const reviewData = { reviewCount: 0, averageRating: 0 };
     let locationInfo: { businessName?: string; address?: string; city?: string; state?: string; phone?: string; category?: string } | undefined;
 
     try {

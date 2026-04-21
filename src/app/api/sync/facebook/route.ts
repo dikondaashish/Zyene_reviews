@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         console.error("Facebook Sync Error:", error);
 
         let status = 500;
-        let message = error instanceof Error ? error.message : "Failed to sync reviews";
+        const message = error instanceof Error ? error.message : "Failed to sync reviews";
         
         if (message === "Business not found" || message === "Facebook platform not connected") {
             status = 404;
