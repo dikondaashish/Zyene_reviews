@@ -133,12 +133,16 @@ export function Step1Form({
                   <Input
                     id="organizationName"
                     placeholder="e.g. Acme Inc."
+                    autoFocus
                     disabled={submitting || isLoading}
                     className="h-14 text-base bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
                     {...field}
                   />
                 </FormControl>
                 <FormMessage />
+                <p className="text-xs text-muted-foreground/70 mt-1.5">
+                  Don't worry, you can rename your organization later.
+                </p>
               </FormItem>
             )}
           />

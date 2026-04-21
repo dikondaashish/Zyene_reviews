@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Loader2, Star, ArrowRight, CheckCircle2, Sparkles, Rocket } from "lucide-react";
+import { Loader2, Star, ArrowRight, CheckCircle2, Sparkles, Rocket, Send } from "lucide-react";
 import { completeOnboarding } from "@/app/actions/onboarding";
 
 interface Step5FormProps {
@@ -173,6 +173,14 @@ export function Step5Form({
             </>
           )}
         </Button>
+        <a
+          href="/requests"
+          className="inline-flex items-center justify-center w-full h-12 text-sm font-semibold text-primary hover:text-primary/80 border-2 border-primary/20 hover:border-primary/40 rounded-2xl transition-all group mt-2"
+        >
+          <Send className="mr-2 h-4 w-4" />
+          Send your first review request
+          <ArrowRight className="ml-2 h-4 w-4 opacity-50 group-hover:translate-x-0.5 transition-transform" />
+        </a>
         <p className="mt-4 text-xs text-muted-foreground/60 font-medium">
           Ready to grow your online reputation.
         </p>

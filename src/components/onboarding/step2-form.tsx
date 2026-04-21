@@ -336,6 +336,10 @@ export function Step2Form({
               <p className="text-xs text-muted-foreground/70 font-medium">
                 Auto-fills name, address, and reviews in one click
               </p>
+              <p className="text-[11px] text-muted-foreground/50 flex items-center justify-center gap-1.5 mt-1">
+                <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                We only read your profile. We never post on your behalf.
+              </p>
             </div>
           )}
 
