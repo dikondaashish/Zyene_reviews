@@ -22,6 +22,7 @@ export function useGoogleSyncRemoteState({
     const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(initialLastSyncedAt)
     const [warmingUp, setWarmingUp] = useState(false)
     const [warmupStart, setWarmupStart] = useState<number | null>(null)
+    const [lockedUntil, setLockedUntil] = useState<string | null>(null)
 
     useEffect(() => {
         setRemoteStatus(initialSyncStatus ?? null)
@@ -39,12 +40,13 @@ export function useGoogleSyncRemoteState({
         if (!res.ok) return
         const body = (await res.json()) as {
             success?: boolean
-            data?: { sync_status?: string; last_synced_at?: string | null }
+            data?: { sync_status?: string; last_synced_at?: string | null; locked_until?: string | null }
         }
         const data = body.data
         if (!data) return
         setRemoteStatus(data.sync_status ?? null)
         setLastSyncedAt(data.last_synced_at ?? null)
+        setLockedUntil(data.locked_until ?? null)
     }, [businessId])
 
     useEffect(() => {
@@ -91,11 +93,14 @@ export function useGoogleSyncRemoteState({
         void fetchStatus()
     }, [fetchStatus])
 
+    const isStalled = remoteStatus === "running" && lockedUntil && new Date(lockedUntil) < new Date()
     const isSyncBusy = warmingUp || remoteStatus === "running"
 
     return {
         remoteStatus,
         lastSyncedAt,
+        lockedUntil,
+        isStalled,
         isSyncBusy,
         markManualSyncStarted,
         fetchStatus,

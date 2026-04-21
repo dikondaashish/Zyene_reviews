@@ -74,6 +74,7 @@ export async function GET(request: Request) {
             platformId: platform.id,
             sync_status: platform.sync_status ?? "idle",
             last_synced_at: platform.last_synced_at ?? null,
+            locked_until: (platform as any).locked_until ?? null,
         });
     } catch (error: unknown) {
         console.error("Sync status GET:", error);

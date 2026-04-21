@@ -20,21 +20,23 @@ export function SyncButton({
     const [showForce, setShowForce] = useState(false)
     const [busySince, setBusySince] = useState<number | null>(null)
     const router = useRouter()
-    const { isSyncBusy, markManualSyncStarted } = useGoogleSyncRemoteState({ businessId })
+    const { isSyncBusy, isStalled, markManualSyncStarted } = useGoogleSyncRemoteState({ businessId })
 
     const busy = isPosting || isSyncBusy
-    const forceHintAfterMs = 3 * 60 * 1000
+    const forceHintAfterMs = 60 * 1000
 
     useEffect(() => {
         if (isSyncBusy) {
             setBusySince((prev) => prev ?? Date.now())
+            if (isStalled) setShowForce(true)
             return
         }
         setBusySince(null)
         setShowForce(false)
-    }, [isSyncBusy])
+    }, [isSyncBusy, isStalled])
 
     useEffect(() => {
+        if (showForce) return
         if (!busySince || showForce || isPosting) return
         const elapsed = Date.now() - busySince
         if (elapsed >= forceHintAfterMs) {
@@ -43,7 +45,7 @@ export function SyncButton({
         }
         const timeoutId = setTimeout(() => setShowForce(true), forceHintAfterMs - elapsed)
         return () => clearTimeout(timeoutId)
-    }, [busySince, showForce, isPosting])
+    }, [busySince, showForce, isPosting, forceHintAfterMs])
 
     const handleSync = async (force = false) => {
         setIsPosting(true)
