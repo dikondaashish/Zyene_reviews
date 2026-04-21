@@ -411,12 +411,15 @@ export async function proxy(request: NextRequest) {
 
         const isReserved = reservedPrefixes.some(prefix => pathname.startsWith(prefix));
 
-        // 3. Rewrite business slugs to /r/[slug]
+        // 3. Redirect business slug-like paths to collectratings.com to avoid
+        // duplicate content across apex domains and keep canonical slug traffic
+        // on the review domain.
         if (!isReserved && !pathname.includes(".")) {
-            console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
-            return createResponse(
-                NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
-            );
+            const targetUrl = request.nextUrl.clone();
+            targetUrl.protocol = "https";
+            targetUrl.hostname = "collectratings.com";
+            targetUrl.port = "";
+            return createResponse(NextResponse.redirect(targetUrl, 301));
         }
 
         console.log(`[Middleware] Passing ${hostname}${pathname} (No rewrite)`);
