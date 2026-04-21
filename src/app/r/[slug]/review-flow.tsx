@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
-import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -164,15 +163,43 @@ export function PublicReviewFlow({
         }
     }, [isPreview, previewStep]);
 
-    const supabase = createClient();
+    const [activeRequestId, setActiveRequestId] = useState<string | undefined>(requestId);
+    const hasTrackedOpenRef = useRef(false);
+
+    useEffect(() => {
+        if (isPreview || hasTrackedOpenRef.current) return;
+        hasTrackedOpenRef.current = true;
+
+        const trackOpen = async () => {
+            try {
+                const res = await fetch("/api/track/review-open", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        businessId,
+                        requestId,
+                    }),
+                });
+
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && typeof data.requestId === "string" && data.requestId.length > 0) {
+                    setActiveRequestId(data.requestId);
+                }
+            } catch (error) {
+                console.error("Open tracking failed:", error);
+            }
+        };
+
+        void trackOpen();
+    }, [businessId, isPreview, requestId]);
 
     const trackRequestUpdate = async (trackData: Record<string, unknown>) => {
-        if (isPreview || !requestId) return;
+        if (isPreview || !activeRequestId) return;
         try {
             await fetch("/api/track/review", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "update", requestId, trackData }),
+                body: JSON.stringify({ action: "update", requestId: activeRequestId, trackData }),
             });
         } catch (error) {
             console.error("Tracking update failed:", error);
