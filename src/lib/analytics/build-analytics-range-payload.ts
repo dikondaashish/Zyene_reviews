@@ -93,7 +93,7 @@ export async function buildAnalyticsRangePayload(
         ? supabase
               .from("review_requests")
               .select(
-                  "id,status,channel,trigger_source,created_at,sent_at,delivered_at,opened_at,clicked_at,completed_at,rating_given,tags_selected,review_left,customer_name,customer_email,follow_up_sent_at,ai_review_text"
+                  "id,status,channel,trigger_source,campaign_id,created_at,sent_at,delivered_at,opened_at,clicked_at,completed_at,rating_given,tags_selected,review_left,customer_name,customer_email,customer_phone,follow_up_sent_at,ai_review_text"
               )
               .eq("business_id", businessId)
               .gte("created_at", previousStart.toISOString())
@@ -289,7 +289,7 @@ export async function buildAnalyticsRangePayload(
         perfSeries,
         discoverySplit,
         searchKeywords,
-        allRequests,
+        allRequests: currentRequests,
         previousRequests,
         privateFeedback,
     };

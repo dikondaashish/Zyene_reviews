@@ -47,6 +47,7 @@ interface ReviewRequest {
     status: string;
     channel: string;
     trigger_source: string;
+    campaign_id: string | null;
     created_at: string;
     sent_at: string | null;
     delivered_at: string | null;
@@ -58,6 +59,7 @@ interface ReviewRequest {
     review_left: boolean;
     customer_name: string | null;
     customer_email: string | null;
+    customer_phone: string | null;
     follow_up_sent_at: string | null;
     ai_review_text: string | null;
 }
@@ -98,49 +100,104 @@ export function ZyenePlatformAnalytics({
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
+    // All-source traffic (direct URL, QR, email, SMS, etc.) for top KPI cards.
+    const allSourceRequests = requests;
+    const previousAllSourceRequests = previousRequests;
+
+    const hasDirectContact = (r: ReviewRequest) =>
+        Boolean(r.customer_phone || r.customer_email || r.customer_name || r.campaign_id);
+
+    const normalizedChannel = (r: ReviewRequest): "email" | "sms" | "link" => {
+        if (r.channel === "sms" || r.channel === "link") return r.channel;
+        // Backward-compatible: public-link/QR tracking rows may be stored as email/manual
+        // without customer identity when legacy DB constraints block channel=link inserts.
+        if (r.channel === "email" && !hasDirectContact(r)) return "link";
+        return "email";
+    };
+
+    const isRequestChannel = (r: ReviewRequest) =>
+        (r.channel === "email" || r.channel === "sms") &&
+        Boolean(r.customer_phone || r.customer_email || r.customer_name || r.campaign_id);
+    const requestFlow = requests.filter(isRequestChannel);
+    const previousRequestFlow = previousRequests.filter(isRequestChannel);
+
     // ── Funnel Aggregations ────────────────────────────────────────────
-    const totalSent = requests.filter((r) => r.sent_at).length;
-    const totalDelivered = requests.filter((r) => r.delivered_at).length;
-    const totalOpened = requests.filter((r) => r.opened_at).length;
-    const totalClicked = requests.filter((r) => r.clicked_at).length;
-    const totalCompleted = requests.filter(
-        (r) => r.status === "completed" || r.status === "feedback_left"
-    ).length;
-    const totalReviewLeft = requests.filter((r) => r.review_left).length;
+    // Rules:
+    // Sent          => SMS/Email requests with sent_at
+    // Delivered     => SMS/Email requests with delivered_at
+    // Opened        => Email requests with opened_at
+    // Link Clicked  => SMS/Email requests with clicked_at
+    // Completed     => SMS/Email requests with completed_at
+    // Posted Google => SMS/Email requests with status === "completed"
+    const totalSent = requestFlow.filter((r) => r.sent_at).length;
+    const totalDelivered = requestFlow.filter((r) => r.delivered_at).length;
+    const totalOpened = requestFlow.filter((r) => r.channel === "email" && r.opened_at).length;
+    const totalClicked = requestFlow.filter((r) => r.clicked_at).length;
+    const totalCompleted = requestFlow.filter((r) => r.completed_at).length;
+    const totalPostedToGoogle = requestFlow.filter((r) => r.status === "completed").length;
 
     // Previous period for deltas
-    const prevSent = previousRequests.filter((r) => r.sent_at).length;
-    const prevClicked = previousRequests.filter((r) => r.clicked_at).length;
-    const prevCompleted = previousRequests.filter(
-        (r) => r.status === "completed" || r.status === "feedback_left"
+    const prevSent = previousRequestFlow.filter((r) => r.sent_at).length;
+    const prevClicked = previousRequestFlow.filter((r) => r.clicked_at).length;
+    const prevCompleted = previousRequestFlow.filter((r) => r.completed_at).length;
+
+    // ── Top KPI Card Metrics (all sources) ─────────────────────────────
+    const allSourceClicked = allSourceRequests.filter((r) => r.clicked_at).length;
+    const allSourcePostedToGoogle = allSourceRequests.filter((r) => r.status === "completed").length;
+    const allSourceRatingsGiven = allSourceRequests.filter((r) => r.rating_given !== null);
+    const allSourceAvgRating =
+        allSourceRatingsGiven.length > 0
+            ? allSourceRatingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) /
+              allSourceRatingsGiven.length
+            : 0;
+    const allSourceLowRatings = allSourceRequests.filter(
+        (r) => r.rating_given !== null && r.rating_given <= 3
+    );
+
+    const prevAllSourceClicked = previousAllSourceRequests.filter((r) => r.clicked_at).length;
+    const prevAllSourcePostedToGoogle = previousAllSourceRequests.filter(
+        (r) => r.status === "completed"
     ).length;
+    const prevAllSourceRatingsGiven = previousAllSourceRequests.filter((r) => r.rating_given !== null);
+    const prevAllSourceAvgRating =
+        prevAllSourceRatingsGiven.length > 0
+            ? prevAllSourceRatingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) /
+              prevAllSourceRatingsGiven.length
+            : 0;
+    const prevAllSourceLowRatings = previousAllSourceRequests.filter(
+        (r) => r.rating_given !== null && r.rating_given <= 3
+    );
+
+    const allSourceClickRate = pct(allSourceClicked, totalSent);
+    const allSourceConversionRate = pct(allSourcePostedToGoogle, allSourceClicked);
 
     // ── Key Metrics ────────────────────────────────────────────────────
-    const ratingsGiven = requests.filter((r) => r.rating_given !== null);
+    const ratingsGiven = requestFlow.filter((r) => r.rating_given !== null);
     const avgRating =
         ratingsGiven.length > 0
             ? ratingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) / ratingsGiven.length
             : 0;
-    const lowRatings = requests.filter((r) => r.rating_given !== null && r.rating_given <= 3);
+    const lowRatings = requestFlow.filter((r) => r.rating_given !== null && r.rating_given <= 3);
     const clickRate = pct(totalClicked, totalSent);
     const conversionRate = pct(totalCompleted, totalClicked);
 
-    const prevRatingsGiven = previousRequests.filter((r) => r.rating_given !== null);
+    const prevRatingsGiven = previousRequestFlow.filter((r) => r.rating_given !== null);
     const prevAvgRating =
         prevRatingsGiven.length > 0
             ? prevRatingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) / prevRatingsGiven.length
             : 0;
-    const prevLowRatings = previousRequests.filter((r) => r.rating_given !== null && r.rating_given <= 3);
+    const prevLowRatings = previousRequestFlow.filter((r) => r.rating_given !== null && r.rating_given <= 3);
 
     // ── Channel Breakdown ──────────────────────────────────────────────
     const channels = ["email", "sms", "link"] as const;
     const channelData = channels.map((ch) => {
-        const chReqs = requests.filter((r) => r.channel === ch);
-        const sent = chReqs.filter((r) => r.sent_at).length;
+        const chReqs = allSourceRequests.filter((r) => normalizedChannel(r) === ch);
+        const sent =
+            ch === "link"
+                ? chReqs.filter((r) => r.clicked_at || r.sent_at).length
+                : chReqs.filter((r) => r.sent_at).length;
         const clicked = chReqs.filter((r) => r.clicked_at).length;
-        const completed = chReqs.filter(
-            (r) => r.status === "completed" || r.status === "feedback_left"
-        ).length;
+        const completed = chReqs.filter((r) => r.status === "completed").length;
         return {
             channel: ch === "sms" ? "SMS" : ch === "email" ? "Email" : "Link",
             sent,
@@ -155,7 +212,7 @@ export function ZyenePlatformAnalytics({
     const ratingDist = [5, 4, 3, 2, 1].map((star) => ({
         star: `${star}★`,
         value: star,
-        count: requests.filter((r) => r.rating_given === star).length,
+        count: requestFlow.filter((r) => r.rating_given === star).length,
     }));
     const maxRatingCount = Math.max(...ratingDist.map((d) => d.count), 1);
     const ratingColors: Record<number, string> = {
@@ -168,7 +225,7 @@ export function ZyenePlatformAnalytics({
 
     // ── Popular Tags ───────────────────────────────────────────────────
     const tagMap = new Map<string, number>();
-    requests.forEach((r) => {
+    requestFlow.forEach((r) => {
         if (r.tags_selected) {
             r.tags_selected.forEach((tag) => {
                 const clean = tag.replace(/^[^\s]+\s/, ""); // strip emoji prefix
@@ -187,14 +244,14 @@ export function ZyenePlatformAnalytics({
         string,
         { date: string; sent: number; clicked: number; completed: number }
     >();
-    requests.forEach((r) => {
+    allSourceRequests.forEach((r) => {
         const date = new Date(r.created_at).toISOString().split("T")[0];
         if (!dailyMap.has(date))
             dailyMap.set(date, { date, sent: 0, clicked: 0, completed: 0 });
         const entry = dailyMap.get(date)!;
         if (r.sent_at) entry.sent++;
         if (r.clicked_at) entry.clicked++;
-        if (r.status === "completed" || r.status === "feedback_left") entry.completed++;
+        if (r.completed_at) entry.completed++;
     });
     const dailyData = Array.from(dailyMap.values()).sort((a, b) =>
         a.date.localeCompare(b.date)
@@ -212,7 +269,7 @@ export function ZyenePlatformAnalytics({
         { label: "Opened", count: totalOpened, icon: Eye, color: "var(--primary)" },
         { label: "Link Clicked", count: totalClicked, icon: MousePointer2, color: "var(--primary)" },
         { label: "Completed", count: totalCompleted, icon: Sparkles, color: "var(--chart-5)" },
-        { label: "Posted to Google", count: totalReviewLeft, icon: Star, color: "var(--chart-2)" },
+        { label: "Posted to Google", count: totalPostedToGoogle, icon: Star, color: "var(--chart-2)" },
     ];
 
     if (!mounted) return <div className="h-[600px] w-full" />;
@@ -228,17 +285,28 @@ export function ZyenePlatformAnalytics({
                             <Zap className="w-5 h-5 text-primary" />
                             Review Request Funnel
                         </CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">
-                            Track every step from send to Google review — {dateRange}
-                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-xs text-muted-foreground font-medium">
+                                Track every step from send to Google review — {dateRange}
+                            </p>
+                            <Badge
+                                variant="secondary"
+                                className="text-[10px] font-bold bg-primary/10 text-primary border-primary/20"
+                            >
+                                Email + SMS only
+                            </Badge>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                         {funnelSteps.map((step, idx) => {
+                            const previousCount = idx > 0 ? funnelSteps[idx - 1].count : 0;
                             const dropOff =
-                                idx > 0 && funnelSteps[idx - 1].count > 0
-                                    ? pct(step.count, funnelSteps[idx - 1].count)
+                                idx > 0
+                                    ? previousCount > 0
+                                        ? pct(step.count, previousCount)
+                                        : 0
                                     : 100;
                             return (
                                 <motion.div
@@ -313,33 +381,33 @@ export function ZyenePlatformAnalytics({
                 {[
                     {
                         title: "Link Opens",
-                        value: totalClicked,
-                        desc: `${clickRate}% of sent requests`,
-                        delta: getDelta(totalClicked, prevClicked),
+                        value: allSourceClicked,
+                        desc: `${allSourceClickRate}% of sent requests`,
+                        delta: getDelta(allSourceClicked, prevAllSourceClicked),
                         icon: MousePointer2,
                     },
                     {
                         title: "Conversion Rate",
-                        value: `${conversionRate}%`,
-                        desc: `${totalCompleted} completed of ${totalClicked} clicks`,
+                        value: `${allSourceConversionRate}%`,
+                        desc: `${allSourcePostedToGoogle} posted to Google of ${allSourceClicked} clicks`,
                         delta: getDelta(
-                            pct(totalCompleted, totalClicked),
-                            pct(prevCompleted, prevClicked)
+                            pct(allSourcePostedToGoogle, allSourceClicked),
+                            pct(prevAllSourcePostedToGoogle, prevAllSourceClicked)
                         ),
                         icon: TrendingUp,
                     },
                     {
                         title: "Avg Rating Given",
-                        value: avgRating > 0 ? avgRating.toFixed(1) : "—",
-                        desc: `From ${ratingsGiven.length} ratings`,
-                        delta: getDelta(avgRating, prevAvgRating),
+                        value: allSourceAvgRating > 0 ? allSourceAvgRating.toFixed(1) : "—",
+                        desc: `From ${allSourceRatingsGiven.length} ratings`,
+                        delta: getDelta(allSourceAvgRating, prevAllSourceAvgRating),
                         icon: Star,
                     },
                     {
                         title: "Low Ratings (≤3★)",
-                        value: lowRatings.length,
+                        value: allSourceLowRatings.length,
                         desc: "Intercepted before Google",
-                        delta: getDelta(lowRatings.length, prevLowRatings.length),
+                        delta: getDelta(allSourceLowRatings.length, prevAllSourceLowRatings.length),
                         icon: AlertTriangle,
                         invertTrend: true,
                     },
