@@ -47,22 +47,50 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: true, requestId });
         }
 
-        const { data: createdRequest, error: insertError } = await supabase
+        const baseInsert = {
+            business_id: businessId,
+            status: "clicked",
+            sent_at: nowIso,
+            delivered_at: nowIso,
+            opened_at: nowIso,
+            clicked_at: nowIso,
+        };
+
+        // Primary path for current schema: explicit link/public_link attribution.
+        // Fallback path supports older production schemas where channel/trigger_source
+        // CHECK constraints may not include these newer enum values yet.
+        let createdRequest: { id: string } | null = null;
+        let insertError: unknown = null;
+
+        const primaryInsert = await supabase
             .from("review_requests")
             .insert({
-                business_id: businessId,
+                ...baseInsert,
                 channel: "link",
                 trigger_source: "public_link",
-                status: "clicked",
-                sent_at: nowIso,
-                delivered_at: nowIso,
-                opened_at: nowIso,
-                clicked_at: nowIso,
             })
             .select("id")
             .single();
 
-        if (insertError || !createdRequest) {
+        createdRequest = primaryInsert.data;
+        insertError = primaryInsert.error;
+
+        if (!createdRequest) {
+            const fallbackInsert = await supabase
+                .from("review_requests")
+                .insert({
+                    ...baseInsert,
+                    channel: "email",
+                    trigger_source: "manual",
+                })
+                .select("id")
+                .single();
+
+            createdRequest = fallbackInsert.data;
+            insertError = fallbackInsert.error;
+        }
+
+        if (!createdRequest) {
             throw insertError ?? new Error("Failed to create request");
         }
 

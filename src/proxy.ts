@@ -311,6 +311,15 @@ export async function proxy(request: NextRequest) {
             return new NextResponse("", { status: 404 });
         }
 
+        // Allow platform internals to work normally on review domains.
+        // This is required so client-side tracking calls like /api/track/review-open
+        // are not rewritten to /r/api/... and dropped.
+        const reviewReservedPrefixes = ["/api", "/_next", "/static", "/favicon.ico"];
+        const isReviewReserved = reviewReservedPrefixes.some((prefix) => pathname.startsWith(prefix));
+        if (isReviewReserved) {
+            return createResponse(supabaseResponse);
+        }
+
         // Rewrite everything else to the /r/[slug] review path
         console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
         return createResponse(

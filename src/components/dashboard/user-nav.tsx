@@ -58,7 +58,7 @@ export function UserNav({ user }: { user: AppUserSummary }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer py-2 px-3">
+                    <DropdownMenuItem onClick={() => router.push("/settings/general")} className="cursor-pointer py-2 px-3">
                         <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
                         <span>{dict.nav.settings}</span>
                     </DropdownMenuItem>

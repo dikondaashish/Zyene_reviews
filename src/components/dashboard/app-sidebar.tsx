@@ -256,7 +256,7 @@ export function AppSidebar({
     const settingsItems = React.useMemo<NavItem[]>(() => [
         {
             title: dict.nav.general,
-            url: "/settings",
+            url: "/settings/general",
             icon: User,
         },
         {
