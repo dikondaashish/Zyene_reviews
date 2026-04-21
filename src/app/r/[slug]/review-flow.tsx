@@ -969,7 +969,7 @@ export function PublicReviewFlow({
                                     "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
-                                        ? "text-primary-foreground scale-105 shadow-md"
+                                        ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
                                         : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                                 )}
                                 style={{
@@ -989,8 +989,8 @@ export function PublicReviewFlow({
                             "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
                             "border-2 active:scale-[0.98]",
                             selectedTags.includes("👍 Everything")
-                                ? "text-primary-foreground shadow-md"
-                                : "text-foreground border-border hover:bg-muted"
+                                ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
+                                : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                         )}
                         style={{
                             backgroundColor: selectedTags.includes("👍 Everything") ? resolvedBrandColor : undefined,
@@ -1020,7 +1020,7 @@ export function PublicReviewFlow({
                                             "flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
                                             "border-2 active:scale-95",
                                             selectedStaff.includes(name)
-                                                ? "text-primary-foreground scale-105 shadow-md"
+                                                ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
                                                 : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                                         )}
                                         style={{
@@ -1046,6 +1046,7 @@ export function PublicReviewFlow({
                         <button
                             className={cn(
                                 "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-all duration-300",
+                                "dark:text-white",
                                 "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
                                 "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                                 "active:scale-[0.98] flex items-center justify-center gap-2"
