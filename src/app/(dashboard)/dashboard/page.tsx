@@ -762,6 +762,18 @@ export default async function DashboardPage() {
                     />
                 </div>
             </div>
+            
+            {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
+            {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
+                <div className="mt-2">
+                    <GettingStartedBanner
+                        googleConnected={isGoogleConnected}
+                        customerCount={customerCount}
+                        requestSent={requestsThisMonth > 0}
+                        notificationsConfigured={notificationsConfigured}
+                    />
+                </div>
+            )}
 
             {/* Smart Review Insights & Customer Portal Row */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -788,17 +800,7 @@ export default async function DashboardPage() {
                 </div>
             </div>
 
-            {/* Getting Started Banner - Persists until all tasks are done or dismissed */}
-            {(!organization?.onboarding_completed || !isGoogleConnected || customerCount === 0 || !notificationsConfigured) && (
-                <div className="mt-2">
-                    <GettingStartedBanner
-                        googleConnected={isGoogleConnected}
-                        customerCount={customerCount}
-                        requestSent={requestsThisMonth > 0}
-                        notificationsConfigured={notificationsConfigured}
-                    />
-                </div>
-            )}
+
 
             {/* Stats Cards */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
