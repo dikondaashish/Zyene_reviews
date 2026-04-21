@@ -20,8 +20,20 @@ export async function proxy(request: NextRequest) {
     });
 
     const { pathname } = request.nextUrl;
-    const hostname = request.headers.get("host")!;
+    const hostHeader = request.headers.get("host") || "";
+    const hostname = hostHeader.split(":")[0]?.toLowerCase() || "";
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+    const legacyApexHosts = new Set(["zyenereviews.com", "www.zyenereviews.com"]);
+
+    // Hard canonical redirect: never serve content on legacy apex domains.
+    // Preserve path + query and use a permanent redirect for SEO.
+    if (legacyApexHosts.has(hostname)) {
+        const targetUrl = request.nextUrl.clone();
+        targetUrl.protocol = "https";
+        targetUrl.hostname = "collectratings.com";
+        targetUrl.port = "";
+        return NextResponse.redirect(targetUrl, 308);
+    }
 
     // --- WEBHOOK EXEMPTION ---
     // Ensure all webhook endpoints are served immediately and never redirected.
@@ -160,7 +172,7 @@ export async function proxy(request: NextRequest) {
             ];
 
             const csrfAllowed =
-                allowedOrigins.includes(origin ?? "") || originMatchesRequestHost(origin, hostname);
+                allowedOrigins.includes(origin ?? "") || originMatchesRequestHost(origin, hostHeader);
 
             if (["POST", "PUT", "DELETE", "PATCH"].includes(request.method) && !csrfAllowed) {
                 return NextResponse.json({ error: "Forbidden" }, { status: 403 });

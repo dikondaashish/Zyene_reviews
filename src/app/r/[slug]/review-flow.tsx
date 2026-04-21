@@ -166,6 +166,19 @@ export function PublicReviewFlow({
 
     const supabase = createClient();
 
+    const trackRequestUpdate = async (trackData: Record<string, unknown>) => {
+        if (isPreview || !requestId) return;
+        try {
+            await fetch("/api/track/review", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "update", requestId, trackData }),
+            });
+        } catch (error) {
+            console.error("Tracking update failed:", error);
+        }
+    };
+
     // Resolve tags: Use custom tags if provided, otherwise category defaults
     const categoryKey = businessCategory.toLowerCase();
     const defaultTags = CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other;
@@ -183,6 +196,10 @@ export function PublicReviewFlow({
 
     const handleRate = (stars: number) => {
         setRating(stars);
+        void trackRequestUpdate({
+            rating_given: stars,
+            status: stars >= minStars ? "rated_positive" : "rated_negative",
+        });
         setTimeout(() => {
             if (stars >= minStars) {
                 setStep("tags");
@@ -199,9 +216,11 @@ export function PublicReviewFlow({
     };
 
     const toggleStaff = (name: string) => {
-        setSelectedStaff((prev) =>
-            prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-        );
+        setSelectedStaff((prev) => {
+            const next = prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name];
+            void trackRequestUpdate({ selected_staff: next });
+            return next;
+        });
     };
 
     const handleGenerateReview = async () => {
@@ -281,13 +300,7 @@ export function PublicReviewFlow({
                 selected_staff: selectedStaff,
             };
 
-            if (requestId) {
-                await fetch("/api/track/review", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "update", requestId, trackData }),
-                });
-            }
+            await trackRequestUpdate(trackData);
         } catch (err) {
             console.error("Tracking error:", err);
         }
@@ -357,21 +370,13 @@ export function PublicReviewFlow({
                 throw new Error(typeof data.error === "string" ? data.error : "Failed to submit feedback");
             }
 
-            if (requestId) {
-                await fetch("/api/track/review", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        action: "update",
-                        requestId,
-                        trackData: {
-                            review_left: true,
-                            rating_given: rating,
-                            selected_staff: selectedStaff,
-                        },
-                    }),
-                });
-            }
+            await trackRequestUpdate({
+                review_left: true,
+                rating_given: rating,
+                selected_staff: selectedStaff,
+                status: "feedback_left",
+                completed_at: new Date().toISOString(),
+            });
 
             setStep("thankyou");
             toast.success("Thank you!", {

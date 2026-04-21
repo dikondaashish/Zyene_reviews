@@ -31,6 +31,10 @@ const syneDisplay = Syne({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://collectratings.com"),
+  alternates: {
+    canonical: "/",
+  },
   title: "Zyene Reviews - Reputation Management for Local Businesses",
   description: "Automate your customer reviews and grow your business with Zyene Reviews.",
   manifest: "/manifest.json",

@@ -95,12 +95,14 @@ export default async function RequestPage({
         return <AccessError type="platform" businessName={business.name} />;
     }
 
+    let resolvedRequestId = requestId;
+
     // 3. Look up Request (if ref provided) & Log Click
-    if (requestId) {
+    if (resolvedRequestId) {
         const { data: request } = await supabase
             .from("review_requests")
             .select("status")
-            .eq("id", requestId)
+            .eq("id", resolvedRequestId)
             .eq("business_id", business.id)
             .single();
 
@@ -109,10 +111,31 @@ export default async function RequestPage({
                 .from("review_requests")
                 .update({
                     status: "clicked",
+                    opened_at: new Date().toISOString(),
                     clicked_at: new Date().toISOString(),
                 })
-                .eq("id", requestId);
+                .eq("id", resolvedRequestId);
         }
+    } else {
+        // Direct /r/[slug] traffic has no campaign ref; create a trackable request row
+        // so analytics can attribute link opens, ratings, selected staff, and completion.
+        const nowIso = new Date().toISOString();
+        const { data: createdRequest } = await supabase
+            .from("review_requests")
+            .insert({
+                business_id: business.id,
+                channel: "link",
+                trigger_source: "public_link",
+                status: "clicked",
+                sent_at: nowIso,
+                delivered_at: nowIso,
+                opened_at: nowIso,
+                clicked_at: nowIso,
+            })
+            .select("id")
+            .single();
+
+        resolvedRequestId = createdRequest?.id;
     }
 
     const rawPageBg = (business as { review_page_background_color?: string | null })
@@ -128,7 +151,7 @@ export default async function RequestPage({
                 businessId={business.id}
                 businessName={business.name}
                 businessCategory={business.category || "other"}
-                requestId={requestId}
+                requestId={resolvedRequestId}
                 googleUrl={business.google_review_url ?? platform?.external_url ?? undefined}
                 logoUrl={business.logo_url ?? undefined}
                 brandColor={business.brand_color ?? undefined}

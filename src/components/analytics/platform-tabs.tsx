@@ -109,12 +109,12 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
                 >
                     <span className="text-xs text-primary font-medium">Internal Link:</span>
                     <a 
-                        href={`https://zyenereviews.com/${businessSlug}`}
+                        href={`https://collectratings.com/${businessSlug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-primary/80 hover:underline flex items-center gap-1"
                     >
-                        zyenereviews.com/{businessSlug}
+                        collectratings.com/{businessSlug}
                         <Globe className="w-3 h-3 ml-1" />
                     </a>
                 </motion.div>
