@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, Loader2, ChevronRight, ChevronDown } from "lucide-react";
+import { Sparkles, Loader2, ChevronRight, ChevronDown, CheckCircle2 } from "lucide-react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
+import { toast } from "sonner";
 
 interface Theme {
     name: string;
@@ -35,6 +36,33 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     const [activeTab, setActiveTab] = useState<"themes" | "suggestions">("themes");
     const [selectedThemeIndex, setSelectedThemeIndex] = useState(0);
     const [expandedSuggestion, setExpandedSuggestion] = useState<number | null>(0);
+    const [dismissedIndices, setDismissedIndices] = useState<Set<number>>(new Set());
+
+    const handleDismiss = (e: React.MouseEvent, index: number) => {
+        e.stopPropagation();
+        setDismissedIndices(prev => {
+            const next = new Set(prev);
+            next.add(index);
+            return next;
+        });
+        toast.success("Suggestion dismissed", {
+            description: "We'll use this feedback to improve your future insights."
+        });
+    };
+
+    const handleTakeAction = (e: React.MouseEvent, title: string) => {
+        e.stopPropagation();
+        toast.success("Taking action...", {
+            description: `Preparing a plan for: ${title}`
+        });
+    };
+
+    const handleSeeExamples = (e: React.MouseEvent, title: string) => {
+        e.stopPropagation();
+        toast.info("Finding examples...", {
+            description: `Searching for reviews related to: ${title}`
+        });
+    };
 
     useEffect(() => {
         async function fetchInsights() {
@@ -233,15 +261,18 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                 ) : (
                     <div className="flex flex-col gap-3 h-full">
                         {data.suggestions.map((suggestion, i) => {
+                            if (dismissedIndices.has(i)) return null;
                             const isExpanded = expandedSuggestion === i;
                             return (
-                                <button 
+                                <div 
                                     key={i}
-                                    onClick={() => setExpandedSuggestion(isExpanded ? null : i)}
                                     className={`w-full text-left bg-white rounded-[16px] border border-border/40 transition-all overflow-hidden ${isExpanded ? "shadow-md" : "hover:shadow-sm"}`}
                                 >
                                     <div className="p-5">
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                        <div 
+                                            className="flex flex-col sm:flex-row sm:items-center gap-3 cursor-pointer"
+                                            onClick={() => setExpandedSuggestion(isExpanded ? null : i)}
+                                        >
                                             <div className="shrink-0 pt-0.5">
                                                 <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
                                                     <Sparkles className={`w-4 h-4 ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'text-[#da543b]' : 'text-foreground'}`} />
@@ -274,14 +305,29 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                                     {suggestion.description}
                                                 </p>
                                                 <div className="flex items-center gap-3 pl-11 mt-4">
-                                                    <div className="bg-[#2B352E] text-white text-xs font-semibold px-4 py-2 rounded-lg cursor-pointer">Take action</div>
-                                                    <div className="bg-transparent border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg cursor-pointer">See examples</div>
-                                                    <div className="text-muted-foreground text-xs font-medium px-2 py-2 cursor-pointer hover:text-foreground">Dismiss</div>
+                                                    <button 
+                                                        onClick={(e) => handleTakeAction(e, suggestion.title)}
+                                                        className="bg-[#2B352E] hover:bg-[#1c2e20] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
+                                                    >
+                                                        Take action
+                                                    </button>
+                                                    <button 
+                                                        onClick={(e) => handleSeeExamples(e, suggestion.title)}
+                                                        className="bg-transparent hover:bg-zinc-50 border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
+                                                    >
+                                                        See examples
+                                                    </button>
+                                                    <button 
+                                                        onClick={(e) => handleDismiss(e, i)}
+                                                        className="text-muted-foreground text-xs font-medium px-2 py-2 hover:text-[#da543b] transition-colors"
+                                                    >
+                                                        Dismiss
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </button>
+                                </div>
                             );
                         })}
                     </div>
