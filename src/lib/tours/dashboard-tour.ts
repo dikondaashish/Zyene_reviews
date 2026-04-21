@@ -22,11 +22,19 @@ export const dashboardTourSteps: TourStep[] = [
     },
     {
         target: "tour-stats",
-        title: "Dashboard Cards",
+        title: "Dashboard Results",
         description:
             "Your key metrics at a glance — total reviews, average rating, response rate, and pending reviews. These update in real-time.",
         placement: "bottom",
         icon: "📊",
+    },
+    {
+        target: "tour-recent-reviews",
+        title: "Recent Actions",
+        description:
+            "Your latest reviews appear here for quick action. Respond, analyze sentiment, and stay on top of feedback with ease.",
+        placement: "top",
+        icon: "💬",
     },
     {
         target: "tour-customers-nav",
@@ -37,14 +45,6 @@ export const dashboardTourSteps: TourStep[] = [
         icon: "👥",
     },
     {
-        target: "tour-settings-nav",
-        title: "Settings",
-        description:
-            "Configure your profile, business info, notifications, billing, and team members all in one place.",
-        placement: "right",
-        icon: "⚙️",
-    },
-    {
         target: "tour-analytics-nav",
         title: "Reports & Analytics",
         description:
@@ -53,11 +53,11 @@ export const dashboardTourSteps: TourStep[] = [
         icon: "📈",
     },
     {
-        target: "tour-recent-reviews",
-        title: "Recent Reviews",
+        target: "tour-settings-nav",
+        title: "Settings & Profile",
         description:
-            "Your latest customer reviews appear here for quick action. Respond, analyze sentiment, and stay on top of feedback.",
-        placement: "top",
-        icon: "💬",
+            "Configure your profile, business info, notifications, billing, and team members all in one place.",
+        placement: "right",
+        icon: "⚙️",
     },
 ];

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check, HelpCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
+import { useDashboardTour } from "@/hooks/use-dashboard-tour";
+import { Button } from "@/components/ui/button";
 
 interface GettingStartedBannerProps {
   googleConnected: boolean;
@@ -20,6 +22,7 @@ export function GettingStartedBanner({
 }: GettingStartedBannerProps) {
   const [mounted, setMounted] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const { startTour } = useDashboardTour();
 
   useEffect(() => {
     setMounted(true);
@@ -54,13 +57,24 @@ export function GettingStartedBanner({
             Complete these steps to unlock the full power of Zyene Reviews
           </p>
         </div>
-        <button
-          onClick={handleDismiss}
-          className="text-muted-foreground hover:text-foreground transition-colors p-1"
-          aria-label="Dismiss banner"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        <div className="flex items-start gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={startTour}
+            className="h-8 gap-2 rounded-lg border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary transition-all text-xs font-semibold"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            Take a quick tour
+          </Button>
+          <button
+            onClick={handleDismiss}
+            className="text-muted-foreground hover:text-foreground transition-colors p-1 mt-0.5"
+            aria-label="Dismiss banner"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       {/* Progress Section */}

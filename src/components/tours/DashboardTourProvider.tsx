@@ -112,6 +112,9 @@ export function DashboardTourProvider() {
         if (!step) return;
         const el = document.querySelector(`[data-tour-target="${step.target}"]`);
         if (el) {
+            // Scroll into view if needed
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+
             const rect = el.getBoundingClientRect();
             setTargetRect({
                 top: rect.top,

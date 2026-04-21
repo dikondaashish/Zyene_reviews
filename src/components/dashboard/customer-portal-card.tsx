@@ -31,7 +31,7 @@ function contrastText(hex: string): string {
     return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
 }
 
-const GOOGLE_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/512px-Google_%22G%22_logo.svg.png";
+const GOOGLE_G_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRjMCAzLjg4LjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==";
 
 export function CustomerPortalCard({ 
     businessSlug, 
@@ -240,7 +240,7 @@ export function CustomerPortalCard({
         };
 
         const googleImg = new Image();
-        googleImg.crossOrigin = "anonymous";
+        // Base64 data URIs don't need crossOrigin
         googleImg.onload = () => {
             if (businessLogoUrl) {
                 const logoImg = new Image();
@@ -252,7 +252,7 @@ export function CustomerPortalCard({
                 drawCard(null, googleImg);
             }
         };
-        googleImg.src = GOOGLE_LOGO_URL;
+        googleImg.src = GOOGLE_G_SVG;
     };
 
     /* ───────── Branded Print (HTML popup) ───────── */
@@ -318,7 +318,7 @@ export function CustomerPortalCard({
                         <div class="biz-name">${businessName || 'Business'}</div>
                         <div class="divider"></div>
                         <div class="cta-pill">
-                            <img src="${GOOGLE_LOGO_URL}" alt="Google" />
+                            <img src="${GOOGLE_G_SVG}" alt="Google" />
                             <span>Scan to Leave Us a Google Review</span>
                         </div>
                         <div class="stars">
@@ -390,7 +390,7 @@ export function CustomerPortalCard({
                 >
                     {/* Background Ornaments */}
                     <div className="absolute -left-12 -top-12 w-48 h-48 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-700">
-                        <img src={GOOGLE_LOGO_URL} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
+                        <img src={GOOGLE_G_SVG} alt="" className="w-full h-full object-contain filter brightness-0 invert" />
                     </div>
                     {/* Subtle Overlay Glow */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>

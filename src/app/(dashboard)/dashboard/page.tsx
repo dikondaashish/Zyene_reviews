@@ -1176,7 +1176,7 @@ export default async function DashboardPage() {
             {/* Bottom Row: Recent Reviews + Needs Attention */}
             <div className="grid gap-4 md:grid-cols-2">
                 {/* Spotlight Reviews */}
-                <div className="min-w-0 flex flex-col h-full">
+                <div className="min-w-0 flex flex-col h-full" data-tour-target="tour-recent-reviews">
                     {recentReviews.length > 0 ? (
                         <div className="flex-1 flex flex-col">
                             <DashboardAnimatedReviewCardsLazy

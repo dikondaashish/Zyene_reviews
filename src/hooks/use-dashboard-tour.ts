@@ -34,11 +34,12 @@ export const useDashboardTour = () => {
 
                 if (!cancelled && !hasCompleted) {
                     // Auto-start tour after short delay for DOM readiness
+                    const delay = forceTour ? 100 : 500;
                     setTimeout(() => {
                         if (!cancelled) {
                             setRunTour(true);
                         }
-                    }, 500);
+                    }, delay);
                 }
             } catch (error) {
                 console.error("Failed to fetch tour status:", error);
