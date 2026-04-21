@@ -465,13 +465,14 @@ export async function GET(request: Request) {
                 });
 
                 const { sendEmail } = await import("@/services/resend/send-email");
-                const { welcomeEmail } = await import("@/services/resend/templates/welcome-email");
+                const { welcomeEmail, welcomeEmailText } = await import("@/services/resend/templates/welcome-email");
                 const loginUrl = `${appUrl}/login`;
 
                 sendEmail({
                     to: email,
-                    subject: "Welcome to Zyene Reviews!",
+                    subject: "Your Zyene Reviews account is ready",
                     html: welcomeEmail({ userName: fullName || "User", loginUrl }),
+                    text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
                 }).catch(err => {
                     console.error("Failed to send welcome email:", err);
                     Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
