@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state"
@@ -18,10 +18,32 @@ export function SyncButton({
 }) {
     const [isPosting, setIsPosting] = useState(false)
     const [showForce, setShowForce] = useState(false)
+    const [busySince, setBusySince] = useState<number | null>(null)
     const router = useRouter()
     const { isSyncBusy, markManualSyncStarted } = useGoogleSyncRemoteState({ businessId })
 
     const busy = isPosting || isSyncBusy
+    const forceHintAfterMs = 3 * 60 * 1000
+
+    useEffect(() => {
+        if (isSyncBusy) {
+            setBusySince((prev) => prev ?? Date.now())
+            return
+        }
+        setBusySince(null)
+        setShowForce(false)
+    }, [isSyncBusy])
+
+    useEffect(() => {
+        if (!busySince || showForce || isPosting) return
+        const elapsed = Date.now() - busySince
+        if (elapsed >= forceHintAfterMs) {
+            setShowForce(true)
+            return
+        }
+        const timeoutId = setTimeout(() => setShowForce(true), forceHintAfterMs - elapsed)
+        return () => clearTimeout(timeoutId)
+    }, [busySince, showForce, isPosting])
 
     const handleSync = async (force = false) => {
         setIsPosting(true)
@@ -71,10 +93,10 @@ export function SyncButton({
                     variant="destructive"
                     size="sm"
                     onClick={() => handleSync(true)}
-                    disabled={busy}
+                    disabled={isPosting}
                     className="animate-in fade-in slide-in-from-right-2"
                 >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${busy ? "animate-spin" : ""}`} />
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isPosting ? "animate-spin" : ""}`} />
                     Force Reset & Sync
                 </Button>
             )}
