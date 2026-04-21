@@ -177,7 +177,7 @@ export function ZyenePlatformAnalytics({
         ratingsGiven.length > 0
             ? ratingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) / ratingsGiven.length
             : 0;
-    const lowRatings = requestFlow.filter((r) => r.rating_given !== null && r.rating_given <= 3);
+    const lowRatings = allSourceLowRatings;
     const clickRate = pct(totalClicked, totalSent);
     const conversionRate = pct(totalCompleted, totalClicked);
 
@@ -186,7 +186,7 @@ export function ZyenePlatformAnalytics({
         prevRatingsGiven.length > 0
             ? prevRatingsGiven.reduce((acc, r) => acc + (r.rating_given || 0), 0) / prevRatingsGiven.length
             : 0;
-    const prevLowRatings = previousRequestFlow.filter((r) => r.rating_given !== null && r.rating_given <= 3);
+    const prevLowRatings = prevAllSourceLowRatings;
 
     // ── Channel Breakdown ──────────────────────────────────────────────
     const channels = ["email", "sms", "link"] as const;
@@ -225,7 +225,7 @@ export function ZyenePlatformAnalytics({
 
     // ── Popular Tags ───────────────────────────────────────────────────
     const tagMap = new Map<string, number>();
-    requestFlow.forEach((r) => {
+    allSourceRequests.forEach((r) => {
         if (r.tags_selected) {
             r.tags_selected.forEach((tag) => {
                 const clean = tag.replace(/^[^\s]+\s/, ""); // strip emoji prefix
