@@ -64,7 +64,7 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
                         </div>
                         <div className="flex-1 h-[22px] rounded-md overflow-hidden bg-muted/60 relative">
                             {/* Inner background that mimics 'empty' state slightly better */}
-                            <div className="absolute inset-0 bg-muted dark:bg-muted/20 opacity-70" />
+                            <div className="absolute inset-0 bg-[rgb(248,239,230)] dark:bg-[rgba(248,239,230,0.1)] opacity-70" />
                             <div
                                 className="absolute top-0 left-0 bottom-0 rounded-md transition-all duration-1000 ease-in-out"
                                 style={{

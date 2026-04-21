@@ -209,14 +209,14 @@ function PlatformGlyph({ platform }: { platform: string }) {
     }
     if (p === "facebook") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold leading-none text-primary-foreground">
+            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[rgb(24,119,242)] text-[10px] font-bold leading-none text-white">
                 f
             </span>
         );
     }
     if (p === "yelp") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-destructive text-[9px] font-bold leading-none text-destructive-foreground">
+            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[rgb(255,26,26)] text-[9px] font-bold leading-none text-white">
                 Y
             </span>
         );
@@ -251,7 +251,7 @@ function PlatformBadge({ platform, theme }: { platform: string; theme: ThemeColo
         theme === "vibrant"
             ? "border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
             : p === "google"
-              ? "border-chart-4/40 bg-chart-4/15 text-foreground dark:border-chart-4/30 dark:bg-chart-4/20 dark:text-foreground"
+              ? "border-[rgba(251,191,36,0.7)] bg-[rgba(254,243,199,0.9)] text-[rgb(69,26,3)] dark:border-[rgba(120,53,15,0.5)] dark:bg-[rgba(69,26,3,0.4)] dark:text-[rgb(254,243,199)]"
               : "border-border/80 bg-muted/80 text-foreground/80 dark:bg-muted/60";
 
     return (
