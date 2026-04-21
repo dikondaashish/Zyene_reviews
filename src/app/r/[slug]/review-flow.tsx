@@ -464,7 +464,7 @@ export function PublicReviewFlow({
             </div>
 
             <div className={cn(
-                "relative w-full max-w-md bg-card rounded-3xl border border-border overflow-hidden",
+                "relative w-full max-w-md bg-card rounded-3xl border border-border overflow-hidden shadow-2xl shadow-black/20 dark:bg-[rgb(17,24,39)] dark:border-white/10 dark:shadow-black/45",
                 "transform transition-all duration-500",
                 mounted ? "translate-y-0 scale-100" : "translate-y-4 scale-95",
                 contentClassName
@@ -473,7 +473,7 @@ export function PublicReviewFlow({
 
                 {/* Powered by footer */}
                 {!hideBranding && (
-                    <div className="py-4 text-center border-t border-border">
+                    <div className="py-4 text-center border-t border-border dark:border-white/10">
                         <div className="text-xs text-muted-foreground font-medium tracking-wide flex items-center justify-center gap-1.5">
                             <span>Powered by</span>
                             {footerLink ? (
@@ -559,7 +559,7 @@ export function PublicReviewFlow({
             >
                 {/* Header with emoji */}
                 <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border">
+                    <div className="h-16 w-16 bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-[rgb(30,41,59)] dark:border-white/10">
                         <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
                     </div>
                     <div className="text-left">
@@ -576,7 +576,7 @@ export function PublicReviewFlow({
                     <div
                         className={cn(
                             "relative overflow-hidden rounded-2xl border border-border p-5 pl-5",
-                            "bg-gradient-to-br from-background via-muted/80 to-primary/5",
+                            "bg-gradient-to-br from-background via-muted/80 to-primary/5 dark:from-[rgb(15,23,42)] dark:via-[rgb(30,41,59)] dark:to-primary/10 dark:border-white/10",
                             "ring-1 ring-border animate-in fade-in zoom-in-95 duration-500"
                         )}
                         role="status"
@@ -637,7 +637,7 @@ export function PublicReviewFlow({
                     <label className="text-sm font-semibold text-foreground">Your feedback</label>
                     <textarea
                         placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
-                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground"
+                        className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
                         autoFocus
@@ -659,7 +659,7 @@ export function PublicReviewFlow({
                             <input
                                 type="email"
                                 placeholder="you@example.com"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
                                 value={customerEmail}
                                 onChange={(e) => setCustomerEmail(e.target.value)}
                                 onKeyDown={(e) => {
@@ -689,7 +689,7 @@ export function PublicReviewFlow({
                                 inputMode="tel"
                                 autoComplete="tel"
                                 placeholder="+1 (555) 000-0000"
-                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground"
+                                className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
                                 value={customerPhone}
                                 onChange={(e) => setCustomerPhone(e.target.value)}
                                 onKeyDown={(e) => {
@@ -760,7 +760,7 @@ export function PublicReviewFlow({
                     {/* Business avatar */}
                     <div className="flex flex-col items-center gap-4">
                         {logoUrl ? (
-                            <div className="h-24 w-24 rounded-full border-4 border-background overflow-hidden bg-background">
+                            <div className="h-24 w-24 rounded-full border-4 border-background overflow-hidden bg-background dark:bg-[rgb(30,41,59)] dark:border-[rgb(30,41,59)]">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={logoUrl} alt={businessName} className="h-full w-full object-cover" />
                             </div>
@@ -803,7 +803,7 @@ export function PublicReviewFlow({
                                             ? "border-primary/50 bg-primary/10 scale-105 shadow-md"
                                             : rating === r.value
                                                 ? "border-primary bg-primary/10 ring-2 ring-primary/20 shadow-md scale-105 z-10"
-                                                : "border-border bg-background"
+                                                : "border-border bg-background dark:border-white/10 dark:bg-[rgb(30,41,59)]"
                                     )}
                                 >
                                     <span className={cn(
@@ -847,7 +847,7 @@ export function PublicReviewFlow({
                                             "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
                                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
                                                 ? "fill-chart-4 text-chart-4"
-                                                : "fill-muted text-muted-foreground/40"
+                                                : "fill-muted text-muted-foreground/40 dark:fill-[rgb(51,65,85)] dark:text-[rgb(100,116,139)]"
                                         )}
                                     />
                                 </button>
@@ -870,7 +870,7 @@ export function PublicReviewFlow({
                                             ? "border-primary bg-primary text-primary-foreground scale-110 shadow-md ring-4 ring-primary/20 z-10"
                                             : hoverRating === num
                                                 ? "border-primary/50 bg-primary/10 text-primary scale-105"
-                                                : "border-border bg-background text-muted-foreground hover:border-foreground/30"
+                                                : "border-border bg-background text-muted-foreground hover:border-foreground/30 dark:border-white/10 dark:bg-[rgb(30,41,59)]"
                                     )}
                                 >
                                     {num}
@@ -919,7 +919,7 @@ export function PublicReviewFlow({
                                         "focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-[0.98]",
                                         rating === r.value
                                             ? "border-primary bg-primary/10 shadow-sm"
-                                            : "border-border bg-background hover:border-primary/40 hover:bg-muted"
+                                            : "border-border bg-background hover:border-primary/40 hover:bg-muted dark:border-white/10 dark:bg-[rgb(30,41,59)] dark:hover:bg-[rgb(51,65,85)]"
                                     )}
                                 >
                                     <div className={cn(
@@ -951,7 +951,7 @@ export function PublicReviewFlow({
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
                         <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                        <div className="h-1.5 flex-1 bg-muted rounded-full" />
+                        <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
                     </div>
 
                     <div className="text-center space-y-1">
@@ -970,7 +970,7 @@ export function PublicReviewFlow({
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
                                         ? "text-primary-foreground scale-105 shadow-md"
-                                        : "bg-background text-muted-foreground border-border hover:bg-muted"
+                                        : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                                 )}
                                 style={{
                                     backgroundColor: selectedTags.includes(tag) ? resolvedBrandColor : undefined,
@@ -1021,7 +1021,7 @@ export function PublicReviewFlow({
                                             "border-2 active:scale-95",
                                             selectedStaff.includes(name)
                                                 ? "text-primary-foreground scale-105 shadow-md"
-                                                : "bg-background text-muted-foreground border-border hover:bg-muted"
+                                                : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                                         )}
                                         style={{
                                             backgroundColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined,
@@ -1081,7 +1081,7 @@ export function PublicReviewFlow({
                     <div className="flex items-center gap-2">
                         <div className="h-1.5 flex-1 bg-primary rounded-full" />
                         <div className="h-1.5 flex-1 bg-primary rounded-full" />
-                        <div className="h-1.5 flex-1 bg-primary/70 rounded-full animate-pulse" />
+                        <div className="h-1.5 flex-1 bg-primary/70 rounded-full animate-pulse dark:bg-primary/60" />
                     </div>
 
                     <div className="flex justify-center">
@@ -1129,7 +1129,7 @@ export function PublicReviewFlow({
                         <textarea
                             value={reviewText}
                             onChange={(e) => setReviewText(e.target.value)}
-                            className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-primary/20 focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-primary/10 leading-relaxed"
+                            className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-primary/20 focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-primary/10 leading-relaxed dark:bg-primary/15 dark:text-foreground"
                         />
                     </div>
 
@@ -1138,7 +1138,7 @@ export function PublicReviewFlow({
                         className={cn(
                             "w-full h-14 rounded-2xl text-base font-semibold transition-all duration-300 relative overflow-hidden",
                             isRedirecting
-                                ? "bg-muted cursor-wait ring-0"
+                                ? "bg-muted cursor-wait ring-0 dark:bg-[rgb(51,65,85)]"
                                 : "text-primary-foreground shadow-lg hover:shadow-xl active:scale-[0.98]",
                             !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                         )}
