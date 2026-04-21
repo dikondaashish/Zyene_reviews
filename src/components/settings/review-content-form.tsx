@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette, Gift } from "lucide-react";
 import type { PublicProfilePreviewValues } from "@/types/components";
@@ -89,7 +89,7 @@ export function ReviewContentForm({
     onTabChange?: (tab: string) => void;
 }) {
     const router = useRouter();
-    const supabase = useMemo(() => createClient(), []);
+    const supabase = createClient();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Check, Minus, Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -70,10 +69,9 @@ export function TeamManagementPanel({
     activity: ActivityRow[];
 }) {
     const seatsUsed = activeMembersCount + pendingInvitesCount;
-    const seatPercent = useMemo(() => {
-        if (!maxMembers || maxMembers <= 0) return 0;
-        return Math.min(100, Math.round((seatsUsed / maxMembers) * 100));
-    }, [seatsUsed, maxMembers]);
+    const seatPercent = !maxMembers || maxMembers <= 0
+        ? 0
+        : Math.min(100, Math.round((seatsUsed / maxMembers) * 100));
 
     const copyLatestInviteLink = async () => {
         if (!latestInviteLink) {

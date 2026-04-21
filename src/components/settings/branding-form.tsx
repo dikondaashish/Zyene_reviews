@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -67,7 +67,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
     const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
-    const supabase = useMemo(() => createClient(), []);
+    const supabase = createClient();
 
     const form = useForm<BrandingFormValues>({
         resolver: zodResolver(brandingSchema),

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -53,7 +53,7 @@ export function InviteMemberDialog({
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const assignableRoles = useMemo(() => inviteRolesAssignableByInviter(inviterRole), [inviterRole]);
+    const assignableRoles = inviteRolesAssignableByInviter(inviterRole);
 
     useEffect(() => {
         if (assignableRoles.length === 0) return;
