@@ -103,13 +103,13 @@ export function DashboardLayoutClient({
                     marginTop: "16px",
                     paddingTop: "20px",
                     paddingBottom: "20px",
-                    backgroundColor: "#f7f5ef",
-                    borderTop: "1px solid var(--border, #e5e7eb)",
+                    backgroundColor: "var(--canvas)",
+                    borderTop: "1px solid var(--border)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
                     fontSize: "11.5px",
-                    color: "#8a8f86",
+                    color: "var(--muted-foreground)",
                 }}
             >
                 <div>© {new Date().getFullYear()} Zyene, Inc. · Local to Global</div>

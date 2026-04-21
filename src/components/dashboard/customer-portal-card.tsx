@@ -17,18 +17,18 @@ interface CustomerPortalCardProps {
 
 /** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
 function resolveBrandColor(color?: string | null): string {
-    return color && /^#([0-9a-fA-F]{3}){1,6}$/.test(color) ? color : "#223122";
+    return color?.trim() ? color : "rgb(34,49,34)";
 }
 
 /** Compute a readable text color (white or dark) for a hex background. */
 function contrastText(hex: string): string {
-    if (!hex.startsWith("#")) return "#ffffff";
+    if (!hex.startsWith("#")) return "rgb(255,255,255)";
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     // Relative luminance (sRGB)
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.55 ? "#1a1a1a" : "#ffffff";
+    return luminance > 0.55 ? "rgb(26,26,26)" : "rgb(255,255,255)";
 }
 
 const GOOGLE_G_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRjMCAzLjg4LjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==";
@@ -150,7 +150,7 @@ export function CustomerPortalCard({
 
             // Inner border
             roundRect(20, 20, baseW - 40, baseH - 40, 16);
-            ctx.strokeStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
+            ctx.strokeStyle = posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
             ctx.lineWidth = 1.5 * scale;
             ctx.stroke();
 
@@ -168,7 +168,7 @@ export function CustomerPortalCard({
             ctx.fillText(businessName || "Business", W / 2, (cursorY + 32) * scale);
             cursorY += 52;
 
-            ctx.strokeStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
+            ctx.strokeStyle = posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
             ctx.lineWidth = 1 * scale;
             ctx.beginPath();
             ctx.moveTo(60 * scale, cursorY * scale);
@@ -184,12 +184,12 @@ export function CustomerPortalCard({
             const pillX = (baseW - pillW) / 2;
             
             roundRect(pillX, cursorY, pillW, pillH, pillH / 2);
-            ctx.fillStyle = posterFg === "#ffffff" ? "#000000" : "rgba(0,0,0,0.85)"; // Keep CTA dark for contrast
+            ctx.fillStyle = posterFg === "rgb(255,255,255)" ? "rgb(0,0,0)" : "rgba(0,0,0,0.85)"; // Keep CTA dark for contrast
             ctx.fill();
             
             ctx.drawImage(googleIcon, (pillX + 28) * scale, (cursorY + (pillH - iconSize) / 2) * scale, iconSize * scale, iconSize * scale);
             
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = "rgb(255,255,255)";
             ctx.textAlign = "left";
             ctx.fillText(ctaText, (pillX + 28 + iconSize + gap) * scale, (cursorY + 30) * scale);
             cursorY += pillH + 16;
@@ -205,7 +205,7 @@ export function CustomerPortalCard({
                     x = cx + Math.cos(rot) * 11; y = cy + Math.sin(rot) * 11; ctx.lineTo(x * scale, y * scale); rot += step;
                     x = cx + Math.cos(rot) * 5; y = cy + Math.sin(rot) * 5; ctx.lineTo(x * scale, y * scale); rot += step;
                 }
-                ctx.closePath(); ctx.fillStyle = "#FFC107"; ctx.fill();
+                ctx.closePath(); ctx.fillStyle = "rgb(255,193,7)"; ctx.fill();
             };
             const starStartX = (baseW - (4 * 30)) / 2;
             for (let i = 0; i < 5; i++) drawStar(starStartX + (i * 30), cursorY + 11);
@@ -215,7 +215,7 @@ export function CustomerPortalCard({
             qrImg.onload = () => {
                 const qrSize = 300, qrX = (baseW - qrSize) / 2;
                 roundRect(qrX - 12, cursorY - 12, qrSize + 24, qrSize + 24, 16);
-                ctx.fillStyle = "#ffffff"; 
+                ctx.fillStyle = "rgb(255,255,255)"; 
                 ctx.fill();
                 
                 ctx.imageSmoothingEnabled = false; // Keep QR sharp
@@ -223,13 +223,13 @@ export function CustomerPortalCard({
                 cursorY += qrSize + 36;
                 
                 ctx.imageSmoothingEnabled = true; // RE-ENABLE FOR TEXT
-                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)";
+                ctx.fillStyle = posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)";
                 ctx.font = `500 ${16 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.textAlign = "center";
                 ctx.fillText(`${domain}/${businessSlug}`, W / 2, cursorY * scale);
                 cursorY += 32;
                 
-                ctx.fillStyle = posterFg === "#ffffff" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
+                ctx.fillStyle = posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
                 ctx.font = `bold ${14 * scale}px 'Inter', 'Segoe UI', system-ui, sans-serif`;
                 ctx.fillText("Powered by Zyene Reviews", W / 2, cursorY * scale);
 
@@ -276,7 +276,7 @@ export function CustomerPortalCard({
                         * { margin: 0; padding: 0; box-sizing: border-box; }
                         body { 
                             font-family: 'Inter', system-ui, sans-serif; 
-                            background: #f5f5f5; 
+                            background: rgb(245,245,245); 
                             display: flex; justify-content: center; align-items: flex-start;
                             padding: 40px;
                         }
@@ -291,22 +291,22 @@ export function CustomerPortalCard({
                             text-align: center; 
                             color: ${posterFg} !important; 
                             padding: 60px 40px; 
-                            border: 12px solid ${posterFg === "#ffffff" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"};
+                            border: 12px solid ${posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"};
                             page-break-inside: avoid;
                         }
                         .logo { max-height: 70px; max-width: 250px; object-fit: contain; margin-bottom: 20px; }
                         .biz-name { font-size: 32px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; }
-                        .divider { height: 1px; background: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)"}; margin: 0 40px 30px; }
-                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 36px; border-radius: 999px; background: ${posterFg === "#ffffff" ? "#000" : "rgba(0,0,0,0.85)"}; color: #fff; font-weight: 600; font-size: 16px; margin-bottom: 30px; }
+                        .divider { height: 1px; background: ${posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)"}; margin: 0 40px 30px; }
+                        .cta-pill { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 36px; border-radius: 999px; background: ${posterFg === "rgb(255,255,255)" ? "rgb(0,0,0)" : "rgba(0,0,0,0.85)"}; color: rgb(255,255,255); font-weight: 600; font-size: 16px; margin-bottom: 30px; }
                         .cta-pill img { width: 24px; height: 24px; }
                         .stars { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
                         .stars svg { width: 28px; height: 28px; }
-                        .qr-frame { display: inline-block; border-radius: 20px; background: #ffffff; padding: 16px; margin-bottom: 30px; }
+                        .qr-frame { display: inline-block; border-radius: 20px; background: rgb(255,255,255); padding: 16px; margin-bottom: 30px; }
                         .qr-frame img { width: 340px; height: 340px; image-rendering: pixelated; display: block; }
-                        .url { color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)"}; font-size: 16px; margin-bottom: 20px; font-weight: 500; }
-                        .powered { font-weight: 700; font-size: 13px; color: ${posterFg === "#ffffff" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)"}; letter-spacing: 1px; }
+                        .url { color: ${posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)"}; font-size: 16px; margin-bottom: 20px; font-weight: 500; }
+                        .powered { font-weight: 700; font-size: 13px; color: ${posterFg === "rgb(255,255,255)" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)"}; letter-spacing: 1px; }
                         @media print { 
-                            body { background: #fff !important; padding: 20px !important; } 
+                            body { background: rgb(255,255,255) !important; padding: 20px !important; } 
                             .card { 
                                 box-shadow: none !important; 
                                 margin: 0 auto !important;
@@ -325,7 +325,7 @@ export function CustomerPortalCard({
                             <span>Scan to Leave Us a Google Review</span>
                         </div>
                         <div class="stars">
-                            ${Array(5).fill('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFC107"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>').join('')}
+                            ${Array(5).fill('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgb(255,193,7)"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>').join('')}
                         </div>
                         <div class="qr-frame"><img src="${qrDataUrl}" alt="QR" /></div>
                         <div class="url">${domain}/${businessSlug}</div>
@@ -346,7 +346,7 @@ export function CustomerPortalCard({
     };
 
     return (
-        <div className="h-full rounded-[24px] bg-[#223122] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[#3e4a3e]/30 shadow-sm min-h-[360px]">
+        <div className="h-full rounded-[24px] bg-primary p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-primary/30 shadow-sm min-h-[360px]">
             {/* Background decorative blob */}
             <svg className="absolute -right-8 -top-8 w-[280px] h-[280px] opacity-[0.03] text-white pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.3C91.4,-33.5,98,-18.1,97.7,-2.8C97.4,12.5,90.2,27.7,80.1,40.6C70,53.5,57.1,64.1,42.8,71.4C28.5,78.7,12.8,82.8,-1.9,86.1C-16.7,89.4,-30.3,91.9,-43.3,86.9C-56.3,81.9,-68.8,69.5,-78.1,55.1C-87.5,40.8,-93.8,24.6,-94.1,8.4C-94.4,-7.8,-88.7,-24,-79.3,-38C-69.8,-52,-56.7,-63.9,-42.6,-71C-28.5,-78.1,-13.4,-80.4,1.4,-82.9C16.3,-85.4,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
@@ -368,7 +368,7 @@ export function CustomerPortalCard({
                 <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
                 <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
                     {loading ? (
-                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-zinc-400 font-medium bg-zinc-900/50 rounded-xl">
+                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-muted-foreground font-medium bg-muted/70 rounded-xl">
                             Generating...
                         </div>
                     ) : qrDataUrl ? (
@@ -379,7 +379,7 @@ export function CustomerPortalCard({
                             style={{ imageRendering: 'pixelated' }}
                         />
                     ) : (
-                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-red-400/70 font-medium bg-red-950/10 rounded-xl">
+                        <div className="w-[180px] h-[180px] flex items-center justify-center text-[11px] text-destructive/70 font-medium bg-destructive/10 rounded-xl">
                             Failed to load QR
                         </div>
                     )}
@@ -388,7 +388,7 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full mb-4">
                 <div 
-                    className="bg-[#0052cc] rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
+                    className="bg-primary rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
                     onClick={() => window.open('https://zyenereviews.com/nfc-cards', '_blank')}
                 >
                     {/* Background Ornaments */}
@@ -408,7 +408,7 @@ export function CustomerPortalCard({
                             </p>
                         </div>
                         <div className="w-fit">
-                            <button className="bg-white text-[#0052cc] text-[13px] font-bold px-5 py-1.5 rounded-[10px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                            <button className="bg-background text-primary text-[13px] font-bold px-5 py-1.5 rounded-[10px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
                                 Order now
                             </button>
                         </div>
@@ -434,12 +434,12 @@ export function CustomerPortalCard({
 
             <div className="relative z-10 w-full space-y-3">
                 {/* Link Box */}
-                <div className="flex items-center justify-between bg-[#2f3d2f] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[#384738] transition-colors cursor-pointer group" onClick={handleCopyLink}>
+                <div className="flex items-center justify-between bg-primary/80 rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-primary/70 transition-colors cursor-pointer group" onClick={handleCopyLink}>
                     <div className="flex items-center gap-3 overflow-hidden text-white/80">
                         <Share2 className="w-4 h-4 text-white/40 shrink-0" />
                         <span className="text-[13px] truncate tracking-tight">{domain}/{businessSlug}</span>
                     </div>
-                    <div className="bg-[#1a251a] group-hover:bg-[#1a251a]/80 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
+                    <div className="bg-primary/90 group-hover:bg-primary/75 text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                         {copied ? "Copied" : "Copy"}
                     </div>
                 </div>
@@ -447,7 +447,7 @@ export function CustomerPortalCard({
                 {/* 4 Action Grid */}
                 <div className="grid grid-cols-2 gap-2">
                     <Dialog open={showQr} onOpenChange={setShowQr}>
-                        <Button variant="ghost" onClick={() => setShowQr(true)} className="w-full bg-[#d65d45] hover:bg-[#c2513a] text-white hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                        <Button variant="ghost" onClick={() => setShowQr(true)} className="w-full bg-destructive hover:bg-destructive/90 text-white hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                             <QrCode className="w-3.5 h-3.5 mr-2" />
                             Show QR code
                         </Button>
@@ -466,15 +466,15 @@ export function CustomerPortalCard({
                         </DialogContent>
                     </Dialog>
 
-                    <Button variant="ghost" onClick={handleShare} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleShare} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Share2 className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Share link
                     </Button>
-                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handleDownload} disabled={!qrDataUrl} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Download className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Download
                     </Button>
-                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-[#2f3d2f] hover:bg-[#384738] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
+                    <Button variant="ghost" onClick={handlePrint} disabled={!qrDataUrl} className="w-full bg-primary/80 hover:bg-primary/70 text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]">
                         <Printer className="w-3.5 h-3.5 mr-2 opacity-70" />
                         Print poster
                     </Button>

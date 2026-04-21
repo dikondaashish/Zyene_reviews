@@ -793,7 +793,7 @@ export default async function DashboardPage() {
                             />
                         </div>
                     ) : (
-                        <div className="h-full rounded-2xl bg-[#2b3a2a] p-6 text-white/50 flex flex-col justify-center items-center">
+                        <div className="h-full rounded-2xl bg-primary p-6 text-primary-foreground/60 flex flex-col justify-center items-center">
                             No active business configuration found.
                         </div>
                     )}
@@ -1143,7 +1143,7 @@ export default async function DashboardPage() {
                             </CardDescription>
                         </div>
                         {totalReviewsTrend !== undefined && totalReviewsTrend !== 0 && (
-                            <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold ${totalReviewsTrend > 0 ? "bg-[#e5eedd] text-[#3e5f2e]" : "bg-destructive/10 text-destructive"}`}>
+                            <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold ${totalReviewsTrend > 0 ? "bg-chart-2/15 text-chart-2" : "bg-destructive/10 text-destructive"}`}>
                                 {totalReviewsTrend > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingUp className="h-3 w-3 rotate-180" />}
                                 {Math.abs(totalReviewsTrend)}% vs 30d prior
                             </div>

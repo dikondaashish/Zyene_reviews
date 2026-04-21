@@ -133,14 +133,14 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     }
 
     return (
-        <div className="rounded-[24px] bg-gradient-to-br from-[#ffffff] via-[#fffbf3] to-[#ffab5c]/10 border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
+        <div className="rounded-[24px] bg-gradient-to-br from-background via-background to-chart-4/10 border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
             {/* Background noise texture or shape could go here */}
 
             {/* Header Lockup */}
             <div className="flex flex-col lg:flex-row lg:items-start justify-between relative z-10 w-full">
                 <div className="max-w-[75%] space-y-4">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1.5 bg-[#2B352E] text-white px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
+                        <div className="flex items-center gap-1.5 bg-primary text-primary-foreground px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
                             <Sparkles className="w-3.5 h-3.5 opacity-80" />
                             SMART INSIGHTS
                         </div>
@@ -150,10 +150,10 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                     </div>
 
                     <div>
-                        <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.05] tracking-[-0.02em] text-[#1c2e20]">
+                        <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.05] tracking-[-0.02em] text-foreground">
                             {firstPart}
                             {secondPart && (
-                                <span className="block text-[#da543b]">
+                                <span className="block text-destructive">
                                     {secondPart}
                                 </span>
                             )}
@@ -168,8 +168,8 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                 {/* Score Chart */}
                 <div className="hidden sm:flex relative items-center justify-center shrink-0" style={{ width: 112, height: 112 }}>
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                        <span className="text-2xl font-serif font-bold text-[#1c2e20]">{positivePct}%</span>
-                        <span className="text-[9px] uppercase tracking-widest text-[#1c2e20]/60 font-bold">POSITIVE</span>
+                        <span className="text-2xl font-serif font-bold text-foreground">{positivePct}%</span>
+                        <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold">POSITIVE</span>
                     </div>
                     <RadialBarChart 
                         width={112} 
@@ -181,13 +181,13 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                         endAngle={-270}
                     >
                         <PolarAngleAxis type="number" domain={[0, 100]} dataKey="value" angleAxisId={0} tick={false} />
-                        <RadialBar background={{ fill: '#e8ece9' }} dataKey="value" cornerRadius={10} fill="#273229" />
+                        <RadialBar background={{ fill: 'rgba(148,163,184,0.25)' }} dataKey="value" cornerRadius={10} fill="rgb(39,50,41)" />
                     </RadialBarChart>
                 </div>
             </div>
 
             {/* Toggle Tabs */}
-            <div className="flex items-center gap-2 mt-8 mb-6 relative z-10 bg-[#f4ece0] p-1 rounded-[12px] self-start inline-flex">
+            <div className="flex items-center gap-2 mt-8 mb-6 relative z-10 bg-muted p-1 rounded-[12px] self-start inline-flex">
                 <button 
                     onClick={() => setActiveTab("themes")}
                     className={`px-4 py-1.5 rounded-[8px] text-[13px] font-semibold transition-colors ${activeTab === "themes" ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
@@ -219,7 +219,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                     }`}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className={`w-2 h-2 rounded-full shrink-0 ${(theme.sentiment || '').toLowerCase() === 'negative' ? 'bg-[#da543b]' : (theme.sentiment || '').toLowerCase() === 'neutral' ? 'bg-[#d8a36c]' : 'bg-[#405642]'}`} />
+                                        <div className={`w-2 h-2 rounded-full shrink-0 ${(theme.sentiment || '').toLowerCase() === 'negative' ? 'bg-destructive' : (theme.sentiment || '').toLowerCase() === 'neutral' ? 'bg-chart-4' : 'bg-chart-2'}`} />
                                         <div>
                                             <p className="text-[13px] font-bold text-foreground leading-none">{theme.name}</p>
                                             <p className="text-[11px] text-muted-foreground mt-1.5 leading-none">{theme.mentions} mentions</p>
@@ -233,7 +233,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                         {/* Theme Detail Panel */}
                         <div className="md:col-span-3 bg-white rounded-[20px] p-6 lg:p-7 shadow-sm border border-border/40">
                             <div className="flex items-center gap-2 mb-4">
-                                <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${(selectedTheme.sentiment || '').toLowerCase() === 'negative' ? 'bg-[#da543b]/10 text-[#da543b]' : (selectedTheme.sentiment || '').toLowerCase() === 'neutral' ? 'bg-[#d8a36c]/10 text-[#d8a36c]' : 'bg-[#405642]/10 text-[#405642]'}`}>
+                                <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${(selectedTheme.sentiment || '').toLowerCase() === 'negative' ? 'bg-destructive/10 text-destructive' : (selectedTheme.sentiment || '').toLowerCase() === 'neutral' ? 'bg-chart-4/15 text-chart-4' : 'bg-chart-2/10 text-chart-2'}`}>
                                     {(selectedTheme.sentiment || '').toLowerCase() === 'negative' ? 'Needs fixing' : (selectedTheme.sentiment || '').toLowerCase() === 'neutral' ? 'Mixed' : 'Guests love it'}
                                 </span>
                                 <span className="bg-muted px-2.5 py-1 rounded-md text-xs font-semibold text-muted-foreground">
@@ -251,7 +251,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                             
                             <div className="space-y-3">
                                 {selectedTheme.customerQuotes && selectedTheme.customerQuotes.map((q, idx) => (
-                                    <div key={idx} className="bg-[#fcfaf7] border-l-[3px] border-[#405642]/40 rounded-r-lg p-3.5 pr-4 pl-4 text-[13px] text-foreground/80 leading-relaxed shadow-sm">
+                                    <div key={idx} className="bg-card border-l-[3px] border-chart-2/40 rounded-r-lg p-3.5 pr-4 pl-4 text-[13px] text-foreground/80 leading-relaxed shadow-sm">
                                         {q}
                                     </div>
                                 ))}
@@ -274,16 +274,16 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                             onClick={() => setExpandedSuggestion(isExpanded ? null : i)}
                                         >
                                             <div className="shrink-0 pt-0.5">
-                                                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
-                                                    <Sparkles className={`w-4 h-4 ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'text-[#da543b]' : 'text-foreground'}`} />
+                                                <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+                                                    <Sparkles className={`w-4 h-4 ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'text-destructive' : 'text-foreground'}`} />
                                                 </div>
                                             </div>
                                             <div className="flex-1 space-y-2">
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold tracking-tight ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'bg-[#da543b] text-white' : 'bg-muted text-foreground'}`}>
+                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold tracking-tight ${(suggestion.urgency || '').toLowerCase().includes('now') ? 'bg-destructive text-white' : 'bg-muted text-foreground'}`}>
                                                         {suggestion.urgency}
                                                     </span>
-                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-[#dff0d4] text-[#3b5930]">
+                                                    <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-chart-2/15 text-chart-2">
                                                         {suggestion.impact}
                                                     </span>
                                                     <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-muted text-muted-foreground">
@@ -307,19 +307,19 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                                 <div className="flex items-center gap-3 pl-11 mt-4">
                                                     <button 
                                                         onClick={(e) => handleTakeAction(e, suggestion.title)}
-                                                        className="bg-[#2B352E] hover:bg-[#1c2e20] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
+                                                        className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
                                                     >
                                                         Take action
                                                     </button>
                                                     <button 
                                                         onClick={(e) => handleSeeExamples(e, suggestion.title)}
-                                                        className="bg-transparent hover:bg-zinc-50 border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
+                                                        className="bg-transparent hover:bg-muted border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
                                                     >
                                                         See examples
                                                     </button>
                                                     <button 
                                                         onClick={(e) => handleDismiss(e, i)}
-                                                        className="text-muted-foreground text-xs font-medium px-2 py-2 hover:text-[#da543b] transition-colors"
+                                                        className="text-muted-foreground text-xs font-medium px-2 py-2 hover:text-destructive transition-colors"
                                                     >
                                                         Dismiss
                                                     </button>

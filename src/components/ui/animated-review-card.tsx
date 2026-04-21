@@ -209,14 +209,14 @@ function PlatformGlyph({ platform }: { platform: string }) {
     }
     if (p === "facebook") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#1877F2] text-[10px] font-bold leading-none text-white">
+            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold leading-none text-primary-foreground">
                 f
             </span>
         );
     }
     if (p === "yelp") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#FF1A1A] text-[9px] font-bold leading-none text-white">
+            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-destructive text-[9px] font-bold leading-none text-destructive-foreground">
                 Y
             </span>
         );
@@ -251,7 +251,7 @@ function PlatformBadge({ platform, theme }: { platform: string; theme: ThemeColo
         theme === "vibrant"
             ? "border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground"
             : p === "google"
-              ? "border-amber-200/70 bg-amber-100/90 text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100"
+              ? "border-chart-4/40 bg-chart-4/15 text-foreground dark:border-chart-4/30 dark:bg-chart-4/20 dark:text-foreground"
               : "border-border/80 bg-muted/80 text-foreground/80 dark:bg-muted/60";
 
     return (
