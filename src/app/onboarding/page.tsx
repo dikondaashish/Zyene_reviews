@@ -370,7 +370,7 @@ export default function OnboardingPage() {
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
 
-        <div className="relative pro-card p-7 sm:p-10">
+        <div className="relative pro-card p-5 sm:p-7">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
