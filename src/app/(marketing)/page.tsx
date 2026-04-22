@@ -638,7 +638,7 @@ export default function MarketingPage() {
                 <span className="text-4xl font-bold text-foreground">Custom</span>
               </div>
               <ul className="space-y-3 text-sm text-muted-foreground flex-1 mb-8">
-                {["Everything in Professional, plus:", "Unlimited business locations", "Unlimited email, SMS & link requests", "Unlimited AI / smart replies (contract terms)", "Dedicated account manager", "Custom integrations & SSO (as agreed)", "Uptime SLA & security review options"].map((f) => (
+                {["Everything in Professional, plus:", "Unlimited business locations", "Unlimited email, SMS & link requests", "Unlimited AI / smart replies (contract terms)", "Managed API keys and integration support", "Embeddable and white-label review widgets", "Priority sync pipelines and proactive monitoring", "Dedicated account manager", "Custom integrations & SSO (as agreed)", "Uptime SLA & security review options"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}
