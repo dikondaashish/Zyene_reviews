@@ -99,10 +99,10 @@ export async function POST(request: Request) {
                 const planId = plan?.id || "starter_monthly";
                 const limits = plan?.limits || {
                     maxLocations: 1,
-                    emailRequestsPerMonth: 2500,
-                    smsRequestsPerMonth: 2500,
-                    linkRequestsPerMonth: 5000,
-                    smartRepliesPerMonth: -1,
+                    emailRequestsPerMonth: 500,
+                    smsRequestsPerMonth: 500,
+                    linkRequestsPerMonth: 1500,
+                    smartRepliesPerMonth: 1500,
                     teamMembers: 5,
                 };
 

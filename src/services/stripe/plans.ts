@@ -29,43 +29,49 @@ export interface Plan {
 
 const STARTER_LIMITS: PlanLimits = {
     maxLocations: 1,
-    emailRequestsPerMonth: 2500,
-    smsRequestsPerMonth: 2500,
-    linkRequestsPerMonth: 5000,
-    smartRepliesPerMonth: -1,
+    emailRequestsPerMonth: 500,
+    smsRequestsPerMonth: 500,
+    linkRequestsPerMonth: 1500,
+    smartRepliesPerMonth: 1500,
     teamMembers: 5,
 };
 
 const STARTER_FEATURES = [
     "1 business location on your plan",
-    "Google Business Profile review sync",
-    "2,500 email review requests / month",
-    "2,500 SMS review requests / month",
-    "5,000 review link requests / month",
-    "Unlimited AI reply suggestions & usage-based smart replies",
-    "Auto commenter for eligible Google reviews (paid plan)",
+    "Google Business Profile, Facebook, and Yelp review sync",
+    "500 email review requests / month",
+    "500 SMS review requests / month",
+    "1,500 AI-generated review draft requests / month (public review link flow, step 3)",
+    "Unlimited AI reply suggestions & Auto commenter",
+    "Competitor tracking",
     "Dashboard, analytics & team alerts",
+    "POS & automation triggers for review requests",
+    "Developer API",
     "Up to 5 team members",
 ];
 
 const PRO_LIMITS: PlanLimits = {
     maxLocations: 3,
-    emailRequestsPerMonth: 3000,
-    smsRequestsPerMonth: 3000,
-    linkRequestsPerMonth: 6000,
-    smartRepliesPerMonth: -1,
+    emailRequestsPerMonth: 700,
+    smsRequestsPerMonth: 700,
+    linkRequestsPerMonth: 2000,
+    smartRepliesPerMonth: 2000,
     teamMembers: 15,
     perLocation: true,
 };
 
 const PRO_FEATURES = [
     "Everything in Starter, plus:",
-    "Up to 3 business locations (limits per location)",
-    "3,000 email review requests / month per location",
-    "3,000 SMS review requests / month per location",
-    "6,000 review link requests / month per location",
-    "Unlimited AI reply suggestions (plan limits apply)",
-    "Priority email support",
+    "3 business locations (limits per location)",
+    "200 email review requests extra / month per location",
+    "200 SMS review requests extra / month per location",
+    "500 review link requests extra / month per location",
+    "Unlimited AI reply suggestions & Auto commenter",
+    "Competitor tracking",
+    "Dashboard, analytics & team alerts",
+    "POS & automation triggers for review requests",
+    "Developer API",
+    "Priority customer support",
     "Up to 15 team members",
 ];
 

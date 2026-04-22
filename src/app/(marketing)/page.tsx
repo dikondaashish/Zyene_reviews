@@ -582,9 +582,9 @@ export default function MarketingPage() {
                 <span className="text-4xl font-bold text-foreground">$29.99</span>
                 <span className="text-muted-foreground">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial included</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial on checkout (where eligible)</p>
               <ul className="space-y-3 text-sm text-muted-foreground flex-1 mb-8">
-                {["Easy to use dashboard", "SEO optimized AI reviews", "1 Location", "2,500 email requests/month", "2,500 SMS requests/month", "5,000 review link requests/month", "Campaign automation", "Customizable review page", "Direct customer feedback", "Google, Yelp, Facebook integration", "AI-powered replies"].map((f) => (
+                {["1 business location on your plan", "Google Business Profile, Facebook, and Yelp review sync", "500 email review requests / month", "500 SMS review requests / month", "1,500 AI-generated review draft requests / month (public review link flow, step 3)", "Unlimited AI reply suggestions & Auto commenter", "Competitor tracking", "Dashboard, analytics & team alerts", "POS & Automation trigger review requests automatically from payment and workflow tools", "Developer API", "Up to 5 team members"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}
@@ -593,7 +593,7 @@ export default function MarketingPage() {
               </ul>
               <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button className="w-full rounded-md py-6 font-medium">
-                  Start Free Trial
+                  Start 7-day free trial
                 </Button>
               </Link>
             </motion.div>
@@ -611,9 +611,9 @@ export default function MarketingPage() {
                 <span className="text-4xl font-bold">$59.99</span>
                 <span className="text-[color:var(--marketing-footer-muted)]">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial included</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial on checkout (where eligible)</p>
               <ul className="space-y-3 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
-                {["Everything in Starter, plus:", "3 Locations", "3,000 email requests/month per location", "3,000 SMS requests/month per location", "6,000 review link requests/month per location", "Priority support"].map((f) => (
+                {["Everything in Starter, plus:", "3 business locations (limits per location)", "200 email review requests extra / month per location", "200 SMS review requests extra / month per location", "500 review link requests extra / month per location", "Unlimited AI reply suggestions & Auto commenter", "Competitor tracking", "Dashboard, analytics & team alerts", "POS & Automation trigger review requests automatically from payment and workflow tools", "Developer API", "Priority customer support", "Up to 15 team members"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}
@@ -622,7 +622,7 @@ export default function MarketingPage() {
               </ul>
               <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
                 <Button className="w-full rounded-md py-6 font-medium">
-                  Start Free Trial
+                  Start 7-day free trial
                 </Button>
               </Link>
             </motion.div>
@@ -633,12 +633,12 @@ export default function MarketingPage() {
                 <ShieldCheck className="h-5 w-5 text-primary" />
                 <h3 className="text-xl font-semibold text-foreground">Enterprise</h3>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">For franchises & large organizations</p>
+              <p className="text-sm text-muted-foreground mb-6">For large organizations with custom needs.</p>
               <div className="flex items-baseline gap-2 mb-6">
                 <span className="text-4xl font-bold text-foreground">Custom</span>
               </div>
               <ul className="space-y-3 text-sm text-muted-foreground flex-1 mb-8">
-                {["Everything in Professional, plus:", "Unlimited locations", "Custom request limits", "Dedicated account manager", "Custom integrations", "SLA guarantee", "White-label options"].map((f) => (
+                {["Everything in Professional, plus:", "Unlimited business locations", "Unlimited email, SMS & link requests", "Unlimited AI / smart replies (contract terms)", "Dedicated account manager", "Custom integrations & SSO (as agreed)", "Uptime SLA & security review options"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}

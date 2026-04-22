@@ -27,7 +27,7 @@ const Container = ({ children, className, id }: ContainerProps) => (
 );
 // ------------------------------------------------------------------
 
-type PlanTier = "Basic" | "Standard" | "Pro";
+type PlanTier = "Starter" | "Professional" | "Enterprise";
 
 interface PricingCardProps {
   title: PlanTier;
@@ -42,29 +42,47 @@ interface PricingCardProps {
 // Dummy pricing data
 const pricingData: PricingCardProps[] = [
   {
-    title: "Basic",
-    price: "$29/month",
-    description: "Perfect for small businesses and individuals.",
-    features: ["3 Pages", "Basic SEO", "Email Support", "Responsive Design"],
-    cta: "Choose Basic",
-    href: "https://stripe.com/",
+    title: "Starter",
+    price: "$29.99/mo",
+    description: "Perfect for single-location businesses.",
+    features: [
+      "1 business location on your plan",
+      "500 email review requests / month",
+      "500 SMS review requests / month",
+      "1,500 AI-generated review draft requests / month (public review link flow, step 3)",
+      "Unlimited AI reply suggestions & Auto commenter",
+    ],
+    cta: "Start 7-day free trial",
+    href: "/signup",
   },
   {
-    title: "Standard",
-    price: "$59/month",
-    description: "Best for growing businesses with more needs.",
-    features: ["10 Pages", "Advanced SEO", "CMS Integration", "24/7 Chat Support"],
-    cta: "Choose Standard",
-    href: "https://stripe.com/",
+    title: "Professional",
+    price: "$59.99/mo",
+    description: "For growing multi-location businesses.",
+    features: [
+      "Everything in Starter, plus:",
+      "3 business locations (limits per location)",
+      "200 email requests extra / month per location",
+      "200 SMS requests extra / month per location",
+      "500 review link requests extra / month per location",
+    ],
+    cta: "Start 7-day free trial",
+    href: "/signup",
     featured: true,
   },
   {
-    title: "Pro",
-    price: "$99/month",
-    description: "Ideal for larger businesses that need scalability.",
-    features: ["Unlimited Pages", "E-commerce Integration", "Priority Support", "Custom API Integration"],
-    cta: "Choose Pro",
-    href: "https://stripe.com/",
+    title: "Enterprise",
+    price: "Custom",
+    description: "For large organizations with custom needs.",
+    features: [
+      "Everything in Professional, plus:",
+      "Unlimited business locations",
+      "Unlimited email, SMS & link requests",
+      "Unlimited AI / smart replies (contract terms)",
+      "Dedicated account manager",
+    ],
+    cta: "Contact Sales",
+    href: "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry",
   },
 ];
 

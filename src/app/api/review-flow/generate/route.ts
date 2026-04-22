@@ -95,19 +95,71 @@ export async function POST(request: Request) {
             );
         }
 
+        const supabase = createAdminClient();
+        let reviewRequestAlreadyGenerated = false;
+        let orgId: string | null = null;
+        let maxAiDraftsPerMonth = 0;
+        let planStatus: string | null = null;
+
         try {
-            const supabase = createAdminClient();
             const { data: biz } = await supabase
                 .from("businesses")
-                .select("organizations!inner(plan, plan_status)")
+                .select("organization_id, organizations!inner(plan, plan_status, max_ai_replies_per_month)")
                 .eq("id", resolvedBusinessId)
                 .maybeSingle();
-            const org = (biz as any)?.organizations ?? null;
+            const org = (biz as { organizations?: { plan?: string | null; plan_status?: string | null; max_ai_replies_per_month?: number | null }; organization_id?: string | null } | null)?.organizations ?? null;
+            orgId = (biz as { organization_id?: string | null } | null)?.organization_id ?? null;
+            maxAiDraftsPerMonth = typeof org?.max_ai_replies_per_month === "number" ? org.max_ai_replies_per_month : 0;
+            planStatus = typeof org?.plan_status === "string" ? org.plan_status : null;
+
             if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
                 return NextResponse.json(
                     { error: "AI review draft requires an active Starter, Professional, or Enterprise plan.", code: "AI_REVIEW_DRAFT_PLAN_REQUIRED" },
                     { status: 403 }
                 );
+            }
+
+            if (reviewRequestId) {
+                const { data: existingDraft } = await supabase
+                    .from("review_requests")
+                    .select("id")
+                    .eq("id", reviewRequestId)
+                    .not("ai_review_text", "is", null)
+                    .maybeSingle();
+                reviewRequestAlreadyGenerated = Boolean(existingDraft?.id);
+            }
+
+            if (orgId && maxAiDraftsPerMonth !== -1 && planStatus && ["active", "trialing"].includes(planStatus)) {
+                const startOfMonth = new Date();
+                startOfMonth.setDate(1);
+                startOfMonth.setHours(0, 0, 0, 0);
+
+                const { data: orgBusinesses } = await supabase
+                    .from("businesses")
+                    .select("id")
+                    .eq("organization_id", orgId);
+
+                const businessIds = (orgBusinesses ?? []).map((b: { id: string }) => b.id);
+                if (businessIds.length > 0) {
+                    const { count: usedDrafts } = await supabase
+                        .from("review_requests")
+                        .select("*", { count: "exact", head: true })
+                        .in("business_id", businessIds)
+                        .not("ai_review_text", "is", null)
+                        .gte("created_at", startOfMonth.toISOString());
+
+                    const currentUsed = usedDrafts ?? 0;
+                    if (!reviewRequestAlreadyGenerated && currentUsed >= maxAiDraftsPerMonth) {
+                        return NextResponse.json(
+                            {
+                                error: "Monthly AI review draft limit reached for your plan.",
+                                code: "AI_REVIEW_DRAFT_LIMIT_REACHED",
+                                limit: maxAiDraftsPerMonth,
+                            },
+                            { status: 429 }
+                        );
+                    }
+                }
             }
         } catch {
             return NextResponse.json(
@@ -151,6 +203,16 @@ Review Content:`;
                 throw new Error("Empty AI response");
             }
 
+            if (reviewRequestId) {
+                await supabase
+                    .from("review_requests")
+                    .update({
+                        ai_review_text: reviewText.trim(),
+                        rating_given: rating,
+                    })
+                    .eq("id", reviewRequestId);
+            }
+
             console.info(`[AI SUCCESS] Generated review for ${businessName} using Gemini 3 Flash`);
             return NextResponse.json({ reviewText: reviewText.trim() });
         } catch (aiError) {
@@ -158,6 +220,16 @@ Review Content:`;
 
             console.warn(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
             const fallbackText = `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Hope to see you again soon!`;
+
+            if (reviewRequestId) {
+                await supabase
+                    .from("review_requests")
+                    .update({
+                        ai_review_text: fallbackText,
+                        rating_given: rating,
+                    })
+                    .eq("id", reviewRequestId);
+            }
 
             return NextResponse.json({ reviewText: fallbackText });
         }

@@ -128,11 +128,11 @@ export async function checkLimit(
 
         if (limitType === "smart_replies") {
             const { count } = await supabase
-                .from("reviews")
+                .from("review_requests")
                 .select("*", { count: "exact", head: true })
                 .in("business_id", businessIds)
-                .eq("response_status", "responded")
-                .gte("responded_at", startOfMonth.toISOString());
+                .not("ai_review_text", "is", null)
+                .gte("created_at", startOfMonth.toISOString());
 
             current = count || 0;
         } else {

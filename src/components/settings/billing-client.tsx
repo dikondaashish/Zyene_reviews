@@ -652,8 +652,8 @@ export function BillingClient({
                                         </PricingCard.Plan>
                                         <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
                                             {isPro
-                                                ? "For growing brands with multiple stores or franchises."
-                                                : "Everything you need to collect reviews and reply from one location."}
+                                                ? "For growing multi-location businesses."
+                                                : "Perfect for single-location businesses."}
                                         </PricingCard.Description>
                                         <PricingCard.Price>
                                             {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
@@ -741,7 +741,7 @@ export function BillingClient({
                                         <PricingCard.Badge>Custom</PricingCard.Badge>
                                     </PricingCard.Plan>
                                     <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
-                                        Volume, security reviews, SSO, and custom contracts for large groups.
+                                        For large organizations with custom needs.
                                     </PricingCard.Description>
                                     <PricingCard.Price>
                                         <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>

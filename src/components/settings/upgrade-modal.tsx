@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, CheckCircle2, Zap, Crown, Building2, ArrowRight } from "lucide-react";
+import { Loader2, CheckCircle2, Zap, Crown } from "lucide-react";
 import { toast } from "sonner";
 import {
     Dialog,
@@ -33,8 +33,6 @@ export function UpgradeModal({
 
     // Exclude enterprise for the main cards
     const displayPlans = PLANS.filter((p) => p.interval === interval && p.id !== "enterprise");
-    const enterprisePlan = PLANS.find((p) => p.id === "enterprise");
-
     const intervalLabel = interval === "month" ? "/mo" : "/yr";
     const monthlyStarterPrice = PLANS.find((p) => p.id === "starter_monthly")?.price ?? 0;
     const yearlyStarterPrice = PLANS.find((p) => p.id === "starter_yearly")?.price ?? 0;
@@ -209,7 +207,7 @@ export function UpgradeModal({
                                                 {loadingPlan === plan.stripePriceId ? (
                                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                                 ) : null}
-                                                Upgrade to {plan.name}
+                                                Start 7-day free trial
                                             </Button>
                                         </PricingCard.Header>
                                         <PricingCard.Body className="space-y-3 p-2">
