@@ -309,7 +309,22 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className={`space-y-6 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-xl"}`}>
+    <div className="relative min-h-screen">
+      {/* Background glow effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div 
+          className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%]"
+          style={{
+            background: `
+              radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 40%)
+            `
+          }}
+        />
+      </div>
+
+      <div className={`relative z-10 space-y-6 mx-auto w-full pt-12 pb-20 ${currentStep === 4 ? "max-w-5xl" : "max-w-xl"}`}>
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
