@@ -36,20 +36,34 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
 
             const imgData = canvas.toDataURL("image/png");
             
-            // Create PDF
+            // Create a standard A4 multi-page PDF to avoid oversized-canvas failures.
             const pdf = new jsPDF({
                 orientation: "portrait",
-                unit: "px",
-                format: [canvas.width, canvas.height],
+                unit: "mm",
+                format: "a4",
             });
 
-            const width = pdf.internal.pageSize.getWidth();
-            const height = pdf.internal.pageSize.getHeight();
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = pageWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            pdf.addImage(imgData, "PNG", 0, 0, width, height);
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
             
             // Save PDF
-            const fileName = `Zyene-Reviews-Report-${businessName.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
+            const safeRange = dateRange.replace(/\s+/g, "-");
+            const fileName = `Zyene-Reviews-Report-${businessName.replace(/\s+/g, "-")}-${safeRange}-${new Date().toISOString().split("T")[0]}.pdf`;
             pdf.save(fileName);
 
             toast.success("Report downloaded successfully!", { id: toastId });
