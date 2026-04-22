@@ -426,16 +426,33 @@ export function Step2Form({
             </p>
           </div>
 
-          {/* Google Connect Button — matches card style */}
-          <Button
+          {/* Google Connect Button — Premium Action */}
+          <motion.button
             type="button"
             onClick={handleConnectClick}
-            className="w-full max-w-[340px] h-12 rounded-2xl border border-border bg-card text-foreground hover:bg-muted/50 transition-colors font-semibold cursor-pointer group text-sm"
+            whileHover={{ scale: 1.01, translateY: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background/80 backdrop-blur-xl border border-border shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
           >
-            <GoogleIcon />
-            <span className="ml-2.5">Connect Google Business</span>
-            <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-          </Button>
+            {/* Subtle inner top highlight for depth */}
+            <div className="absolute inset-x-0 top-0 h-px bg-white/20 pointer-events-none" />
+            
+            <div className="flex items-center gap-3.5 relative z-10">
+              <div className="p-2 bg-white rounded-xl shadow-sm border border-border/50 group-hover:scale-110 transition-transform duration-300">
+                <GoogleIcon />
+              </div>
+              <span className="text-[14px] font-bold text-foreground tracking-tight">
+                Connect Google Business
+              </span>
+            </div>
+            
+            <div className="relative z-10">
+              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
+            </div>
+
+            {/* Subtle background glow on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </motion.button>
 
           {/* Benefits — uses primary color for checkmarks */}
           <div className="space-y-2.5">
