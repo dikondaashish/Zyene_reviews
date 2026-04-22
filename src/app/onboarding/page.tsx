@@ -203,7 +203,7 @@ export default function OnboardingPage() {
               });
               const hasGoogle = biz.review_platforms?.some((p: any) => p.platform === "google");
               setGoogleConnected(hasGoogle);
-              
+
               // If Google is already connected, trigger a background sync on login
               if (hasGoogle) {
                 triggerOnboardingSync(biz.id).catch(() => {
@@ -342,9 +342,8 @@ export default function OnboardingPage() {
                     <StepIcon className="w-5 h-5" />
                   )}
                 </motion.div>
-                <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
-                  isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
-                }`}>
+                <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
+                  }`}>
                   {step.label}
                 </span>
               </div>
@@ -370,7 +369,7 @@ export default function OnboardingPage() {
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
 
-        <div className="relative pro-card p-5 sm:p-7">
+        <div className="relative pro-card p-3 sm:p-5">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
