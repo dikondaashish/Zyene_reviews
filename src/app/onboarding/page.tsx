@@ -324,7 +324,7 @@ export default function OnboardingPage() {
         />
       </div>
 
-      <div className={`relative z-10 space-y-6 mx-auto w-full pt-12 pb-20 ${currentStep === 4 ? "max-w-5xl" : "max-w-xl"}`}>
+      <div className={`relative z-10 space-y-6 mx-auto w-full pt-12 pb-20 px-4 ${currentStep === 4 ? "max-w-5xl" : currentStep === 2 ? "max-w-4xl" : "max-w-xl"}`}>
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
@@ -379,7 +379,52 @@ export default function OnboardingPage() {
         })}
       </div>
 
-      {/* Glass card wrapper */}
+      {/* Step 2 renders OUTSIDE the glass card — it has its own two-column layout */}
+      {currentStep === 2 && business && (
+        <motion.div key="step-2-outer" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+          <button
+            type="button"
+            onClick={() => setCurrentStep(1)}
+            className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer group"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-br from-[#d4a054]/8 via-transparent to-primary/5 rounded-[2rem] blur-sm" />
+            <div className="relative">
+              <Step2Form
+                businessId={business.id}
+                businessName={business.name}
+                city={business.city ?? ""}
+                address={business.address_line1 ?? ""}
+                state={business.state ?? ""}
+                phone={business.phone ?? ""}
+                pendingGoogleCode={pendingGoogleCode}
+                onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
+                onBusinessUpdate={handleBusinessUpdate}
+                initialConnected={googleConnected}
+                onNext={async () => {
+                  setGoogleConnected(true);
+                  setCurrentStep(3);
+                }}
+                onSkip={async () => {
+                  setCurrentStep(3);
+                }}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+      {currentStep === 2 && !business && (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      )}
+
+      {/* Glass card wrapper — for Steps 1, 3, 4, 5 */}
+      {currentStep !== 2 && (
       <div className="relative">
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
@@ -394,43 +439,6 @@ export default function OnboardingPage() {
                   organizationId={organization.id}
                   initialOrgName={organization.name}
                 />
-              </motion.div>
-            )}
-            {currentStep === 2 && business && (
-              <motion.div key="step-2" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                  Back
-                </button>
-                <Step2Form
-                  businessId={business.id}
-                  businessName={business.name}
-                  city={business.city ?? ""}
-                  address={business.address_line1 ?? ""}
-                  state={business.state ?? ""}
-                  phone={business.phone ?? ""}
-                  pendingGoogleCode={pendingGoogleCode}
-                  onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
-                  onBusinessUpdate={handleBusinessUpdate}
-                  initialConnected={googleConnected}
-                  onNext={async () => {
-                    setGoogleConnected(true);
-                    setCurrentStep(3);
-                  }}
-                  onSkip={async () => {
-                    setCurrentStep(3);
-                  }}
-                  isLoading={isLoading}
-                />
-              </motion.div>
-            )}
-            {currentStep === 2 && !business && (
-              <motion.div key="step-2-loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center py-16">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </motion.div>
             )}
             {currentStep === 3 && business && (
@@ -492,6 +500,7 @@ export default function OnboardingPage() {
           </AnimatePresence>
         </div>
       </div>
+      )}
     </div>
   </div>
 );

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { CheckCircle2, Loader2, RefreshCw, ArrowRight, Link2, MapPin } from "lucide-react";
+import { CheckCircle2, Loader2, RefreshCw, ArrowRight, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -282,26 +282,27 @@ export function Step2Form({
 
   if (!mounted) return null;
 
+  /* ─── Icon Components ─── */
   const ChainIcon = () => (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="mx-auto">
+    <svg width="52" height="52" viewBox="0 0 64 64" fill="none">
       <defs>
         <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#d4af37" />
-          <stop offset="50%" stopColor="#f9d71c" />
-          <stop offset="100%" stopColor="#aa823a" />
+          <stop offset="0%" stopColor="#d4a054" />
+          <stop offset="50%" stopColor="#e8c068" />
+          <stop offset="100%" stopColor="#b8863c" />
         </linearGradient>
       </defs>
       <path
         d="M26 38L38 26M22 26L14 34C11.7909 36.2091 11.7909 39.7909 14 42L22 50C24.2091 52.2091 27.7909 52.2091 30 50L34 46M30 18L34 14C36.2091 11.7909 39.7909 11.7909 42 14L50 22C52.2091 24.2091 52.2091 27.7909 50 30L42 38C39.7909 40.2091 36.2091 40.2091 34 38"
         stroke="url(#gold-grad)"
-        strokeWidth="4"
+        strokeWidth="3.5"
         strokeLinecap="round"
       />
     </svg>
   );
 
   const GoogleIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -309,209 +310,257 @@ export function Step2Form({
     </svg>
   );
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
-        >
-          <ChainIcon />
-        </motion.div>
-        
-        <div>
-          <h2 className="text-3xl font-display font-medium text-foreground tracking-tight">
-            Connect your business
-          </h2>
-          <p className="text-muted-foreground mt-2 text-sm max-w-sm mx-auto leading-relaxed">
-            Link Google to auto-fill your details, or enter them manually below.
-          </p>
+  /* ─── Success / Multi-location / Error overlays ─── */
+  if (googleState.status === "connecting") {
+    return (
+      <div className="flex flex-col items-center justify-center gap-5 py-20">
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary/15 blur-2xl rounded-full animate-pulse" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary relative z-10" />
         </div>
+        <p className="text-sm font-semibold text-foreground animate-pulse">Connecting to Google…</p>
       </div>
+    );
+  }
 
-      {/* Google Connect Section */}
-      <div className="space-y-6 pt-2">
-        {googleState.status === "idle" && (
-          <div className="space-y-6 max-w-sm mx-auto">
-            <Button
+  if (googleState.status === "success" && availableLocations.length > 0) {
+    return (
+      <div className="max-w-md mx-auto space-y-5 py-8">
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/5 mx-auto">
+            <MapPin className="h-7 w-7 text-primary" />
+          </div>
+          <p className="font-bold text-xl text-foreground">Select your business</p>
+          <p className="text-xs text-muted-foreground">We found {availableLocations.length} locations. Pick one.</p>
+        </div>
+        <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+          {availableLocations.map((loc, idx) => (
+            <button
+              key={loc.name || idx}
               type="button"
-              onClick={handleConnectClick}
-              className="w-full h-14 rounded-full border border-border/40 bg-white/60 dark:bg-white/5 backdrop-blur-md text-foreground shadow-sm transition-all font-medium cursor-pointer group hover:bg-white/80 dark:hover:bg-white/10 flex items-center justify-between px-6"
+              onClick={() => handleSelection(loc)}
+              disabled={advancing}
+              className="w-full text-left p-4 rounded-xl border border-border/60 bg-card hover:border-primary/40 hover:bg-primary/[0.02] transition-all flex items-center justify-between group"
             >
-              <GoogleIcon />
-              <span className="text-sm lg:text-base">Connect Google Business</span>
-              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
-            </Button>
+              <div>
+                <p className="font-bold text-sm">{loc.businessName}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{loc.fullAddress}</p>
+              </div>
+              {advancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
-            <div className="space-y-3 px-2">
-              {[
-                "Auto-import all your reviews",
-                "AI-powered response suggestions",
-                "Real-time sync — new reviews appear instantly",
-              ].map((benefit) => (
-                <div key={benefit} className="flex items-center gap-3 text-[13px] text-muted-foreground/90">
-                  <CheckCircle2 className="w-4 h-4 text-[#aa823a] shrink-0" />
-                  <span className="font-medium">{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+  if (googleState.status === "success" && availableLocations.length === 0) {
+    return (
+      <div className="max-w-sm mx-auto text-center space-y-6 py-10">
+        <div className="w-16 h-16 rounded-full bg-chart-2/15 flex items-center justify-center mx-auto ring-4 ring-chart-2/10">
+          <CheckCircle2 className="w-8 h-8 text-chart-2" />
+        </div>
+        <div>
+          <p className="font-bold text-chart-2 text-xl">Connected!</p>
+          <p className="text-sm text-chart-2/80 mt-1">{form.getValues("businessName")}</p>
+        </div>
+        <Button
+          type="button"
+          onClick={onSaveAndNext}
+          className="w-full h-12 bg-chart-2 hover:bg-chart-2/90 rounded-xl font-semibold text-sm cursor-pointer"
+          disabled={advancing}
+        >
+          {advancing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Continue Setup →"}
+        </Button>
+      </div>
+    );
+  }
 
-        {googleState.status === "connecting" && (
-          <div className="flex flex-col items-center justify-center gap-4 py-8">
-            <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            <p className="text-sm font-semibold text-foreground animate-pulse">Connecting to Google...</p>
-          </div>
-        )}
+  if (googleState.status === "error") {
+    return (
+      <div className="max-w-sm mx-auto space-y-4 py-10">
+        <div className="p-4 bg-destructive/10 text-destructive rounded-xl text-sm border border-destructive/20 font-medium">
+          {googleState.errorMessage}
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setGoogleState({ status: "idle" })}
+          className="w-full h-12 rounded-xl font-semibold border-2 cursor-pointer"
+        >
+          <RefreshCw className="h-4 w-4 mr-2" /> Try again
+        </Button>
+      </div>
+    );
+  }
 
-        {googleState.status === "success" && (
+  /* ─── Main Two-Column Layout (idle state) ─── */
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-0 rounded-2xl overflow-hidden border border-border/30">
+
+      {/* ─── LEFT PANEL: Google Connect ─── */}
+      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden"
+           style={{
+             background: `
+               linear-gradient(135deg, rgba(212, 160, 84, 0.06) 0%, rgba(232, 192, 104, 0.03) 50%, rgba(255, 79, 0, 0.04) 100%)
+             `
+           }}>
+        {/* Decorative radial glow */}
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#d4a054]/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -right-16 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-7">
+          {/* Chain icon */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="space-y-5"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
           >
-            {availableLocations.length > 0 ? (
-              <div className="space-y-4 max-w-md mx-auto">
-                <div className="text-center space-y-1 mb-4">
-                  <p className="font-bold text-lg">Select your business</p>
-                  <p className="text-xs text-muted-foreground">Multiple locations found. Please select one.</p>
-                </div>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                  {availableLocations.map((loc, idx) => (
-                    <button
-                      key={loc.name || idx}
-                      onClick={() => handleSelection(loc)}
-                      className="w-full text-left p-4 rounded-xl border border-border/60 bg-white/40 hover:border-primary/50 hover:bg-primary/[0.02] transition-all flex items-center justify-between group"
-                    >
-                      <div>
-                        <p className="font-bold text-sm">{loc.businessName}</p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">{loc.fullAddress}</p>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="text-center space-y-5 bg-chart-2/5 p-6 rounded-2xl border border-chart-2/20 max-w-sm mx-auto">
-                <div className="w-12 h-12 rounded-full bg-chart-2/20 flex items-center justify-center mx-auto text-chart-2">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="font-bold text-chart-2 text-lg uppercase tracking-wider">Connected</p>
-                  <p className="text-sm text-chart-2/80 mt-1">Profile: {form.getValues("businessName")}</p>
-                </div>
-                <Button
-                  type="button"
-                  onClick={onSaveAndNext}
-                  className="w-full h-12 bg-chart-2 hover:bg-chart-2/90 rounded-full font-semibold text-sm cursor-pointer group"
-                  disabled={advancing}
-                >
-                  {advancing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Continue Setup"}
-                </Button>
-              </div>
-            )}
+            <ChainIcon />
           </motion.div>
-        )}
-      </div>
 
-      {/* Divider */}
-      <div className="relative flex items-center justify-center py-4">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-border/40" />
-        </div>
-        <div className="relative bg-background/80 px-4">
-          <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-muted-foreground/50">
-            or enter manually
-          </span>
-        </div>
-      </div>
-
-      {/* Manual Form Section */}
-      <div className="space-y-5 max-w-sm mx-auto">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest ml-1">
-              Business Name
-            </Label>
-            <Input
-              {...form.register("businessName")}
-              placeholder="e.g., Acme Corp"
-              disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/40 border-border/60 focus:border-primary focus:ring-4 focus:ring-primary/5 rounded-xl text-sm transition-all"
-            />
+          {/* Title & Subtitle */}
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-display font-semibold text-foreground tracking-tight leading-tight">
+              Connect your business
+            </h2>
+            <p className="text-muted-foreground mt-2.5 text-sm leading-relaxed max-w-xs">
+              Link Google to auto-fill your details, or enter them manually below.
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest ml-1">
+          {/* Google Connect Button */}
+          <Button
+            type="button"
+            onClick={handleConnectClick}
+            className="w-full max-w-[340px] h-[52px] rounded-full border border-border/50 bg-white/70 dark:bg-white/5 backdrop-blur-lg text-foreground shadow-sm hover:shadow-md transition-all font-medium cursor-pointer group flex items-center justify-between px-5 gap-3"
+          >
+            <GoogleIcon />
+            <span className="text-[13px] sm:text-sm font-semibold">Connect Google Business</span>
+            <ArrowRight className="h-4 w-4 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform" />
+          </Button>
+
+          {/* Benefits */}
+          <div className="space-y-3 pt-1">
+            {[
+              { icon: "✓", text: "Auto-import all your reviews" },
+              { icon: "✓", text: "AI-powered response suggestions" },
+              { icon: "✓", text: "Real-time sync — new reviews appear instantly" },
+            ].map((benefit) => (
+              <div key={benefit.text} className="flex items-start gap-3 text-[13px] text-muted-foreground/80">
+                <CheckCircle2 className="w-4 h-4 text-[#b8863c] shrink-0 mt-0.5" />
+                <span className="font-medium leading-snug">{benefit.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ─── RIGHT PANEL: Manual Entry ─── */}
+      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center bg-card/80 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-border/30">
+        
+        {/* "or enter manually" label */}
+        <div className="mb-7">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/50 shrink-0">
+              or enter manually
+            </span>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          {/* Business Name Label */}
+          <div className="text-xs font-semibold text-foreground/70 mb-1.5">
+            {form.watch("businessName") || businessName
+              ? `${form.watch("businessName") || businessName}'s Business`
+              : "Your Business"}
+          </div>
+        </div>
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+          {/* Address */}
+          <div className="space-y-1.5">
+            <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
               Address
             </Label>
             <Input
               {...form.register("address")}
               placeholder="e.g., 123 Main St, City"
               disabled={isLoading || googleState.status === "success"}
-              className="h-12 bg-white/40 border-border/60 focus:border-primary focus:ring-4 focus:ring-primary/5 rounded-xl text-sm transition-all"
+              className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all placeholder:text-muted-foreground/40"
             />
           </div>
-        </div>
 
-        {/* City/State/Phone in a compact row for data completeness while matching UI minimal look */}
-        {(form.watch("city") || form.watch("state") || googleState.status !== "success") && (
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <div className="space-y-1.5 opacity-60">
-               <Label className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-widest ml-1">City</Label>
-               <Input {...form.register("city")} placeholder="City" className="h-10 text-xs rounded-xl" disabled={isLoading || googleState.status === "success"} />
+          {/* City & State row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
+                City
+              </Label>
+              <Input
+                {...form.register("city")}
+                placeholder="City"
+                disabled={isLoading || googleState.status === "success"}
+                className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all placeholder:text-muted-foreground/40"
+              />
             </div>
-            <div className="space-y-1.5 opacity-60">
-               <Label className="text-[9px] font-bold text-muted-foreground/70 uppercase tracking-widest ml-1">State</Label>
-               <Select
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
+                State
+              </Label>
+              <Select
                 value={form.watch("state")}
                 onValueChange={(v) => form.setValue("state", v)}
                 disabled={isLoading || googleState.status === "success"}
               >
-                <SelectTrigger className="h-10 text-xs rounded-xl"><SelectValue placeholder="State" /></SelectTrigger>
-                <SelectContent>{US_STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                <SelectTrigger className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all">
+                  <SelectValue placeholder="State" />
+                </SelectTrigger>
+                <SelectContent>
+                  {US_STATES.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
           </div>
-        )}
 
-        {googleState.status !== "success" && (
+          {/* Continue Button */}
           <Button
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full h-12 mt-2 font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all rounded-xl cursor-pointer text-sm"
+            className="w-full h-11 mt-3 font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/15 hover:shadow-primary/25 hover:brightness-105 active:scale-[0.98] transition-all rounded-lg cursor-pointer text-sm"
           >
             {advancing || isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               "Continue"
             )}
           </Button>
-        )}
 
-        {/* Footer Privacy Note */}
-        <div className="pt-6 flex items-center justify-center gap-2 text-[11px] text-muted-foreground/60 font-medium">
-          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          <p>We only read your profile. We never post on your behalf.</p>
-        </div>
+          {/* Privacy & Skip */}
+          <div className="space-y-3 pt-4">
+            <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground/50 font-medium">
+              <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>We only read your profile. We never post on your behalf.</span>
+            </div>
 
-        <div className="text-center pt-2">
-          <button
-            type="button"
-            onClick={handleSkip}
-            disabled={advancing}
-            className="text-[11px] font-bold text-muted-foreground/40 hover:text-primary transition-colors tracking-widest uppercase cursor-pointer"
-          >
-            I&apos;ll connect later
-          </button>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleSkip}
+                disabled={advancing}
+                className="text-[11px] font-semibold text-muted-foreground/40 hover:text-primary transition-colors tracking-wider uppercase cursor-pointer"
+              >
+                I&apos;ll connect later
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
