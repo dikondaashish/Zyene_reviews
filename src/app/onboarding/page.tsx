@@ -312,7 +312,7 @@ export default function OnboardingPage() {
     <div className="relative min-h-screen">
       {/* Background glow effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div 
+        <div
           className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%]"
           style={{
             background: `
@@ -324,184 +324,184 @@ export default function OnboardingPage() {
         />
       </div>
 
-      <div className={`relative z-10 space-y-6 mx-auto w-full pt-12 pb-20 px-4 ${currentStep === 4 ? "max-w-5xl" : currentStep === 2 ? "max-w-4xl" : "max-w-xl"}`}>
-      {/* Step indicator — animated dots */}
-      <div className="flex items-center justify-center gap-0">
-        {STEPS.map((step, index) => {
-          const stepNum = index + 1;
-          const isActive = stepNum === currentStep;
-          const isCompleted = stepNum < currentStep;
-          const StepIcon = step.icon;
+      <div className={`relative z-10 space-y-6 mx-auto w-full pt-1 pb-20 px-4 ${currentStep === 4 ? "max-w-5xl" : currentStep === 2 ? "max-w-4xl" : "max-w-xl"}`}>
+        {/* Step indicator — animated dots */}
+        <div className="flex items-center justify-center gap-0">
+          {STEPS.map((step, index) => {
+            const stepNum = index + 1;
+            const isActive = stepNum === currentStep;
+            const isCompleted = stepNum < currentStep;
+            const StepIcon = step.icon;
 
-          return (
-            <div key={step.label} className="flex items-center">
-              <div className="flex flex-col items-center gap-2">
-                <motion.div
-                  className={`
+            return (
+              <div key={step.label} className="flex items-center">
+                <div className="flex flex-col items-center gap-2">
+                  <motion.div
+                    className={`
                     w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
                     ${isCompleted
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                      : isActive
-                        ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
-                        : "bg-secondary/60 text-muted-foreground"
-                    }
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                        : isActive
+                          ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
+                          : "bg-secondary/60 text-muted-foreground"
+                      }
                   `}
-                  animate={isActive ? { scale: [1, 1.05, 1] } : {}}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  {isCompleted ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    <StepIcon className="w-4 h-4" />
-                  )}
-                </motion.div>
-                <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
-                  }`}>
-                  {step.label}
-                </span>
-              </div>
-
-              {/* Connector line */}
-              {index < STEPS.length - 1 && (
-                <div className="w-6 sm:w-10 h-[2px] mx-1 sm:mx-1.5 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
-                  <motion.div
-                    className="h-full bg-primary rounded-full"
-                    initial={false}
-                    animate={{ width: isCompleted ? "100%" : "0%" }}
-                    transition={{ duration: 0.4 }}
-                  />
+                    animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {isCompleted ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <StepIcon className="w-4 h-4" />
+                    )}
+                  </motion.div>
+                  <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
+                    }`}>
+                    {step.label}
+                  </span>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
 
-      {/* Step 2 renders OUTSIDE the glass card — it has its own two-column layout */}
-      {currentStep === 2 && business && (
-        <motion.div key="step-2-outer" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-          <button
-            type="button"
-            onClick={() => setCurrentStep(1)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer group"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-            Back
-          </button>
-          <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-br from-[#d4a054]/8 via-transparent to-primary/5 rounded-[2rem] blur-sm" />
-            <div className="relative">
-              <Step2Form
-                businessId={business.id}
-                businessName={business.name}
-                city={business.city ?? ""}
-                address={business.address_line1 ?? ""}
-                state={business.state ?? ""}
-                phone={business.phone ?? ""}
-                pendingGoogleCode={pendingGoogleCode}
-                onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
-                onBusinessUpdate={handleBusinessUpdate}
-                initialConnected={googleConnected}
-                onNext={async () => {
-                  setGoogleConnected(true);
-                  setCurrentStep(3);
-                }}
-                onSkip={async () => {
-                  setCurrentStep(3);
-                }}
-                isLoading={isLoading}
-              />
-            </div>
-          </div>
-        </motion.div>
-      )}
-      {currentStep === 2 && !business && (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                {/* Connector line */}
+                {index < STEPS.length - 1 && (
+                  <div className="w-6 sm:w-10 h-[2px] mx-1 sm:mx-1.5 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
+                    <motion.div
+                      className="h-full bg-primary rounded-full"
+                      initial={false}
+                      animate={{ width: isCompleted ? "100%" : "0%" }}
+                      transition={{ duration: 0.4 }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
-      )}
 
-      {/* Glass card wrapper — for Steps 1, 3, 4, 5 */}
-      {currentStep !== 2 && (
-      <div className="relative">
-        {/* Card glow */}
-        <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
-
-        <div className="relative pro-card p-5 sm:p-7">
-          <AnimatePresence mode="wait">
-            {currentStep === 1 && (
-              <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <Step1Form
-                  onNext={handleStep1Next}
-                  isLoading={isLoading}
-                  organizationId={organization.id}
-                  initialOrgName={organization.name}
-                />
-              </motion.div>
-            )}
-            {currentStep === 3 && business && (
-              <motion.div key="step-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                  Back
-                </button>
-                <Step3Form
+        {/* Step 2 renders OUTSIDE the glass card — it has its own two-column layout */}
+        {currentStep === 2 && business && (
+          <motion.div key="step-2-outer" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+            <button
+              type="button"
+              onClick={() => setCurrentStep(1)}
+              className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              Back
+            </button>
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-br from-[#d4a054]/8 via-transparent to-primary/5 rounded-[2rem] blur-sm" />
+              <div className="relative">
+                <Step2Form
                   businessId={business.id}
                   businessName={business.name}
                   city={business.city ?? ""}
-                  initialCategory={business.category ?? undefined}
-                  isGoogleConnected={googleConnected}
-                  onNext={async () => setCurrentStep(4)}
-                  isLoading={isLoading}
-                />
-              </motion.div>
-            )}
-            {currentStep === 4 && organization && (
-              <motion.div key="step-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(3)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                  Back
-                </button>
-                <Step4SubscriptionForm
-                  organizationId={organization.id}
-                  isGoogleConnected={googleConnected}
-                  isCancelled={showPaymentCancelled}
-                  onNext={() => setCurrentStep(5)}
-                  isLoading={isLoading}
-                />
-              </motion.div>
-            )}
-            {currentStep === 5 && business && user && (
-              <motion.div key="step-5" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <Step5Form
-                  businessId={business.id}
-                  businessName={business.name}
-                  userEmail={user.email || ""}
-                  userName={user.user_metadata?.full_name || "Valued Customer"}
-                  googleConnected={googleConnected}
-                  onNext={() => {
-                    reset();
-                    router.push("/dashboard");
+                  address={business.address_line1 ?? ""}
+                  state={business.state ?? ""}
+                  phone={business.phone ?? ""}
+                  pendingGoogleCode={pendingGoogleCode}
+                  onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
+                  onBusinessUpdate={handleBusinessUpdate}
+                  initialConnected={googleConnected}
+                  onNext={async () => {
+                    setGoogleConnected(true);
+                    setCurrentStep(3);
+                  }}
+                  onSkip={async () => {
+                    setCurrentStep(3);
                   }}
                   isLoading={isLoading}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {currentStep === 2 && !business && (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
+
+        {/* Glass card wrapper — for Steps 1, 3, 4, 5 */}
+        {currentStep !== 2 && (
+          <div className="relative">
+            {/* Card glow */}
+            <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
+
+            <div className="relative pro-card p-5 sm:p-7">
+              <AnimatePresence mode="wait">
+                {currentStep === 1 && (
+                  <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                    <Step1Form
+                      onNext={handleStep1Next}
+                      isLoading={isLoading}
+                      organizationId={organization.id}
+                      initialOrgName={organization.name}
+                    />
+                  </motion.div>
+                )}
+                {currentStep === 3 && business && (
+                  <motion.div key="step-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                      Back
+                    </button>
+                    <Step3Form
+                      businessId={business.id}
+                      businessName={business.name}
+                      city={business.city ?? ""}
+                      initialCategory={business.category ?? undefined}
+                      isGoogleConnected={googleConnected}
+                      onNext={async () => setCurrentStep(4)}
+                      isLoading={isLoading}
+                    />
+                  </motion.div>
+                )}
+                {currentStep === 4 && organization && (
+                  <motion.div key="step-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(3)}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                      Back
+                    </button>
+                    <Step4SubscriptionForm
+                      organizationId={organization.id}
+                      isGoogleConnected={googleConnected}
+                      isCancelled={showPaymentCancelled}
+                      onNext={() => setCurrentStep(5)}
+                      isLoading={isLoading}
+                    />
+                  </motion.div>
+                )}
+                {currentStep === 5 && business && user && (
+                  <motion.div key="step-5" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
+                    <Step5Form
+                      businessId={business.id}
+                      businessName={business.name}
+                      userEmail={user.email || ""}
+                      userName={user.user_metadata?.full_name || "Valued Customer"}
+                      googleConnected={googleConnected}
+                      onNext={() => {
+                        reset();
+                        router.push("/dashboard");
+                      }}
+                      isLoading={isLoading}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
       </div>
-      )}
     </div>
-  </div>
-);
+  );
 }
