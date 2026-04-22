@@ -99,7 +99,7 @@ export function Step3Form({
   };
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5">
       {/* Header */}
       <div className="text-center space-y-3">
         <motion.div
@@ -108,15 +108,15 @@ export function Step3Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <LayoutGrid className="w-8 h-8 text-primary" />
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <LayoutGrid className="w-7 h-7 text-primary" />
           </div>
         </motion.div>
 
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
           What&apos;s your industry?
         </h2>
-        <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
+        <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
           We&apos;ll tailor your review templates and response suggestions to match.
         </p>
         {initialCategory && isGoogleConnected && (
@@ -134,7 +134,7 @@ export function Step3Form({
       </div>
 
       {/* Category tile grid */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <Controller
           control={form.control}
           name="category"
@@ -157,7 +157,7 @@ export function Step3Form({
                     }}
                     disabled={isLoading}
                     className={`
-                      relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
+                      relative flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
                       ${isSelected
                         ? "border-primary bg-primary/[0.06] ring-2 ring-primary/20"
                         : "border-border/40 bg-background/40 hover:border-primary/30 hover:bg-primary/[0.02]"
@@ -204,7 +204,7 @@ export function Step3Form({
         <Button
           type="submit"
           disabled={!selectedCategory || isLoading}
-          className="w-full h-14 font-semibold cta-button"
+          className="w-full h-12 font-semibold cta-button text-sm"
         >
           {isLoading ? (
             <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>

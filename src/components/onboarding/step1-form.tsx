@@ -82,7 +82,7 @@ export function Step1Form({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
         <motion.div
@@ -91,16 +91,16 @@ export function Step1Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <Building2 className="w-8 h-8 text-primary" />
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <Building2 className="w-7 h-7 text-primary" />
           </div>
         </motion.div>
 
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
             Name your workspace
           </h2>
-          <p className="text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
+          <p className="text-muted-foreground mt-1.5 text-sm max-w-xs mx-auto leading-relaxed">
             This is your organization — the umbrella for all your business locations.
           </p>
         </div>
@@ -135,7 +135,7 @@ export function Step1Form({
                     placeholder="e.g. Acme Inc."
                     autoFocus
                     disabled={submitting || isLoading}
-                    className="h-14 text-base bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
+                    className="h-12 text-sm bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl transition-all placeholder:text-muted-foreground/50"
                     {...field}
                   />
                 </FormControl>
@@ -150,7 +150,7 @@ export function Step1Form({
           <Button
             type="submit"
             disabled={!form.formState.isValid || submitting || isLoading}
-            className="w-full h-14 text-base font-semibold cta-button"
+            className="w-full h-12 text-sm font-semibold cta-button"
           >
             {submitting || isLoading ? (
               <>

@@ -309,7 +309,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className={`space-y-8 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-2xl"}`}>
+    <div className={`space-y-6 mx-auto w-full ${currentStep === 4 ? "max-w-5xl" : "max-w-xl"}`}>
       {/* Step indicator — animated dots */}
       <div className="flex items-center justify-center gap-0">
         {STEPS.map((step, index) => {
@@ -323,7 +323,7 @@ export default function OnboardingPage() {
               <div className="flex flex-col items-center gap-2">
                 <motion.div
                   className={`
-                    w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
+                    w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
                     ${isCompleted
                       ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                       : isActive
@@ -335,11 +335,11 @@ export default function OnboardingPage() {
                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   {isCompleted ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
-                    <StepIcon className="w-5 h-5" />
+                    <StepIcon className="w-4 h-4" />
                   )}
                 </motion.div>
                 <span className={`text-[11px] font-semibold tracking-wide hidden sm:block ${isActive ? "text-primary" : isCompleted ? "text-primary/70" : "text-muted-foreground"
@@ -350,7 +350,7 @@ export default function OnboardingPage() {
 
               {/* Connector line */}
               {index < STEPS.length - 1 && (
-                <div className="w-8 sm:w-12 h-[2px] mx-1 sm:mx-2 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
+                <div className="w-6 sm:w-10 h-[2px] mx-1 sm:mx-1.5 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
                   <motion.div
                     className="h-full bg-primary rounded-full"
                     initial={false}
@@ -369,7 +369,7 @@ export default function OnboardingPage() {
         {/* Card glow */}
         <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
 
-        <div className="relative pro-card p-3 sm:p-5">
+        <div className="relative pro-card p-5 sm:p-7">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
               <motion.div key="step-1" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>

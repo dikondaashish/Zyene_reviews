@@ -84,7 +84,7 @@ export function Step5Form({
   ];
 
   return (
-    <div className="text-center space-y-8 py-2">
+    <div className="text-center space-y-6 py-2">
       {/* Celebration icon */}
       <motion.div
         initial={{ scale: 0, rotate: -20 }}
@@ -94,8 +94,8 @@ export function Step5Form({
       >
         <div className="relative">
           <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping opacity-40" />
-          <div className="relative w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20">
-            <Sparkles className="h-10 w-10 text-primary" />
+          <div className="relative w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20">
+            <Sparkles className="h-8 w-8 text-primary" />
           </div>
         </div>
       </motion.div>
@@ -107,10 +107,10 @@ export function Step5Form({
         transition={{ delay: 0.2 }}
         className="space-y-2"
       >
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
           You&apos;re all set, {firstName}!
         </h2>
-        <p className="text-muted-foreground max-w-xs mx-auto">
+        <p className="text-muted-foreground text-sm max-w-xs mx-auto">
           Your Zyene Reviews dashboard is ready for <strong className="text-foreground">{businessName}</strong>.
         </p>
       </motion.div>
@@ -130,7 +130,7 @@ export function Step5Form({
               <div className="w-7 h-7 rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="h-4 w-4 text-chart-2" />
               </div>
-              <span className="text-sm font-medium text-foreground">{item.label}</span>
+              <span className="text-xs font-medium text-foreground">{item.label}</span>
             </motion.div>
           );
         })}
@@ -161,7 +161,7 @@ export function Step5Form({
         <Button
           onClick={handleGoToDashboard}
           disabled={isLoading || isCompleting}
-          className="cta-button w-full h-14 text-base group cursor-pointer"
+          className="cta-button w-full h-12 text-sm group cursor-pointer"
         >
           {isLoading || isCompleting ? (
             <Loader2 className="h-5 w-5 animate-spin" />

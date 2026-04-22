@@ -131,7 +131,7 @@ export function Step4SubscriptionForm({
   const busy = isLoading || loadingPlan !== null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8">
         <div
           aria-hidden="true"
@@ -166,8 +166,8 @@ export function Step4SubscriptionForm({
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
-              <h3 className="text-xl font-semibold text-left">Unlock the full power of Zyene</h3>
-              <p className="text-sm text-muted-foreground text-left mt-1">Your business is set up — choose a plan to start managing reviews with AI.</p>
+              <h3 className="text-lg font-semibold text-left">Unlock the full power of Zyene</h3>
+              <p className="text-xs text-muted-foreground text-left mt-1">Your business is set up — choose a plan to start managing reviews with AI.</p>
             </div>
 
             <div
@@ -233,7 +233,7 @@ export function Step4SubscriptionForm({
                       </Badge>
                     </div>
                   )}
-                  <PricingCard.Header className="relative z-10 mb-3 p-3">
+                  <PricingCard.Header className="relative z-10 mb-2 p-2">
                     <PricingCard.Plan>
                       <PricingCard.PlanName>
                         {isPro ? (
@@ -285,7 +285,7 @@ export function Step4SubscriptionForm({
                       </span>
                     </Button>
                   </PricingCard.Header>
-                  <PricingCard.Body className="space-y-3 p-2">
+                  <PricingCard.Body className="space-y-2 p-2">
                     <PricingCard.List className="space-y-2">
                       {plan.features.map((feature) => (
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">

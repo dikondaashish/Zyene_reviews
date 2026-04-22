@@ -292,7 +292,7 @@ export function Step2Form({
   );
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5">
       {/* Header */}
       <div className="text-center space-y-3">
         <motion.div
@@ -301,14 +301,14 @@ export function Step2Form({
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
           className="inline-flex"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-            <Link2 className="w-8 h-8 text-primary" />
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
+            <Link2 className="w-7 h-7 text-primary" />
           </div>
         </motion.div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
           Connect your business
         </h2>
-        <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
+        <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
           Link Google to auto-fill your details, or enter them manually below.
         </p>
       </div>
@@ -339,7 +339,7 @@ export function Step2Form({
               <Button
                 type="button"
                 onClick={handleConnectClick}
-                className="w-full h-14 text-base rounded-2xl border border-border bg-card text-foreground transition-colors font-semibold cursor-pointer group hover:bg-muted/50"
+                className="w-full h-12 text-sm rounded-2xl border border-border bg-card text-foreground transition-colors font-semibold cursor-pointer group hover:bg-muted/50"
               >
                 <GoogleIcon />
                 <span className="ml-2.5">Connect Google Business</span>
@@ -541,7 +541,7 @@ export function Step2Form({
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full h-14 mt-2 font-semibold cta-button"
+            className="w-full h-12 mt-2 font-semibold cta-button text-sm"
           >
             {advancing || isLoading ? (
               <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
