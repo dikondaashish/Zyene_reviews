@@ -251,18 +251,52 @@ export async function buildAnalyticsRangePayload(
         );
     }
 
-    const platformData = [
-        {
-            platform: "Google",
-            reviews: totalReviews,
-            avgRating,
-            responseRate,
-            profileViews: (perfTotals as { profileViews?: number } | null)?.profileViews,
-            callClicks: (perfTotals as { callClicks?: number } | null)?.callClicks,
-            directionRequests: (perfTotals as { directionRequests?: number } | null)?.directionRequests,
-            websiteClicks: (perfTotals as { websiteClicks?: number } | null)?.websiteClicks,
-        },
-    ];
+    const normalizePlatformName = (p: unknown): string => {
+        const raw = typeof p === "string" ? p.trim().toLowerCase() : "";
+        if (!raw || raw === "zyene") return "Own Platform";
+        if (raw === "google") return "Google";
+        if (raw === "facebook") return "Facebook";
+        return raw.charAt(0).toUpperCase() + raw.slice(1);
+    };
+
+    const platformAgg = new Map<string, { reviews: number; ratingSum: number; responded: number }>();
+    currentReviews.forEach((r) => {
+        const name = normalizePlatformName(r.platform);
+        if (!platformAgg.has(name)) {
+            platformAgg.set(name, { reviews: 0, ratingSum: 0, responded: 0 });
+        }
+        const entry = platformAgg.get(name)!;
+        entry.reviews += 1;
+        entry.ratingSum += r.rating || 0;
+        if (r.response_status === "responded" || r.responded_at) entry.responded += 1;
+    });
+
+    const platformOrder = ["Google", "Own Platform", "Facebook"];
+    const platformData = Array.from(platformAgg.entries())
+        .map(([name, agg]) => ({
+            platform: name,
+            reviews: agg.reviews,
+            avgRating: agg.reviews > 0 ? agg.ratingSum / agg.reviews : 0,
+            responseRate: agg.reviews > 0 ? (agg.responded / agg.reviews) * 100 : 0,
+            profileViews:
+                name === "Google" ? (perfTotals as { profileViews?: number } | null)?.profileViews : undefined,
+            callClicks:
+                name === "Google" ? (perfTotals as { callClicks?: number } | null)?.callClicks : undefined,
+            directionRequests:
+                name === "Google"
+                    ? (perfTotals as { directionRequests?: number } | null)?.directionRequests
+                    : undefined,
+            websiteClicks:
+                name === "Google" ? (perfTotals as { websiteClicks?: number } | null)?.websiteClicks : undefined,
+        }))
+        .sort((a, b) => {
+            const ai = platformOrder.indexOf(a.platform);
+            const bi = platformOrder.indexOf(b.platform);
+            if (ai === -1 && bi === -1) return b.reviews - a.reviews;
+            if (ai === -1) return 1;
+            if (bi === -1) return -1;
+            return ai - bi;
+        });
 
     return {
         range: normalizedRange,
