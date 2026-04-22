@@ -284,25 +284,24 @@ export function Step2Form({
 
   /* ─── Icon Components ─── */
   const ChainIcon = () => (
-    <svg width="52" height="52" viewBox="0 0 64 64" fill="none">
+    <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
       <defs>
-        <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#d4a054" />
-          <stop offset="50%" stopColor="#e8c068" />
-          <stop offset="100%" stopColor="#b8863c" />
+        <linearGradient id="chain-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.6" />
         </linearGradient>
       </defs>
       <path
         d="M26 38L38 26M22 26L14 34C11.7909 36.2091 11.7909 39.7909 14 42L22 50C24.2091 52.2091 27.7909 52.2091 30 50L34 46M30 18L34 14C36.2091 11.7909 39.7909 11.7909 42 14L50 22C52.2091 24.2091 52.2091 27.7909 50 30L42 38C39.7909 40.2091 36.2091 40.2091 34 38"
-        stroke="url(#gold-grad)"
-        strokeWidth="3.5"
+        stroke="url(#chain-grad)"
+        strokeWidth="4"
         strokeLinecap="round"
       />
     </svg>
   );
 
   const GoogleIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -327,7 +326,7 @@ export function Step2Form({
     return (
       <div className="max-w-md mx-auto space-y-5 py-8">
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/5 mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
             <MapPin className="h-7 w-7 text-primary" />
           </div>
           <p className="font-bold text-xl text-foreground">Select your business</p>
@@ -340,13 +339,13 @@ export function Step2Form({
               type="button"
               onClick={() => handleSelection(loc)}
               disabled={advancing}
-              className="w-full text-left p-4 rounded-xl border border-border/60 bg-card hover:border-primary/40 hover:bg-primary/[0.02] transition-all flex items-center justify-between group"
+              className="w-full text-left p-4 rounded-2xl border border-border bg-background/60 hover:border-primary/40 hover:bg-primary/[0.03] transition-all flex items-center justify-between group"
             >
               <div>
-                <p className="font-bold text-sm">{loc.businessName}</p>
+                <p className="font-bold text-sm text-foreground">{loc.businessName}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{loc.fullAddress}</p>
               </div>
-              {advancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />}
+              {advancing ? <Loader2 className="w-4 h-4 animate-spin text-primary" /> : <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />}
             </button>
           ))}
         </div>
@@ -357,17 +356,17 @@ export function Step2Form({
   if (googleState.status === "success" && availableLocations.length === 0) {
     return (
       <div className="max-w-sm mx-auto text-center space-y-6 py-10">
-        <div className="w-16 h-16 rounded-full bg-chart-2/15 flex items-center justify-center mx-auto ring-4 ring-chart-2/10">
+        <div className="w-16 h-16 rounded-2xl bg-chart-2/10 flex items-center justify-center mx-auto ring-1 ring-chart-2/20">
           <CheckCircle2 className="w-8 h-8 text-chart-2" />
         </div>
         <div>
           <p className="font-bold text-chart-2 text-xl">Connected!</p>
-          <p className="text-sm text-chart-2/80 mt-1">{form.getValues("businessName")}</p>
+          <p className="text-sm text-muted-foreground mt-1">{form.getValues("businessName")}</p>
         </div>
         <Button
           type="button"
           onClick={onSaveAndNext}
-          className="w-full h-12 bg-chart-2 hover:bg-chart-2/90 rounded-xl font-semibold text-sm cursor-pointer"
+          className="w-full h-12 bg-chart-2 hover:bg-chart-2/90 rounded-2xl font-semibold text-sm cursor-pointer"
           disabled={advancing}
         >
           {advancing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Continue Setup →"}
@@ -379,14 +378,14 @@ export function Step2Form({
   if (googleState.status === "error") {
     return (
       <div className="max-w-sm mx-auto space-y-4 py-10">
-        <div className="p-4 bg-destructive/10 text-destructive rounded-xl text-sm border border-destructive/20 font-medium">
+        <div className="p-4 bg-destructive/10 text-destructive rounded-2xl text-sm border border-destructive/20 font-medium">
           {googleState.errorMessage}
         </div>
         <Button
           type="button"
           variant="outline"
           onClick={() => setGoogleState({ status: "idle" })}
-          className="w-full h-12 rounded-xl font-semibold border-2 cursor-pointer"
+          className="w-full h-12 rounded-2xl font-semibold border-2 cursor-pointer"
         >
           <RefreshCw className="h-4 w-4 mr-2" /> Try again
         </Button>
@@ -396,60 +395,58 @@ export function Step2Form({
 
   /* ─── Main Two-Column Layout (idle state) ─── */
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-0 rounded-2xl overflow-hidden border border-border/30">
+    <div className="grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-border bg-card/80 backdrop-blur-xl">
 
       {/* ─── LEFT PANEL: Google Connect ─── */}
-      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden"
-           style={{
-             background: `
-               linear-gradient(135deg, rgba(212, 160, 84, 0.06) 0%, rgba(232, 192, 104, 0.03) 50%, rgba(255, 79, 0, 0.04) 100%)
-             `
-           }}>
-        {/* Decorative radial glow */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#d4a054]/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden bg-primary/[0.03]">
+        {/* Subtle decorative glow */}
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-primary/[0.06] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-7">
-          {/* Chain icon */}
+        <div className="relative z-10 space-y-6">
+          {/* Icon — matches Step 1 style */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, type: "spring" }}
+            transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
+            className="inline-flex"
           >
-            <ChainIcon />
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+              <ChainIcon />
+            </div>
           </motion.div>
 
-          {/* Title & Subtitle */}
+          {/* Title & Subtitle — matches Step 1 typography */}
           <div>
-            <h2 className="text-2xl sm:text-3xl font-display font-semibold text-foreground tracking-tight leading-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
               Connect your business
             </h2>
-            <p className="text-muted-foreground mt-2.5 text-sm leading-relaxed max-w-xs">
+            <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed max-w-xs">
               Link Google to auto-fill your details, or enter them manually below.
             </p>
           </div>
 
-          {/* Google Connect Button */}
+          {/* Google Connect Button — matches card style */}
           <Button
             type="button"
             onClick={handleConnectClick}
-            className="w-full max-w-[340px] h-[52px] rounded-full border border-border/50 bg-white/70 dark:bg-white/5 backdrop-blur-lg text-foreground shadow-sm hover:shadow-md transition-all font-medium cursor-pointer group flex items-center justify-between px-5 gap-3"
+            className="w-full max-w-[340px] h-12 rounded-2xl border border-border bg-card text-foreground hover:bg-muted/50 transition-colors font-semibold cursor-pointer group text-sm"
           >
             <GoogleIcon />
-            <span className="text-[13px] sm:text-sm font-semibold">Connect Google Business</span>
-            <ArrowRight className="h-4 w-4 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform" />
+            <span className="ml-2.5">Connect Google Business</span>
+            <ArrowRight className="ml-auto h-5 w-5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
           </Button>
 
-          {/* Benefits */}
-          <div className="space-y-3 pt-1">
+          {/* Benefits — uses primary color for checkmarks */}
+          <div className="space-y-2.5">
             {[
-              { icon: "✓", text: "Auto-import all your reviews" },
-              { icon: "✓", text: "AI-powered response suggestions" },
-              { icon: "✓", text: "Real-time sync — new reviews appear instantly" },
+              "Auto-import all your reviews",
+              "AI-powered response suggestions",
+              "Real-time sync — new reviews appear instantly",
             ].map((benefit) => (
-              <div key={benefit.text} className="flex items-start gap-3 text-[13px] text-muted-foreground/80">
-                <CheckCircle2 className="w-4 h-4 text-[#b8863c] shrink-0 mt-0.5" />
-                <span className="font-medium leading-snug">{benefit.text}</span>
+              <div key={benefit} className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
+                <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                <span className="font-medium">{benefit}</span>
               </div>
             ))}
           </div>
@@ -457,56 +454,52 @@ export function Step2Form({
       </div>
 
       {/* ─── RIGHT PANEL: Manual Entry ─── */}
-      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center bg-card/80 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-border/30">
+      <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-border">
         
-        {/* "or enter manually" label */}
-        <div className="mb-7">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/50 shrink-0">
+        {/* Divider label */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="h-px flex-1 bg-border/60" />
+            <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-muted-foreground/60 shrink-0">
               or enter manually
             </span>
-            <div className="h-px flex-1 bg-border/40" />
+            <div className="h-px flex-1 bg-border/60" />
           </div>
 
-          {/* Business Name Label */}
-          <div className="text-xs font-semibold text-foreground/70 mb-1.5">
-            {form.watch("businessName") || businessName
-              ? `${form.watch("businessName") || businessName}'s Business`
-              : "Your Business"}
-          </div>
+          {/* Business name — just the name, no redundant suffix */}
+          <p className="text-sm font-semibold text-foreground">
+            {form.watch("businessName") || businessName || "Your Business"}
+          </p>
         </div>
 
-        {/* Form Fields */}
+        {/* Form Fields — matching Step 1 input styles */}
         <div className="space-y-4">
-          {/* Address */}
           <div className="space-y-1.5">
-            <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
               Address
             </Label>
             <Input
               {...form.register("address")}
               placeholder="e.g., 123 Main St, City"
               disabled={isLoading || googleState.status === "success"}
-              className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all placeholder:text-muted-foreground/40"
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
             />
           </div>
 
-          {/* City & State row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                 City
               </Label>
               <Input
                 {...form.register("city")}
                 placeholder="City"
                 disabled={isLoading || googleState.status === "success"}
-                className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all placeholder:text-muted-foreground/40"
+                className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest ml-0.5">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                 State
               </Label>
               <Select
@@ -514,7 +507,7 @@ export function Step2Form({
                 onValueChange={(v) => form.setValue("state", v)}
                 disabled={isLoading || googleState.status === "success"}
               >
-                <SelectTrigger className="h-11 bg-background/60 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg text-sm transition-all">
+                <SelectTrigger className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all">
                   <SelectValue placeholder="State" />
                 </SelectTrigger>
                 <SelectContent>
@@ -526,36 +519,39 @@ export function Step2Form({
             </div>
           </div>
 
-          {/* Continue Button */}
+          {/* Continue — uses cta-button class like Step 1 */}
           <Button
             type="button"
             onClick={form.handleSubmit(onSaveAndNext)}
             disabled={advancing || isLoading || !form.formState.isValid}
-            className="w-full h-11 mt-3 font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/15 hover:shadow-primary/25 hover:brightness-105 active:scale-[0.98] transition-all rounded-lg cursor-pointer text-sm"
+            className="w-full h-12 mt-2 text-sm font-semibold cta-button"
           >
             {advancing || isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...</>
             ) : (
-              "Continue"
+              <>
+                Continue
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </>
             )}
           </Button>
 
-          {/* Privacy & Skip */}
-          <div className="space-y-3 pt-4">
-            <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground/50 font-medium">
+          {/* Privacy & Skip — matching established patterns */}
+          <div className="space-y-3 pt-3">
+            <p className="text-[11px] text-muted-foreground/50 flex items-center justify-center gap-1.5 font-medium">
               <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
-              <span>We only read your profile. We never post on your behalf.</span>
-            </div>
+              We only read your profile. We never post on your behalf.
+            </p>
 
             <div className="text-center">
               <button
                 type="button"
                 onClick={handleSkip}
                 disabled={advancing}
-                className="text-[11px] font-semibold text-muted-foreground/40 hover:text-primary transition-colors tracking-wider uppercase cursor-pointer"
+                className="text-xs font-semibold text-muted-foreground/60 hover:text-primary transition-colors tracking-wide cursor-pointer hover:underline underline-offset-4"
               >
                 I&apos;ll connect later
               </button>
