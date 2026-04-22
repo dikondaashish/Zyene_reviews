@@ -476,6 +476,18 @@ export function Step2Form({
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
+              Business Name
+            </Label>
+            <Input
+              {...form.register("businessName")}
+              placeholder="e.g., Acme Corp"
+              disabled={isLoading || googleState.status === "success"}
+              className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
               Address
             </Label>
             <Input
