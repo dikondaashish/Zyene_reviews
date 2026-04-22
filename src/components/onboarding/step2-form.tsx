@@ -466,10 +466,6 @@ export function Step2Form({
             <div className="h-px flex-1 bg-border/60" />
           </div>
 
-          {/* Business name — just the name, no redundant suffix */}
-          <p className="text-sm font-semibold text-foreground">
-            {form.watch("businessName") || businessName || "Your Business"}
-          </p>
         </div>
 
         {/* Form Fields — matching Step 1 input styles */}
