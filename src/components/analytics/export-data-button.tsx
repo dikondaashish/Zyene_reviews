@@ -7,9 +7,10 @@ import { toast } from "sonner";
 interface ExportDataButtonProps {
     businessId?: string | null;
     range: string;
+    platform: string;
 }
 
-export function ExportDataButton({ businessId, range }: ExportDataButtonProps) {
+export function ExportDataButton({ businessId, range, platform }: ExportDataButtonProps) {
     const [isExporting, setIsExporting] = useState(false);
 
     const handleExport = async () => {
@@ -22,17 +23,25 @@ export function ExportDataButton({ businessId, range }: ExportDataButtonProps) {
         const toastId = toast.loading("Preparing your analytics data...");
 
         try {
-            const response = await fetch(`/api/analytics/export?range=${range}`);
+            const response = await fetch(
+                `/api/analytics/export?range=${encodeURIComponent(range)}&platform=${encodeURIComponent(platform)}`,
+                { credentials: "include" }
+            );
             
             if (!response.ok) {
-                throw new Error("Failed to export data");
+                const message = await response.text().catch(() => "Failed to export data");
+                throw new Error(message || "Failed to export data");
             }
 
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `analytics_export_${range}_${new Date().toISOString().split('T')[0]}.csv`;
+            const disposition = response.headers.get("content-disposition") || "";
+            const matched = disposition.match(/filename="([^"]+)"/i);
+            a.download =
+                matched?.[1] ||
+                `analytics_export_${platform}_${range}_${new Date().toISOString().split("T")[0]}.csv`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

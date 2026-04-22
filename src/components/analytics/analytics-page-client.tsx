@@ -135,7 +135,7 @@ export function AnalyticsPageClient({
 
                     <div className="flex items-center gap-3 bg-muted/40 p-1 rounded-xl border border-border/50 backdrop-blur-md">
                         <ReportGenerator businessName={businessName || undefined} dateRange={d.rangeLabel} />
-                        <ExportDataButton businessId={businessId} range={range} />
+                        <ExportDataButton businessId={businessId} range={range} platform={platform} />
                     </div>
                 </div>
 

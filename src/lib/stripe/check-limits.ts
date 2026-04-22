@@ -142,6 +142,12 @@ export async function checkLimit(
                 .in("business_id", businessIds)
                 .gte("created_at", startOfMonth.toISOString());
 
+            // Count only outbound/customer-targeted requests for billing usage.
+            // Excludes anonymous telemetry rows created by direct-link / QR tracking.
+            query = query.or(
+                "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null"
+            );
+
             if (limitType === "email_requests") {
                 query = query.eq("channel", "email");
             } else if (limitType === "sms_requests") {

@@ -32,6 +32,8 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
                 logging: false,
                 backgroundColor: "#ffffff",
                 windowWidth: 1200, // Fixed width for consistent layout
+                scrollX: 0,
+                scrollY: -window.scrollY,
             });
 
             const imgData = canvas.toDataURL("image/png");

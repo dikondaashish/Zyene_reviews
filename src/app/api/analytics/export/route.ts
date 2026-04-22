@@ -14,6 +14,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const range = searchParams.get("range") || "30d";
+    const platform = searchParams.get("platform") || "all";
 
     const { business } = await getActiveBusinessId();
 
@@ -22,19 +23,29 @@ export async function GET(request: Request) {
     const { currentStart, currentEnd } = getAnalyticsPeriods(range);
 
     // Fetch Reviews for Export
-    const { data: reviews } = await supabase
+    let reviewsQuery = supabase
         .from("reviews")
-        .select("*")
+        .select("id,created_at,review_date,platform,rating,is_visible")
         .eq("business_id", business.id)
-        .gte("created_at", currentStart.toISOString())
-        .lte("created_at", currentEnd.toISOString())
-        .order("created_at", { ascending: true });
+        .or("is_visible.is.null,is_visible.eq.true")
+        .gte("review_date", currentStart.toISOString())
+        .lte("review_date", currentEnd.toISOString())
+        .order("review_date", { ascending: true });
+
+    if (platform === "zyene") {
+        reviewsQuery = reviewsQuery.or("platform.eq.zyene,platform.is.null");
+    } else if (platform !== "all") {
+        reviewsQuery = reviewsQuery.eq("platform", platform);
+    }
+
+    const { data: reviews } = await reviewsQuery;
 
     // Aggregate Daily Trends for the CSV
     const dateMap = new Map<string, { Date: string; "Avg Rating": number; "Review Count": number; "Positive": number; "Neutral": number; "Negative": number }>();
 
     (reviews || []).forEach((r) => {
-        const date = new Date(r.created_at).toISOString().split('T')[0];
+        const sourceDate = r.review_date || r.created_at;
+        const date = new Date(sourceDate).toISOString().split("T")[0];
         if (!dateMap.has(date)) {
             dateMap.set(date, { Date: date, "Avg Rating": 0, "Review Count": 0, Positive: 0, Neutral: 0, Negative: 0 });
         }
@@ -53,7 +64,7 @@ export async function GET(request: Request) {
     // Generate CSV
     const csvData = Papa.unparse(trendRows);
     const businessName = business.name || "business";
-    const filename = `${businessName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_analytics_${range}.csv`;
+    const filename = `${businessName.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_analytics_${platform}_${range}.csv`;
 
     return new NextResponse(csvData, {
         status: 200,
