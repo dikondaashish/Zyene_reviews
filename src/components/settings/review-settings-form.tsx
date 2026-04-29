@@ -93,6 +93,8 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
             }
 
             toast.success("Review settings updated");
+            // Mark current values as the new baseline so "Save Changes" disables again.
+            form.reset(data);
             router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
@@ -194,7 +196,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
 
                 <p className="text-xs text-muted-foreground">Note: Quiet hours settings are currently only available for admin users via direct configuration.</p>
 
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Save Changes
                 </Button>

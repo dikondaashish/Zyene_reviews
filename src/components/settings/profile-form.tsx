@@ -56,6 +56,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
             }
 
             toast.success("Profile updated successfully");
+            // Mark current values as the new baseline so "Save Changes" disables again.
+            form.reset(data);
             router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
@@ -110,7 +112,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     </div>
                 </div>
                 <div className="flex justify-end pt-2">
-                    <Button type="submit" disabled={isLoading} size="sm">
+                    <Button type="submit" disabled={isLoading || !form.formState.isDirty} size="sm">
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Save Changes
                     </Button>
