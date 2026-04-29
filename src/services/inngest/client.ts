@@ -29,6 +29,8 @@ type SyncPlatformEvent = {
     data: {
         platformId: string;
         platformType: "google" | "yelp" | "facebook";
+        /** When set (e.g. Pub/Sub review webhook), identifies the GBP location that triggered the sync. */
+        googleLocationId?: string;
     };
 };
 

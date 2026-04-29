@@ -21,10 +21,13 @@ export const syncPlatformWorker = inngest.createFunction(
   { id: "sync-platform-worker", name: "Sync Review Platform" },
   { event: "review/sync.platform" },
   async ({ event, step }) => {
-    const { platformId, platformType } = event.data;
+    const { platformId, platformType, googleLocationId } = event.data;
 
     return await step.run(`sync-${platformType}`, async () => {
-      console.log(`[Worker] Starting sync for ${platformType} platform: ${platformId}`);
+      console.log(
+        `[Worker] Starting sync for ${platformType} platform: ${platformId}` +
+            (googleLocationId ? ` (location ${googleLocationId})` : "")
+      );
       
       try {
         let result: unknown;
