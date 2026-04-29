@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Balancer from "react-wrap-balancer";
 import Link from "next/link";
 import { CircleCheck } from "lucide-react";
 
@@ -81,8 +80,8 @@ export default function Pricing() {
     <Section>
       <Container className="flex flex-col items-center gap-4 text-center">
         <h2 className="!my-0">Pricing</h2>
-        <p className="text-lg opacity-70 md:text-2xl">
-          <Balancer>Select the plan that best suits your needs.</Balancer>
+        <p className="max-w-2xl text-balance text-lg opacity-70 md:text-2xl">
+          Select the plan that best suits your needs.
         </p>
 
         <div className="mt-4 w-full not-prose flex justify-center">
