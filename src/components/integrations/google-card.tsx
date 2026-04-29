@@ -63,6 +63,7 @@ interface GoogleCardProps {
         google_performance_synced_at?: string | null;
         sync_status: string | null;
         total_reviews: number;
+        average_rating?: number | null;
     } | null;
     businessId: string;
     businessName?: string | null;
@@ -106,11 +107,18 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     const router = useRouter();
     const [isPosting, setIsPosting] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
-    const { remoteStatus, isSyncBusy, markManualSyncStarted } = useGoogleSyncRemoteState({
-        businessId,
-        initialSyncStatus: platform?.sync_status ?? null,
-        initialLastSyncedAt: platform?.last_synced_at ?? null,
-    });
+    const { remoteStatus, isSyncBusy, markManualSyncStarted, lastSyncedAt, totalReviews } =
+        useGoogleSyncRemoteState({
+            businessId,
+            initialSyncStatus: platform?.sync_status ?? null,
+            initialLastSyncedAt: platform?.last_synced_at ?? null,
+            initialTotalReviews: platform?.total_reviews ?? null,
+            initialAverageRating:
+                platform?.average_rating != null && !Number.isNaN(Number(platform.average_rating))
+                    ? Number(platform.average_rating)
+                    : null,
+            onSyncSettled: () => router.refresh(),
+        });
     const syncButtonBusy = isPosting || isSyncBusy;
     const [mounted, setMounted] = useState(false);
     const [isPickingLocation, setIsPickingLocation] = useState(false);
@@ -126,6 +134,9 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     const isConnected = !!platform;
     const isError = platform?.sync_status?.startsWith("error");
     const needsLocation = isConnected && !platform?.google_location_id;
+
+    const displayReviewCount = totalReviews ?? platform?.total_reviews ?? 0;
+    const displayLastSyncedAt = lastSyncedAt ?? platform?.last_synced_at ?? null;
 
     const supabase = createClient();
 
@@ -373,7 +384,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 <Star className="h-3.5 w-3.5" />
                                 <span className="text-xs font-medium uppercase tracking-wide">Reviews Synced</span>
                             </div>
-                            <p className="text-xl font-bold">{platform?.total_reviews || 0}</p>
+                            <p className="text-xl font-bold">{displayReviewCount}</p>
                         </div>
                         <div className="rounded-lg bg-muted/50 p-3 text-center">
                             <div className="flex items-center justify-center gap-1.5 text-muted-foreground mb-1">
@@ -381,7 +392,7 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
                                 <span className="text-xs font-medium uppercase tracking-wide">Last Synced</span>
                             </div>
                             <p className="text-sm font-semibold mt-1">
-                                {!mounted ? "..." : (platform?.last_synced_at ? timeAgo(platform.last_synced_at as string) : "Never")}
+                                {!mounted ? "..." : displayLastSyncedAt ? timeAgo(displayLastSyncedAt) : "Never"}
                             </p>
                         </div>
                     </div>

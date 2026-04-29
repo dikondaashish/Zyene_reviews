@@ -13,6 +13,8 @@ type GooglePlatformRow = {
     sync_status: string | null;
     last_synced_at: string | null;
     locked_until?: string | null;
+    total_reviews?: number | null;
+    average_rating?: number | string | null;
 };
 
 /**
@@ -46,7 +48,9 @@ async function getGooglePlatformForUser(
                 platform,
                 sync_status,
                 last_synced_at,
-                locked_until
+                locked_until,
+                total_reviews,
+                average_rating
             )
         `
         )
@@ -86,6 +90,9 @@ export async function GET(request: Request) {
             sync_status: platform.sync_status ?? "idle",
             last_synced_at: platform.last_synced_at ?? null,
             locked_until: platform.locked_until ?? null,
+            total_reviews: Number(platform.total_reviews ?? 0),
+            average_rating:
+                platform.average_rating != null ? Number(platform.average_rating) : null,
         });
     } catch (error: unknown) {
         console.error("Sync status GET:", error);

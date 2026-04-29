@@ -20,7 +20,10 @@ export function SyncButton({
     const [showForce, setShowForce] = useState(false)
     const [busySince, setBusySince] = useState<number | null>(null)
     const router = useRouter()
-    const { isSyncBusy, isStalled, markManualSyncStarted } = useGoogleSyncRemoteState({ businessId })
+    const { isSyncBusy, isStalled, markManualSyncStarted } = useGoogleSyncRemoteState({
+        businessId,
+        onSyncSettled: () => router.refresh(),
+    })
 
     const busy = isPosting || isSyncBusy
     const forceHintAfterMs = 60 * 1000

@@ -777,22 +777,31 @@ export async function syncGoogleReviewsPage(
 export async function finalizeGoogleSync(
     platformId: string, 
     businessId: string, 
-    finalTotal?: number, 
-    finalAvg?: number
+    _finalTotal?: number, 
+    _finalAvg?: number
 ) {
     const admin = createAdminClient();
 
-    // 1. Fetch exact visible count for platform
-    const { count } = await admin
+    /** Roll up from DB only — Google API `totalReviewCount` can be 0 for wrong listing while rows exist here, and `0 ?? dbCount` would incorrectly keep 0. */
+    const { data: ratingRows, error: rollupErr } = await admin
         .from("reviews")
-        .select("id", { count: 'exact', head: true })
+        .select("rating")
         .eq("business_id", businessId)
         .eq("platform", "google")
         .eq("is_visible", true);
 
+    if (rollupErr) {
+        console.error("[Sync] Finalize rollup select failed:", rollupErr);
+    }
+
+    const list = ratingRows || [];
+    const total = list.length;
+    const avg = total > 0 ? list.reduce((s, r) => s + Number(r.rating ?? 0), 0) / total : 0;
+    const avgRounded = parseFloat(avg.toFixed(1));
+
     const updateData = {
-        total_reviews: finalTotal ?? count ?? 0,
-        average_rating: parseFloat((finalAvg ?? 0).toFixed(1)),
+        total_reviews: total,
+        average_rating: avgRounded,
         sync_status: 'idle',
         last_synced_at: new Date().toISOString(),
         locked_until: null
@@ -803,8 +812,8 @@ export async function finalizeGoogleSync(
     // Update business summary
     try {
         await admin.from("businesses").update({
-            total_reviews: updateData.total_reviews,
-            average_rating: updateData.average_rating
+            total_reviews: total,
+            average_rating: avgRounded
         }).eq("id", businessId);
     } catch (e) {
         console.error("[Sync] Finalize failed for business summary update:", e);

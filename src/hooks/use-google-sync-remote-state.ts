@@ -1,12 +1,16 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 type UseGoogleSyncRemoteStateOptions = {
     businessId?: string
     /** From RSC / parent (e.g. integrations card) */
     initialSyncStatus?: string | null
     initialLastSyncedAt?: string | null
+    initialTotalReviews?: number | null
+    initialAverageRating?: number | null
+    /** Fired once when DB-backed status goes from `running` to `idle` (sync finished). Use for `router.refresh()`. */
+    onSyncSettled?: () => void
 }
 
 /**
@@ -17,12 +21,20 @@ export function useGoogleSyncRemoteState({
     businessId,
     initialSyncStatus = null,
     initialLastSyncedAt = null,
+    initialTotalReviews = null,
+    initialAverageRating = null,
+    onSyncSettled,
 }: UseGoogleSyncRemoteStateOptions) {
     const [remoteStatus, setRemoteStatus] = useState<string | null>(initialSyncStatus)
     const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(initialLastSyncedAt)
+    const [totalReviews, setTotalReviews] = useState<number | null>(initialTotalReviews)
+    const [averageRating, setAverageRating] = useState<number | null>(initialAverageRating)
     const [warmingUp, setWarmingUp] = useState(false)
     const [warmupStart, setWarmupStart] = useState<number | null>(null)
     const [lockedUntil, setLockedUntil] = useState<string | null>(null)
+    const prevRemoteStatusRef = useRef<string | null>(null)
+    const onSyncSettledRef = useRef(onSyncSettled)
+    onSyncSettledRef.current = onSyncSettled
 
     useEffect(() => {
         setRemoteStatus(initialSyncStatus ?? null)
@@ -32,6 +44,14 @@ export function useGoogleSyncRemoteState({
         setLastSyncedAt(initialLastSyncedAt ?? null)
     }, [initialLastSyncedAt])
 
+    useEffect(() => {
+        setTotalReviews(initialTotalReviews ?? null)
+    }, [initialTotalReviews])
+
+    useEffect(() => {
+        setAverageRating(initialAverageRating ?? null)
+    }, [initialAverageRating])
+
     const fetchStatus = useCallback(async () => {
         const url = businessId
             ? `/api/sync/google?businessId=${encodeURIComponent(businessId)}`
@@ -40,13 +60,23 @@ export function useGoogleSyncRemoteState({
         if (!res.ok) return
         const body = (await res.json()) as {
             success?: boolean
-            data?: { sync_status?: string; last_synced_at?: string | null; locked_until?: string | null }
+            data?: {
+                sync_status?: string
+                last_synced_at?: string | null
+                locked_until?: string | null
+                total_reviews?: number
+                average_rating?: number | null
+            }
         }
         const data = body.data
         if (!data) return
         setRemoteStatus(data.sync_status ?? null)
         setLastSyncedAt(data.last_synced_at ?? null)
         setLockedUntil(data.locked_until ?? null)
+        if (typeof data.total_reviews === "number") setTotalReviews(data.total_reviews)
+        if (data.average_rating != null && !Number.isNaN(Number(data.average_rating))) {
+            setAverageRating(Number(data.average_rating))
+        }
     }, [businessId])
 
     useEffect(() => {
@@ -87,6 +117,14 @@ export function useGoogleSyncRemoteState({
         return () => clearTimeout(id)
     }, [warmingUp])
 
+    useEffect(() => {
+        const prev = prevRemoteStatusRef.current
+        prevRemoteStatusRef.current = remoteStatus ?? null
+        if (prev === "running" && remoteStatus === "idle") {
+            onSyncSettledRef.current?.()
+        }
+    }, [remoteStatus])
+
     const markManualSyncStarted = useCallback(() => {
         setWarmingUp(true)
         setWarmupStart(Date.now())
@@ -99,6 +137,8 @@ export function useGoogleSyncRemoteState({
     return {
         remoteStatus,
         lastSyncedAt,
+        totalReviews,
+        averageRating,
         lockedUntil,
         isStalled,
         isSyncBusy,
