@@ -281,6 +281,8 @@ async function fetchGoogleReviewsPaginated(
     googleReviews: GoogleReview[];
     apiTotalReviews?: number;
     apiAverageRating?: number;
+    /** True when more pages existed but we stopped at {@link MAX_REVIEW_PAGES} — list is incomplete for reconciliation. */
+    truncated: boolean;
 }> {
     let pageToken: string | undefined = undefined;
     const googleReviews: GoogleReview[] = [];
@@ -331,7 +333,8 @@ async function fetchGoogleReviewsPaginated(
         }
     } while (pageToken && pageCount < MAX_REVIEW_PAGES);
 
-    return { googleReviews, apiTotalReviews, apiAverageRating };
+    const truncated = Boolean(pageToken);
+    return { googleReviews, apiTotalReviews, apiAverageRating, truncated };
 }
 
 export async function getValidGoogleToken(platformId: string) {
@@ -738,7 +741,14 @@ export async function syncGoogleReviewsPage(
 
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];
+    /** Every ID Google returned on this page — needed for deletion reconciliation even when we hash-skip or early-exit mid-page. */
     const externalIdsOnPage: string[] = [];
+    for (const review of apiResp.reviews) {
+        if (review.reviewId) {
+            externalIdsOnPage.push(review.reviewId);
+        }
+    }
+
     let earlyExit = false;
 
     let newReviewsCount = 0;
@@ -784,9 +794,6 @@ export async function syncGoogleReviewsPage(
             if (stats.isNew) {
                 newReviewsCount++;
             }
-        }
-        if (review.reviewId) {
-            externalIdsOnPage.push(review.reviewId);
         }
     }
 
@@ -931,7 +938,8 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
     try {
         // Default to full-sync behavior unless explicitly enabled.
         if (!incrementalEnabled || forceFullSync) {
-            const { googleReviews, apiTotalReviews, apiAverageRating } = await fetchGoogleReviewsPaginated(
+            const { googleReviews, apiTotalReviews, apiAverageRating, truncated } =
+                await fetchGoogleReviewsPaginated(
                 context.accessToken,
                 context.googleAccountId,
                 context.googleLocationId
@@ -953,11 +961,12 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
                 if (review.reviewId) seenGoogleExternalIds.add(review.reviewId);
             }
 
-            // Safe to reconcile only if we likely fetched the complete list (not truncated by MAX_REVIEW_PAGES).
+            // Safe to reconcile only if we fetched every page Google had (not truncated) and counts match when API gives a total.
             const reconciliationSafe =
-                typeof apiTotalReviews === "number" && apiTotalReviews >= 0
+                !truncated &&
+                (typeof apiTotalReviews === "number" && apiTotalReviews > 0
                     ? googleReviews.length >= apiTotalReviews
-                    : false;
+                    : true);
             await hideGoogleReviewsRemovedFromSource(admin, {
                 businessId: context.platform.business_id,
                 platformId: context.platform.id,
