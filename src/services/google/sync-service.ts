@@ -476,6 +476,25 @@ export interface GoogleSyncContext {
     orderByUpdateTimeEnabled: boolean;
 }
 
+/**
+ * Inngest persists step output as JSON; `syncStateManager` becomes a plain object and
+ * `instanceof SyncStateManager` is unreliable across bundles. Use duck typing and fall back.
+ */
+function syncStateManagerFromContext(context: GoogleSyncContext): SyncStateManager {
+    const m = context.syncStateManager as unknown;
+    if (
+        m != null &&
+        typeof m === "object" &&
+        typeof (m as { checkpointSync?: unknown }).checkpointSync === "function" &&
+        typeof (m as { beginSync?: unknown }).beginSync === "function" &&
+        typeof (m as { completeSync?: unknown }).completeSync === "function" &&
+        typeof (m as { failSync?: unknown }).failSync === "function"
+    ) {
+        return m as SyncStateManager;
+    }
+    return new SyncStateManager();
+}
+
 function isOrderByUnsupportedError(error: unknown): boolean {
     const msg = error instanceof Error ? error.message : String(error);
     return (
@@ -712,10 +731,7 @@ export async function syncGoogleReviewsPage(
     }
 
     context.reviewsProcessed += syncedCount;
-    const stateManager = context.syncStateManager instanceof SyncStateManager
-        ? context.syncStateManager
-        : new SyncStateManager();
-    await stateManager.checkpointSync(
+    await syncStateManagerFromContext(context).checkpointSync(
         context.platform.id,
         earlyExit ? "__EARLY_EXIT__" : apiResp.nextPageToken ?? "",
         context.reviewsProcessed
@@ -893,7 +909,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         let lastResp = null;
         let pageCount = 0;
         const seenGoogleExternalIds = new Set<string>();
-        await context.syncStateManager.beginSync(platformId);
+        await syncStateManagerFromContext(context).beginSync(platformId);
 
         do {
             lastResp = await syncGoogleReviewsPage(context, pageToken);
@@ -928,7 +944,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         console.log(
             `[Sync] Incremental complete for platform ${platformId}: high-water mark -> ${newHighWaterMark}, processed=${context.reviewsProcessed}`
         );
-        await context.syncStateManager.completeSync(
+        await syncStateManagerFromContext(context).completeSync(
             platformId,
             newHighWaterMark,
             context.reviewsProcessed
@@ -949,7 +965,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         if (usingIncremental) {
             try {
                 const message = error instanceof Error ? error.message : String(error);
-                await context.syncStateManager.failSync(platformId, message);
+                await syncStateManagerFromContext(context).failSync(platformId, message);
             } catch (stateErr) {
                 console.error("[Sync] Failed to mark sync_state failure:", stateErr);
             }
