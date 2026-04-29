@@ -5,7 +5,7 @@ import {
     refreshGoogleReviewRollupsFromDb,
 } from "@/services/google/sync-service";
 import { listAccounts, listLocations } from "@/services/google/business-profile";
-import { registerNotifications } from "@/services/google/notifications";
+import { registerNotificationsWithRetry } from "@/services/google/notifications";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { redis } from "@/lib/db/redis";
 import { type NextRequest } from "next/server";
@@ -207,14 +207,17 @@ export async function POST(request: Request) {
             await refreshGoogleReviewRollupsFromDb(admin, platform.business_id, platform.id);
         }
 
-        // Register Pub/Sub notifications now that we know the account.
+        // Register Pub/Sub notifications now that we know the account (non-fatal).
         const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
         if (topicName) {
-            try {
-                await registerNotifications(accessToken, accountName, topicName);
-            } catch (e) {
-                console.error("[Google Notifications] Registration failed (non-fatal):", e);
-            }
+            await registerNotificationsWithRetry({
+                accessToken,
+                accountName,
+                topic: topicName,
+                platformId: platform.id,
+                googleAccountId: rawAccountId,
+                logPrefix: "[Location Selector]",
+            });
         }
 
         // Bust cached business context so UI updates immediately.

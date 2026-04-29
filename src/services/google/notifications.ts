@@ -122,3 +122,44 @@ export async function getNotificationSetting(
 
     return response.json();
 }
+
+const REGISTER_NOTIFICATIONS_RETRY_DELAY_MS = 2000;
+
+export type RegisterNotificationsWithRetryParams = {
+    accessToken: string;
+    accountName: string;
+    topic: string;
+    platformId: string;
+    googleAccountId: string;
+    logPrefix: string;
+};
+
+/**
+ * Wraps {@link registerNotifications}: one immediate attempt, then a second after 2s if the first throws.
+ * Never throws — callers keep non-fatal behavior. Logs `platformId` and `googleAccountId` on failure.
+ */
+export async function registerNotificationsWithRetry(
+    params: RegisterNotificationsWithRetryParams
+): Promise<{ ok: boolean }> {
+    const { accessToken, accountName, topic, platformId, googleAccountId, logPrefix } = params;
+    try {
+        await registerNotifications(accessToken, accountName, topic);
+        return { ok: true };
+    } catch (firstError) {
+        console.error(
+            `${logPrefix} registerNotifications failed (attempt 1/2) platformId=${platformId} googleAccountId=${googleAccountId}:`,
+            firstError
+        );
+        await new Promise((r) => setTimeout(r, REGISTER_NOTIFICATIONS_RETRY_DELAY_MS));
+        try {
+            await registerNotifications(accessToken, accountName, topic);
+            return { ok: true };
+        } catch (secondError) {
+            console.warn(
+                `${logPrefix} WARNING: registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect. platformId=${platformId} googleAccountId=${googleAccountId}`,
+                secondError
+            );
+            return { ok: false };
+        }
+    }
+}

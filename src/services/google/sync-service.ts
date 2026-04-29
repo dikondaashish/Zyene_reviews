@@ -17,7 +17,7 @@ import {
     reviewQualifiesForAutoReplyEnqueue,
     type AutoReplyBusinessSettings,
 } from "@/services/reviews/auto-reply-eligibility";
-import { registerNotifications } from "./notifications";
+import { registerNotificationsWithRetry } from "./notifications";
 import { computeReviewHash } from "@/utils/review-hash";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 
@@ -634,20 +634,21 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
             }).eq("id", platformId);
         }
 
-        // 5. NEW: Auto-register for real-time notifications if topic is configured
+        // 5. Auto-register for real-time notifications if topic is configured (non-fatal for sync).
         const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
         if (topicName && googleAccountId) {
-            try {
-                const accountName = `accounts/${googleAccountId}`;
-                console.log(`[Sync] Registering notifications for ${accountName} to topic ${topicName}`);
-                await registerNotifications(accessToken!, accountName, topicName);
+            const accountName = `accounts/${googleAccountId}`;
+            console.log(`[Sync] Registering notifications for ${accountName} to topic ${topicName}`);
+            const regResult = await registerNotificationsWithRetry({
+                accessToken: accessToken!,
+                accountName,
+                topic: topicName,
+                platformId,
+                googleAccountId,
+                logPrefix: "[Sync]",
+            });
+            if (regResult.ok) {
                 console.log(`[Sync] Notification registration successful.`);
-            } catch (regError) {
-                console.error(
-                    `[Sync] Notification registration failed — real-time Google reviews will not arrive until this succeeds. Enable "My Business Notifications API" in GCP and check OAuth scopes:`,
-                    regError
-                );
-                // We don't fail the sync because pull-based review import still works
             }
         }
 

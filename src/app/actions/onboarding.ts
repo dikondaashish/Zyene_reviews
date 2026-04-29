@@ -25,7 +25,7 @@ import {
 import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
-import { registerNotifications } from "@/services/google/notifications";
+import { registerNotificationsWithRetry } from "@/services/google/notifications";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
@@ -516,14 +516,20 @@ export async function finalizeGoogleConnection(
           "Google is connected, but starting the review import failed. Use Sync on Integrations or Reviews in a few minutes.";
       }
 
-      // Register notifications
+      // Register notifications (non-fatal; logs WARNING after retry if still failing)
       const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
       if (topicName) {
           const accountName = loc.name?.split("/locations")[0];
           if (accountName) {
-            await registerNotifications(accessToken, accountName, topicName).catch((e) =>
-              console.error("[Onboarding] registerNotifications failed:", e)
-            );
+            const googleAccountId = accountName.replace(/^accounts\//, "") || accountName;
+            await registerNotificationsWithRetry({
+              accessToken,
+              accountName,
+              topic: topicName,
+              platformId: platformData.id,
+              googleAccountId,
+              logPrefix: "[Onboarding]",
+            });
           }
       }
     }
