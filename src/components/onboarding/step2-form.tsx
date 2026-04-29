@@ -185,6 +185,9 @@ export function Step2Form({
         setAvailableLocations([]);
         setPendingTokens(null);
         toast.success("Business profile selected and connected!");
+        if (result.googleSyncWarning) {
+          toast.warning(result.googleSyncWarning);
+        }
         updateFormAndParent(result.locationInfo, result.reviewData);
       } else {
         toast.error(result.error || "Failed to finalize connection");

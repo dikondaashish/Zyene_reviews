@@ -31,6 +31,41 @@ import { syncGooglePerformanceForPlatform } from "@/services/google/performance-
 import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
 import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
 import { syncGoogleLodgingForPlatform } from "@/services/google/phase4-sync";
+import { inngest } from "@/services/inngest/client";
+
+type OnboardingGoogleSyncResult = { mode: "inngest" } | { mode: "inline" } | { mode: "failed"; error: string };
+
+/**
+ * Primary path: Inngest `google/sync.reviews` (chunked steps, performance + analysis after reviews).
+ * Fallback when Inngest is unavailable (e.g. missing keys locally): inline sync + GBP side jobs.
+ */
+async function enqueueGooglePostConnectSync(platformId: string): Promise<OnboardingGoogleSyncResult> {
+  try {
+    await inngest.send({
+      name: "google/sync.reviews",
+      data: { platformId },
+    });
+    return { mode: "inngest" };
+  } catch (inngestErr) {
+    console.error("[Onboarding] inngest.send(google/sync.reviews) failed:", inngestErr);
+    try {
+      await syncGoogleReviewsForPlatform(platformId);
+      syncGooglePerformanceForPlatform(platformId).catch((e) =>
+        console.error("[Onboarding] Fallback performance sync:", e)
+      );
+      syncGooglePhase2ForPlatform(platformId).catch((e) => console.error("[Onboarding] Fallback phase2:", e));
+      syncGoogleListingProfileForPlatform(platformId).catch((e) =>
+        console.error("[Onboarding] Fallback listing profile:", e)
+      );
+      syncGoogleLodgingForPlatform(platformId).catch((e) => console.error("[Onboarding] Fallback lodging:", e));
+      return { mode: "inline" };
+    } catch (syncErr) {
+      const msg = syncErr instanceof Error ? syncErr.message : String(syncErr);
+      console.error("[Onboarding] Fallback syncGoogleReviewsForPlatform failed:", syncErr);
+      return { mode: "failed", error: msg };
+    }
+  }
+}
 
 export async function createBusinessAndAdvanceOnboarding(
   data: Step1FormData,
@@ -468,19 +503,27 @@ export async function finalizeGoogleConnection(
       .eq("platform", "google")
       .single();
 
+    let googleSyncWarning: string | undefined;
+
     if (platformData?.id) {
-      await syncGoogleReviewsForPlatform(platformData.id).catch(() => {});
-      syncGooglePerformanceForPlatform(platformData.id).catch(() => {});
-      syncGooglePhase2ForPlatform(platformData.id).catch(() => {});
-      syncGoogleListingProfileForPlatform(platformData.id).catch(() => {});
-      syncGoogleLodgingForPlatform(platformData.id).catch(() => {});
+      const syncOutcome = await enqueueGooglePostConnectSync(platformData.id);
+      if (syncOutcome.mode === "failed") {
+        console.error(
+          "[Onboarding] Google review sync could not be started after connect:",
+          syncOutcome.error
+        );
+        googleSyncWarning =
+          "Google is connected, but starting the review import failed. Use Sync on Integrations or Reviews in a few minutes.";
+      }
 
       // Register notifications
       const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
       if (topicName) {
           const accountName = loc.name?.split("/locations")[0];
           if (accountName) {
-            await registerNotifications(accessToken, accountName, topicName).catch(() => {});
+            await registerNotifications(accessToken, accountName, topicName).catch((e) =>
+              console.error("[Onboarding] registerNotifications failed:", e)
+            );
           }
       }
     }
@@ -490,6 +533,7 @@ export async function finalizeGoogleConnection(
     return {
       success: true,
       reviewData,
+      googleSyncWarning,
       locationInfo: {
         businessName: loc.title || loc.businessName,
         address: addr?.addressLines?.join(", ") || addr,
@@ -769,6 +813,33 @@ export async function completeOnboarding(businessId: string) {
         success: false,
         error: "Failed to complete onboarding. Please try again.",
       };
+    }
+
+    // Safety net: if Google is connected but we never recorded a successful sync (or row is in error), queue again.
+    const { data: googlePlatform } = await supabase
+      .from("review_platforms")
+      .select("id, last_synced_at, sync_status")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .maybeSingle();
+
+    if (googlePlatform?.id) {
+      const status = String(googlePlatform.sync_status ?? "").toLowerCase();
+      const stuckError =
+        status === "error" ||
+        status.startsWith("error_");
+      const neverSynced = googlePlatform.last_synced_at == null;
+      const notRunning = status !== "running";
+
+      if (notRunning && (neverSynced || stuckError)) {
+        const catchUp = await enqueueGooglePostConnectSync(googlePlatform.id);
+        if (catchUp.mode === "failed") {
+          console.error(
+            "[completeOnboarding] Catch-up Google sync failed:",
+            catchUp.error
+          );
+        }
+      }
     }
 
     revalidatePath("/onboarding");
@@ -1320,15 +1391,10 @@ export async function triggerOnboardingSync(businessId: string) {
 
     if (!platform) return { success: false, error: "Google not connected" };
 
-    // Trigger primary sync (await it to ensure it starts, or at least kicks off the process)
-    // We don't wait for the full fetch, but we do wait for the initial result
-    await syncGoogleReviewsForPlatform(platform.id);
-
-    // Trigger other data in background
-    syncGooglePerformanceForPlatform(platform.id).catch(console.error);
-    syncGooglePhase2ForPlatform(platform.id).catch(console.error);
-    syncGoogleListingProfileForPlatform(platform.id).catch(console.error);
-    syncGoogleLodgingForPlatform(platform.id).catch(console.error);
+    const outcome = await enqueueGooglePostConnectSync(platform.id);
+    if (outcome.mode === "failed") {
+      return { success: false, error: outcome.error || "Failed to trigger sync" };
+    }
 
     return { success: true };
   } catch (error) {
