@@ -134,7 +134,8 @@
   --popover: #2a2222;
   --popover-foreground: #fffefb;
   --primary: #ff4f00;
-  --primary-foreground: #1a1212;
+  /* Keep primary button text readable on orange in dark mode */
+  --primary-foreground: #ffffff;
   --cta: #ff4f00;
   --cta-foreground: #fffefb;
   --secondary: #36342e;
@@ -156,7 +157,7 @@
   --sidebar: #201515;
   --sidebar-foreground: #fffefb;
   --sidebar-primary: #ff4f00;
-  --sidebar-primary-foreground: #1a1212;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #36342e;
   --sidebar-accent-foreground: #fffefb;
   --sidebar-border: #4a4540;
