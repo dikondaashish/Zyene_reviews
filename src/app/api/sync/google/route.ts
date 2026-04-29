@@ -135,7 +135,12 @@ export async function POST(request: Request) {
             console.log(`[Manual Sync] Force reset requested for platform ${platform.id}`);
             await supabase
                 .from("review_platforms")
-                .update({ sync_status: 'idle', locked_until: null })
+                .update({
+                    sync_status: "idle",
+                    locked_until: null,
+                    /** Next sync walks full pagination (no incremental early-stop). */
+                    last_review_update_time: null,
+                })
                 .eq("id", platform.id);
         }
 

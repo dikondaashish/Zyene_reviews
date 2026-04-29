@@ -474,6 +474,11 @@ export interface GoogleSyncContext {
     highestReviewUpdateTime: string | null;
     /** True when Google accepts orderBy=updateTime desc for this location. */
     orderByUpdateTimeEnabled: boolean;
+    /**
+     * After the first list call we compare visible DB rows to Google `totalReviewCount`.
+     * Used once per sync so we do not repeat the count query every page.
+     */
+    reviewGapCheckDone?: boolean;
 }
 
 /**
@@ -679,6 +684,50 @@ export async function syncGoogleReviewsPage(
     const admin = createAdminClient();
 
     const apiResp = await listReviewsWithOrderByFallback(context, pageToken);
+
+    /**
+     * Incremental sync walks newest-first and stops when `updateTime <= last_review_update_time`.
+     * If a past sync never imported the full history (e.g. job stopped early) but the watermark was
+     * advanced to the listing's newest review, we would otherwise exit on the first row and never
+     * paginate — leaving hundreds of older Google reviews missing from the DB.
+     */
+    if (!context.reviewGapCheckDone && !pageToken) {
+        context.reviewGapCheckDone = true;
+        const apiTotal =
+            typeof apiResp.totalReviewCount === "number" && apiResp.totalReviewCount > 0
+                ? apiResp.totalReviewCount
+                : 0;
+        if (apiTotal > 0 && context.lastReviewUpdateTime) {
+            const { count: dbCount, error: countErr } = await admin
+                .from("reviews")
+                .select("id", { count: "exact", head: true })
+                .eq("business_id", context.platform.business_id)
+                .eq("platform", "google")
+                .eq("is_visible", true);
+            if (countErr) {
+                console.error("[Sync] Review gap check (DB count) failed:", countErr);
+            } else {
+                const n = dbCount ?? 0;
+                /** Small slack for removals / Maps vs API headline drift — large gaps still trigger backfill. */
+                const slack = 25;
+                if (n + slack < apiTotal) {
+                    console.warn(
+                        `[Sync] Incomplete Google history: ${n} visible reviews in DB vs Google totalReviewCount=${apiTotal}. ` +
+                            `Clearing incremental watermark for this run to backfill (platform ${context.platform.id}).`
+                    );
+                    context.lastReviewUpdateTime = null;
+                    context.highestReviewUpdateTime = null;
+                    const { error: clearHwErr } = await admin
+                        .from("review_platforms")
+                        .update({ last_review_update_time: null })
+                        .eq("id", context.platform.id);
+                    if (clearHwErr) {
+                        console.error("[Sync] Failed to clear last_review_update_time for backfill:", clearHwErr);
+                    }
+                }
+            }
+        }
+    }
 
     const { data: autoReplyRow } = await admin
         .from("businesses")

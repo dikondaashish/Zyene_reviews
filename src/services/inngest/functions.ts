@@ -507,6 +507,14 @@ export const syncGoogleReviews = inngest.createFunction(
                     lastResp?.total,
                     lastResp?.avgRating
                 );
+                const admin = createAdminClient();
+                const highWater = context.highestReviewUpdateTime;
+                if (typeof highWater === "string" && highWater.length > 0) {
+                    await admin
+                        .from("review_platforms")
+                        .update({ last_review_update_time: highWater })
+                        .eq("id", platformId);
+                }
             });
 
             // Listing performance + search keywords (same data as daily cron `/api/cron/google-performance`)
