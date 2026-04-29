@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
             platformId: platform.id,
             platformType: "google",
             googleLocationId,
+            triggerSource: "pubsub" as const,
         },
     });
 

@@ -31,6 +31,11 @@ type SyncPlatformEvent = {
         platformType: "google" | "yelp" | "facebook";
         /** When set (e.g. Pub/Sub review webhook), identifies the GBP location that triggered the sync. */
         googleLocationId?: string;
+        /**
+         * `pubsub` — worker may wait and retry on Google sync lock conflict (see sync-platform-worker).
+         * Omitted for cron/manual fan-out (unchanged behavior).
+         */
+        triggerSource?: "pubsub";
     };
 };
 
