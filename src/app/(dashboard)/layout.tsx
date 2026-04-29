@@ -59,9 +59,9 @@ export default async function DashboardLayout({
             : null;
 
     const headerContent = (
-        <div className="flex flex-1 items-center justify-between gap-3 min-w-0">
-            <div className="flex min-w-0 flex-col gap-0.5">
-                <div className="flex items-center gap-2 min-w-0">
+        <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2 lg:gap-2">
                     <OrganizationDisplay organization={organization ? { 
                         id: organization.id, 
                         name: organization.name || "Your Organization" 

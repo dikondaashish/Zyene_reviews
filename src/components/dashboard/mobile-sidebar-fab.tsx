@@ -19,9 +19,11 @@ export function MobileSidebarFAB() {
             size="lg"
             onClick={() => toggleSidebar()}
             className={`
-                fixed bottom-6 right-6 rounded-full
+                fixed z-40 rounded-full
+                bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))]
+                right-[max(1.25rem,env(safe-area-inset-right,0px))]
                 bg-primary hover:bg-primary/90 text-primary-foreground
-                h-14 w-14 p-0 z-40
+                h-14 w-14 p-0
                 transition-all duration-200
             `}
             aria-label={openMobile ? "Close sidebar" : "Open sidebar"}

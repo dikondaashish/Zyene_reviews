@@ -15,17 +15,27 @@ export async function disconnectGoogle(platformId: string) {
         throw new Error("Unauthorized");
     }
 
-    const { data: platformRow, error: verifyErr } = await supabase
+    const admin = createAdminClient();
+
+    const { data: platformRow, error: platformErr } = await admin
         .from("review_platforms")
-        .select("id")
+        .select("id, business_id")
         .eq("id", platformId)
         .maybeSingle();
 
-    if (verifyErr || !platformRow) {
-        throw new Error("Failed to disconnect: permission denied");
+    if (platformErr || !platformRow) {
+        throw new Error("Integration not found");
     }
 
-    const admin = createAdminClient();
+    const { data: businessRow, error: businessErr } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("id", platformRow.business_id)
+        .maybeSingle();
+
+    if (businessErr || !businessRow) {
+        throw new Error("Failed to disconnect: permission denied");
+    }
 
     const { error: hideErr } = await admin
         .from("reviews")

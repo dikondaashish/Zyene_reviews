@@ -73,7 +73,7 @@ export function DashboardLayoutClient({
     return (
         <>
             <DashboardTourProvider />
-            <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-4">
+            <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-3 max-lg:gap-1.5 lg:px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
                     <>
@@ -94,12 +94,14 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-4 bg-canvas p-4 lg:p-6 min-h-[calc(100vh-4rem)]">
+            <main className="flex min-w-0 flex-1 flex-col gap-3 bg-canvas p-3 sm:p-4 lg:gap-4 lg:p-6 min-h-[calc(100vh-4rem)] max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
                 {children}
             </main>
-            <footer className="mt-4 flex items-center justify-between border-t border-[rgb(229,231,235)] bg-[rgb(247,245,239)] px-4 py-5 text-[11.5px] text-[rgb(138,143,134)] dark:border-white/10 dark:bg-[rgb(32,21,21)] dark:text-[rgb(197,192,177)] lg:px-6">
-                <div>© {new Date().getFullYear()} Zyene, Inc. · Local to Global</div>
-                <div style={{ display: "flex", gap: "16px" }}>
+            <footer className="mt-4 flex flex-col gap-3 border-t border-[rgb(229,231,235)] bg-[rgb(247,245,239)] px-3 py-4 text-[11.5px] text-[rgb(138,143,134)] dark:border-white/10 dark:bg-[rgb(32,21,21)] dark:text-[rgb(197,192,177)] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
+                <div className="shrink-0 text-center sm:text-left">
+                    © {new Date().getFullYear()} Zyene, Inc. · Local to Global
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-end">
                     <Link href="/terms" className="transition-colors hover:text-foreground dark:text-[rgb(197,192,177)] dark:hover:text-[rgb(226,232,240)]">
                         Legal
                     </Link>

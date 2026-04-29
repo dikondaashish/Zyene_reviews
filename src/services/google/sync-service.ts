@@ -346,7 +346,8 @@ export async function getValidGoogleToken(platformId: string) {
 
     if (platformError || !platform) {
         console.error(`[Token] Fetch failed for ${platformId}:`, platformError);
-        throw new Error("Platform not found");
+        const msg = platformError?.message ? `, error=${platformError.message}` : "";
+        throw new Error(`Platform not found: id=${platformId}${msg}`);
     }
 
     // 2. Decrypt tokens via RPC (More robust than inline select)
@@ -539,7 +540,10 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
         .eq("id", platformId)
         .single();
 
-    if (platformError || !platform) throw new Error("Platform not found");
+    if (platformError || !platform) {
+        const msg = platformError?.message ? `, error=${platformError.message}` : "";
+        throw new Error(`Platform not found: id=${platformId}${msg}`);
+    }
 
     // 2. Cooldown
     enforceSyncCooldown(platform);
@@ -708,7 +712,10 @@ export async function syncGoogleReviewsPage(
     }
 
     context.reviewsProcessed += syncedCount;
-    await context.syncStateManager.checkpointSync(
+    const stateManager = context.syncStateManager instanceof SyncStateManager
+        ? context.syncStateManager
+        : new SyncStateManager();
+    await stateManager.checkpointSync(
         context.platform.id,
         earlyExit ? "__EARLY_EXIT__" : apiResp.nextPageToken ?? "",
         context.reviewsProcessed

@@ -1,4 +1,5 @@
 import { syncRateLimit } from "@/lib/auth/rate-limit";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { inngest } from "@/services/inngest/client";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
@@ -6,47 +7,58 @@ import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { mapGoogleSyncError } from "@/lib/api/google-sync-errors";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+type GooglePlatformRow = {
+    id: string;
+    platform: string;
+    sync_status: string | null;
+    last_synced_at: string | null;
+    locked_until?: string | null;
+};
+
+/**
+ * Match dashboard business resolution (cookie + business_members) via {@link getActiveBusinessId},
+ * then load Google row with an RLS-scoped `businesses` read. Avoids organization_members + nested
+ * `!inner` + `.single()` which fails for multi-org users and business-scoped memberships.
+ */
 async function getGooglePlatformForUser(
     supabase: SupabaseClient,
-    userId: string,
-    businessId?: string
-): Promise<{
-    businessId: string;
-    platform: { id: string; sync_status: string | null; last_synced_at: string | null };
-}> {
-    let query = supabase
-        .from("organization_members")
-        .select(`
-            organizations (
-                businesses (
-                    id,
-                    review_platforms!inner(id, platform, sync_status, last_synced_at)
-                )
-            )
-        `)
-        .eq("user_id", userId);
+    businessIdParam?: string | null
+): Promise<{ businessId: string; platform: GooglePlatformRow }> {
+    const trimmed = typeof businessIdParam === "string" ? businessIdParam.trim() : "";
+    let resolvedBusinessId: string | null = trimmed.length > 0 ? trimmed : null;
 
-    if (businessId) {
-        query = query.eq("organizations.businesses.id", businessId);
+    if (!resolvedBusinessId) {
+        const { businessId } = await getActiveBusinessId();
+        resolvedBusinessId = businessId;
     }
 
-    const { data: memberData, error: membError } = await query.single();
-
-    if (membError || !memberData) {
+    if (!resolvedBusinessId) {
         throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
     }
 
-    const memberTyped = memberData as {
-        organizations?: { businesses?: Array<{ id: string; review_platforms?: unknown[] }> };
-    };
-    const businesses = memberTyped.organizations?.businesses || [];
-    const business = businessId ? businesses.find((b) => b.id === businessId) : businesses[0];
+    const { data: business, error: businessError } = await supabase
+        .from("businesses")
+        .select(
+            `
+            id,
+            review_platforms (
+                id,
+                platform,
+                sync_status,
+                last_synced_at,
+                locked_until
+            )
+        `
+        )
+        .eq("id", resolvedBusinessId)
+        .maybeSingle();
 
-    if (!business) throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
+    if (businessError || !business) {
+        throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
+    }
 
-    const platform = (business.review_platforms as Array<{ id: string; platform: string; sync_status: string | null; last_synced_at: string | null }> | undefined)?.find(
-        (p) => p.platform === "google"
-    );
+    const platforms = (business.review_platforms ?? []) as GooglePlatformRow[];
+    const platform = platforms.find((p) => p.platform === "google");
     if (!platform) {
         throw new ApiRouteError("Google platform not connected", {
             status: 404,
@@ -65,7 +77,6 @@ export async function GET(request: Request) {
 
         const { businessId: resolvedBusinessId, platform } = await getGooglePlatformForUser(
             supabase,
-            user.id,
             businessId ?? undefined
         );
 
@@ -74,7 +85,7 @@ export async function GET(request: Request) {
             platformId: platform.id,
             sync_status: platform.sync_status ?? "idle",
             last_synced_at: platform.last_synced_at ?? null,
-            locked_until: (platform as any).locked_until ?? null,
+            locked_until: platform.locked_until ?? null,
         });
     } catch (error: unknown) {
         console.error("Sync status GET:", error);
@@ -111,7 +122,7 @@ export async function POST(request: Request) {
             /* no body */
         }
 
-        const { platform } = await getGooglePlatformForUser(supabase, user.id, businessId);
+        const { platform } = await getGooglePlatformForUser(supabase, businessId);
         
         if (force) {
             console.log(`[Manual Sync] Force reset requested for platform ${platform.id}`);

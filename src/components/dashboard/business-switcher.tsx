@@ -45,7 +45,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="w-full max-w-[min(70vw,220px)] justify-between sm:w-[220px]"
+                    className="min-w-0 flex-1 justify-between max-lg:max-w-[min(calc(100vw-10rem),240px)] sm:flex-none sm:w-[220px] lg:w-[220px] lg:max-w-[220px]"
                     disabled={switching}
                     aria-label={
                         activeBusiness
