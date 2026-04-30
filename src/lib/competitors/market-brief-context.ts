@@ -3,7 +3,7 @@ import type { Database } from "@/lib/db/supabase/database.types";
 import type { MarketPositioningBriefInput } from "@/domains/ai/services/generateMarketPositioningBrief";
 import { parsePlacesMetaFromSnapshot } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
-import { countVisibleReviewsForBusiness } from "@/lib/reviews/count-visible-reviews";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 export async function loadMarketPositioningBriefContext(
     supabase: SupabaseClient<Database>,
@@ -11,7 +11,7 @@ export async function loadMarketPositioningBriefContext(
 ): Promise<{ ok: true; input: MarketPositioningBriefInput } | { ok: false; error: string }> {
     const { data: business, error: bErr } = await supabase
         .from("businesses")
-        .select("id, name, average_rating, total_reviews")
+        .select("id, name")
         .eq("id", businessId)
         .maybeSingle();
 
@@ -19,7 +19,10 @@ export async function loadMarketPositioningBriefContext(
         return { ok: false, error: "Business not found." };
     }
 
-    const { count: visibleReviewTotal } = await countVisibleReviewsForBusiness(supabase, businessId);
+    const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]);
+    const vr = visibleRollupMap.get(businessId)!;
+    const yourReviewCountFromVisible = vr.totalVisible;
+    const yourRatingFromVisible = vr.totalVisible > 0 ? vr.averageRatingVisible : null;
 
     const { data: competitors, error: cErr } = await supabase
         .from("competitors")
@@ -77,8 +80,8 @@ export async function loadMarketPositioningBriefContext(
 
     const input: MarketPositioningBriefInput = {
         businessName: business.name ?? "Your business",
-        yourRating: business.average_rating != null ? Number(business.average_rating) : null,
-        yourReviewCount: visibleReviewTotal,
+        yourRating: yourRatingFromVisible,
+        yourReviewCount: yourReviewCountFromVisible,
         yourTopKeywords: keywords.map((k) => ({ keyword: k.keyword, impressions: k.impressions })),
         keywordDiscoveryPct: split.discoveryPct,
         keywordDirectPct: split.directPct,
