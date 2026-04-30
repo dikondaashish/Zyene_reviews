@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getActiveBusinessId, setActiveBusiness } from "@/lib/auth/business-context";
 import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 export default async function BusinessesPage() {
     const supabase = await createClient();
@@ -27,6 +28,11 @@ export default async function BusinessesPage() {
     // Check plan limits for "Add a business" button
     const maxLocations = organization?.max_businesses || 1; // Default: Starter = 1
     const atLimit = businesses.length >= maxLocations;
+
+    const visibleReviewStats = await fetchVisibleReviewRollupsByBusinessIds(
+        supabase,
+        businesses.map((b) => b.id)
+    );
 
     return (
         <div className="flex flex-col gap-6">
@@ -57,7 +63,13 @@ export default async function BusinessesPage() {
                             (p: any) => p.platform === "google"
                         );
                         const isConnected = !!googlePlatform;
-                        const rating = business.average_rating || null;
+                        const cardStats = visibleReviewStats.get(business.id) ?? {
+                            totalVisible: 0,
+                            averageRatingVisible: 0,
+                        };
+                        const rating =
+                            cardStats.totalVisible > 0 ? cardStats.averageRatingVisible : null;
+                        const totalReviews = cardStats.totalVisible;
                         const isActive = business.id === activeBusinessId;
 
                         return (
@@ -119,13 +131,13 @@ export default async function BusinessesPage() {
                                         </div>
 
                                         {/* Rating */}
-                                        {rating && (
+                                        {rating != null && (
                                             <div className="flex items-center gap-1.5 text-sm">
                                                 <Star className="h-4 w-4 text-chart-4 fill-chart-4" />
                                                 <span className="font-medium">{Number(rating).toFixed(1)}</span>
-                                                {business.total_reviews > 0 && (
+                                                {totalReviews > 0 && (
                                                     <span className="text-muted-foreground">
-                                                        ({business.total_reviews} reviews)
+                                                        ({totalReviews} reviews)
                                                     </span>
                                                 )}
                                             </div>

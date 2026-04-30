@@ -64,6 +64,10 @@ import {
     DashboardRatingDistributionChartLazy,
     DashboardReviewTrendChartLazy,
 } from "@/components/dashboard/dashboard-ssr-false-blocks";
+import {
+    fetchVisibleReviewRollupsByBusinessIds,
+    type VisibleReviewRollup,
+} from "@/lib/reviews/visible-review-rollups";
 
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
@@ -265,6 +269,13 @@ export default async function DashboardPage() {
     let unansweredQaCount = 0;
     let brokenPlaceLinksCount = 0;
 
+    /** Live counts from `reviews` (is_visible). Cards used `businesses.total_reviews` / `average_rating` (denormalized; can match Google headline ~1000). */
+    let visibleReviewRollup: VisibleReviewRollup | null = null;
+    if (business.id && !useDemoData) {
+        const rollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
+        visibleReviewRollup = rollupMap.get(business.id) ?? null;
+    }
+
     if (business.id) {
         // ── Redis Caching ──
         const cacheKey = `dashboard:stats:${business.id}`;
@@ -294,6 +305,24 @@ export default async function DashboardPage() {
             hasEngagementData = stats.hasEngagementData || false;
             requestsThisMonth = stats.requestsThisMonth || 0;
             newReviews30d = stats.newReviews30d || 0;
+
+            if (!useDemoData && visibleReviewRollup) {
+                pendingCount = visibleReviewRollup.pendingVisible;
+                const { count: respondedVisible, error: respondedVisibleErr } = await supabase
+                    .from("reviews")
+                    .select("*", { count: "exact", head: true })
+                    .eq("business_id", business.id)
+                    .eq("is_visible", true)
+                    .eq("response_status", "responded");
+                if (respondedVisibleErr) {
+                    console.error("[Dashboard page] Visible responded count failed:", respondedVisibleErr);
+                } else {
+                    responseRate =
+                        visibleReviewRollup.totalVisible > 0
+                            ? ((respondedVisible ?? 0) / visibleReviewRollup.totalVisible) * 100
+                            : 0;
+                }
+            }
 
             // Always fetch customer count and notification prefs (not cached)
             const [customerCountCached, notificationPrefsCached] = await Promise.all([
@@ -353,17 +382,19 @@ export default async function DashboardPage() {
                 customerCountResult,
                 notificationPrefsResult,
             ] = await Promise.all([
-                // 1. Response Rate
+                // 1. Response Rate (visible rows only; denominator aligned with Total Reviews card)
                 supabase
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .eq("response_status", "responded"),
-                // 2. Pending Reviews Count
+                // 2. Pending Reviews Count (kept for diagnostics; display uses visibleReviewRollup.pendingVisible)
                 supabase
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .eq("response_status", "pending"),
                 // 3. Recent Reviews (15 most recent — Review Spotlight carousel)
                 supabase
@@ -482,14 +513,14 @@ export default async function DashboardPage() {
 
             // ── Process results ──
 
-            // 1. Response Rate
-            const totalReviewsCount = business.total_reviews ?? 0;
-            if (totalReviewsCount > 0) {
-                responseRate = ((respondedResult.count || 0) / totalReviewsCount) * 100;
+            // 1–2. Response rate & pending from visible DB rows (not businesses.total_reviews / Google API totals).
+            const totalVisible = visibleReviewRollup?.totalVisible ?? 0;
+            pendingCount = visibleReviewRollup?.pendingVisible ?? 0;
+            if (totalVisible > 0) {
+                responseRate = ((respondedResult.count || 0) / totalVisible) * 100;
+            } else {
+                responseRate = 0;
             }
-
-            // 2. Pending
-            pendingCount = pendingResult.count || 0;
 
             // 3. Recent
             recentReviews = recentResult.data || [];
@@ -625,36 +656,6 @@ export default async function DashboardPage() {
         }
     }
 
-    // ── Computed Stats ──────────────────────────────────────────
-
-    const currentReviewsCount = business.total_reviews ?? 0;
-    const responseRateLabel =
-        currentReviewsCount > 0
-            ? `${responseRate.toFixed(1)}${dict.dashboard.reviews_responded}`
-            : dict.dashboard.no_reviews;
-
-    const pendingLabel =
-        pendingCount > 0
-            ? `${pendingCount} ${dict.dashboard.awaiting_response}`
-            : dict.dashboard.all_caught_up;
-
-    const formatTrend = (val: number, isRating = false) => {
-        if (val === 0) return null;
-        const isPositive = val > 0;
-        const text = isRating ? val.toFixed(1) : Math.abs(val);
-        // For reviews: more is good (green). For ratings: higher is good (green).
-        const color = isPositive ? "text-chart-2" : "text-destructive";
-        const Icon = isPositive ? TrendingUp : TrendingUp; // Could use TrendingDown for negative but lucide TrendingUp rotated is fine or specific icons
-
-        return (
-            <span className={`text-xs font-medium ${color} flex items-center`}>
-                {isPositive ? "+" : "-"}{text}
-                {isRating ? " stars" : ""}
-                {isPositive ? " this month" : " vs last month"}
-            </span>
-        );
-    };
-
     if (useDemoData) {
         responseRate = DASHBOARD_DEMO_DATA.responseRate;
         pendingCount = DASHBOARD_DEMO_DATA.pendingCount;
@@ -684,7 +685,49 @@ export default async function DashboardPage() {
         brokenPlaceLinksCount = 1;
         totalReviewsTrend = 12;
         averageRatingTrend = 0.1;
+        visibleReviewRollup = {
+            totalVisible: DASHBOARD_DEMO_DATA.total_reviews,
+            pendingVisible: DASHBOARD_DEMO_DATA.pendingCount,
+            averageRatingVisible: DASHBOARD_DEMO_DATA.average_rating,
+            googleVisibleCount: DASHBOARD_DEMO_DATA.total_reviews,
+            googleAverageRating: DASHBOARD_DEMO_DATA.average_rating,
+            facebookVisibleCount: 0,
+            facebookAverageRating: 0,
+            yelpVisibleCount: 0,
+            yelpAverageRating: 0,
+        };
     }
+
+    const displayTotalReviews = visibleReviewRollup?.totalVisible ?? 0;
+    const displayAverageRating = visibleReviewRollup?.averageRatingVisible ?? 0;
+
+    const currentReviewsCount = displayTotalReviews;
+    const responseRateLabel =
+        currentReviewsCount > 0
+            ? `${responseRate.toFixed(1)}${dict.dashboard.reviews_responded}`
+            : dict.dashboard.no_reviews;
+
+    const pendingLabel =
+        pendingCount > 0
+            ? `${pendingCount} ${dict.dashboard.awaiting_response}`
+            : dict.dashboard.all_caught_up;
+
+    const formatTrend = (val: number, isRating = false) => {
+        if (val === 0) return null;
+        const isPositive = val > 0;
+        const text = isRating ? val.toFixed(1) : Math.abs(val);
+        // For reviews: more is good (green). For ratings: higher is good (green).
+        const color = isPositive ? "text-chart-2" : "text-destructive";
+        const Icon = isPositive ? TrendingUp : TrendingUp; // Could use TrendingDown for negative but lucide TrendingUp rotated is fine or specific icons
+
+        return (
+            <span className={`text-xs font-medium ${color} flex items-center`}>
+                {isPositive ? "+" : "-"}{text}
+                {isRating ? " stars" : ""}
+                {isPositive ? " this month" : " vs last month"}
+            </span>
+        );
+    };
 
     let googleLodgingHealthScore: number | null = null;
     let googleLodgingApplicable: boolean | null = null;
@@ -729,11 +772,11 @@ export default async function DashboardPage() {
         googleProfileHealthScore = typeof gh === "number" ? gh : null;
     }
 
-    const reviewsCount = business.total_reviews;
+    const reviewsCount = displayTotalReviews;
 
     return (
         <div className="flex flex-col gap-6 w-full">
-            <MilestoneCelebration currentCount={business.total_reviews ?? 0} type="reviews" isDemo={useDemoData} scopeKey={business.id || "default"} />
+            <MilestoneCelebration currentCount={displayTotalReviews} type="reviews" isDemo={useDemoData} scopeKey={business.id || "default"} />
             
             {/* Demo Mode Banner */}
             {useDemoData && <DemoModeBanner className="mb-2" />}
@@ -806,7 +849,7 @@ export default async function DashboardPage() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-tour-target="tour-stats">
                 <ProStatCard
                     title={dict.dashboard.total_reviews}
-                    value={business.total_reviews ?? 0}
+                    value={displayTotalReviews}
                     iconName="reviews"
                     description={!isGoogleConnected ? dict.dashboard.connect_google : dict.dashboard.from_google}
                     trend={totalReviewsTrend}
@@ -815,7 +858,7 @@ export default async function DashboardPage() {
                 />
                 <ProStatCard
                     title={dict.dashboard.average_rating}
-                    value={Number(business.average_rating ?? 0)}
+                    value={displayAverageRating}
                     iconName="rating"
                     precision={1}
                     description={dict.dashboard.based_on_google}
@@ -1161,11 +1204,11 @@ export default async function DashboardPage() {
                                 Star distribution
                             </CardTitle>
                             <CardDescription className="text-[13px] mt-0.5 text-muted-foreground/80">
-                                All-time &middot; {business?.total_reviews ?? 0} reviews
+                                All-time &middot; {displayTotalReviews} reviews
                             </CardDescription>
                         </div>
                         <div className="flex items-center gap-1 text-xl font-medium tracking-tight">
-                            {business?.average_rating ?? "0"}
+                            {displayAverageRating.toFixed(1)}
                             <Star className="h-4 w-4 fill-chart-4 text-chart-4" strokeWidth={1} />
                         </div>
                     </CardHeader>

@@ -20,6 +20,7 @@ import {
     type CompetitorPlacesRowMeta,
 } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 export const metadata = {
     title: "Competitors - Zyene Reviews",
@@ -66,7 +67,7 @@ export default async function CompetitorsPage({
 
     const { data: ownBusiness } = await supabase
         .from("businesses")
-        .select("id, name, average_rating, total_reviews")
+        .select("id, name")
         .eq("id", businessId)
         .maybeSingle();
 
@@ -204,6 +205,9 @@ export default async function CompetitorsPage({
         );
     }
 
+    const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]);
+    const visibleRollupAll = visibleRollupMap.get(businessId)!;
+
     const snapshotRowsTyped = (snapshotsRes.data || []) as Array<{
         id: string;
         competitor_id: string;
@@ -250,7 +254,11 @@ export default async function CompetitorsPage({
         );
 
     const yourRatingForRank =
-        ownAvgInRange !== null ? ownAvgInRange : Number(ownBusiness?.average_rating || 0);
+        ownAvgInRange !== null
+            ? ownAvgInRange
+            : visibleRollupAll.totalVisible > 0
+              ? visibleRollupAll.averageRatingVisible
+              : 0;
     const competitorEndRatings = competitorsList.map((c) => {
         const rows = snapshotRowsTyped
             .filter((s) => s.competitor_id === c.id)
@@ -467,9 +475,8 @@ export default async function CompetitorsPage({
                 ownBusinessChart={{
                     name: ownBusiness?.name ?? "Your business",
                     averageRating:
-                        ownBusiness?.average_rating != null ? Number(ownBusiness.average_rating) : null,
-                    totalReviews:
-                        ownBusiness?.total_reviews != null ? Number(ownBusiness.total_reviews) : null,
+                        visibleRollupAll.totalVisible > 0 ? visibleRollupAll.averageRatingVisible : null,
+                    totalReviews: visibleRollupAll.totalVisible > 0 ? visibleRollupAll.totalVisible : null,
                 }}
             />
         </div>

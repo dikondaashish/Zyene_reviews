@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 // ── Brand Icons ──
 
@@ -148,10 +149,10 @@ export default async function IntegrationsPage() {
     );
     const connectedCount = connectedPlatforms.length;
 
-    const totalReviews = connectedPlatforms.reduce(
-        (sum, p) => sum + (p?.total_reviews || 0),
-        0
-    );
+    /** Summary line: visible rows in `reviews` (not `review_platforms.total_reviews` from Google listing totals). */
+    const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
+    const visibleRollup = visibleRollupMap.get(business.id);
+    const totalReviews = visibleRollup?.totalVisible ?? 0;
 
     return (
         <div className="flex flex-1 flex-col gap-10 p-4 sm:p-6 lg:p-8">
@@ -205,16 +206,21 @@ export default async function IntegrationsPage() {
                         platform={googlePlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbVisibleGoogleReviewCount={visibleRollup?.googleVisibleCount ?? 0}
+                        dbVisibleGoogleAverageRating={visibleRollup?.googleAverageRating ?? null}
                     />
                     <YelpIntegrationCard
                         platform={yelpPlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbVisibleYelpReviewCount={visibleRollup?.yelpVisibleCount ?? 0}
                     />
                     <FacebookIntegrationCard
                         platform={facebookPlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbVisibleFacebookReviewCount={visibleRollup?.facebookVisibleCount ?? 0}
+                        dbVisibleFacebookAverageRating={visibleRollup?.facebookAverageRating ?? null}
                     />
                     <PlaceholderCard
                         name="TripAdvisor"

@@ -40,12 +40,17 @@ interface FacebookCardProps {
     platform: IntegrationPlatformSummary | null;
     businessId: string;
     businessName: string;
+    /** Live `reviews` aggregates (`is_visible = true`, platform facebook). */
+    dbVisibleFacebookReviewCount?: number;
+    dbVisibleFacebookAverageRating?: number | null;
 }
 
 export function FacebookIntegrationCard({
     platform,
     businessId,
     businessName,
+    dbVisibleFacebookReviewCount,
+    dbVisibleFacebookAverageRating,
 }: FacebookCardProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -62,6 +67,11 @@ export function FacebookIntegrationCard({
     }, []);
 
     const isConnected = platform?.sync_status === "active";
+    const fbVisibleCount = dbVisibleFacebookReviewCount ?? 0;
+    const fbRatingDisplay =
+        fbVisibleCount > 0 && dbVisibleFacebookAverageRating != null && !Number.isNaN(dbVisibleFacebookAverageRating)
+            ? dbVisibleFacebookAverageRating.toFixed(1)
+            : "—";
     const isError =
         platform?.sync_status?.startsWith("error") ||
         platform?.sync_status === "error_token_expired";
@@ -206,7 +216,7 @@ export function FacebookIntegrationCard({
                             <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <Star className="h-3.5 w-3.5 text-chart-4" />
-                                    {platform.average_rating?.toFixed(1) || "—"}
+                                    {fbRatingDisplay}
                                 </div>
                                 <div className="text-[10px] text-muted-foreground">
                                     Rating
@@ -215,7 +225,7 @@ export function FacebookIntegrationCard({
                             <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                                    {platform.total_reviews || 0}
+                                    {fbVisibleCount}
                                 </div>
                                 <div className="text-[10px] text-muted-foreground">
                                     Reviews

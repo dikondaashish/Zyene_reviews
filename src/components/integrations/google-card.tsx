@@ -67,6 +67,9 @@ interface GoogleCardProps {
     } | null;
     businessId: string;
     businessName?: string | null;
+    /** From `reviews`: visible Google rows (overrides platform totals from Google API metadata). */
+    dbVisibleGoogleReviewCount?: number;
+    dbVisibleGoogleAverageRating?: number | null;
 }
 
 function GoogleIcon() {
@@ -103,7 +106,13 @@ function timeAgo(date: string) {
     return `${days}d ago`;
 }
 
-export function GoogleIntegrationCard({ platform, businessId, businessName }: GoogleCardProps) {
+export function GoogleIntegrationCard({
+    platform,
+    businessId,
+    businessName,
+    dbVisibleGoogleReviewCount,
+    dbVisibleGoogleAverageRating,
+}: GoogleCardProps) {
     const router = useRouter();
     const [isPosting, setIsPosting] = useState(false);
     const [isDisconnecting, setIsDisconnecting] = useState(false);
@@ -112,11 +121,16 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
             businessId,
             initialSyncStatus: platform?.sync_status ?? null,
             initialLastSyncedAt: platform?.last_synced_at ?? null,
-            initialTotalReviews: platform?.total_reviews ?? null,
+            initialTotalReviews:
+                typeof dbVisibleGoogleReviewCount === "number"
+                    ? dbVisibleGoogleReviewCount
+                    : (platform?.total_reviews ?? null),
             initialAverageRating:
-                platform?.average_rating != null && !Number.isNaN(Number(platform.average_rating))
-                    ? Number(platform.average_rating)
-                    : null,
+                dbVisibleGoogleAverageRating != null && !Number.isNaN(Number(dbVisibleGoogleAverageRating))
+                    ? Number(dbVisibleGoogleAverageRating)
+                    : platform?.average_rating != null && !Number.isNaN(Number(platform.average_rating))
+                      ? Number(platform.average_rating)
+                      : null,
             onSyncSettled: () => router.refresh(),
         });
     const syncButtonBusy = isPosting || isSyncBusy;
@@ -135,7 +149,10 @@ export function GoogleIntegrationCard({ platform, businessId, businessName }: Go
     const isError = platform?.sync_status?.startsWith("error");
     const needsLocation = isConnected && !platform?.google_location_id;
 
-    const displayReviewCount = totalReviews ?? platform?.total_reviews ?? 0;
+    const displayReviewCount =
+        typeof dbVisibleGoogleReviewCount === "number"
+            ? dbVisibleGoogleReviewCount
+            : (totalReviews ?? platform?.total_reviews ?? 0);
     const displayLastSyncedAt = lastSyncedAt ?? platform?.last_synced_at ?? null;
 
     const supabase = createClient();

@@ -12,6 +12,7 @@ import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getGoogleLocation } from "@/services/google/listing-information";
 import { DescriptionOptimizerCard } from "@/components/google-seo-aeo/description-optimizer-card";
 import { RunAuditControls } from "@/components/google-seo-aeo/run-audit-controls";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 type AuditItem = {
     id: string;
@@ -80,7 +81,7 @@ export default async function GoogleSeoAeoPage() {
 
     const { data: platform } = await supabase
         .from("review_platforms")
-        .select("id, average_rating, total_reviews, platform, google_location_id")
+        .select("id, platform, google_location_id")
         .eq("business_id", businessId)
         .eq("platform", "google")
         .maybeSingle();
@@ -107,33 +108,39 @@ export default async function GoogleSeoAeoPage() {
     const start30 = new Date(now);
     start30.setDate(start30.getDate() - 29);
 
-    const [perfTotals, keywords, googleReviewsRes, placeActionsRes, aiRunRes, heatmapRunRes] = await Promise.all([
-        getGooglePerformanceTotals(supabase, businessId, start30, now),
-        getGoogleSearchKeywords(supabase, businessId, 20),
-        supabase
-            .from("reviews")
-            .select("id, response_status, review_date")
-            .eq("business_id", businessId)
-            .eq("platform", "google")
-            .or("is_visible.is.null,is_visible.eq.true")
-            .gte("review_date", start30.toISOString()),
-        supabase
-            .from("gbp_place_action_links")
-            .select("id", { count: "exact", head: true })
-            .eq("business_id", businessId),
-        (supabase.from("google_seo_ai_visibility_runs" as never) as any)
-            .select("id, query, status, created_at")
-            .eq("business_id", businessId)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle(),
-        (supabase.from("google_seo_heatmap_runs" as never) as any)
-            .select("id, keyword, status, created_at")
-            .eq("business_id", businessId)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle(),
-    ]);
+    const [visibleRollupMap, perfTotals, keywords, googleReviewsRes, placeActionsRes, aiRunRes, heatmapRunRes] =
+        await Promise.all([
+            fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]),
+            getGooglePerformanceTotals(supabase, businessId, start30, now),
+            getGoogleSearchKeywords(supabase, businessId, 20),
+            supabase
+                .from("reviews")
+                .select("id, response_status, review_date")
+                .eq("business_id", businessId)
+                .eq("platform", "google")
+                .eq("is_visible", true)
+                .gte("review_date", start30.toISOString()),
+            supabase
+                .from("gbp_place_action_links")
+                .select("id", { count: "exact", head: true })
+                .eq("business_id", businessId),
+            (supabase.from("google_seo_ai_visibility_runs" as never) as any)
+                .select("id, query, status, created_at")
+                .eq("business_id", businessId)
+                .order("created_at", { ascending: false })
+                .limit(1)
+                .maybeSingle(),
+            (supabase.from("google_seo_heatmap_runs" as never) as any)
+                .select("id, keyword, status, created_at")
+                .eq("business_id", businessId)
+                .order("created_at", { ascending: false })
+                .limit(1)
+                .maybeSingle(),
+        ]);
+
+    const visibleRollup = visibleRollupMap.get(businessId)!;
+    const googleAvgLive = visibleRollup.googleAverageRating;
+    const googleCountLive = visibleRollup.googleVisibleCount;
 
     const reviews = googleReviewsRes.data || [];
     const responded = reviews.filter((r) => r.response_status === "responded").length;
@@ -179,8 +186,8 @@ export default async function GoogleSeoAeoPage() {
         {
             id: "google-rating",
             label: "Google Rating",
-            status: Number(platform.average_rating || 0) >= 4.2 ? "pass" : "fail",
-            detail: `${Number(platform.average_rating || 0).toFixed(1)} / 5`,
+            status: googleAvgLive >= 4.2 ? "pass" : "fail",
+            detail: `${googleAvgLive.toFixed(1)} / 5 (${googleCountLive.toLocaleString()} visible in Zyene)`,
         },
         {
             id: "review-replies",
@@ -298,8 +305,8 @@ export default async function GoogleSeoAeoPage() {
                         <span className="text-3xl font-bold">{score}%</span>
                     </CardTitle>
                     <CardDescription>
-                        {businessName} · {businessAddress} · {Number(platform.average_rating || 0).toFixed(1)}/5 ·{" "}
-                        {(platform.total_reviews || 0).toLocaleString()} reviews
+                        {businessName} · {businessAddress} · {googleAvgLive.toFixed(1)}/5 ·{" "}
+                        {googleCountLive.toLocaleString()} reviews (visible in Zyene)
                         {" · "}
                         Based on {measured.length} measured checks.
                     </CardDescription>

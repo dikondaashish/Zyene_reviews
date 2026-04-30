@@ -8,7 +8,7 @@ import { BusinessSwitcher } from "@/components/dashboard/business-switcher";
 import { OrganizationDisplay } from "@/components/dashboard/organization-display";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
-import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
+import { getActiveBusinessId, getGoogleQaSidebarNavVisible } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
 import { PastDuePaymentBanner } from "@/components/dashboard/past-due-payment-banner";
@@ -39,7 +39,8 @@ export default async function DashboardLayout({
     const { businesses, businessId: activeBusinessId, organization, business: activeBusiness } =
         await getActiveBusinessId();
 
-    const hideGoogleQaNav = await getGoogleQaUnavailableForActiveBusiness(activeBusinessId);
+    const showGoogleQaNav = await getGoogleQaSidebarNavVisible(activeBusinessId);
+    const hideGoogleQaNav = !showGoogleQaNav;
 
     const planStatusNorm = String(organization?.plan_status ?? "").toLowerCase().trim();
     let canManageBilling = false;

@@ -4,6 +4,7 @@ import { ReviewBadge } from "@/components/widgets/review-badge";
 import { notFound } from "next/navigation";
 import { AccessError } from "@/components/public/access-error";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
+import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 
 export const dynamic = "force-dynamic";
 
@@ -28,8 +29,6 @@ export default async function WidgetPage({
         .select(`
             id,
             name,
-            average_rating,
-            total_reviews,
             organization:organizations (
                 plan,
                 plan_status
@@ -48,6 +47,9 @@ export default async function WidgetPage({
         return <AccessError type="subscription" businessName={business.name} />;
     }
 
+    const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(admin, [business.id]);
+    const vr = visibleRollupMap.get(business.id)!;
+
     const { data: reviews } = await admin
         .from("reviews")
         .select(`
@@ -61,6 +63,7 @@ export default async function WidgetPage({
             )
         `)
         .eq("business_id", business.id)
+        .eq("is_visible", true)
         .gte("rating", 4)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -74,14 +77,13 @@ export default async function WidgetPage({
         created_at: r.created_at,
     }));
 
-    const reviewCount = Number((business as { total_reviews?: number | null }).total_reviews ?? 0);
-    const averageRatingFromBusiness = Number((business as { average_rating?: number | null }).average_rating ?? 0);
+    const reviewCount = vr.totalVisible;
     const averageRating =
-        averageRatingFromBusiness > 0
-            ? averageRatingFromBusiness
+        vr.totalVisible > 0
+            ? vr.averageRatingVisible
             : formattedReviews.length > 0
-            ? formattedReviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) / formattedReviews.length
-            : 5;
+              ? formattedReviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) / formattedReviews.length
+              : 5;
 
     return (
         <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0">
