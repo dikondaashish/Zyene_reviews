@@ -20,6 +20,7 @@ import {
     UserRound,
     Clock,
     Sparkles,
+    CircleAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { CustomerDetailStats, TimelineItem } from "@/lib/customers/customer-detail-data";
@@ -206,6 +208,11 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
     const avatarText = initials(customer);
     const avatarCompact = avatarText.length > 2;
     const campaignHref = `/campaigns/new?customerIds=${encodeURIComponent(customer.id)}`;
+    const pageHeading =
+        name || customer.phone?.trim() || customer.email?.trim() || "Unnamed contact";
+    const missingPhoneAndEmail = !customer.phone?.trim() && !customer.email?.trim();
+    const summaryHasNoEngagement =
+        stats.totalRequestsSent === 0 && stats.reviewsLeftCount === 0;
 
     const addTag = () => {
         const t = tagInput.trim();
@@ -228,7 +235,11 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <span className="inline-flex w-full sm:w-auto">
-                            <Button type="button" disabled className="h-10 w-full rounded-lg px-5 sm:w-auto">
+                            <Button
+                                type="button"
+                                disabled
+                                className="h-9 w-full rounded-lg px-4 text-sm font-semibold sm:w-auto"
+                            >
                                 <Send className="mr-2 h-4 w-4" />
                                 Send review request
                             </Button>
@@ -238,7 +249,10 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                 </Tooltip>
             </TooltipProvider>
         ) : (
-            <Button asChild size="default" className="h-10 w-full rounded-lg px-5 shadow-sm sm:w-auto">
+            <Button
+                asChild
+                className="h-9 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 sm:w-auto"
+            >
                 <Link href={campaignHref}>
                     <Sparkles className="mr-2 h-4 w-4 opacity-90" />
                     Send review request
@@ -247,21 +261,47 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
         );
 
     return (
-        <div className="space-y-8 pb-12">
-            {/* Top bar: back + primary CTA (matches requested order) */}
-            <header className="flex flex-col gap-4 border-b border-border/70 pb-6 sm:flex-row sm:items-center sm:justify-between">
-                <Link
-                    href="/customers"
-                    className={cn(
-                        "group inline-flex w-fit items-center gap-2 rounded-lg border border-transparent px-1 py-1 text-sm font-medium text-muted-foreground transition-colors",
-                        "hover:border-border hover:bg-muted/50 hover:text-foreground"
-                    )}
-                >
-                    <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                    Customers
-                </Link>
-                {sendReviewRequestButton}
+        <div className="animate-in fade-in duration-500 space-y-6">
+            {/* Page chrome aligned with /customers list */}
+            <header className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                <div className="min-w-0 space-y-1">
+                    <Link
+                        href="/customers"
+                        className={cn(
+                            "group mb-1 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors",
+                            "hover:text-foreground"
+                        )}
+                    >
+                        <ChevronLeft className="h-4 w-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />
+                        Customers
+                    </Link>
+                    <div className="flex items-center gap-2">
+                        <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
+                            <UserRound className="h-4 w-4 text-primary" />
+                        </div>
+                        <h1 className="min-w-0 truncate text-2xl font-bold tracking-tight text-foreground">
+                            {pageHeading}
+                        </h1>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        View contact details, review outreach, and activity for this person.
+                    </p>
+                </div>
+                <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+                    {sendReviewRequestButton}
+                </div>
             </header>
+
+            {missingPhoneAndEmail ? (
+                <Alert className="border-chart-4/35 bg-chart-4/5 text-foreground [&>svg]:text-chart-4">
+                    <CircleAlert className="h-4 w-4" />
+                    <AlertTitle>Add phone or email</AlertTitle>
+                    <AlertDescription>
+                        Campaigns need at least one channel to reach this contact. Add details below before sending a
+                        review request.
+                    </AlertDescription>
+                </Alert>
+            ) : null}
 
             {/* Profile + contact */}
             <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm">
@@ -330,7 +370,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                             className="group block text-left"
                                         >
                                             {name ? (
-                                                <span className="text-2xl font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline sm:text-3xl">
+                                                <span className="text-xl font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline sm:text-2xl">
                                                     {name}
                                                 </span>
                                             ) : (
@@ -358,7 +398,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                 )}
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
+                            <div className="grid gap-3 sm:grid-cols-2">
                                 <div
                                     className={cn(
                                         "flex items-start gap-3 rounded-xl border px-4 py-3.5 transition-colors",
@@ -405,13 +445,16 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-border/80 bg-muted/15 p-4 sm:p-5 lg:max-w-3xl">
+                            <div className="rounded-xl border border-border/80 bg-muted/15 p-4 sm:p-5">
                                 <div className="mb-3">
                                     <p className="text-sm font-semibold text-foreground">Tags</p>
                                     <p className="text-xs text-muted-foreground">
                                         Organize this contact for campaigns and filters.
                                     </p>
                                 </div>
+                                {tags.length === 0 ? (
+                                    <p className="mb-3 text-sm text-muted-foreground">No tags yet — add labels to find this contact in filters.</p>
+                                ) : null}
                                 <div className="flex flex-wrap items-center gap-2">
                                     {tags.map((tag) => (
                                         <Badge
@@ -510,6 +553,12 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                 </p>
                             </div>
                         </div>
+                        {summaryHasNoEngagement ? (
+                            <div className="border-t border-border/80 bg-muted/15 px-5 py-4 text-center text-sm text-muted-foreground sm:px-6">
+                                No review requests or feedback recorded for this contact yet. Send a request to start
+                                the timeline below.
+                            </div>
+                        ) : null}
                     </CardContent>
                 </Card>
             </section>

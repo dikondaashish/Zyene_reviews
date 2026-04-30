@@ -93,7 +93,7 @@ export default async function CustomerDetailPage({
     const stats = computeDetailStats(customer, matchedRequests, matchedFeedback);
 
     return (
-        <div className="mx-auto w-full max-w-6xl px-4 py-6 pb-16 lg:px-8">
+        <div className="mx-auto w-full max-w-[1200px] px-4 py-6 lg:px-6">
             <CustomerDetailClient
                 customer={customer}
                 businessId={businessId}
