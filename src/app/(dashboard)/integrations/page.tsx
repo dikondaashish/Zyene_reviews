@@ -149,10 +149,10 @@ export default async function IntegrationsPage() {
     );
     const connectedCount = connectedPlatforms.length;
 
-    /** All review rows stored in Zyene (matches DB; not capped at 1,000). */
+    /** User-facing total: `reviews` rows with `is_visible = true` only (excludes Google-deleted / hidden rows). */
     const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
     const visibleRollup = visibleRollupMap.get(business.id);
-    const totalReviews = visibleRollup?.totalReviewRows ?? 0;
+    const totalReviews = visibleRollup?.totalVisible ?? 0;
 
     return (
         <div className="flex flex-1 flex-col gap-10 p-4 sm:p-6 lg:p-8">

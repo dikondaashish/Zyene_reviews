@@ -3,9 +3,9 @@ import type { Database } from "@/lib/db/supabase/database.types";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export type VisibleReviewRollup = {
-    /** All `reviews` rows for this business (any platform, any `is_visible`). */
+    /** All `reviews` rows stored for this business (includes `is_visible = false`). For diagnostics only; use `totalVisible` in UI. */
     totalReviewRows: number;
-    /** All platforms, `reviews.is_visible = true`. */
+    /** All platforms, `reviews.is_visible = true` only — use for dashboards and “reviews in Zyene” style copy. */
     totalVisible: number;
     pendingVisible: number;
     averageRatingVisible: number;

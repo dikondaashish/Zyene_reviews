@@ -78,7 +78,13 @@ export function YelpIntegrationCard({
 
     const isConnected = platform && platform.sync_status === "active";
     const yelpVisibleCount = dbVisibleYelpReviewCount ?? 0;
-    const yelpSyncedCount = dbYelpSyncedRowCount !== undefined ? dbYelpSyncedRowCount : yelpVisibleCount;
+    /** Shown on card: visible rows in Zyene; falls back to all stored rows only if visible count not supplied. */
+    const yelpSyncedCount =
+        typeof dbVisibleYelpReviewCount === "number"
+            ? dbVisibleYelpReviewCount
+            : dbYelpSyncedRowCount !== undefined
+              ? dbYelpSyncedRowCount
+              : yelpVisibleCount;
     const hasError = platform && platform.sync_status?.startsWith("error");
 
     const handleSearch = async () => {

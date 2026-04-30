@@ -67,9 +67,9 @@ interface GoogleCardProps {
     } | null;
     businessId: string;
     businessName?: string | null;
-    /** All Google rows in `reviews` (sync volume; not PostgREST-capped). */
+    /** All Google rows in `reviews` including hidden (`is_visible = false`); optional diagnostics only. */
     dbGoogleSyncedRowCount?: number;
-    /** Visible Google rows — used for average rating. */
+    /** Visible Google rows (`is_visible = true`) — primary count for UI and polling seed. */
     dbVisibleGoogleReviewCount?: number;
     dbVisibleGoogleAverageRating?: number | null;
 }
@@ -125,10 +125,10 @@ export function GoogleIntegrationCard({
             initialSyncStatus: platform?.sync_status ?? null,
             initialLastSyncedAt: platform?.last_synced_at ?? null,
             initialTotalReviews:
-                dbGoogleSyncedRowCount !== undefined
-                    ? dbGoogleSyncedRowCount
-                    : typeof dbVisibleGoogleReviewCount === "number"
-                      ? dbVisibleGoogleReviewCount
+                typeof dbVisibleGoogleReviewCount === "number"
+                    ? dbVisibleGoogleReviewCount
+                    : dbGoogleSyncedRowCount !== undefined
+                      ? dbGoogleSyncedRowCount
                       : (platform?.total_reviews ?? null),
             initialAverageRating:
                 dbVisibleGoogleAverageRating != null && !Number.isNaN(Number(dbVisibleGoogleAverageRating))
@@ -155,10 +155,10 @@ export function GoogleIntegrationCard({
     const needsLocation = isConnected && !platform?.google_location_id;
 
     const displayReviewCount =
-        dbGoogleSyncedRowCount !== undefined
-            ? dbGoogleSyncedRowCount
-            : typeof dbVisibleGoogleReviewCount === "number"
-              ? dbVisibleGoogleReviewCount
+        typeof dbVisibleGoogleReviewCount === "number"
+            ? dbVisibleGoogleReviewCount
+            : dbGoogleSyncedRowCount !== undefined
+              ? dbGoogleSyncedRowCount
               : (totalReviews ?? platform?.total_reviews ?? 0);
     const displayLastSyncedAt = lastSyncedAt ?? platform?.last_synced_at ?? null;
 

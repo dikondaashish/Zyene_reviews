@@ -84,13 +84,29 @@ export async function GET(request: Request) {
             businessId ?? undefined
         );
 
+        const { count: visibleGoogleReviewCount, error: visibleCountError } = await supabase
+            .from("reviews")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", resolvedBusinessId)
+            .eq("platform", "google")
+            .eq("is_visible", true);
+
+        if (visibleCountError) {
+            console.warn("[sync/google GET] visible review count failed, using review_platforms.total_reviews:", visibleCountError);
+        }
+
+        const totalReviewsDisplay =
+            typeof visibleGoogleReviewCount === "number" && !visibleCountError
+                ? visibleGoogleReviewCount
+                : Number(platform.total_reviews ?? 0);
+
         return apiOk({
             businessId: resolvedBusinessId,
             platformId: platform.id,
             sync_status: platform.sync_status ?? "idle",
             last_synced_at: platform.last_synced_at ?? null,
             locked_until: platform.locked_until ?? null,
-            total_reviews: Number(platform.total_reviews ?? 0),
+            total_reviews: totalReviewsDisplay,
             average_rating:
                 platform.average_rating != null ? Number(platform.average_rating) : null,
         });

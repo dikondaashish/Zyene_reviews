@@ -71,7 +71,13 @@ export function FacebookIntegrationCard({
 
     const isConnected = platform?.sync_status === "active";
     const fbVisibleCount = dbVisibleFacebookReviewCount ?? 0;
-    const fbSyncedCount = dbFacebookSyncedRowCount !== undefined ? dbFacebookSyncedRowCount : fbVisibleCount;
+    /** Shown as “Reviews”: visible rows in Zyene; falls back to all stored rows only if visible count not supplied. */
+    const fbSyncedCount =
+        typeof dbVisibleFacebookReviewCount === "number"
+            ? dbVisibleFacebookReviewCount
+            : dbFacebookSyncedRowCount !== undefined
+              ? dbFacebookSyncedRowCount
+              : fbVisibleCount;
     const fbRatingDisplay =
         fbVisibleCount > 0 && dbVisibleFacebookAverageRating != null && !Number.isNaN(dbVisibleFacebookAverageRating)
             ? dbVisibleFacebookAverageRating.toFixed(1)
