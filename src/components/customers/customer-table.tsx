@@ -111,7 +111,7 @@ const TAG_PILL_CLASSES = [
     "border-chart-3/35 bg-chart-3/12 text-chart-3",
     "border-chart-4/35 bg-chart-4/12 text-chart-4",
     "border-primary/35 bg-primary/12 text-primary",
-    "border-violet-500/35 bg-violet-500/12 text-violet-700 dark:text-violet-300",
+    "border-chart-5/35 bg-chart-5/12 text-chart-5",
 ];
 
 function tagPillClass(tag: string): string {
@@ -793,7 +793,7 @@ function CustomerNameCell({
                     {customer.is_opted_out ? (
                         <Badge
                             variant="outline"
-                            className="h-5 border-amber-500/40 bg-amber-500/10 px-1.5 text-[10px] font-medium text-amber-800 dark:text-amber-200"
+                            className="h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-chart-4"
                         >
                             Opted out
                         </Badge>

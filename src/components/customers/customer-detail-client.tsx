@@ -93,13 +93,13 @@ function requestStatusTone(status: string): { className: string; dot: string } {
         };
     if (s === "sending" || s === "queued" || s === "pending")
         return {
-            className: "border-amber-500/35 bg-amber-500/10 text-amber-900 dark:text-amber-100",
-            dot: "bg-amber-500 animate-pulse",
+            className: "border-chart-4/35 bg-chart-4/10 text-chart-4",
+            dot: "bg-chart-4 animate-pulse",
         };
     if (s === "sent" || s === "delivered" || s === "opened" || s === "clicked" || s === "completed" || s === "review_left")
         return {
-            className: "border-emerald-500/35 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100",
-            dot: "bg-emerald-500",
+            className: "border-chart-2/35 bg-chart-2/10 text-chart-2",
+            dot: "bg-chart-2",
         };
     return {
         className: "border-border bg-muted/60 text-muted-foreground",
@@ -312,7 +312,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                         {customer.is_opted_out ? (
                                             <Badge
                                                 variant="outline"
-                                                className="mt-2 w-fit border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-100"
+                                                className="mt-2 w-fit border-chart-4/40 bg-chart-4/10 text-chart-4"
                                             >
                                                 Opted out of review requests
                                             </Badge>
@@ -512,7 +512,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                                                 <span className="hidden sm:inline" aria-hidden>
                                                                     ·
                                                                 </span>
-                                                                <span className="text-emerald-700 dark:text-emerald-400">
+                                                                <span className="text-chart-2">
                                                                     Review completed
                                                                 </span>
                                                             </>

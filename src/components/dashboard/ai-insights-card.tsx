@@ -35,18 +35,18 @@ export function AiInsightsCard() {
     if (error) return null; // Silently hide if AI fails
     if (loading) {
         return (
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Sparkles className="h-5 w-5 text-blue-500" />
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                        <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-base text-slate-900">AI Review Insights</h3>
-                        <p className="text-sm text-slate-400">Analyzing your reviews...</p>
+                        <h3 className="text-base font-semibold text-foreground">AI Review Insights</h3>
+                        <p className="text-sm text-muted-foreground">Analyzing your reviews...</p>
                     </div>
                 </div>
                 <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 </div>
             </div>
         );
@@ -55,59 +55,59 @@ export function AiInsightsCard() {
     if (!data || data.themes.length === 0) return null; // No insights available
 
     return (
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Sparkles className="h-5 w-5 text-blue-500" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                        <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-base text-slate-900">AI Review Insights</h3>
-                        <p className="text-sm text-slate-400">
+                        <h3 className="text-base font-semibold text-foreground">AI Review Insights</h3>
+                        <p className="text-sm text-muted-foreground">
                             {data.reviewCount} reviews analyzed · all time
                         </p>
                     </div>
                 </div>
-                <span className="text-xs font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-1 rounded-md">
+                <span className="rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                     AI
                 </span>
             </div>
 
             {/* Key Themes */}
             <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                    <TrendingUp className="h-4 w-4 text-slate-400" />
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Key Themes
                     </span>
                 </div>
                 <ul className="space-y-2.5">
                     {data.themes.map((theme, i) => (
                         <li key={i} className="flex items-start gap-2.5">
-                            <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
-                            <span className="text-sm text-slate-700 leading-relaxed">{theme}</span>
+                            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-chart-1" />
+                            <span className="text-sm leading-relaxed text-foreground">{theme}</span>
                         </li>
                     ))}
                 </ul>
             </div>
 
             {/* Divider */}
-            <div className="border-t border-slate-100 my-5" />
+            <div className="my-5 border-t border-border" />
 
             {/* Suggestions */}
             <div>
-                <div className="flex items-center gap-2 mb-3">
-                    <Lightbulb className="h-4 w-4 text-amber-400" />
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="mb-3 flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-chart-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Suggestions
                     </span>
                 </div>
                 <ul className="space-y-2.5">
                     {data.suggestions.map((suggestion, i) => (
                         <li key={i} className="flex items-start gap-2.5">
-                            <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-400 flex-shrink-0" />
-                            <span className="text-sm text-slate-700 leading-relaxed">{suggestion}</span>
+                            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-chart-4" />
+                            <span className="text-sm leading-relaxed text-foreground">{suggestion}</span>
                         </li>
                     ))}
                 </ul>

@@ -94,7 +94,7 @@ export default function Pricing() {
               <TabsTrigger value="monthly">Monthly</TabsTrigger>
               <TabsTrigger value="yearly">
                 Yearly
-                <span className="ml-1.5 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800 dark:bg-green-900 dark:text-green-100">
+                <span className="ml-1.5 rounded-full bg-chart-2/15 px-2 py-0.5 text-xs text-chart-2">
                   Save 17%
                 </span>
               </TabsTrigger>
