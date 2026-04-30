@@ -3,6 +3,7 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { countVisibleReviewsForBusiness } from "@/lib/reviews/count-visible-reviews";
 import { Schema, Type as SchemaType } from "@google/genai";
 
 const insightsSchema: Schema = {
@@ -88,21 +89,24 @@ export async function GET(request: Request) {
         // Redis unavailable, continue without cache
     }
 
-    // Fetch review texts (sample up to 200 most recent with text)
-    const { data: reviews, count } = await supabase
-        .from("reviews")
-        .select("text, rating", { count: "exact" })
-        .eq("business_id", businessId)
-        .not("text", "is", null)
-        .neq("text", "")
-        .order("review_date", { ascending: false })
-        .limit(200);
+    const [{ count: visibleReviewTotal }, { data: reviews }] = await Promise.all([
+        countVisibleReviewsForBusiness(supabase, businessId),
+        supabase
+            .from("reviews")
+            .select("text, rating")
+            .eq("business_id", businessId)
+            .eq("is_visible", true)
+            .not("text", "is", null)
+            .neq("text", "")
+            .order("review_date", { ascending: false })
+            .limit(200),
+    ]);
 
     if (!reviews || reviews.length < 5) {
         return apiOk({
             themes: [],
             suggestions: [],
-            reviewCount: count || 0,
+            reviewCount: visibleReviewTotal,
             message: "Not enough reviews with text to generate insights. At least 5 reviews needed.",
         });
     }
@@ -114,7 +118,7 @@ export async function GET(request: Request) {
 
         const prompt = INSIGHTS_PROMPT
             .replace("{business_name}", business?.name || "the business")
-            .replace("{count}", (count || reviews.length).toString())
+            .replace("{count}", String(visibleReviewTotal))
             .replace("{reviews}", reviewsText);
 
         const content = await generateContentWithFallback(prompt, {
@@ -133,7 +137,7 @@ export async function GET(request: Request) {
             headline: result.headline || "",
             themes: result.themes || [],
             suggestions: result.suggestions || [],
-            reviewCount: count || reviews.length,
+            reviewCount: visibleReviewTotal,
         };
 
         // Cache for 24 hours
@@ -144,7 +148,7 @@ export async function GET(request: Request) {
             // Cache write failed, non-critical
         }
 
-        logger.info({ userId: user.id, businessId, reviewCount: count }, "AI insights generated");
+        logger.info({ userId: user.id, businessId, reviewCount: visibleReviewTotal }, "AI insights generated");
         return apiOk(responseData);
     } catch (error) {
         logger.error({ error, userId: user.id, businessId }, "AI insights generation failed");

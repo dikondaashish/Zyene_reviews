@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
                 .from("reviews")
                 .select("id, rating, response_status, review_date")
                 .eq("business_id", auth.businessId)
+                .eq("is_visible", true)
                 .gte("review_date", startIso)
                 .order("id", { ascending: true })
                 .range(from, to)

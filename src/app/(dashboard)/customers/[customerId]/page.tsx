@@ -68,6 +68,7 @@ export default async function CustomerDetailPage({
         .from("reviews")
         .select("id, rating, platform, review_date, text, author_name")
         .eq("business_id", businessId)
+        .eq("is_visible", true)
         .order("review_date", { ascending: false })
         .limit(500);
 

@@ -76,6 +76,7 @@ export async function GET(request: Request) {
                 )
             `)
             .eq("business_id", business.id)
+            .eq("is_visible", true)
             .order("review_date", { ascending: false });
 
         const publicRows = (reviews || []) as PublicReviewExportRow[];

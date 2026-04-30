@@ -80,7 +80,7 @@ export async function buildAnalyticsRangePayload(
                 "id, created_at, review_date, platform, rating, response_status, responded_at, sentiment, themes, is_visible"
             )
             .eq("business_id", businessId)
-            .or("is_visible.is.null,is_visible.eq.true")
+            .eq("is_visible", true)
             .gte("review_date", previousStart.toISOString())
             .lte("review_date", currentEnd.toISOString());
 

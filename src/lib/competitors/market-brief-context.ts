@@ -1,10 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/db/supabase/database.types";
 import type { MarketPositioningBriefInput } from "@/domains/ai/services/generateMarketPositioningBrief";
 import { parsePlacesMetaFromSnapshot } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
+import { countVisibleReviewsForBusiness } from "@/lib/reviews/count-visible-reviews";
 
 export async function loadMarketPositioningBriefContext(
-    supabase: SupabaseClient,
+    supabase: SupabaseClient<Database>,
     businessId: string
 ): Promise<{ ok: true; input: MarketPositioningBriefInput } | { ok: false; error: string }> {
     const { data: business, error: bErr } = await supabase
@@ -16,6 +18,8 @@ export async function loadMarketPositioningBriefContext(
     if (bErr || !business) {
         return { ok: false, error: "Business not found." };
     }
+
+    const { count: visibleReviewTotal } = await countVisibleReviewsForBusiness(supabase, businessId);
 
     const { data: competitors, error: cErr } = await supabase
         .from("competitors")
@@ -74,7 +78,7 @@ export async function loadMarketPositioningBriefContext(
     const input: MarketPositioningBriefInput = {
         businessName: business.name ?? "Your business",
         yourRating: business.average_rating != null ? Number(business.average_rating) : null,
-        yourReviewCount: business.total_reviews != null ? Number(business.total_reviews) : null,
+        yourReviewCount: visibleReviewTotal,
         yourTopKeywords: keywords.map((k) => ({ keyword: k.keyword, impressions: k.impressions })),
         keywordDiscoveryPct: split.discoveryPct,
         keywordDirectPct: split.directPct,

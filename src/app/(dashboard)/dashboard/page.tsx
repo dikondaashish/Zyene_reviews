@@ -399,16 +399,18 @@ export default async function DashboardPage() {
                     .eq("response_status", "pending"),
                 // 3. Recent Reviews (15 most recent — Review Spotlight carousel)
                 supabase
-                    .from("reviews")
-                    .select("*")
-                    .eq("business_id", business.id)
-                    .order("review_date", { ascending: false })
-                    .limit(15),
+                .from("reviews")
+                .select("*")
+                .eq("business_id", business.id)
+                .eq("is_visible", true)
+                .order("review_date", { ascending: false })
+                .limit(15),
                 // 4. Needs Attention (urgent or negative, still pending)
                 supabase
                     .from("reviews")
                     .select("*")
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .eq("response_status", "pending")
                     .or("rating.lte.2,urgency_score.gte.7")
                     .order("urgency_score", { ascending: false, nullsFirst: false })
@@ -419,6 +421,7 @@ export default async function DashboardPage() {
                         .from("reviews")
                         .select("review_date, rating")
                         .eq("business_id", business.id)
+                        .eq("is_visible", true)
                         .gte("review_date", startOfLastYear.toISOString())
                         .order("review_date", { ascending: true })
                         .order("id", { ascending: true })
@@ -430,6 +433,7 @@ export default async function DashboardPage() {
                         .from("reviews")
                         .select("review_date")
                         .eq("business_id", business.id)
+                        .eq("is_visible", true)
                         .gte("review_date", thirtyDaysAgo.toISOString())
                         .order("review_date", { ascending: true })
                         .order("id", { ascending: true })
@@ -441,6 +445,7 @@ export default async function DashboardPage() {
                         .from("reviews")
                         .select("rating")
                         .eq("business_id", business.id)
+                        .eq("is_visible", true)
                         .order("id", { ascending: true })
                         .range(from, to)
                 ),
@@ -449,18 +454,21 @@ export default async function DashboardPage() {
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .eq("sentiment", "positive"),
                 // 8b. Negative/mixed sentiment count
                 supabase
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .in("sentiment", ["negative", "mixed"]),
                 // 8c. Total with sentiment
                 supabase
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .not("sentiment", "is", null),
                 // 9a. Completed requests
                 supabase
@@ -485,6 +493,7 @@ export default async function DashboardPage() {
                     .from("reviews")
                     .select("*", { count: "exact", head: true })
                     .eq("business_id", business.id)
+                    .eq("is_visible", true)
                     .gte("review_date", thirtyDaysAgo.toISOString()),
                 // 12. Customer count (for getting started banner)
                 supabase

@@ -129,7 +129,7 @@ export function GoogleIntegrationCard({
                     ? dbVisibleGoogleReviewCount
                     : dbGoogleSyncedRowCount !== undefined
                       ? dbGoogleSyncedRowCount
-                      : (platform?.total_reviews ?? null),
+                      : null,
             initialAverageRating:
                 dbVisibleGoogleAverageRating != null && !Number.isNaN(Number(dbVisibleGoogleAverageRating))
                     ? Number(dbVisibleGoogleAverageRating)
@@ -159,7 +159,7 @@ export function GoogleIntegrationCard({
             ? dbVisibleGoogleReviewCount
             : dbGoogleSyncedRowCount !== undefined
               ? dbGoogleSyncedRowCount
-              : (totalReviews ?? platform?.total_reviews ?? 0);
+              : (totalReviews ?? 0);
     const displayLastSyncedAt = lastSyncedAt ?? platform?.last_synced_at ?? null;
 
     const supabase = createClient();

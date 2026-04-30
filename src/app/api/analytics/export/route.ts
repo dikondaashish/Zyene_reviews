@@ -28,7 +28,7 @@ export async function GET(request: Request) {
             .from("reviews")
             .select("id,created_at,review_date,platform,rating,is_visible")
             .eq("business_id", business.id)
-            .or("is_visible.is.null,is_visible.eq.true")
+            .eq("is_visible", true)
             .gte("review_date", currentStart.toISOString())
             .lte("review_date", currentEnd.toISOString());
 
