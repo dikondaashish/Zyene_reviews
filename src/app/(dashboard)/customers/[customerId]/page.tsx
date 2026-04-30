@@ -1,10 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { CustomerDetailClient } from "@/components/customers/customer-detail-client";
-import { ChevronLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
     buildCustomerTimeline,
     computeDetailStats,
@@ -96,20 +93,7 @@ export default async function CustomerDetailPage({
     const stats = computeDetailStats(customer, matchedRequests, matchedFeedback);
 
     return (
-        <div className="mx-auto max-w-3xl px-4 py-6 pb-12 lg:px-6">
-            <nav className="mb-6" aria-label="Breadcrumb">
-                <Link
-                    href="/customers"
-                    className={cn(
-                        "group inline-flex items-center gap-2 rounded-full border border-transparent px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors",
-                        "hover:border-border hover:bg-muted/60 hover:text-foreground"
-                    )}
-                >
-                    <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                    Customers
-                </Link>
-            </nav>
-
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 pb-16 lg:px-8">
             <CustomerDetailClient
                 customer={customer}
                 businessId={businessId}

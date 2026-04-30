@@ -15,6 +15,7 @@ import {
     BarChart3,
     X,
     Plus,
+    ChevronLeft,
     ChevronRight,
     UserRound,
     Clock,
@@ -25,8 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { CustomerDetailStats, TimelineItem } from "@/lib/customers/customer-detail-data";
@@ -47,7 +47,6 @@ function displayName(c: CustomerRow): string {
     return `${c.first_name ?? ""} ${c.last_name ?? ""}`.trim();
 }
 
-/** Avatar text: name initials, else last 4 phone digits (more recognizable than 2), else email prefix, else ? */
 function initials(c: CustomerRow): string {
     const name = displayName(c);
     if (name) {
@@ -132,7 +131,7 @@ function SectionHeading({
                     </span>
                     {title}
                 </h2>
-                <p className="mt-1 max-w-xl text-sm text-muted-foreground">{description}</p>
+                <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>
             </div>
         </div>
     );
@@ -206,6 +205,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
     const name = displayName(customer);
     const avatarText = initials(customer);
     const avatarCompact = avatarText.length > 2;
+    const campaignHref = `/campaigns/new?customerIds=${encodeURIComponent(customer.id)}`;
 
     const addTag = () => {
         const t = tagInput.trim();
@@ -222,38 +222,75 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
         void saveTags(tags.filter((x) => x !== tag));
     };
 
-    const campaignHref = `/campaigns/new?customerIds=${encodeURIComponent(customer.id)}`;
+    const sendReviewRequestButton =
+        customer.is_opted_out ? (
+            <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <span className="inline-flex w-full sm:w-auto">
+                            <Button type="button" disabled className="h-10 w-full rounded-lg px-5 sm:w-auto">
+                                <Send className="mr-2 h-4 w-4" />
+                                Send review request
+                            </Button>
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">This contact opted out of review requests.</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        ) : (
+            <Button asChild size="default" className="h-10 w-full rounded-lg px-5 shadow-sm sm:w-auto">
+                <Link href={campaignHref}>
+                    <Sparkles className="mr-2 h-4 w-4 opacity-90" />
+                    Send review request
+                </Link>
+            </Button>
+        );
 
     return (
-        <div className="space-y-10 pb-10">
-            {/* Hero */}
+        <div className="space-y-8 pb-12">
+            {/* Top bar: back + primary CTA (matches requested order) */}
+            <header className="flex flex-col gap-4 border-b border-border/70 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                <Link
+                    href="/customers"
+                    className={cn(
+                        "group inline-flex w-fit items-center gap-2 rounded-lg border border-transparent px-1 py-1 text-sm font-medium text-muted-foreground transition-colors",
+                        "hover:border-border hover:bg-muted/50 hover:text-foreground"
+                    )}
+                >
+                    <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                    Customers
+                </Link>
+                {sendReviewRequestButton}
+            </header>
+
+            {/* Profile + contact */}
             <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm">
                 <div
-                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_circle_at_100%_0%,var(--primary)_0%,transparent_55%)] opacity-[0.07]"
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_circle_at_100%_0%,var(--primary)_0%,transparent_55%)] opacity-[0.06]"
                     aria-hidden
                 />
-                <div className="relative p-6 sm:p-8">
+                <div className="relative border-b border-border/60 bg-muted/20 px-5 py-5 sm:px-8 sm:py-7">
                     <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
                         <div
                             className={cn(
-                                "relative flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 ring-2 ring-primary/15 ring-offset-2 ring-offset-background",
-                                avatarCompact ? "h-[5.25rem] w-[5.25rem]" : "h-24 w-24"
+                                "relative flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/18 to-primary/5 ring-2 ring-primary/12 ring-offset-2 ring-offset-card",
+                                avatarCompact ? "h-[4.75rem] w-[4.75rem]" : "h-[5.25rem] w-[5.25rem]"
                             )}
                         >
                             <span
                                 className={cn(
                                     "font-semibold tracking-tight text-primary",
-                                    avatarCompact ? "text-base tabular-nums" : "text-2xl"
+                                    avatarCompact ? "text-base tabular-nums" : "text-xl"
                                 )}
                             >
                                 {avatarText}
                             </span>
                         </div>
 
-                        <div className="min-w-0 flex-1 space-y-6">
+                        <div className="min-w-0 flex-1 space-y-5">
                             <div className="space-y-2">
                                 {editingName ? (
-                                    <div className="flex max-w-lg flex-col gap-2">
+                                    <div className="flex max-w-xl flex-col gap-2">
                                         <Input
                                             value={nameDraft}
                                             onChange={(e) => setNameDraft(e.target.value)}
@@ -276,7 +313,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                                 }
                                                 void saveName();
                                             }}
-                                            className="h-11 text-lg font-semibold"
+                                            className="h-11 max-w-xl text-lg font-semibold"
                                             autoFocus
                                             placeholder="Full name"
                                         />
@@ -293,19 +330,19 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                             className="group block text-left"
                                         >
                                             {name ? (
-                                                <span className="text-2xl font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline">
+                                                <span className="text-2xl font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline sm:text-3xl">
                                                     {name}
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-muted-foreground">
-                                                    <UserRound className="h-6 w-6 shrink-0 opacity-60" />
+                                                <span className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-muted-foreground sm:text-3xl">
+                                                    <UserRound className="h-7 w-7 shrink-0 opacity-60" />
                                                     Add a display name
                                                     <ChevronRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
                                                 </span>
                                             )}
                                         </button>
                                         {!name && customer.phone && (
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
                                                 Showing phone below — add a name so this contact is easier to find.
                                             </p>
                                         )}
@@ -321,55 +358,59 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                 )}
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
                                 <div
                                     className={cn(
-                                        "flex items-start gap-3 rounded-xl border px-4 py-3",
-                                        customer.phone ? "border-border/80 bg-muted/30" : "border-dashed border-muted-foreground/25 bg-muted/10"
+                                        "flex items-start gap-3 rounded-xl border px-4 py-3.5 transition-colors",
+                                        customer.phone
+                                            ? "border-border/80 bg-background/80"
+                                            : "border-dashed border-muted-foreground/20 bg-muted/15"
                                     )}
                                 >
-                                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background shadow-sm">
+                                    <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted/80">
                                         <Phone className="h-4 w-4 text-muted-foreground" />
                                     </span>
                                     <div className="min-w-0">
-                                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                                             Phone
                                         </p>
                                         {customer.phone ? (
-                                            <p className="mt-0.5 font-medium text-foreground tabular-nums">{customer.phone}</p>
+                                            <p className="mt-1 font-medium text-foreground tabular-nums">{customer.phone}</p>
                                         ) : (
-                                            <p className="mt-0.5 text-sm text-muted-foreground">Not set</p>
+                                            <p className="mt-1 text-sm text-muted-foreground">Not set</p>
                                         )}
                                     </div>
                                 </div>
                                 <div
                                     className={cn(
-                                        "flex items-start gap-3 rounded-xl border px-4 py-3",
-                                        customer.email ? "border-border/80 bg-muted/30" : "border-dashed border-muted-foreground/25 bg-muted/10"
+                                        "flex items-start gap-3 rounded-xl border px-4 py-3.5 transition-colors",
+                                        customer.email
+                                            ? "border-border/80 bg-background/80"
+                                            : "border-dashed border-muted-foreground/20 bg-muted/15"
                                     )}
                                 >
-                                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background shadow-sm">
+                                    <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted/80">
                                         <Mail className="h-4 w-4 text-muted-foreground" />
                                     </span>
                                     <div className="min-w-0">
-                                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                                             Email
                                         </p>
                                         {customer.email ? (
-                                            <p className="mt-0.5 break-all font-medium text-foreground">{customer.email}</p>
+                                            <p className="mt-1 break-all font-medium text-foreground">{customer.email}</p>
                                         ) : (
-                                            <p className="mt-0.5 text-sm text-muted-foreground">Not set</p>
+                                            <p className="mt-1 text-sm text-muted-foreground">Not set</p>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-border/80 bg-muted/20 p-4">
-                                <div className="mb-3 flex items-center justify-between gap-2">
-                                    <div>
-                                        <p className="text-sm font-medium text-foreground">Tags</p>
-                                        <p className="text-xs text-muted-foreground">Organize this contact for campaigns and filters.</p>
-                                    </div>
+                            <div className="rounded-xl border border-border/80 bg-muted/15 p-4 sm:p-5 lg:max-w-3xl">
+                                <div className="mb-3">
+                                    <p className="text-sm font-semibold text-foreground">Tags</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Organize this contact for campaigns and filters.
+                                    </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2">
                                     {tags.map((tag) => (
@@ -389,7 +430,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                             </button>
                                         </Badge>
                                     ))}
-                                    <div className="flex min-w-[12rem] flex-1 items-center gap-2 sm:max-w-xs">
+                                    <div className="flex min-w-[12rem] flex-1 items-center gap-2 sm:max-w-md">
                                         <Input
                                             placeholder="Type a tag and press Enter"
                                             value={tagInput}
@@ -410,46 +451,67 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                 </div>
                             </div>
 
-                            <Separator className="bg-border/60" />
-
-                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Calendar className="h-4 w-4 shrink-0 opacity-70" />
-                                    <span>
-                                        Customer since{" "}
-                                        <span className="font-medium text-foreground">
-                                            {format(parseISO(customer.created_at), "MMMM d, yyyy")}
-                                        </span>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Calendar className="h-4 w-4 shrink-0 opacity-70" />
+                                <span>
+                                    Customer since{" "}
+                                    <span className="font-medium text-foreground">
+                                        {format(parseISO(customer.created_at), "MMMM d, yyyy")}
                                     </span>
-                                </div>
-                                {customer.is_opted_out ? (
-                                    <TooltipProvider delayDuration={200}>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <span className="inline-flex w-full sm:w-auto">
-                                                    <Button type="button" disabled className="w-full rounded-xl sm:w-auto">
-                                                        <Send className="mr-2 h-4 w-4" />
-                                                        Send review request
-                                                    </Button>
-                                                </span>
-                                            </TooltipTrigger>
-                                            <TooltipContent className="max-w-xs">
-                                                This contact opted out of review requests.
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ) : (
-                                    <Button asChild size="lg" className="w-full rounded-xl shadow-sm sm:w-auto">
-                                        <Link href={campaignHref}>
-                                            <Sparkles className="mr-2 h-4 w-4 opacity-90" />
-                                            Send review request
-                                        </Link>
-                                    </Button>
-                                )}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+
+            {/* Summary before activity */}
+            <section>
+                <SectionHeading
+                    icon={BarChart3}
+                    title="Summary"
+                    description="Quick stats for requests and engagement with this contact."
+                />
+                <Card className="overflow-hidden rounded-2xl border-border/80 shadow-sm">
+                    <CardContent className="p-0">
+                        <div className="grid divide-y divide-border/80 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+                            <div className="px-5 py-5 sm:px-6 sm:py-6">
+                                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Requests sent
+                                </p>
+                                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+                                    {stats.totalRequestsSent}
+                                </p>
+                            </div>
+                            <div className="px-5 py-5 sm:px-6 sm:py-6">
+                                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Reviews left
+                                </p>
+                                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+                                    {stats.reviewsLeftCount}
+                                </p>
+                            </div>
+                            <div className="px-5 py-5 sm:px-6 sm:py-6">
+                                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Last contacted
+                                </p>
+                                <p className="mt-2 text-lg font-semibold leading-snug text-foreground">
+                                    {stats.lastContactedAt
+                                        ? formatDistanceToNow(parseISO(stats.lastContactedAt), { addSuffix: true })
+                                        : "Never"}
+                                </p>
+                            </div>
+                            <div className="px-5 py-5 sm:px-6 sm:py-6">
+                                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Last request
+                                </p>
+                                <p className="mt-2 text-lg font-semibold leading-snug text-foreground">
+                                    {stats.lastRequestStatus}
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </section>
 
             {/* Activity */}
@@ -467,14 +529,14 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                     <MessageSquare className="h-5 w-5 text-muted-foreground" />
                                 </div>
                                 <p className="text-sm font-medium text-foreground">No activity yet</p>
-                                <p className="max-w-sm text-sm text-muted-foreground">
+                                <p className="max-w-md text-sm text-muted-foreground">
                                     When you send a request or this contact leaves feedback, it will show up here.
                                 </p>
                             </div>
                         ) : (
                             <ul className="divide-y divide-border/80">
                                 {timeline.map((item) => (
-                                    <li key={`${item.type}-${item.id}`} className="px-5 py-5 sm:px-7">
+                                    <li key={`${item.type}-${item.id}`} className="px-5 py-5 sm:px-8">
                                         {item.type === "request" ? (
                                             <div className="flex gap-4">
                                                 <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary shadow-inner">
@@ -512,9 +574,7 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                                                 <span className="hidden sm:inline" aria-hidden>
                                                                     ·
                                                                 </span>
-                                                                <span className="text-chart-2">
-                                                                    Review completed
-                                                                </span>
+                                                                <span className="text-chart-2">Review completed</span>
                                                             </>
                                                         ) : null}
                                                     </p>
@@ -593,57 +653,6 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                         )}
                     </CardContent>
                 </Card>
-            </section>
-
-            {/* Summary */}
-            <section>
-                <SectionHeading
-                    icon={BarChart3}
-                    title="Summary"
-                    description="Quick stats for requests and engagement with this contact."
-                />
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card className="rounded-2xl border-border/80 shadow-sm">
-                        <CardHeader className="space-y-1 pb-2 pt-5">
-                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
-                                Requests sent
-                            </CardDescription>
-                            <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight">
-                                {stats.totalRequestsSent}
-                            </CardTitle>
-                        </CardHeader>
-                    </Card>
-                    <Card className="rounded-2xl border-border/80 shadow-sm">
-                        <CardHeader className="space-y-1 pb-2 pt-5">
-                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
-                                Reviews left
-                            </CardDescription>
-                            <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight">
-                                {stats.reviewsLeftCount}
-                            </CardTitle>
-                        </CardHeader>
-                    </Card>
-                    <Card className="rounded-2xl border-border/80 shadow-sm">
-                        <CardHeader className="space-y-1 pb-2 pt-5">
-                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
-                                Last contacted
-                            </CardDescription>
-                            <CardTitle className="text-lg font-semibold leading-snug">
-                                {stats.lastContactedAt
-                                    ? formatDistanceToNow(parseISO(stats.lastContactedAt), { addSuffix: true })
-                                    : "Never"}
-                            </CardTitle>
-                        </CardHeader>
-                    </Card>
-                    <Card className="rounded-2xl border-border/80 shadow-sm">
-                        <CardHeader className="space-y-1 pb-2 pt-5">
-                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
-                                Last request
-                            </CardDescription>
-                            <CardTitle className="text-lg font-semibold leading-snug">{stats.lastRequestStatus}</CardTitle>
-                        </CardHeader>
-                    </Card>
-                </div>
             </section>
         </div>
     );
