@@ -69,6 +69,10 @@ function NewCampaignForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const templateId = searchParams.get("templateId");
+    const customerIdsParam = searchParams.get("customerIds");
+    const preselectedCustomerCount = customerIdsParam
+        ? customerIdsParam.split(",").filter((id) => id.trim().length > 0).length
+        : 0;
     const [step, setStep] = useState(0);
     const [saving, setSaving] = useState(false);
 
@@ -167,6 +171,15 @@ function NewCampaignForm() {
                     </p>
                 </div>
             </div>
+
+            {preselectedCustomerCount > 0 && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-foreground">
+                    <strong>{preselectedCustomerCount}</strong> customer
+                    {preselectedCustomerCount === 1 ? "" : "s"} selected from the Customers page. Continue with a manual
+                    batch campaign; your selection is passed in the URL as <code className="text-xs">customerIds</code> for
+                    launch workflows.
+                </div>
+            )}
 
             {/* Step Indicator */}
             <div className="flex items-center gap-2">

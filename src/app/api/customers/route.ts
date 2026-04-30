@@ -4,6 +4,8 @@ import { type NextRequest } from "next/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
+import { customerMatchesSearch } from "@/lib/customers/search-match";
+import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
 
 const createCustomerSchema = z.object({
     businessId: z.string().uuid(),
@@ -31,6 +33,7 @@ const patchCustomerSchema = z.object({
     phone: z.string().max(30).optional(),
     tags: z.array(z.string().max(50)).optional(),
     notes: z.string().max(2000).nullable().optional(),
+    is_opted_out: z.boolean().optional(),
 }).superRefine((value, ctx) => {
     const hasUpdateField =
         value.firstName !== undefined ||
@@ -40,7 +43,8 @@ const patchCustomerSchema = z.object({
         value.email !== undefined ||
         value.phone !== undefined ||
         value.tags !== undefined ||
-        value.notes !== undefined;
+        value.notes !== undefined ||
+        value.is_opted_out !== undefined;
 
     if (!hasUpdateField) {
         ctx.addIssue({
@@ -119,11 +123,10 @@ export async function GET(request: NextRequest) {
 
         const searchParams = request.nextUrl.searchParams;
         const businessId = searchParams.get("businessId");
-        const search = searchParams.get("search")?.toLowerCase();
+        const searchRaw = searchParams.get("search")?.trim() ?? "";
         const tags = searchParams.get("tags")?.split(",").filter(Boolean);
-        const segment = searchParams.get("segment");
         const page = parseInt(searchParams.get("page") || "1");
-        const limit = parseInt(searchParams.get("limit") || "50");
+        const limit = Math.min(parseInt(searchParams.get("limit") || "5000"), 5000);
 
         if (!businessId) {
             return apiError("Business ID is required", { status: 400 });
@@ -139,39 +142,35 @@ export async function GET(request: NextRequest) {
             .select("*", { count: "exact" })
             .eq("business_id", businessId);
 
-        // Text Search — sanitize to prevent PostgREST filter injection
-        if (search) {
-            const sanitized = search.replace(/[%_\\]/g, "\\$&").slice(0, 100);
-            query = query.or(`first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%,phone.ilike.%${sanitized}%`);
-        }
-
         // Tag Filtering
         if (tags && tags.length > 0) {
             query = query.contains("tags", tags);
         }
 
-        // Predefined Segments
-        if (segment) {
-            switch (segment) {
-                case "high-value":
-                    query = query.gte("total_spend_cents", 50000); // Ex: Over $500
-                    break;
-                case "loyal":
-                    query = query.gte("visit_count", 5);
-                    break;
-                case "needs-request":
-                    query = query.is("last_request_sent_at", null);
-                    break;
-                case "recent":
-                    const thirtyDaysAgo = new Date();
-                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                    query = query.gte("created_at", thirtyDaysAgo.toISOString());
-                    break;
-            }
-        }
-
         const from = (page - 1) * limit;
         const to = from + limit - 1;
+
+        if (searchRaw) {
+            const { data: candidates, error } = await query.order("created_at", { ascending: false });
+            if (error) throw error;
+            const filtered = (candidates || []).filter((row) => customerMatchesSearch(row, searchRaw));
+            const enrichedFiltered = await enrichCustomersWithReviewLinkage(supabase, businessId, filtered);
+            const total = enrichedFiltered.length;
+            const pageRows = enrichedFiltered.slice(from, Math.min(to + 1, enrichedFiltered.length));
+            return apiOk(
+                {
+                    customers: pageRows,
+                    total,
+                    page,
+                    limit,
+                },
+                {
+                    headers: {
+                        "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+                    },
+                }
+            );
+        }
 
         const { data, count, error } = await query
             .order("created_at", { ascending: false })
@@ -179,9 +178,11 @@ export async function GET(request: NextRequest) {
 
         if (error) throw error;
 
+        const enriched = await enrichCustomersWithReviewLinkage(supabase, businessId, data || []);
+
         return apiOk(
             {
-                customers: data,
+                customers: enriched,
                 total: count,
                 page,
                 limit,
@@ -257,6 +258,7 @@ export async function PATCH(request: NextRequest) {
             phone,
             tags,
             notes,
+            is_opted_out,
         } = parsed.data;
 
         const updates: {
@@ -266,6 +268,7 @@ export async function PATCH(request: NextRequest) {
             phone?: string;
             tags?: string[];
             notes?: string | null;
+            is_opted_out?: boolean;
             updated_at: string;
         } = {
             updated_at: new Date().toISOString(),
@@ -277,6 +280,7 @@ export async function PATCH(request: NextRequest) {
         if (phone !== undefined) updates.phone = phone;
         if (tags !== undefined) updates.tags = tags;
         if (notes !== undefined) updates.notes = notes;
+        if (is_opted_out !== undefined) updates.is_opted_out = is_opted_out;
 
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {

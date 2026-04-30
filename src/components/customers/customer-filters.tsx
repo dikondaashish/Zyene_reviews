@@ -1,17 +1,9 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { 
-    Search, 
-    Filter, 
-    Tag as TagIcon, 
-    Users, 
-    Zap, 
-    Clock, 
-    Star, 
-    X,
-    ChevronDown
-} from "lucide-react";
+import { Search, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
     Select,
     SelectContent,
@@ -19,43 +11,35 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
 
-export type CustomerSegment = "all" | "high-value" | "loyal" | "needs-request" | "recent";
+const ALL_TAGS_VALUE = "__zyene_filter_all__";
 
 interface CustomerFiltersProps {
     onSearchChange: (value: string) => void;
-    onSegmentChange: (segment: CustomerSegment) => void;
-    onTagChange: (tags: string[]) => void;
-    availableTags: string[];
+    tagFilter: string;
+    onTagFilterChange: (value: string) => void;
+    allTags: string[];
 }
 
-export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, availableTags }: CustomerFiltersProps) {
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+export function CustomerFilters({
+    onSearchChange,
+    tagFilter,
+    onTagFilterChange,
+    allTags,
+}: CustomerFiltersProps) {
     const [searchValue, setSearchValue] = useState("");
-
-    const toggleTag = (tag: string) => {
-        const newTags = selectedTags.includes(tag)
-            ? selectedTags.filter(t => t !== tag)
-            : [...selectedTags, tag];
-        setSelectedTags(newTags);
-        onTagChange(newTags);
-    };
 
     const clearFilters = () => {
         setSearchValue("");
-        setSelectedTags([]);
         onSearchChange("");
-        onTagChange([]);
-        onSegmentChange("all");
+        onTagFilterChange("");
     };
+
+    const hasFilters = Boolean(searchValue || tagFilter);
 
     return (
         <div className="mb-5 flex flex-col gap-3 p-0">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-                {/* Search Bar */}
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
                 <div className="relative flex-1 w-full group">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
@@ -69,82 +53,43 @@ export function CustomerFilters({ onSearchChange, onSegmentChange, onTagChange, 
                     />
                 </div>
 
-                {/* Segment Selector */}
-                <div className="w-full md:w-[210px]">
-                    <Select defaultValue="all" onValueChange={(v) => onSegmentChange(v as CustomerSegment)}>
-                        <SelectTrigger className="h-9 rounded-lg border-border bg-background px-3 text-sm focus:ring-2 focus:ring-primary/15">
-                            <div className="flex items-center gap-2">
-                                <Users className="h-4 w-4 text-muted-foreground" />
-                                <SelectValue placeholder="All Customers" />
-                            </div>
+                <div className="flex w-full flex-col gap-1.5 md:w-auto md:min-w-[200px]">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground md:sr-only">
+                        Filter by tag
+                    </span>
+                    <Select
+                        value={tagFilter ? tagFilter : ALL_TAGS_VALUE}
+                        onValueChange={(v) => onTagFilterChange(v === ALL_TAGS_VALUE ? "" : v)}
+                    >
+                        <SelectTrigger
+                            size="sm"
+                            className="h-9 w-full rounded-lg border-border md:w-[220px]"
+                            aria-label="Filter by tag"
+                        >
+                            <SelectValue placeholder="Filter by tag" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl border-border">
-                            <SelectItem value="all" className="py-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Users className="h-4 w-4 text-primary" />
-                                    <span>All Customers</span>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value="high-value" className="py-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Star className="h-4 w-4 text-chart-4 fill-chart-4" />
-                                    <span>High Value (VIP)</span>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value="loyal" className="py-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-sync-action fill-sync-action" />
-                                    <span>Loyal Customers</span>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value="needs-request" className="py-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-primary" />
-                                    <span>Needs Request</span>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value="recent" className="py-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-chart-2" />
-                                    <span>Recent (30 Days)</span>
-                                </div>
-                            </SelectItem>
+                        <SelectContent>
+                            <SelectItem value={ALL_TAGS_VALUE}>All tags</SelectItem>
+                            {allTags.map((tag) => (
+                                <SelectItem key={tag} value={tag}>
+                                    {tag}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
 
-                {(searchValue || selectedTags.length > 0) && (
-                    <Button 
-                        variant="ghost" 
+                {hasFilters && (
+                    <Button
+                        variant="ghost"
                         onClick={clearFilters}
-                        className="h-9 rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10/50 hover:text-destructive"
+                        className="h-9 shrink-0 rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive"
                     >
                         <X className="h-4 w-4 mr-2" />
-                        Clear All
+                        Clear
                     </Button>
                 )}
             </div>
-
-            {/* Tag Quick Selection */}
-            {availableTags.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 px-0">
-                    <span className="mr-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Quick Tags:</span>
-                    {availableTags.map((tag) => (
-                        <button
-                            key={tag}
-                            onClick={() => toggleTag(tag)}
-                            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                                selectedTags.includes(tag)
-                                    ? "bg-primary text-primary-foreground ring-2 ring-primary/20"
-                                    : "bg-muted text-muted-foreground hover:bg-border"
-                            }`}
-                        >
-                            <TagIcon className={`h-3 w-3 ${selectedTags.includes(tag) ? "text-primary-foreground/80" : "text-muted-foreground"}`} />
-                            {tag}
-                        </button>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }

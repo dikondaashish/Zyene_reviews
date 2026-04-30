@@ -504,6 +504,7 @@ export type Database = {
           email: string | null
           first_name: string | null
           id: string
+          is_opted_out: boolean
           last_name: string | null
           last_request_sent_at: string | null
           last_visit_at: string | null
@@ -521,6 +522,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_opted_out?: boolean
           last_name?: string | null
           last_request_sent_at?: string | null
           last_visit_at?: string | null
@@ -538,6 +540,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_opted_out?: boolean
           last_name?: string | null
           last_request_sent_at?: string | null
           last_visit_at?: string | null

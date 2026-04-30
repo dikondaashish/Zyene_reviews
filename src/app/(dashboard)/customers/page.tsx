@@ -4,6 +4,7 @@ import { CustomerManagement } from "@/components/customers/customer-management";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { UsersRound } from "lucide-react";
+import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
 
 export default async function CustomersPage() {
     const { businessId, businesses } = await getActiveBusinessId();
@@ -21,12 +22,12 @@ export default async function CustomersPage() {
     const supabase = await createClient();
     
     // Fetch initial customers for the active business
-    const { data: initialCustomers, error } = await supabase
+    const { data: rawCustomers, error } = await supabase
         .from("customers")
         .select("*")
         .eq("business_id", businessId)
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(5000);
 
     if (error) {
         console.error("Error fetching initial customers:", error);
@@ -40,12 +41,11 @@ export default async function CustomersPage() {
         );
     }
 
+    const initialCustomers = await enrichCustomersWithReviewLinkage(supabase, businessId, rawCustomers || []);
+
     return (
         <div className="mx-auto max-w-[1200px] px-4 py-6 lg:px-6">
-            <CustomerManagement 
-                businessId={businessId as string} 
-                initialCustomers={initialCustomers || []} 
-            />
+            <CustomerManagement businessId={businessId as string} initialCustomers={initialCustomers} />
         </div>
     );
 }

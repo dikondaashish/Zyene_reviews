@@ -101,14 +101,22 @@ export async function POST(request: NextRequest) {
                     return NextResponse.json({ error: "No valid customers found" }, { status: 400 });
                 }
 
+                const eligibleCustomers = customersToRequest.filter((c) => !c.is_opted_out);
+                if (eligibleCustomers.length === 0) {
+                    return NextResponse.json(
+                        { error: "Selected customers are opted out of review requests" },
+                        { status: 400 }
+                    );
+                }
+
                 // 3. Plan limit (bulk request uses SMS only — enforce SMS channel cap)
                 const { allowed, remaining } = await checkLimit(business.organizations.id, "sms_requests");
                 if (!allowed) {
                     return NextResponse.json({ error: "Monthly limit reached" }, { status: 403 });
                 }
 
-                const batchSize = Math.min(customersToRequest.length, remaining);
-                const actualBatch = customersToRequest.slice(0, batchSize);
+                const batchSize = Math.min(eligibleCustomers.length, remaining);
+                const actualBatch = eligibleCustomers.slice(0, batchSize);
 
                 // 4. Trigger Requests (Sequential to avoid Twilio/DB congestion for now)
                 let successCount = 0;
@@ -177,7 +185,7 @@ export async function POST(request: NextRequest) {
                     success: true, 
                     sent: successCount, 
                     failed: failCount,
-                    limitReached: batchSize < customersToRequest.length
+                    limitReached: batchSize < eligibleCustomers.length
                 });
 
             default:

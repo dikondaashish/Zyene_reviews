@@ -1,14 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { 
-    Trash2, 
-    Send, 
-    Tag as TagIcon, 
-    X,
-    CheckCircle2
-} from "lucide-react";
+import { Trash2, Send, Tag as TagIcon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BulkActionBarProps {
     selectedCount: number;
@@ -16,65 +11,79 @@ interface BulkActionBarProps {
     onDelete: () => void;
     onSendRequests: () => void;
     onAddTag: () => void;
+    /** When true, Send Request is disabled (e.g. all selected are opted out). */
+    sendRequestsBlocked?: boolean;
+    sendRequestsBlockedReason?: string;
 }
 
-export function BulkActionBar({ selectedCount, onClear, onDelete, onSendRequests, onAddTag }: BulkActionBarProps) {
+export function BulkActionBar({
+    selectedCount,
+    onClear,
+    onDelete,
+    onSendRequests,
+    onAddTag,
+    sendRequestsBlocked,
+    sendRequestsBlockedReason,
+}: BulkActionBarProps) {
     if (selectedCount === 0) return null;
 
     return (
         <AnimatePresence>
             <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 100, opacity: 0 }}
-                className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-full max-w-2xl px-4"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                className="mb-4 rounded-xl border border-border bg-card p-3 shadow-sm"
             >
-                <div className="bg-foreground text-background rounded-3xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 pointer-events-auto border border-border backdrop-blur-xl">
-                    <div className="flex items-center gap-3 pl-2">
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground ring-4 ring-primary/20">
-                            <span className="text-xs font-bold leading-none">{selectedCount}</span>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-3 pl-1">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                            {selectedCount}
                         </div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold tracking-tight">Customers selected</span>
-                            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ready for bulk action</span>
+                        <div>
+                            <p className="text-sm font-semibold text-foreground">Selected customers</p>
+                            <p className="text-[11px] text-muted-foreground">Choose a bulk action below</p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={onSendRequests}
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl h-10 px-4 transition-all hover:scale-105 active:scale-95 border-none"
-                        >
-                            <Send className="mr-2 h-3.5 w-3.5" />
-                            Send Requests
-                        </Button>
-                        <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={onAddTag}
-                            className="bg-foreground/80 hover:bg-foreground/70 text-background rounded-2xl h-10 px-4 transition-all"
-                        >
+                    <div className="flex flex-wrap items-center gap-2">
+                        {sendRequestsBlocked ? (
+                            <TooltipProvider delayDuration={200}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span className="inline-flex">
+                                            <Button size="sm" className="rounded-lg" disabled>
+                                                <Send className="mr-2 h-3.5 w-3.5" />
+                                                Send Request
+                                            </Button>
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="bottom" className="max-w-xs">
+                                        {sendRequestsBlockedReason ??
+                                            "Selected contacts cannot receive review requests."}
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        ) : (
+                            <Button size="sm" onClick={onSendRequests} className="rounded-lg">
+                                <Send className="mr-2 h-3.5 w-3.5" />
+                                Send Request
+                            </Button>
+                        )}
+                        <Button size="sm" variant="outline" onClick={onAddTag} className="rounded-lg">
                             <TagIcon className="mr-2 h-3.5 w-3.5" />
                             Add Tag
                         </Button>
-                        <div className="w-px h-6 bg-border mx-1" />
-                        <Button 
-                            variant="ghost" 
-                            size="sm" 
+                        <Button
+                            size="sm"
+                            variant="outline"
                             onClick={onDelete}
-                            className="text-destructive hover:bg-destructive/100/10 hover:text-destructive rounded-2xl h-10 px-4 transition-all"
+                            className="rounded-lg text-destructive hover:text-destructive"
                         >
                             <Trash2 className="mr-2 h-3.5 w-3.5" />
-                            Delete
+                            Delete Selected
                         </Button>
-                        <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={onClear}
-                            className="text-muted-foreground hover:text-background rounded-full h-10 w-10 p-0 transition-all ml-1"
-                        >
+                        <Button size="sm" variant="ghost" onClick={onClear} className="rounded-lg" aria-label="Clear selection">
                             <X className="h-4 w-4" />
                         </Button>
                     </div>
