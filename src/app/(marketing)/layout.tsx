@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 
 import { CookieBanner } from "@/components/ui/cookie-banner";
 
+const PUBLIC_STATUS_URL = "https://status.zyenereviews.com/";
+
 export default function MarketingLayout({
     children,
 }: {
@@ -133,7 +135,7 @@ export default function MarketingLayout({
                     </p>
                     <nav
                         className="flex flex-wrap items-center justify-end gap-x-8 gap-y-1 text-[13px] font-normal leading-normal text-[#8a8f86]"
-                        aria-label="Legal and privacy"
+                        aria-label="Legal, privacy, and system status"
                     >
                         <Link
                             href="/terms"
@@ -147,6 +149,14 @@ export default function MarketingLayout({
                         >
                             Privacy
                         </Link>
+                        <a
+                            href={PUBLIC_STATUS_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
+                        >
+                            Status
+                        </a>
                         <button
                             type="button"
                             className="cursor-pointer bg-transparent p-0 text-[13px] font-normal leading-normal text-[#8a8f86] no-underline transition-colors hover:text-foreground"
