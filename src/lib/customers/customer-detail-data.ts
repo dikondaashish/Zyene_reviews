@@ -45,13 +45,37 @@ export type CustomerDetailStats = {
     lastRequestStatus: string;
 };
 
+/** User-facing label for raw `review_requests.status` values. */
+export function humanizeRequestStatus(status: string): string {
+    const key = status.trim().toLowerCase().replace(/\s+/g, "_");
+    const labels: Record<string, string> = {
+        sending: "Sending",
+        queued: "Queued",
+        pending: "Pending",
+        failed: "Failed",
+        delivered: "Delivered",
+        sent: "Sent",
+        opened: "Opened",
+        clicked: "Clicked",
+        review_left: "Review left",
+        completed: "Completed",
+        feedback_left: "Feedback left",
+        skipped: "Skipped",
+    };
+    if (labels[key]) return labels[key];
+    return status
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (m) => m.toUpperCase())
+        .trim();
+}
+
 export function lastRequestEngagementLabel(r: ReviewRequestRow | null | undefined): string {
     if (!r) return "—";
     if (r.review_left || r.completed_at) return "Reviewed";
     if (r.clicked_at) return "Clicked";
     if (r.opened_at) return "Opened";
     if (r.sent_at) return "Sent";
-    return r.status || "Pending";
+    return humanizeRequestStatus(r.status || "pending");
 }
 
 export function computeReviewsLeftCount(

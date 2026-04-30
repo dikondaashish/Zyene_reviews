@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import {
     analyticsRangeLabel,
     getAnalyticsPeriods,
@@ -72,22 +73,25 @@ export async function buildAnalyticsRangePayload(
     const { range: normalizedRange, currentStart, currentEnd, previousStart } = getAnalyticsPeriods(rangeRaw);
     const isZyenePlatform = platform === "zyene";
 
-    let reviewsQuery = supabase
-        .from("reviews")
-        .select(
-            "id, created_at, review_date, platform, rating, response_status, responded_at, sentiment, themes, is_visible"
-        )
-        .eq("business_id", businessId)
-        .or("is_visible.is.null,is_visible.eq.true")
-        .gte("review_date", previousStart.toISOString())
-        .lte("review_date", currentEnd.toISOString())
-        .order("review_date", { ascending: true });
+    const fetchReviewsPage = (from: number, to: number) => {
+        let q = supabase
+            .from("reviews")
+            .select(
+                "id, created_at, review_date, platform, rating, response_status, responded_at, sentiment, themes, is_visible"
+            )
+            .eq("business_id", businessId)
+            .or("is_visible.is.null,is_visible.eq.true")
+            .gte("review_date", previousStart.toISOString())
+            .lte("review_date", currentEnd.toISOString());
 
-    if (platform === "zyene") {
-        reviewsQuery = reviewsQuery.or("platform.eq.zyene,platform.is.null");
-    } else if (platform !== "all") {
-        reviewsQuery = reviewsQuery.eq("platform", platform);
-    }
+        if (platform === "zyene") {
+            q = q.or("platform.eq.zyene,platform.is.null");
+        } else if (platform !== "all") {
+            q = q.eq("platform", platform);
+        }
+
+        return q.order("review_date", { ascending: true }).order("id", { ascending: true }).range(from, to);
+    };
 
     const requestsQuery: PromiseLike<{ data: unknown[] | null; error: unknown }> = isZyenePlatform
         ? supabase
@@ -115,19 +119,19 @@ export async function buildAnalyticsRangePayload(
               .limit(50)
         : null;
 
-    const [reviewsRes, requestsRes, platformsRes, privateFeedbackResult] = await Promise.all([
-        reviewsQuery,
+    const [reviewsPaged, requestsRes, platformsRes, privateFeedbackResult] = await Promise.all([
+        fetchAllReviewRowsPaginated(1000, fetchReviewsPage),
         requestsQuery,
         supabase.from("review_platforms").select("platform").eq("business_id", businessId),
         privateFeedbackQuery ?? Promise.resolve({ data: null, error: null }),
     ]);
 
     const privateRes = privateFeedbackResult as { data: unknown; error: unknown };
-    if (reviewsRes.error || requestsRes.error || platformsRes.error || privateRes.error) {
+    if (reviewsPaged.error || requestsRes.error || platformsRes.error || privateRes.error) {
         return { error: true };
     }
 
-    const allReviews = (reviewsRes.data || []) as Array<{
+    const allReviews = (reviewsPaged.data || []) as Array<{
         review_date?: string;
         created_at?: string;
         rating?: number;

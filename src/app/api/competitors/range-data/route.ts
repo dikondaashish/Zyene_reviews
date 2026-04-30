@@ -13,6 +13,7 @@ import {
 } from "@/lib/competitors/range-benchmark";
 import { parsePlacesMetaFromSnapshot } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -60,12 +61,16 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const ownReviewsInRangePromise = supabase
-    .from("reviews")
-    .select("rating")
-    .eq("business_id", businessId)
-    .eq("is_visible", true)
-    .gte("review_date", rangeStart.toISOString());
+  const ownReviewsInRangePromise = fetchAllReviewRowsPaginated(1000, (from, to) =>
+    supabase
+      .from("reviews")
+      .select("rating")
+      .eq("business_id", businessId)
+      .eq("is_visible", true)
+      .gte("review_date", rangeStart.toISOString())
+      .order("id", { ascending: true })
+      .range(from, to)
+  );
 
   const latestSnapshotsForPlacesMetaPromise = (supabase.from("competitor_snapshots" as never) as any)
     .select("competitor_id, captured_at, metadata")

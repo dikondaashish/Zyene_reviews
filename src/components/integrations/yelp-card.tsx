@@ -48,11 +48,19 @@ interface YelpCardProps {
     platform: IntegrationPlatformSummary | null;
     businessId: string;
     businessName: string;
+    /** All Yelp rows in `reviews` for this business. */
+    dbYelpSyncedRowCount?: number;
     /** Live `reviews` count (`is_visible = true`, platform yelp). */
     dbVisibleYelpReviewCount?: number;
 }
 
-export function YelpIntegrationCard({ platform, businessId, businessName, dbVisibleYelpReviewCount }: YelpCardProps) {
+export function YelpIntegrationCard({
+    platform,
+    businessId,
+    businessName,
+    dbYelpSyncedRowCount,
+    dbVisibleYelpReviewCount,
+}: YelpCardProps) {
     const router = useRouter();
     const [isConnecting, setIsConnecting] = useState(false);
     const [showConnect, setShowConnect] = useState(false);
@@ -70,6 +78,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName, dbVisi
 
     const isConnected = platform && platform.sync_status === "active";
     const yelpVisibleCount = dbVisibleYelpReviewCount ?? 0;
+    const yelpSyncedCount = dbYelpSyncedRowCount !== undefined ? dbYelpSyncedRowCount : yelpVisibleCount;
     const hasError = platform && platform.sync_status?.startsWith("error");
 
     const handleSearch = async () => {
@@ -177,7 +186,7 @@ export function YelpIntegrationCard({ platform, businessId, businessName, dbVisi
                                 <Star className="w-3 h-3" /> Reviews synced
                             </div>
                             <p className="text-lg font-bold text-foreground">
-                                {yelpVisibleCount}
+                                {yelpSyncedCount}
                             </p>
                         </div>
                         <div className="bg-muted rounded-md p-2.5">

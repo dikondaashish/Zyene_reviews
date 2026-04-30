@@ -108,17 +108,25 @@ export default async function GoogleSeoAeoPage() {
     const start30 = new Date(now);
     start30.setDate(start30.getDate() - 29);
 
-    const [visibleRollupMap, perfTotals, keywords, googleReviewsRes, placeActionsRes, aiRunRes, heatmapRunRes] =
+    const [visibleRollupMap, perfTotals, keywords, google30TotalRes, google30RespondedRes, placeActionsRes, aiRunRes, heatmapRunRes] =
         await Promise.all([
             fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]),
             getGooglePerformanceTotals(supabase, businessId, start30, now),
             getGoogleSearchKeywords(supabase, businessId, 20),
             supabase
                 .from("reviews")
-                .select("id, response_status, review_date")
+                .select("*", { count: "exact", head: true })
                 .eq("business_id", businessId)
                 .eq("platform", "google")
                 .eq("is_visible", true)
+                .gte("review_date", start30.toISOString()),
+            supabase
+                .from("reviews")
+                .select("*", { count: "exact", head: true })
+                .eq("business_id", businessId)
+                .eq("platform", "google")
+                .eq("is_visible", true)
+                .eq("response_status", "responded")
                 .gte("review_date", start30.toISOString()),
             supabase
                 .from("gbp_place_action_links")
@@ -142,9 +150,13 @@ export default async function GoogleSeoAeoPage() {
     const googleAvgLive = visibleRollup.googleAverageRating;
     const googleCountLive = visibleRollup.googleVisibleCount;
 
-    const reviews = googleReviewsRes.data || [];
-    const responded = reviews.filter((r) => r.response_status === "responded").length;
-    const replyRate = reviews.length > 0 ? responded / reviews.length : 0;
+    const reviews30dCount = google30TotalRes.count ?? 0;
+    const responded30dCount = google30RespondedRes.count ?? 0;
+    const replyRate = reviews30dCount > 0 ? responded30dCount / reviews30dCount : 0;
+
+    if (google30TotalRes.error || google30RespondedRes.error) {
+        console.error("[Google SEO/AEO] review count fetch failed:", google30TotalRes.error || google30RespondedRes.error);
+    }
 
     let listingDescription = "";
     try {
@@ -180,8 +192,8 @@ export default async function GoogleSeoAeoPage() {
         {
             id: "review-frequency",
             label: "Review Frequency (30d)",
-            status: reviews.length >= 10 ? "pass" : "fail",
-            detail: `${reviews.length} Google reviews in last 30 days.`,
+            status: reviews30dCount >= 10 ? "pass" : "fail",
+            detail: `${reviews30dCount} Google reviews in last 30 days.`,
         },
         {
             id: "google-rating",
@@ -193,7 +205,7 @@ export default async function GoogleSeoAeoPage() {
             id: "review-replies",
             label: "Review Replies (30d)",
             status: replyRate >= 0.8 ? "pass" : "fail",
-            detail: `${Math.round(replyRate * 100)}% replied (${responded}/${reviews.length})`,
+            detail: `${Math.round(replyRate * 100)}% replied (${responded30dCount}/${reviews30dCount})`,
         },
         {
             id: "profile-performance",

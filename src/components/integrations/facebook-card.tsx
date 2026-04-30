@@ -40,6 +40,8 @@ interface FacebookCardProps {
     platform: IntegrationPlatformSummary | null;
     businessId: string;
     businessName: string;
+    /** All Facebook rows in `reviews` for this business. */
+    dbFacebookSyncedRowCount?: number;
     /** Live `reviews` aggregates (`is_visible = true`, platform facebook). */
     dbVisibleFacebookReviewCount?: number;
     dbVisibleFacebookAverageRating?: number | null;
@@ -49,6 +51,7 @@ export function FacebookIntegrationCard({
     platform,
     businessId,
     businessName,
+    dbFacebookSyncedRowCount,
     dbVisibleFacebookReviewCount,
     dbVisibleFacebookAverageRating,
 }: FacebookCardProps) {
@@ -68,6 +71,7 @@ export function FacebookIntegrationCard({
 
     const isConnected = platform?.sync_status === "active";
     const fbVisibleCount = dbVisibleFacebookReviewCount ?? 0;
+    const fbSyncedCount = dbFacebookSyncedRowCount !== undefined ? dbFacebookSyncedRowCount : fbVisibleCount;
     const fbRatingDisplay =
         fbVisibleCount > 0 && dbVisibleFacebookAverageRating != null && !Number.isNaN(dbVisibleFacebookAverageRating)
             ? dbVisibleFacebookAverageRating.toFixed(1)
@@ -225,7 +229,7 @@ export function FacebookIntegrationCard({
                             <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                                    {fbVisibleCount}
+                                    {fbSyncedCount}
                                 </div>
                                 <div className="text-[10px] text-muted-foreground">
                                     Reviews

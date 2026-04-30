@@ -3,6 +3,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
 import { getAnalyticsPeriods } from "@/lib/analytics/date-range";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
@@ -22,23 +23,29 @@ export async function GET(request: Request) {
 
     const { currentStart, currentEnd } = getAnalyticsPeriods(range);
 
-    // Fetch Reviews for Export
-    let reviewsQuery = supabase
-        .from("reviews")
-        .select("id,created_at,review_date,platform,rating,is_visible")
-        .eq("business_id", business.id)
-        .or("is_visible.is.null,is_visible.eq.true")
-        .gte("review_date", currentStart.toISOString())
-        .lte("review_date", currentEnd.toISOString())
-        .order("review_date", { ascending: true });
+    const fetchReviewsPage = (from: number, to: number) => {
+        let q = supabase
+            .from("reviews")
+            .select("id,created_at,review_date,platform,rating,is_visible")
+            .eq("business_id", business.id)
+            .or("is_visible.is.null,is_visible.eq.true")
+            .gte("review_date", currentStart.toISOString())
+            .lte("review_date", currentEnd.toISOString());
 
-    if (platform === "zyene") {
-        reviewsQuery = reviewsQuery.or("platform.eq.zyene,platform.is.null");
-    } else if (platform !== "all") {
-        reviewsQuery = reviewsQuery.eq("platform", platform);
+        if (platform === "zyene") {
+            q = q.or("platform.eq.zyene,platform.is.null");
+        } else if (platform !== "all") {
+            q = q.eq("platform", platform);
+        }
+
+        return q.order("review_date", { ascending: true }).order("id", { ascending: true }).range(from, to);
+    };
+
+    const { data: reviews, error: reviewsError } = await fetchAllReviewRowsPaginated(1000, fetchReviewsPage);
+
+    if (reviewsError) {
+        return new NextResponse("Failed to load reviews for export", { status: 500 });
     }
-
-    const { data: reviews } = await reviewsQuery;
 
     // Aggregate Daily Trends for the CSV
     const dateMap = new Map<string, { Date: string; "Avg Rating": number; "Review Count": number; "Positive": number; "Neutral": number; "Negative": number }>();

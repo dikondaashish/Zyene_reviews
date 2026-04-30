@@ -15,6 +15,10 @@ import {
     BarChart3,
     X,
     Plus,
+    ChevronRight,
+    UserRound,
+    Clock,
+    Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,8 +26,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { CustomerDetailStats, TimelineItem } from "@/lib/customers/customer-detail-data";
+import { humanizeRequestStatus } from "@/lib/customers/customer-detail-data";
 
 type CustomerRow = Database["public"]["Tables"]["customers"]["Row"];
 
@@ -40,6 +47,7 @@ function displayName(c: CustomerRow): string {
     return `${c.first_name ?? ""} ${c.last_name ?? ""}`.trim();
 }
 
+/** Avatar text: name initials, else last 4 phone digits (more recognizable than 2), else email prefix, else ? */
 function initials(c: CustomerRow): string {
     const name = displayName(c);
     if (name) {
@@ -48,7 +56,15 @@ function initials(c: CustomerRow): string {
         return parts[0].slice(0, 2).toUpperCase();
     }
     const digits = (c.phone ?? "").replace(/\D/g, "");
+    if (digits.length >= 4) return digits.slice(-4);
     if (digits.length > 0) return digits.slice(-2);
+    const email = (c.email ?? "").trim();
+    if (email.length >= 2) {
+        const local = email.split("@")[0] ?? email;
+        const letters = local.replace(/[^a-zA-Z0-9]/g, "");
+        if (letters.length >= 2) return letters.slice(0, 2).toUpperCase();
+        return email.slice(0, 2).toUpperCase();
+    }
     return "?";
 }
 
@@ -68,11 +84,58 @@ function platformLabel(p: string): string {
     return p.charAt(0).toUpperCase() + p.slice(1);
 }
 
+function requestStatusTone(status: string): { className: string; dot: string } {
+    const s = status.toLowerCase();
+    if (s === "failed" || s === "skipped")
+        return {
+            className: "border-destructive/30 bg-destructive/10 text-destructive",
+            dot: "bg-destructive",
+        };
+    if (s === "sending" || s === "queued" || s === "pending")
+        return {
+            className: "border-amber-500/35 bg-amber-500/10 text-amber-900 dark:text-amber-100",
+            dot: "bg-amber-500 animate-pulse",
+        };
+    if (s === "sent" || s === "delivered" || s === "opened" || s === "clicked" || s === "completed" || s === "review_left")
+        return {
+            className: "border-emerald-500/35 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100",
+            dot: "bg-emerald-500",
+        };
+    return {
+        className: "border-border bg-muted/60 text-muted-foreground",
+        dot: "bg-muted-foreground",
+    };
+}
+
 interface CustomerDetailClientProps {
     customer: CustomerRow;
     businessId: string;
     timeline: TimelineItem[];
     stats: CustomerDetailStats;
+}
+
+function SectionHeading({
+    icon: Icon,
+    title,
+    description,
+}: {
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+}) {
+    return (
+        <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
+                        <Icon className="h-4 w-4 text-muted-foreground" />
+                    </span>
+                    {title}
+                </h2>
+                <p className="mt-1 max-w-xl text-sm text-muted-foreground">{description}</p>
+            </div>
+        </div>
+    );
 }
 
 export function CustomerDetailClient({ customer: initial, businessId, timeline, stats }: CustomerDetailClientProps) {
@@ -140,6 +203,9 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
     };
 
     const tags = customer.tags ?? [];
+    const name = displayName(customer);
+    const avatarText = initials(customer);
+    const avatarCompact = avatarText.length > 2;
 
     const addTag = () => {
         const t = tagInput.trim();
@@ -159,18 +225,35 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
     const campaignHref = `/campaigns/new?customerIds=${encodeURIComponent(customer.id)}`;
 
     return (
-        <div className="space-y-8">
-            {/* SECTION A */}
-            <Card>
-                <CardContent className="pt-6">
-                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xl font-semibold text-primary">
-                            {initials(customer)}
+        <div className="space-y-10 pb-10">
+            {/* Hero */}
+            <section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm">
+                <div
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_circle_at_100%_0%,var(--primary)_0%,transparent_55%)] opacity-[0.07]"
+                    aria-hidden
+                />
+                <div className="relative p-6 sm:p-8">
+                    <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
+                        <div
+                            className={cn(
+                                "relative flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 ring-2 ring-primary/15 ring-offset-2 ring-offset-background",
+                                avatarCompact ? "h-[5.25rem] w-[5.25rem]" : "h-24 w-24"
+                            )}
+                        >
+                            <span
+                                className={cn(
+                                    "font-semibold tracking-tight text-primary",
+                                    avatarCompact ? "text-base tabular-nums" : "text-2xl"
+                                )}
+                            >
+                                {avatarText}
+                            </span>
                         </div>
-                        <div className="min-w-0 flex-1 space-y-4">
-                            <div>
+
+                        <div className="min-w-0 flex-1 space-y-6">
+                            <div className="space-y-2">
                                 {editingName ? (
-                                    <div className="flex max-w-md flex-col gap-2">
+                                    <div className="flex max-w-lg flex-col gap-2">
                                         <Input
                                             value={nameDraft}
                                             onChange={(e) => setNameDraft(e.target.value)}
@@ -193,61 +276,112 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                                 }
                                                 void saveName();
                                             }}
-                                            className="text-lg font-semibold"
+                                            className="h-11 text-lg font-semibold"
                                             autoFocus
+                                            placeholder="Full name"
                                         />
-                                        <p className="text-[11px] text-muted-foreground">Enter to save · Esc to cancel</p>
+                                        <p className="text-xs text-muted-foreground">Enter to save · Esc to cancel</p>
                                     </div>
                                 ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setNameDraft(displayName(customer) || "");
-                                            setEditingName(true);
-                                        }}
-                                        className="text-left text-2xl font-semibold tracking-tight hover:underline"
-                                    >
-                                        {displayName(customer) ? (
-                                            displayName(customer)
-                                        ) : (
-                                            <span className="text-muted-foreground font-normal">Unnamed Customer</span>
+                                    <div className="space-y-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setNameDraft(displayName(customer) || "");
+                                                setEditingName(true);
+                                            }}
+                                            className="group block text-left"
+                                        >
+                                            {name ? (
+                                                <span className="text-2xl font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline">
+                                                    {name}
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-muted-foreground">
+                                                    <UserRound className="h-6 w-6 shrink-0 opacity-60" />
+                                                    Add a display name
+                                                    <ChevronRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+                                                </span>
+                                            )}
+                                        </button>
+                                        {!name && customer.phone && (
+                                            <p className="text-sm text-muted-foreground">
+                                                Showing phone below — add a name so this contact is easier to find.
+                                            </p>
                                         )}
-                                    </button>
+                                        {customer.is_opted_out ? (
+                                            <Badge
+                                                variant="outline"
+                                                className="mt-2 w-fit border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-100"
+                                            >
+                                                Opted out of review requests
+                                            </Badge>
+                                        ) : null}
+                                    </div>
                                 )}
                             </div>
 
-                            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-                                {customer.phone ? (
-                                    <span className="flex items-center gap-2">
-                                        <Phone className="h-4 w-4 shrink-0" />
-                                        {customer.phone}
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                <div
+                                    className={cn(
+                                        "flex items-start gap-3 rounded-xl border px-4 py-3",
+                                        customer.phone ? "border-border/80 bg-muted/30" : "border-dashed border-muted-foreground/25 bg-muted/10"
+                                    )}
+                                >
+                                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background shadow-sm">
+                                        <Phone className="h-4 w-4 text-muted-foreground" />
                                     </span>
-                                ) : (
-                                    <span className="flex items-center gap-2 italic">No phone</span>
-                                )}
-                                {customer.email ? (
-                                    <span className="flex items-center gap-2">
-                                        <Mail className="h-4 w-4 shrink-0" />
-                                        {customer.email}
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                            Phone
+                                        </p>
+                                        {customer.phone ? (
+                                            <p className="mt-0.5 font-medium text-foreground tabular-nums">{customer.phone}</p>
+                                        ) : (
+                                            <p className="mt-0.5 text-sm text-muted-foreground">Not set</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div
+                                    className={cn(
+                                        "flex items-start gap-3 rounded-xl border px-4 py-3",
+                                        customer.email ? "border-border/80 bg-muted/30" : "border-dashed border-muted-foreground/25 bg-muted/10"
+                                    )}
+                                >
+                                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background shadow-sm">
+                                        <Mail className="h-4 w-4 text-muted-foreground" />
                                     </span>
-                                ) : (
-                                    <span className="flex items-center gap-2 italic">No email</span>
-                                )}
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                            Email
+                                        </p>
+                                        {customer.email ? (
+                                            <p className="mt-0.5 break-all font-medium text-foreground">{customer.email}</p>
+                                        ) : (
+                                            <p className="mt-0.5 text-sm text-muted-foreground">Not set</p>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <p className="text-xs font-medium text-muted-foreground">Tags</p>
+                            <div className="rounded-xl border border-border/80 bg-muted/20 p-4">
+                                <div className="mb-3 flex items-center justify-between gap-2">
+                                    <div>
+                                        <p className="text-sm font-medium text-foreground">Tags</p>
+                                        <p className="text-xs text-muted-foreground">Organize this contact for campaigns and filters.</p>
+                                    </div>
+                                </div>
                                 <div className="flex flex-wrap items-center gap-2">
                                     {tags.map((tag) => (
                                         <Badge
                                             key={tag}
                                             variant="secondary"
-                                            className="gap-1 pr-1"
+                                            className="gap-1 border border-border/60 bg-background py-1 pr-1 pl-2.5 text-xs font-medium shadow-sm"
                                         >
                                             {tag}
                                             <button
                                                 type="button"
-                                                className="rounded p-0.5 hover:bg-muted"
+                                                className="rounded-md p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
                                                 aria-label={`Remove ${tag}`}
                                                 onClick={() => removeTag(tag)}
                                             >
@@ -255,9 +389,9 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                             </button>
                                         </Badge>
                                     ))}
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex min-w-[12rem] flex-1 items-center gap-2 sm:max-w-xs">
                                         <Input
-                                            placeholder="Add tag"
+                                            placeholder="Type a tag and press Enter"
                                             value={tagInput}
                                             onChange={(e) => setTagInput(e.target.value)}
                                             onKeyDown={(e) => {
@@ -266,141 +400,187 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                                                     addTag();
                                                 }
                                             }}
-                                            className="h-8 w-36 text-xs"
+                                            className="h-9 flex-1 text-sm"
                                         />
-                                        <Button type="button" size="icon" variant="outline" className="h-8 w-8" onClick={addTag}>
-                                            <Plus className="h-3.5 w-3.5" />
+                                        <Button type="button" size="sm" variant="secondary" className="shrink-0" onClick={addTag}>
+                                            <Plus className="mr-1 h-3.5 w-3.5" />
+                                            Add
                                         </Button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                                <span className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" />
-                                    Added {format(parseISO(customer.created_at), "MMM d, yyyy")}
-                                </span>
-                            </div>
+                            <Separator className="bg-border/60" />
 
-                            {customer.is_opted_out ? (
-                                <TooltipProvider delayDuration={200}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span className="inline-flex">
-                                                <Button type="button" disabled className="rounded-lg">
-                                                    <Send className="mr-2 h-4 w-4" />
-                                                    Send Review Request
-                                                </Button>
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent className="max-w-xs">
-                                            This contact opted out of review requests.
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            ) : (
-                                <Button asChild className="rounded-lg">
-                                    <Link href={campaignHref}>
-                                        <Send className="mr-2 h-4 w-4" />
-                                        Send Review Request
-                                    </Link>
-                                </Button>
-                            )}
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Calendar className="h-4 w-4 shrink-0 opacity-70" />
+                                    <span>
+                                        Customer since{" "}
+                                        <span className="font-medium text-foreground">
+                                            {format(parseISO(customer.created_at), "MMMM d, yyyy")}
+                                        </span>
+                                    </span>
+                                </div>
+                                {customer.is_opted_out ? (
+                                    <TooltipProvider delayDuration={200}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <span className="inline-flex w-full sm:w-auto">
+                                                    <Button type="button" disabled className="w-full rounded-xl sm:w-auto">
+                                                        <Send className="mr-2 h-4 w-4" />
+                                                        Send review request
+                                                    </Button>
+                                                </span>
+                                            </TooltipTrigger>
+                                            <TooltipContent className="max-w-xs">
+                                                This contact opted out of review requests.
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                ) : (
+                                    <Button asChild size="lg" className="w-full rounded-xl shadow-sm sm:w-auto">
+                                        <Link href={campaignHref}>
+                                            <Sparkles className="mr-2 h-4 w-4 opacity-90" />
+                                            Send review request
+                                        </Link>
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
-            {/* SECTION B — Activity */}
-            <div>
-                <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-                    <Activity className="h-5 w-5 text-muted-foreground" />
-                    Activity
-                </h2>
-                <Card>
+            {/* Activity */}
+            <section>
+                <SectionHeading
+                    icon={Activity}
+                    title="Activity"
+                    description="Review requests and feedback for this contact, newest first."
+                />
+                <Card className="overflow-hidden rounded-2xl border-border/80 shadow-sm">
                     <CardContent className="p-0">
                         {timeline.length === 0 ? (
-                            <p className="p-6 text-sm text-muted-foreground">No activity yet.</p>
+                            <div className="flex flex-col items-center justify-center gap-2 px-6 py-14 text-center">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                                    <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                                </div>
+                                <p className="text-sm font-medium text-foreground">No activity yet</p>
+                                <p className="max-w-sm text-sm text-muted-foreground">
+                                    When you send a request or this contact leaves feedback, it will show up here.
+                                </p>
+                            </div>
                         ) : (
-                            <ul className="divide-y divide-border">
+                            <ul className="divide-y divide-border/80">
                                 {timeline.map((item) => (
-                                    <li key={`${item.type}-${item.id}`} className="px-4 py-4 sm:px-6">
+                                    <li key={`${item.type}-${item.id}`} className="px-5 py-5 sm:px-7">
                                         {item.type === "request" ? (
-                                            <div className="flex gap-3">
-                                                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                                                    <MessageSquare className="h-4 w-4 text-primary" />
+                                            <div className="flex gap-4">
+                                                <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary shadow-inner">
+                                                    <MessageSquare className="h-5 w-5" />
                                                 </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="font-medium text-foreground">
-                                                        Review request · {channelLabel(item.channel)}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                                        {item.sent_at
-                                                            ? format(parseISO(item.sent_at), "MMM d, yyyy h:mm a")
-                                                            : format(parseISO(item.sortAt), "MMM d, yyyy h:mm a")}
-                                                        {" · "}
-                                                        <span className="capitalize">{item.status}</span>
-                                                        {item.review_left ? " · Review completed" : null}
+                                                <div className="min-w-0 flex-1 space-y-2">
+                                                    <div className="flex flex-wrap items-center gap-2 gap-y-1">
+                                                        <p className="font-medium text-foreground">
+                                                            {channelLabel(item.channel)} review request
+                                                        </p>
+                                                        {(() => {
+                                                            const tone = requestStatusTone(item.status);
+                                                            return (
+                                                                <span
+                                                                    className={cn(
+                                                                        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                                                                        tone.className
+                                                                    )}
+                                                                >
+                                                                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", tone.dot)} />
+                                                                    {humanizeRequestStatus(item.status)}
+                                                                </span>
+                                                            );
+                                                        })()}
+                                                    </div>
+                                                    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                                                        <span className="inline-flex items-center gap-1">
+                                                            <Clock className="h-3.5 w-3.5 shrink-0 opacity-70" />
+                                                            {item.sent_at
+                                                                ? format(parseISO(item.sent_at), "MMM d, yyyy · h:mm a")
+                                                                : format(parseISO(item.sortAt), "MMM d, yyyy · h:mm a")}
+                                                        </span>
+                                                        {item.review_left ? (
+                                                            <>
+                                                                <span className="hidden sm:inline" aria-hidden>
+                                                                    ·
+                                                                </span>
+                                                                <span className="text-emerald-700 dark:text-emerald-400">
+                                                                    Review completed
+                                                                </span>
+                                                            </>
+                                                        ) : null}
                                                     </p>
                                                 </div>
                                             </div>
                                         ) : item.type === "feedback" ? (
-                                            <div className="flex gap-3">
-                                                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
-                                                    <Star className="h-4 w-4 text-chart-4" />
+                                            <div className="flex gap-4">
+                                                <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-chart-4/15 text-chart-4 shadow-inner">
+                                                    <Star className="h-5 w-5" />
                                                 </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="font-medium text-foreground">
-                                                        Review left · Private feedback
-                                                    </p>
-                                                    <div className="mt-1 flex flex-wrap items-center gap-1">
-                                                        {Array.from({ length: 5 }).map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`h-3.5 w-3.5 ${
-                                                                    i < item.rating
-                                                                        ? "fill-chart-4 text-chart-4"
-                                                                        : "text-muted-foreground/30"
-                                                                }`}
-                                                            />
-                                                        ))}
-                                                        <span className="ml-2 text-xs text-muted-foreground">
-                                                            {format(parseISO(item.sortAt), "MMM d, yyyy h:mm a")}
+                                                <div className="min-w-0 flex-1 space-y-2">
+                                                    <p className="font-medium text-foreground">Private feedback</p>
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        <div className="flex items-center gap-0.5">
+                                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                                <Star
+                                                                    key={i}
+                                                                    className={cn(
+                                                                        "h-4 w-4",
+                                                                        i < item.rating
+                                                                            ? "fill-chart-4 text-chart-4"
+                                                                            : "text-muted-foreground/25"
+                                                                    )}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {format(parseISO(item.sortAt), "MMM d, yyyy · h:mm a")}
                                                         </span>
                                                     </div>
                                                     {item.content ? (
-                                                        <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                                                        <p className="rounded-lg border border-border/60 bg-muted/20 p-3 text-sm leading-relaxed text-muted-foreground">
                                                             {item.content}
                                                         </p>
                                                     ) : null}
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="flex gap-3">
-                                                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
-                                                    <Star className="h-4 w-4 text-chart-4" />
+                                            <div className="flex gap-4">
+                                                <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-chart-2/15 text-chart-2 shadow-inner">
+                                                    <Star className="h-5 w-5" />
                                                 </div>
-                                                <div className="min-w-0 flex-1">
+                                                <div className="min-w-0 flex-1 space-y-2">
                                                     <p className="font-medium text-foreground">
-                                                        Review left · {platformLabel(item.platform)}
+                                                        Public review · {platformLabel(item.platform)}
                                                     </p>
-                                                    <div className="mt-1 flex flex-wrap items-center gap-1">
-                                                        {Array.from({ length: 5 }).map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`h-3.5 w-3.5 ${
-                                                                    i < item.rating
-                                                                        ? "fill-chart-4 text-chart-4"
-                                                                        : "text-muted-foreground/30"
-                                                                }`}
-                                                            />
-                                                        ))}
-                                                        <span className="ml-2 text-xs text-muted-foreground">
-                                                            {format(parseISO(item.sortAt), "MMM d, yyyy h:mm a")}
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        <div className="flex items-center gap-0.5">
+                                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                                <Star
+                                                                    key={i}
+                                                                    className={cn(
+                                                                        "h-4 w-4",
+                                                                        i < item.rating
+                                                                            ? "fill-chart-2 text-chart-2"
+                                                                            : "text-muted-foreground/25"
+                                                                    )}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {format(parseISO(item.sortAt), "MMM d, yyyy · h:mm a")}
                                                         </span>
                                                     </div>
                                                     {item.text ? (
-                                                        <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                                                        <p className="rounded-lg border border-border/60 bg-muted/20 p-3 text-sm leading-relaxed text-muted-foreground">
                                                             {item.text}
                                                         </p>
                                                     ) : null}
@@ -413,45 +593,58 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                         )}
                     </CardContent>
                 </Card>
-            </div>
+            </section>
 
-            {/* SECTION C — Summary */}
-            <div>
-                <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-                    <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                    Summary
-                </h2>
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                    <Card>
-                        <CardHeader className="pb-2 pt-4">
-                            <CardDescription>Total requests sent</CardDescription>
-                            <CardTitle className="text-2xl">{stats.totalRequestsSent}</CardTitle>
-                        </CardHeader>
-                    </Card>
-                    <Card>
-                        <CardHeader className="pb-2 pt-4">
-                            <CardDescription>Reviews left</CardDescription>
-                            <CardTitle className="text-2xl">{stats.reviewsLeftCount}</CardTitle>
-                        </CardHeader>
-                    </Card>
-                    <Card>
-                        <CardHeader className="pb-2 pt-4">
-                            <CardDescription>Last contacted</CardDescription>
-                            <CardTitle className="text-base font-medium leading-snug">
-                                {stats.lastContactedAt
-                                    ? formatDistanceToNow(parseISO(stats.lastContactedAt), { addSuffix: true })
-                                    : "—"}
+            {/* Summary */}
+            <section>
+                <SectionHeading
+                    icon={BarChart3}
+                    title="Summary"
+                    description="Quick stats for requests and engagement with this contact."
+                />
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <Card className="rounded-2xl border-border/80 shadow-sm">
+                        <CardHeader className="space-y-1 pb-2 pt-5">
+                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
+                                Requests sent
+                            </CardDescription>
+                            <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight">
+                                {stats.totalRequestsSent}
                             </CardTitle>
                         </CardHeader>
                     </Card>
-                    <Card>
-                        <CardHeader className="pb-2 pt-4">
-                            <CardDescription>Last request status</CardDescription>
-                            <CardTitle className="text-base font-medium">{stats.lastRequestStatus}</CardTitle>
+                    <Card className="rounded-2xl border-border/80 shadow-sm">
+                        <CardHeader className="space-y-1 pb-2 pt-5">
+                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
+                                Reviews left
+                            </CardDescription>
+                            <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight">
+                                {stats.reviewsLeftCount}
+                            </CardTitle>
+                        </CardHeader>
+                    </Card>
+                    <Card className="rounded-2xl border-border/80 shadow-sm">
+                        <CardHeader className="space-y-1 pb-2 pt-5">
+                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
+                                Last contacted
+                            </CardDescription>
+                            <CardTitle className="text-lg font-semibold leading-snug">
+                                {stats.lastContactedAt
+                                    ? formatDistanceToNow(parseISO(stats.lastContactedAt), { addSuffix: true })
+                                    : "Never"}
+                            </CardTitle>
+                        </CardHeader>
+                    </Card>
+                    <Card className="rounded-2xl border-border/80 shadow-sm">
+                        <CardHeader className="space-y-1 pb-2 pt-5">
+                            <CardDescription className="text-xs font-medium uppercase tracking-wide">
+                                Last request
+                            </CardDescription>
+                            <CardTitle className="text-lg font-semibold leading-snug">{stats.lastRequestStatus}</CardTitle>
                         </CardHeader>
                     </Card>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

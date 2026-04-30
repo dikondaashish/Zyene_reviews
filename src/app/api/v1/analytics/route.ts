@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { authenticateApiKey, corsPreflight, withCors } from "@/app/api/v1/_lib/auth";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export async function OPTIONS() {
     return corsPreflight();
@@ -16,28 +17,38 @@ export async function GET(req: NextRequest) {
     start.setDate(start.getDate() - days);
 
     const admin = createAdminClient();
-    const [reviewsRes, requestsRes] = await Promise.all([
-        admin
-            .from("reviews")
-            .select("id, rating, response_status, review_date", { count: "exact" })
-            .eq("business_id", auth.businessId)
-            .gte("review_date", start.toISOString()),
-        admin
-            .from("review_requests")
-            .select("id, status, sent_at, clicked_at, completed_at, review_left", { count: "exact" })
-            .eq("business_id", auth.businessId)
-            .gte("created_at", start.toISOString()),
+    const startIso = start.toISOString();
+
+    const [reviewsPaged, requestsPaged] = await Promise.all([
+        fetchAllReviewRowsPaginated(1000, (from, to) =>
+            admin
+                .from("reviews")
+                .select("id, rating, response_status, review_date")
+                .eq("business_id", auth.businessId)
+                .gte("review_date", startIso)
+                .order("id", { ascending: true })
+                .range(from, to)
+        ),
+        fetchAllReviewRowsPaginated(1000, (from, to) =>
+            admin
+                .from("review_requests")
+                .select("id, status, sent_at, clicked_at, completed_at, review_left")
+                .eq("business_id", auth.businessId)
+                .gte("created_at", startIso)
+                .order("id", { ascending: true })
+                .range(from, to)
+        ),
     ]);
 
-    if (reviewsRes.error || requestsRes.error) {
+    if (reviewsPaged.error || requestsPaged.error) {
         return withCors(
             NextResponse.json({ success: false, error: "Failed to fetch analytics data." }, { status: 500 })
         );
     }
 
-    const reviews = reviewsRes.data || [];
-    const requests = requestsRes.data || [];
-    const totalReviews = reviewsRes.count || 0;
+    const reviews = reviewsPaged.data || [];
+    const requests = requestsPaged.data || [];
+    const totalReviews = reviews.length;
     const avgRating =
         reviews.length > 0 ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length : 0;
     const responded = reviews.filter((r) => r.response_status === "responded").length;
@@ -61,7 +72,7 @@ export async function GET(req: NextRequest) {
                         responseRate: totalReviews > 0 ? Number(((responded / totalReviews) * 100).toFixed(1)) : 0,
                     },
                     requests: {
-                        total: requestsRes.count || 0,
+                        total: requests.length,
                         sent,
                         clicked,
                         completed,

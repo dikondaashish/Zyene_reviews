@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { CustomerDetailClient } from "@/components/customers/customer-detail-client";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
     buildCustomerTimeline,
     computeDetailStats,
@@ -95,13 +95,19 @@ export default async function CustomerDetailPage({
     const stats = computeDetailStats(customer, matchedRequests, matchedFeedback);
 
     return (
-        <div className="mx-auto max-w-4xl space-y-8 px-4 py-6 lg:px-6">
-            <Button variant="ghost" size="sm" asChild className="-ml-2 gap-2 text-muted-foreground">
-                <Link href="/customers">
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to Customers
+        <div className="mx-auto max-w-3xl px-4 py-6 pb-12 lg:px-6">
+            <nav className="mb-6" aria-label="Breadcrumb">
+                <Link
+                    href="/customers"
+                    className={cn(
+                        "group inline-flex items-center gap-2 rounded-full border border-transparent px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors",
+                        "hover:border-border hover:bg-muted/60 hover:text-foreground"
+                    )}
+                >
+                    <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                    Customers
                 </Link>
-            </Button>
+            </nav>
 
             <CustomerDetailClient
                 customer={customer}

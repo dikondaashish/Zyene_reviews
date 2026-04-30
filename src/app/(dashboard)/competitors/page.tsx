@@ -21,6 +21,7 @@ import {
 } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export const metadata = {
     title: "Competitors - Zyene Reviews",
@@ -132,12 +133,16 @@ export default async function CompetitorsPage({
         .gte("created_at", rangeStart.toISOString())
         .like("event_type", "competitor.alert.%");
 
-    const ownReviewsInRangePromise = supabase
-        .from("reviews")
-        .select("rating")
-        .eq("business_id", businessId)
-        .eq("is_visible", true)
-        .gte("review_date", rangeStart.toISOString());
+    const ownReviewsInRangePromise = fetchAllReviewRowsPaginated(1000, (from, to) =>
+        supabase
+            .from("reviews")
+            .select("rating")
+            .eq("business_id", businessId)
+            .eq("is_visible", true)
+            .gte("review_date", rangeStart.toISOString())
+            .order("id", { ascending: true })
+            .range(from, to)
+    );
 
     const latestSnapshotsForPlacesMetaPromise = (supabase
         .from("competitor_snapshots" as never) as any)

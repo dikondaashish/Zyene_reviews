@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { getActiveBusinessId, setActiveBusiness } from "@/lib/auth/business-context";
 import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
-import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
+import { fetchVisibleReviewRollupsByBusinessIds, emptyVisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
 
 export default async function BusinessesPage() {
     const supabase = await createClient();
@@ -63,10 +63,7 @@ export default async function BusinessesPage() {
                             (p: any) => p.platform === "google"
                         );
                         const isConnected = !!googlePlatform;
-                        const cardStats = visibleReviewStats.get(business.id) ?? {
-                            totalVisible: 0,
-                            averageRatingVisible: 0,
-                        };
+                        const cardStats = visibleReviewStats.get(business.id) ?? emptyVisibleReviewRollup();
                         const rating =
                             cardStats.totalVisible > 0 ? cardStats.averageRatingVisible : null;
                         const totalReviews = cardStats.totalVisible;

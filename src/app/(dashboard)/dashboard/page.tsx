@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { cookies } from "next/headers";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
@@ -412,23 +413,37 @@ export default async function DashboardPage() {
                     .or("rating.lte.2,urgency_score.gte.7")
                     .order("urgency_score", { ascending: false, nullsFirst: false })
                     .limit(5),
-                // 5. Yearly trend data (since start of last year)
-                supabase
-                    .from("reviews")
-                    .select("review_date, rating")
-                    .eq("business_id", business.id)
-                    .gte("review_date", startOfLastYear.toISOString()),
+                // 5. Yearly trend data (since start of last year) — paginated (PostgREST ~1k row cap)
+                fetchAllReviewRowsPaginated(1000, (from, to) =>
+                    supabase
+                        .from("reviews")
+                        .select("review_date, rating")
+                        .eq("business_id", business.id)
+                        .gte("review_date", startOfLastYear.toISOString())
+                        .order("review_date", { ascending: true })
+                        .order("id", { ascending: true })
+                        .range(from, to)
+                ),
                 // 6. 30-day Chart Data
-                supabase
-                    .from("reviews")
-                    .select("review_date")
-                    .eq("business_id", business.id)
-                    .gte("review_date", thirtyDaysAgo.toISOString()),
-                // 7. Rating Distribution
-                supabase
-                    .from("reviews")
-                    .select("rating")
-                    .eq("business_id", business.id),
+                fetchAllReviewRowsPaginated(1000, (from, to) =>
+                    supabase
+                        .from("reviews")
+                        .select("review_date")
+                        .eq("business_id", business.id)
+                        .gte("review_date", thirtyDaysAgo.toISOString())
+                        .order("review_date", { ascending: true })
+                        .order("id", { ascending: true })
+                        .range(from, to)
+                ),
+                // 7. Rating Distribution (all-time)
+                fetchAllReviewRowsPaginated(1000, (from, to) =>
+                    supabase
+                        .from("reviews")
+                        .select("rating")
+                        .eq("business_id", business.id)
+                        .order("id", { ascending: true })
+                        .range(from, to)
+                ),
                 // 8a. Positive sentiment count
                 supabase
                     .from("reviews")
@@ -686,13 +701,17 @@ export default async function DashboardPage() {
         totalReviewsTrend = 12;
         averageRatingTrend = 0.1;
         visibleReviewRollup = {
+            totalReviewRows: DASHBOARD_DEMO_DATA.total_reviews,
             totalVisible: DASHBOARD_DEMO_DATA.total_reviews,
             pendingVisible: DASHBOARD_DEMO_DATA.pendingCount,
             averageRatingVisible: DASHBOARD_DEMO_DATA.average_rating,
+            googleRowCount: DASHBOARD_DEMO_DATA.total_reviews,
             googleVisibleCount: DASHBOARD_DEMO_DATA.total_reviews,
             googleAverageRating: DASHBOARD_DEMO_DATA.average_rating,
+            facebookRowCount: 0,
             facebookVisibleCount: 0,
             facebookAverageRating: 0,
+            yelpRowCount: 0,
             yelpVisibleCount: 0,
             yelpAverageRating: 0,
         };

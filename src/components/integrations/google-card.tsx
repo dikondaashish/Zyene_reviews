@@ -67,7 +67,9 @@ interface GoogleCardProps {
     } | null;
     businessId: string;
     businessName?: string | null;
-    /** From `reviews`: visible Google rows (overrides platform totals from Google API metadata). */
+    /** All Google rows in `reviews` (sync volume; not PostgREST-capped). */
+    dbGoogleSyncedRowCount?: number;
+    /** Visible Google rows — used for average rating. */
     dbVisibleGoogleReviewCount?: number;
     dbVisibleGoogleAverageRating?: number | null;
 }
@@ -110,6 +112,7 @@ export function GoogleIntegrationCard({
     platform,
     businessId,
     businessName,
+    dbGoogleSyncedRowCount,
     dbVisibleGoogleReviewCount,
     dbVisibleGoogleAverageRating,
 }: GoogleCardProps) {
@@ -122,9 +125,11 @@ export function GoogleIntegrationCard({
             initialSyncStatus: platform?.sync_status ?? null,
             initialLastSyncedAt: platform?.last_synced_at ?? null,
             initialTotalReviews:
-                typeof dbVisibleGoogleReviewCount === "number"
-                    ? dbVisibleGoogleReviewCount
-                    : (platform?.total_reviews ?? null),
+                dbGoogleSyncedRowCount !== undefined
+                    ? dbGoogleSyncedRowCount
+                    : typeof dbVisibleGoogleReviewCount === "number"
+                      ? dbVisibleGoogleReviewCount
+                      : (platform?.total_reviews ?? null),
             initialAverageRating:
                 dbVisibleGoogleAverageRating != null && !Number.isNaN(Number(dbVisibleGoogleAverageRating))
                     ? Number(dbVisibleGoogleAverageRating)
@@ -150,9 +155,11 @@ export function GoogleIntegrationCard({
     const needsLocation = isConnected && !platform?.google_location_id;
 
     const displayReviewCount =
-        typeof dbVisibleGoogleReviewCount === "number"
-            ? dbVisibleGoogleReviewCount
-            : (totalReviews ?? platform?.total_reviews ?? 0);
+        dbGoogleSyncedRowCount !== undefined
+            ? dbGoogleSyncedRowCount
+            : typeof dbVisibleGoogleReviewCount === "number"
+              ? dbVisibleGoogleReviewCount
+              : (totalReviews ?? platform?.total_reviews ?? 0);
     const displayLastSyncedAt = lastSyncedAt ?? platform?.last_synced_at ?? null;
 
     const supabase = createClient();

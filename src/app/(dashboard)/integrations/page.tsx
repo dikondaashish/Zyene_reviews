@@ -149,10 +149,10 @@ export default async function IntegrationsPage() {
     );
     const connectedCount = connectedPlatforms.length;
 
-    /** Summary line: visible rows in `reviews` (not `review_platforms.total_reviews` from Google listing totals). */
+    /** All review rows stored in Zyene (matches DB; not capped at 1,000). */
     const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
     const visibleRollup = visibleRollupMap.get(business.id);
-    const totalReviews = visibleRollup?.totalVisible ?? 0;
+    const totalReviews = visibleRollup?.totalReviewRows ?? 0;
 
     return (
         <div className="flex flex-1 flex-col gap-10 p-4 sm:p-6 lg:p-8">
@@ -181,7 +181,7 @@ export default async function IntegrationsPage() {
                         <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
                             <Star className="h-4 w-4 text-chart-4" />
                             <span className="text-sm font-medium">
-                                {`${totalReviews.toLocaleString("en-US")} total reviews synced`}
+                                {`${totalReviews.toLocaleString("en-US")} review${totalReviews !== 1 ? "s" : ""} in Zyene`}
                             </span>
                         </div>
                     </div>
@@ -206,6 +206,7 @@ export default async function IntegrationsPage() {
                         platform={googlePlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbGoogleSyncedRowCount={visibleRollup?.googleRowCount ?? 0}
                         dbVisibleGoogleReviewCount={visibleRollup?.googleVisibleCount ?? 0}
                         dbVisibleGoogleAverageRating={visibleRollup?.googleAverageRating ?? null}
                     />
@@ -213,12 +214,14 @@ export default async function IntegrationsPage() {
                         platform={yelpPlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbYelpSyncedRowCount={visibleRollup?.yelpRowCount ?? 0}
                         dbVisibleYelpReviewCount={visibleRollup?.yelpVisibleCount ?? 0}
                     />
                     <FacebookIntegrationCard
                         platform={facebookPlatform}
                         businessId={business.id}
                         businessName={business.name || ""}
+                        dbFacebookSyncedRowCount={visibleRollup?.facebookRowCount ?? 0}
                         dbVisibleFacebookReviewCount={visibleRollup?.facebookVisibleCount ?? 0}
                         dbVisibleFacebookAverageRating={visibleRollup?.facebookAverageRating ?? null}
                     />
