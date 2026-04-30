@@ -1,4 +1,3 @@
-
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
@@ -8,6 +7,7 @@ import { inngest } from "@/services/inngest/client";
 /** Rolling window of reviews to include in the weekly digest (matches email copy). */
 const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 
+/** Base URL only; success pings GET this URL, failures append `/fail`. */
 function digestHeartbeatBaseUrl(): string | null {
     const raw =
         process.env.BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL ||
@@ -39,6 +39,10 @@ function isAuthorizedCronRequest(request: Request): boolean {
  * in your chosen timezone, GET with Authorization: Bearer CRON_SECRET.
  *
  * Example cron-jobs.org: "0 9 * * MON" with timezone America/Chicago (adjust as needed).
+ *
+ * Better Stack: set `BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL` to the heartbeat URL from Uptime → Heartbeats.
+ * Configure the monitor's "expect heartbeat every" to that same cadence (e.g. 7 days for weekly cron), not daily,
+ * or you will see false "missed heartbeat" alerts. If the env var is unset, this route never pings Better Stack.
  */
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {
