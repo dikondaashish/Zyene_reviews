@@ -72,6 +72,12 @@ export default function DeveloperApiDocsPage() {
                             <strong>Integrations → Developer API</strong> in the dashboard. Send it on every request as{" "}
                             <code>X-API-Key: zy_…</code> or <code>Authorization: Bearer zy_…</code>.
                         </p>
+                        <p className="text-sm text-muted-foreground">
+                            <strong>Postman / curl without Origin:</strong> If you see <code>403 Forbidden</code> on{" "}
+                            <code>POST</code> only, add header{" "}
+                            <code>Origin: {apiOrigin.replace(/\/$/, "")}</code> (must match your app host), or deploy the
+                            version that exempts <code>/api/v1</code> from browser-only CSRF checks for API-key traffic.
+                        </p>
 
                         <h2 id="base-url">Base URL</h2>
                         <p>

@@ -146,8 +146,9 @@ export async function proxy(request: NextRequest) {
             }
         }
 
-        // CSRF Protection: Validate Origin on mutating requests
-        const csrfWhitelisted = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        // CSRF Protection: Validate Origin on mutating requests.
+        // Developer API (v1) uses X-API-Key / Bearer — Postman and servers often omit Origin; exempt this prefix.
+        const csrfWhitelisted = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/v1"];
         const isCsrfWhitelisted = csrfWhitelisted.some(p => pathname.startsWith(p));
 
         if (!isCsrfWhitelisted) {
