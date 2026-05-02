@@ -39,7 +39,7 @@ export function CustomerFilters({
 
     return (
         <div className="mb-5 flex flex-col gap-3 p-0">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
                 <div className="relative flex-1 w-full group">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
@@ -53,8 +53,8 @@ export function CustomerFilters({
                     />
                 </div>
 
-                <div className="flex w-full flex-col gap-1.5 md:w-auto md:min-w-[200px]">
-                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground md:sr-only">
+                <div className="flex w-full flex-col gap-1.5 lg:w-auto lg:min-w-[200px]">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground lg:sr-only">
                         Filter by tag
                     </span>
                     <Select
@@ -63,7 +63,7 @@ export function CustomerFilters({
                     >
                         <SelectTrigger
                             size="sm"
-                            className="h-9 w-full rounded-lg border-border md:w-[220px]"
+                            className="h-9 w-full rounded-lg border-border lg:w-[220px]"
                             aria-label="Filter by tag"
                         >
                             <SelectValue placeholder="Filter by tag" />

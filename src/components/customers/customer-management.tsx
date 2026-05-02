@@ -371,48 +371,51 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
     return (
         <div className="animate-in fade-in duration-500">
-            <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 mb-1">
+            <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+                <div className="min-w-0 space-y-1">
+                    <div className="mb-1 flex items-center gap-2">
                         <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
                             <Users className="h-4 w-4 text-primary" />
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground">Customers</h1>
+                        <h1 className="text-xl font-bold tracking-tight text-foreground lg:text-2xl">Customers</h1>
                     </div>
                     <p className="text-sm text-muted-foreground">
                         Manage your customer database and trigger review campaigns.
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex w-full flex-wrap gap-2 lg:w-auto lg:justify-end">
                     <Button
                         variant="outline"
                         onClick={() => setIsImportModalOpen(true)}
-                        className="h-9 rounded-lg border-border px-4 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50"
+                        className="h-9 min-w-0 flex-1 rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:flex-initial sm:px-4"
                     >
-                        <Upload className="h-4 w-4" />
-                        Import CSV
+                        <Upload className="h-4 w-4 shrink-0 md:mr-2" />
+                        <span className="md:hidden">Import</span>
+                        <span className="hidden md:inline">Import CSV</span>
                     </Button>
                     <Button
                         variant="outline"
                         onClick={() => void handleExportCsv()}
                         disabled={isExporting}
-                        className="h-9 rounded-lg border-border px-4 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50"
+                        className="h-9 min-w-0 flex-1 rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:flex-initial sm:px-4"
                     >
-                        <Download className="h-4 w-4" />
-                        Export CSV
+                        <Download className="h-4 w-4 shrink-0 md:mr-2" />
+                        <span className="md:hidden">Export</span>
+                        <span className="hidden md:inline">Export CSV</span>
                     </Button>
                     <Button
                         onClick={() => setIsAddModalOpen(true)}
-                        className="h-9 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90"
+                        className="h-9 min-w-0 flex-1 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 sm:flex-initial sm:px-4"
                     >
-                        <UserPlus className="h-4 w-4" />
-                        Add Customer
+                        <UserPlus className="h-4 w-4 shrink-0 md:mr-2" />
+                        <span className="md:hidden">Add</span>
+                        <span className="hidden md:inline">Add Customer</span>
                     </Button>
                 </div>
             </div>
 
-            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
                 <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
                         <Users className="h-4 w-4 text-primary" />

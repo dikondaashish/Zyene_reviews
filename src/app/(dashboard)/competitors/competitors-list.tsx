@@ -444,8 +444,8 @@ export function CompetitorsList({
 
     return (
         <div className="space-y-8">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2 rounded-lg border bg-muted/30 p-1 w-fit">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex w-full min-w-0 items-stretch gap-1 rounded-lg border bg-muted/30 p-1 lg:w-fit lg:items-center">
                     {rangeOptions.map((opt) => {
                         const active = optimisticRange === opt.value;
                         return (
@@ -453,6 +453,7 @@ export function CompetitorsList({
                                 key={opt.value}
                                 size="sm"
                                 variant={active ? "default" : "ghost"}
+                                className="min-w-0 flex-1 px-2 sm:px-3 lg:flex-none lg:px-3"
                                 onClick={() => setRange(opt.value)}
                             >
                                 {opt.label}
@@ -469,11 +470,12 @@ export function CompetitorsList({
                             onClick={() => void handleSyncCompetitorWatch()}
                         >
                             {syncWatchLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin sm:mr-2" />
+                                <Loader2 className="h-4 w-4 animate-spin md:mr-2" />
                             ) : (
-                                <RefreshCw className="h-4 w-4 sm:mr-2" />
+                                <RefreshCw className="h-4 w-4 md:mr-2" />
                             )}
-                            <span className="hidden sm:inline">Sync from Google</span>
+                            <span className="md:hidden">Sync</span>
+                            <span className="hidden md:inline">Sync from Google</span>
                         </Button>
                     ) : null}
                     <Button variant="outline" size="sm" asChild>
@@ -482,8 +484,9 @@ export function CompetitorsList({
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Download className="h-4 w-4 sm:mr-2" />
-                            <span className="hidden sm:inline">Export CSV</span>
+                            <Download className="h-4 w-4 md:mr-2" />
+                            <span className="md:hidden">CSV</span>
+                            <span className="hidden md:inline">Export CSV</span>
                         </a>
                     </Button>
                     <AddCompetitorDialog
@@ -541,7 +544,7 @@ export function CompetitorsList({
             )}
 
             <Card className="border-border bg-canvas-elevated text-foreground">
-                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
+                <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:space-y-0">
                     <div className="space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5 text-chart-4" />
@@ -561,11 +564,12 @@ export function CompetitorsList({
                             onClick={() => void handleGenerateMarketBrief()}
                         >
                             {briefGenLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin sm:mr-2" />
+                                <Loader2 className="h-4 w-4 animate-spin md:mr-2" />
                             ) : (
-                                <Sparkles className="h-4 w-4 sm:mr-2" />
+                                <Sparkles className="h-4 w-4 md:mr-2" />
                             )}
-                            <span className="hidden sm:inline">
+                            <span className="md:hidden">{marketBriefLatest ? "Regenerate" : "Brief"}</span>
+                            <span className="hidden md:inline">
                                 {marketBriefLatest ? "Regenerate brief" : "Generate brief"}
                             </span>
                         </Button>
@@ -643,7 +647,7 @@ export function CompetitorsList({
                         </p>
                     ) : (
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                                 <Badge variant={runStatusVariant(latestRun.status)}>
                                     {String(latestRun.status || "unknown").toUpperCase()}
                                 </Badge>
@@ -661,7 +665,7 @@ export function CompetitorsList({
                                     </span>
                                 ) : null}
                             </div>
-                            <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
+                            <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-3 lg:grid-cols-5">
                                 <div className="rounded border p-2">
                                     <p className="text-muted-foreground text-xs">Scanned</p>
                                     <p className="font-semibold">{latestRun.scanned}</p>
@@ -853,8 +857,156 @@ export function CompetitorsList({
                                 search-keyword reports.
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="overflow-x-auto">
-                            <Table>
+                        <CardContent className="space-y-4 pt-0">
+                            <div className="lg:hidden space-y-3">
+                                {competitors.map((competitor) => {
+                                    const syncing = isSyncing(competitor);
+                                    const updatedAt = competitor.updated_at ? (
+                                        <TimeAgo date={competitor.updated_at} />
+                                    ) : (
+                                        "—"
+                                    );
+                                    const places = activePlacesMetaByCompetitorId[competitor.id];
+                                    const snap = latestSnapshotByCompetitor.get(competitor.id);
+                                    const meta = snap?.metadata as
+                                        | { provider?: string; seeded_on_create?: boolean }
+                                        | null
+                                        | undefined;
+                                    const sourceLabel = (() => {
+                                        if (meta?.provider) return String(meta.provider);
+                                        if (snap?.source === "google_places") return "google_places";
+                                        if (snap?.source === "manual" && meta?.seeded_on_create) return "Pending sync";
+                                        return snap?.source || "—";
+                                    })();
+
+                                    return (
+                                        <div
+                                            key={`card-${competitor.id}`}
+                                            className="rounded-lg border bg-card p-4 shadow-sm"
+                                        >
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div className="min-w-0 flex-1 space-y-2">
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        <p className="font-semibold leading-snug break-words">
+                                                            {competitor.name}
+                                                        </p>
+                                                        {syncing ? (
+                                                            <Badge variant="secondary" className="flex shrink-0 items-center gap-1">
+                                                                <Loader2 className="h-3 w-3 animate-spin" />
+                                                                Syncing…
+                                                            </Badge>
+                                                        ) : null}
+                                                    </div>
+                                                    {places?.summary ? (
+                                                        <p
+                                                            className="text-xs leading-relaxed text-muted-foreground"
+                                                            title={places.summary}
+                                                        >
+                                                            {places.summary}
+                                                        </p>
+                                                    ) : null}
+                                                </div>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    disabled={isDeleting === competitor.id}
+                                                    onClick={() => setDeleteConfirm(competitor.id)}
+                                                    className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                                    aria-label={`Remove ${competitor.name}`}
+                                                >
+                                                    {isDeleting === competitor.id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <Trash2 className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                            </div>
+                                            <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-3 text-sm">
+                                                <div>
+                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                                        Category
+                                                    </dt>
+                                                    <dd className="mt-0.5 text-muted-foreground">
+                                                        {syncing ? (
+                                                            "—"
+                                                        ) : places?.primaryType ? (
+                                                            <span title={places.typesPreview ?? undefined}>
+                                                                {places.primaryType}
+                                                            </span>
+                                                        ) : (
+                                                            "—"
+                                                        )}
+                                                    </dd>
+                                                </div>
+                                                <div>
+                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                                        Avg rating
+                                                    </dt>
+                                                    <dd className="mt-0.5">
+                                                        {syncing ? (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center gap-1">
+                                                                <Star className="h-3.5 w-3.5 shrink-0 fill-chart-4 text-chart-4" />
+                                                                {competitor.average_rating || "—"}
+                                                            </span>
+                                                        )}
+                                                    </dd>
+                                                </div>
+                                                <div>
+                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                                        Reviews
+                                                    </dt>
+                                                    <dd className="mt-0.5">
+                                                        {syncing ? (
+                                                            <span className="text-muted-foreground">—</span>
+                                                        ) : (
+                                                            (competitor.total_reviews || 0).toLocaleString()
+                                                        )}
+                                                    </dd>
+                                                </div>
+                                                <div>
+                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                                                        Updated
+                                                    </dt>
+                                                    <dd className="mt-0.5 text-xs text-muted-foreground">{updatedAt}</dd>
+                                                </div>
+                                            </dl>
+                                            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-3 text-xs">
+                                                {!syncing && places?.websiteUrl ? (
+                                                    <a
+                                                        href={places.websiteUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                                                    >
+                                                        <Globe className="h-3.5 w-3.5 shrink-0" />
+                                                        Website
+                                                    </a>
+                                                ) : null}
+                                                {competitor.google_url ? (
+                                                    <a
+                                                        href={competitor.google_url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                                                    >
+                                                        Maps
+                                                        <ExternalLink className="h-3 w-3 shrink-0" />
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-muted-foreground">Maps: N/A</span>
+                                                )}
+                                            </div>
+                                            <p className="mt-2 text-[11px] text-muted-foreground">
+                                                Source: {sourceLabel}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className="hidden overflow-x-auto lg:block">
+                                <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="min-w-[140px]">Competitor Name</TableHead>
@@ -996,7 +1148,8 @@ export function CompetitorsList({
                                         );
                                     })}
                                 </TableBody>
-                            </Table>
+                                </Table>
+                            </div>
                         </CardContent>
                     </Card>
 
@@ -1141,9 +1294,11 @@ export function CompetitorsList({
                                             competitors.find((c) => c.id === event.competitor_id)?.name || "Competitor";
                                         return (
                                             <div key={event.id} className="rounded-lg border p-3">
-                                                <div className="flex items-center justify-between gap-2">
-                                                    <p className="text-sm font-medium">{event.title || event.event_type}</p>
-                                                    <span className="text-xs text-muted-foreground">
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <p className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
+                                                        {event.title || event.event_type}
+                                                    </p>
+                                                    <span className="shrink-0 text-xs text-muted-foreground">
                                                         <TimeAgo date={event.created_at} />
                                                     </span>
                                                 </div>

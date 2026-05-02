@@ -117,7 +117,7 @@ export default async function RequestsPage({
     if (statsOrListError) {
         console.error("[Requests page] Fetch failed:", statsOrListError);
         return (
-            <div className="flex flex-1 flex-col gap-4 p-4 lg:p-8">
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
                 <DashboardFetchError
                     message="We could not load review requests. Check your connection and try again."
                     retryHref="/requests"
@@ -174,19 +174,23 @@ export default async function RequestsPage({
     };
 
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 lg:p-8">
-            <div className="flex items-center justify-between mb-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Review Requests</h1>
-                    <p className="text-muted-foreground mt-1">Manage and track your review invitations.</p>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
+            <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0">
+                    <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">Review Requests</h1>
+                    <p className="mt-1 text-sm text-muted-foreground lg:text-base">
+                        Manage and track your review invitations.
+                    </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" asChild>
-                        <a href={`/api/requests/export`}>
-                            <Download className="w-4 h-4 mr-2" />
-                            Export CSV
+                <div className="flex w-full min-w-0 flex-wrap items-center gap-2 lg:w-auto lg:shrink-0">
+                    <Button variant="outline" className="min-w-0 flex-1 sm:flex-initial" asChild>
+                        <a href={`/api/requests/export`} className="inline-flex items-center justify-center gap-2">
+                            <Download className="h-4 w-4 shrink-0" />
+                            <span className="md:hidden">Export</span>
+                            <span className="hidden md:inline">Export CSV</span>
                         </a>
                     </Button>
+                    <div className="min-w-0 flex-1 max-lg:[&_button]:w-full sm:flex-initial lg:[&_button]:w-auto">
                     <SendRequestDialog
                         businessId={business.id}
                         businessSlug={business.slug || ""}
@@ -194,11 +198,12 @@ export default async function RequestsPage({
                         initialCustomer={initialCustomer}
                         autoOpen={!!initialCustomer}
                     />
+                    </div>
                 </div>
             </div>
 
             {/* STATS */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+            <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                 <Card className="border-l-4 border-l-primary">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
@@ -247,7 +252,52 @@ export default async function RequestsPage({
             </div>
 
             {/* LIST */}
-            <div className="rounded-md border bg-card">
+            <div className="space-y-3 lg:hidden">
+                {requests && requests.length > 0 ? (
+                    requests.map((req) => {
+                        const contact =
+                            [req.customer_phone, (req as { customer_email?: string | null }).customer_email]
+                                .filter(Boolean)
+                                .join(" · ") || "—";
+                        return (
+                            <div
+                                key={req.id}
+                                className="rounded-lg border border-border bg-card p-4 shadow-sm"
+                            >
+                                <div className="flex flex-wrap items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                        <p className="font-semibold leading-snug break-words">
+                                            {req.customer_name || "Guest"}
+                                        </p>
+                                        <p className="mt-1 break-all text-xs text-muted-foreground">{contact}</p>
+                                    </div>
+                                    <div className="shrink-0 text-right text-xs text-muted-foreground">
+                                        {req.created_at
+                                            ? formatDistanceToNow(new Date(req.created_at), { addSuffix: true })
+                                            : "—"}
+                                    </div>
+                                </div>
+                                <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                        {req.channel === "sms" ? (
+                                            <MessageSquare className="h-3.5 w-3.5 shrink-0" />
+                                        ) : (
+                                            <Mail className="h-3.5 w-3.5 shrink-0" />
+                                        )}
+                                        <span className="font-medium uppercase">{req.channel}</span>
+                                    </div>
+                                    <div className="ml-auto">{getStatusBadge(req.status, req.review_left)}</div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div className="rounded-lg border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
+                        No requests sent yet.
+                    </div>
+                )}
+            </div>
+            <div className="hidden overflow-x-auto rounded-md border bg-card lg:block">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -261,13 +311,13 @@ export default async function RequestsPage({
                     <TableBody>
                         {requests && requests.length > 0 ? (
                             requests.map((req) => (
-                                <TableRow key={req.id} className="hover:bg-muted/50 transition-colors">
+                                <TableRow key={req.id} className="transition-colors hover:bg-muted/50">
                                     <TableCell className="font-medium">{req.customer_name || "Guest"}</TableCell>
                                     <TableCell>{req.customer_phone}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center">
                                             {req.channel === 'sms' ? <MessageSquare className="w-3 h-3 mr-2 text-muted-foreground" /> : <Mail className="w-3 h-3 mr-2 text-muted-foreground" />}
-                                            <span className="uppercase text-xs font-medium text-muted-foreground">{req.channel}</span>
+                                            <span className="text-xs font-medium uppercase text-muted-foreground">{req.channel}</span>
                                         </div>
                                     </TableCell>
                                     <TableCell>
@@ -289,14 +339,16 @@ export default async function RequestsPage({
                 </Table>
             </div>
             {/* Simple Pagination */}
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button variant="outline" size="sm" disabled={page <= 1} asChild>
-                    {page > 1 ? <Link href={`/requests?page=${page - 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Previous</Link> : <span>Previous</span>}
-                </Button>
-                <span className="text-sm text-muted-foreground">Page {page}</span>
-                <Button variant="outline" size="sm" disabled={!requests || requests.length < pageSize} asChild>
-                    {requests && requests.length >= pageSize ? <Link href={`/requests?page=${page + 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Next</Link> : <span>Next</span>}
-                </Button>
+            <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
+                <div className="flex items-center justify-center gap-2 sm:justify-end">
+                    <Button variant="outline" size="sm" disabled={page <= 1} asChild>
+                        {page > 1 ? <Link href={`/requests?page=${page - 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Previous</Link> : <span>Previous</span>}
+                    </Button>
+                    <span className="text-sm text-muted-foreground">Page {page}</span>
+                    <Button variant="outline" size="sm" disabled={!requests || requests.length < pageSize} asChild>
+                        {requests && requests.length >= pageSize ? <Link href={`/requests?page=${page + 1}${sp.customer ? `&customer=${sp.customer}` : ''}`}>Next</Link> : <span>Next</span>}
+                    </Button>
+                </div>
             </div>
         </div>
     );

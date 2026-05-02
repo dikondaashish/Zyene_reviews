@@ -129,6 +129,89 @@ interface CustomerTableProps {
     onSelectionChange?: (selectedIds: string[]) => void;
 }
 
+function CustomerActionsDropdown({
+    customer,
+    onEditName,
+    onSendRequest,
+    onDelete,
+    setOptedOut,
+}: {
+    customer: Customer;
+    onEditName: () => void;
+    onSendRequest: () => void;
+    onDelete: () => void;
+    setOptedOut: (customer: Customer, value: boolean) => void;
+}) {
+    return (
+        <div className="text-right" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[200px]">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={onEditName}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit name
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={`/customers/${customer.id}`} className="flex cursor-pointer items-center">
+                            <Eye className="mr-2 h-4 w-4" />
+                            View details
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {customer.is_opted_out ? (
+                        <DropdownMenuItem onClick={() => setOptedOut(customer, false)}>
+                            <RotateCcw className="mr-2 h-4 w-4" />
+                            Clear opt-out
+                        </DropdownMenuItem>
+                    ) : (
+                        <DropdownMenuItem onClick={() => setOptedOut(customer, true)}>
+                            <Ban className="mr-2 h-4 w-4" />
+                            Mark as opted out
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    {customer.is_opted_out ? (
+                        <TooltipProvider delayDuration={200}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <span className="block w-full cursor-default">
+                                        <DropdownMenuItem disabled className="pointer-events-none opacity-60">
+                                            <Send className="mr-2 h-4 w-4" />
+                                            Send Request
+                                        </DropdownMenuItem>
+                                    </span>
+                                </TooltipTrigger>
+                                <TooltipContent side="left" className="max-w-xs">
+                                    This contact opted out of review requests.
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    ) : (
+                        <DropdownMenuItem onClick={onSendRequest}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Send Request
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={onDelete}
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete customer
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
+
 export function CustomerTable({
     data,
     businessId,
@@ -391,84 +474,14 @@ export function CustomerTable({
                 id: "actions",
                 cell: ({ row }) => {
                     const customer = row.original;
-
                     return (
-                        <div className="text-right">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-[200px]">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                            setEditingNameId(customer.id);
-                                        }}
-                                    >
-                                        <Pencil className="mr-2 h-4 w-4" />
-                                        Edit name
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link
-                                            href={`/customers/${customer.id}`}
-                                            className="flex cursor-pointer items-center"
-                                        >
-                                            <Eye className="mr-2 h-4 w-4" />
-                                            View details
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    {customer.is_opted_out ? (
-                                        <DropdownMenuItem onClick={() => setOptedOut(customer, false)}>
-                                            <RotateCcw className="mr-2 h-4 w-4" />
-                                            Clear opt-out
-                                        </DropdownMenuItem>
-                                    ) : (
-                                        <DropdownMenuItem onClick={() => setOptedOut(customer, true)}>
-                                            <Ban className="mr-2 h-4 w-4" />
-                                            Mark as opted out
-                                        </DropdownMenuItem>
-                                    )}
-                                    <DropdownMenuSeparator />
-                                    {customer.is_opted_out ? (
-                                        <TooltipProvider delayDuration={200}>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <span className="block w-full cursor-default">
-                                                        <DropdownMenuItem
-                                                            disabled
-                                                            className="pointer-events-none opacity-60"
-                                                        >
-                                                            <Send className="mr-2 h-4 w-4" />
-                                                            Send Request
-                                                        </DropdownMenuItem>
-                                                    </span>
-                                                </TooltipTrigger>
-                                                <TooltipContent side="left" className="max-w-xs">
-                                                    This contact opted out of review requests.
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
-                                    ) : (
-                                        <DropdownMenuItem onClick={() => onSendRequest?.(customer)}>
-                                            <Send className="mr-2 h-4 w-4" />
-                                            Send Request
-                                        </DropdownMenuItem>
-                                    )}
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        className="text-destructive focus:text-destructive"
-                                        onClick={() => setDeleteTarget(customer)}
-                                    >
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        Delete customer
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
+                        <CustomerActionsDropdown
+                            customer={customer}
+                            onEditName={() => setEditingNameId(customer.id)}
+                            onSendRequest={() => onSendRequest?.(customer)}
+                            onDelete={() => setDeleteTarget(customer)}
+                            setOptedOut={setOptedOut}
+                        />
                     );
                 },
             }
@@ -507,7 +520,132 @@ export function CustomerTable({
 
     return (
         <div className="w-full">
-            <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="space-y-3 lg:hidden">
+                {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => {
+                        const customer = row.original;
+                        const display = customerDisplayName(customer);
+                        return (
+                            <div
+                                key={row.id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={(e) => handleRowNavigate(e, customer.id)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                        e.preventDefault();
+                                        router.push(`/customers/${customer.id}`);
+                                    }
+                                }}
+                                className="cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/20"
+                            >
+                                <div className="flex items-start gap-3">
+                                    <div onClick={(e) => e.stopPropagation()} className="pt-0.5">
+                                        <Checkbox
+                                            checked={row.getIsSelected()}
+                                            onCheckedChange={(value) => row.toggleSelected(!!value)}
+                                            aria-label="Select row"
+                                        />
+                                    </div>
+                                    <div className="min-w-0 flex-1 space-y-2">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0">
+                                                <p className="font-semibold leading-snug break-words text-foreground">
+                                                    {display || "Unnamed Customer"}
+                                                </p>
+                                                {customer.is_opted_out ? (
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="mt-1 h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-chart-4"
+                                                    >
+                                                        Opted out
+                                                    </Badge>
+                                                ) : null}
+                                            </div>
+                                            <CustomerActionsDropdown
+                                                customer={customer}
+                                                onEditName={() => setEditingNameId(customer.id)}
+                                                onSendRequest={() => onSendRequest?.(customer)}
+                                                onDelete={() => setDeleteTarget(customer)}
+                                                setOptedOut={setOptedOut}
+                                            />
+                                        </div>
+                                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                            {customer.email ? (
+                                                <span className="inline-flex min-w-0 items-center gap-1 break-all">
+                                                    <Mail className="h-3 w-3 shrink-0" />
+                                                    {customer.email}
+                                                </span>
+                                            ) : null}
+                                            {customer.phone ? (
+                                                <span className="inline-flex items-center gap-1">
+                                                    <Phone className="h-3 w-3 shrink-0" />
+                                                    {customer.phone}
+                                                </span>
+                                            ) : null}
+                                        </div>
+                                        <div className="min-w-0 max-w-full [&_button]:max-w-none">
+                                        <CustomerTagsCell
+                                            customer={customer}
+                                            onSaveTags={saveTags}
+                                            tagPillClass={tagPillClass}
+                                        />
+                                        </div>
+                                        <dl className="grid grid-cols-2 gap-2 border-t border-border pt-2 text-xs">
+                                            <div>
+                                                <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                                    Requests
+                                                </dt>
+                                                <dd className="mt-0.5 font-medium text-foreground">
+                                                    {customer.total_requests_sent ?? 0} sent
+                                                </dd>
+                                            </div>
+                                            <div>
+                                                <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                                    Last sent
+                                                </dt>
+                                                <dd className="mt-0.5 text-muted-foreground">
+                                                    {customer.last_request_sent_at
+                                                        ? formatDistanceToNow(new Date(customer.last_request_sent_at), {
+                                                              addSuffix: true,
+                                                          })
+                                                        : "Never"}
+                                                </dd>
+                                            </div>
+                                            {showVisitsSpend ? (
+                                                <>
+                                                    <div>
+                                                        <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                                            Visits
+                                                        </dt>
+                                                        <dd className="mt-0.5">{customer.visit_count ?? 0}</dd>
+                                                    </div>
+                                                    <div>
+                                                        <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                                            Spend
+                                                        </dt>
+                                                        <dd className="mt-0.5">
+                                                            {new Intl.NumberFormat("en-US", {
+                                                                style: "currency",
+                                                                currency: "USD",
+                                                            }).format((customer.total_spend_cents ?? 0) / 100)}
+                                                        </dd>
+                                                    </div>
+                                                </>
+                                            ) : null}
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div className="rounded-xl border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
+                        No customers found.
+                    </div>
+                )}
+            </div>
+            <div className="hidden overflow-hidden rounded-xl border border-border bg-card lg:block">
                 <Table>
                     <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -559,12 +697,12 @@ export function CustomerTable({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between space-x-2 py-3">
-                <div className="text-xs text-muted-foreground">
+            <div className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-center text-xs text-muted-foreground sm:text-left">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
-                <div className="space-x-2">
+                <div className="flex items-center justify-center gap-2 sm:justify-end">
                     <Button
                         variant="outline"
                         size="sm"

@@ -201,7 +201,7 @@ export default async function CompetitorsPage({
     ) {
         console.error("[Competitors page] Fetch failed:", competitorsError);
         return (
-            <div className="flex-1 space-y-6 p-8 pt-6">
+            <div className="flex-1 space-y-6 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-6">
                 <DashboardFetchError
                     message="We could not load competitors. Check your connection and try again."
                     retryHref="/competitors"
@@ -365,18 +365,18 @@ export default async function CompetitorsPage({
     })();
 
     return (
-        <div className="flex-1 space-y-6 p-8 pt-6">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Competitor Monitoring</h2>
-                    <p className="text-muted-foreground">
+        <div className="flex-1 space-y-6 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-6">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:gap-2">
+                <div className="min-w-0">
+                    <h2 className="text-2xl font-bold tracking-tight lg:text-3xl">Competitor Monitoring</h2>
+                    <p className="text-muted-foreground text-sm lg:text-base">
                         Keep track of your competitors' review performance to stay ahead.
                     </p>
                 </div>
                 {(recentAlertsCountRes.count ?? 0) > 0 ? (
                     <a
                         href="#competitor-alerts"
-                        className="inline-flex items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm font-medium hover:bg-muted/60"
+                        className="inline-flex w-fit shrink-0 items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm font-medium hover:bg-muted/60"
                     >
                         <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
                             {recentAlertsCountRes.count}

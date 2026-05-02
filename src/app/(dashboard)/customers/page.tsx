@@ -32,7 +32,7 @@ export default async function CustomersPage() {
     if (error) {
         console.error("Error fetching initial customers:", error);
         return (
-            <div className="max-w-[1200px] mx-auto py-10 px-6">
+            <div className="max-w-[1200px] mx-auto px-4 py-8 sm:px-6">
                 <DashboardFetchError
                     message="We couldn&apos;t load customers for this business. Check your connection and try again."
                     retryHref="/customers"
@@ -44,7 +44,7 @@ export default async function CustomersPage() {
     const initialCustomers = await enrichCustomersWithReviewLinkage(supabase, businessId, rawCustomers || []);
 
     return (
-        <div className="mx-auto max-w-[1200px] px-4 py-6 lg:px-6">
+        <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-5 sm:py-6 lg:px-6">
             <CustomerManagement businessId={businessId as string} initialCustomers={initialCustomers} />
         </div>
     );

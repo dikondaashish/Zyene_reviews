@@ -10,11 +10,16 @@ import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state"
 export function SyncButton({
     businessId,
     className,
-    variant = "outline"
+    variant = "outline",
+    /** When set, shown below `md` instead of `syncLabel` to save horizontal space on phones. */
+    syncShortLabel,
+    syncLabel = "Sync Reviews",
 }: {
     businessId?: string,
     className?: string,
-    variant?: "outline" | "secondary" | "destructive" | "default" | "ghost" | "link"
+    variant?: "outline" | "secondary" | "destructive" | "default" | "ghost" | "link",
+    syncShortLabel?: string,
+    syncLabel?: string,
 }) {
     const [isPosting, setIsPosting] = useState(false)
     const [showForce, setShowForce] = useState(false)
@@ -101,8 +106,9 @@ export function SyncButton({
                     disabled={isPosting}
                     className="animate-in fade-in slide-in-from-right-2"
                 >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isPosting ? "animate-spin" : ""}`} />
-                    Force Reset & Sync
+                    <RefreshCw className={`h-4 w-4 md:mr-2 ${isPosting ? "animate-spin" : ""}`} />
+                    <span className="md:hidden">Force sync</span>
+                    <span className="hidden md:inline">Force Reset & Sync</span>
                 </Button>
             )}
             <Button
@@ -112,8 +118,20 @@ export function SyncButton({
                 disabled={busy}
                 className={className || "border border-[color:var(--sync-action)] bg-[color:var(--sync-action)] text-primary-foreground hover:bg-[color:var(--sync-action-hover)] hover:border-[color:var(--sync-action-hover)]"}
             >
-                <RefreshCw className={`mr-2 h-4 w-4 ${busy ? "animate-spin" : ""}`} />
-                {busy ? "Syncing..." : "Sync Reviews"}
+                <RefreshCw className={`h-4 w-4 shrink-0 md:mr-2 ${busy ? "animate-spin" : ""}`} />
+                {busy ? (
+                    <>
+                        <span className="md:hidden">Syncing</span>
+                        <span className="hidden md:inline">Syncing...</span>
+                    </>
+                ) : syncShortLabel ? (
+                    <>
+                        <span className="md:hidden">{syncShortLabel}</span>
+                        <span className="hidden md:inline">{syncLabel}</span>
+                    </>
+                ) : (
+                    syncLabel
+                )}
             </Button>
         </div>
     )

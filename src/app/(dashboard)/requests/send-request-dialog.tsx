@@ -165,11 +165,13 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>
-                    <Send className="mr-2 h-4 w-4" /> Send Review Request
+                <Button className="w-full sm:w-auto">
+                    <Send className="h-4 w-4 shrink-0 md:mr-2" />
+                    <span className="md:hidden">Send request</span>
+                    <span className="hidden md:inline">Send Review Request</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Send Review Request</DialogTitle>
                     <DialogDescription>

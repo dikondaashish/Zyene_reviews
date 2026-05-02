@@ -35,7 +35,7 @@ export function BulkActionBar({
                 exit={{ opacity: 0, y: -6 }}
                 className="mb-4 rounded-xl border border-border bg-card p-3 shadow-sm"
             >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center gap-3 pl-1">
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
                             {selectedCount}
@@ -53,8 +53,9 @@ export function BulkActionBar({
                                     <TooltipTrigger asChild>
                                         <span className="inline-flex">
                                             <Button size="sm" className="rounded-lg" disabled>
-                                                <Send className="mr-2 h-3.5 w-3.5" />
-                                                Send Request
+                                                <Send className="h-3.5 w-3.5 md:mr-2" />
+                                                <span className="md:hidden">Send</span>
+                                                <span className="hidden md:inline">Send Request</span>
                                             </Button>
                                         </span>
                                     </TooltipTrigger>
@@ -66,13 +67,15 @@ export function BulkActionBar({
                             </TooltipProvider>
                         ) : (
                             <Button size="sm" onClick={onSendRequests} className="rounded-lg">
-                                <Send className="mr-2 h-3.5 w-3.5" />
-                                Send Request
+                                <Send className="h-3.5 w-3.5 md:mr-2" />
+                                <span className="md:hidden">Send</span>
+                                <span className="hidden md:inline">Send Request</span>
                             </Button>
                         )}
                         <Button size="sm" variant="outline" onClick={onAddTag} className="rounded-lg">
-                            <TagIcon className="mr-2 h-3.5 w-3.5" />
-                            Add Tag
+                            <TagIcon className="h-3.5 w-3.5 md:mr-2" />
+                            <span className="md:hidden">Tag</span>
+                            <span className="hidden md:inline">Add Tag</span>
                         </Button>
                         <Button
                             size="sm"
@@ -80,8 +83,9 @@ export function BulkActionBar({
                             onClick={onDelete}
                             className="rounded-lg text-destructive hover:text-destructive"
                         >
-                            <Trash2 className="mr-2 h-3.5 w-3.5" />
-                            Delete Selected
+                            <Trash2 className="h-3.5 w-3.5 md:mr-2" />
+                            <span className="md:hidden">Delete</span>
+                            <span className="hidden md:inline">Delete Selected</span>
                         </Button>
                         <Button size="sm" variant="ghost" onClick={onClear} className="rounded-lg" aria-label="Clear selection">
                             <X className="h-4 w-4" />

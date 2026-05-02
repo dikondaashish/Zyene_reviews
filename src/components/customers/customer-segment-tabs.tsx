@@ -36,7 +36,7 @@ interface CustomerSegmentTabsProps {
 
 export function CustomerSegmentTabs({ value, onChange, counts }: CustomerSegmentTabsProps) {
     return (
-        <div className="flex flex-wrap gap-2 border-b border-border pb-3 mb-4">
+        <div className="-mx-1 mb-4 flex gap-2 overflow-x-auto border-b border-border pb-3 [-ms-overflow-style:none] [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible [&::-webkit-scrollbar]:hidden">
             {TABS.map((t) => {
                 const n = counts[t.id];
                 const active = value === t.id;
@@ -46,7 +46,7 @@ export function CustomerSegmentTabs({ value, onChange, counts }: CustomerSegment
                         type="button"
                         onClick={() => onChange(t.id)}
                         className={cn(
-                            "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                            "shrink-0 snap-start rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                             active
                                 ? "bg-primary text-primary-foreground shadow-sm"
                                 : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"

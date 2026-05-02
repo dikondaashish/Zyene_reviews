@@ -810,26 +810,28 @@ export default async function DashboardPage() {
             {useDemoData && <DemoModeBanner className="mb-2" />}
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-2">
-                <div className="space-y-0.5">
-                    <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+            <div className="mb-2 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 space-y-0.5">
+                    <p className="text-[10px] font-bold uppercase leading-relaxed tracking-widest text-muted-foreground sm:text-[11px]">
                         WELCOME BACK, {user.user_metadata?.full_name?.toUpperCase() || user.user_metadata?.first_name?.toUpperCase() || user.email?.split('@')[0].toUpperCase() || "OWNER"}
                     </p>
-                    <h1 className="text-4xl font-serif text-foreground pb-1" style={{ fontFamily: "Georgia, serif", letterSpacing: "-0.02em" }}>
+                    <h1 className="break-words pb-1 font-serif text-3xl text-foreground lg:text-4xl" style={{ fontFamily: "Georgia, serif", letterSpacing: "-0.02em" }}>
                         {business.name || dict.dashboard.title}
                     </h1>
                 </div>
-                <div className="flex items-center gap-3">
-                    <Link href="/requests">
-                        <Button variant="outline" className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background">
-                            <Send className="w-3.5 h-3.5" />
-                            Request review
+                <div className="flex w-full min-w-0 flex-wrap items-center gap-2 lg:w-auto lg:shrink-0 lg:justify-end">
+                    <Link href="/requests" className="min-w-0">
+                        <Button variant="outline" className="h-[38px] w-full gap-2 rounded-full border-border/60 bg-background px-4 font-medium text-[13px] hover:bg-muted lg:w-auto">
+                            <Send className="h-3.5 w-3.5 shrink-0" />
+                            <span className="md:hidden">Request</span>
+                            <span className="hidden md:inline">Request review</span>
                         </Button>
                     </Link>
                     <SyncButton 
                         businessId={business.id} 
                         variant="outline"
-                        className="h-[38px] px-4 gap-2 rounded-full border-border/60 hover:bg-muted font-medium text-[13px] bg-background text-foreground"
+                        syncShortLabel="Sync"
+                        className="h-[38px] gap-2 rounded-full border-border/60 bg-background px-4 font-medium text-[13px] text-foreground hover:bg-muted"
                     />
                 </div>
             </div>
@@ -1040,11 +1042,11 @@ export default async function DashboardPage() {
             {/* Google Business Profile performance (last 12 months) */}
             {(useDemoData || isGoogleConnected) && googlePerf && (
                 <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                    <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                             Google listing performance
                         </h2>
-                        <span className="text-xs text-muted-foreground">Last 12 months</span>
+                        <span className="shrink-0 text-xs text-muted-foreground">Last 12 months</span>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <Card>
@@ -1157,15 +1159,15 @@ export default async function DashboardPage() {
                         <Send className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                             <div className={`text-2xl font-bold ${maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.95 ? "text-destructive" :
                                 maxRequestsPerMonth > 0 && (requestsThisMonth / maxRequestsPerMonth) > 0.8 ? "text-chart-4" : ""
                                 }`}>
                                 {requestsThisMonth} / {maxRequestsPerMonth}
                             </div>
                             {!isPaidPlan && (
-                                <Link href="/settings/billing">
-                                    <Button variant="outline" size="sm" className="h-7 text-xs border-primary/30 bg-primary/10 text-primary hover:bg-primary/20">
+                                <Link href="/settings/billing" className="w-full shrink-0 lg:w-auto">
+                                    <Button variant="outline" size="sm" className="h-7 w-full text-xs border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 lg:w-auto">
                                         <ArrowRight className="mr-1 h-3 w-3" />
                                         {dict.dashboard.upgrade_prompt || "Upgrade"}
                                     </Button>
@@ -1204,19 +1206,20 @@ export default async function DashboardPage() {
             {/* Charts Row */}
             <div className="grid gap-4 md:grid-cols-2">
                 <Card className="flex flex-col">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
-                        <div>
+                    <CardHeader className="flex flex-col gap-2 pb-0 sm:flex-row sm:items-start sm:justify-between lg:items-center">
+                        <div className="min-w-0">
                             <CardTitle className="text-base font-bold text-foreground">
                                 Review volume
                             </CardTitle>
-                            <CardDescription className="text-[13px] mt-0.5 text-muted-foreground/80">
+                            <CardDescription className="mt-0.5 text-[13px] text-muted-foreground/80">
                                 Last 30 days &middot; hover any day for detail
                             </CardDescription>
                         </div>
                         {totalReviewsTrend !== undefined && totalReviewsTrend !== 0 && (
-                            <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold ${totalReviewsTrend > 0 ? "bg-[rgb(229,238,221)] text-[rgb(62,95,46)]" : "bg-destructive/10 text-destructive"}`}>
+                            <div className={`flex shrink-0 items-center gap-1 self-start rounded-md px-2 py-1 text-xs font-semibold sm:self-auto ${totalReviewsTrend > 0 ? "bg-[rgb(229,238,221)] text-[rgb(62,95,46)]" : "bg-destructive/10 text-destructive"}`}>
                                 {totalReviewsTrend > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingUp className="h-3 w-3 rotate-180" />}
-                                {Math.abs(totalReviewsTrend)}% vs 30d prior
+                                <span className="max-sm:sr-only">{Math.abs(totalReviewsTrend)}% vs 30d prior</span>
+                                <span className="sm:hidden">{Math.abs(totalReviewsTrend)}%</span>
                             </div>
                         )}
                     </CardHeader>
@@ -1226,16 +1229,16 @@ export default async function DashboardPage() {
                 </Card>
 
                 <Card className="flex flex-col">
-                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-0">
-                        <div>
+                    <CardHeader className="flex flex-col gap-2 pb-0 sm:flex-row sm:items-start sm:justify-between lg:items-center">
+                        <div className="min-w-0">
                             <CardTitle className="text-base font-bold text-foreground">
                                 Star distribution
                             </CardTitle>
-                            <CardDescription className="text-[13px] mt-0.5 text-muted-foreground/80">
+                            <CardDescription className="mt-0.5 text-[13px] text-muted-foreground/80">
                                 All-time &middot; {displayTotalReviews} reviews
                             </CardDescription>
                         </div>
-                        <div className="flex items-center gap-1 text-xl font-medium tracking-tight">
+                        <div className="flex shrink-0 items-center gap-1 text-xl font-medium tracking-tight">
                             {displayAverageRating.toFixed(1)}
                             <Star className="h-4 w-4 fill-chart-4 text-chart-4" strokeWidth={1} />
                         </div>
