@@ -351,6 +351,7 @@ export const processAutoReplyReview = inngest.createFunction(
             }
 
             const biz = row.businesses as unknown as {
+                id: string;
                 name: string | null;
                 category: string | null;
                 organization_id: string;
@@ -403,6 +404,7 @@ export const processAutoReplyReview = inngest.createFunction(
             return {
                 ok: true as const,
                 orgId,
+                businessId: biz.id,
                 tone,
                 businessName: biz.name || "our business",
                 businessCategory: (biz.category || "local").trim() || "local",
@@ -427,6 +429,8 @@ export const processAutoReplyReview = inngest.createFunction(
                 selectedStaff: gate.selectedStaff,
                 tone: gate.tone,
                 plan: gate.plan,
+                varietyKey: reviewId,
+                rotationScope: gate.businessId,
             });
         });
 

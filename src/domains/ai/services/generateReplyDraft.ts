@@ -1,6 +1,14 @@
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import { SUGGEST_REPLY_PROMPT_COMPACT } from "@/domains/ai/prompts";
 import { singleReplySchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { pickSparseTemplateIndex } from "@/services/reviews/sparse-reply-rotation";
+import {
+    humanizeCategory,
+    pickCategoryFragment,
+    ratingWords,
+    renderSparseTemplate,
+    sparsePoolForTone,
+} from "@/services/reviews/sparse-reply-template-pool";
 
 export const REPLY_TONE_INSTRUCTIONS: Record<string, string> = {
     professional: "Write in a professional, polished tone. Be courteous and business-appropriate.",
@@ -13,22 +21,33 @@ export type ReplyTone = "professional" | "friendly" | "concise";
 function isSparseReviewText(text: string): boolean {
     const trimmed = text.trim();
     if (!trimmed) return true;
-    // If the reviewer only leaves symbols/stars/emojis or very short text, avoid inferred specifics.
     const alphaNum = trimmed.replace(/[^a-zA-Z0-9]/g, "");
     return alphaNum.length < 12;
 }
 
-function genericPositiveReply(
-    businessName: string,
-    tone: ReplyTone
-): string {
-    if (tone === "concise") {
-        return `Thanks for the 5-star review and for supporting ${businessName}. We appreciate it and look forward to welcoming you again soon.`;
-    }
-    if (tone === "friendly") {
-        return `Thank you so much for the 5-star review and for supporting ${businessName}. We really appreciate your kindness and can't wait to welcome you back again soon.`;
-    }
-    return `Thank you for the 5-star review and for choosing ${businessName}. We truly appreciate your support and look forward to serving you again soon.`;
+async function buildSparsePositiveReply(input: {
+    businessName: string;
+    businessCategory: string;
+    tone: ReplyTone;
+    rating: number;
+    varietyKey: string;
+    /** Business id for Redis-backed random template (avoid recent repeats per location + tone). */
+    rotationScope: string | null | undefined;
+}): Promise<string> {
+    const name = input.businessName.trim() || "us";
+    const rw = ratingWords(input.rating);
+    const categoryLabel = humanizeCategory(input.businessCategory || "");
+    const cat = pickCategoryFragment(categoryLabel, input.varietyKey);
+
+    const pool = sparsePoolForTone(input.tone);
+    const idx = await pickSparseTemplateIndex({
+        rotationScope: input.rotationScope,
+        tone: input.tone,
+        poolLength: pool.length,
+    });
+
+    const template = pool[idx] ?? pool[0]!;
+    return renderSparseTemplate(template, { name, rw, categoryFragment: cat });
 }
 
 /**
@@ -94,11 +113,23 @@ export async function generateReplyDraftText(input: {
     reviewText: string;
     selectedStaff: string[] | null | undefined;
     tone: ReplyTone;
-    /** From organizations.plan — same as suggest-reply API */
     plan: string | null | undefined;
+    varietyKey?: string;
+    /** Business (location) id for Redis: random template pick avoids recent repeats per tone. */
+    rotationScope?: string | null;
 }): Promise<string> {
     if (input.rating >= 4 && isSparseReviewText(input.reviewText)) {
-        return genericPositiveReply(input.businessName, input.tone);
+        const varietyKey =
+            (input.varietyKey && input.varietyKey.trim()) ||
+            `${input.businessName}|${input.rating}|${input.reviewText.length}`;
+        return buildSparsePositiveReply({
+            businessName: input.businessName,
+            businessCategory: input.businessCategory,
+            tone: input.tone,
+            rating: input.rating,
+            varietyKey,
+            rotationScope: input.rotationScope,
+        });
     }
 
     const toneInstruction =
@@ -128,7 +159,6 @@ Return JSON only: {"reply":"..."} matching the schema.`;
         requireJson: true,
         schema: singleReplySchema,
         isPremium,
-        // d74fdb4 had no cap — a low limit truncates JSON mid-string and surfaces raw `{"reply":"...` in the UI.
         maxOutputTokens: 2048,
         temperature: 0.55,
         ...(suggestModel ? { modelOverride: suggestModel } : {}),

@@ -20,6 +20,7 @@ interface OrgWithPlan {
 }
 
 interface ReviewWithBusiness {
+    business_id: string;
     rating: number;
     text: string | null;
     selected_staff?: string[] | null;
@@ -99,6 +100,9 @@ export async function POST(request: Request) {
         const businessCategory = reviewTyped.businesses?.category?.trim() || "local";
         const plan = reviewTyped.businesses?.organizations?.plan;
 
+        const businessId = reviewTyped.business_id;
+        if (!businessId) return apiError("Business not found", { status: 404, details: requestId });
+
         const reply = await generateReplyDraftText({
             businessName,
             businessCategory,
@@ -107,6 +111,8 @@ export async function POST(request: Request) {
             selectedStaff: review.selected_staff,
             tone,
             plan,
+            varietyKey: reviewId,
+            rotationScope: businessId,
         });
 
         // After successful generative call, increment the counter atomically:
