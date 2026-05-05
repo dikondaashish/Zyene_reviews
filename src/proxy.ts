@@ -123,8 +123,15 @@ export async function proxy(request: NextRequest) {
 
     // --- GLOBAL API RATE LIMITING (DDoS Protection) ---
     if (pathname.startsWith("/api")) {
-        // Whitelist webhook and background job endpoints from global rate limiting
-        const whitelistedPaths = ["/api/webhooks", "/api/inngest", "/api/cron"];
+        // Whitelist webhook/background jobs and auth callbacks from global rate limiting.
+        // Login flows (OAuth redirect to /api/auth/callback) and immediate post-login API bursts
+        // share one IP; counting auth against the global bucket caused false 429s for real users.
+        const whitelistedPaths = [
+            "/api/webhooks",
+            "/api/inngest",
+            "/api/cron",
+            "/api/auth",
+        ];
         const isWhitelisted = whitelistedPaths.some(p => pathname.startsWith(p));
 
         if (!isWhitelisted) {
