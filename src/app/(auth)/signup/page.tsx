@@ -8,6 +8,10 @@ import { Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck, Mail, Phone } from "lu
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
 import { useSearchParams } from "next/navigation";
+import {
+    isSupabaseEmailSendRateLimited,
+    toastAuthEmailRateLimit,
+} from "@/lib/auth/supabase-email-rate-limit";
 
 function SignupForm() {
     const searchParams = useSearchParams();
@@ -124,7 +128,11 @@ function SignupForm() {
         });
 
         if (error) {
-            toast.error(error.message);
+            if (isSupabaseEmailSendRateLimited(error)) {
+                toastAuthEmailRateLimit(toast);
+            } else {
+                toast.error(error.message);
+            }
             setIsLoading(false);
             return;
         }

@@ -5,6 +5,10 @@ import Link from "next/link";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
+import {
+    isSupabaseEmailSendRateLimited,
+    toastAuthEmailRateLimit,
+} from "@/lib/auth/supabase-email-rate-limit";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");
@@ -22,7 +26,11 @@ export default function ForgotPasswordPage() {
         });
 
         if (error) {
-            toast.error(error.message);
+            if (isSupabaseEmailSendRateLimited(error)) {
+                toastAuthEmailRateLimit(toast);
+            } else {
+                toast.error(error.message);
+            }
             setIsLoading(false);
             return;
         }

@@ -1,11 +1,15 @@
 "use client";
 
-import { AlertCircle, ArrowRight, Mail, X } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import type { AppUserSummary } from "@/types/components";
+import {
+    isSupabaseEmailSendRateLimited,
+    toastAuthEmailRateLimit,
+} from "@/lib/auth/supabase-email-rate-limit";
 
 export function VerificationBanner({ user }: { user: AppUserSummary }) {
     const [isVisible, setIsVisible] = useState(!user?.email_confirmed_at);
@@ -31,7 +35,11 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
         });
 
         if (error) {
-            toast.error("Failed to resend verification email");
+            if (isSupabaseEmailSendRateLimited(error)) {
+                toastAuthEmailRateLimit(toast);
+            } else {
+                toast.error(error.message || "Failed to resend verification email");
+            }
         } else {
             toast.success("Verification email sent!");
         }
