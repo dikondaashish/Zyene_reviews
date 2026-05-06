@@ -27,6 +27,14 @@ function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unkn
     return t;
 }
 
+/** Explicit opt-in for SMS review alerts (Twilio / toll-free compliance). Default false. */
+function smsReviewAlertsConsentFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): boolean {
+    const v = user.user_metadata?.sms_review_alerts_consent;
+    if (v === true) return true;
+    if (typeof v === "string") return v.toLowerCase() === "true";
+    return false;
+}
+
 function safeNextPath(raw: string | null): string {
     const fallback = "/dashboard";
     if (!raw) return fallback;
@@ -351,6 +359,7 @@ export async function GET(request: Request) {
                 const email = data.user.email!;
                 const slug = `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
                 const signupPhone = signUpPhoneFromUserMetadata(data.user);
+                const smsReviewAlertsConsent = smsReviewAlertsConsentFromUserMetadata(data.user);
 
                 const { error: userError } = await admin.from("users").insert({
                     id: data.user.id,
@@ -430,8 +439,8 @@ export async function GET(request: Request) {
                             business_id: newBusiness.id,
                             email_enabled: true,
                             digest_enabled: true,
-                            sms_enabled: true,
-                            sms_phone_number: signupPhone,
+                            sms_enabled: smsReviewAlertsConsent,
+                            sms_phone_number: smsReviewAlertsConsent ? signupPhone : null,
                             email_frequency: "immediately",
                             min_urgency_for_sms: 7,
                             min_rating_threshold: 1,
