@@ -15,7 +15,7 @@ export default async function CustomerDetailPage({
     params: Promise<{ customerId: string }>;
 }) {
     const { customerId } = await params;
-    const { businessId } = await getActiveBusinessId();
+    const { businessId, business } = await getActiveBusinessId();
 
     if (!businessId) {
         redirect("/customers");
@@ -97,6 +97,8 @@ export default async function CustomerDetailPage({
             <CustomerDetailClient
                 customer={customer}
                 businessId={businessId}
+                businessSlug={business?.slug ?? undefined}
+                businessName={business?.name ?? undefined}
                 timeline={timeline}
                 stats={stats}
             />

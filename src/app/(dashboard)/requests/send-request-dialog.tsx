@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,9 +56,18 @@ interface SendRequestDialogProps {
     businessName?: string;
     initialCustomer?: { name: string; phone: string };
     autoOpen?: boolean;
+    /** Custom trigger (e.g. customer profile). Omit to use the default “Send Review Request” button. */
+    trigger?: ReactNode;
 }
 
-export function SendRequestDialog({ businessId, businessSlug, businessName, initialCustomer, autoOpen }: SendRequestDialogProps) {
+export function SendRequestDialog({
+    businessId,
+    businessSlug,
+    businessName,
+    initialCustomer,
+    autoOpen,
+    trigger,
+}: SendRequestDialogProps) {
     const router = useRouter();
     const [open, setOpen] = useState(autoOpen || false);
     const [isLoading, setIsLoading] = useState(false);
@@ -75,6 +84,16 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
             scheduledFor: false,
         },
     });
+
+    useEffect(() => {
+        if (!open || !initialCustomer) return;
+        form.reset({
+            customerName: initialCustomer.name || "",
+            customerPhone: initialCustomer.phone || "",
+            channel: "sms",
+            scheduledFor: false,
+        });
+    }, [open, initialCustomer?.name, initialCustomer?.phone, form]);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true);
@@ -165,11 +184,13 @@ export function SendRequestDialog({ businessId, businessSlug, businessName, init
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                    <Send className="h-4 w-4 shrink-0 md:mr-2" />
-                    <span className="md:hidden">Send request</span>
-                    <span className="hidden md:inline">Send Review Request</span>
-                </Button>
+                {trigger ?? (
+                    <Button className="w-full sm:w-auto">
+                        <Send className="h-4 w-4 shrink-0 md:mr-2" />
+                        <span className="md:hidden">Send request</span>
+                        <span className="hidden md:inline">Send Review Request</span>
+                    </Button>
+                )}
             </DialogTrigger>
             <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[425px]">
                 <DialogHeader>

@@ -19,7 +19,6 @@ import {
     ChevronRight,
     UserRound,
     Clock,
-    Sparkles,
     CircleAlert,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -33,6 +32,7 @@ import { cn } from "@/lib/utils";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { CustomerDetailStats, TimelineItem } from "@/lib/customers/customer-detail-data";
 import { humanizeRequestStatus } from "@/lib/customers/customer-detail-data";
+import { SendRequestDialog } from "@/app/(dashboard)/requests/send-request-dialog";
 
 type CustomerRow = Database["public"]["Tables"]["customers"]["Row"];
 
@@ -111,6 +111,8 @@ function requestStatusTone(status: string): { className: string; dot: string } {
 interface CustomerDetailClientProps {
     customer: CustomerRow;
     businessId: string;
+    businessSlug?: string | null;
+    businessName?: string | null;
     timeline: TimelineItem[];
     stats: CustomerDetailStats;
 }
@@ -139,7 +141,14 @@ function SectionHeading({
     );
 }
 
-export function CustomerDetailClient({ customer: initial, businessId, timeline, stats }: CustomerDetailClientProps) {
+export function CustomerDetailClient({
+    customer: initial,
+    businessId,
+    businessSlug,
+    businessName,
+    timeline,
+    stats,
+}: CustomerDetailClientProps) {
     const router = useRouter();
     const [customer, setCustomer] = React.useState(initial);
     const [editingName, setEditingName] = React.useState(false);
@@ -207,7 +216,6 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
     const name = displayName(customer);
     const avatarText = initials(customer);
     const avatarCompact = avatarText.length > 2;
-    const campaignHref = `/campaigns/new?customerIds=${encodeURIComponent(customer.id)}`;
     const pageHeading =
         name || customer.phone?.trim() || customer.email?.trim() || "Unnamed contact";
     const missingPhoneAndEmail = !customer.phone?.trim() && !customer.email?.trim();
@@ -248,16 +256,45 @@ export function CustomerDetailClient({ customer: initial, businessId, timeline, 
                     <TooltipContent className="max-w-xs">This contact opted out of review requests.</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
+        ) : !(customer.phone ?? "").trim() ? (
+            <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <span className="inline-flex w-full sm:w-auto">
+                            <Button
+                                type="button"
+                                disabled
+                                className="h-9 w-full rounded-lg px-4 text-sm font-semibold sm:w-auto"
+                            >
+                                <Send className="mr-2 h-4 w-4" />
+                                Send review request
+                            </Button>
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                        Add a mobile number to this contact to send an SMS review request.
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         ) : (
-            <Button
-                asChild
-                className="h-9 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 sm:w-auto"
-            >
-                <Link href={campaignHref}>
-                    <Sparkles className="mr-2 h-4 w-4 opacity-90" />
-                    Send review request
-                </Link>
-            </Button>
+            <SendRequestDialog
+                businessId={businessId}
+                businessSlug={businessSlug ?? undefined}
+                businessName={businessName ?? undefined}
+                initialCustomer={{
+                    name: name || "Customer",
+                    phone: (customer.phone ?? "").trim(),
+                }}
+                trigger={
+                    <Button
+                        type="button"
+                        className="h-9 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 sm:w-auto"
+                    >
+                        <Send className="mr-2 h-4 w-4 opacity-90" />
+                        Send review request
+                    </Button>
+                }
+            />
         );
 
     return (
