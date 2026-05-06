@@ -26,7 +26,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { readApiErrorMessage } from "@/lib/api/error-message";
 
 // Zod validation schema
 const addCustomerSchema = z.object({
@@ -78,16 +77,19 @@ export function AddCustomerModal({ open, onOpenChange, businessId, onSuccess }: 
                     businessId,
                     firstName,
                     lastName,
-                    email: values.email,
-                    phone: values.phone?.trim() || null,
-                    tags: null,
-                    notes: values.notes?.trim() || null,
+                    email: values.email.trim(),
+                    phone: values.phone?.trim() || undefined,
+                    tags: [],
+                    notes: values.notes?.trim() || undefined,
                 }),
             });
 
             if (!response.ok) {
-                const payload = await response.json();
-                throw new Error(readApiErrorMessage(payload) || "Failed to add customer");
+                const body = (await response.json().catch(() => ({}))) as {
+                    error?: string;
+                    message?: string;
+                };
+                throw new Error(body.error || body.message || "Failed to add customer");
             }
 
             toast.success("Customer added successfully");

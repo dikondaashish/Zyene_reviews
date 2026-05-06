@@ -9,13 +9,16 @@ import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage
 
 const createCustomerSchema = z.object({
     businessId: z.string().uuid(),
-    /** JSON body often sends `null` for omitted optional strings — use nullish, not optional-only. */
-    firstName: z.string().max(100).nullish(),
-    lastName: z.string().max(100).nullish(),
-    email: z.string().email().max(255).nullish(),
-    phone: z.string().max(30).nullish(),
-    tags: z.array(z.string().max(50)).nullish(),
-    notes: z.string().max(2000).nullish(),
+    firstName: z.string().max(100).optional(),
+    lastName: z.string().max(100).optional(),
+    email: z.string().email().max(255).optional(),
+    phone: z.string().max(30).optional(),
+    /** Clients sometimes send `null`; treat as missing (empty array). */
+    tags: z
+        .array(z.string().max(50))
+        .nullish()
+        .transform((t) => t ?? []),
+    notes: z.string().max(2000).optional(),
 });
 
 const deleteCustomerSchema = z.object({
@@ -72,11 +75,8 @@ export async function POST(request: NextRequest) {
         }
         const { businessId, firstName, lastName, email, phone, tags, notes } = parsed.data;
 
-        // Validate input (treat empty strings like missing)
-        const hasEmail = !!email?.trim();
-        const hasFirst = !!firstName?.trim();
-        const hasPhone = !!phone?.trim();
-        if (!hasEmail && !hasFirst && !hasPhone) {
+        // Validate input
+        if (!email && !firstName && !phone) {
             return apiError("Business ID and at least one contact method (email, phone, or name) are required", { status: 400, details: requestId });
         }
 
