@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { X, Check, HelpCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
-import { useDashboardTour } from "@/hooks/use-dashboard-tour";
+import { useDashboardTour } from "@/components/tours/DashboardTourProvider";
 import { Button } from "@/components/ui/button";
 
 interface GettingStartedBannerProps {

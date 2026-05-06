@@ -1,10 +1,24 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useSearchParams } from "next/navigation";
+import {
+    completeTour as completeTourAction,
+    getTourStatus,
+    resetTour as resetTourAction,
+} from "@/app/actions/tour";
 import { dashboardTourSteps, type TourStep } from "@/lib/tours/dashboard-tour";
-import { useDashboardTour } from "@/hooks/use-dashboard-tour";
 import "./dashboard-tour.css";
 
 interface TargetRect {
@@ -17,6 +31,139 @@ interface TargetRect {
 const SPOTLIGHT_PADDING = 10;
 const TOOLTIP_GAP = 16;
 
+export type DashboardTourContextValue = {
+    runTour: boolean;
+    currentStep: number;
+    isLoading: boolean;
+    completeTour: () => Promise<void>;
+    startTour: () => Promise<void>;
+    skipTour: () => void;
+    nextStep: (totalSteps: number) => void;
+    prevStep: () => void;
+};
+
+const DashboardTourContext = createContext<DashboardTourContextValue | null>(null);
+
+/**
+ * Shared dashboard tour controls (must be used under {@link DashboardTourProvider}).
+ */
+export function useDashboardTour(): DashboardTourContextValue {
+    const ctx = useContext(DashboardTourContext);
+    if (!ctx) {
+        throw new Error("useDashboardTour must be used within DashboardTourProvider");
+    }
+    return ctx;
+}
+
+function useDashboardTourState(): DashboardTourContextValue {
+    const [runTour, setRunTour] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const checkTourStatus = async () => {
+            try {
+                const forceTour = searchParams.get("tour") === "true";
+
+                if (!cancelled && forceTour) {
+                    setRunTour(true);
+                    setIsLoading(false);
+                    return;
+                }
+
+                const hasCompleted = await getTourStatus();
+
+                if (!cancelled && !hasCompleted) {
+                    setTimeout(() => {
+                        if (!cancelled) {
+                            setRunTour(true);
+                        }
+                    }, 500);
+                }
+            } catch (error) {
+                console.error("Failed to fetch tour status:", error);
+            } finally {
+                if (!cancelled) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        checkTourStatus();
+        return () => {
+            cancelled = true;
+        };
+    }, [pathname, searchParams]);
+
+    const completeTour = useCallback(async () => {
+        setRunTour(false);
+        setCurrentStep(0);
+        try {
+            await completeTourAction();
+        } catch (error) {
+            console.error("Failed to save tour completion:", error);
+        }
+    }, []);
+
+    const startTour = useCallback(async () => {
+        try {
+            await resetTourAction();
+        } catch (error) {
+            console.error("Failed to reset tour:", error);
+        }
+        setCurrentStep(0);
+        setRunTour(true);
+    }, []);
+
+    const skipTour = useCallback(() => {
+        void completeTour();
+    }, [completeTour]);
+
+    const nextStep = useCallback(
+        (totalSteps: number) => {
+            if (currentStep < totalSteps - 1) {
+                setCurrentStep((prev) => prev + 1);
+            } else {
+                void completeTour();
+            }
+        },
+        [currentStep, completeTour],
+    );
+
+    const prevStep = useCallback(() => {
+        if (currentStep > 0) {
+            setCurrentStep((prev) => prev - 1);
+        }
+    }, [currentStep]);
+
+    return useMemo(
+        () => ({
+            runTour,
+            currentStep,
+            isLoading,
+            completeTour,
+            startTour,
+            skipTour,
+            nextStep,
+            prevStep,
+        }),
+        [
+            runTour,
+            currentStep,
+            isLoading,
+            completeTour,
+            startTour,
+            skipTour,
+            nextStep,
+            prevStep,
+        ],
+    );
+}
+
 /**
  * Calculate tooltip position based on target element rect and placement
  */
@@ -24,7 +171,7 @@ function getTooltipPosition(
     rect: TargetRect,
     placement: TourStep["placement"],
     tooltipWidth: number,
-    tooltipHeight: number
+    tooltipHeight: number,
 ): { top: number; left: number; actualPlacement: TourStep["placement"] } {
     const viewportW = window.innerWidth;
     const viewportH = window.innerHeight;
@@ -37,7 +184,6 @@ function getTooltipPosition(
         case "right":
             top = rect.top + rect.height / 2 - tooltipHeight / 2;
             left = rect.left + rect.width + TOOLTIP_GAP + SPOTLIGHT_PADDING;
-            // Fallback to bottom if out of viewport
             if (left + tooltipWidth > viewportW - 16) {
                 actualPlacement = "bottom";
                 top = rect.top + rect.height + TOOLTIP_GAP + SPOTLIGHT_PADDING;
@@ -66,23 +212,17 @@ function getTooltipPosition(
             }
             break;
         default:
-            // center
             top = viewportH / 2 - tooltipHeight / 2;
             left = viewportW / 2 - tooltipWidth / 2;
     }
 
-    // Clamp to viewport
     left = Math.max(16, Math.min(left, viewportW - tooltipWidth - 16));
     top = Math.max(16, Math.min(top, viewportH - tooltipHeight - 16));
 
     return { top, left, actualPlacement };
 }
 
-/**
- * Dashboard Tour Component
- * Custom-built product tour with spotlight overlay, animated tooltips, and step navigation
- */
-export function DashboardTourProvider() {
+function DashboardTourPortal() {
     const {
         runTour,
         currentStep,
@@ -102,17 +242,14 @@ export function DashboardTourProvider() {
     const step = steps[currentStep];
     const totalSteps = steps.length;
 
-    // Client-side only
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Update target rect when step changes
     const updateTargetRect = useCallback(() => {
         if (!step) return;
         const el = document.querySelector(`[data-tour-target="${step.target}"]`);
         if (el) {
-            // Scroll into view if needed
             el.scrollIntoView({ behavior: "smooth", block: "center" });
 
             const rect = el.getBoundingClientRect();
@@ -130,10 +267,8 @@ export function DashboardTourProvider() {
     useEffect(() => {
         if (!runTour || !step) return;
 
-        // Initial position
         updateTargetRect();
 
-        // Re-calculate on scroll/resize
         const handleUpdate = () => updateTargetRect();
         window.addEventListener("scroll", handleUpdate, true);
         window.addEventListener("resize", handleUpdate);
@@ -144,7 +279,6 @@ export function DashboardTourProvider() {
         };
     }, [runTour, step, updateTargetRect]);
 
-    // Measure tooltip size on render
     useEffect(() => {
         if (tooltipRef.current) {
             const rect = tooltipRef.current.getBoundingClientRect();
@@ -152,7 +286,6 @@ export function DashboardTourProvider() {
         }
     }, [currentStep, runTour]);
 
-    // Lock body scroll during tour
     useEffect(() => {
         if (runTour) {
             document.body.style.overflow = "hidden";
@@ -171,10 +304,10 @@ export function DashboardTourProvider() {
     const tooltipPos = targetRect
         ? getTooltipPosition(targetRect, step.placement, tooltipSize.width, tooltipSize.height)
         : {
-            top: window.innerHeight / 2 - tooltipSize.height / 2,
-            left: window.innerWidth / 2 - tooltipSize.width / 2,
-            actualPlacement: "center" as const,
-        };
+              top: window.innerHeight / 2 - tooltipSize.height / 2,
+              left: window.innerWidth / 2 - tooltipSize.width / 2,
+              actualPlacement: "center" as const,
+          };
 
     const spotlightX = targetRect ? targetRect.left - SPOTLIGHT_PADDING : 0;
     const spotlightY = targetRect ? targetRect.top - SPOTLIGHT_PADDING : 0;
@@ -194,7 +327,6 @@ export function DashboardTourProvider() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
                 >
-                    {/* Dark overlay with spotlight cutout using SVG mask */}
                     <svg
                         className="tour-spotlight-svg"
                         style={{ pointerEvents: "all" }}
@@ -204,13 +336,7 @@ export function DashboardTourProvider() {
                     >
                         <defs>
                             <mask id="tour-spotlight-mask">
-                                <rect
-                                    x="0"
-                                    y="0"
-                                    width="100%"
-                                    height="100%"
-                                    fill="white"
-                                />
+                                <rect x="0" y="0" width="100%" height="100%" fill="white" />
                                 {targetRect && (
                                     <rect
                                         x={spotlightX}
@@ -234,7 +360,6 @@ export function DashboardTourProvider() {
                         />
                     </svg>
 
-                    {/* Spotlight ring */}
                     {targetRect && (
                         <motion.div
                             className="tour-spotlight-ring"
@@ -254,7 +379,6 @@ export function DashboardTourProvider() {
                         />
                     )}
 
-                    {/* Tooltip */}
                     <AnimatePresence mode="wait">
                         <motion.div
                             ref={tooltipRef}
@@ -273,7 +397,6 @@ export function DashboardTourProvider() {
                                 delay: 0.05,
                             }}
                         >
-                            {/* Arrow */}
                             {targetRect && tooltipPos.actualPlacement !== "center" && (
                                 <div
                                     className={`tour-arrow tour-arrow-${tooltipPos.actualPlacement}`}
@@ -281,18 +404,14 @@ export function DashboardTourProvider() {
                             )}
 
                             <div className="tour-tooltip-card">
-                                {/* Header */}
                                 <div className="tour-tooltip-header">
                                     <div className="tour-tooltip-header-content">
                                         <div className="tour-tooltip-title-row">
-                                            <span className="tour-tooltip-icon">
-                                                {step.icon}
-                                            </span>
-                                            <h3 className="tour-tooltip-title">
-                                                {step.title}
-                                            </h3>
+                                            <span className="tour-tooltip-icon">{step.icon}</span>
+                                            <h3 className="tour-tooltip-title">{step.title}</h3>
                                         </div>
                                         <button
+                                            type="button"
                                             className="tour-tooltip-close"
                                             onClick={skipTour}
                                             aria-label="Close tour"
@@ -302,12 +421,8 @@ export function DashboardTourProvider() {
                                     </div>
                                 </div>
 
-                                {/* Body */}
-                                <div className="tour-tooltip-body">
-                                    {step.description}
-                                </div>
+                                <div className="tour-tooltip-body">{step.description}</div>
 
-                                {/* Footer */}
                                 <div className="tour-tooltip-footer">
                                     <div className="tour-tooltip-progress">
                                         <span className="tour-tooltip-step-counter">
@@ -332,6 +447,7 @@ export function DashboardTourProvider() {
                                     <div className="tour-tooltip-actions">
                                         {isFirstStep && (
                                             <button
+                                                type="button"
                                                 className="tour-btn tour-btn-skip"
                                                 onClick={skipTour}
                                             >
@@ -340,6 +456,7 @@ export function DashboardTourProvider() {
                                         )}
                                         {!isFirstStep && (
                                             <button
+                                                type="button"
                                                 className="tour-btn tour-btn-prev"
                                                 onClick={prevStep}
                                             >
@@ -347,11 +464,10 @@ export function DashboardTourProvider() {
                                             </button>
                                         )}
                                         <button
+                                            type="button"
                                             className={`tour-btn ${isLastStep ? "tour-btn-finish" : "tour-btn-next"}`}
                                             onClick={() =>
-                                                isLastStep
-                                                    ? completeTour()
-                                                    : nextStep(totalSteps)
+                                                isLastStep ? void completeTour() : nextStep(totalSteps)
                                             }
                                         >
                                             {isLastStep ? "Got it! 🎉" : "Next →"}
@@ -367,4 +483,21 @@ export function DashboardTourProvider() {
     );
 
     return createPortal(tourContent, document.body);
+}
+
+interface DashboardTourProviderProps {
+    children: ReactNode;
+}
+
+/**
+ * Provides a single shared tour state for the dashboard layout and portal overlay.
+ */
+export function DashboardTourProvider({ children }: DashboardTourProviderProps) {
+    const value = useDashboardTourState();
+    return (
+        <DashboardTourContext.Provider value={value}>
+            {children}
+            <DashboardTourPortal />
+        </DashboardTourContext.Provider>
+    );
 }

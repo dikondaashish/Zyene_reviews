@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Sparkles, Loader2, ChevronRight, ChevronDown, CheckCircle2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Sparkles, Loader2, ChevronRight, ChevronDown } from "lucide-react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 import { toast } from "sonner";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Theme {
     name: string;
@@ -29,6 +36,48 @@ interface InsightsData {
     message?: string;
 }
 
+function normalizeWords(text: string): string[] {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter((w) => w.length > 2);
+}
+
+/** Match a suggestion to themes so we can show real guest quotes in the examples dialog. */
+function themesForSuggestionExamples(suggestion: Suggestion, themes: Theme[]): Theme[] {
+    const suggestionBlob = `${suggestion.title} ${suggestion.description}`;
+    const sugWords = new Set(normalizeWords(suggestionBlob));
+
+    const scored = themes.map((theme) => {
+        const themeBlob = `${theme.name} ${theme.summaryQuote}`;
+        let score = 0;
+        for (const w of normalizeWords(themeBlob)) {
+            if (sugWords.has(w)) score += 3;
+        }
+        for (const q of theme.customerQuotes || []) {
+            for (const w of normalizeWords(q)) {
+                if (sugWords.has(w)) score += 1;
+            }
+        }
+        return { theme, score };
+    });
+
+    const positive = scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score);
+    if (positive.length > 0) {
+        return positive.slice(0, 4).map((s) => s.theme);
+    }
+
+    const withQuotes = themes
+        .filter((t) => (t.customerQuotes?.length ?? 0) > 0)
+        .sort((a, b) => (b.mentions ?? 0) - (a.mentions ?? 0));
+    if (withQuotes.length > 0) {
+        return withQuotes.slice(0, 3);
+    }
+
+    return themes.slice(0, 3);
+}
+
 export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     const [data, setData] = useState<InsightsData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -37,6 +86,8 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     const [selectedThemeIndex, setSelectedThemeIndex] = useState(0);
     const [expandedSuggestion, setExpandedSuggestion] = useState<number | null>(0);
     const [dismissedIndices, setDismissedIndices] = useState<Set<number>>(new Set());
+    const [examplesOpen, setExamplesOpen] = useState(false);
+    const [examplesSuggestion, setExamplesSuggestion] = useState<Suggestion | null>(null);
 
     const handleDismiss = (e: React.MouseEvent, index: number) => {
         e.stopPropagation();
@@ -57,12 +108,20 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
         });
     };
 
-    const handleSeeExamples = (e: React.MouseEvent, title: string) => {
+    const handleSeeExamples = (e: React.MouseEvent, suggestion: Suggestion) => {
         e.stopPropagation();
-        toast.info("Finding examples...", {
-            description: `Searching for reviews related to: ${title}`
-        });
+        if (!data?.themes?.length) {
+            toast.error("Insights are still loading.");
+            return;
+        }
+        setExamplesSuggestion(suggestion);
+        setExamplesOpen(true);
     };
+
+    const exampleThemes = useMemo(() => {
+        if (!examplesSuggestion || !data?.themes) return [];
+        return themesForSuggestionExamples(examplesSuggestion, data.themes);
+    }, [examplesSuggestion, data?.themes]);
 
     useEffect(() => {
         async function fetchInsights() {
@@ -306,18 +365,21 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                                                 </p>
                                                 <div className="flex items-center gap-3 pl-11 mt-4">
                                                     <button 
+                                                        type="button"
                                                         onClick={(e) => handleTakeAction(e, suggestion.title)}
                                                         className="bg-[rgb(43,53,46)] hover:bg-[rgb(28,46,32)] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95"
                                                     >
                                                         Take action
                                                     </button>
                                                     <button 
-                                                        onClick={(e) => handleSeeExamples(e, suggestion.title)}
+                                                        type="button"
+                                                        onClick={(e) => handleSeeExamples(e, suggestion)}
                                                         className="bg-transparent hover:bg-[rgb(250,250,250)] border border-border/50 text-foreground text-xs font-semibold px-4 py-2 rounded-lg transition-colors active:scale-95 dark:hover:bg-[rgb(51,65,85)] dark:border-white/20 dark:text-[rgb(226,232,240)]"
                                                     >
                                                         See examples
                                                     </button>
                                                     <button 
+                                                        type="button"
                                                         onClick={(e) => handleDismiss(e, i)}
                                                         className="text-muted-foreground text-xs font-medium px-2 py-2 hover:text-[rgb(218,84,59)] transition-colors"
                                                     >
@@ -333,6 +395,69 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
                     </div>
                 )}
             </div>
+
+            <Dialog
+                open={examplesOpen}
+                onOpenChange={(open) => {
+                    setExamplesOpen(open);
+                    if (!open) setExamplesSuggestion(null);
+                }}
+            >
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>What guests said</DialogTitle>
+                        {examplesSuggestion ? (
+                            <>
+                                <p className="text-left text-sm font-medium text-foreground pt-1">
+                                    {examplesSuggestion.title}
+                                </p>
+                                <DialogDescription className="text-left">
+                                    {examplesSuggestion.description}
+                                </DialogDescription>
+                            </>
+                        ) : null}
+                    </DialogHeader>
+                    <div className="space-y-6 pt-2">
+                        {exampleThemes.map((theme, ti) => {
+                            const quotes = theme.customerQuotes?.filter((q) => q.trim()) ?? [];
+                            return (
+                                <div key={`${theme.name}-${ti}`} className="space-y-2">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <span className="text-sm font-semibold text-foreground">{theme.name}</span>
+                                        <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground dark:bg-[rgb(51,65,85)] dark:text-[rgb(203,213,225)]">
+                                            {theme.mentions} mentions
+                                        </span>
+                                    </div>
+                                    {quotes.length > 0 ? (
+                                        <ul className="space-y-2">
+                                            {quotes.map((q, qi) => (
+                                                <li
+                                                    key={qi}
+                                                    className="border-l-[3px] border-[rgba(64,86,66,0.45)] bg-[rgb(252,250,247)] py-2.5 pl-3 pr-3 text-[13px] leading-relaxed text-foreground/85 dark:border-[rgba(148,163,184,0.5)] dark:bg-[rgb(15,23,42)] dark:text-[rgb(226,232,240)]"
+                                                >
+                                                    &ldquo;{q}&rdquo;
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : theme.summaryQuote ? (
+                                        <p className="border-l-[3px] border-border py-2 pl-3 text-[13px] italic text-muted-foreground">
+                                            {theme.summaryQuote}
+                                        </p>
+                                    ) : null}
+                                </div>
+                            );
+                        })}
+                        {examplesSuggestion &&
+                            exampleThemes.length > 0 &&
+                            !exampleThemes.some((t) => (t.customerQuotes?.length ?? 0) > 0) && (
+                                <p className="text-xs text-muted-foreground">
+                                    Detailed quotes were not stored for these themes. Showing summaries from your
+                                    insights instead.
+                                </p>
+                            )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

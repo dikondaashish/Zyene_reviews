@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Check, Copy, Download, Loader2, QrCode, Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,35 +26,88 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
+type CustomerSearchRow = {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    phone: string | null;
+};
 
-const formSchema = z.object({
-    customerName: z.string().optional(),
-    customerPhone: z.string().min(10, "Phone number must be at least 10 digits"),
-    channel: z.enum(["sms", "email"]),
-    scheduledFor: z.boolean().default(false),
-    // scheduleDate: z.date().optional(), // For future
-});
+function displayCustomerName(c: CustomerSearchRow): string {
+    const n = [c.first_name, c.last_name].filter(Boolean).join(" ").trim();
+    return n || c.email || c.phone || "Contact";
+}
+
+const formSchema = z
+    .object({
+        customerName: z.string().max(200).optional().or(z.literal("")),
+        customerPhone: z.string().max(40).optional().or(z.literal("")),
+        customerEmail: z.string().max(255).optional().or(z.literal("")),
+        channel: z.enum(["sms", "email"]),
+        scheduleEnabled: z.boolean(),
+        scheduleAt: z.string().optional().or(z.literal("")),
+    })
+    .superRefine((data, ctx) => {
+        if (data.channel === "sms") {
+            const digits = (data.customerPhone || "").replace(/\D/g, "");
+            if (digits.length < 10) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Enter a valid phone number (at least 10 digits) for SMS.",
+                    path: ["customerPhone"],
+                });
+            }
+        } else {
+            const em = (data.customerEmail || "").trim();
+            if (!z.string().email().safeParse(em).success) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Enter a valid email address for Email.",
+                    path: ["customerEmail"],
+                });
+            }
+        }
+        if (data.scheduleEnabled) {
+            const raw = (data.scheduleAt || "").trim();
+            if (!raw) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Pick a date and time to schedule.",
+                    path: ["scheduleAt"],
+                });
+                return;
+            }
+            const t = new Date(raw).getTime();
+            if (Number.isNaN(t)) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Invalid schedule date.",
+                    path: ["scheduleAt"],
+                });
+                return;
+            }
+            if (t < Date.now() + 60_000) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Schedule time must be at least one minute from now.",
+                    path: ["scheduleAt"],
+                });
+            }
+        }
+    });
+
+type FormValues = z.infer<typeof formSchema>;
 
 interface SendRequestDialogProps {
     businessId: string;
     businessSlug?: string;
     businessName?: string;
-    initialCustomer?: { name: string; phone: string };
+    initialCustomer?: { name: string; phone: string; email?: string };
     autoOpen?: boolean;
     /** Custom trigger (e.g. customer profile). Omit to use the default “Send Review Request” button. */
     trigger?: ReactNode;
@@ -62,8 +115,6 @@ interface SendRequestDialogProps {
 
 export function SendRequestDialog({
     businessId,
-    businessSlug,
-    businessName,
     initialCustomer,
     autoOpen,
     trigger,
@@ -71,115 +122,180 @@ export function SendRequestDialog({
     const router = useRouter();
     const [open, setOpen] = useState(autoOpen || false);
     const [isLoading, setIsLoading] = useState(false);
-    const [linkCopied, setLinkCopied] = useState(false);
-    const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
-    const [qrLoading, setQrLoading] = useState(false);
+    const [suggestions, setSuggestions] = useState<CustomerSearchRow[]>([]);
+    const [suggestLoading, setSuggestLoading] = useState(false);
+    const [suggestOpen, setSuggestOpen] = useState(false);
+    const nameDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const nameWrapRef = useRef<HTMLDivElement>(null);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema) as any,
+    const initialDigits = (initialCustomer?.phone ?? "").replace(/\D/g, "");
+    const defaultChannel: "sms" | "email" =
+        initialDigits.length >= 10 ? "sms" : initialCustomer?.email ? "email" : "sms";
+
+    const form = useForm<FormValues>({
+        resolver: zodResolver(formSchema) as Resolver<FormValues>,
         defaultValues: {
             customerName: initialCustomer?.name || "",
             customerPhone: initialCustomer?.phone || "",
-            channel: "sms",
-            scheduledFor: false,
+            customerEmail: initialCustomer?.email || "",
+            channel: defaultChannel,
+            scheduleEnabled: false,
+            scheduleAt: "",
         },
     });
 
+    const watchName = form.watch("customerName");
+
     useEffect(() => {
         if (!open || !initialCustomer) return;
+        const ch: "sms" | "email" =
+            (initialCustomer.phone || "").replace(/\D/g, "").length >= 10
+                ? "sms"
+                : initialCustomer.email
+                  ? "email"
+                  : "sms";
         form.reset({
             customerName: initialCustomer.name || "",
             customerPhone: initialCustomer.phone || "",
-            channel: "sms",
-            scheduledFor: false,
+            customerEmail: initialCustomer.email || "",
+            channel: ch,
+            scheduleEnabled: false,
+            scheduleAt: "",
         });
-    }, [open, initialCustomer?.name, initialCustomer?.phone, form]);
+    }, [open, initialCustomer?.name, initialCustomer?.phone, initialCustomer?.email, form]);
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    useEffect(() => {
+        const q = (watchName || "").trim();
+        if (nameDebounceRef.current) clearTimeout(nameDebounceRef.current);
+        if (q.length < 2) {
+            setSuggestions([]);
+            setSuggestOpen(false);
+            return;
+        }
+        nameDebounceRef.current = setTimeout(async () => {
+            setSuggestLoading(true);
+            try {
+                const res = await fetch(
+                    `/api/customers?businessId=${encodeURIComponent(businessId)}&search=${encodeURIComponent(q)}&limit=20`,
+                );
+                if (!res.ok) {
+                    setSuggestions([]);
+                    return;
+                }
+                const json = await res.json();
+                const payload = json.data ?? json;
+                const list = (payload.customers ?? []) as CustomerSearchRow[];
+                setSuggestions(list);
+                setSuggestOpen(list.length > 0);
+            } catch {
+                setSuggestions([]);
+            } finally {
+                setSuggestLoading(false);
+            }
+        }, 280);
+        return () => {
+            if (nameDebounceRef.current) clearTimeout(nameDebounceRef.current);
+        };
+    }, [watchName, businessId]);
+
+    useEffect(() => {
+        if (!suggestOpen) return;
+        const onDown = (e: MouseEvent) => {
+            if (nameWrapRef.current && !nameWrapRef.current.contains(e.target as Node)) {
+                setSuggestOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", onDown);
+        return () => document.removeEventListener("mousedown", onDown);
+    }, [suggestOpen]);
+
+    function applyCustomerPick(c: CustomerSearchRow) {
+        form.setValue("customerName", displayCustomerName(c));
+        if (c.phone?.trim()) form.setValue("customerPhone", c.phone.trim());
+        if (c.email?.trim()) form.setValue("customerEmail", c.email.trim());
+        if (c.phone?.replace(/\D/g, "").length && c.phone.replace(/\D/g, "").length >= 10) {
+            form.setValue("channel", "sms");
+        } else if (c.email?.trim()) {
+            form.setValue("channel", "email");
+        }
+        setSuggestOpen(false);
+        setSuggestions([]);
+    }
+
+    async function onSubmit(values: FormValues) {
         setIsLoading(true);
         try {
-            // Prepend +1 if missing for US numbers, basic formatting
-            let phone = values.customerPhone.replace(/\D/g, "");
+            let phone = (values.customerPhone || "").replace(/\D/g, "");
             if (phone.length === 10) phone = "+1" + phone;
-            else if (!phone.startsWith("+")) phone = "+" + phone;
+            else if (phone.length > 0 && !phone.startsWith("+")) phone = "+" + phone;
+
+            const email = (values.customerEmail || "").trim();
+
+            const body: Record<string, unknown> = {
+                businessId,
+                customerName: (values.customerName || "").trim() || undefined,
+                channel: values.channel,
+            };
+            if (values.channel === "sms") {
+                body.customerPhone = phone;
+            } else {
+                body.customerEmail = email;
+                if (phone) body.customerPhone = phone;
+            }
+
+            if (values.scheduleEnabled && values.scheduleAt) {
+                body.scheduledFor = new Date(values.scheduleAt).toISOString();
+            }
 
             const response = await fetch("/api/requests/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    businessId,
-                    customerName: values.customerName,
-                    customerPhone: phone,
-                    channel: values.channel,
-                }),
+                body: JSON.stringify(body),
             });
 
+            const raw = await response.text();
             if (!response.ok) {
-                const text = await response.text();
-                throw new Error(text);
+                let msg = raw;
+                try {
+                    const j = JSON.parse(raw) as { error?: string };
+                    if (typeof j.error === "string") msg = j.error;
+                } catch {
+                    /* keep raw */
+                }
+                throw new Error(msg);
             }
-
-            toast.success("Request Sent!", {
-                description: "The review request has been sent successfully.",
-            });
+            if (values.scheduleEnabled) {
+                toast.success("Request scheduled", {
+                    description: "It will appear as queued and send at the scheduled time when processing is enabled.",
+                });
+            } else {
+                toast.success("Request sent!", {
+                    description:
+                        values.channel === "email"
+                            ? "The review request email was sent successfully."
+                            : "The SMS review request was sent successfully.",
+                });
+            }
             setOpen(false);
-            form.reset();
+            form.reset({
+                customerName: "",
+                customerPhone: "",
+                customerEmail: "",
+                channel: "sms",
+                scheduleEnabled: false,
+                scheduleAt: "",
+            });
             router.refresh();
         } catch (error: unknown) {
-            toast.error("Failed to send", {
-                description: error instanceof Error ? error.message : "Something went wrong.",
-            });
+            const msg = error instanceof Error ? error.message : "Something went wrong.";
+            toast.error("Could not send request", { description: msg });
         } finally {
             setIsLoading(false);
         }
     }
 
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-    const protocol =
-        typeof window !== "undefined"
-            ? window.location.protocol
-            : rootDomain.includes("localhost")
-                ? "http:"
-                : "https:";
-
-    const reviewLink = businessSlug
-        ? `${protocol}//${rootDomain}/${businessSlug}`
-        : "";
-
-    const handleCopyLink = async () => {
-        try {
-            await navigator.clipboard.writeText(reviewLink);
-            setLinkCopied(true);
-            toast.success("Link copied!");
-            setTimeout(() => setLinkCopied(false), 2000);
-        } catch {
-            toast.error("Failed to copy");
-        }
-    };
-
-    const loadQR = async () => {
-        if (qrDataUrl) return;
-        setQrLoading(true);
-        try {
-            const res = await fetch(`/api/businesses/${businessId}/qr-code`);
-            if (res.ok) {
-                const data = await res.json();
-                setQrDataUrl(data.qrCodeDataUrl);
-            }
-        } catch { } finally {
-            setQrLoading(false);
-        }
-    };
-
-    const handleDownloadQR = () => {
-        if (!qrDataUrl) return;
-        const link = document.createElement("a");
-        link.href = qrDataUrl;
-        link.download = `${businessSlug}-qr-code.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    const channel = form.watch("channel");
+    const scheduleEnabled = form.watch("scheduleEnabled");
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -192,170 +308,192 @@ export function SendRequestDialog({
                     </Button>
                 )}
             </DialogTrigger>
-            <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[425px]">
+            <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[440px]">
                 <DialogHeader>
                     <DialogTitle>Send Review Request</DialogTitle>
-                    <DialogDescription>
-                        Send via SMS or share your review link.
-                    </DialogDescription>
+                    <DialogDescription>Send via SMS or Email.</DialogDescription>
                 </DialogHeader>
-                <Tabs defaultValue="sms">
-                    <TabsList variant="line" className="grid w-full grid-cols-2 gap-0 border-b border-border p-0">
-                        <TabsTrigger value="sms">Send SMS</TabsTrigger>
-                        <TabsTrigger value="link" onClick={loadQR}>QR Code / Link</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="sms">
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                <FormField
-                                    control={form.control}
-                                    name="customerName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Customer Name (Optional)</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="John Doe" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="customerPhone"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Customer Phone (Required)</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="(555) 123-4567" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <div className="space-y-3">
-                                    <FormLabel>Channel</FormLabel>
-                                    <FormField
-                                        control={form.control}
-                                        name="channel"
-                                        render={({ field }) => (
-                                            <div className="flex items-center gap-4">
-                                                <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-pointer transition-all ${field.value === 'sms' ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-input hover:bg-muted/50'}`}>
-                                                    <input
-                                                        type="radio"
-                                                        className="sr-only"
-                                                        {...field}
-                                                        value="sms"
-                                                        checked={field.value === 'sms'}
-                                                    />
-                                                    <span className="font-medium text-sm">SMS</span>
-                                                </label>
-
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <label className={`flex items-center justify-center border rounded-lg p-3 w-1/2 cursor-not-allowed opacity-60 bg-muted/50`}>
-                                                                <span className="font-medium text-sm text-muted-foreground">Email</span>
-                                                            </label>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>Coming soon</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            </div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="customerName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Customer name</FormLabel>
+                                    <div ref={nameWrapRef} className="relative">
+                                        <FormControl>
+                                            <Input
+                                                autoComplete="off"
+                                                placeholder="Start typing to search your contacts"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        {suggestOpen && (suggestions.length > 0 || suggestLoading) && (
+                                            <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border border-border bg-popover py-1 text-sm shadow-md">
+                                                {suggestLoading && (
+                                                    <li className="px-3 py-2 text-muted-foreground">Searching…</li>
+                                                )}
+                                                {!suggestLoading &&
+                                                    suggestions.map((c) => (
+                                                        <li key={c.id}>
+                                                            <button
+                                                                type="button"
+                                                                className={cn(
+                                                                    "flex w-full flex-col gap-0.5 px-3 py-2 text-left hover:bg-muted",
+                                                                )}
+                                                                onMouseDown={(e) => e.preventDefault()}
+                                                                onClick={() => applyCustomerPick(c)}
+                                                            >
+                                                                <span className="font-medium text-foreground">
+                                                                    {displayCustomerName(c)}
+                                                                </span>
+                                                                <span className="text-xs text-muted-foreground">
+                                                                    {[c.phone, c.email].filter(Boolean).join(" · ")}
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                            </ul>
                                         )}
-                                    />
-                                </div>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                <FormField
-                                    control={form.control}
-                                    name="scheduledFor"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                            <div className="space-y-0.5">
-                                                <FormLabel>Schedule for Later</FormLabel>
-                                            </div>
-                                            <FormControl>
-                                                <Switch
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                    disabled={true} // Disabled for MVP
-                                                />
-                                            </FormControl>
-                                            {/* Date picker would show here if enabled */}
-                                        </FormItem>
-                                    )}
-                                />
+                        <FormField
+                            control={form.control}
+                            name="customerPhone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Customer phone number</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="(555) 123-4567" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                <DialogFooter>
-                                    <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-                                        {isLoading ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            "Send Now"
-                                        )}
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        </Form>
-                    </TabsContent>
-                    <TabsContent value="link" className="space-y-4 pt-2">
-                        {businessSlug ? (
-                            <>
-                                <div className="flex min-w-0 items-center gap-2 p-3 bg-muted rounded-lg border border-border">
-                                    <span className="min-w-0 flex-1 truncate font-mono text-xs bg-muted px-2 py-1 rounded" title={reviewLink}>
-                                        {rootDomain}/{businessSlug}
-                                    </span>
-                                    <button
-                                        onClick={handleCopyLink}
-                                        className="flex-shrink-0 rounded-md p-2 hover:bg-border transition-colors"
-                                    >
-                                        {linkCopied ? (
-                                            <Check className="h-4 w-4 text-chart-2" />
-                                        ) : (
-                                            <Copy className="h-4 w-4 text-muted-foreground" />
-                                        )}
-                                    </button>
-                                </div>
-                                <div className="flex justify-center">
-                                    {qrLoading ? (
-                                        <div className="h-[160px] w-[160px] bg-muted rounded-lg animate-pulse" />
-                                    ) : qrDataUrl ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                            src={qrDataUrl}
-                                            alt="QR code"
-                                            className="h-[160px] w-[160px] rounded-lg"
-                                        />
-                                    ) : (
-                                        <div className="h-[160px] w-[160px] flex items-center justify-center bg-muted/30 rounded-lg border border-dashed">
-                                            <QrCode className="h-8 w-8 text-muted-foreground/40" />
-                                        </div>
-                                    )}
-                                </div>
-                                {qrDataUrl && (
-                                    <div className="flex gap-2">
-                                        <Button variant="outline" size="sm" className="flex-1" onClick={handleCopyLink}>
-                                            <Copy className="h-3.5 w-3.5 mr-1" /> Copy Link
-                                        </Button>
-                                        <Button variant="outline" size="sm" className="flex-1" onClick={handleDownloadQR}>
-                                            <Download className="h-3.5 w-3.5 mr-1" /> Download QR
-                                        </Button>
+                        <FormField
+                            control={form.control}
+                            name="customerEmail"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Customer email</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="name@example.com" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="space-y-2">
+                            <FormLabel>Channel</FormLabel>
+                            <FormField
+                                control={form.control}
+                                name="channel"
+                                render={({ field }) => (
+                                    <div className="flex gap-3">
+                                        <label
+                                            className={cn(
+                                                "flex flex-1 cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                                field.value === "sms"
+                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                                    : "border-input hover:bg-muted/50",
+                                            )}
+                                        >
+                                            <input
+                                                type="radio"
+                                                className="sr-only"
+                                                checked={field.value === "sms"}
+                                                onChange={() => field.onChange("sms")}
+                                            />
+                                            <span className="text-sm font-medium">SMS</span>
+                                        </label>
+                                        <label
+                                            className={cn(
+                                                "flex flex-1 cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                                field.value === "email"
+                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                                    : "border-input hover:bg-muted/50",
+                                            )}
+                                        >
+                                            <input
+                                                type="radio"
+                                                className="sr-only"
+                                                checked={field.value === "email"}
+                                                onChange={() => field.onChange("email")}
+                                            />
+                                            <span className="text-sm font-medium">Email</span>
+                                        </label>
                                     </div>
                                 )}
-                            </>
-                        ) : (
-                            <p className="text-sm text-muted-foreground text-center py-4">
-                                Set a business slug in Settings to enable link sharing.
-                            </p>
+                            />
+                            {channel === "sms" && (
+                                <p className="text-xs text-muted-foreground">
+                                    SMS uses the phone number above. Add a valid mobile number.
+                                </p>
+                            )}
+                            {channel === "email" && (
+                                <p className="text-xs text-muted-foreground">
+                                    Email uses the address above. Phone is optional for your records.
+                                </p>
+                            )}
+                        </div>
+
+                        <FormField
+                            control={form.control}
+                            name="scheduleEnabled"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                                    <div className="space-y-0.5">
+                                        <FormLabel>Schedule for later</FormLabel>
+                                        <p className="text-xs text-muted-foreground">
+                                            Queues the request for the time you pick.
+                                        </p>
+                                    </div>
+                                    <FormControl>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        {scheduleEnabled && (
+                            <FormField
+                                control={form.control}
+                                name="scheduleAt"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Send at</FormLabel>
+                                        <FormControl>
+                                            <Input type="datetime-local" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         )}
-                    </TabsContent>
-                </Tabs>
+
+                        <DialogFooter className="gap-2 sm:gap-0">
+                            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        {scheduleEnabled ? "Scheduling…" : "Sending…"}
+                                    </>
+                                ) : scheduleEnabled ? (
+                                    "Schedule request"
+                                ) : (
+                                    "Send now"
+                                )}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );

@@ -256,7 +256,7 @@ export function CustomerDetailClient({
                     <TooltipContent className="max-w-xs">This contact opted out of review requests.</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        ) : !(customer.phone ?? "").trim() ? (
+        ) : missingPhoneAndEmail ? (
             <TooltipProvider delayDuration={200}>
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -272,7 +272,7 @@ export function CustomerDetailClient({
                         </span>
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">
-                        Add a mobile number to this contact to send an SMS review request.
+                        Add a phone number or email to this contact to send a review request.
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
@@ -284,6 +284,7 @@ export function CustomerDetailClient({
                 initialCustomer={{
                     name: name || "Customer",
                     phone: (customer.phone ?? "").trim(),
+                    email: (customer.email ?? "").trim(),
                 }}
                 trigger={
                     <Button

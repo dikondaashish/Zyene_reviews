@@ -71,8 +71,7 @@ export function DashboardLayoutClient({
     };
 
     return (
-        <>
-            <DashboardTourProvider />
+        <DashboardTourProvider>
             <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-3 max-lg:gap-1.5 lg:px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
@@ -117,6 +116,6 @@ export function DashboardLayoutClient({
                     </button>
                 </div>
             </footer>
-        </>
+        </DashboardTourProvider>
     );
 }

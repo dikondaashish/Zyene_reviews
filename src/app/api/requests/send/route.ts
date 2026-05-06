@@ -2,17 +2,120 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
+import { sendEmail } from "@/services/resend/send-email";
+import { reviewRequestEmail } from "@/services/resend/templates/review-request-email";
 import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/auth/rate-limit";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-const sendRequestSchema = z.object({
-    customerName: z.string().max(200).optional(),
-    customerPhone: z.string().max(30),
-    channel: z.string().max(20).optional(),
-    businessId: z.string().uuid(),
-});
+const sendRequestSchema = z
+    .object({
+        customerName: z.string().max(200).optional().nullable(),
+        customerPhone: z.string().max(40).optional().nullable(),
+        customerEmail: z.string().email().max(255).optional().nullable(),
+        channel: z.enum(["sms", "email"]),
+        businessId: z.string().uuid(),
+        scheduledFor: z.string().optional().nullable(),
+    })
+    .superRefine((data, ctx) => {
+        const ch = data.channel.toLowerCase();
+        if (ch === "sms") {
+            const digits = (data.customerPhone || "").replace(/\D/g, "");
+            if (digits.length < 10) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Valid customer phone is required for SMS (at least 10 digits).",
+                    path: ["customerPhone"],
+                });
+            }
+        }
+        if (ch === "email") {
+            if (!data.customerEmail || !z.string().email().safeParse(data.customerEmail).success) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Valid customer email is required for Email.",
+                    path: ["customerEmail"],
+                });
+            }
+        }
+    });
+
+function normalizePhone(raw: string | null | undefined): string | null {
+    let phone = (raw || "").replace(/\D/g, "");
+    if (!phone) return null;
+    if (phone.length === 10) phone = "+1" + phone;
+    else if (!phone.startsWith("+")) phone = "+" + phone;
+    return phone;
+}
+
+function splitCustomerName(customerName: string | null | undefined): {
+    first: string | null;
+    last: string | null;
+} {
+    const parts = (customerName || "").trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return { first: null, last: null };
+    if (parts.length === 1) return { first: parts[0] ?? null, last: null };
+    return { first: parts[0] ?? null, last: parts.slice(1).join(" ") || null };
+}
+
+async function bumpCustomerAfterSend(
+    supabase: SupabaseClient,
+    businessId: string,
+    customerName: string | null | undefined,
+    phone: string | null,
+    email: string | null,
+) {
+    const { first: pFirst, last: pLast } = splitCustomerName(customerName ?? undefined);
+
+    const digits = (phone || "").replace(/\D/g, "");
+    if (phone && digits.length >= 10) {
+        await supabase.rpc("increment_customer_requests", {
+            p_business_id: businessId,
+            p_phone: phone,
+            p_first_name: pFirst,
+            p_last_name: pLast,
+        });
+        return;
+    }
+
+    if (email) {
+        const { data: row } = await supabase
+            .from("customers")
+            .select("id, total_requests_sent, first_name, last_name")
+            .eq("business_id", businessId)
+            .eq("email", email)
+            .maybeSingle();
+
+        const nextTotal = (row?.total_requests_sent ?? 0) + 1;
+        const patch = {
+            total_requests_sent: nextTotal,
+            last_request_sent_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            first_name: pFirst ?? row?.first_name ?? null,
+            last_name: pLast ?? row?.last_name ?? null,
+        };
+
+        if (row?.id) {
+            await supabase.from("customers").update(patch).eq("id", row.id);
+        } else {
+            const { error: insErr } = await supabase.from("customers").insert({
+                business_id: businessId,
+                email,
+                phone: null,
+                first_name: pFirst,
+                last_name: pLast,
+                tags: [],
+                total_requests_sent: 1,
+                last_request_sent_at: new Date().toISOString(),
+            });
+            if (insErr) {
+                console.error("[requests/send] customer insert (email):", insErr);
+            }
+        }
+    }
+}
 
 export async function POST(request: Request) {
     try {
@@ -27,7 +130,6 @@ export async function POST(request: Request) {
             return apiError("Unauthorized", { status: 401 });
         }
 
-        // Apply Rate Limiting (10 requests/min per user)
         const { success: rateLimitSuccess } = await requestRateLimit.limit(user.id);
         if (!rateLimitSuccess) {
             return apiError("Rate limit exceeded. Try again later.", { status: 429 });
@@ -35,24 +137,27 @@ export async function POST(request: Request) {
 
         const parsed = sendRequestSchema.safeParse(await request.json());
         if (!parsed.success) {
-            return apiError(parsed.error.issues[0].message, { status: 400 });
+            return apiError(parsed.error.issues[0]?.message || "Invalid request", { status: 400 });
         }
-        const { customerName, customerPhone, channel: channelRaw, businessId } = parsed.data;
-        const channel = channelRaw || "sms";
 
-        // 1. Verify ownership & Get Business Config
+        const { customerName, customerPhone, customerEmail, channel: channelRaw, businessId, scheduledFor } =
+            parsed.data;
+        const channel = channelRaw.toLowerCase();
+
         const { data: business, error: businessError } = await supabase
             .from("businesses")
-            .select(`
+            .select(
+                `
                 *,
                 organizations (
                     id,
                     plan,
                     organization_members!inner(user_id)
                 )
-            `)
+            `,
+            )
             .eq("id", businessId)
-            .eq("organizations.organization_members.user_id", user.id) // Explicit ownership check
+            .eq("organizations.organization_members.user_id", user.id)
             .single();
 
         if (businessError || !business) {
@@ -63,11 +168,9 @@ export async function POST(request: Request) {
 
         const orgId = business.organizations?.id;
 
-        // 2. Check plan limit for this channel (defaults to SMS — matches send path below)
         if (orgId) {
-            const ch = channel.toLowerCase();
             const limitType =
-                ch === "email" ? "email_requests" : ch === "link" ? "link_requests" : "sms_requests";
+                channel === "email" ? "email_requests" : channel === "link" ? "link_requests" : "sms_requests";
             const { allowed } = await checkLimit(orgId, limitType);
             if (!allowed) {
                 return apiError("You've reached your monthly limit for this channel. Upgrade your plan.", {
@@ -76,53 +179,119 @@ export async function POST(request: Request) {
             }
         }
 
-        // 3. Check Frequency Cap
-        const frequencyCapDays = business.review_request_frequency_cap_days || 30; // Default 30?
+        const phoneNorm = normalizePhone(customerPhone || "");
+        const emailNorm = (customerEmail || "").trim() || null;
 
-        const { data: contact } = await supabase
-            .from("customers")
-            .select("last_request_sent_at")
-            .eq("business_id", businessId)
-            .eq("phone", customerPhone)
-            .single();
+        const frequencyCapDays = business.review_request_frequency_cap_days ?? 30;
 
-        interface CustomerRecord {
-            last_request_sent_at?: string | null;
-        }
-        const contactTyped = contact as unknown as CustomerRecord;
+        if (channel === "sms" && phoneNorm) {
+            const { data: contact } = await supabase
+                .from("customers")
+                .select("last_request_sent_at, is_opted_out")
+                .eq("business_id", businessId)
+                .eq("phone", phoneNorm)
+                .maybeSingle();
 
-        if (contactTyped?.last_request_sent_at) {
-            const lastSent = new Date(contactTyped.last_request_sent_at);
-            const now = new Date();
-            const diffDays = (now.getTime() - lastSent.getTime()) / (1000 * 3600 * 24);
+            if (contact?.is_opted_out) {
+                return apiError("This contact opted out of review requests.", { status: 400 });
+            }
 
-            if (diffDays < frequencyCapDays) {
-                return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, { status: 400 });
+            if (contact?.last_request_sent_at) {
+                const lastSent = new Date(contact.last_request_sent_at);
+                const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
+                if (diffDays < frequencyCapDays) {
+                    return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, {
+                        status: 400,
+                    });
+                }
             }
         }
 
-        // 4. Check Opt-out
-        // Using admin client to check global opt-outs if RLS prevents reading it
-        const { data: optOut } = await admindClient
-            .from("sms_opt_outs")
-            .select("id")
-            .eq("phone_number", customerPhone)
-            .single();
+        if (channel === "email" && emailNorm) {
+            const { data: contact } = await supabase
+                .from("customers")
+                .select("last_request_sent_at, is_opted_out")
+                .eq("business_id", businessId)
+                .eq("email", emailNorm)
+                .maybeSingle();
 
-        if (optOut) {
-            return apiError("Customer has opted out", { status: 400 });
+            if (contact?.is_opted_out) {
+                return apiError("This contact opted out of review requests.", { status: 400 });
+            }
+
+            if (contact?.last_request_sent_at) {
+                const lastSent = new Date(contact.last_request_sent_at);
+                const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
+                if (diffDays < frequencyCapDays) {
+                    return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, {
+                        status: 400,
+                    });
+                }
+            }
         }
 
-        // 5. Generate Review Link — insert first to get requestId for the link
+        if (channel === "sms" && phoneNorm) {
+            const { data: optOut } = await admindClient
+                .from("sms_opt_outs")
+                .select("id")
+                .eq("phone_number", phoneNorm)
+                .maybeSingle();
+
+            if (optOut) {
+                return apiError("Customer has opted out of SMS", { status: 400 });
+            }
+        }
+
+        const scheduleDate = scheduledFor ? new Date(scheduledFor) : null;
+        const isScheduled =
+            scheduleDate &&
+            !Number.isNaN(scheduleDate.getTime()) &&
+            scheduleDate.getTime() > Date.now() + 60_000;
+
+        if (!business.slug && !isScheduled) {
+            return apiError(
+                "Set a public profile link (slug) in Settings before sending review requests so the message includes your review page.",
+                { status: 400 },
+            );
+        }
+
+        const displayName = (customerName || "").trim() || "there";
+
+        if (isScheduled && scheduleDate) {
+            const { data: requestRecord, error: insertError } = await supabase
+                .from("review_requests")
+                .insert({
+                    business_id: businessId,
+                    customer_name: displayName === "there" ? null : displayName,
+                    customer_phone: phoneNorm || null,
+                    customer_email: emailNorm,
+                    channel,
+                    status: "queued",
+                    scheduled_for: scheduleDate.toISOString(),
+                    trigger_source: "manual",
+                })
+                .select()
+                .single();
+
+            if (insertError) {
+                console.error("Insert scheduled request error:", insertError);
+                Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_scheduled" } });
+                return apiError("Failed to schedule request", { status: 500 });
+            }
+
+            return apiOk(requestRecord);
+        }
 
         const { data: requestRecord, error: insertError } = await supabase
             .from("review_requests")
             .insert({
                 business_id: businessId,
-                customer_name: customerName,
-                customer_phone: customerPhone,
+                customer_name: displayName === "there" ? null : displayName,
+                customer_phone: phoneNorm || null,
+                customer_email: emailNorm,
                 channel,
-                status: "sending", // Temporary status
+                status: "sending",
+                trigger_source: "manual",
             })
             .select()
             .single();
@@ -136,32 +305,45 @@ export async function POST(request: Request) {
         const requestId = requestRecord.id;
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const protocol = rootDomain.includes("localhost") ? "http" : "https";
-        const reviewLink = `${protocol}://${rootDomain}/${business.slug}?ref=${requestId}`;
+        const slug = business.slug as string;
+        const reviewLink = `${protocol}://${rootDomain}/${slug}?ref=${requestId}`;
 
-        // 6. Send SMS
         let sendStatus = "sent";
-        let errorMessage = null;
+        let errorMessage: string | null = null;
 
-        if (channel.toLowerCase() === "sms") {
-            const messageBody = `Hi ${customerName || "there"}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
-
-            const result = await sendSMS(customerPhone, messageBody);
-
+        if (channel === "sms") {
+            const messageBody = `Hi ${displayName}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+            const result = await sendSMS(phoneNorm!, messageBody);
             if (!result.sent) {
                 sendStatus = "failed";
-                errorMessage = result.error;
+                errorMessage = result.error ?? "SMS failed";
             }
         } else {
-            // Email channel — not yet implemented; will be handled when email sending is enabled
+            const html = reviewRequestEmail({
+                customerName: displayName,
+                businessName: business.name || "us",
+                reviewLink,
+            });
+            const subject = `How was your visit to ${business.name || "us"}?`;
+            const emailResult = await sendEmail({
+                to: emailNorm!,
+                subject,
+                html,
+                text: `Hi ${displayName},\n\nWe would love your feedback: ${reviewLink}\n\n— ${business.name || "Zyene Reviews"}`,
+            });
+            if (!emailResult.sent) {
+                sendStatus = "failed";
+                errorMessage = emailResult.error ?? "Email failed";
+            }
         }
 
-        // 7. Update Request Status
         const { error: updateError } = await supabase
             .from("review_requests")
             .update({
                 status: sendStatus,
                 error_message: errorMessage,
                 sent_at: sendStatus === "sent" ? new Date().toISOString() : null,
+                review_link: reviewLink,
             })
             .eq("id", requestId);
 
@@ -170,18 +352,16 @@ export async function POST(request: Request) {
             Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
         }
 
-        // 8. Upsert Customer Contact — atomic frequency tracking via RPC (FIX 4.3)
-        await supabase.rpc("increment_customer_requests", {
-            p_business_id: businessId,
-            p_phone: customerPhone,
-        });
+        if (sendStatus === "sent") {
+            await bumpCustomerAfterSend(supabase, businessId, customerName ?? undefined, phoneNorm, emailNorm);
+        }
 
         if (sendStatus === "failed") {
-            return apiError(`Failed to send SMS: ${errorMessage}`, { status: 500 });
+            const label = channel === "email" ? "email" : "SMS";
+            return apiError(`Failed to send ${label}: ${errorMessage}`, { status: 500 });
         }
 
         return apiOk(requestRecord);
-
     } catch (error: unknown) {
         console.error("Request API Error:", error);
         Sentry.captureException(error, { tags: { route: "requests-send" } });

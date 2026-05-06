@@ -153,7 +153,8 @@ export default async function RequestsPage({
         if (customerData) {
             initialCustomer = {
                 name: `${customerData.first_name || ""} ${customerData.last_name || ""}`.trim(),
-                phone: customerData.phone || ""
+                phone: customerData.phone || "",
+                email: customerData.email || "",
             };
         }
     }
