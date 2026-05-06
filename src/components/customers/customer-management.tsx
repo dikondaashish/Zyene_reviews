@@ -36,7 +36,8 @@ async function fetchAllCustomersForExport(businessId: string): Promise<Customer[
     const all: Customer[] = [];
     for (;;) {
         const res = await fetch(
-            `/api/customers?businessId=${encodeURIComponent(businessId)}&limit=${limit}&page=${page}`
+            `/api/customers?businessId=${encodeURIComponent(businessId)}&limit=${limit}&page=${page}`,
+            { cache: "no-store" }
         );
         const json = await res.json();
         if (!res.ok || !json.success) {
@@ -129,7 +130,9 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
     const loadStats = useCallback(async () => {
         if (!businessId) return;
         try {
-            const res = await fetch(`/api/customers/stats?businessId=${encodeURIComponent(businessId)}`);
+            const res = await fetch(`/api/customers/stats?businessId=${encodeURIComponent(businessId)}`, {
+                cache: "no-store",
+            });
             const json = await res.json();
             if (!res.ok || json.success === false) {
                 throw new Error(json.error || "Failed to load stats");
@@ -151,10 +154,12 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
         loadStats();
     }, [loadStats]);
 
-    const fetchCustomers = useCallback(async () => {
+    const fetchCustomers = useCallback(async (opts?: { silent?: boolean }) => {
         if (!businessId) return;
 
-        setIsLoading(true);
+        if (!opts?.silent) {
+            setIsLoading(true);
+        }
         try {
             const queryParams = new URLSearchParams({
                 businessId: businessId,
@@ -165,7 +170,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 queryParams.set("tags", tagFilter);
             }
 
-            const response = await fetch(`/api/customers?${queryParams}`);
+            const response = await fetch(`/api/customers?${queryParams}`, { cache: "no-store" });
             const json = await response.json();
 
             if (!response.ok || json.success === false) {
@@ -178,7 +183,9 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
             toast.error("Failed to fetch customers: " + message);
         } finally {
-            setIsLoading(false);
+            if (!opts?.silent) {
+                setIsLoading(false);
+            }
         }
     }, [businessId, search, tagFilter, loadStats]);
 
@@ -249,7 +256,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     });
                     return "Review requests sent successfully!";
                 }
-                fetchCustomers();
+                void fetchCustomers({ silent: true });
                 setSelectedIds([]);
                 return `Bulk ${action} completed!`;
             },
@@ -287,7 +294,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 throw new Error(json.error || "Failed to send request");
             }
             toast.success("Review request sent!");
-            fetchCustomers();
+            await fetchCustomers({ silent: true });
         } catch (e) {
             toast.error(e instanceof Error ? e.message : "Failed to send request");
         }
@@ -301,8 +308,11 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 body: JSON.stringify({ id, businessId }),
             });
             if (!response.ok) throw new Error("Failed to delete");
+            setCustomers((prev) => prev.filter((c) => c.id !== id));
+            setSelectedIds((prev) => prev.filter((x) => x !== id));
             toast.success("Customer deleted");
-            fetchCustomers();
+            router.refresh();
+            await fetchCustomers({ silent: true });
         } catch (error) {
             toast.error("Failed to delete customer");
         }
@@ -513,13 +523,13 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             <AddCustomerModal
                 open={isAddModalOpen}
                 onOpenChange={setIsAddModalOpen}
-                onSuccess={fetchCustomers}
+                onSuccess={() => void fetchCustomers({ silent: true })}
                 businessId={businessId}
             />
             <CSVImportModal
                 open={isImportModalOpen}
                 onOpenChange={setIsImportModalOpen}
-                onSuccess={fetchCustomers}
+                onSuccess={() => void fetchCustomers({ silent: true })}
             />
 
             <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>

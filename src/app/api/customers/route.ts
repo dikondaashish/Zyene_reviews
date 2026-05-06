@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
                 },
                 {
                     headers: {
-                        "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+                        "Cache-Control": "private, no-store, max-age=0",
                     },
                 }
             );
@@ -193,7 +193,7 @@ export async function GET(request: NextRequest) {
             },
             {
                 headers: {
-                    "Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+                    "Cache-Control": "private, no-store, max-age=0",
                 },
             }
         );
