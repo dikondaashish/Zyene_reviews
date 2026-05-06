@@ -36,7 +36,7 @@ interface CustomerSegmentTabsProps {
 
 export function CustomerSegmentTabs({ value, onChange, counts }: CustomerSegmentTabsProps) {
     return (
-        <div className="-mx-1 mb-4 flex gap-2 overflow-x-auto border-b border-border pb-3 [-ms-overflow-style:none] [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-2 overflow-x-auto border-t border-border/50 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-wrap lg:overflow-visible [&::-webkit-scrollbar]:hidden">
             {TABS.map((t) => {
                 const n = counts[t.id];
                 const active = value === t.id;

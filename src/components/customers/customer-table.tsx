@@ -27,6 +27,7 @@ import {
     Eye,
     Ban,
     RotateCcw,
+    ChevronRight,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -645,7 +646,7 @@ export function CustomerTable({
                     </div>
                 )}
             </div>
-            <div className="hidden overflow-hidden rounded-xl border border-border bg-card lg:block">
+            <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm lg:block">
                 <Table>
                     <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -674,8 +675,15 @@ export function CustomerTable({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className="border-border transition-colors hover:bg-muted/20 data-[state=selected]:bg-primary/10 cursor-pointer"
+                                    tabIndex={0}
+                                    className="group cursor-pointer border-border transition-colors hover:bg-muted/25 data-[state=selected]:bg-primary/10 focus-visible:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                                     onClick={(e) => handleRowNavigate(e, row.original.id)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            router.push(`/customers/${row.original.id}`);
+                                        }
+                                    }}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className="h-auto py-2.5 align-middle">
@@ -917,7 +925,8 @@ function CustomerNameCell({
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 items-start justify-between gap-2">
+            <div className="flex min-w-0 flex-1 flex-col">
             <div
                 className="text-left rounded-md px-0 py-0.5 hover:bg-muted/40"
                 role={isEditing ? undefined : "presentation"}
@@ -950,6 +959,11 @@ function CustomerNameCell({
                     </span>
                 )}
             </div>
+            </div>
+            <ChevronRight
+                className="mt-1 h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-70"
+                aria-hidden
+            />
         </div>
     );
 }

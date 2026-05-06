@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function CustomersLoading() {
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-500">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 py-4 animate-in fade-in duration-500 sm:px-5 sm:py-6 lg:px-6">
             <div className="flex items-center justify-between">
                 <div className="space-y-1">
                     <Skeleton className="h-9 w-40" />

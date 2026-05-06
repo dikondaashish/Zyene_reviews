@@ -1,9 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Search, X } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -15,6 +14,7 @@ import {
 const ALL_TAGS_VALUE = "__zyene_filter_all__";
 
 interface CustomerFiltersProps {
+    searchQuery: string;
     onSearchChange: (value: string) => void;
     tagFilter: string;
     onTagFilterChange: (value: string) => void;
@@ -22,32 +22,29 @@ interface CustomerFiltersProps {
 }
 
 export function CustomerFilters({
+    searchQuery,
     onSearchChange,
     tagFilter,
     onTagFilterChange,
     allTags,
 }: CustomerFiltersProps) {
-    const [searchValue, setSearchValue] = useState("");
-
     const clearFilters = () => {
-        setSearchValue("");
         onSearchChange("");
         onTagFilterChange("");
     };
 
-    const hasFilters = Boolean(searchValue || tagFilter);
+    const hasFilters = Boolean(searchQuery || tagFilter);
 
     return (
-        <div className="mb-5 flex flex-col gap-3 p-0">
+        <div className="mb-0 flex flex-col gap-3 p-0">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
                 <div className="relative flex-1 w-full group">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
                         placeholder="Search by name, email, or phone..."
                         className="h-9 rounded-lg border-border bg-background pl-9 text-sm focus:border-primary/60 focus:ring-2 focus:ring-primary/15"
-                        value={searchValue}
+                        value={searchQuery}
                         onChange={(e) => {
-                            setSearchValue(e.target.value);
                             onSearchChange(e.target.value);
                         }}
                     />

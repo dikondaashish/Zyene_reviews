@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, RefreshCcw, Users, UserPlus, Percent, MessageCircleOff, BarChart3, Download } from "lucide-react";
+import { Upload, RefreshCcw, Users, UserPlus, Percent, MessageCircleOff, BarChart3, Download, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { CustomerTable, Customer } from "@/components/customers/customer-table";
 import { CustomerFilters } from "@/components/customers/customer-filters";
@@ -379,6 +380,10 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
 
     const segmentCountsForTabs = stats?.segmentCounts ?? emptySegmentCounts;
 
+    const listEmpty = !isLoading && displayedCustomers.length === 0;
+    const filteredEmpty = listEmpty && customers.length > 0;
+    const databaseEmpty = listEmpty && customers.length === 0;
+
     return (
         <div className="animate-in fade-in duration-500">
             <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
@@ -426,7 +431,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             </div>
 
             <div className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
                         <Users className="h-4 w-4 text-primary" />
                     </div>
@@ -439,7 +444,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         </h3>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-2/10">
                         <Percent className="h-4 w-4 text-chart-2" />
                     </div>
@@ -453,7 +458,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-4/10">
                         <MessageCircleOff className="h-4 w-4 text-chart-4" />
                     </div>
@@ -467,7 +472,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-4/15">
                         <BarChart3 className="h-4 w-4 text-chart-4" />
                     </div>
@@ -483,14 +488,17 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 </div>
             </div>
 
-            <CustomerFilters
-                allTags={allTagsForFilter}
-                tagFilter={tagFilter}
-                onTagFilterChange={setTagFilter}
-                onSearchChange={setSearch}
-            />
+            <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-border/60 bg-muted/15 p-4 shadow-sm sm:p-5">
+                <CustomerFilters
+                    searchQuery={search}
+                    allTags={allTagsForFilter}
+                    tagFilter={tagFilter}
+                    onTagFilterChange={setTagFilter}
+                    onSearchChange={setSearch}
+                />
 
-            <CustomerSegmentTabs value={smartTab} onChange={setSmartTab} counts={segmentCountsForTabs} />
+                <CustomerSegmentTabs value={smartTab} onChange={setSmartTab} counts={segmentCountsForTabs} />
+            </div>
 
             {selectedIds.length > 0 && (
                 <BulkActionBar
@@ -505,10 +513,71 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             )}
 
             {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-64 bg-card rounded-3xl border border-border">
-                    <RefreshCcw className="h-10 w-10 text-primary animate-spin mb-4" />
-                    <p className="text-muted-foreground font-medium">Loading your customers...</p>
+                <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-border/80 bg-card shadow-sm">
+                    <RefreshCcw className="mb-4 h-10 w-10 animate-spin text-primary" />
+                    <p className="font-medium text-muted-foreground">Loading your customers...</p>
                 </div>
+            ) : listEmpty ? (
+                <Card className="rounded-2xl border-dashed border-border/80 bg-card/80 shadow-sm">
+                    <CardContent className="flex flex-col items-center gap-4 px-6 py-14 text-center sm:px-10">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-muted/40">
+                            {filteredEmpty ? (
+                                <Search className="h-6 w-6 text-muted-foreground" />
+                            ) : (
+                                <Users className="h-6 w-6 text-muted-foreground" />
+                            )}
+                        </div>
+                        <div className="max-w-md space-y-2">
+                            <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                                {databaseEmpty ? "No customers yet" : "No contacts in this view"}
+                            </h2>
+                            <p className="text-sm leading-relaxed text-muted-foreground">
+                                {databaseEmpty
+                                    ? "Add contacts manually or import a CSV to start sending review requests and tracking engagement."
+                                    : "Try the “All” tab, adjust your search or tag filter, or pick another segment — your contacts are still in the full list."}
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                            {databaseEmpty ? (
+                                <>
+                                    <Button
+                                        onClick={() => setIsAddModalOpen(true)}
+                                        className="rounded-lg bg-primary px-4 font-semibold"
+                                    >
+                                        <UserPlus className="mr-2 h-4 w-4" />
+                                        Add customer
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setIsImportModalOpen(true)}
+                                        className="rounded-lg border-border"
+                                    >
+                                        <Upload className="mr-2 h-4 w-4" />
+                                        Import CSV
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Button variant="outline" className="rounded-lg" onClick={() => setSmartTab("all")}>
+                                        Show all contacts
+                                    </Button>
+                                    {(search || tagFilter) && (
+                                        <Button
+                                            variant="ghost"
+                                            className="rounded-lg text-muted-foreground"
+                                            onClick={() => {
+                                                setSearch("");
+                                                setTagFilter("");
+                                            }}
+                                        >
+                                            Clear search & tag filters
+                                        </Button>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
             ) : (
                 <CustomerTable
                     data={displayedCustomers}
