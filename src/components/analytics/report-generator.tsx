@@ -65,8 +65,8 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
                     clonedEl.querySelectorAll("iframe").forEach((n) => n.remove());
                     clonedEl.querySelectorAll("*").forEach((node) => {
                         if (node instanceof HTMLElement) {
-                            node.style.backdropFilter = "none";
-                            node.style.webkitBackdropFilter = "none";
+                            node.style.setProperty("backdrop-filter", "none");
+                            node.style.setProperty("-webkit-backdrop-filter", "none");
                         }
                     });
                     clonedEl.querySelectorAll("img").forEach((node) => {
