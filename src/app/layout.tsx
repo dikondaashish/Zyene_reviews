@@ -30,6 +30,8 @@ const syneDisplay = Syne({
   weight: ["500", "600", "700"],
 });
 
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://collectratings.com"),
   alternates: {
@@ -74,6 +76,22 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${geistMono.variable} ${syneDisplay.variable} antialiased`}
       >
+        {META_PIXEL_ID ? (
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`}
+          </Script>
+        ) : null}
+        {META_PIXEL_ID ? (
+          <noscript>
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        ) : null}
         <Script id="theme-init" strategy="beforeInteractive">
           {themeInitScript}
         </Script>
