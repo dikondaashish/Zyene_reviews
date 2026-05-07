@@ -254,7 +254,12 @@ export async function POST(request: Request) {
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const protocol = rootDomain.includes("localhost") ? "http" : "https";
         const slug = business.slug as string;
-        const reviewLink = `${protocol}://${rootDomain}/${slug}?ref=${requestId}`;
+        // Public review flow is hosted on a separate capture domain (redirect-free).
+        // Root domain redirects slug traffic → capture domain, but direct links track better.
+        const reviewCaptureDomain = rootDomain.includes("localhost")
+            ? rootDomain
+            : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
+        const reviewLink = `${protocol}://${reviewCaptureDomain}/${slug}?ref=${requestId}`;
 
         let sendStatus = "sent";
         let errorMessage: string | null = null;

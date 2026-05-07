@@ -150,7 +150,12 @@ export async function POST(request: NextRequest) {
                             continue;
                         }
 
-                        const reviewLink = `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${business.slug}?ref=${requestRecord.id}`;
+                        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                        const protocol = rootDomain.includes("localhost") ? "http" : "https";
+                        const reviewCaptureDomain = rootDomain.includes("localhost")
+                            ? rootDomain
+                            : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
+                        const reviewLink = `${protocol}://${reviewCaptureDomain}/${business.slug}?ref=${requestRecord.id}`;
                         const messageBody = `Hi ${customer.first_name || "there"}! Thanks for visiting ${business.name}. We'd love your feedback: ${reviewLink}`;
 
                         const result = await sendSMS(customer.phone, messageBody);

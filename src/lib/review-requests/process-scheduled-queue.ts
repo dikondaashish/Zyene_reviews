@@ -247,7 +247,10 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         const displayName = (row.customer_name || "").trim() || "there";
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
         const protocol = rootDomain.includes("localhost") ? "http" : "https";
-        const reviewLink = `${protocol}://${rootDomain}/${slug}?ref=${requestId}`;
+        const reviewCaptureDomain = rootDomain.includes("localhost")
+            ? rootDomain
+            : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
+        const reviewLink = `${protocol}://${reviewCaptureDomain}/${slug}?ref=${requestId}`;
 
         let sendStatus: "sent" | "failed" = "sent";
         let errorMessage: string | null = null;
