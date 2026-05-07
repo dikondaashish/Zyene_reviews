@@ -11,8 +11,9 @@ import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals
 import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/auth/rate-limit";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
+import { inngest } from "@/services/inngest/client";
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 
 const sendRequestSchema = z
     .object({
@@ -52,73 +53,6 @@ function normalizePhone(raw: string | null | undefined): string | null {
     if (phone.length === 10) phone = "+1" + phone;
     else if (!phone.startsWith("+")) phone = "+" + phone;
     return phone;
-}
-
-function splitCustomerName(customerName: string | null | undefined): {
-    first: string | null;
-    last: string | null;
-} {
-    const parts = (customerName || "").trim().split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return { first: null, last: null };
-    if (parts.length === 1) return { first: parts[0] ?? null, last: null };
-    return { first: parts[0] ?? null, last: parts.slice(1).join(" ") || null };
-}
-
-async function bumpCustomerAfterSend(
-    supabase: SupabaseClient,
-    businessId: string,
-    customerName: string | null | undefined,
-    phone: string | null,
-    email: string | null,
-) {
-    const { first: pFirst, last: pLast } = splitCustomerName(customerName ?? undefined);
-
-    const digits = (phone || "").replace(/\D/g, "");
-    if (phone && digits.length >= 10) {
-        await supabase.rpc("increment_customer_requests", {
-            p_business_id: businessId,
-            p_phone: phone,
-            p_first_name: pFirst,
-            p_last_name: pLast,
-        });
-        return;
-    }
-
-    if (email) {
-        const { data: row } = await supabase
-            .from("customers")
-            .select("id, total_requests_sent, first_name, last_name")
-            .eq("business_id", businessId)
-            .eq("email", email)
-            .maybeSingle();
-
-        const nextTotal = (row?.total_requests_sent ?? 0) + 1;
-        const patch = {
-            total_requests_sent: nextTotal,
-            last_request_sent_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            first_name: pFirst ?? row?.first_name ?? null,
-            last_name: pLast ?? row?.last_name ?? null,
-        };
-
-        if (row?.id) {
-            await supabase.from("customers").update(patch).eq("id", row.id);
-        } else {
-            const { error: insErr } = await supabase.from("customers").insert({
-                business_id: businessId,
-                email,
-                phone: null,
-                first_name: pFirst,
-                last_name: pLast,
-                tags: [],
-                total_requests_sent: 1,
-                last_request_sent_at: new Date().toISOString(),
-            });
-            if (insErr) {
-                console.error("[requests/send] customer insert (email):", insErr);
-            }
-        }
-    }
 }
 
 export async function POST(request: Request) {
@@ -282,6 +216,16 @@ export async function POST(request: Request) {
                 Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_scheduled" } });
                 return apiError("Failed to schedule request", { status: 500 });
             }
+
+            // Schedule background send via Inngest.
+            await inngest.send({
+                name: "review-request/scheduled.send",
+                data: {
+                    reviewRequestId: requestRecord.id,
+                    sendAt: scheduleDate.toISOString(),
+                    trigger: "api",
+                },
+            });
 
             return apiOk(requestRecord);
         }

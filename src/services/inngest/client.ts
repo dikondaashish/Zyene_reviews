@@ -84,6 +84,16 @@ type GoogleSeoAeoSyncRunEvent = {
     };
 };
 
+type ScheduledReviewRequestSendEvent = {
+    data: {
+        reviewRequestId: string;
+        /** ISO timestamp when send should happen. */
+        sendAt: string;
+        /** For debugging/attribution (optional). */
+        trigger?: "api" | "supabase-webhook";
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -96,6 +106,7 @@ type Events = {
     "google-seo-aeo/ai-visibility.run": GoogleSeoAeoAiVisibilityRunEvent;
     "google-seo-aeo/heatmap.run": GoogleSeoAeoHeatmapRunEvent;
     "google-seo-aeo/sync.run": GoogleSeoAeoSyncRunEvent;
+    "review-request/scheduled.send": ScheduledReviewRequestSendEvent;
 };
 
 // Create a client to send and receive events

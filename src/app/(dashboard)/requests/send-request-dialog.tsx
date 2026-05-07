@@ -266,7 +266,8 @@ export function SendRequestDialog({
             }
             if (values.scheduleEnabled) {
                 toast.success("Request scheduled", {
-                    description: "It will appear as queued and send at the scheduled time when processing is enabled.",
+                    description:
+                        "It stays queued until your send time, then a background job sends it within a few minutes after that.",
                 });
             } else {
                 toast.success("Request sent!", {
