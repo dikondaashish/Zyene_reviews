@@ -251,6 +251,7 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
 
         let sendStatus: "sent" | "failed" = "sent";
         let errorMessage: string | null = null;
+        let resendEmailId: string | null = null;
 
         if (channel === "sms" && phoneNorm) {
             const messageBody = `Hi ${displayName}! Thanks for visiting ${b.name || "us"}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -285,6 +286,8 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
             if (!emailResult.sent) {
                 sendStatus = "failed";
                 errorMessage = emailResult.error ?? "Email failed";
+            } else {
+                resendEmailId = emailResult.id ?? null;
             }
         }
 
@@ -294,6 +297,7 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
             error_message: errorMessage,
             sent_at: sentAt,
             review_link: reviewLink,
+            ...(resendEmailId ? { resend_email_id: resendEmailId } : {}),
         });
 
         if (sendStatus === "sent") {

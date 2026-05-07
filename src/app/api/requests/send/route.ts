@@ -258,6 +258,7 @@ export async function POST(request: Request) {
 
         let sendStatus = "sent";
         let errorMessage: string | null = null;
+        let resendEmailId: string | null = null;
 
         if (channel === "sms") {
             const messageBody = `Hi ${displayName}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -293,6 +294,8 @@ export async function POST(request: Request) {
             if (!emailResult.sent) {
                 sendStatus = "failed";
                 errorMessage = emailResult.error ?? "Email failed";
+            } else {
+                resendEmailId = emailResult.id ?? null;
             }
         }
 
@@ -302,6 +305,7 @@ export async function POST(request: Request) {
             error_message: errorMessage,
             sent_at: sentAt,
             review_link: reviewLink,
+            ...(resendEmailId ? { resend_email_id: resendEmailId } : {}),
         };
 
         const { data: updatedRows, error: updateError } = await supabase
