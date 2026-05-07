@@ -28,7 +28,7 @@ export function reviewRequestEmailPlainText({
     const greeting = (customerName || "").trim() || "there";
     const rawBody =
         template ||
-        `Thank you for choosing ${businessName}! We'd really appreciate your feedback — it helps us improve and helps others in our community discover our services.`;
+        `Thanks for choosing ${businessName}. When you have a moment, a quick note about your visit would mean a lot to us.`;
     const body = rawBody
         .replace(/\{customer_name\}/g, customerName)
         .replace(/\{business_name\}/g, businessName)
@@ -50,8 +50,8 @@ export function reviewRequestEmailPlainText({
 }
 
 /**
- * Review-request HTML: table layout + inline styles for Gmail/Outlook;
- * single primary CTA, no remote images (keeps a transactional feel).
+ * Minimal HTML for one-to-one review requests: reads like a personal note in Gmail
+ * (plain flow, single link, no “newsletter” chrome). Tab placement is still heuristic.
  */
 export function reviewRequestEmail({
     customerName,
@@ -70,7 +70,7 @@ export function reviewRequestEmail({
     const biz = escapeHtml(businessName);
     const rawBody =
         template ||
-        `Thank you for choosing {business_name}! We'd really appreciate your feedback — it helps us improve and helps others in our community discover our services.`;
+        `Thanks for choosing {business_name}. When you have a moment, a quick note about your visit would mean a lot to us.`;
     const formattedBody = escapeHtml(
         rawBody
             .replace(/\{customer_name\}/g, customerName)
@@ -81,15 +81,10 @@ export function reviewRequestEmail({
     const safeLink = escapeHtml(reviewLink);
     const href = escapeAttr(reviewLink);
 
-    const fontStack =
+    const font =
         "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif";
-    const bgPage = "#f0eeea";
-    const bgCard = "#fffefb";
-    const borderSubtle = "#e8e4dc";
-    const textMain = "#120909";
-    const textMuted = "#6d685d";
-    const primary = "#ff4f00";
-    const onPrimary = "#ffffff";
+    const text = "#202124";
+    const muted = "#5f6368";
 
     const bodyHtml = formattedBody.replace(/\n/g, "<br>");
 
@@ -98,79 +93,26 @@ export function reviewRequestEmail({
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="x-apple-disable-message-reformatting">
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
-  <title>How was your visit to ${biz}?</title>
-  <!--[if mso]>
-  <noscript>
-    <xml>
-      <o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings>
-    </xml>
-  </noscript>
-  <![endif]-->
+  <title>Feedback</title>
 </head>
-<body style="margin:0;padding:0;background-color:${bgPage};">
-  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
-    Quick feedback for ${biz} — one short step. &#8204;&nbsp;&#8204;&nbsp;
-  </div>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${bgPage};">
+<body style="margin:0;padding:0;background-color:#ffffff;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#ffffff;">
     <tr>
-      <td align="center" style="padding:32px 16px 48px;">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;">
-          <tr>
-            <td style="padding:0 0 20px;text-align:center;font-family:${fontStack};font-size:13px;font-weight:600;letter-spacing:0.04em;color:${textMuted};text-transform:uppercase;">
-              Zyene Reviews
-            </td>
-          </tr>
-          <tr>
-            <td style="background-color:${bgCard};border:1px solid ${borderSubtle};border-radius:12px;box-shadow:0 1px 2px rgba(18,9,9,0.04);">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="padding:32px 28px 28px;font-family:${fontStack};color:${textMain};">
-                    <p style="margin:0 0 8px;font-size:20px;font-weight:700;line-height:1.3;color:${textMain};">
-                      How was your visit?
-                    </p>
-                    <p style="margin:0 0 24px;font-size:15px;line-height:1.55;color:${textMuted};">
-                      ${biz} would love to hear from you.
-                    </p>
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${textMain};">
-                      Hi ${greeting},
-                    </p>
-                    <p style="margin:0 0 28px;font-size:16px;line-height:1.65;color:${textMain};">
-                      ${bodyHtml}
-                    </p>
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 20px;">
-                      <tr>
-                        <td align="left" bgcolor="${primary}" style="background-color:${primary};border-radius:10px;">
-                          <a href="${href}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 28px;font-family:${fontStack};font-size:16px;font-weight:600;line-height:1.25;color:${onPrimary};text-decoration:none;border-radius:10px;">
-                            Leave feedback
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                    <p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:${textMuted};">
-                      Or copy this link into your browser:
-                    </p>
-                    <p style="margin:0 0 28px;font-size:12px;line-height:1.5;word-break:break-all;">
-                      <a href="${href}" target="_blank" rel="noopener noreferrer" style="color:${primary};text-decoration:underline;">${safeLink}</a>
-                    </p>
-                    <p style="margin:0;font-size:15px;line-height:1.55;color:${textMain};">
-                      Thank you,<br>
-                      <strong style="font-weight:600;">${biz}</strong>
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:20px 28px 28px;border-top:1px solid ${borderSubtle};font-family:${fontStack};font-size:12px;line-height:1.6;color:${textMuted};">
-                    Sent by <a href="https://zyenereviews.com" target="_blank" rel="noopener noreferrer" style="color:${textMuted};text-decoration:underline;font-weight:500;">Zyene Reviews</a> for <strong style="color:${textMain};font-weight:600;">${biz}</strong>.
-                    This is a one-to-one message about your visit, not a mailing list.
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+      <td style="padding:28px 20px 40px;">
+        <div style="max-width:560px;margin:0 auto;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
+          <p style="margin:0 0 16px;">Hi ${greeting},</p>
+          <p style="margin:0 0 22px;">${bodyHtml}</p>
+          <p style="margin:0 0 10px;">
+            <a href="${href}" style="color:#1a0dab;text-decoration:underline;">Leave feedback</a>
+            <span style="color:${muted};"> — about a minute.</span>
+          </p>
+          <p style="margin:0 0 28px;font-size:13px;line-height:1.5;color:${muted};word-break:break-all;">${safeLink}</p>
+          <p style="margin:0 0 6px;">Thank you,</p>
+          <p style="margin:0;"><strong>${biz}</strong></p>
+          <p style="margin:28px 0 0;font-size:12px;line-height:1.55;color:${muted};">
+            Sent by Zyene Reviews for ${biz}. One-to-one message about your visit, not a mailing list.
+          </p>
+        </div>
       </td>
     </tr>
   </table>
