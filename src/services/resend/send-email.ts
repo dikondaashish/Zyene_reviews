@@ -1,11 +1,15 @@
 import { resend } from "./client";
 
 interface SendEmailProps {
-    to: string;
+    to: string | string[];
     subject: string;
     html: string;
     /** Plain-text body improves deliverability (multipart/alternative). */
     text?: string;
+    /** Shown as Reply-To so the message reads as from the business, not bulk marketing. */
+    replyTo?: string | string[];
+    /** Custom MIME headers (e.g. Importance, Auto-Submitted). */
+    headers?: Record<string, string>;
 }
 
 /**
@@ -18,12 +22,21 @@ function getResendFrom(): string {
     return "Zyene Reviews <notifications@zyenereviews.com>";
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailProps) {
+export async function sendEmail({ to, subject, html, text, replyTo, headers }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
         console.error("Resend API Key missing");
         return { sent: false, error: "RESEND_API_KEY is not set on the server" };
     }
+
+    const replyList =
+        replyTo === undefined
+            ? []
+            : (Array.isArray(replyTo) ? replyTo : [replyTo]).filter((a) => typeof a === "string" && a.trim().length > 0);
+    const replyToPayload = replyList.length > 0 ? { reply_to: replyList } : {};
+
+    const headersPayload =
+        headers && Object.keys(headers).length > 0 ? { headers } : {};
 
     try {
         const { data, error } = await resend.emails.send({
@@ -32,6 +45,8 @@ export async function sendEmail({ to, subject, html, text }: SendEmailProps) {
             subject,
             html,
             ...(text ? { text } : {}),
+            ...replyToPayload,
+            ...headersPayload,
         });
 
         if (error) {

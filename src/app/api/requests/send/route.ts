@@ -3,7 +3,11 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail } from "@/services/resend/send-email";
-import { reviewRequestEmail } from "@/services/resend/templates/review-request-email";
+import {
+    reviewRequestEmail,
+    reviewRequestEmailPlainText,
+} from "@/services/resend/templates/review-request-email";
+import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/auth/rate-limit";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
@@ -325,11 +329,22 @@ export async function POST(request: Request) {
                 reviewLink,
             });
             const subject = `How was your visit to ${business.name || "us"}?`;
+            const bizRow = business as { email?: string | null };
+            const businessEmail =
+                typeof bizRow.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bizRow.email.trim())
+                    ? bizRow.email.trim()
+                    : undefined;
             const emailResult = await sendEmail({
                 to: emailNorm!,
                 subject,
                 html,
-                text: `Hi ${displayName},\n\nWe would love your feedback: ${reviewLink}\n\n— ${business.name || "Zyene Reviews"}`,
+                text: reviewRequestEmailPlainText({
+                    customerName: displayName,
+                    businessName: business.name || "us",
+                    reviewLink,
+                }),
+                replyTo: businessEmail,
+                headers: REVIEW_REQUEST_EMAIL_HEADERS,
             });
             if (!emailResult.sent) {
                 sendStatus = "failed";

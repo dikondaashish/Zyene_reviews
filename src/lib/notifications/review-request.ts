@@ -1,6 +1,10 @@
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail } from "@/services/resend/send-email";
-import { reviewRequestEmail } from "@/services/resend/templates/review-request-email";
+import {
+    reviewRequestEmail,
+    reviewRequestEmailPlainText,
+} from "@/services/resend/templates/review-request-email";
+import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 
 interface SendReviewRequestOptions {
     businessId: string;
@@ -77,10 +81,17 @@ export async function sendReviewRequest({
             const emailResult = await sendEmail({
                 to: customerEmail,
                 subject,
-                html
+                html,
+                text: reviewRequestEmailPlainText({
+                    customerName,
+                    businessName,
+                    reviewLink,
+                    template,
+                }),
+                headers: REVIEW_REQUEST_EMAIL_HEADERS,
             });
 
-            results.emailSent = !!emailResult.id;
+            results.emailSent = emailResult.sent;
         }
 
         return results;
