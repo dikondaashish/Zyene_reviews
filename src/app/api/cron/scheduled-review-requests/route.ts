@@ -7,7 +7,7 @@ import { processDueScheduledReviewRequests } from "@/lib/review-requests/process
  * Sends manually scheduled review requests (`queued` + `scheduled_for` ≤ now).
  *
  * On cron-jobs.org: create a job that GETs your production URL every few minutes
- * (e.g. `*/5 * * * *`), and add header `Authorization: Bearer <CRON_SECRET>` matching
+ * (example schedule: `every 5 minutes`), and add header `Authorization: Bearer <CRON_SECRET>` matching
  * the `CRON_SECRET` env var in your app (same pattern as your other cron routes).
  */
 export async function GET(request: Request) {
