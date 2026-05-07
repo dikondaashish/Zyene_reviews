@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { setActiveBusiness } from "@/lib/auth/business-context"
 import Link from "next/link"
+import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href"
 
 interface BusinessSwitcherProps {
     businesses: {
@@ -88,7 +89,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                 <DropdownMenuItem asChild>
                     {businesses.length >= maxBusinesses ? (
                         <Link 
-                            href="/settings/billing?status=limit_reached" 
+                            href={BUSINESS_LIMIT_UPGRADE_BILLING_HREF} 
                             className="flex items-center justify-between w-full cursor-pointer text-primary font-medium"
                         >
                             <div className="flex items-center gap-2">

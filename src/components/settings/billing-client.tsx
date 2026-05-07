@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
     Card,
@@ -49,6 +49,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { PastDueBillingAlert } from "@/components/billing/past-due-billing-alert";
+import { BILLING_PLAN_PROFESSIONAL_ANCHOR_ID } from "@/lib/billing/business-limit-upgrade-href";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -153,6 +154,7 @@ export function BillingClient({
     const [prorationPreview, setProrationPreview] = useState<ProrationPreviewState>("idle");
     const searchParams = useSearchParams();
     const router = useRouter();
+    const hasScrolledToProfessionalRef = useRef(false);
 
     useEffect(() => {
         if (currentPlan?.interval === "month" || currentPlan?.interval === "year") {
@@ -213,7 +215,7 @@ export function BillingClient({
                 description: "No charges were made. You can subscribe anytime.",
             });
             router.replace("/settings/billing");
-        } else if (status === "limit_reached") {
+        } else if (status === "limit_reached" || searchParams.get("error") === "limit_reached") {
             toast.error("Business limit reached", {
                 description:
                     "You've reached the maximum number of businesses for your current plan. Upgrade to add more locations.",
@@ -221,6 +223,45 @@ export function BillingClient({
             });
         }
     }, [searchParams, router]);
+
+    /** Deep-link from "Add a business" / upgrade: scroll to the Professional plan card. */
+    useEffect(() => {
+        const status = searchParams.get("status");
+        const error = searchParams.get("error");
+        const hash = typeof window !== "undefined" ? window.location.hash.trim().toLowerCase() : "";
+        const shouldScroll =
+            status === "limit_reached" ||
+            error === "limit_reached" ||
+            hash === `#${BILLING_PLAN_PROFESSIONAL_ANCHOR_ID}` ||
+            hash === "#professional";
+
+        const proPlansForInterval = plans.filter(
+            (p) => p.interval === interval && p.id !== "enterprise" && p.name === "Professional",
+        );
+        if (!shouldScroll || hasScrolledToProfessionalRef.current || proPlansForInterval.length === 0) {
+            return;
+        }
+
+        let cancelled = false;
+        const tryScroll = (attempt: number) => {
+            if (cancelled) return;
+            const el = document.getElementById(BILLING_PLAN_PROFESSIONAL_ANCHOR_ID);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+                hasScrolledToProfessionalRef.current = true;
+                return;
+            }
+            if (attempt < 8) {
+                window.setTimeout(() => tryScroll(attempt + 1), 120);
+            }
+        };
+
+        const start = window.setTimeout(() => tryScroll(0), 80);
+        return () => {
+            cancelled = true;
+            window.clearTimeout(start);
+        };
+    }, [searchParams, interval, plans]);
 
     const isEnterpriseOrg = organizationPlanId === "enterprise";
     const hasPricedPlan =
@@ -622,8 +663,9 @@ export function BillingClient({
                             return (
                                 <PricingCard.Card
                                     key={plan.id}
+                                    id={isPro ? BILLING_PLAN_PROFESSIONAL_ANCHOR_ID : undefined}
                                     className={cn(
-                                        "relative flex w-full max-w-none flex-col h-full",
+                                        "relative flex w-full max-w-none flex-col h-full scroll-mt-28",
                                         isPro &&
                                             "ring-2 ring-primary/50",
                                         isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"

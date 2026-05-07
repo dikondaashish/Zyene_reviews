@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -46,7 +47,7 @@ export default async function BusinessesPage() {
                         Manage your business locations and integrations.
                     </p>
                 </div>
-                <Link href={atLimit ? "/settings/billing?status=limit_reached" : "/businesses/add"}>
+                <Link href={atLimit ? BUSINESS_LIMIT_UPGRADE_BILLING_HREF : "/businesses/add"}>
                     <Button className="gap-2" variant={atLimit ? "outline" : "default"}>
                         {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                         Add a business

@@ -8,6 +8,7 @@ import { createClient } from "@/lib/db/supabase/client"
 import { Store, ArrowLeft, Lock } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
+import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href"
 
 import { useRouter } from "next/navigation"
 import { getActiveBusinessId } from "@/lib/auth/business-context"
@@ -124,7 +125,7 @@ export default function AddBusinessPage() {
                                 Upgrade to a higher plan to add more locations and unlock premium features for all your businesses.
                             </p>
                             <div className="pt-2">
-                                <Link href="/settings/billing?status=limit_reached">
+                                <Link href={BUSINESS_LIMIT_UPGRADE_BILLING_HREF}>
                                     <Button
                                         size="lg"
                                         className="w-full gap-2"

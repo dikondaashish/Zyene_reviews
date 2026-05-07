@@ -18,6 +18,7 @@ import type {
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
 import { inngest } from "@/services/inngest/client";
+import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
 
 function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): string | null {
     const raw = user.user_metadata?.phone;
@@ -123,7 +124,9 @@ export async function GET(request: Request) {
                 const limitCheck = await checkLimit(addBusinessOrgId, "businesses");
                 if (!limitCheck.allowed) {
                     console.log(`⚠️ Business limit reached for org ${addBusinessOrgId}. Redirecting to billing.`);
-                    return NextResponse.redirect(`${appUrl}/settings/billing?error=limit_reached`);
+                    return NextResponse.redirect(
+                        `${String(appUrl).replace(/\/+$/, "")}${BUSINESS_LIMIT_UPGRADE_BILLING_HREF}`,
+                    );
                 }
 
                 // ─── ADD BUSINESS FLOW ──────────────────────────
