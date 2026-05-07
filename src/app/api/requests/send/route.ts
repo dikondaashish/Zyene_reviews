@@ -352,19 +352,45 @@ export async function POST(request: Request) {
             }
         }
 
-        const { error: updateError } = await supabase
-            .from("review_requests")
-            .update({
-                status: sendStatus,
-                error_message: errorMessage,
-                sent_at: sendStatus === "sent" ? new Date().toISOString() : null,
-                review_link: reviewLink,
-            })
-            .eq("id", requestId);
+        const sentAt = sendStatus === "sent" ? new Date().toISOString() : null;
+        const statusPatch = {
+            status: sendStatus,
+            error_message: errorMessage,
+            sent_at: sentAt,
+            review_link: reviewLink,
+        };
 
-        if (updateError) {
-            console.error("Update Request Error:", updateError);
-            Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
+        const { data: updatedRows, error: updateError } = await supabase
+            .from("review_requests")
+            .update(statusPatch)
+            .eq("id", requestId)
+            .select();
+
+        let finalRequestRecord = updatedRows?.[0] ?? null;
+
+        if (updateError || !finalRequestRecord) {
+            if (updateError) {
+                console.error("Update Request Error:", updateError);
+                Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
+            }
+            const { data: adminRows, error: adminUpdateError } = await admindClient
+                .from("review_requests")
+                .update(statusPatch)
+                .eq("id", requestId)
+                .eq("business_id", businessId)
+                .select();
+
+            if (adminUpdateError || !adminRows?.[0]) {
+                if (adminUpdateError) {
+                    console.error("[requests/send] admin fallback update failed:", adminUpdateError);
+                    Sentry.captureException(adminUpdateError, {
+                        tags: { route: "requests-send", step: "update_request_admin" },
+                    });
+                }
+                finalRequestRecord = { ...requestRecord, ...statusPatch };
+            } else {
+                finalRequestRecord = adminRows[0];
+            }
         }
 
         if (sendStatus === "sent") {
@@ -376,7 +402,7 @@ export async function POST(request: Request) {
             return apiError(`Failed to send ${label}: ${errorMessage}`, { status: 500 });
         }
 
-        return apiOk(requestRecord);
+        return apiOk(finalRequestRecord);
     } catch (error: unknown) {
         console.error("Request API Error:", error);
         Sentry.captureException(error, { tags: { route: "requests-send" } });

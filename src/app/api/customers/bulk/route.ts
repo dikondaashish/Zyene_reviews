@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { type NextRequest, NextResponse } from "next/server";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -117,6 +118,7 @@ export async function POST(request: NextRequest) {
 
                 const batchSize = Math.min(eligibleCustomers.length, remaining);
                 const actualBatch = eligibleCustomers.slice(0, batchSize);
+                const adminClient = createAdminClient();
 
                 // 4. Trigger Requests (Sequential to avoid Twilio/DB congestion for now)
                 let successCount = 0;
@@ -153,15 +155,24 @@ export async function POST(request: NextRequest) {
 
                         const result = await sendSMS(customer.phone, messageBody);
 
-                        await supabase
+                        const rrPatch = {
+                            status: result.sent ? "sent" : "failed",
+                            error_message: result.error || null,
+                            sent_at: result.sent ? new Date().toISOString() : null,
+                        };
+                        const { data: rrUpdated } = await supabase
                             .from("review_requests")
-                            .update({
-                                status: result.sent ? "sent" : "failed",
-                                error_message: result.error || null,
-                                sent_at: result.sent ? new Date().toISOString() : null
-                            })
-                            .eq("id", requestRecord.id);
-                        
+                            .update(rrPatch)
+                            .eq("id", requestRecord.id)
+                            .select();
+                        if (!rrUpdated?.[0]) {
+                            await adminClient
+                                .from("review_requests")
+                                .update(rrPatch)
+                                .eq("id", requestRecord.id)
+                                .eq("business_id", businessId);
+                        }
+
                         if (result.sent) {
                             successCount++;
                             // Simple update on customer record
