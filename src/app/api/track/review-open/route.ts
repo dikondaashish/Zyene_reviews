@@ -12,6 +12,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const parsed = openSchema.safeParse(body);
         if (!parsed.success) {
+            console.warn("[track/review-open] invalid payload", parsed.error.flatten());
             return NextResponse.json({ error: "Invalid open tracking payload" }, { status: 400 });
         }
 
@@ -27,7 +28,15 @@ export async function POST(request: Request) {
                 .eq("business_id", businessId)
                 .maybeSingle();
 
-            if (lookupError || !existing) {
+            if (lookupError) {
+                console.error("[track/review-open] lookup error", { requestId, businessId, message: lookupError.message });
+                return NextResponse.json({ error: "Review request lookup failed" }, { status: 500 });
+            }
+            if (!existing) {
+                console.warn("[track/review-open] no row for id+business", {
+                    requestId,
+                    businessId,
+                });
                 return NextResponse.json({ error: "Review request not found" }, { status: 404 });
             }
 
@@ -41,12 +50,27 @@ export async function POST(request: Request) {
                     opened_at: nowIso,
                     clicked_at: nowIso,
                 })
-                .eq("id", requestId);
+                .eq("id", requestId)
+                .eq("business_id", businessId);
 
-            if (updateError) throw updateError;
+            if (updateError) {
+                console.error("[track/review-open] update failed", {
+                    requestId,
+                    businessId,
+                    message: updateError.message,
+                });
+                throw updateError;
+            }
+            console.info("[track/review-open] updated", {
+                requestId,
+                businessId,
+                priorStatus: existing.status,
+                nextStatus,
+            });
             return NextResponse.json({ success: true, requestId });
         }
 
+        console.info("[track/review-open] anonymous public_link (no ref)", { businessId });
         const baseInsert = {
             business_id: businessId,
             status: "clicked",

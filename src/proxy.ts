@@ -328,11 +328,13 @@ export async function proxy(request: NextRequest) {
             return createResponse(supabaseResponse);
         }
 
-        // Rewrite everything else to the /r/[slug] review path
-        console.log(`[Middleware] Rewriting ${hostname}${pathname} to /r${pathname}`);
-        return createResponse(
-            NextResponse.rewrite(new URL(`/r${pathname}`, request.url))
-        );
+        // Rewrite everything else to the /r/[slug] review path.
+        // IMPORTANT: `new URL("/r/foo", request.url)` drops the original query string (?ref=...).
+        // Clone nextUrl, change pathname only, so ?ref=<requestId> survives for server + client tracking.
+        const rewriteUrl = request.nextUrl.clone();
+        rewriteUrl.pathname = `/r${pathname}`;
+        console.log(`[proxy] review domain rewrite: ${hostname}${pathname}${rewriteUrl.search} → ${rewriteUrl.pathname}${rewriteUrl.search}`);
+        return createResponse(NextResponse.rewrite(rewriteUrl));
     }
 
     // --- ROOT DOMAIN (domain) ---

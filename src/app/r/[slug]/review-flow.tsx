@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent, useRef, useCallback } from "react";
 import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { cn } from "@/lib/utils";
 import {
     DEFAULT_REVIEW_PAGE_BACKDROP_CSS,
@@ -44,6 +45,15 @@ export type PrivateFeedbackOfferMode = "hidden" | "visible";
 
 const DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT =
     "We're sorry for the inconvenience. We'd like to make things right with a special offer for you — we'll follow up with the details.";
+
+/** `?ref=` from the browser when SSR lost the query (e.g. old rewrite). */
+function parseReviewRefFromSearch(): string | undefined {
+    if (typeof window === "undefined") return undefined;
+    const raw = new URLSearchParams(window.location.search).get("ref")?.trim();
+    if (!raw) return undefined;
+    const parsed = z.string().uuid().safeParse(raw);
+    return parsed.success ? parsed.data : undefined;
+}
 
 // ─── Props ──────────────────────────────────────────────────────────────
 export interface PublicReviewFlowProps {
@@ -167,6 +177,18 @@ export function PublicReviewFlow({
     const hasTrackedOpenRef = useRef(false);
     const trackOpenInFlightRef = useRef<Promise<string | undefined> | null>(null);
 
+    const resolveTrackingRequestId = useCallback((): string | undefined => {
+        const fromProp = requestId?.trim();
+        if (fromProp && z.string().uuid().safeParse(fromProp).success) {
+            return fromProp;
+        }
+        const fromUrl = parseReviewRefFromSearch();
+        if (fromUrl && !fromProp) {
+            console.info("[PublicReviewFlow] using ?ref= from window.location (prop missing)");
+        }
+        return fromUrl;
+    }, [requestId]);
+
     const ensureActiveRequestId = useCallback(async (): Promise<string | undefined> => {
         if (isPreview) return undefined;
         if (activeRequestId) return activeRequestId;
@@ -177,22 +199,31 @@ export function PublicReviewFlow({
 
         trackOpenInFlightRef.current = (async () => {
             try {
+                const rid = resolveTrackingRequestId();
                 const res = await fetch("/api/track/review-open", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         businessId,
-                        requestId,
+                        requestId: rid,
                     }),
                 });
 
-                const data = await res.json().catch(() => ({}));
+                const data = (await res.json().catch(() => ({}))) as { requestId?: string; error?: string };
+                if (!res.ok) {
+                    console.warn("[PublicReviewFlow] /api/track/review-open failed", {
+                        status: res.status,
+                        error: data.error,
+                        hadRefProp: !!requestId?.trim(),
+                        hadRefUrl: !!parseReviewRefFromSearch(),
+                    });
+                }
                 if (res.ok && typeof data.requestId === "string" && data.requestId.length > 0) {
                     setActiveRequestId(data.requestId);
                     return data.requestId as string;
                 }
             } catch (error) {
-                console.error("Open tracking failed:", error);
+                console.error("[PublicReviewFlow] Open tracking failed:", error);
             } finally {
                 trackOpenInFlightRef.current = null;
             }
@@ -201,7 +232,7 @@ export function PublicReviewFlow({
         })();
 
         return trackOpenInFlightRef.current;
-    }, [activeRequestId, businessId, isPreview, requestId]);
+    }, [activeRequestId, businessId, isPreview, requestId, resolveTrackingRequestId]);
 
     useEffect(() => {
         if (isPreview || hasTrackedOpenRef.current) return;
@@ -402,7 +433,7 @@ export function PublicReviewFlow({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     business_id: businessId,
-                    review_request_id: requestId,
+                    review_request_id: activeRequestId ?? requestId ?? parseReviewRefFromSearch(),
                     rating,
                     content: feedback,
                     customer_email: customerEmail.trim() || null,
