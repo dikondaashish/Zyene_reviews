@@ -1368,6 +1368,7 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           delivered_at: string | null
+          email_status: string | null
           error_message: string | null
           follow_up_sent_at: string | null
           id: string
@@ -1378,6 +1379,7 @@ export type Database = {
           review_link: string | null
           scheduled_for: string | null
           sent_at: string | null
+          sms_status: string | null
           status: string
           tags_selected: string[] | null
           selected_staff: string[] | null
@@ -1395,6 +1397,7 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivered_at?: string | null
+          email_status?: string | null
           error_message?: string | null
           follow_up_sent_at?: string | null
           id?: string
@@ -1405,6 +1408,7 @@ export type Database = {
           review_link?: string | null
           scheduled_for?: string | null
           sent_at?: string | null
+          sms_status?: string | null
           status?: string
           tags_selected?: string[] | null
           selected_staff?: string[] | null
@@ -1422,6 +1426,7 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivered_at?: string | null
+          email_status?: string | null
           error_message?: string | null
           follow_up_sent_at?: string | null
           id?: string
@@ -1432,6 +1437,7 @@ export type Database = {
           review_link?: string | null
           scheduled_for?: string | null
           sent_at?: string | null
+          sms_status?: string | null
           status?: string
           tags_selected?: string[] | null
           selected_staff?: string[] | null

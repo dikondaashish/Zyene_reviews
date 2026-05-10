@@ -102,6 +102,17 @@ export default async function RequestsPage({
     // Use one `or=(and(...))` so stats match: outbound AND (click or delivery) predicates.
     const outboundRequestFilter =
         "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null";
+    // "Successfully sent" = at least one leg succeeded (new email_status / sms_status columns)
+    // OR a legacy row (both leg cols still NULL) whose top-level status reflects a delivered send.
+    // This makes "Total Sent" reflect actual reach, not raw attempts.
+    const legacySentStatuses = "sent,delivered,clicked,completed,feedback_left";
+    const successfullySent = [
+        "email_status.eq.sent",
+        "sms_status.eq.sent",
+        `and(channel.eq.link,status.eq.sent)`,
+        `and(email_status.is.null,sms_status.is.null,status.in.(${legacySentStatuses}))`,
+    ].join(",");
+    const outboundAndSent = `and(or(${outboundRequestFilter}),or(${successfullySent}))`;
     // Clicks: opened the link, or already converted (counts toward conversion denominator even if click row lagged).
     const clickedOrConverted =
         "clicked_at.not.is.null,status.eq.clicked,review_left.eq.true,completed_at.not.is.null,status.eq.completed,status.eq.feedback_left";
@@ -111,6 +122,11 @@ export default async function RequestsPage({
     const completedOrReviewLeft =
         "review_left.eq.true,completed_at.not.is.null,status.eq.completed,status.eq.feedback_left";
     const outboundAndConverted = `and(or(${outboundRequestFilter}),or(${completedOrReviewLeft}))`;
+    // Per-channel send / fail breakdowns — use the new dedicated columns.
+    const outboundAndEmailSent = `and(or(${outboundRequestFilter}),email_status.eq.sent)`;
+    const outboundAndSmsSent = `and(or(${outboundRequestFilter}),sms_status.eq.sent)`;
+    const outboundAndEmailFailed = `and(or(${outboundRequestFilter}),email_status.eq.failed)`;
+    const outboundAndSmsFailed = `and(or(${outboundRequestFilter}),sms_status.eq.failed)`;
 
     const admin = createAdminClient();
 
@@ -119,13 +135,17 @@ export default async function RequestsPage({
         deliveredRes,
         clickedRes,
         reviewsRes,
+        emailSentRes,
+        smsSentRes,
+        emailFailedRes,
+        smsFailedRes,
         listRes,
     ] = await Promise.all([
         admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
-            .or(outboundRequestFilter),
+            .or(outboundAndSent),
         admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
@@ -141,6 +161,26 @@ export default async function RequestsPage({
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
             .or(outboundAndConverted),
+        admin
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .or(outboundAndEmailSent),
+        admin
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .or(outboundAndSmsSent),
+        admin
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .or(outboundAndEmailFailed),
+        admin
+            .from("review_requests")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", business.id)
+            .or(outboundAndSmsFailed),
         supabase
             .from("review_requests")
             .select("*")
@@ -155,6 +195,10 @@ export default async function RequestsPage({
         deliveredRes.error ||
         clickedRes.error ||
         reviewsRes.error ||
+        emailSentRes.error ||
+        smsSentRes.error ||
+        emailFailedRes.error ||
+        smsFailedRes.error ||
         listRes.error;
 
     if (statsOrListError) {
@@ -173,6 +217,11 @@ export default async function RequestsPage({
     const delivered = deliveredRes.count;
     const clicked = clickedRes.count;
     const reviews = reviewsRes.count;
+    const emailSent = emailSentRes.count || 0;
+    const smsSent = smsSentRes.count || 0;
+    const emailFailed = emailFailedRes.count || 0;
+    const smsFailed = smsFailedRes.count || 0;
+    const totalFailed = emailFailed + smsFailed;
     const requests = listRes.data ?? [];
 
     const safeTotal = totalSent || 0;
@@ -215,18 +264,102 @@ export default async function RequestsPage({
             req.status === "feedback_left"
         );
 
-    // Badge helper
-    const getStatusBadge = (status: string, converted: boolean) => {
-        if (converted) return <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35"><Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left</Badge>;
+    // Badge helper. Prefers per-channel state (email_status / sms_status) when
+    // available so users can see partial-success cases on channel="both" and
+    // accurate per-leg failures on single-channel rows.
+    const getStatusBadge = (req: {
+        status: string;
+        channel?: string | null;
+        email_status?: string | null;
+        sms_status?: string | null;
+    }, converted: boolean) => {
+        if (converted) {
+            return (
+                <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35">
+                    <Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left
+                </Badge>
+            );
+        }
+
+        const status = req.status;
+        const ch = (req.channel || "").toLowerCase();
+        const e = req.email_status;
+        const s = req.sms_status;
+
+        // Pre-send lifecycle stays on the row-level status.
+        if (status === "queued") {
+            return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
+        }
+        if (status === "processing" || status === "sending") {
+            return <Badge variant="secondary" className="bg-muted text-muted-foreground">Processing</Badge>;
+        }
+
+        // Channel="both": show split per-leg state when we have it.
+        if (ch === "both" && (e || s)) {
+            const emailLabel = e === "sent" ? "Email ✓" : e === "failed" ? "Email ✗" : null;
+            const smsLabel = s === "sent" ? "SMS ✓" : s === "failed" ? "SMS ✗" : null;
+            const allOk = e === "sent" && s === "sent";
+            const allFailed = e === "failed" && s === "failed";
+
+            if (allOk) {
+                return (
+                    <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">
+                        Email + SMS Sent
+                    </Badge>
+                );
+            }
+            if (allFailed) {
+                return <Badge variant="destructive">Email + SMS Failed</Badge>;
+            }
+            return (
+                <div className="flex flex-wrap items-center gap-1">
+                    {emailLabel && (
+                        <Badge
+                            variant="outline"
+                            className={
+                                e === "sent"
+                                    ? "border-chart-2/40 bg-chart-2/15 text-chart-2"
+                                    : "border-destructive/40 bg-destructive/10 text-destructive"
+                            }
+                        >
+                            {emailLabel}
+                        </Badge>
+                    )}
+                    {smsLabel && (
+                        <Badge
+                            variant="outline"
+                            className={
+                                s === "sent"
+                                    ? "border-chart-2/40 bg-chart-2/15 text-chart-2"
+                                    : "border-destructive/40 bg-destructive/10 text-destructive"
+                            }
+                        >
+                            {smsLabel}
+                        </Badge>
+                    )}
+                </div>
+            );
+        }
+
+        // Single-channel rows: prefer the per-leg failure label.
+        if (ch === "email" && e === "failed") {
+            return <Badge variant="destructive">Email Failed</Badge>;
+        }
+        if (ch === "sms" && s === "failed") {
+            return <Badge variant="destructive">SMS Failed</Badge>;
+        }
 
         switch (status) {
-            case "queued": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
-            case "processing": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Processing</Badge>;
-            case "sent": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">Sent</Badge>;
-            case "delivered": return <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">Delivered</Badge>;
-            case "clicked": return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">Clicked</Badge>;
-            case "failed": return <Badge variant="destructive">Failed</Badge>;
-            default: return <Badge variant="outline">{status}</Badge>;
+            case "sent":
+                return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">Sent</Badge>;
+            case "delivered":
+                return <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">Delivered</Badge>;
+            case "clicked":
+                return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">Clicked</Badge>;
+            case "failed":
+                return <Badge variant="destructive">Failed</Badge>;
+            default:
+                return <Badge variant="outline">{status}</Badge>;
         }
     };
 
@@ -268,6 +401,12 @@ export default async function RequestsPage({
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{totalSent}</div>
+                        <p className="text-xs text-muted-foreground">
+                            {emailSent} email · {smsSent} SMS
+                            {totalFailed > 0 ? (
+                                <span className="text-destructive"> · {totalFailed} failed</span>
+                            ) : null}
+                        </p>
                     </CardContent>
                 </Card>
                 <Card className="border-l-4 border-l-emerald-500">
@@ -335,7 +474,7 @@ export default async function RequestsPage({
                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                         {reviewRequestChannelCell(req.channel)}
                                     </div>
-                                    <div className="ml-auto">{getStatusBadge(req.status, requestFlowCompleted(req))}</div>
+                                    <div className="ml-auto">{getStatusBadge(req, requestFlowCompleted(req))}</div>
                                 </div>
                             </div>
                         );
@@ -369,7 +508,7 @@ export default async function RequestsPage({
                                         {reviewRequestChannelCell(req.channel)}
                                     </TableCell>
                                     <TableCell>
-                                        {getStatusBadge(req.status, requestFlowCompleted(req))}
+                                        {getStatusBadge(req, requestFlowCompleted(req))}
                                     </TableCell>
                                     <TableCell className="text-right text-muted-foreground">
                                         {req.created_at ? formatDistanceToNow(new Date(req.created_at), { addSuffix: true }) : "-"}

@@ -44,6 +44,8 @@ export interface ReviewRequestExportRow {
     customer_email?: string | null;
     channel: string;
     status: string;
+    email_status?: string | null;
+    sms_status?: string | null;
     review_left?: boolean | null;
     completed_at?: string | null;
 }

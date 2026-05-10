@@ -315,6 +315,9 @@ export async function sendOutboundReviewRequest(
     let errorMessage: string | null = null;
     let resendEmailId: string | null = null;
     let bumpLegs: BumpAfterSendLegs | undefined;
+    // Per-leg outcomes. NULL means "this channel was not used on this row".
+    let smsLegStatus: "sent" | "failed" | null = null;
+    let emailLegStatus: "sent" | "failed" | null = null;
 
     if (channel === "sms" && phoneNorm) {
         const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -322,6 +325,9 @@ export async function sendOutboundReviewRequest(
         if (!r.sent) {
             sendStatus = "failed";
             errorMessage = r.error ?? "SMS failed";
+            smsLegStatus = "failed";
+        } else {
+            smsLegStatus = "sent";
         }
     } else if (channel === "email" && emailNorm) {
         const html = reviewRequestEmail({
@@ -347,8 +353,10 @@ export async function sendOutboundReviewRequest(
         if (!r.sent) {
             sendStatus = "failed";
             errorMessage = r.error ?? "Email failed";
+            emailLegStatus = "failed";
         } else {
             resendEmailId = r.id ?? null;
+            emailLegStatus = "sent";
         }
     } else if (channel === "both" && phoneNorm && emailNorm) {
         const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -377,6 +385,9 @@ export async function sendOutboundReviewRequest(
 
         const smsOk = smsR.sent;
         const emailOk = emailR.sent;
+        smsLegStatus = smsOk ? "sent" : "failed";
+        emailLegStatus = emailOk ? "sent" : "failed";
+
         if (!smsOk && !emailOk) {
             sendStatus = "failed";
             errorMessage = [
@@ -403,6 +414,8 @@ export async function sendOutboundReviewRequest(
         error_message: errorMessage,
         sent_at: sentAt,
         review_link: reviewLink,
+        sms_status: smsLegStatus,
+        email_status: emailLegStatus,
     };
     if (resendEmailId) patch.resend_email_id = resendEmailId;
 

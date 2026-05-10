@@ -25,6 +25,8 @@ export async function GET(request: Request) {
             customer_email,
             channel,
             status,
+            email_status,
+            sms_status,
             review_left,
             completed_at,
             created_at,
@@ -48,6 +50,8 @@ export async function GET(request: Request) {
             "Email": requestRow.customer_email || "",
             "Channel": requestRow.channel,
             "Status": requestRow.status,
+            "Email Status": requestRow.email_status || "",
+            "SMS Status": requestRow.sms_status || "",
             "Converted to Review": converted ? "Yes" : "No",
         };
     });
