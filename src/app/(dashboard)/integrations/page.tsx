@@ -269,7 +269,7 @@ export default async function IntegrationsPage() {
                         }
                         accentColor="bg-primary"
                     />
-                    <ZapierCard businessId={business.id} />
+                    <ZapierCard apiKey={apiKey} />
                 </div>
             </section>
 

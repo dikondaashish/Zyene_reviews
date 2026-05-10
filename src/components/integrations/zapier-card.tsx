@@ -5,14 +5,27 @@ import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Zap, ExternalLink } from "lucide-react";
+import { Copy, Check, Zap, ExternalLink, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { getAppBaseUrl } from "@/config/env";
 
-export function ZapierCard({ businessId }: { businessId: string }) {
+interface ZapierCardProps {
+    /** Required so we can fall back to a friendly disabled state when the user hasn't generated a key yet. */
+    apiKey?: string | null;
+}
+
+export function ZapierCard({ apiKey }: ZapierCardProps) {
     const [copied, setCopied] = useState(false);
-    const webhookUrl = `https://app.zyenereviews.com/api/webhooks/generic?key=${businessId}`;
+    const apiBase = getAppBaseUrl();
+    const webhookUrl = apiKey
+        ? `${apiBase}/api/webhooks/generic?key=${apiKey}`
+        : `${apiBase}/api/webhooks/generic?key=YOUR_API_KEY`;
 
     const handleCopy = () => {
+        if (!apiKey) {
+            toast.info("Generate an API key first in the Developer API card below.");
+            return;
+        }
         navigator.clipboard.writeText(webhookUrl);
         setCopied(true);
         toast.success("Webhook URL copied to clipboard");
@@ -35,12 +48,28 @@ export function ZapierCard({ businessId }: { businessId: string }) {
                             </p>
                         </div>
                     </div>
-                    <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1 border-0 text-xs">
-                        Available
+                    <Badge
+                        className={
+                            apiKey
+                                ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1 border-0 text-xs"
+                                : "bg-muted text-muted-foreground gap-1 border-0 text-xs"
+                        }
+                    >
+                        {apiKey ? "Available" : "Needs API key"}
                     </Badge>
                 </div>
             </CardHeader>
             <CardContent className="space-y-3 pb-3">
+                {!apiKey && (
+                    <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-300">
+                        <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                        <p>
+                            Generate an API key in the <span className="font-medium">Developer API</span>{" "}
+                            section below first &mdash; the webhook URL is signed by it.
+                        </p>
+                    </div>
+                )}
+
                 <div>
                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5 block">
                         Webhook URL
@@ -51,7 +80,13 @@ export function ZapierCard({ businessId }: { businessId: string }) {
                             readOnly
                             className="font-mono text-xs bg-muted/50"
                         />
-                        <Button variant="outline" size="icon" className="shrink-0" onClick={handleCopy}>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="shrink-0"
+                            onClick={handleCopy}
+                            disabled={!apiKey}
+                        >
                             {copied ? (
                                 <Check className="h-4 w-4 text-chart-2" />
                             ) : (
@@ -60,22 +95,35 @@ export function ZapierCard({ businessId }: { businessId: string }) {
                         </Button>
                     </div>
                 </div>
+
                 <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground space-y-1.5">
                     <p className="font-medium text-foreground text-sm">Quick Setup</p>
+                    <p>1. In Zapier, create a new Zap with your POS as the trigger.</p>
                     <p>
-                        1. In Zapier, create a new Zap with your POS as the trigger.
+                        2. Add a &quot;Webhooks by Zapier&quot; action &rarr; choose <span className="font-mono">POST</span>.
                     </p>
+                    <p>3. Paste the URL above into the Webhook field.</p>
                     <p>
-                        2. Add a &quot;Webhooks by Zapier&quot; action → choose POST.
+                        4. Send JSON with <span className="font-mono">name</span>,{" "}
+                        <span className="font-mono">email</span>, and/or{" "}
+                        <span className="font-mono">phone</span>. Optional:{" "}
+                        <span className="font-mono">channel</span> = sms | email | both | link.
                     </p>
-                    <p>
-                        3. Paste the webhook URL above and send customer data as JSON.
-                    </p>
+                </div>
+
+                <div className="rounded-lg border bg-background/60 p-3 text-[11px] text-muted-foreground">
+                    <p className="font-medium text-foreground mb-1">Example payload</p>
+                    <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed">{`{
+  "name": "Sam Patel",
+  "email": "sam@example.com",
+  "phone": "+15551234567",
+  "channel": "both"
+}`}</pre>
                 </div>
             </CardContent>
             <CardFooter className="pt-0">
                 <a
-                    href="https://zapier.com"
+                    href="https://zapier.com/apps/webhook/integrations"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full"
