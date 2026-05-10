@@ -1,5 +1,6 @@
 
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
@@ -63,15 +64,17 @@ export default async function RequestsPage({
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    // Exclude anonymous tracking-only rows created by public-link / QR opens.
-    // Requests page should show outbound customer requests, not passive page-open telemetry.
+    // PostgREST: chained `.or()` becomes multiple `or=` params and does NOT mean (A AND B).
+    // Use one `or=(and(...))` so stats match: outbound AND (click or delivery) predicates.
     const outboundRequestFilter =
         "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null";
-
-    // Clicks: prefer clicked_at (set by /api/track/review-open or Resend). Do not rely on status alone —
-    // Resend "delivered" overwrites status to "delivered" after a visit, which would hide real clicks.
     const clickedOrConverted =
         "clicked_at.not.is.null,status.eq.clicked,review_left.eq.true";
+    const outboundAndClicked = `and(or(${outboundRequestFilter}),or(${clickedOrConverted}))`;
+    const outboundAndDelivered = `and(or(${outboundRequestFilter}),delivered_at.not.is.null)`;
+    const outboundAndReviewLeft = `and(or(${outboundRequestFilter}),review_left.eq.true)`;
+
+    const admin = createAdminClient();
 
     const [
         totalSentRes,
@@ -80,29 +83,26 @@ export default async function RequestsPage({
         reviewsRes,
         listRes,
     ] = await Promise.all([
-        supabase
+        admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
             .or(outboundRequestFilter),
-        supabase
+        admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
-            .or(outboundRequestFilter)
-            .not("delivered_at", "is", null),
-        supabase
+            .or(outboundAndDelivered),
+        admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
-            .or(outboundRequestFilter)
-            .or(clickedOrConverted),
-        supabase
+            .or(outboundAndClicked),
+        admin
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
-            .or(outboundRequestFilter)
-            .eq("review_left", true),
+            .or(outboundAndReviewLeft),
         supabase
             .from("review_requests")
             .select("*")

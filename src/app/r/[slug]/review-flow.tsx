@@ -174,7 +174,6 @@ export function PublicReviewFlow({
     }, [isPreview, previewStep]);
 
     const [activeRequestId, setActiveRequestId] = useState<string | undefined>(requestId);
-    const hasTrackedOpenRef = useRef(false);
     const trackOpenInFlightRef = useRef<Promise<string | undefined> | null>(null);
 
     const resolveTrackingRequestId = useCallback((): string | undefined => {
@@ -235,8 +234,8 @@ export function PublicReviewFlow({
     }, [activeRequestId, businessId, isPreview, requestId, resolveTrackingRequestId]);
 
     useEffect(() => {
-        if (isPreview || hasTrackedOpenRef.current) return;
-        hasTrackedOpenRef.current = true;
+        if (isPreview) return;
+        // Server may already have recorded the open; client POST dedupes via in-flight ref and is a backup.
         void ensureActiveRequestId();
     }, [ensureActiveRequestId, isPreview]);
 

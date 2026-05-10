@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { recordReviewRequestOpenForRef } from "@/lib/review-requests/record-review-request-open";
 import { z } from "zod";
 
 const openSchema = z.object({
@@ -17,58 +18,23 @@ export async function POST(request: Request) {
         }
 
         const { businessId, requestId } = parsed.data;
-        const nowIso = new Date().toISOString();
-        const supabase = createAdminClient();
 
         if (requestId) {
-            const { data: existing, error: lookupError } = await supabase
-                .from("review_requests")
-                .select("id,status")
-                .eq("id", requestId)
-                .eq("business_id", businessId)
-                .maybeSingle();
-
-            if (lookupError) {
-                console.error("[track/review-open] lookup error", { requestId, businessId, message: lookupError.message });
-                return NextResponse.json({ error: "Review request lookup failed" }, { status: 500 });
+            const result = await recordReviewRequestOpenForRef({ businessId, requestId });
+            if (!result.ok) {
+                if (result.reason === "not_found") {
+                    return NextResponse.json({ error: "Review request not found" }, { status: 404 });
+                }
+                if (result.reason === "lookup_failed") {
+                    return NextResponse.json({ error: "Review request lookup failed" }, { status: 500 });
+                }
+                return NextResponse.json({ error: "Failed to track open" }, { status: 500 });
             }
-            if (!existing) {
-                console.warn("[track/review-open] no row for id+business", {
-                    requestId,
-                    businessId,
-                });
-                return NextResponse.json({ error: "Review request not found" }, { status: 404 });
-            }
-
-            const terminalStatuses = new Set(["completed", "review_left", "feedback_left"]);
-            const nextStatus = terminalStatuses.has(existing.status) ? existing.status : "clicked";
-
-            const { error: updateError } = await supabase
-                .from("review_requests")
-                .update({
-                    status: nextStatus,
-                    opened_at: nowIso,
-                    clicked_at: nowIso,
-                })
-                .eq("id", requestId)
-                .eq("business_id", businessId);
-
-            if (updateError) {
-                console.error("[track/review-open] update failed", {
-                    requestId,
-                    businessId,
-                    message: updateError.message,
-                });
-                throw updateError;
-            }
-            console.info("[track/review-open] updated", {
-                requestId,
-                businessId,
-                priorStatus: existing.status,
-                nextStatus,
-            });
             return NextResponse.json({ success: true, requestId });
         }
+
+        const nowIso = new Date().toISOString();
+        const supabase = createAdminClient();
 
         console.info("[track/review-open] anonymous public_link (no ref)", { businessId });
         const baseInsert = {
@@ -80,9 +46,6 @@ export async function POST(request: Request) {
             clicked_at: nowIso,
         };
 
-        // Primary path for current schema: explicit link/public_link attribution.
-        // Fallback path supports older production schemas where channel/trigger_source
-        // CHECK constraints may not include these newer enum values yet.
         let createdRequest: { id: string } | null = null;
         let insertError: unknown = null;
 

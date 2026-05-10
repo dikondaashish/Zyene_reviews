@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { notFound } from "next/navigation";
 import { PublicReviewFlow } from "./review-flow";
 import { Metadata } from "next";
+import { z } from "zod";
 
 export async function generateMetadata({
     params,
@@ -22,6 +23,7 @@ export async function generateMetadata({
 
 import { AccessError } from "@/components/public/access-error";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
+import { recordReviewRequestOpenForRef } from "@/lib/review-requests/record-review-request-open";
 
 export default async function RequestPage({
     params,
@@ -106,9 +108,21 @@ export default async function RequestPage({
         return <AccessError type="platform" businessName={business.name} />;
     }
 
-    // Open/click tracking runs client-side via /api/track/review-open so every page load
-    // (including QR scans) is recorded at request time, not during server render.
+    // Record email-link opens on the server so clicks are not lost when client JS never runs
+    // (RSC prefetch, iOS quirks) or when the client effect fails once and previously could not retry.
     const resolvedRequestId = requestId;
+    if (resolvedRequestId) {
+        const refParse = z.string().uuid().safeParse(resolvedRequestId.trim());
+        if (refParse.success) {
+            const tracked = await recordReviewRequestOpenForRef({
+                businessId: business.id,
+                requestId: refParse.data,
+            });
+            if (!tracked.ok) {
+                console.warn("[Review Flow] server open tracking failed", tracked);
+            }
+        }
+    }
 
     const rawPageBg = (business as { review_page_background_color?: string | null })
         .review_page_background_color;
