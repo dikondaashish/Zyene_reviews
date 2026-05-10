@@ -223,6 +223,7 @@ export const followUpWorker = inngest.createFunction(
           .eq("campaign_id", campaignId)
           .eq("status", "delivered")
           .eq("review_left", false)
+          .is("completed_at", null)
           .eq("is_follow_up_sent", false)
           .lt("sent_at", cutoffTime.toISOString())
           .limit(100);

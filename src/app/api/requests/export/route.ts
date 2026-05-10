@@ -26,6 +26,7 @@ export async function GET(request: Request) {
             channel,
             status,
             review_left,
+            completed_at,
             created_at,
             sent_at
         `)
@@ -33,16 +34,23 @@ export async function GET(request: Request) {
         .order("created_at", { ascending: false });
 
     const requestRows = (requests || []) as ReviewRequestExportRow[];
-    const formatted = requestRows.map((requestRow) => ({
-        "Created At": new Date(requestRow.created_at).toLocaleString(),
-        "Sent At": requestRow.sent_at ? new Date(requestRow.sent_at).toLocaleString() : "",
-        "Name": requestRow.customer_name || "",
-        "Phone": requestRow.customer_phone || "",
-        "Email": requestRow.customer_email || "",
-        "Channel": requestRow.channel,
-        "Status": requestRow.status,
-        "Converted to Review": requestRow.review_left ? "Yes" : "No"
-    }));
+    const formatted = requestRows.map((requestRow) => {
+        const converted =
+            !!requestRow.review_left ||
+            !!requestRow.completed_at ||
+            requestRow.status === "completed" ||
+            requestRow.status === "feedback_left";
+        return {
+            "Created At": new Date(requestRow.created_at).toLocaleString(),
+            "Sent At": requestRow.sent_at ? new Date(requestRow.sent_at).toLocaleString() : "",
+            "Name": requestRow.customer_name || "",
+            "Phone": requestRow.customer_phone || "",
+            "Email": requestRow.customer_email || "",
+            "Channel": requestRow.channel,
+            "Status": requestRow.status,
+            "Converted to Review": converted ? "Yes" : "No",
+        };
+    });
 
     const csvData = Papa.unparse(formatted);
     const businessName = business.name || "business";

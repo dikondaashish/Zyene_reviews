@@ -68,11 +68,15 @@ export default async function RequestsPage({
     // Use one `or=(and(...))` so stats match: outbound AND (click or delivery) predicates.
     const outboundRequestFilter =
         "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null";
+    // Clicks: opened the link, or already converted (counts toward conversion denominator even if click row lagged).
     const clickedOrConverted =
-        "clicked_at.not.is.null,status.eq.clicked,review_left.eq.true";
+        "clicked_at.not.is.null,status.eq.clicked,review_left.eq.true,completed_at.not.is.null,status.eq.completed,status.eq.feedback_left";
     const outboundAndClicked = `and(or(${outboundRequestFilter}),or(${clickedOrConverted}))`;
     const outboundAndDelivered = `and(or(${outboundRequestFilter}),delivered_at.not.is.null)`;
-    const outboundAndReviewLeft = `and(or(${outboundRequestFilter}),review_left.eq.true)`;
+    // Completed Google flow sets status + completed_at but historically omitted review_left; include both.
+    const completedOrReviewLeft =
+        "review_left.eq.true,completed_at.not.is.null,status.eq.completed,status.eq.feedback_left";
+    const outboundAndConverted = `and(or(${outboundRequestFilter}),or(${completedOrReviewLeft}))`;
 
     const admin = createAdminClient();
 
@@ -102,7 +106,7 @@ export default async function RequestsPage({
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
-            .or(outboundAndReviewLeft),
+            .or(outboundAndConverted),
         supabase
             .from("review_requests")
             .select("*")
@@ -165,9 +169,21 @@ export default async function RequestsPage({
     }
 
 
+    const requestFlowCompleted = (req: {
+        review_left?: boolean | null;
+        completed_at?: string | null;
+        status?: string | null;
+    }) =>
+        !!(
+            req.review_left ||
+            req.completed_at ||
+            req.status === "completed" ||
+            req.status === "feedback_left"
+        );
+
     // Badge helper
-    const getStatusBadge = (status: string, reviewLeft: boolean) => {
-        if (reviewLeft) return <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35"><Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left</Badge>;
+    const getStatusBadge = (status: string, converted: boolean) => {
+        if (converted) return <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35"><Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left</Badge>;
 
         switch (status) {
             case "queued": return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
@@ -252,7 +268,7 @@ export default async function RequestsPage({
                     <CardContent>
                         <div className="text-2xl font-bold">{conversionRate.toFixed(1)}%</div>
                         <p className="text-xs text-muted-foreground">
-                            {reviews} reviews left
+                            {reviews} completed
                         </p>
                     </CardContent>
                 </Card>
@@ -293,7 +309,7 @@ export default async function RequestsPage({
                                         )}
                                         <span className="font-medium uppercase">{req.channel}</span>
                                     </div>
-                                    <div className="ml-auto">{getStatusBadge(req.status, req.review_left)}</div>
+                                    <div className="ml-auto">{getStatusBadge(req.status, requestFlowCompleted(req))}</div>
                                 </div>
                             </div>
                         );
@@ -328,7 +344,7 @@ export default async function RequestsPage({
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        {getStatusBadge(req.status, req.review_left)}
+                                        {getStatusBadge(req.status, requestFlowCompleted(req))}
                                     </TableCell>
                                     <TableCell className="text-right text-muted-foreground">
                                         {req.created_at ? formatDistanceToNow(new Date(req.created_at), { addSuffix: true }) : "-"}

@@ -45,6 +45,7 @@ export interface ReviewRequestExportRow {
     channel: string;
     status: string;
     review_left?: boolean | null;
+    completed_at?: string | null;
 }
 
 export interface PrivateFeedbackExportRow {

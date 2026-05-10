@@ -369,6 +369,7 @@ export function PublicReviewFlow({
         try {
             const trackData = {
                 status: "completed",
+                review_left: true,
                 rating_given: rating,
                 tags_selected: selectedTags,
                 ai_review_text: reviewText,
