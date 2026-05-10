@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -10,11 +11,11 @@ import {
     CheckCircle2,
     Copy,
     ExternalLink,
-    Inbox,
     KeyRound,
+    Link2,
     Send,
     Sparkles,
-    Workflow,
+    Store,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -26,6 +27,7 @@ interface ZapierSetupClientProps {
     appBaseUrl: string;
     apiKey: string | null;
     businessId: string;
+    children?: ReactNode;
 }
 
 const SAMPLE_PAYLOAD = `{
@@ -35,37 +37,17 @@ const SAMPLE_PAYLOAD = `{
   "channel": "both"
 }`;
 
-interface PartnerApp {
-    name: string;
-    /** One-line use case shown beneath the name. */
-    blurb: string;
-    /** Single emoji glyph used as a tiny visual anchor; we deliberately avoid
-     *  pulling in third-party brand SVGs to keep the page lightweight and on-brand. */
-    glyph: string;
-}
-
-const PARTNER_APPS: PartnerApp[] = [
-    { name: "Square", blurb: "After a Square payment", glyph: "◼" },
-    { name: "Jobber", blurb: "When a job is closed", glyph: "🔧" },
-    { name: "ServiceTitan", blurb: "Invoice marked paid", glyph: "🛠" },
-    { name: "Housecall Pro", blurb: "Job completed", glyph: "🏠" },
-    { name: "QuickBooks", blurb: "Invoice marked paid", glyph: "📒" },
-    { name: "Google Sheets", blurb: "New row added", glyph: "📊" },
-];
-
 export function ZapierSetupClient({
     appBaseUrl,
     apiKey,
     businessId,
+    children,
 }: ZapierSetupClientProps) {
     const webhookUrl = useMemo(() => {
         const key = apiKey ?? "YOUR_API_KEY";
         return `${appBaseUrl}/api/webhooks/generic?key=${key}`;
     }, [appBaseUrl, apiKey]);
 
-    // Short hint shown under the webhook URL so a user can confirm at a glance
-    // which business this Zap is wired to. Useful for multi-location accounts
-    // and for quoting on support tickets.
     const businessIdShort = `${businessId.slice(0, 8)}…${businessId.slice(-4)}`;
 
     const [copiedUrl, setCopiedUrl] = useState(false);
@@ -97,44 +79,45 @@ export function ZapierSetupClient({
 
     return (
         <div className="grid gap-6 lg:grid-cols-5">
-            {/* ── LEFT: How it works ── */}
-            <Card className="lg:col-span-2">
-                <CardHeader className="space-y-1">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+            {/* ── LEFT: How it works (matches dashboard stat-card accent style) ── */}
+            <Card className="overflow-hidden border-l-4 border-l-primary border-border bg-card lg:col-span-2">
+                <CardHeader className="space-y-1 border-b border-border/60 bg-muted/20 pb-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         How it works
                     </p>
                     <h2 className="text-lg font-semibold tracking-tight">
                         Three steps from job done to review request sent
                     </h2>
                 </CardHeader>
-                <CardContent className="space-y-5">
+                <CardContent className="space-y-5 pt-5">
                     <HowItWorksStep
                         index={1}
-                        icon={Workflow}
+                        icon={Store}
+                        iconWrapClass="bg-chart-4/15 text-chart-4 ring-chart-4/25"
                         title="Your POS or CRM fires the trigger"
                         description="When a job is completed, an invoice is paid, or a row is added to a sheet — pick whatever signals 'service is done'."
                     />
-                    <div className="ml-[15px] h-6 w-px bg-border" />
                     <HowItWorksStep
                         index={2}
-                        icon={Inbox}
+                        icon={Link2}
+                        iconWrapClass="bg-chart-2/15 text-chart-2 ring-chart-2/25"
                         title="Zapier sends customer details to Zyene"
                         description="Map the customer's name, phone, and/or email into the JSON body. The webhook URL has your API key built in."
                     />
-                    <div className="ml-[15px] h-6 w-px bg-border" />
                     <HowItWorksStep
                         index={3}
                         icon={Send}
+                        iconWrapClass="bg-primary/10 text-primary ring-primary/25"
                         title="We send the review request automatically"
                         description="SMS, email, or both — using the same plan limits, opt-out logic, and templates as the dashboard."
                     />
 
-                    <div className="mt-6 flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs text-foreground/80">
-                        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                    <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-muted/50 p-3 text-xs text-foreground/90">
+                        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sync-action" aria-hidden />
                         <p>
                             <span className="font-medium text-foreground">Tip:</span>{" "}
-                            Set <code className="font-mono">channel</code> to{" "}
-                            <code className="font-mono">both</code> when you have a phone <em>and</em> an email — Zyene
+                            Set <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">channel</code> to{" "}
+                            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">both</code> when you have a phone <em>and</em> an email — Zyene
                             will gracefully fall back to whichever channel succeeds if one fails.
                         </p>
                     </div>
@@ -143,11 +126,11 @@ export function ZapierSetupClient({
 
             {/* ── RIGHT: Setup ── */}
             <div className="space-y-6 lg:col-span-3">
-                {/* Webhook URL panel */}
-                <Card>
-                    <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 pb-3">
+                <Card className="overflow-hidden border-primary/20 bg-card">
+                    <div className="h-1 w-full bg-gradient-to-r from-sync-action to-primary" />
+                    <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 border-b border-border/60 bg-muted/15 pb-4">
                         <div className="space-y-1">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                 Setup
                             </p>
                             <h2 className="text-lg font-semibold tracking-tight">
@@ -157,17 +140,17 @@ export function ZapierSetupClient({
                         <Badge
                             className={
                                 apiKey
-                                    ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 border-0 text-xs"
-                                    : "bg-muted text-muted-foreground border-0 text-xs"
+                                    ? "border-0 bg-chart-2/15 text-xs text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
+                                    : "border-0 bg-muted text-xs text-muted-foreground"
                             }
                         >
                             {apiKey ? "Ready" : "Needs API key"}
                         </Badge>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 pt-5">
                         {!apiKey && (
                             <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-300">
-                                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
                                 <div className="space-y-2">
                                     <p>
                                         You need a Developer API key before you can use Zapier — the
@@ -212,7 +195,7 @@ export function ZapierSetupClient({
                             <p className="mt-1.5 text-[11px] text-muted-foreground">
                                 Treat this URL like a password — it includes your API key.
                                 Connected to business{" "}
-                                <code className="rounded bg-muted px-1 py-0.5 font-mono">
+                                <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
                                     {businessIdShort}
                                 </code>
                                 .
@@ -245,7 +228,7 @@ export function ZapierSetupClient({
                                     )}
                                 </Button>
                             </div>
-                            <pre className="overflow-x-auto rounded-lg border bg-muted/40 p-3 font-mono text-[11px] leading-relaxed">
+                            <pre className="overflow-x-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-[11px] leading-relaxed">
                                 {SAMPLE_PAYLOAD}
                             </pre>
                             <p className="mt-1.5 text-[11px] text-muted-foreground">
@@ -260,9 +243,8 @@ export function ZapierSetupClient({
                     </CardContent>
                 </Card>
 
-                {/* Step-by-step */}
-                <Card>
-                    <CardHeader className="space-y-1">
+                <Card className="overflow-hidden border-border bg-card">
+                    <CardHeader className="space-y-1 border-b border-border/60 bg-muted/15 pb-4">
                         <h2 className="text-lg font-semibold tracking-tight">
                             Configure your Zap
                         </h2>
@@ -270,7 +252,7 @@ export function ZapierSetupClient({
                             Five minutes in Zapier — no code needed.
                         </p>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-5">
                         <ol className="space-y-4">
                             <SetupStep
                                 index={1}
@@ -358,48 +340,9 @@ export function ZapierSetupClient({
                     </CardContent>
                 </Card>
 
-                {/* Partner apps */}
-                <Card>
-                    <CardHeader className="space-y-1">
-                        <h2 className="text-lg font-semibold tracking-tight">
-                            Popular tools that work via Zapier
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            Anything Zapier supports works here — these are the ones our
-                            customers wire up most often.
-                        </p>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {PARTNER_APPS.map((app) => (
-                                <div
-                                    key={app.name}
-                                    className="flex items-start gap-3 rounded-lg border border-border bg-card/40 p-3 transition-colors hover:bg-card"
-                                >
-                                    <div
-                                        aria-hidden="true"
-                                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted text-base"
-                                    >
-                                        {app.glyph}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="truncate text-sm font-semibold">{app.name}</p>
-                                        <p className="truncate text-[11px] text-muted-foreground">
-                                            {app.blurb}
-                                        </p>
-                                        <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                                            <CheckCircle2 className="h-2.5 w-2.5" />
-                                            Works via Zapier
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                {children}
 
-                {/* Help footer */}
-                <Card className="border-dashed">
+                <Card className="border-dashed border-border bg-muted/20">
                     <CardContent className="flex flex-col items-start justify-between gap-3 py-5 sm:flex-row sm:items-center">
                         <div>
                             <p className="text-sm font-semibold">Need a hand?</p>
@@ -417,7 +360,7 @@ export function ZapierSetupClient({
                                     Open docs
                                 </Link>
                             </Button>
-                            <Button asChild size="sm">
+                            <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
                                 <a
                                     href="https://zapier.com/apps/webhook/integrations"
                                     target="_blank"
@@ -439,21 +382,25 @@ export function ZapierSetupClient({
 function HowItWorksStep({
     index,
     icon: Icon,
+    iconWrapClass,
     title,
     description,
 }: {
     index: number;
     icon: React.ElementType;
+    iconWrapClass: string;
     title: string;
     description: string;
 }) {
     return (
-        <div className="flex items-start gap-3">
-            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/20">
-                <Icon className="h-4 w-4 text-primary" />
-                <span className="absolute -right-1 -top-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
-                    {index}
-                </span>
+        <div className="flex gap-3">
+            <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border">
+                {index}
+            </span>
+            <div
+                className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ring-1 ${iconWrapClass}`}
+            >
+                <Icon className="h-5 w-5" aria-hidden />
             </div>
             <div className="min-w-0">
                 <p className="text-sm font-semibold leading-tight">{title}</p>
@@ -474,7 +421,7 @@ function SetupStep({
 }) {
     return (
         <li className="flex gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary ring-1 ring-primary/20">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border">
                 {index}
             </span>
             <div className="min-w-0">
