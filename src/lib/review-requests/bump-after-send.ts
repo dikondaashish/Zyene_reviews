@@ -10,6 +10,8 @@ function splitCustomerName(customerName: string | null | undefined): {
     return { first: parts[0] ?? null, last: parts.slice(1).join(" ") || null };
 }
 
+export type BumpAfterSendLegs = { phone: boolean; email: boolean };
+
 /** After a successful send: bump customer counters (works with service-role client). */
 export async function bumpCustomerAfterSend(
     supabase: SupabaseClient,
@@ -17,21 +19,25 @@ export async function bumpCustomerAfterSend(
     customerName: string | null | undefined,
     phone: string | null,
     email: string | null,
+    /** When set (e.g. channel "both" partial success), only bump legs that actually sent. */
+    legs?: BumpAfterSendLegs,
 ) {
     const { first: pFirst, last: pLast } = splitCustomerName(customerName ?? undefined);
 
+    const bumpPhone = legs ? legs.phone : true;
+    const bumpEmail = legs ? legs.email : true;
+
     const digits = (phone || "").replace(/\D/g, "");
-    if (phone && digits.length >= 10) {
+    if (bumpPhone && phone && digits.length >= 10) {
         await supabase.rpc("increment_customer_requests", {
             p_business_id: businessId,
             p_phone: phone,
             p_first_name: pFirst,
             p_last_name: pLast,
         });
-        return;
     }
 
-    if (email) {
+    if (bumpEmail && email) {
         const { data: row } = await supabase
             .from("customers")
             .select("id, total_requests_sent, first_name, last_name")

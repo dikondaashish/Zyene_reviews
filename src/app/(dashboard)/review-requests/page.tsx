@@ -70,7 +70,7 @@ function StatusBadge({ status }: { status: string }) {
 
 // Channel Badge Component
 function ChannelBadge({ channel }: { channel: string }) {
-    const config: Record<string, { label: string; icon: any; color: string }> = {
+    const config: Record<string, { label: string; icon: typeof MessageSquare; color: string }> = {
         sms: {
             label: "SMS",
             icon: MessageSquare,
@@ -81,8 +81,24 @@ function ChannelBadge({ channel }: { channel: string }) {
             icon: Mail,
             color: "bg-primary/10 text-primary",
         },
+        both: {
+            label: "Both",
+            icon: MessageSquare,
+            color: "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4",
+        },
     };
     const config_item = config[channel] || config.email;
+    if (channel === "both") {
+        return (
+            <div
+                className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config_item.color}`}
+            >
+                <MessageSquare className="w-3 h-3" />
+                <Mail className="w-3 h-3" />
+                {config_item.label}
+            </div>
+        );
+    }
     const IconComponent = config_item.icon;
     return (
         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config_item.color}`}>
@@ -328,7 +344,11 @@ export default async function ReviewRequestsPage(props: {
                                                         <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
                                                             {req.channel === "sms"
                                                                 ? req.customer_phone || "N/A"
-                                                                : req.customer_email || "N/A"}
+                                                                : req.channel === "email"
+                                                                  ? req.customer_email || "N/A"
+                                                                  : [req.customer_phone, req.customer_email]
+                                                                          .filter(Boolean)
+                                                                          .join(" · ") || "N/A"}
                                                         </TableCell>
                                                         <TableCell>
                                                             <ChannelBadge channel={req.channel} />

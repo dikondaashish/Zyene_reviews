@@ -42,6 +42,33 @@ function formatReviewRequestContact(req: {
     return [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") || "—";
 }
 
+function reviewRequestChannelCell(channel: string | null | undefined) {
+    const ch = (channel || "").toLowerCase();
+    if (ch === "both") {
+        return (
+            <div className="flex items-center gap-1.5">
+                <MessageSquare className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <Mail className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <span className="text-xs font-medium uppercase text-muted-foreground">Both</span>
+            </div>
+        );
+    }
+    if (ch === "sms") {
+        return (
+            <div className="flex items-center gap-1.5">
+                <MessageSquare className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                <span className="font-medium uppercase">{ch}</span>
+            </div>
+        );
+    }
+    return (
+        <div className="flex items-center gap-1.5">
+            <Mail className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="font-medium uppercase">{ch || "—"}</span>
+        </div>
+    );
+}
+
 export default async function RequestsPage({
     searchParams,
 }: {
@@ -306,12 +333,7 @@ export default async function RequestsPage({
                                 </div>
                                 <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                        {req.channel === "sms" ? (
-                                            <MessageSquare className="h-3.5 w-3.5 shrink-0" />
-                                        ) : (
-                                            <Mail className="h-3.5 w-3.5 shrink-0" />
-                                        )}
-                                        <span className="font-medium uppercase">{req.channel}</span>
+                                        {reviewRequestChannelCell(req.channel)}
                                     </div>
                                     <div className="ml-auto">{getStatusBadge(req.status, requestFlowCompleted(req))}</div>
                                 </div>
@@ -344,10 +366,7 @@ export default async function RequestsPage({
                                         {formatReviewRequestContact(req)}
                                     </TableCell>
                                     <TableCell>
-                                        <div className="flex items-center">
-                                            {req.channel === 'sms' ? <MessageSquare className="w-3 h-3 mr-2 text-muted-foreground" /> : <Mail className="w-3 h-3 mr-2 text-muted-foreground" />}
-                                            <span className="text-xs font-medium uppercase text-muted-foreground">{req.channel}</span>
-                                        </div>
+                                        {reviewRequestChannelCell(req.channel)}
                                     </TableCell>
                                     <TableCell>
                                         {getStatusBadge(req.status, requestFlowCompleted(req))}

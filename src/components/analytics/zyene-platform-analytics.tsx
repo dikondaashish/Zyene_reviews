@@ -107,7 +107,8 @@ export function ZyenePlatformAnalytics({
     const hasDirectContact = (r: ReviewRequest) =>
         Boolean(r.customer_phone || r.customer_email || r.customer_name || r.campaign_id);
 
-    const normalizedChannel = (r: ReviewRequest): "email" | "sms" | "link" => {
+    const normalizedChannel = (r: ReviewRequest): "email" | "sms" | "link" | "both" => {
+        if (r.channel === "both") return "both";
         if (r.channel === "sms" || r.channel === "link") return r.channel;
         // Backward-compatible: public-link/QR tracking rows may be stored as email/manual
         // without customer identity when legacy DB constraints block channel=link inserts.
@@ -116,7 +117,7 @@ export function ZyenePlatformAnalytics({
     };
 
     const isRequestChannel = (r: ReviewRequest) =>
-        (r.channel === "email" || r.channel === "sms") &&
+        (r.channel === "email" || r.channel === "sms" || r.channel === "both") &&
         Boolean(r.customer_phone || r.customer_email || r.customer_name || r.campaign_id);
     const requestFlow = requests.filter(isRequestChannel);
     const previousRequestFlow = previousRequests.filter(isRequestChannel);
@@ -131,7 +132,9 @@ export function ZyenePlatformAnalytics({
     // Posted Google => SMS/Email requests with status === "completed"
     const totalSent = requestFlow.filter((r) => r.sent_at).length;
     const totalDelivered = requestFlow.filter((r) => r.delivered_at).length;
-    const totalOpened = requestFlow.filter((r) => r.channel === "email" && r.opened_at).length;
+    const totalOpened = requestFlow.filter(
+        (r) => (r.channel === "email" || r.channel === "both") && r.opened_at,
+    ).length;
     const totalClicked = requestFlow.filter((r) => r.clicked_at).length;
     const totalCompleted = requestFlow.filter((r) => r.completed_at).length;
     const totalPostedToGoogle = requestFlow.filter((r) => r.status === "completed").length;
@@ -189,7 +192,7 @@ export function ZyenePlatformAnalytics({
     const prevLowRatings = prevAllSourceLowRatings;
 
     // ── Channel Breakdown ──────────────────────────────────────────────
-    const channels = ["email", "sms", "link"] as const;
+    const channels = ["email", "sms", "link", "both"] as const;
     const channelData = channels.map((ch) => {
         const chReqs = allSourceRequests.filter((r) => normalizedChannel(r) === ch);
         const sent =
@@ -199,7 +202,8 @@ export function ZyenePlatformAnalytics({
         const clicked = chReqs.filter((r) => r.clicked_at).length;
         const completed = chReqs.filter((r) => r.status === "completed").length;
         return {
-            channel: ch === "sms" ? "SMS" : ch === "email" ? "Email" : "Link",
+            channel:
+                ch === "sms" ? "SMS" : ch === "email" ? "Email" : ch === "both" ? "SMS + Email" : "Link",
             sent,
             clicked,
             completed,

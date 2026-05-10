@@ -9,7 +9,7 @@ import {
 } from "@/services/resend/templates/review-request-email";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import * as Sentry from "@sentry/nextjs";
-import { bumpCustomerAfterSend } from "./bump-after-send";
+import { bumpCustomerAfterSend, type BumpAfterSendLegs } from "./bump-after-send";
 
 type DueRow = {
     id: string;
@@ -122,16 +122,31 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         const orgId = b.organization_id;
 
         if (orgId) {
-            const limitType =
-                channel === "email" ? "email_requests" : channel === "link" ? "link_requests" : "sms_requests";
-            const { allowed } = await checkLimit(orgId, limitType);
-            if (!allowed) {
-                await patchRequest(admin, businessId, requestId, {
-                    status: "failed",
-                    error_message: "Monthly limit reached at send time.",
-                    sent_at: null,
-                });
-                return "failed";
+            if (channel === "both") {
+                const [smsL, emailL] = await Promise.all([
+                    checkLimit(orgId, "sms_requests"),
+                    checkLimit(orgId, "email_requests"),
+                ]);
+                if (!smsL.allowed || !emailL.allowed) {
+                    await patchRequest(admin, businessId, requestId, {
+                        status: "failed",
+                        error_message: "SMS and/or email monthly limit reached at send time.",
+                        sent_at: null,
+                    });
+                    return "failed";
+                }
+            } else {
+                const limitType =
+                    channel === "email" ? "email_requests" : channel === "link" ? "link_requests" : "sms_requests";
+                const { allowed } = await checkLimit(orgId, limitType);
+                if (!allowed) {
+                    await patchRequest(admin, businessId, requestId, {
+                        status: "failed",
+                        error_message: "Monthly limit reached at send time.",
+                        sent_at: null,
+                    });
+                    return "failed";
+                }
             }
         }
 
@@ -139,7 +154,10 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         const emailNorm = row.customer_email?.trim() || null;
         const frequencyCapDays = b.review_request_frequency_cap_days ?? 30;
 
-        if (channel === "sms") {
+        const needSms = channel === "sms" || channel === "both";
+        const needEmail = channel === "email" || channel === "both";
+
+        if (needSms) {
             const digits = (phoneNorm || "").replace(/\D/g, "");
             if (!phoneNorm || digits.length < 10) {
                 await patchRequest(admin, businessId, requestId, {
@@ -188,7 +206,9 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
                 });
                 return "failed";
             }
-        } else if (channel === "email") {
+        }
+
+        if (needEmail) {
             if (!emailNorm) {
                 await patchRequest(admin, businessId, requestId, {
                     status: "failed",
@@ -226,7 +246,9 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
                     return "failed";
                 }
             }
-        } else {
+        }
+
+        if (!needSms && !needEmail) {
             await patchRequest(admin, businessId, requestId, {
                 status: "failed",
                 error_message: `Unsupported channel: ${channel}`,
@@ -256,6 +278,7 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         let sendStatus: "sent" | "failed" = "sent";
         let errorMessage: string | null = null;
         let resendEmailId: string | null = null;
+        let bumpLegs: BumpAfterSendLegs | undefined;
 
         if (channel === "sms" && phoneNorm) {
             const messageBody = `Hi ${displayName}! Thanks for visiting ${b.name || "us"}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -298,6 +321,59 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
             } else {
                 resendEmailId = emailResult.id ?? null;
             }
+        } else if (channel === "both" && phoneNorm && emailNorm) {
+            const businessName = b.name || "us";
+            const senderName = (b.sender_name || "").trim() || undefined;
+            const messageBody = `Hi ${displayName}! Thanks for visiting ${b.name || "us"}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+            const smsResult = await sendSMS(phoneNorm, messageBody);
+
+            const html = reviewRequestEmail({
+                customerName: displayName,
+                businessName,
+                reviewLink,
+                senderName,
+            });
+            const subject = `Quick question about your visit to ${businessName}`;
+            const businessEmail =
+                typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim())
+                    ? b.email.trim()
+                    : undefined;
+            const emailResult = await sendEmail({
+                to: emailNorm,
+                subject,
+                html,
+                text: reviewRequestEmailPlainText({
+                    customerName: displayName,
+                    businessName,
+                    reviewLink,
+                    senderName,
+                }),
+                from: buildFromLine({ senderName, businessName }),
+                replyTo: businessEmail,
+                headers: REVIEW_REQUEST_EMAIL_HEADERS,
+            });
+
+            const smsOk = smsResult.sent;
+            const emailOk = emailResult.sent;
+            if (!smsOk && !emailOk) {
+                sendStatus = "failed";
+                errorMessage = [
+                    `SMS: ${smsResult.error ?? "failed"}`,
+                    `Email: ${emailResult.error ?? "failed"}`,
+                ].join(". ");
+            } else {
+                sendStatus = "sent";
+                bumpLegs = { phone: smsOk, email: emailOk };
+                if (!smsOk || !emailOk) {
+                    const parts: string[] = [];
+                    if (!smsOk) parts.push(`SMS did not send: ${smsResult.error ?? "failed"}`);
+                    if (!emailOk) parts.push(`Email did not send: ${emailResult.error ?? "failed"}`);
+                    errorMessage = parts.join(" ");
+                }
+                if (emailOk && emailResult.id) {
+                    resendEmailId = emailResult.id;
+                }
+            }
         }
 
         const sentAt = sendStatus === "sent" ? new Date().toISOString() : null;
@@ -310,7 +386,14 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         });
 
         if (sendStatus === "sent") {
-            await bumpCustomerAfterSend(admin, businessId, row.customer_name ?? undefined, phoneNorm, emailNorm);
+            await bumpCustomerAfterSend(
+                admin,
+                businessId,
+                row.customer_name ?? undefined,
+                phoneNorm,
+                emailNorm,
+                bumpLegs,
+            );
         }
 
         return sendStatus;

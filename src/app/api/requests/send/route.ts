@@ -11,7 +11,7 @@ import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals
 import * as Sentry from "@sentry/nextjs";
 import { requestRateLimit } from "@/lib/auth/rate-limit";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
-import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
+import { bumpCustomerAfterSend, type BumpAfterSendLegs } from "@/lib/review-requests/bump-after-send";
 import { inngest } from "@/services/inngest/client";
 import { z } from "zod";
 
@@ -19,15 +19,17 @@ const sendRequestSchema = z
     .object({
         customerName: z.string().max(200).optional().nullable(),
         customerPhone: z.string().max(40).optional().nullable(),
-        customerEmail: z.string().email().max(255).optional().nullable(),
-        channel: z.enum(["sms", "email"]),
+        customerEmail: z.string().max(255).optional().nullable(),
+        channel: z.enum(["sms", "email", "both"]),
         businessId: z.string().uuid(),
         scheduledFor: z.string().optional().nullable(),
     })
     .superRefine((data, ctx) => {
         const ch = data.channel.toLowerCase();
+        const digits = (data.customerPhone || "").replace(/\D/g, "");
+        const em = (data.customerEmail || "").trim();
+
         if (ch === "sms") {
-            const digits = (data.customerPhone || "").replace(/\D/g, "");
             if (digits.length < 10) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
@@ -35,12 +37,26 @@ const sendRequestSchema = z
                     path: ["customerPhone"],
                 });
             }
-        }
-        if (ch === "email") {
-            if (!data.customerEmail || !z.string().email().safeParse(data.customerEmail).success) {
+        } else if (ch === "email") {
+            if (!em || !z.string().email().safeParse(em).success) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: "Valid customer email is required for Email.",
+                    path: ["customerEmail"],
+                });
+            }
+        } else if (ch === "both") {
+            if (digits.length < 10) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Phone number is required when sending both SMS and email (at least 10 digits).",
+                    path: ["customerPhone"],
+                });
+            }
+            if (!em || !z.string().email().safeParse(em).success) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Email is required when sending both SMS and email.",
                     path: ["customerEmail"],
                 });
             }
@@ -107,13 +123,26 @@ export async function POST(request: Request) {
         const orgId = business.organizations?.id;
 
         if (orgId) {
-            const limitType =
-                channel === "email" ? "email_requests" : channel === "link" ? "link_requests" : "sms_requests";
-            const { allowed } = await checkLimit(orgId, limitType);
-            if (!allowed) {
-                return apiError("You've reached your monthly limit for this channel. Upgrade your plan.", {
-                    status: 403,
-                });
+            if (channel === "both") {
+                const [smsCap, emailCap] = await Promise.all([
+                    checkLimit(orgId, "sms_requests"),
+                    checkLimit(orgId, "email_requests"),
+                ]);
+                if (!smsCap.allowed || !emailCap.allowed) {
+                    return apiError(
+                        "You've reached your monthly limit for SMS and/or email. Upgrade your plan or choose a single channel.",
+                        { status: 403 },
+                    );
+                }
+            } else {
+                const limitType =
+                    channel === "email" ? "email_requests" : channel === "link" ? "link_requests" : "sms_requests";
+                const { allowed } = await checkLimit(orgId, limitType);
+                if (!allowed) {
+                    return apiError("You've reached your monthly limit for this channel. Upgrade your plan.", {
+                        status: 403,
+                    });
+                }
             }
         }
 
@@ -122,7 +151,7 @@ export async function POST(request: Request) {
 
         const frequencyCapDays = business.review_request_frequency_cap_days ?? 30;
 
-        if (channel === "sms" && phoneNorm) {
+        if ((channel === "sms" || channel === "both") && phoneNorm) {
             const { data: contact } = await supabase
                 .from("customers")
                 .select("last_request_sent_at, is_opted_out")
@@ -145,7 +174,7 @@ export async function POST(request: Request) {
             }
         }
 
-        if (channel === "email" && emailNorm) {
+        if ((channel === "email" || channel === "both") && emailNorm) {
             const { data: contact } = await supabase
                 .from("customers")
                 .select("last_request_sent_at, is_opted_out")
@@ -168,7 +197,7 @@ export async function POST(request: Request) {
             }
         }
 
-        if (channel === "sms" && phoneNorm) {
+        if ((channel === "sms" || channel === "both") && phoneNorm) {
             const { data: optOut } = await admindClient
                 .from("sms_opt_outs")
                 .select("id")
@@ -264,6 +293,7 @@ export async function POST(request: Request) {
         let sendStatus = "sent";
         let errorMessage: string | null = null;
         let resendEmailId: string | null = null;
+        let bumpLegs: BumpAfterSendLegs | undefined;
 
         if (channel === "sms") {
             const messageBody = `Hi ${displayName}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
@@ -272,7 +302,7 @@ export async function POST(request: Request) {
                 sendStatus = "failed";
                 errorMessage = result.error ?? "SMS failed";
             }
-        } else {
+        } else if (channel === "email") {
             const businessName = business.name || "us";
             const bizRow = business as { email?: string | null; sender_name?: string | null };
             const senderName = (bizRow.sender_name || "").trim() || undefined;
@@ -306,6 +336,60 @@ export async function POST(request: Request) {
                 errorMessage = emailResult.error ?? "Email failed";
             } else {
                 resendEmailId = emailResult.id ?? null;
+            }
+        } else if (channel === "both") {
+            const businessName = business.name || "us";
+            const bizRow = business as { email?: string | null; sender_name?: string | null };
+            const senderName = (bizRow.sender_name || "").trim() || undefined;
+            const messageBody = `Hi ${displayName}! Thanks for visiting ${business.name}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+            const smsResult = await sendSMS(phoneNorm!, messageBody);
+
+            const html = reviewRequestEmail({
+                customerName: displayName,
+                businessName,
+                reviewLink,
+                senderName,
+            });
+            const subject = `Quick question about your visit to ${businessName}`;
+            const businessEmail =
+                typeof bizRow.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bizRow.email.trim())
+                    ? bizRow.email.trim()
+                    : undefined;
+            const emailResult = await sendEmail({
+                to: emailNorm!,
+                subject,
+                html,
+                text: reviewRequestEmailPlainText({
+                    customerName: displayName,
+                    businessName,
+                    reviewLink,
+                    senderName,
+                }),
+                from: buildFromLine({ senderName, businessName }),
+                replyTo: businessEmail,
+                headers: REVIEW_REQUEST_EMAIL_HEADERS,
+            });
+
+            const smsOk = smsResult.sent;
+            const emailOk = emailResult.sent;
+            if (!smsOk && !emailOk) {
+                sendStatus = "failed";
+                errorMessage = [
+                    `SMS: ${smsResult.error ?? "failed"}`,
+                    `Email: ${emailResult.error ?? "failed"}`,
+                ].join(". ");
+            } else {
+                sendStatus = "sent";
+                bumpLegs = { phone: smsOk, email: emailOk };
+                if (!smsOk || !emailOk) {
+                    const parts: string[] = [];
+                    if (!smsOk) parts.push(`SMS did not send: ${smsResult.error ?? "failed"}`);
+                    if (!emailOk) parts.push(`Email did not send: ${emailResult.error ?? "failed"}`);
+                    errorMessage = parts.join(" ");
+                }
+                if (emailOk && emailResult.id) {
+                    resendEmailId = emailResult.id;
+                }
             }
         }
 
@@ -352,12 +436,20 @@ export async function POST(request: Request) {
         }
 
         if (sendStatus === "sent") {
-            await bumpCustomerAfterSend(supabase, businessId, customerName ?? undefined, phoneNorm, emailNorm);
+            await bumpCustomerAfterSend(
+                supabase,
+                businessId,
+                customerName ?? undefined,
+                phoneNorm,
+                emailNorm,
+                bumpLegs,
+            );
         }
 
         if (sendStatus === "failed") {
-            const label = channel === "email" ? "email" : "SMS";
-            return apiError(`Failed to send ${label}: ${errorMessage}`, { status: 500 });
+            const label =
+                channel === "both" ? "SMS and email" : channel === "email" ? "email" : "SMS";
+            return apiError(`Failed to send (${label}): ${errorMessage}`, { status: 500 });
         }
 
         return apiOk(finalRequestRecord);

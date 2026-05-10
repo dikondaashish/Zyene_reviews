@@ -48,13 +48,15 @@ const formSchema = z
         customerName: z.string().max(200).optional().or(z.literal("")),
         customerPhone: z.string().max(40).optional().or(z.literal("")),
         customerEmail: z.string().max(255).optional().or(z.literal("")),
-        channel: z.enum(["sms", "email"]),
+        channel: z.enum(["sms", "email", "both"]),
         scheduleEnabled: z.boolean(),
         scheduleAt: z.string().optional().or(z.literal("")),
     })
     .superRefine((data, ctx) => {
+        const digits = (data.customerPhone || "").replace(/\D/g, "");
+        const em = (data.customerEmail || "").trim();
+
         if (data.channel === "sms") {
-            const digits = (data.customerPhone || "").replace(/\D/g, "");
             if (digits.length < 10) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
@@ -62,12 +64,26 @@ const formSchema = z
                     path: ["customerPhone"],
                 });
             }
-        } else {
-            const em = (data.customerEmail || "").trim();
+        } else if (data.channel === "email") {
             if (!z.string().email().safeParse(em).success) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: "Enter a valid email address for Email.",
+                    path: ["customerEmail"],
+                });
+            }
+        } else if (data.channel === "both") {
+            if (digits.length < 10) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Both requires a valid phone number (at least 10 digits).",
+                    path: ["customerPhone"],
+                });
+            }
+            if (!z.string().email().safeParse(em).success) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Both requires a valid email address.",
                     path: ["customerEmail"],
                 });
             }
@@ -129,8 +145,16 @@ export function SendRequestDialog({
     const nameWrapRef = useRef<HTMLDivElement>(null);
 
     const initialDigits = (initialCustomer?.phone ?? "").replace(/\D/g, "");
-    const defaultChannel: "sms" | "email" =
-        initialDigits.length >= 10 ? "sms" : initialCustomer?.email ? "email" : "sms";
+    const initialEmail = (initialCustomer?.email || "").trim();
+    const initialEmailValid = z.string().email().safeParse(initialEmail).success;
+    const defaultChannel: "sms" | "email" | "both" =
+        initialDigits.length >= 10 && initialEmailValid
+            ? "both"
+            : initialDigits.length >= 10
+              ? "sms"
+              : initialEmailValid
+                ? "email"
+                : "sms";
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema) as Resolver<FormValues>,
@@ -148,12 +172,11 @@ export function SendRequestDialog({
 
     useEffect(() => {
         if (!open || !initialCustomer) return;
-        const ch: "sms" | "email" =
-            (initialCustomer.phone || "").replace(/\D/g, "").length >= 10
-                ? "sms"
-                : initialCustomer.email
-                  ? "email"
-                  : "sms";
+        const digits = (initialCustomer.phone || "").replace(/\D/g, "").length;
+        const em = (initialCustomer.email || "").trim();
+        const emailOk = z.string().email().safeParse(em).success;
+        const ch: "sms" | "email" | "both" =
+            digits >= 10 && emailOk ? "both" : digits >= 10 ? "sms" : emailOk ? "email" : "sms";
         form.reset({
             customerName: initialCustomer.name || "",
             customerPhone: initialCustomer.phone || "",
@@ -213,9 +236,14 @@ export function SendRequestDialog({
         form.setValue("customerName", displayCustomerName(c));
         if (c.phone?.trim()) form.setValue("customerPhone", c.phone.trim());
         if (c.email?.trim()) form.setValue("customerEmail", c.email.trim());
-        if (c.phone?.replace(/\D/g, "").length && c.phone.replace(/\D/g, "").length >= 10) {
+        const digits = (c.phone || "").replace(/\D/g, "").length;
+        const em = (c.email || "").trim();
+        const emailOk = z.string().email().safeParse(em).success;
+        if (digits >= 10 && emailOk) {
+            form.setValue("channel", "both");
+        } else if (digits >= 10) {
             form.setValue("channel", "sms");
-        } else if (c.email?.trim()) {
+        } else if (emailOk) {
             form.setValue("channel", "email");
         }
         setSuggestOpen(false);
@@ -238,9 +266,12 @@ export function SendRequestDialog({
             };
             if (values.channel === "sms") {
                 body.customerPhone = phone;
-            } else {
+            } else if (values.channel === "email") {
                 body.customerEmail = email;
                 if (phone) body.customerPhone = phone;
+            } else {
+                body.customerPhone = phone;
+                body.customerEmail = email;
             }
 
             if (values.scheduleEnabled && values.scheduleAt) {
@@ -264,17 +295,33 @@ export function SendRequestDialog({
                 }
                 throw new Error(msg);
             }
+
+            let partialNote: string | null = null;
+            try {
+                const j = JSON.parse(raw) as { data?: { error_message?: string | null } };
+                const em = j.data?.error_message;
+                if (typeof em === "string" && em.trim()) partialNote = em.trim();
+            } catch {
+                /* ignore */
+            }
+
             if (values.scheduleEnabled) {
                 toast.success("Request scheduled", {
                     description:
                         "It stays queued until your send time, then a background job sends it within a few minutes after that.",
                 });
+            } else if (partialNote) {
+                toast.success("Request sent (one channel failed)", {
+                    description: partialNote,
+                });
             } else {
                 toast.success("Request sent!", {
                     description:
-                        values.channel === "email"
-                            ? "The review request email was sent successfully."
-                            : "The SMS review request was sent successfully.",
+                        values.channel === "both"
+                            ? "SMS and email were sent with the same review link."
+                            : values.channel === "email"
+                              ? "The review request email was sent successfully."
+                              : "The SMS review request was sent successfully.",
                 });
             }
             setOpen(false);
@@ -309,13 +356,89 @@ export function SendRequestDialog({
                     </Button>
                 )}
             </DialogTrigger>
-            <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[440px]">
+            <DialogContent className="max-h-[min(90dvh,720px)] overflow-y-auto sm:max-w-[480px]">
                 <DialogHeader>
                     <DialogTitle>Send Review Request</DialogTitle>
                     <DialogDescription>Send via SMS or Email.</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="space-y-2">
+                            <FormLabel>Channel</FormLabel>
+                            <FormField
+                                control={form.control}
+                                name="channel"
+                                render={({ field }) => (
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <label
+                                            className={cn(
+                                                "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                                field.value === "sms"
+                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                                    : "border-input hover:bg-muted/50",
+                                            )}
+                                        >
+                                            <input
+                                                type="radio"
+                                                className="sr-only"
+                                                checked={field.value === "sms"}
+                                                onChange={() => field.onChange("sms")}
+                                            />
+                                            <span className="text-sm font-medium">SMS</span>
+                                        </label>
+                                        <label
+                                            className={cn(
+                                                "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                                field.value === "email"
+                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                                    : "border-input hover:bg-muted/50",
+                                            )}
+                                        >
+                                            <input
+                                                type="radio"
+                                                className="sr-only"
+                                                checked={field.value === "email"}
+                                                onChange={() => field.onChange("email")}
+                                            />
+                                            <span className="text-sm font-medium">Email</span>
+                                        </label>
+                                        <label
+                                            className={cn(
+                                                "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                                field.value === "both"
+                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                                    : "border-input hover:bg-muted/50",
+                                            )}
+                                        >
+                                            <input
+                                                type="radio"
+                                                className="sr-only"
+                                                checked={field.value === "both"}
+                                                onChange={() => field.onChange("both")}
+                                            />
+                                            <span className="text-sm font-medium">Both</span>
+                                        </label>
+                                    </div>
+                                )}
+                            />
+                            {channel === "sms" && (
+                                <p className="text-xs text-muted-foreground">
+                                    Sends to the customer number below. A valid mobile number is required.
+                                </p>
+                            )}
+                            {channel === "email" && (
+                                <p className="text-xs text-muted-foreground">
+                                    Sends to the email below. Customer number is optional for your records.
+                                </p>
+                            )}
+                            {channel === "both" && (
+                                <p className="text-xs text-muted-foreground">
+                                    Sends the same review link by SMS and email. Customer number and customer email are
+                                    both required.
+                                </p>
+                            )}
+                        </div>
+
                         <FormField
                             control={form.control}
                             name="customerName"
@@ -368,7 +491,7 @@ export function SendRequestDialog({
                             name="customerPhone"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Customer phone number</FormLabel>
+                                    <FormLabel>Customer number</FormLabel>
                                     <FormControl>
                                         <Input placeholder="(555) 123-4567" {...field} />
                                     </FormControl>
@@ -390,60 +513,6 @@ export function SendRequestDialog({
                                 </FormItem>
                             )}
                         />
-
-                        <div className="space-y-2">
-                            <FormLabel>Channel</FormLabel>
-                            <FormField
-                                control={form.control}
-                                name="channel"
-                                render={({ field }) => (
-                                    <div className="flex gap-3">
-                                        <label
-                                            className={cn(
-                                                "flex flex-1 cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
-                                                field.value === "sms"
-                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
-                                                    : "border-input hover:bg-muted/50",
-                                            )}
-                                        >
-                                            <input
-                                                type="radio"
-                                                className="sr-only"
-                                                checked={field.value === "sms"}
-                                                onChange={() => field.onChange("sms")}
-                                            />
-                                            <span className="text-sm font-medium">SMS</span>
-                                        </label>
-                                        <label
-                                            className={cn(
-                                                "flex flex-1 cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
-                                                field.value === "email"
-                                                    ? "border-primary bg-primary/5 ring-1 ring-primary"
-                                                    : "border-input hover:bg-muted/50",
-                                            )}
-                                        >
-                                            <input
-                                                type="radio"
-                                                className="sr-only"
-                                                checked={field.value === "email"}
-                                                onChange={() => field.onChange("email")}
-                                            />
-                                            <span className="text-sm font-medium">Email</span>
-                                        </label>
-                                    </div>
-                                )}
-                            />
-                            {channel === "sms" && (
-                                <p className="text-xs text-muted-foreground">
-                                    SMS uses the phone number above. Add a valid mobile number.
-                                </p>
-                            )}
-                            {channel === "email" && (
-                                <p className="text-xs text-muted-foreground">
-                                    Email uses the address above. Phone is optional for your records.
-                                </p>
-                            )}
-                        </div>
 
                         <FormField
                             control={form.control}
