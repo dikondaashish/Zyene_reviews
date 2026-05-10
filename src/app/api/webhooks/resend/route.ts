@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { resend } from "@/services/resend/client";
+import { Webhook } from "svix";
 
 type ResendEvent = {
     type?: string;
@@ -24,37 +24,38 @@ function getEmailId(body: ResendEvent): string | null {
     return typeof id === "string" && id.length > 0 ? id : null;
 }
 
-async function verifyResendWebhook(rawPayload: string, request: Request): Promise<boolean> {
+function verifyResendWebhook(rawPayload: string, request: Request): boolean {
     const secret = process.env.RESEND_WEBHOOK_SECRET?.trim();
     if (!secret) return false;
 
-    // Preferred: Svix signature verification (Resend docs).
+    // Resend signs webhooks with Svix (`svix-id`, `svix-timestamp`, `svix-signature`).
+    // The Resend Node SDK does not expose `resend.webhooks.verify`; use `svix` directly.
     const svixId = request.headers.get("svix-id");
     const svixTimestamp = request.headers.get("svix-timestamp");
     const svixSignature = request.headers.get("svix-signature");
 
-    const maybeVerify = (resend as unknown as { webhooks?: { verify?: (args: unknown) => unknown } })?.webhooks?.verify;
-    if (typeof maybeVerify === "function" && svixId && svixTimestamp && svixSignature) {
+    if (svixId && svixTimestamp && svixSignature) {
         try {
-            const ok = maybeVerify({
-                payload: rawPayload,
-                headers: { id: svixId, timestamp: svixTimestamp, signature: svixSignature },
-                webhookSecret: secret,
+            const wh = new Webhook(secret);
+            wh.verify(rawPayload, {
+                "svix-id": svixId,
+                "svix-timestamp": svixTimestamp,
+                "svix-signature": svixSignature,
             });
-            return ok === true;
+            return true;
         } catch {
             return false;
         }
     }
 
-    // Fallback: simple bearer secret (less secure, but avoids silently breaking).
+    // Fallback: Bearer (manual tests / non-Svix proxies).
     const authHeader = request.headers.get("authorization");
     return authHeader === `Bearer ${secret}`;
 }
 
 export async function POST(request: Request) {
     const raw = await request.text();
-    const verified = await verifyResendWebhook(raw, request);
+    const verified = verifyResendWebhook(raw, request);
     if (!verified) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
