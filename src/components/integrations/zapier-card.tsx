@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Zap, ExternalLink, AlertTriangle } from "lucide-react";
+import { ArrowRight, Copy, Check, Zap, ExternalLink, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { getAppBaseUrl } from "@/config/env";
 
@@ -121,18 +122,27 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
 }`}</pre>
                 </div>
             </CardContent>
-            <CardFooter className="pt-0">
-                <a
-                    href="https://zapier.com/apps/webhook/integrations"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full"
-                >
-                    <Button variant="outline" size="sm" className="w-full">
+            <CardFooter className="flex flex-col gap-2 pt-0 sm:flex-row">
+                <Button asChild size="sm" className="w-full sm:flex-1">
+                    <Link
+                        href="/integrations/zapier"
+                        className="inline-flex items-center justify-center"
+                    >
+                        Full setup guide
+                        <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                    </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="w-full sm:flex-1">
+                    <a
+                        href="https://zapier.com/apps/webhook/integrations"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center"
+                    >
                         <ExternalLink className="mr-2 h-3.5 w-3.5" />
                         Open Zapier
-                    </Button>
-                </a>
+                    </a>
+                </Button>
             </CardFooter>
         </Card>
     );
