@@ -78,14 +78,13 @@ export async function POST(request: Request) {
 
     const patch: Record<string, unknown> = {};
 
-    // Resend event types docs: e.g. "email.delivered", "email.opened", "email.clicked", "email.bounced".
+    // Resend: email.delivered, email.opened, email.clicked, email.bounced.
+    // delivered/opened only set timestamps — never force status here, or events can arrive out of order
+    // and overwrite funnel state (e.g. "clicked" from /api/track/review-open) with "delivered"/"opened".
     if (type === "email.delivered" || type === "delivered") {
         patch.delivered_at = nowIso;
-        patch.status = "delivered";
     } else if (type === "email.opened" || type === "opened") {
         patch.opened_at = nowIso;
-        // Only bump status upward if not terminal; simplest: set opened.
-        patch.status = "opened";
     } else if (type === "email.clicked" || type === "clicked") {
         patch.clicked_at = nowIso;
         patch.status = "clicked";

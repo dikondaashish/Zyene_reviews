@@ -68,6 +68,11 @@ export default async function RequestsPage({
     const outboundRequestFilter =
         "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null";
 
+    // Clicks: prefer clicked_at (set by /api/track/review-open or Resend). Do not rely on status alone —
+    // Resend "delivered" overwrites status to "delivered" after a visit, which would hide real clicks.
+    const clickedOrConverted =
+        "clicked_at.not.is.null,status.eq.clicked,review_left.eq.true";
+
     const [
         totalSentRes,
         deliveredRes,
@@ -85,13 +90,13 @@ export default async function RequestsPage({
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
             .or(outboundRequestFilter)
-            .eq("status", "delivered"),
+            .not("delivered_at", "is", null),
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
             .eq("business_id", business.id)
             .or(outboundRequestFilter)
-            .or("status.eq.clicked,review_left.eq.true"),
+            .or(clickedOrConverted),
         supabase
             .from("review_requests")
             .select("*", { count: "exact", head: true })
