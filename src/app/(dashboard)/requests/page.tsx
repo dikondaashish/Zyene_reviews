@@ -35,6 +35,13 @@ import { SendRequestDialog } from "./send-request-dialog";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 
+function formatReviewRequestContact(req: {
+    customer_phone?: string | null;
+    customer_email?: string | null;
+}) {
+    return [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") || "—";
+}
+
 export default async function RequestsPage({
     searchParams,
 }: {
@@ -278,10 +285,7 @@ export default async function RequestsPage({
             <div className="space-y-3 lg:hidden">
                 {requests && requests.length > 0 ? (
                     requests.map((req) => {
-                        const contact =
-                            [req.customer_phone, (req as { customer_email?: string | null }).customer_email]
-                                .filter(Boolean)
-                                .join(" · ") || "—";
+                        const contact = formatReviewRequestContact(req);
                         return (
                             <div
                                 key={req.id}
@@ -336,7 +340,9 @@ export default async function RequestsPage({
                             requests.map((req) => (
                                 <TableRow key={req.id} className="transition-colors hover:bg-muted/50">
                                     <TableCell className="font-medium">{req.customer_name || "Guest"}</TableCell>
-                                    <TableCell>{req.customer_phone}</TableCell>
+                                    <TableCell className="max-w-[240px] break-all text-muted-foreground">
+                                        {formatReviewRequestContact(req)}
+                                    </TableCell>
                                     <TableCell>
                                         <div className="flex items-center">
                                             {req.channel === 'sms' ? <MessageSquare className="w-3 h-3 mr-2 text-muted-foreground" /> : <Mail className="w-3 h-3 mr-2 text-muted-foreground" />}
