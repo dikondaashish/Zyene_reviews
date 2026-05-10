@@ -103,6 +103,7 @@ export type Database = {
           review_request_frequency_cap_days: number
           review_request_min_amount_cents: number
           review_request_sms_enabled: boolean
+          sender_name: string | null
           slug: string
           social_links: Json | null
           staff_names: string[]
@@ -165,6 +166,7 @@ export type Database = {
           review_request_frequency_cap_days?: number
           review_request_min_amount_cents?: number
           review_request_sms_enabled?: boolean
+          sender_name?: string | null
           slug: string
           social_links?: Json | null
           staff_names?: string[]
@@ -227,6 +229,7 @@ export type Database = {
           review_request_frequency_cap_days?: number
           review_request_min_amount_cents?: number
           review_request_sms_enabled?: boolean
+          sender_name?: string | null
           slug?: string
           social_links?: Json | null
           staff_names?: string[]
