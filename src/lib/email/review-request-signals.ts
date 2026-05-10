@@ -1,10 +1,14 @@
 /**
- * Optional MIME headers for review-request mail. Gmail’s Primary vs Promotions
- * placement is mostly ML-driven; flashy HTML and bulk-style headers correlate
- * with Promotions — keep this minimal. SPF/DKIM/DMARC and recipient engagement
- * still dominate — see https://support.google.com/mail/answer/6579
+ * Optional MIME headers for review-request mail.
+ *
+ * We intentionally DO NOT set:
+ *   - `Auto-Submitted: auto-generated` — Gmail treats this as a bulk/automation
+ *     signal and pushes the mail into Promotions/Updates. Review requests are
+ *     1:1 transactional, so we omit it to keep messages eligible for Primary.
+ *   - `Precedence: bulk` — same reason.
+ *   - `List-Unsubscribe` — Gmail’s bulk-only inbox category. We are not a list.
+ *
+ * Returning an empty object lets the call sites stay generic; the Resend SDK
+ * skips the headers payload when it’s empty.
  */
-export const REVIEW_REQUEST_EMAIL_HEADERS: Record<string, string> = {
-    /** RFC 3834 — automated, recipient-specific (avoid “marketing” priority headers). */
-    "Auto-Submitted": "auto-generated",
-};
+export const REVIEW_REQUEST_EMAIL_HEADERS: Record<string, string> = {};

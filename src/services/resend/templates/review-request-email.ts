@@ -56,13 +56,13 @@ export function reviewRequestEmailPlainText({
     return [
         `Hi ${greeting},`,
         "",
-        `${intro} Thanks again for stopping by.`,
+        `${intro} Thanks again for stopping by — hope you enjoyed it.`,
         "",
-        "When you have a minute, could you let us know how your visit went? It really helps us improve.",
+        "Could you share a quick word about your visit? It really helps us out and only takes a minute.",
         "",
-        `You can share it here: ${reviewLink}`,
+        reviewLink,
         "",
-        "If it's easier, just reply to this email — I read every response.",
+        "If it's easier, just reply to this email and let me know how it went — I read every response.",
         "",
         "Thank you,",
         signoff,
@@ -99,13 +99,14 @@ export function reviewRequestEmail({
         : `Quick note from ${biz}.`;
 
     const href = escapeAttr(reviewLink);
-    const safeLink = escapeHtml(reviewLink);
 
     const font =
         "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif";
     const text = "#202124";
     const muted = "#5f6368";
 
+    // Plain-as-possible HTML: no header bar, no buttons, no images, single inline
+    // anchor with neutral link color. Mirrors what a person might type by hand.
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,11 +117,9 @@ export function reviewRequestEmail({
 <body style="margin:0;padding:0;background-color:#ffffff;">
   <div style="max-width:560px;margin:0 auto;padding:24px 20px 32px;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
     <p style="margin:0 0 16px;">Hi ${greeting},</p>
-    <p style="margin:0 0 16px;">${intro} Thanks again for stopping by.</p>
-    <p style="margin:0 0 16px;">When you have a minute, could you let us know how your visit went? It really helps us improve.</p>
-    <p style="margin:0 0 8px;">You can share it here:</p>
-    <p style="margin:0 0 20px;word-break:break-all;"><a href="${href}" style="color:#1a0dab;text-decoration:underline;">${safeLink}</a></p>
-    <p style="margin:0 0 16px;color:${muted};">If it's easier, just reply to this email — I read every response.</p>
+    <p style="margin:0 0 16px;">${intro} Thanks again for stopping by &mdash; hope you enjoyed it.</p>
+    <p style="margin:0 0 16px;">Could you <a href="${href}" style="color:#1a0dab;text-decoration:underline;">share a quick word about your visit</a>? It really helps us out and only takes a minute.</p>
+    <p style="margin:0 0 16px;color:${muted};">If it&rsquo;s easier, just reply to this email and let me know how it went &mdash; I read every response.</p>
     <p style="margin:0 0 4px;">Thank you,</p>
     <p style="margin:0;">${signoff}</p>
   </div>
