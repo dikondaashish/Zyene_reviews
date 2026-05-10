@@ -54,7 +54,7 @@ export const processCampaignContact = inngest.createFunction(
         const campaign = await step.run("fetch-campaign-details", async () => {
             const { data, error } = await supabase
                 .from("campaigns")
-                .select("*, businesses(name, slug, review_request_frequency_cap_days, review_platforms(platform))")
+                .select("*, businesses(name, slug, sender_name, review_request_frequency_cap_days, review_platforms(platform))")
                 .eq("id", campaignId)
                 .single();
             if (error || !data) throw new Error(`Campaign not found: ${campaignId}`);
@@ -65,6 +65,7 @@ export const processCampaignContact = inngest.createFunction(
             businesses: {
                 name: string;
                 slug: string;
+                sender_name: string | null;
                 review_request_frequency_cap_days: number | null;
                 review_platforms: Array<{ platform: string }>;
             } | null;
@@ -165,6 +166,7 @@ export const processCampaignContact = inngest.createFunction(
             const result = await sendReviewRequest({
                 businessId: businessId,
                 businessName: business.name,
+                senderName: business.sender_name,
                 customerName: contact.name || "Customer",
                 contactMethods,
                 customerEmail: contact.email,

@@ -100,6 +100,7 @@ export interface ReviewManagementItem {
 export interface BusinessSettingsRecord {
     id: string;
     name?: string | null;
+    sender_name?: string | null;
     phone?: string | null;
     email?: string | null;
     address_line1?: string | null;

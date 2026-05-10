@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
-import { sendEmail } from "@/services/resend/send-email";
+import { sendEmail, buildFromLine } from "@/services/resend/send-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
@@ -25,6 +25,7 @@ type BusinessRow = {
     name: string | null;
     slug: string | null;
     email: string | null;
+    sender_name: string | null;
     review_request_frequency_cap_days: number | null;
     organization_id: string;
 };
@@ -104,7 +105,7 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
     try {
         const { data: business, error: bizErr } = await admin
             .from("businesses")
-            .select("id, name, slug, email, review_request_frequency_cap_days, organization_id")
+            .select("id, name, slug, email, sender_name, review_request_frequency_cap_days, organization_id")
             .eq("id", businessId)
             .maybeSingle();
 
@@ -264,12 +265,15 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
                 errorMessage = result.error ?? "SMS failed";
             }
         } else if (channel === "email" && emailNorm) {
+            const businessName = b.name || "us";
+            const senderName = (b.sender_name || "").trim() || undefined;
             const html = reviewRequestEmail({
                 customerName: displayName,
-                businessName: b.name || "us",
+                businessName,
                 reviewLink,
+                senderName,
             });
-            const subject = `How was your visit to ${b.name || "us"}?`;
+            const subject = `Quick question about your visit to ${businessName}`;
             const businessEmail =
                 typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim())
                     ? b.email.trim()
@@ -280,9 +284,11 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
                 html,
                 text: reviewRequestEmailPlainText({
                     customerName: displayName,
-                    businessName: b.name || "us",
+                    businessName,
                     reviewLink,
+                    senderName,
                 }),
+                from: buildFromLine({ senderName, businessName }),
                 replyTo: businessEmail,
                 headers: REVIEW_REQUEST_EMAIL_HEADERS,
             });

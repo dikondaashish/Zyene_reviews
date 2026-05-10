@@ -206,7 +206,7 @@ export const followUpWorker = inngest.createFunction(
       // 1. Fetch Campaign
       const { data: campaign } = await admin
         .from("campaigns")
-        .select("*, businesses (id, name)")
+        .select("*, businesses (id, name, sender_name)")
         .eq("id", campaignId)
         .single();
 
@@ -242,6 +242,7 @@ export const followUpWorker = inngest.createFunction(
           await sendReviewRequest({
             businessId: business.id,
             businessName: business.name,
+            senderName: (business as { sender_name?: string | null }).sender_name ?? null,
             customerName: req.customer_name || "Customer",
             contactMethods: methods as ("email" | "sms")[],
             customerEmail: req.customer_email,

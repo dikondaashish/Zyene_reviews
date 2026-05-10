@@ -2,7 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
-import { sendEmail } from "@/services/resend/send-email";
+import { sendEmail, buildFromLine } from "@/services/resend/send-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
@@ -273,13 +273,16 @@ export async function POST(request: Request) {
                 errorMessage = result.error ?? "SMS failed";
             }
         } else {
+            const businessName = business.name || "us";
+            const bizRow = business as { email?: string | null; sender_name?: string | null };
+            const senderName = (bizRow.sender_name || "").trim() || undefined;
             const html = reviewRequestEmail({
                 customerName: displayName,
-                businessName: business.name || "us",
+                businessName,
                 reviewLink,
+                senderName,
             });
-            const subject = `How was your visit to ${business.name || "us"}?`;
-            const bizRow = business as { email?: string | null };
+            const subject = `Quick question about your visit to ${businessName}`;
             const businessEmail =
                 typeof bizRow.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bizRow.email.trim())
                     ? bizRow.email.trim()
@@ -290,9 +293,11 @@ export async function POST(request: Request) {
                 html,
                 text: reviewRequestEmailPlainText({
                     customerName: displayName,
-                    businessName: business.name || "us",
+                    businessName,
                     reviewLink,
+                    senderName,
                 }),
+                from: buildFromLine({ senderName, businessName }),
                 replyTo: businessEmail,
                 headers: REVIEW_REQUEST_EMAIL_HEADERS,
             });

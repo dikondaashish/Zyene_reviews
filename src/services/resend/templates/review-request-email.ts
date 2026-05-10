@@ -3,6 +3,8 @@ interface ReviewRequestEmailProps {
     businessName: string;
     reviewLink: string;
     template?: string;
+    /** Optional first-person sender, e.g. "Sam". When provided we sign as this person. */
+    senderName?: string;
 }
 
 function escapeHtml(s: string): string {
@@ -18,104 +20,110 @@ function escapeAttr(s: string): string {
     return escapeHtml(s).replace(/'/g, "&#39;");
 }
 
-/** Plain-text part — substantive copy helps Gmail treat mail as personal/transactional. */
+function firstName(value: string | null | undefined): string {
+    const cleaned = (value || "").trim().split(/\s+/)[0] || "";
+    return cleaned;
+}
+
+/**
+ * Plain-text body. Short, conversational, asks for a reply — patterns that
+ * Gmail typically treats as personal correspondence rather than bulk mail.
+ */
 export function reviewRequestEmailPlainText({
     customerName,
     businessName,
     reviewLink,
     template,
+    senderName,
 }: ReviewRequestEmailProps): string {
-    const greeting = (customerName || "").trim() || "there";
-    const rawBody =
-        template ||
-        `Thanks for choosing ${businessName}. When you have a moment, a quick note about your visit would mean a lot to us.`;
-    const body = rawBody
-        .replace(/\{customer_name\}/g, customerName)
-        .replace(/\{business_name\}/g, businessName)
-        .replace(/\{review_link\}/g, reviewLink);
+    const greeting = firstName(customerName) || "there";
+    const sender = (senderName || "").trim();
+    const signoff = sender ? sender : businessName;
+
+    if (template) {
+        const rendered = template
+            .replace(/\{customer_name\}/g, customerName || "")
+            .replace(/\{business_name\}/g, businessName)
+            .replace(/\{review_link\}/g, reviewLink)
+            .replace(/\{sender_name\}/g, sender);
+        return rendered;
+    }
+
+    const intro = sender
+        ? `This is ${sender} from ${businessName}.`
+        : `Quick note from ${businessName}.`;
+
     return [
         `Hi ${greeting},`,
         "",
-        body,
+        `${intro} Thanks again for stopping by.`,
         "",
-        `Leave feedback: ${reviewLink}`,
+        "When you have a minute, could you let us know how your visit went? It really helps us improve.",
         "",
-        `— ${businessName}`,
+        `You can share it here: ${reviewLink}`,
         "",
-        `This message was sent by Zyene Reviews on behalf of ${businessName}.`,
-        "If you were not a customer of this business, you can ignore this email.",
+        "If it's easier, just reply to this email — I read every response.",
         "",
-        "https://zyenereviews.com",
+        "Thank you,",
+        signoff,
     ].join("\n");
 }
 
 /**
- * Minimal HTML for one-to-one review requests: reads like a personal note in Gmail
- * (plain flow, single link, no “newsletter” chrome). Tab placement is still heuristic.
+ * Minimal HTML for one-to-one review requests. Plain-text vibe, single link,
+ * asks for a reply, no "newsletter" chrome. Tab placement is still heuristic.
  */
 export function reviewRequestEmail({
     customerName,
     businessName,
     reviewLink,
     template,
+    senderName,
 }: ReviewRequestEmailProps): string {
     if (template && template.includes("<") && template.includes(">")) {
         return template
-            .replace(/\{customer_name\}/g, customerName)
+            .replace(/\{customer_name\}/g, customerName || "")
             .replace(/\{business_name\}/g, businessName)
-            .replace(/\{review_link\}/g, reviewLink);
+            .replace(/\{review_link\}/g, reviewLink)
+            .replace(/\{sender_name\}/g, senderName || "");
     }
 
-    const greeting = escapeHtml((customerName || "").trim() || "there");
+    const greeting = escapeHtml(firstName(customerName) || "there");
     const biz = escapeHtml(businessName);
-    const rawBody =
-        template ||
-        `Thanks for choosing {business_name}. When you have a moment, a quick note about your visit would mean a lot to us.`;
-    const formattedBody = escapeHtml(
-        rawBody
-            .replace(/\{customer_name\}/g, customerName)
-            .replace(/\{business_name\}/g, businessName)
-            .replace(/\{review_link\}/g, reviewLink),
-    );
+    const sender = (senderName || "").trim();
+    const senderEsc = escapeHtml(sender);
+    const signoff = escapeHtml(sender || businessName);
 
-    const safeLink = escapeHtml(reviewLink);
+    const intro = sender
+        ? `This is ${senderEsc} from ${biz}.`
+        : `Quick note from ${biz}.`;
+
     const href = escapeAttr(reviewLink);
+    const safeLink = escapeHtml(reviewLink);
 
     const font =
         "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif";
     const text = "#202124";
     const muted = "#5f6368";
 
-    const bodyHtml = formattedBody.replace(/\n/g, "<br>");
-
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feedback</title>
+  <title>Quick question about your visit</title>
 </head>
 <body style="margin:0;padding:0;background-color:#ffffff;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#ffffff;">
-    <tr>
-      <td style="padding:28px 20px 40px;">
-        <div style="max-width:560px;margin:0 auto;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
-          <p style="margin:0 0 16px;">Hi ${greeting},</p>
-          <p style="margin:0 0 22px;">${bodyHtml}</p>
-          <p style="margin:0 0 10px;">
-            <a href="${href}" style="color:#1a0dab;text-decoration:underline;">Leave feedback</a>
-            <span style="color:${muted};"> — about a minute.</span>
-          </p>
-          <p style="margin:0 0 28px;font-size:13px;line-height:1.5;color:${muted};word-break:break-all;">${safeLink}</p>
-          <p style="margin:0 0 6px;">Thank you,</p>
-          <p style="margin:0;"><strong>${biz}</strong></p>
-          <p style="margin:28px 0 0;font-size:12px;line-height:1.55;color:${muted};">
-            Sent by Zyene Reviews for ${biz}. One-to-one message about your visit, not a mailing list.
-          </p>
-        </div>
-      </td>
-    </tr>
-  </table>
+  <div style="max-width:560px;margin:0 auto;padding:24px 20px 32px;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
+    <p style="margin:0 0 16px;">Hi ${greeting},</p>
+    <p style="margin:0 0 16px;">${intro} Thanks again for stopping by.</p>
+    <p style="margin:0 0 16px;">When you have a minute, could you let us know how your visit went? It really helps us improve.</p>
+    <p style="margin:0 0 8px;">You can share it here:</p>
+    <p style="margin:0 0 20px;word-break:break-all;"><a href="${href}" style="color:#1a0dab;text-decoration:underline;">${safeLink}</a></p>
+    <p style="margin:0 0 16px;color:${muted};">If it's easier, just reply to this email — I read every response.</p>
+    <p style="margin:0 0 4px;">Thank you,</p>
+    <p style="margin:0;">${signoff}</p>
+  </div>
 </body>
 </html>`;
 }

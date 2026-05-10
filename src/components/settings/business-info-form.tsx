@@ -30,6 +30,11 @@ import type { BusinessSettingsRecord } from "@/types/components";
 
 const businessFormSchema = z.object({
     name: z.string().min(2, { message: "Business name must be at least 2 characters." }),
+    sender_name: z
+        .string()
+        .max(80, { message: "Sender name must be 80 characters or fewer." })
+        .optional()
+        .or(z.literal("")),
     phone: z.string().optional(),
     email: z.string().email().optional().or(z.literal("")),
     address_line1: z.string().optional(),
@@ -54,6 +59,7 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
         resolver: zodResolver(businessFormSchema),
         defaultValues: {
             name: business.name || "",
+            sender_name: business.sender_name || "",
             phone: business.phone || "",
             email: business.email || "",
             address_line1: business.address_line1 || "",
@@ -68,10 +74,14 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
     async function onSubmit(data: BusinessFormValues) {
         setIsLoading(true);
         try {
+            const payload = {
+                ...data,
+                sender_name: data.sender_name?.trim() ? data.sender_name.trim() : null,
+            };
             const response = await fetch(`/api/businesses/${business.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -103,6 +113,25 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
                             <FormControl>
                                 <Input placeholder="Acme Inc." {...field} />
                             </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="sender_name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Sender Name (review emails)</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g. Sam" {...field} value={field.value ?? ""} />
+                            </FormControl>
+                            <FormDescription>
+                                The first name shown as the email sender (e.g. <em>Sam &lt;hello@zyenereviews.com&gt;</em>)
+                                and used to sign off the message. Leave empty to send as your business name. A real
+                                first name dramatically improves Gmail Primary placement.
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

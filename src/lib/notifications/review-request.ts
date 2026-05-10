@@ -1,5 +1,5 @@
 import { sendSMS } from "@/services/twilio/send-sms";
-import { sendEmail } from "@/services/resend/send-email";
+import { sendEmail, buildFromLine } from "@/services/resend/send-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
@@ -15,6 +15,8 @@ interface SendReviewRequestOptions {
     customerPhone?: string | null;
     template?: string;
     isFollowUp?: boolean;
+    /** Optional human-friendly sender (e.g. owner first name) for From + signoff. */
+    senderName?: string | null;
 }
 
 export async function sendReviewRequest({
@@ -25,7 +27,8 @@ export async function sendReviewRequest({
     customerEmail,
     customerPhone,
     template,
-    isFollowUp = false
+    isFollowUp = false,
+    senderName,
 }: SendReviewRequestOptions) {
     const results = {
         emailSent: false,
@@ -67,16 +70,18 @@ export async function sendReviewRequest({
 
         // 2. Send Email
         if (contactMethods.includes("email") && customerEmail) {
+            const sender = (senderName || "").trim() || undefined;
             const html = reviewRequestEmail({
                 customerName,
                 businessName,
                 reviewLink,
-                template
+                template,
+                senderName: sender,
             });
 
             const subject = isFollowUp
-                ? `Friendly Reminder: Feedback for ${businessName}`
-                : `How was your visit to ${businessName}?`;
+                ? `Following up on your visit to ${businessName}`
+                : `Quick question about your visit to ${businessName}`;
 
             const emailResult = await sendEmail({
                 to: customerEmail,
@@ -87,7 +92,9 @@ export async function sendReviewRequest({
                     businessName,
                     reviewLink,
                     template,
+                    senderName: sender,
                 }),
+                from: buildFromLine({ senderName: sender, businessName }),
                 headers: REVIEW_REQUEST_EMAIL_HEADERS,
             });
 

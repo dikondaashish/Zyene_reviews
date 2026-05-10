@@ -25,6 +25,8 @@ const businessPatchSchema = z
         country: z.string().min(2).max(2).optional(),
         phone: z.string().max(30).optional().nullable(),
         email: z.string().email().max(255).optional().nullable().or(z.literal("")),
+        /** Optional human-friendly first name used as From display + email signoff. */
+        sender_name: z.string().max(80).optional().nullable().or(z.literal("")),
         website: z.string().url().max(500).optional().nullable(),
         logo_url: z.string().url().max(1000).optional().nullable(),
         address: z.string().max(1000).optional().nullable(),
