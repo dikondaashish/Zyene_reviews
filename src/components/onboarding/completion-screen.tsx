@@ -54,7 +54,7 @@ export function OnboardingCompletionScreen({
       condition: true,
     },
     {
-      label: "Google Business Profile syncing — reviews appear within 1–2 hours",
+      label: "Google reviews importing — they appear on Reviews within a minute",
       condition: googleConnected,
     },
     {

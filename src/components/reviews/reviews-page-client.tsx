@@ -11,6 +11,7 @@ import { MessageSquare, Lock, Download, Loader2, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { toast } from "sonner";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
+import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
 
 interface ReviewsPageClientProps {
     businessId: string;
@@ -18,6 +19,8 @@ interface ReviewsPageClientProps {
     googleMapsListingUrl?: string | null;
     isDemo: boolean;
     isGoogleConnected: boolean;
+    initialGoogleSyncStatus?: string | null;
+    initialGoogleLastSyncedAt?: string | null;
     /** Starter, Professional, or Enterprise — required to enable Auto commenter */
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
@@ -40,6 +43,8 @@ export function ReviewsPageClient({
     googleMapsListingUrl = null,
     isDemo,
     isGoogleConnected,
+    initialGoogleSyncStatus = null,
+    initialGoogleLastSyncedAt = null,
     autoCommenterPlanOk,
     autoReplyInitial,
     initialReviews,
@@ -65,6 +70,16 @@ export function ReviewsPageClient({
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     const loading = isPending || isFetching;
+
+    const { remoteStatus, lastSyncedAt, isSyncBusy } = useGoogleSyncRemoteState({
+        businessId,
+        initialSyncStatus: initialGoogleSyncStatus,
+        initialLastSyncedAt: initialGoogleLastSyncedAt,
+    });
+
+    const isImportingGoogleReviews =
+        isGoogleConnected &&
+        (remoteStatus === "running" || isSyncBusy || (publicCount === 0 && !lastSyncedAt));
 
     useEffect(() => {
         setReviews(initialReviews);
@@ -132,6 +147,21 @@ export function ReviewsPageClient({
             setIsFetching(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (!isGoogleConnected || type !== "public" || !isImportingGoogleReviews) return;
+
+        const poll = () => {
+            void fetchReviews({ type, ...filters, page });
+        };
+        poll();
+        const id = setInterval(poll, 3000);
+        const stop = setTimeout(() => clearInterval(id), 120_000);
+        return () => {
+            clearInterval(id);
+            clearTimeout(stop);
+        };
+    }, [isGoogleConnected, type, isImportingGoogleReviews, fetchReviews, filters, page]);
 
     const handleFilterChange = useCallback((key: string, value: string) => {
         startTransition(() => {
@@ -256,8 +286,11 @@ export function ReviewsPageClient({
                         </div>
                     </button>
                 </div>
-                {loading && (
+                {(loading || isImportingGoogleReviews) && (
                     <Loader2 className="w-4 h-4 ml-3 animate-spin text-muted-foreground" />
+                )}
+                {isImportingGoogleReviews && (
+                    <span className="text-xs text-muted-foreground">Importing from Google…</span>
                 )}
                 {type === "public" && (
                     <Button
@@ -300,12 +333,18 @@ export function ReviewsPageClient({
                                     <MessageSquare className="h-6 w-6 text-muted-foreground" />
                                 </div>
                                 <h3 className="text-lg font-medium text-foreground">
-                                    {publicCount === 0 ? "No reviews synced yet" : "No reviews found"}
+                                    {isImportingGoogleReviews
+                                        ? "Importing your Google reviews"
+                                        : publicCount === 0
+                                          ? "No reviews synced yet"
+                                          : "No reviews found"}
                                 </h3>
                                 <p className="text-muted-foreground max-w-sm mt-1 mb-6">
-                                    {publicCount === 0
-                                        ? "Connect your Google Business Profile to import and manage your reviews."
-                                        : "Try adjusting your filters or sync your reviews."}
+                                    {isImportingGoogleReviews
+                                        ? "Your first reviews usually appear within a minute. This page refreshes automatically."
+                                        : publicCount === 0
+                                          ? "Connect your Google Business Profile to import and manage your reviews."
+                                          : "Try adjusting your filters or sync your reviews."}
                                 </p>
                                 <SyncButton businessId={businessId} />
                             </div>

@@ -233,6 +233,81 @@ export async function refreshGoogleReviewRollupsFromDb(
     }
 }
 
+/**
+ * Publishes imported reviews to the dashboard while a multi-page sync is still running.
+ * Updates rollups + `last_synced_at` without clearing `sync_status: running`.
+ */
+export async function publishGoogleReviewSyncProgress(
+    admin: AdminClient,
+    businessId: string,
+    platformId: string
+): Promise<void> {
+    await refreshGoogleReviewRollupsFromDb(admin, businessId, platformId);
+    await admin
+        .from("review_platforms")
+        .update({
+            last_synced_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", platformId)
+        .eq("sync_status", "running");
+}
+
+/**
+ * First-page import during onboarding / post-connect so reviews appear in seconds, not after
+ * the full Inngest pagination + performance pipeline. Releases the lock for the background job.
+ */
+export async function bootstrapGoogleReviewsForPlatform(
+    platformId: string
+): Promise<{ synced: number; hasMore: boolean }> {
+    const admin = createAdminClient();
+    let context: GoogleSyncContext | null = null;
+
+    try {
+        context = await prepareGoogleSync(platformId);
+        const result = await syncGoogleReviewsPage(context, undefined);
+        await publishGoogleReviewSyncProgress(admin, context.platform.business_id, platformId);
+
+        const hasMore = Boolean(result.nextPageToken && !result.earlyExit);
+        await admin
+            .from("review_platforms")
+            .update({
+                locked_until: null,
+                sync_status: "running",
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", platformId);
+
+        console.log(
+            `[Sync] Bootstrap page 1: synced=${result.synced}, hasMore=${hasMore}, platform=${platformId}`
+        );
+        return { synced: result.synced, hasMore };
+    } catch (err) {
+        if (context) {
+            await admin
+                .from("review_platforms")
+                .update({ sync_status: "idle", locked_until: null })
+                .eq("id", platformId);
+        }
+        throw err;
+    }
+}
+
+/** Read pagination cursor saved by bootstrap or a partial sync (for Inngest resume). */
+export async function readGoogleReviewSyncResumeCursor(platformId: string): Promise<string | undefined> {
+    const admin = createAdminClient();
+    const { data } = await admin
+        .from("review_platforms")
+        .select("sync_state")
+        .eq("id", platformId)
+        .maybeSingle();
+    const cursor = syncStateObject(data?.sync_state).last_page_cursor;
+    if (typeof cursor === "string" && cursor.length > 0 && cursor !== "__EARLY_EXIT__") {
+        return cursor;
+    }
+    return undefined;
+}
+
 /** Push `locked_until` forward while a long sync is still running (avoids TTL expiry mid-pagination). */
 async function extendSyncLockTtl(admin: AdminClient, platformId: string): Promise<void> {
     const until = new Date(Date.now() + STALE_LOCK_TIMEOUT_MINUTES * 60 * 1000).toISOString();
@@ -817,6 +892,8 @@ export async function syncGoogleReviewsPage(
         earlyExit ? "__EARLY_EXIT__" : apiResp.nextPageToken ?? "",
         context.reviewsProcessed
     );
+
+    await publishGoogleReviewSyncProgress(admin, context.platform.business_id, context.platform.id);
 
     return {
         nextPageToken: earlyExit ? undefined : apiResp.nextPageToken,

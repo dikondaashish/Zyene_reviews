@@ -26,7 +26,11 @@ import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 import { registerNotificationsWithRetry } from "@/services/google/notifications";
-import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
+import {
+  bootstrapGoogleReviewsForPlatform,
+  syncGoogleReviewsForPlatform,
+} from "@/services/google/sync-service";
+import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
 import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
@@ -36,10 +40,21 @@ import { inngest } from "@/services/inngest/client";
 type OnboardingGoogleSyncResult = { mode: "inngest" } | { mode: "inline" } | { mode: "failed"; error: string };
 
 /**
- * Primary path: Inngest `google/sync.reviews` (chunked steps, performance + analysis after reviews).
+ * Primary path: bootstrap first page inline, then Inngest for remaining pages + analysis.
  * Fallback when Inngest is unavailable (e.g. missing keys locally): inline sync + GBP side jobs.
  */
 async function enqueueGooglePostConnectSync(platformId: string): Promise<OnboardingGoogleSyncResult> {
+  try {
+    await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {
+      if (isGoogleSyncConflictError(err)) return;
+      console.warn("[Onboarding] bootstrapGoogleReviewsForPlatform:", err);
+    });
+    revalidatePath("/reviews");
+    revalidatePath("/dashboard");
+  } catch (bootstrapErr) {
+    console.warn("[Onboarding] bootstrapGoogleReviewsForPlatform failed:", bootstrapErr);
+  }
+
   try {
     await inngest.send({
       name: "google/sync.reviews",

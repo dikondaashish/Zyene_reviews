@@ -184,6 +184,12 @@ export default async function ReviewsPage(props: {
                 googleMapsListingUrl={googleMapsListingUrl}
                 isDemo={isDemo}
                 isGoogleConnected={isGoogleConnected}
+                initialGoogleSyncStatus={
+                    typeof googlePlatform?.sync_status === "string" ? googlePlatform.sync_status : null
+                }
+                initialGoogleLastSyncedAt={
+                    typeof googlePlatform?.last_synced_at === "string" ? googlePlatform.last_synced_at : null
+                }
                 autoCommenterPlanOk={autoCommenterPlanOk}
                 autoReplyInitial={autoReplyInitial}
                 initialReviews={reviews}

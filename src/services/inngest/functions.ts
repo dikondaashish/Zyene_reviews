@@ -12,6 +12,7 @@ import {
     finalizeGoogleSync,
     enqueueMissingGoogleReviewAnalysis,
     hideGoogleReviewsRemovedFromSource,
+    readGoogleReviewSyncResumeCursor,
 } from "@/services/google/sync-service";
 import { MAX_REVIEW_PAGES } from "@/services/google/constants";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -552,10 +553,14 @@ export const syncGoogleReviews = inngest.createFunction(
                 return await prepareGoogleSync(platformId);
             });
 
-            let pageToken: string | undefined = undefined;
+            const resumePageToken = await step.run("read-resume-cursor", async () => {
+                return readGoogleReviewSyncResumeCursor(platformId);
+            });
+
+            let pageToken: string | undefined = resumePageToken ?? undefined;
             let totalSynced = 0;
             let lastResp: { total: number; avgRating: number } | null = null;
-            let pageCount = 0;
+            let pageCount = resumePageToken ? 1 : 0;
             const seenGoogleExternalIds: string[] = [];
 
             // 2. Paginated Sync (Each page is a Step)
@@ -601,7 +606,11 @@ export const syncGoogleReviews = inngest.createFunction(
                 }
             });
 
-            // Listing performance + search keywords (same data as daily cron `/api/cron/google-performance`)
+            await step.run("enqueue-missing-analysis", async () => {
+                return enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
+            });
+
+            // Listing performance + search keywords — after reviews are visible and analysis is queued
             await step.run("sync-google-performance", async () => {
                 const r = await syncGooglePerformanceForPlatform(platformId);
                 if (!r.success) {
@@ -611,10 +620,6 @@ export const syncGoogleReviews = inngest.createFunction(
                     );
                 }
                 return r;
-            });
-
-            await step.run("enqueue-missing-analysis", async () => {
-                return enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
             });
 
             await pingReviewSyncHeartbeat(true);
