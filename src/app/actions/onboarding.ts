@@ -26,6 +26,7 @@ import { stripe } from "@/services/stripe/client";
 import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 import { registerNotificationsWithRetry } from "@/services/google/notifications";
+import { parseGoogleLocationResourceIds } from "@/services/google/business-profile";
 import {
   bootstrapGoogleReviewsForPlatform,
   syncGoogleReviewsForPlatform,
@@ -489,7 +490,10 @@ export async function finalizeGoogleConnection(
       })
       .eq("id", businessId);
 
-    // Store platform tokens
+    // Store platform tokens + GBP resource IDs (required for sync without listAccounts)
+    const { googleAccountId, googleLocationId } = parseGoogleLocationResourceIds(
+      typeof loc.name === "string" ? loc.name : null
+    );
     const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: accessToken || "" });
     const { data: encRefresh } = await supabase.rpc("encrypt_token", { plaintext: refreshToken || "" });
 
@@ -502,6 +506,10 @@ export async function finalizeGoogleConnection(
           access_token: encAccess,
           refresh_token: encRefresh || null,
           token_expires_at: new Date(Date.now() + expiresIn * 1000).toISOString(),
+          google_account_id: googleAccountId,
+          google_location_id: googleLocationId,
+          external_id: googleLocationId,
+          external_url: googleReviewUrl,
           total_reviews: reviewData.reviewCount,
           average_rating: reviewData.averageRating,
           sync_status: "active",

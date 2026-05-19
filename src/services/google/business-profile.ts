@@ -135,6 +135,30 @@ export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTo
     return response.json();
 }
 
+/** Parse `accounts/{accountId}/locations/{locationId}` from a GBP resource name. */
+export function parseGoogleLocationResourceIds(locationName: string | null | undefined): {
+    googleAccountId: string | null;
+    googleLocationId: string | null;
+} {
+    if (!locationName || typeof locationName !== "string") {
+        return { googleAccountId: null, googleLocationId: null };
+    }
+    const full = locationName.match(/accounts\/([^/]+)\/locations\/([^/]+)/i);
+    if (full) {
+        return { googleAccountId: full[1], googleLocationId: full[2] };
+    }
+    const locationOnly = locationName.match(/locations\/([^/]+)/i);
+    if (locationOnly) {
+        return { googleAccountId: null, googleLocationId: locationOnly[1] };
+    }
+    return { googleAccountId: null, googleLocationId: null };
+}
+
+export function isGoogleUnauthorizedError(error: unknown): boolean {
+    const msg = error instanceof Error ? error.message : String(error);
+    return /\b401\b/.test(msg) && /unauthorized/i.test(msg);
+}
+
 export async function listAccounts(accessToken: string): Promise<GoogleAccount[]> {
     const response = await fetchWithRetry(`${BASE_URL_ACCOUNT}/accounts`, {
         headers: { Authorization: `Bearer ${accessToken}` },

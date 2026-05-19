@@ -1,6 +1,13 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import type { Json } from "@/lib/db/supabase/database.types";
-import { refreshGoogleToken, listAccounts, listLocations, listReviews, type GoogleReview } from "./business-profile";
+import {
+    refreshGoogleToken,
+    listAccounts,
+    listLocations,
+    listReviews,
+    isGoogleUnauthorizedError,
+    type GoogleReview,
+} from "./business-profile";
 import {
     AI_ANALYSIS_BATCH_SIZE,
     MAX_REVIEW_PAGES,
@@ -466,63 +473,110 @@ export async function getValidGoogleToken(platformId: string) {
     const isExpired = !expiry || (expiry.getTime() - now.getTime() < TOKEN_EXPIRY_BUFFER_MS);
 
     if (isExpired) {
-        console.log(`[Token] Expired for platform ${platformId}. Refreshing...`);
-
-        if (!refreshToken) {
-            console.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
-            await admin.from("review_platforms").update({ sync_status: 'error_no_refresh_token' }).eq("id", platformId);
-            throw new Error("No refresh token available - Please reconnect Google Account");
-        }
-
-        try {
-            const tokens = await refreshGoogleToken(refreshToken);
-            accessToken = tokens.access_token;
-            
-            // NEW: Encrypt the new access token before storing
-            const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", { 
-                plaintext: accessToken 
-            });
-            
-            if (encError) {
-                console.error("[Token] Encryption failed during refresh:", encError);
-                throw new Error("Failed to secure new token");
-            }
-
-            // Calculate new expiry (tokens.expires_in is in seconds)
-            const newExpiry = new Date(now.getTime() + (tokens.expires_in * 1000));
-
-            await admin.from("review_platforms").update({
-                access_token: encAccess,
-                token_expires_at: newExpiry.toISOString(),
-                sync_status: 'active',
-                updated_at: new Date().toISOString(),
-            }).eq("id", platformId);
-
-            console.log(`[Token] Refreshed. New expiry: ${newExpiry.toISOString()}`);
-
-            return { 
-                accessToken, 
-                platform: { ...platformWithTokens, access_token: accessToken, token_expires_at: newExpiry.toISOString() } 
-            };
-        } catch (error: any) {
-            console.error(`[Token] Refresh failed:`, error);
-            
-            const errorMsg = error?.message || "";
-            const isRevoked = errorMsg.includes("invalid_grant");
-            
-            await admin.from("review_platforms").update({
-                sync_status: isRevoked ? 'error_token_revoked' : 'error_refresh_failed',
-                updated_at: new Date().toISOString()
-            }).eq("id", platformId);
-
-            if (isRevoked) {
-                throw new Error("Google connection expired. Please reconnect your account in Settings.");
-            }
-            throw new Error("Failed to refresh Google token. Please try again later.");
-        }
+        return refreshPlatformAccessToken(admin, platformId, refreshToken, platformWithTokens);
     }
 
     return { accessToken, platform: platformWithTokens };
+}
+
+/** Refresh OAuth access token and persist encrypted value (used on expiry or 401 from Google APIs). */
+async function refreshPlatformAccessToken(
+    admin: AdminClient,
+    platformId: string,
+    refreshToken: string | null,
+    platformWithTokens: Record<string, unknown>
+): Promise<{ accessToken: string; platform: Record<string, unknown> }> {
+    console.log(`[Token] Refreshing access token for platform ${platformId}...`);
+
+    if (!refreshToken) {
+        console.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
+        await admin.from("review_platforms").update({ sync_status: "error_no_refresh_token" }).eq("id", platformId);
+        throw new Error("No refresh token available - Please reconnect Google Account");
+    }
+
+    try {
+        const tokens = await refreshGoogleToken(refreshToken);
+        const accessToken = tokens.access_token;
+
+        const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", {
+            plaintext: accessToken,
+        });
+
+        if (encError) {
+            console.error("[Token] Encryption failed during refresh:", encError);
+            throw new Error("Failed to secure new token");
+        }
+
+        const newExpiry = new Date(Date.now() + tokens.expires_in * 1000);
+
+        await admin
+            .from("review_platforms")
+            .update({
+                access_token: encAccess,
+                token_expires_at: newExpiry.toISOString(),
+                sync_status: "active",
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", platformId);
+
+        console.log(`[Token] Refreshed. New expiry: ${newExpiry.toISOString()}`);
+
+        return {
+            accessToken,
+            platform: {
+                ...platformWithTokens,
+                access_token: accessToken,
+                token_expires_at: newExpiry.toISOString(),
+            },
+        };
+    } catch (error: unknown) {
+        console.error(`[Token] Refresh failed:`, error);
+
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        const isRevoked = errorMsg.includes("invalid_grant");
+
+        await admin
+            .from("review_platforms")
+            .update({
+                sync_status: isRevoked ? "error_token_revoked" : "error_refresh_failed",
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", platformId);
+
+        if (isRevoked) {
+            throw new Error("Google connection expired. Please reconnect your account in Settings.");
+        }
+        throw new Error("Failed to refresh Google token. Please try again later.");
+    }
+}
+
+/** Force refresh when Google returns 401 but `token_expires_at` still looks valid. */
+export async function forceRefreshGoogleAccessToken(
+    platformId: string
+): Promise<{ accessToken: string; platform: Record<string, unknown> }> {
+    const admin = createAdminClient();
+    const { data: platform, error: platformError } = await admin
+        .from("review_platforms")
+        .select("*")
+        .eq("id", platformId)
+        .single();
+
+    if (platformError || !platform) {
+        throw new Error(`Platform not found: id=${platformId}`);
+    }
+
+    let refreshToken: string | null = null;
+    if (platform.refresh_token) {
+        const { data: decRefresh, error: decRefreshError } = await admin.rpc("decrypt_token", {
+            ciphertext: platform.refresh_token,
+        });
+        if (decRefreshError) {
+            throw new Error("Failed to decrypt refresh token");
+        }
+        refreshToken = decRefresh;
+    }
+
+    return refreshPlatformAccessToken(admin, platformId, refreshToken, { ...platform });
 }
 
 
@@ -679,34 +733,62 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
 
     try {
         // 4. Token & IDs
-        const { accessToken, platform: validPlatform } = await getValidGoogleToken(platformId);
+        let { accessToken, platform: validPlatform } = await getValidGoogleToken(platformId);
 
-        let googleAccountId = validPlatform.google_account_id;
-        let googleLocationId = validPlatform.google_location_id;
+        let googleAccountId = validPlatform.google_account_id as string | null | undefined;
+        let googleLocationId = validPlatform.google_location_id as string | null | undefined;
 
-        if (!googleAccountId || !googleLocationId) {
-            console.log("[Sync] Refilled IDs missing. Fetching hierarchy...");
-            const accounts = await listAccounts(accessToken!);
+        if (!googleLocationId && validPlatform.external_id) {
+            googleLocationId = String(validPlatform.external_id);
+        }
+
+        const resolveGoogleIdsFromApi = async (token: string) => {
+            console.log("[Sync] GBP account/location IDs missing. Fetching hierarchy...");
+            const accounts = await listAccounts(token);
             if (accounts.length === 0) throw new Error("No Google Accounts found");
             const account = accounts[0];
-            googleAccountId = account.name.split("/")[1];
+            const resolvedAccountId = account.name.split("/")[1];
 
-            const locations = await listLocations(accessToken!, account.name);
+            const locations = await listLocations(token, account.name);
             let locationDetails = null;
             if (validPlatform.external_id) {
-                locationDetails = locations.find(l => l.name.endsWith(`/${validPlatform.external_id}`));
+                locationDetails = locations.find((l) =>
+                    l.name.endsWith(`/${validPlatform.external_id}`)
+                );
             }
             if (!locationDetails) {
                 if (locations.length === 0) throw new Error("No Locations found");
                 locationDetails = locations[0];
             }
-            googleLocationId = locationDetails.name.split("/").pop() ?? null;
+            const resolvedLocationId = locationDetails.name.split("/").pop() ?? null;
 
-            await admin.from("review_platforms").update({
-                google_account_id: googleAccountId,
-                google_location_id: googleLocationId,
-                external_id: googleLocationId
-            }).eq("id", platformId);
+            googleAccountId = resolvedAccountId;
+            googleLocationId = resolvedLocationId;
+
+            await admin
+                .from("review_platforms")
+                .update({
+                    google_account_id: googleAccountId,
+                    google_location_id: googleLocationId,
+                    external_id: googleLocationId,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", platformId);
+        };
+
+        if (!googleAccountId || !googleLocationId) {
+            try {
+                await resolveGoogleIdsFromApi(accessToken!);
+            } catch (err) {
+                if (!isGoogleUnauthorizedError(err)) {
+                    throw err;
+                }
+                console.warn("[Sync] listAccounts 401 — forcing token refresh and retrying...");
+                const refreshed = await forceRefreshGoogleAccessToken(platformId);
+                accessToken = refreshed.accessToken;
+                validPlatform = refreshed.platform;
+                await resolveGoogleIdsFromApi(accessToken);
+            }
         }
 
         // 5. Auto-register for real-time notifications if topic is configured (non-fatal for sync).
