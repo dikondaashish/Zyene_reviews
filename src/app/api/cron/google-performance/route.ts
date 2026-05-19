@@ -5,6 +5,7 @@ import { inngest } from "@/services/inngest/client";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 /**
  * Daily job: sync Google Business Profile Performance API metrics + search keywords
@@ -13,9 +14,7 @@ import * as Sentry from "@sentry/nextjs";
  * Schedule in Vercel: e.g. `0 3 * * *` (03:00 UTC) with `Authorization: Bearer CRON_SECRET`.
  */
 export async function GET(request: Request) {
-    // Verify Cron Secret — always required
-    const authHeader = request.headers.get("authorization");
-    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isAuthorizedCronRequest(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

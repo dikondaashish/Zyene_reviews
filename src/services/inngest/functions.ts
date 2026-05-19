@@ -630,14 +630,18 @@ export const syncGoogleReviews = inngest.createFunction(
 
             // Update status to error in DB so it's not stuck as "running"
             await step.run("mark-as-error", async () => {
+                const { clearGoogleSyncBootstrapHandoff } = await import(
+                    "@/services/google/sync-run-state"
+                );
                 await supabase
                     .from("review_platforms")
                     .update({
                         sync_status: "error",
-                        locked_until: null, // Release lock
-                        updated_at: new Date().toISOString()
+                        locked_until: null,
+                        updated_at: new Date().toISOString(),
                     })
                     .eq("id", platformId);
+                await clearGoogleSyncBootstrapHandoff(supabase, platformId);
             });
 
             throw error; // Rethrow for Inngest retries if needed

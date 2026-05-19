@@ -32,6 +32,7 @@ export function useGoogleSyncRemoteState({
     const [warmingUp, setWarmingUp] = useState(false)
     const [warmupStart, setWarmupStart] = useState<number | null>(null)
     const [lockedUntil, setLockedUntil] = useState<string | null>(null)
+    const [syncStale, setSyncStale] = useState(false)
     const prevRemoteStatusRef = useRef<string | null>(null)
     const onSyncSettledRef = useRef(onSyncSettled)
     onSyncSettledRef.current = onSyncSettled
@@ -64,6 +65,7 @@ export function useGoogleSyncRemoteState({
                 sync_status?: string
                 last_synced_at?: string | null
                 locked_until?: string | null
+                sync_stale?: boolean
                 total_reviews?: number
                 average_rating?: number | null
             }
@@ -73,6 +75,7 @@ export function useGoogleSyncRemoteState({
         setRemoteStatus(data.sync_status ?? null)
         setLastSyncedAt(data.last_synced_at ?? null)
         setLockedUntil(data.locked_until ?? null)
+        setSyncStale(Boolean(data.sync_stale))
         if (typeof data.total_reviews === "number") setTotalReviews(data.total_reviews)
         if (data.average_rating != null && !Number.isNaN(Number(data.average_rating))) {
             setAverageRating(Number(data.average_rating))
@@ -131,7 +134,12 @@ export function useGoogleSyncRemoteState({
         void fetchStatus()
     }, [fetchStatus])
 
-    const isStalled = remoteStatus === "running" && lockedUntil && new Date(lockedUntil) < new Date()
+    const lockExpired =
+        remoteStatus === "running" &&
+        lockedUntil != null &&
+        new Date(lockedUntil).getTime() < Date.now()
+    const isStalled =
+        remoteStatus === "running" && (syncStale || lockExpired)
     const isSyncBusy = warmingUp || remoteStatus === "running"
 
     return {
@@ -140,6 +148,7 @@ export function useGoogleSyncRemoteState({
         totalReviews,
         averageRating,
         lockedUntil,
+        syncStale,
         isStalled,
         isSyncBusy,
         markManualSyncStarted,

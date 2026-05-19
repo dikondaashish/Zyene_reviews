@@ -8,6 +8,7 @@ import {
     competitorEnrichmentToSnapshotMetadata,
 } from "@/services/competitors/external-metrics";
 import { sendCompetitorAlertEmail } from "@/lib/notifications/send-competitor-alert-email";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +17,6 @@ export const dynamic = "force-dynamic";
  * (e.g. cron-job.org): periodic GET to this URL with header `Authorization: Bearer <CRON_SECRET>`
  * (same secret as other `/api/cron/*` routes). Example: daily at a quiet hour in your timezone.
  */
-
-function isAuthorizedCronRequest(request: Request): boolean {
-    const authHeader = request.headers.get("authorization");
-    const hasSecret = typeof process.env.CRON_SECRET === "string" && process.env.CRON_SECRET.length > 0;
-    return Boolean(hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`);
-}
 
 function sameUtcDay(aIso: string | null | undefined, b: Date): boolean {
     if (!aIso) return false;

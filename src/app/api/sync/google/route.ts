@@ -1,6 +1,12 @@
 import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
+import {
+    clearGoogleSyncBootstrapHandoff,
+    isStaleRunningGoogleSync,
+    reconcileStaleGoogleSyncRun,
+} from "@/services/google/sync-run-state";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
@@ -13,6 +19,8 @@ type GooglePlatformRow = {
     sync_status: string | null;
     last_synced_at: string | null;
     locked_until?: string | null;
+    updated_at?: string | null;
+    sync_state?: unknown;
     total_reviews?: number | null;
     average_rating?: number | string | null;
 };
@@ -49,6 +57,8 @@ async function getGooglePlatformForUser(
                 sync_status,
                 last_synced_at,
                 locked_until,
+                updated_at,
+                sync_state,
                 total_reviews,
                 average_rating
             )
@@ -79,10 +89,30 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const businessId = searchParams.get("businessId") ?? undefined;
 
-        const { businessId: resolvedBusinessId, platform } = await getGooglePlatformForUser(
+        const { businessId: resolvedBusinessId, platform: platformRow } = await getGooglePlatformForUser(
             supabase,
             businessId ?? undefined
         );
+
+        const admin = createAdminClient();
+        const syncStaleBeforeReconcile = isStaleRunningGoogleSync(platformRow);
+        if (syncStaleBeforeReconcile) {
+            await reconcileStaleGoogleSyncRun(admin, platformRow.id, platformRow);
+        }
+
+        let platform = platformRow;
+        if (syncStaleBeforeReconcile) {
+            const { data: refreshed } = await admin
+                .from("review_platforms")
+                .select(
+                    "id, platform, sync_status, last_synced_at, locked_until, updated_at, sync_state, total_reviews, average_rating"
+                )
+                .eq("id", platformRow.id)
+                .maybeSingle();
+            if (refreshed) {
+                platform = refreshed as unknown as GooglePlatformRow;
+            }
+        }
 
         const { count: visibleGoogleReviewCount, error: visibleCountError } = await supabase
             .from("reviews")
@@ -106,6 +136,7 @@ export async function GET(request: Request) {
             sync_status: platform.sync_status ?? "idle",
             last_synced_at: platform.last_synced_at ?? null,
             locked_until: platform.locked_until ?? null,
+            sync_stale: syncStaleBeforeReconcile || isStaleRunningGoogleSync(platform),
             total_reviews: totalReviewsDisplay,
             average_rating:
                 platform.average_rating != null ? Number(platform.average_rating) : null,
@@ -146,10 +177,15 @@ export async function POST(request: Request) {
         }
 
         const { platform } = await getGooglePlatformForUser(supabase, businessId);
-        
+
+        const admin = createAdminClient();
+        if (!force) {
+            await reconcileStaleGoogleSyncRun(admin, platform.id);
+        }
+
         if (force) {
             console.log(`[Manual Sync] Force reset requested for platform ${platform.id}`);
-            await supabase
+            await admin
                 .from("review_platforms")
                 .update({
                     sync_status: "idle",
@@ -158,6 +194,7 @@ export async function POST(request: Request) {
                     last_review_update_time: null,
                 })
                 .eq("id", platform.id);
+            await clearGoogleSyncBootstrapHandoff(admin, platform.id);
         }
 
         // 2. Trigger Background Sync

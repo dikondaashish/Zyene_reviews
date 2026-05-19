@@ -44,16 +44,35 @@ type OnboardingGoogleSyncResult = { mode: "inngest" } | { mode: "inline" } | { m
  * Primary path: bootstrap first page inline, then Inngest for remaining pages + analysis.
  * Fallback when Inngest is unavailable (e.g. missing keys locally): inline sync + GBP side jobs.
  */
+async function runGooglePostConnectSideJobs(platformId: string): Promise<void> {
+  syncGooglePerformanceForPlatform(platformId).catch((e) =>
+    console.error("[Onboarding] GBP performance sync:", e)
+  );
+  syncGooglePhase2ForPlatform(platformId).catch((e) => console.error("[Onboarding] GBP phase2:", e));
+  syncGoogleListingProfileForPlatform(platformId).catch((e) =>
+    console.error("[Onboarding] GBP listing profile:", e)
+  );
+  syncGoogleLodgingForPlatform(platformId).catch((e) => console.error("[Onboarding] GBP lodging:", e));
+}
+
 async function enqueueGooglePostConnectSync(platformId: string): Promise<OnboardingGoogleSyncResult> {
+  let completedInline = false;
   try {
-    await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {
-      if (isGoogleSyncConflictError(err)) return;
+    const bootstrap = await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {
+      if (isGoogleSyncConflictError(err)) return null;
       console.warn("[Onboarding] bootstrapGoogleReviewsForPlatform:", err);
+      return null;
     });
+    completedInline = bootstrap?.completedInline === true;
     revalidatePath("/reviews");
     revalidatePath("/dashboard");
   } catch (bootstrapErr) {
     console.warn("[Onboarding] bootstrapGoogleReviewsForPlatform failed:", bootstrapErr);
+  }
+
+  if (completedInline) {
+    await runGooglePostConnectSideJobs(platformId);
+    return { mode: "inline" };
   }
 
   try {
@@ -66,14 +85,7 @@ async function enqueueGooglePostConnectSync(platformId: string): Promise<Onboard
     console.error("[Onboarding] inngest.send(google/sync.reviews) failed:", inngestErr);
     try {
       await syncGoogleReviewsForPlatform(platformId);
-      syncGooglePerformanceForPlatform(platformId).catch((e) =>
-        console.error("[Onboarding] Fallback performance sync:", e)
-      );
-      syncGooglePhase2ForPlatform(platformId).catch((e) => console.error("[Onboarding] Fallback phase2:", e));
-      syncGoogleListingProfileForPlatform(platformId).catch((e) =>
-        console.error("[Onboarding] Fallback listing profile:", e)
-      );
-      syncGoogleLodgingForPlatform(platformId).catch((e) => console.error("[Onboarding] Fallback lodging:", e));
+      await runGooglePostConnectSideJobs(platformId);
       return { mode: "inline" };
     } catch (syncErr) {
       const msg = syncErr instanceof Error ? syncErr.message : String(syncErr);

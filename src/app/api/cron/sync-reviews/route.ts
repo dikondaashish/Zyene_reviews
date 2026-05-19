@@ -5,12 +5,11 @@ import { inngest } from "@/services/inngest/client";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 export async function GET(request: Request) {
     try {
-        // 1. Verify Cron Secret
-        const authHeader = request.headers.get("authorization");
-        if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        if (!isAuthorizedCronRequest(request)) {
             console.error("[Cron] Unauthorized access attempt");
             // Ping fail so we know the cron tried to run but was blocked
             await pingReviewSyncHeartbeat(false);

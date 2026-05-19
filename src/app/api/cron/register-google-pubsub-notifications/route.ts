@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { registerNotifications } from "@/services/google/notifications";
 import { createLogger } from "@/lib/logger";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +17,7 @@ const log = createLogger("cron-register-google-pubsub-notifications");
  * Does not change review sync or webhooks — only calls Google's Notifications API.
  */
 export async function GET(request: Request) {
-    const authHeader = request.headers.get("authorization");
-    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isAuthorizedCronRequest(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

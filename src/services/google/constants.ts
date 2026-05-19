@@ -29,6 +29,12 @@ export const AI_ANALYSIS_BATCH_SIZE = 5;
  */
 export const STALE_LOCK_TIMEOUT_MINUTES = 45;
 
+/**
+ * Bootstrap hands off to Inngest with `sync_status: running` and `locked_until: null`.
+ * If no worker acquires the lock within this window, reconcile to `idle` (partial reviews kept).
+ */
+export const STALE_RUNNING_SYNC_MINUTES = 25;
+
 // --- Performance Sync ---
 /** Default number of days for daily performance metrics (covers ~13 months for "Last 12 Months" charts). */
 export const PERFORMANCE_DAILY_DAYS = 400;

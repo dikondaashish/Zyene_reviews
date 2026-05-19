@@ -28,6 +28,11 @@ import { registerNotificationsWithRetry } from "./notifications";
 import { computeReviewHash } from "@/utils/review-hash";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
+import {
+    clearGoogleSyncBootstrapHandoff,
+    markGoogleSyncBootstrapHandoff,
+    reconcileStaleGoogleSyncRun,
+} from "@/services/google/sync-run-state";
 
 export { isGoogleSyncConflictError } from "./sync-lock-utils";
 import {
@@ -267,29 +272,49 @@ export async function publishGoogleReviewSyncProgress(
  */
 export async function bootstrapGoogleReviewsForPlatform(
     platformId: string
-): Promise<{ synced: number; hasMore: boolean }> {
+): Promise<{ synced: number; hasMore: boolean; completedInline: boolean }> {
     const admin = createAdminClient();
     let context: GoogleSyncContext | null = null;
 
     try {
+        await reconcileStaleGoogleSyncRun(admin, platformId);
+
         context = await prepareGoogleSync(platformId);
         const result = await syncGoogleReviewsPage(context, undefined);
         await publishGoogleReviewSyncProgress(admin, context.platform.business_id, platformId);
 
         const hasMore = Boolean(result.nextPageToken && !result.earlyExit);
-        await admin
-            .from("review_platforms")
-            .update({
-                locked_until: null,
-                sync_status: "running",
-                updated_at: new Date().toISOString(),
-            })
-            .eq("id", platformId);
+
+        if (!hasMore) {
+            await finalizeGoogleSync(
+                platformId,
+                context.platform.business_id,
+                result.total,
+                result.avgRating
+            );
+            const highWater = context.highestReviewUpdateTime;
+            if (typeof highWater === "string" && highWater.length > 0) {
+                await admin
+                    .from("review_platforms")
+                    .update({ last_review_update_time: highWater })
+                    .eq("id", platformId);
+            }
+            await clearGoogleSyncBootstrapHandoff(admin, platformId);
+            void enqueueMissingGoogleReviewAnalysis(context.platform.business_id).catch((e) =>
+                console.error("[Sync] Bootstrap inline analysis enqueue failed:", e)
+            );
+            console.log(
+                `[Sync] Bootstrap complete inline: synced=${result.synced}, platform=${platformId}`
+            );
+            return { synced: result.synced, hasMore: false, completedInline: true };
+        }
+
+        await markGoogleSyncBootstrapHandoff(admin, platformId);
 
         console.log(
-            `[Sync] Bootstrap page 1: synced=${result.synced}, hasMore=${hasMore}, platform=${platformId}`
+            `[Sync] Bootstrap page 1: synced=${result.synced}, hasMore=true, awaiting Inngest, platform=${platformId}`
         );
-        return { synced: result.synced, hasMore };
+        return { synced: result.synced, hasMore: true, completedInline: false };
     } catch (err) {
         if (context) {
             await admin
@@ -728,11 +753,22 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
         throw new Error(`Platform not found: id=${platformId}${msg}`);
     }
 
+    await reconcileStaleGoogleSyncRun(admin, platformId, platform);
+
+    const { data: platformAfterReconcile } = await admin
+        .from("review_platforms")
+        .select("*")
+        .eq("id", platformId)
+        .single();
+
+    const activePlatform = platformAfterReconcile ?? platform;
+
     // 2. Cooldown
-    enforceSyncCooldown(platform);
+    enforceSyncCooldown(activePlatform);
 
     // 3. Acquire Lock
     await acquireSyncLockOrThrow(admin, platformId);
+    await clearGoogleSyncBootstrapHandoff(admin, platformId);
 
     try {
         // 4. Token & IDs

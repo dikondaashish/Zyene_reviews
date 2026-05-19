@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { inngest } from "@/services/inngest/client";
 import { pingFollowUpHeartbeat } from "@/lib/monitoring/follow-up-heartbeat";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 /**
  * Fan-out follow-up processing for active campaigns with follow-ups enabled.
@@ -14,9 +15,7 @@ import { pingFollowUpHeartbeat } from "@/lib/monitoring/follow-up-heartbeat";
  * with how often this route runs.
  */
 export async function GET(request: Request) {
-    // Verify Cron Secret — always required
-    const authHeader = request.headers.get("authorization");
-    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isAuthorizedCronRequest(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

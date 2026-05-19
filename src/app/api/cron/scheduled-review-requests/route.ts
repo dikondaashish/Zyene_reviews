@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 import { processDueScheduledReviewRequests } from "@/lib/review-requests/process-scheduled-queue";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 /**
  * Sends manually scheduled review requests (`queued` + `scheduled_for` ≤ now).
@@ -11,8 +12,7 @@ import { processDueScheduledReviewRequests } from "@/lib/review-requests/process
  * the `CRON_SECRET` env var in your app (same pattern as your other cron routes).
  */
 export async function GET(request: Request) {
-    const authHeader = request.headers.get("authorization");
-    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isAuthorizedCronRequest(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
