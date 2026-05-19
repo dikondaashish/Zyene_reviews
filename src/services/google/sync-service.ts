@@ -27,6 +27,7 @@ import {
 import { registerNotificationsWithRetry } from "./notifications";
 import { computeReviewHash } from "@/utils/review-hash";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
+import type { GooglePlatformWithTokens } from "@/types/google-sync";
 
 export { isGoogleSyncConflictError } from "./sync-lock-utils";
 import {
@@ -419,7 +420,9 @@ async function fetchGoogleReviewsPaginated(
     return { googleReviews, apiTotalReviews, apiAverageRating, truncated };
 }
 
-export async function getValidGoogleToken(platformId: string) {
+export async function getValidGoogleToken(
+    platformId: string
+): Promise<{ accessToken: string | null; platform: GooglePlatformWithTokens }> {
     const admin = createAdminClient();
     
     // 1. Fetch RAW platform record (encrypted tokens)
@@ -461,10 +464,10 @@ export async function getValidGoogleToken(platformId: string) {
         refreshToken = decRefresh;
     }
 
-    const platformWithTokens = { 
-        ...platform, 
-        access_token: accessToken, 
-        refresh_token: refreshToken 
+    const platformWithTokens: GooglePlatformWithTokens = {
+        ...platform,
+        access_token: accessToken,
+        refresh_token: refreshToken,
     };
 
     // 3. Check Token Expiry (Buffer: 5 minutes)
@@ -484,8 +487,8 @@ async function refreshPlatformAccessToken(
     admin: AdminClient,
     platformId: string,
     refreshToken: string | null,
-    platformWithTokens: Record<string, unknown>
-): Promise<{ accessToken: string; platform: Record<string, unknown> }> {
+    platformWithTokens: GooglePlatformWithTokens
+): Promise<{ accessToken: string; platform: GooglePlatformWithTokens }> {
     console.log(`[Token] Refreshing access token for platform ${platformId}...`);
 
     if (!refreshToken) {
@@ -553,7 +556,7 @@ async function refreshPlatformAccessToken(
 /** Force refresh when Google returns 401 but `token_expires_at` still looks valid. */
 export async function forceRefreshGoogleAccessToken(
     platformId: string
-): Promise<{ accessToken: string; platform: Record<string, unknown> }> {
+): Promise<{ accessToken: string; platform: GooglePlatformWithTokens }> {
     const admin = createAdminClient();
     const { data: platform, error: platformError } = await admin
         .from("review_platforms")
@@ -735,8 +738,8 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
         // 4. Token & IDs
         let { accessToken, platform: validPlatform } = await getValidGoogleToken(platformId);
 
-        let googleAccountId = validPlatform.google_account_id as string | null | undefined;
-        let googleLocationId = validPlatform.google_location_id as string | null | undefined;
+        let googleAccountId = validPlatform.google_account_id;
+        let googleLocationId = validPlatform.google_location_id;
 
         if (!googleLocationId && validPlatform.external_id) {
             googleLocationId = String(validPlatform.external_id);

@@ -61,7 +61,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         const { accessToken, platform } = await getValidGoogleToken(review.platform_id);
 
         // 5. Resolve Location & Account IDs
-        const locationId = platform.external_id;
+        const locationId =
+            platform.google_location_id ?? platform.external_id;
         if (!locationId) throw new Error("Platform location ID missing");
 
         // We currently resolve account_id dynamically from Google account listings.
@@ -155,7 +156,8 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 
         const { accessToken, platform } = await getValidGoogleToken(review.platform_id);
 
-        const locationId = platform.external_id;
+        const locationId =
+            platform.google_location_id ?? platform.external_id;
         if (!locationId) throw new Error("Platform location ID missing");
 
         const accounts = await listAccounts(accessToken!);
