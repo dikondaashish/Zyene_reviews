@@ -217,7 +217,10 @@ export const processScheduledReviewRequest = inngest.createFunction(
     {
         id: "process-scheduled-review-request",
         name: "Process Scheduled Review Request",
-        concurrency: { limit: 10 },
+        concurrency: {
+            // Inngest free/hobby plans cap per-function concurrency at 5; higher values fail sync.
+            limit: 5,
+        },
     },
     { event: "review-request/scheduled.send" },
     async ({ event, step }: { event: { data: { reviewRequestId: string; sendAt: string } }; step: any }) => {
