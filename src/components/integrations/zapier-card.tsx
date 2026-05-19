@@ -62,7 +62,7 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
             </CardHeader>
             <CardContent className="space-y-3 pb-3">
                 {!apiKey && (
-                    <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-300">
+                    <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
                         <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}
