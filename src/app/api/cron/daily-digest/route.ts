@@ -1,15 +1,27 @@
 import { NextResponse } from "next/server";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { pingWeeklyDigestHeartbeat } from "@/lib/monitoring/weekly-digest-heartbeat";
 
 export const dynamic = "force-dynamic";
 
-/** @deprecated Use GET /api/cron/weekly-digest (same Bearer auth). */
-export async function GET() {
-    return NextResponse.json(
-        {
-            error: "Gone",
-            message:
-                "Daily digest was replaced by the weekly digest. Point cron-jobs.org to GET /api/cron/weekly-digest with the same Authorization: Bearer CRON_SECRET.",
-        },
-        { status: 410 }
-    );
+/**
+ * Daily Better Stack heartbeat for the weekly digest monitor (no email fan-out).
+ *
+ * Use when cron-jobs.org (or similar) still hits this legacy path daily while
+ * GET /api/cron/weekly-digest runs weekly for actual digest emails.
+ */
+export async function GET(request: Request) {
+    if (!isAuthorizedCronRequest(request)) {
+        await pingWeeklyDigestHeartbeat(false);
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    await pingWeeklyDigestHeartbeat(true);
+
+    return NextResponse.json({
+        ok: true,
+        heartbeat: true,
+        message:
+            "Digest heartbeat recorded. Fan-out emails via GET /api/cron/weekly-digest on your weekly schedule.",
+    });
 }

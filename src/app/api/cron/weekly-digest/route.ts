@@ -3,36 +3,11 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
+import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { pingWeeklyDigestHeartbeat } from "@/lib/monitoring/weekly-digest-heartbeat";
 
 /** Rolling window of reviews to include in the weekly digest (matches email copy). */
 const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
-
-/** Base URL only; success pings GET this URL, failures append `/fail`. */
-function digestHeartbeatBaseUrl(): string | null {
-    const raw =
-        process.env.BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL ||
-        process.env.BETTERSTACK_DAILY_DIGEST_HEARTBEAT_URL ||
-        "";
-    const base = raw.trim();
-    return base ? base.replace(/\/+$/, "") : null;
-}
-
-async function pingDigestHeartbeat(ok: boolean): Promise<void> {
-    const base = digestHeartbeatBaseUrl();
-    if (!base) return;
-    const url = ok ? base : `${base}/fail`;
-    await fetch(url).catch(() => {});
-}
-
-function isAuthorizedCronRequest(request: Request): boolean {
-    const authHeader = request.headers.get("authorization");
-    const hasSecret = typeof process.env.CRON_SECRET === "string" && process.env.CRON_SECRET.length > 0;
-    const hasValidBearer = hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-
-    // Vercel Cron invokes with this header and no bearer token.
-    const isVercelCron = request.headers.get("x-vercel-cron") === "1";
-    return Boolean(hasValidBearer || isVercelCron);
-}
 
 /**
  * Weekly digest fan-out. Schedule externally (e.g. cron-jobs.org): every Monday 09:00
@@ -40,13 +15,14 @@ function isAuthorizedCronRequest(request: Request): boolean {
  *
  * Example cron-jobs.org: "0 9 * * MON" with timezone America/Chicago (adjust as needed).
  *
- * Better Stack: set `BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL` to the heartbeat URL from Uptime → Heartbeats.
- * Configure the monitor's "expect heartbeat every" to that same cadence (e.g. 7 days for weekly cron), not daily,
- * or you will see false "missed heartbeat" alerts. If the env var is unset, this route never pings Better Stack.
+ * Better Stack: optional `BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL`; legacy monitor URL is built in if unset.
+ * For a daily monitor: schedule GET /api/cron/daily-digest every day (heartbeat only).
+ * For weekly emails: schedule this route weekly (e.g. Monday 09:00) and set monitor interval to 7–8 days,
+ * or keep daily heartbeat via /api/cron/daily-digest.
  */
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {
-        await pingDigestHeartbeat(false);
+        await pingWeeklyDigestHeartbeat(false);
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -76,12 +52,12 @@ export async function GET(request: Request) {
             .order("created_at", { ascending: false });
 
         if (reviewError) {
-            await pingDigestHeartbeat(false);
+            await pingWeeklyDigestHeartbeat(false);
             return NextResponse.json({ error: reviewError.message }, { status: 500 });
         }
 
         if (!recentReviews || recentReviews.length === 0) {
-            await pingDigestHeartbeat(true);
+            await pingWeeklyDigestHeartbeat(true);
             return NextResponse.json({ message: "No new reviews in the digest window" });
         }
 
@@ -98,7 +74,7 @@ export async function GET(request: Request) {
             );
         }
 
-        await pingDigestHeartbeat(true);
+        await pingWeeklyDigestHeartbeat(true);
 
         return NextResponse.json({
             success: true,
@@ -107,7 +83,7 @@ export async function GET(request: Request) {
         });
     } catch (error: unknown) {
         console.error("Weekly Digest CRON Error:", error);
-        await pingDigestHeartbeat(false);
+        await pingWeeklyDigestHeartbeat(false);
         const message = error instanceof Error ? error.message : "Internal server error";
         return NextResponse.json({ error: message }, { status: 500 });
     }
