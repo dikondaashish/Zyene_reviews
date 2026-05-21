@@ -26,17 +26,24 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save, Upload, Trash, Star, Tag, Globe, MessageSquare, CheckCircle, Palette, Gift } from "lucide-react";
 import type { PublicProfilePreviewValues } from "@/types/components";
+import { ReviewTagChipEditor } from "@/components/settings/review-tag-chip-editor";
+import {
+    customTagsForPreview,
+    customTagsForSave,
+    parseTagsToItems,
+    sanitizeTagItems,
+    type ReviewTagItem,
+} from "@/lib/review-flow/tag-display";
 
 /** Match `businessPatchSchema` max lengths so saves fail in-form instead of opaque API 400s */
 const contentSchema = z.object({
     rating_subtitle: z.string().max(500).optional(),
     tags_heading: z.string().max(500).optional(),
     tags_subheading: z.string().max(500).optional(),
-    custom_tags: z.string().optional(),
     enable_staff_selection: z.boolean().optional(),
     staff_names: z.string().optional(),
     google_heading: z.string().max(500).optional(),
@@ -81,10 +88,12 @@ type ContentFormValues = z.infer<typeof contentSchema>;
 
 export function ReviewContentForm({
     businessId,
+    businessCategory = "other",
     onValuesChange,
     onTabChange,
 }: {
     businessId: string;
+    businessCategory?: string;
     onValuesChange?: (values: Partial<PublicProfilePreviewValues>) => void;
     onTabChange?: (tab: string) => void;
 }) {
@@ -101,7 +110,6 @@ export function ReviewContentForm({
             rating_subtitle: "",
             tags_heading: "",
             tags_subheading: "",
-            custom_tags: "",
             enable_staff_selection: false,
             staff_names: "",
             google_heading: "",
@@ -129,6 +137,12 @@ export function ReviewContentForm({
 
     const [uploadingFooterLogo, setUploadingFooterLogo] = useState(false);
     const [filesToDelete, setFilesToDelete] = useState<string[]>([]);
+    const categoryKey = businessCategory.toLowerCase().trim() || "other";
+    const [tagCategory, setTagCategory] = useState(categoryKey);
+    const [tagItems, setTagItems] = useState<ReviewTagItem[]>(() =>
+        parseTagsToItems(null, categoryKey)
+    );
+    const [tagsReady, setTagsReady] = useState(false);
 
     const handleFooterLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -169,26 +183,34 @@ export function ReviewContentForm({
         toast.success("Footer logo removed");
     };
 
-    // Watch for changes and notify parent for preview
-    useEffect(() => {
-        const subscription = form.watch((value) => {
+    const pushPreview = useCallback(
+        (value: Partial<ContentFormValues>) => {
             if (!onValuesChange) return;
-            const customTagsArray = value.custom_tags
-                ? value.custom_tags.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
-                : [];
-
             const staffNamesArray = value.staff_names
                 ? value.staff_names.split(",").map((t) => t?.trim()).filter((t) => t && t.length > 0)
                 : [];
 
             onValuesChange({
                 ...value,
-                custom_tags: customTagsArray,
+                custom_tags: customTagsForPreview(tagItems, tagCategory),
                 staff_names: staffNamesArray,
             });
+        },
+        [onValuesChange, tagCategory, tagItems]
+    );
+
+    useEffect(() => {
+        if (!tagsReady) return;
+        pushPreview(form.getValues() as ContentFormValues);
+    }, [tagItems, tagsReady, pushPreview, form]);
+
+    useEffect(() => {
+        const subscription = form.watch((value) => {
+            if (!tagsReady) return;
+            pushPreview(value);
         });
         return () => subscription.unsubscribe();
-    }, [form, onValuesChange]);
+    }, [form, pushPreview, tagsReady]);
 
     useEffect(() => {
         let cancelled = false;
@@ -207,12 +229,19 @@ export function ReviewContentForm({
 
                 if (cancelled || !data) return;
 
+                const loadedCategory =
+                    typeof data.category === "string" && data.category.trim()
+                        ? data.category.trim().toLowerCase()
+                        : categoryKey;
+                setTagCategory(loadedCategory);
+                setTagItems(parseTagsToItems(data.custom_tags, loadedCategory));
+                setTagsReady(true);
+
                 form.reset({
                         min_stars_for_google: data.min_stars_for_google ?? 4,
                         rating_subtitle: data.rating_subtitle || "Your feedback means a lot to us!",
                         tags_heading: data.tags_heading || "What did you like most?",
                         tags_subheading: data.tags_subheading || "Tap to select what stood out",
-                        custom_tags: Array.isArray(data.custom_tags) ? data.custom_tags.join(", ") : "",
                         enable_staff_selection: data.enable_staff_selection ?? false,
                         staff_names: Array.isArray(data.staff_names) ? data.staff_names.join(", ") : "",
                         google_heading: data.google_heading || "Would you post this on Google?",
@@ -262,14 +291,24 @@ export function ReviewContentForm({
         return () => {
             cancelled = true;
         };
-    }, [businessId, supabase, form.reset]);
+    }, [businessId, categoryKey, supabase, form.reset]);
+
+    useEffect(() => {
+        if (tagsReady) return;
+        setTagItems(parseTagsToItems(null, categoryKey));
+        setTagCategory(categoryKey);
+    }, [categoryKey, tagsReady]);
 
     async function onSubmit(data: ContentFormValues) {
         setIsSaving(true);
         try {
-            const customTagsArray = data.custom_tags
-                ? data.custom_tags.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
-                : [];
+            const sanitizedTags = sanitizeTagItems(tagItems);
+            if (sanitizedTags.length === 0) {
+                toast.error("Add at least one review tag with a label.");
+                setIsSaving(false);
+                return;
+            }
+
             const staffNamesArray = data.staff_names
                 ? data.staff_names.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
                 : [];
@@ -284,7 +323,7 @@ export function ReviewContentForm({
                 rating_subtitle: trimOrNull(data.rating_subtitle),
                 tags_heading: trimOrNull(data.tags_heading),
                 tags_subheading: trimOrNull(data.tags_subheading),
-                custom_tags: customTagsArray.length > 0 ? customTagsArray : null,
+                custom_tags: customTagsForSave(sanitizedTags, tagCategory),
                 enable_staff_selection: data.enable_staff_selection ?? false,
                 staff_names: staffNamesArray,
                 google_heading: trimOrNull(data.google_heading),
@@ -550,26 +589,21 @@ export function ReviewContentForm({
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                        control={form.control}
-                                        name="custom_tags"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Custom Tags (Comma Separated)</FormLabel>
-                                                <FormControl>
-                                                    <Textarea
-                                                        placeholder="Professional, Friendly, Fast Service, Great Value"
-                                                        className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormDescription>
-                                                    Leave empty to use default tags for your business category. Separate multiple tags with commas.
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
+                                    <FormItem>
+                                        <FormLabel>Review tags</FormLabel>
+                                        {tagsReady ? (
+                                            <ReviewTagChipEditor
+                                                category={tagCategory}
+                                                items={tagItems}
+                                                onChange={setTagItems}
+                                            />
+                                        ) : (
+                                            <div className="h-24 rounded-lg border border-border bg-muted/20 animate-pulse" />
                                         )}
-                                    />
+                                        <FormDescription>
+                                            Starts from your business category defaults. Icons appear on your review page automatically. Reset to restore defaults.
+                                        </FormDescription>
+                                    </FormItem>
                                     <div className="pt-4 border-t border-border mt-4">
                                         <div className="space-y-4">
                                             <FormField

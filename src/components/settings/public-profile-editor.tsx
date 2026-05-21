@@ -264,6 +264,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
 
                 <ReviewContentForm
                     businessId={business.id}
+                    businessCategory={business.category || "other"}
                     onValuesChange={handleValuesChange}
                     onTabChange={handleTabChange}
                 />

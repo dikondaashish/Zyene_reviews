@@ -27,31 +27,13 @@ import {
     reviewPageOrbRgba,
 } from "@/lib/utils/review-page-background";
 import { ensureCompleteReviewText } from "@/lib/review-flow/ensure-complete-review";
+import { formatTagForDisplay, resolveReviewFlowTags } from "@/lib/review-flow/tag-display";
 import {
     buildTagsSelected,
     EVERYTHING_TAG,
     MAX_CUSTOM_TAG_CHIPS,
     normalizeCustomTagInput,
 } from "@/lib/review-flow/tags-for-ai";
-
-// ─── Category → Tag mapping ────────────────────────────────────────────
-const CATEGORY_TAGS: Record<string, string[]> = {
-    restaurant: ["🍽️ Food", "👨‍🍳 Service", "✨ Ambiance", "💰 Prices", "🍕 Portions", "⚡ Speed", "🧹 Cleanliness", "📋 Menu Variety"],
-    cafe: ["☕ Coffee", "🍰 Food", "✨ Ambiance", "👨‍🍳 Service", "💰 Prices", "📶 Wi-Fi", "💺 Seating"],
-    bar: ["🍸 Drinks", "🎵 Atmosphere", "👨‍🍳 Service", "🎶 Music", "💰 Prices", "🍕 Food", "👥 Crowd"],
-    salon: ["💇 Service", "✨ Skill", "🧹 Cleanliness", "💆 Ambiance", "💰 Prices", "🧴 Products", "😌 Relaxation"],
-    spa: ["💆 Service", "😌 Relaxation", "🧹 Cleanliness", "✨ Ambiance", "🧖 Treatments", "👨‍⚕️ Staff", "💰 Value"],
-    gym: ["🏋️ Equipment", "👨‍🏫 Trainers", "🧹 Cleanliness", "💰 Prices", "🎯 Classes", "💪 Atmosphere", "⏰ Hours"],
-    fitness: ["👨‍🏫 Trainers", "🏋️ Equipment", "🎯 Classes", "💪 Atmosphere", "🧹 Cleanliness", "📈 Results", "👥 Community"],
-    medical: ["👨‍⚕️ Staff", "🏥 Professionalism", "⏰ Wait Time", "🧹 Cleanliness", "💬 Communication", "❤️ Care"],
-    dental: ["👨‍⚕️ Staff", "🏥 Professionalism", "😌 Comfort", "🧹 Cleanliness", "💬 Communication", "✨ Pain-Free"],
-    retail: ["🛍️ Selection", "💰 Prices", "👨‍💼 Staff", "⭐ Quality", "🏪 Store Layout", "↩️ Returns"],
-    auto: ["🤝 Honesty", "⚡ Speed", "💰 Prices", "⭐ Quality", "💬 Communication", "🏥 Professionalism"],
-    hotel: ["🛏️ Room", "🧹 Cleanliness", "👨‍💼 Staff", "📍 Location", "🏊 Amenities", "💰 Value"],
-    service: ["⭐ Quality", "🏥 Professionalism", "💬 Communication", "⏰ Timeliness", "💰 Value", "🧠 Expertise"],
-    smoke: ["🌿 Products", "👨‍💼 Service", "⭐ Quality", "💰 Prices", "🏪 Selection", "✨ Atmosphere"],
-    other: ["⭐ Quality", "👨‍💼 Service", "💰 Value", "✨ Atmosphere", "👥 Staff", "🎯 Experience"],
-};
 
 // ─── Emoji ratings ─────────────────────────────────────────────────────
 const RATINGS = [
@@ -279,10 +261,8 @@ export function PublicReviewFlow({
         }
     };
 
-    // Resolve tags: Use custom tags if provided, otherwise category defaults
     const categoryKey = businessCategory.toLowerCase();
-    const defaultTags = CATEGORY_TAGS[categoryKey] || CATEGORY_TAGS.other;
-    const tags = (customTags && customTags.length > 0) ? customTags : defaultTags;
+    const tags = resolveReviewFlowTags(customTags, categoryKey);
 
     // Get initials for avatar
     const initials = businessName
@@ -1092,13 +1072,15 @@ export function PublicReviewFlow({
 
                     {/* Tags */}
                     <div className="flex flex-wrap justify-center gap-2">
-                        {tags.map((tag) => (
+                        {tags.map((tag) => {
+                            const { emoji, label } = formatTagForDisplay(tag, categoryKey);
+                            return (
                             <button
                                 key={tag}
                                 type="button"
                                 onClick={() => toggleTag(tag)}
                                 className={cn(
-                                    "px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
+                                    "inline-flex items-center gap-1.5 px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
                                         ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
@@ -1109,9 +1091,11 @@ export function PublicReviewFlow({
                                     borderColor: selectedTags.includes(tag) ? resolvedBrandColor : undefined
                                 }}
                             >
-                                {tag}
+                                <span className="text-base leading-none" aria-hidden>{emoji}</span>
+                                <span>{label}</span>
                             </button>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {/* Everything + Add your own */}
