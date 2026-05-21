@@ -1072,7 +1072,7 @@ export function PublicReviewFlow({
             "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
 
         return renderCardWrapper(
-            <div className="px-6 pt-5 pb-0 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="px-6 pt-5 pb-2 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
@@ -1303,7 +1303,7 @@ export function PublicReviewFlow({
                     </button>
                 </div>,
             "overflow-visible flex flex-col relative z-20",
-            "pt-0 pb-4"
+            "pt-2 pb-4"
         );
     }
 
