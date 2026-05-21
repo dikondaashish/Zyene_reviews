@@ -587,7 +587,7 @@ export function PublicReviewFlow({
 
                 {/* Powered by footer */}
                 {!hideBranding && (
-                    <div className="py-4 text-center border-t border-border dark:border-white/10">
+                    <div className="pt-2.5 pb-2.5 text-center border-t border-border dark:border-white/10">
                         <div className="text-xs text-muted-foreground font-medium tracking-wide flex items-center justify-center gap-1.5">
                             <span>Powered by</span>
                             {footerLink ? (
@@ -1063,7 +1063,7 @@ export function PublicReviewFlow({
             "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
 
         return renderCardWrapper(
-            <div className="px-6 py-5 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="px-6 pt-5 pb-0 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
@@ -1279,7 +1279,7 @@ export function PublicReviewFlow({
 
                     <button
                         type="button"
-                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto pt-0.5"
+                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
                         onClick={() => {
                             setRating(null);
                             setSelectedTags([]);
