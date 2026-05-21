@@ -4,10 +4,10 @@ const projectId = process.env.GCP_PROJECT_ID || "zyene-reviews";
 const location = process.env.GCP_REGION || "global";
 const apiKey = process.env.GOOGLE_VERTEX_API_KEY;
 
-/** Default: Gemini 3 Flash Preview (primary). Override with GOOGLE_AI_PRIMARY_MODEL. */
-const DEFAULT_PRIMARY_MODEL = process.env.GOOGLE_AI_PRIMARY_MODEL || "gemini-3-flash-preview";
-/** Default: Gemini 2.5 Flash (fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
-const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-2.5-flash";
+/** Default: Gemini 3.1 Flash-Lite (fast, cost-efficient). Override with GOOGLE_AI_PRIMARY_MODEL. */
+const DEFAULT_PRIMARY_MODEL = process.env.GOOGLE_AI_PRIMARY_MODEL || "gemini-3.1-flash-lite";
+/** Default: Gemini 3.5 Flash (quality fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
+const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-3.5-flash";
 
 /**
  * Initialize the GoogleGenAI client.

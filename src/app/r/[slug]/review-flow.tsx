@@ -1147,7 +1147,7 @@ export function PublicReviewFlow({
                             }}
                         >
                             <Pencil className="h-4 w-4 shrink-0" aria-hidden />
-                            Add your own
+                            Add your own words
                         </button>
 
                         {showCustomInput && (
