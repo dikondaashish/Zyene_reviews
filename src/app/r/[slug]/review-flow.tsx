@@ -1072,7 +1072,7 @@ export function PublicReviewFlow({
             "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
 
         return renderCardWrapper(
-            <div className="px-6 pt-5 pb-0 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="px-6 pt-7 pb-0 animate-in fade-in slide-in-from-right-4 duration-400">
                 <div className="flex flex-col gap-4">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
