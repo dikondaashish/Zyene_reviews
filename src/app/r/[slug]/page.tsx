@@ -5,6 +5,9 @@ import { PublicReviewFlow } from "./review-flow";
 import { Metadata } from "next";
 import { z } from "zod";
 
+/** Always read latest rating_style / copy from DB (no stale static cache after settings save). */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
     params,
 }: {

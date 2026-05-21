@@ -335,7 +335,10 @@ export function PublicReviewFlow({
             console.error("Generation error:", error);
             const firstTag = selectedTags[0]?.replace(/^[^\s]+\s/, "") || "experience";
             setReviewText(
-                `Great experience at ${businessName}! Really loved the ${firstTag.toLowerCase()}. Would definitely come back.`
+                ensureCompleteReviewText(
+                    `Great experience at ${businessName}! Really loved the ${firstTag.toLowerCase()}. Would definitely come back.`,
+                    businessName
+                )
             );
             setStep("review");
         }
