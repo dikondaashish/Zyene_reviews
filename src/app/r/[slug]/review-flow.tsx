@@ -1059,28 +1059,36 @@ export function PublicReviewFlow({
     // ─── Render: Tag Selection (step 2) ─────────────────────────────────
 
     if (step === "tags") {
+        const tagActionBtnClass =
+            "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
+
         return renderCardWrapper(
-            <div className="p-8 pb-32 flex-1 flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="px-6 py-5 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                        <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
+                        <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                        <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                        <div className="h-1 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
                     </div>
 
-                    <div className="text-center space-y-1">
-                        <h2 className="text-2xl font-bold text-foreground">{tagsHeading || "What did you like most?"}</h2>
-                        <p className="text-muted-foreground text-sm">{tagsSubheading || "Tap to select what stood out"}</p>
+                    <div className="text-center space-y-0.5">
+                        <h2 className="text-xl font-bold text-foreground leading-snug">
+                            {tagsHeading || "What did you like most?"}
+                        </h2>
+                        <p className="text-muted-foreground text-xs">
+                            {tagsSubheading || "Tap to select what stood out"}
+                        </p>
                     </div>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap justify-center gap-2.5 my-2">
+                    <div className="flex flex-wrap justify-center gap-2">
                         {tags.map((tag) => (
                             <button
                                 key={tag}
+                                type="button"
                                 onClick={() => toggleTag(tag)}
                                 className={cn(
-                                    "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                                    "px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
                                     "border-2 active:scale-95",
                                     selectedTags.includes(tag)
                                         ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
@@ -1096,13 +1104,13 @@ export function PublicReviewFlow({
                         ))}
                     </div>
 
-                    {/* Everything button */}
+                    {/* Everything + Add your own */}
+                    <div className="space-y-2">
                     <button
                         type="button"
                         onClick={handleToggleEverything}
                         className={cn(
-                            "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
-                            "border-2 active:scale-[0.98]",
+                            tagActionBtnClass,
                             selectedTags.includes(EVERYTHING_TAG)
                                 ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
                                 : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
@@ -1127,8 +1135,8 @@ export function PublicReviewFlow({
                                 showCustomInput ? setShowCustomInput(false) : openCustomInputPanel()
                             }
                             className={cn(
-                                "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
-                                "border-2 active:scale-[0.98] flex items-center justify-center gap-2",
+                                tagActionBtnClass,
+                                "flex items-center justify-center gap-2",
                                 showCustomInput || addedCustomTags.length > 0
                                     ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
                                     : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
@@ -1194,7 +1202,7 @@ export function PublicReviewFlow({
                                 {addedCustomTags.map((tag, index) => (
                                     <span
                                         key={`${tag}-${index}`}
-                                        className="inline-flex items-center gap-1.5 pl-3 pr-2 py-2 rounded-full text-sm font-medium border-2 text-primary-foreground dark:text-white"
+                                        className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-sm font-medium border-2 text-primary-foreground dark:text-white"
                                         style={{
                                             backgroundColor: resolvedBrandColor,
                                             borderColor: resolvedBrandColor,
@@ -1214,25 +1222,23 @@ export function PublicReviewFlow({
                             </div>
                         )}
                     </div>
-
-                    <div className="h-2" /> {/* Extra spacing */}
+                    </div>
 
                     {/* Staff selection (same step as tags — avoids a duplicate full-screen staff step) */}
                     {enableStaffSelection && staffNames.length > 0 && (
-                        <div className="pt-4 border-t border-border">
-                            <p className="text-center text-sm font-medium text-foreground mb-1">
-                                Who served you?
+                        <div className="pt-3 border-t border-border dark:border-white/10">
+                            <p className="text-center text-sm font-medium text-foreground mb-2">
+                                Who served you?{" "}
+                                <span className="font-normal text-muted-foreground">(optional)</span>
                             </p>
-                            <p className="text-center text-xs text-muted-foreground mb-3">
-                                Select who helped you today (optional)
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-2.5">
+                            <div className="flex flex-wrap justify-center gap-2">
                                 {staffNames.map((name) => (
                                     <button
                                         key={name}
+                                        type="button"
                                         onClick={() => toggleStaff(name)}
                                         className={cn(
-                                            "flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                                            "flex items-center gap-1.5 px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
                                             "border-2 active:scale-95",
                                             selectedStaff.includes(name)
                                                 ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
@@ -1252,29 +1258,28 @@ export function PublicReviewFlow({
                     )}
 
                     {/* Continue button */}
-                    <div className={cn(
-                        "transition-all duration-300",
-                        hasTagSelection
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 translate-y-4 pointer-events-none h-0 overflow-hidden"
-                    )}>
-                        <button
-                            className={cn(
-                                "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-all duration-300",
-                                "dark:text-white",
-                                "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
-                                "shadow-lg shadow-primary/20 hover:shadow-primary/30",
-                                "active:scale-[0.98] flex items-center justify-center gap-2"
-                            )}
-                            onClick={handleTagsContinue}
-                        >
-                            Continue
-                            <ChevronRight className="h-5 w-5" />
-                        </button>
-                    </div>
+                    {hasTagSelection && (
+                        <div className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+                            <button
+                                type="button"
+                                className={cn(
+                                    "w-full min-h-12 rounded-xl text-base font-semibold text-primary-foreground transition-all duration-300",
+                                    "dark:text-white",
+                                    "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
+                                    "shadow-lg shadow-primary/20 hover:shadow-primary/30",
+                                    "active:scale-[0.98] flex items-center justify-center gap-2"
+                                )}
+                                onClick={handleTagsContinue}
+                            >
+                                Continue
+                                <ChevronRight className="h-5 w-5" />
+                            </button>
+                        </div>
+                    )}
 
                     <button
-                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
+                        type="button"
+                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto pt-0.5"
                         onClick={() => {
                             setRating(null);
                             setSelectedTags([]);
@@ -1288,7 +1293,7 @@ export function PublicReviewFlow({
                         Back
                     </button>
                 </div>,
-            "overflow-visible min-h-[450px] flex flex-col relative z-20"
+            "overflow-visible flex flex-col relative z-20"
         );
     }
 
