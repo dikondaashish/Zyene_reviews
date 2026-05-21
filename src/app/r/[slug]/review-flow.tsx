@@ -1072,7 +1072,8 @@ export function PublicReviewFlow({
             "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
 
         return renderCardWrapper(
-            <div className="px-6 pt-5 pb-2 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
+            <div className="px-6 pt-5 pb-0 animate-in fade-in slide-in-from-right-4 duration-400">
+                <div className="flex flex-col gap-4">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
                         <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
@@ -1285,25 +1286,26 @@ export function PublicReviewFlow({
                             </button>
                         </div>
                     )}
+                </div>
 
-                    <button
-                        type="button"
-                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto pt-0.5"
-                        onClick={() => {
-                            setRating(null);
-                            setSelectedTags([]);
-                            setAddedCustomTags([]);
-                            setCustomTagInput("");
-                            setShowCustomInput(false);
-                            setStep("rating");
-                        }}
-                    >
-                        <ArrowLeft className="h-3.5 w-3.5" />
-                        Back
-                    </button>
-                </div>,
-            "overflow-visible flex flex-col relative z-20",
-            "pt-2 pb-4"
+                <button
+                    type="button"
+                    className="mt-6 mb-2 flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
+                    onClick={() => {
+                        setRating(null);
+                        setSelectedTags([]);
+                        setAddedCustomTags([]);
+                        setCustomTagInput("");
+                        setShowCustomInput(false);
+                        setStep("rating");
+                    }}
+                >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    Back
+                </button>
+            </div>,
+            "overflow-visible relative z-20",
+            "pt-3 pb-3"
         );
     }
 
