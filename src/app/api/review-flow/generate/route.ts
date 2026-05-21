@@ -8,6 +8,7 @@ import {
     ensureCompleteReviewText,
     isCompleteReviewText,
 } from "@/lib/review-flow/ensure-complete-review";
+import { buildTagsPromptFragment, tagsForAi } from "@/lib/review-flow/tags-for-ai";
 
 const requestSchema = z.object({
     /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
@@ -16,7 +17,7 @@ const requestSchema = z.object({
     businessName: z.string().min(1).max(200),
     businessCategory: z.string().min(1).max(120),
     rating: z.number().int().min(4).max(5),
-    selectedTags: z.array(z.string().min(1).max(200)).min(1).max(10),
+    selectedTags: z.array(z.string().min(1).max(200)).min(1).max(20),
     selectedStaff: z.array(z.string().max(120)).max(50).optional(),
 });
 
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
 
         const { reviewRequestId, businessId, businessName, businessCategory, rating, selectedTags, selectedStaff } =
             parsed.data;
-        const tagsString = selectedTags.join(", ");
+        const tagContext = buildTagsPromptFragment(tagsForAi(selectedTags), rating);
         const staffString =
             selectedStaff && selectedStaff.length > 0
                 ? ` They also specifically wanted to highlight the great service from their staff member(s): ${selectedStaff.join(" and ")}.`
@@ -174,7 +175,7 @@ export async function POST(request: Request) {
 
         const prompt = `You are a customer writing a short, natural Google review. Write as if you are the customer. Every review must be optimized for SEO (Search Engine Optimization) and AEO (Answer Engine Optimization). Strictly NO icons, NO emojis, and NO 'AI-sounding' phrases.
 
-Task: Write a Google review for ${businessName}, a ${businessCategory} business. The customer gave ${rating} stars and especially liked: ${tagsString}.${staffString}
+Task: Write a Google review for ${businessName}, a ${businessCategory} business. ${tagContext}${staffString}
 
 Context (Last 5 reviews for this business - DO NOT COPY):
 ${recentReviewsContext || "None available."}

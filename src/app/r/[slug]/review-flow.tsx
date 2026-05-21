@@ -1,7 +1,22 @@
 "use client";
 
 import { useState, useEffect, FormEvent, useRef, useCallback } from "react";
-import { Loader2, Copy, ExternalLink, Sparkles, Send, ArrowLeft, Mail, Phone, Gift, ChevronRight, Check, Star } from "lucide-react";
+import {
+    Loader2,
+    Copy,
+    ExternalLink,
+    Sparkles,
+    Send,
+    ArrowLeft,
+    Mail,
+    Phone,
+    Gift,
+    ChevronRight,
+    Check,
+    Star,
+    Pencil,
+    X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
@@ -12,6 +27,12 @@ import {
     reviewPageOrbRgba,
 } from "@/lib/utils/review-page-background";
 import { ensureCompleteReviewText } from "@/lib/review-flow/ensure-complete-review";
+import {
+    buildTagsSelected,
+    EVERYTHING_TAG,
+    MAX_CUSTOM_TAG_CHIPS,
+    normalizeCustomTagInput,
+} from "@/lib/review-flow/tags-for-ai";
 
 // ─── Category → Tag mapping ────────────────────────────────────────────
 const CATEGORY_TAGS: Record<string, string[]> = {
@@ -155,6 +176,9 @@ export function PublicReviewFlow({
     const [rating, setRating] = useState<number | null>(null);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [showCustomInput, setShowCustomInput] = useState(false);
+    const [customTagInput, setCustomTagInput] = useState("");
+    const [addedCustomTags, setAddedCustomTags] = useState<string[]>([]);
     const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
     const [reviewText, setReviewText] = useState("");
     const [feedback, setFeedback] = useState("");
@@ -285,10 +309,46 @@ export function PublicReviewFlow({
         }, 400); // Delay to show satisfying emoji scale-up animation
     };
 
+    const hasTagSelection = selectedTags.length > 0 || addedCustomTags.length > 0;
+
+    const handleToggleEverything = () => {
+        setAddedCustomTags([]);
+        setCustomTagInput("");
+        setShowCustomInput(false);
+        setSelectedTags((prev) => (prev.includes(EVERYTHING_TAG) ? [] : [EVERYTHING_TAG]));
+    };
+
+    const openCustomInputPanel = () => {
+        setSelectedTags((prev) => prev.filter((t) => t !== EVERYTHING_TAG));
+        setShowCustomInput(true);
+    };
+
+    const addCustomTag = () => {
+        const normalized = normalizeCustomTagInput(customTagInput);
+        if (!normalized) return;
+        setAddedCustomTags((prev) => {
+            if (prev.length >= MAX_CUSTOM_TAG_CHIPS) return prev;
+            if (prev.some((t) => t.toLowerCase() === normalized.toLowerCase())) return prev;
+            return [...prev, normalized];
+        });
+        setCustomTagInput("");
+    };
+
+    const removeCustomTag = (index: number) => {
+        setAddedCustomTags((prev) => prev.filter((_, i) => i !== index));
+    };
+
     const toggleTag = (tag: string) => {
-        setSelectedTags((prev) =>
-            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-        );
+        if (tag === EVERYTHING_TAG) {
+            handleToggleEverything();
+            return;
+        }
+        setSelectedTags((prev) => {
+            const withoutEverything = prev.filter((t) => t !== EVERYTHING_TAG);
+            return withoutEverything.includes(tag)
+                ? withoutEverything.filter((t) => t !== tag)
+                : [...withoutEverything, tag];
+        });
     };
 
     const toggleStaff = (name: string) => {
@@ -321,7 +381,7 @@ export function PublicReviewFlow({
                     businessName,
                     businessCategory: categoryKey,
                     rating,
-                    selectedTags: selectedTags.map((t) => t.replace(/^[^\s]+\s/, "")), // Strip emojis for AI
+                    selectedTags: buildTagsSelected(selectedTags, addedCustomTags),
                     selectedStaff,
                 }),
             });
@@ -375,7 +435,7 @@ export function PublicReviewFlow({
                 status: "completed",
                 review_left: true,
                 rating_given: rating,
-                tags_selected: selectedTags,
+                tags_selected: buildTagsSelected(selectedTags, addedCustomTags),
                 ai_review_text: reviewText,
                 completed_at: new Date().toISOString(),
                 selected_staff: selectedStaff,
@@ -1038,21 +1098,122 @@ export function PublicReviewFlow({
 
                     {/* Everything button */}
                     <button
-                        onClick={() => toggleTag("👍 Everything")}
+                        type="button"
+                        onClick={handleToggleEverything}
                         className={cn(
                             "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
                             "border-2 active:scale-[0.98]",
-                            selectedTags.includes("👍 Everything")
+                            selectedTags.includes(EVERYTHING_TAG)
                                 ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
                                 : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                         )}
                         style={{
-                            backgroundColor: selectedTags.includes("👍 Everything") ? resolvedBrandColor : undefined,
-                            borderColor: selectedTags.includes("👍 Everything") ? resolvedBrandColor : undefined
+                            backgroundColor: selectedTags.includes(EVERYTHING_TAG)
+                                ? resolvedBrandColor
+                                : undefined,
+                            borderColor: selectedTags.includes(EVERYTHING_TAG)
+                                ? resolvedBrandColor
+                                : undefined,
                         }}
                     >
                         👍 Everything!
                     </button>
+
+                    {/* Add your own — inline custom keyword chips */}
+                    <div className="space-y-2">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                showCustomInput ? setShowCustomInput(false) : openCustomInputPanel()
+                            }
+                            className={cn(
+                                "w-full h-13 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200",
+                                "border-2 active:scale-[0.98] flex items-center justify-center gap-2",
+                                showCustomInput || addedCustomTags.length > 0
+                                    ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
+                                    : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                            )}
+                            style={{
+                                backgroundColor:
+                                    showCustomInput || addedCustomTags.length > 0
+                                        ? resolvedBrandColor
+                                        : undefined,
+                                borderColor:
+                                    showCustomInput || addedCustomTags.length > 0
+                                        ? resolvedBrandColor
+                                        : undefined,
+                            }}
+                        >
+                            <Pencil className="h-4 w-4 shrink-0" aria-hidden />
+                            Add your own
+                        </button>
+
+                        {showCustomInput && (
+                            <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={customTagInput}
+                                        onChange={(e) => setCustomTagInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                addCustomTag();
+                                            }
+                                        }}
+                                        placeholder="What stood out?"
+                                        inputMode="text"
+                                        enterKeyHint="done"
+                                        maxLength={80}
+                                        disabled={addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS}
+                                        className="flex-1 min-w-0 h-11 px-3 rounded-xl border-2 border-border bg-background text-foreground text-sm focus:border-primary focus:outline-none dark:bg-[rgb(30,41,59)] dark:border-white/10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={addCustomTag}
+                                        disabled={
+                                            !normalizeCustomTagInput(customTagInput) ||
+                                            addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS
+                                        }
+                                        className="h-11 px-4 rounded-xl text-sm font-semibold text-primary-foreground bg-primary disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                                        style={{ backgroundColor: resolvedBrandColor }}
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                {addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS && (
+                                    <p className="text-xs text-muted-foreground text-center">
+                                        4 max — remove one to add another
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
+                        {addedCustomTags.length > 0 && (
+                            <div className="flex flex-wrap justify-center gap-2">
+                                {addedCustomTags.map((tag, index) => (
+                                    <span
+                                        key={`${tag}-${index}`}
+                                        className="inline-flex items-center gap-1.5 pl-3 pr-2 py-2 rounded-full text-sm font-medium border-2 text-primary-foreground dark:text-white"
+                                        style={{
+                                            backgroundColor: resolvedBrandColor,
+                                            borderColor: resolvedBrandColor,
+                                        }}
+                                    >
+                                        {tag}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeCustomTag(index)}
+                                            className="rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/20"
+                                            aria-label={`Remove ${tag}`}
+                                        >
+                                            <X className="h-3.5 w-3.5" />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
 
                     <div className="h-2" /> {/* Extra spacing */}
 
@@ -1093,7 +1254,7 @@ export function PublicReviewFlow({
                     {/* Continue button */}
                     <div className={cn(
                         "transition-all duration-300",
-                        selectedTags.length > 0
+                        hasTagSelection
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4 pointer-events-none h-0 overflow-hidden"
                     )}>
@@ -1117,6 +1278,9 @@ export function PublicReviewFlow({
                         onClick={() => {
                             setRating(null);
                             setSelectedTags([]);
+                            setAddedCustomTags([]);
+                            setCustomTagInput("");
+                            setShowCustomInput(false);
                             setStep("rating");
                         }}
                     >
