@@ -4,6 +4,10 @@ import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import {
+    ensureCompleteReviewText,
+    isCompleteReviewText,
+} from "@/lib/review-flow/ensure-complete-review";
 
 const requestSchema = z.object({
     /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
@@ -192,34 +196,55 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 Review Content:`;
 
         try {
-            // Short reviews still need headroom: low caps hit MAX_TOKENS mid-sentence (especially with staff + context).
-            const reviewText = await generateContentWithFallback(prompt, {
-                requireJson: false,
-                maxOutputTokens: 1024,
-                temperature: 0.7,
-            });
+            const generateOnce = async (extraInstruction = "") =>
+                generateContentWithFallback(
+                    extraInstruction ? `${prompt}\n\n${extraInstruction}` : prompt,
+                    {
+                        requireJson: false,
+                        maxOutputTokens: 1024,
+                        temperature: 0.7,
+                    }
+                );
 
-            if (!reviewText || reviewText.trim().length < 10) {
+            let rawText = (await generateOnce()).trim();
+
+            if (!rawText || rawText.length < 10) {
                 throw new Error("Empty AI response");
             }
+
+            if (!isCompleteReviewText(rawText)) {
+                const retry = (
+                    await generateOnce(
+                        "IMPORTANT: Your previous answer was cut off mid-sentence. Rewrite the full review as exactly 2-3 complete sentences. End with proper punctuation. Include the full business name in the last sentence."
+                    )
+                ).trim();
+                if (retry.length >= 10) {
+                    rawText = retry;
+                }
+            }
+
+            const reviewText = ensureCompleteReviewText(rawText, businessName);
 
             if (reviewRequestId) {
                 await supabase
                     .from("review_requests")
                     .update({
-                        ai_review_text: reviewText.trim(),
+                        ai_review_text: reviewText,
                         rating_given: rating,
                     })
                     .eq("id", reviewRequestId);
             }
 
             console.info(`[AI SUCCESS] Generated review for ${businessName} using Gemini 3 Flash`);
-            return NextResponse.json({ reviewText: reviewText.trim() });
+            return NextResponse.json({ reviewText });
         } catch (aiError) {
             console.error("AI generation failed for review flow:", aiError);
 
             console.warn(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
-            const fallbackText = `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Hope to see you again soon!`;
+            const fallbackText = ensureCompleteReviewText(
+                `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Highly recommend ${businessName}.`,
+                businessName
+            );
 
             if (reviewRequestId) {
                 await supabase

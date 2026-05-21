@@ -74,6 +74,7 @@ export default async function RequestPage({
             hide_branding,
             enable_staff_selection,
             staff_names,
+            rating_style,
             organization:organizations (
                 plan,
                 plan_status
@@ -131,6 +132,15 @@ export default async function RequestPage({
             ? rawPageBg
             : undefined;
 
+    const ratingStyleRaw = (business as { rating_style?: string | null }).rating_style;
+    const ratingStyle =
+        ratingStyleRaw === "stars" ||
+        ratingStyleRaw === "number" ||
+        ratingStyleRaw === "slider" ||
+        ratingStyleRaw === "radio"
+            ? ratingStyleRaw
+            : "emoji";
+
     return (
         <div className="review-page-wrapper">
             <PublicReviewFlow
@@ -143,6 +153,7 @@ export default async function RequestPage({
                 brandColor={business.brand_color ?? undefined}
                 reviewPageBackgroundColor={reviewPageBackgroundColor}
                 minStars={business.min_stars_for_google ?? undefined}
+                ratingStyle={ratingStyle}
                 welcomeMsg={business.welcome_message ?? undefined}
                 apologyMsg={business.apology_message ?? undefined}
                 ratingSubtitle={business.rating_subtitle ?? undefined}

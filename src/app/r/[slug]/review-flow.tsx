@@ -11,6 +11,7 @@ import {
     reviewPageBackdropGradient,
     reviewPageOrbRgba,
 } from "@/lib/utils/review-page-background";
+import { ensureCompleteReviewText } from "@/lib/review-flow/ensure-complete-review";
 
 // ─── Category → Tag mapping ────────────────────────────────────────────
 const CATEGORY_TAGS: Record<string, string[]> = {
@@ -328,7 +329,7 @@ export function PublicReviewFlow({
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Failed to generate");
 
-            setReviewText(data.reviewText);
+            setReviewText(ensureCompleteReviewText(data.reviewText ?? "", businessName));
             setStep("review");
         } catch (error) {
             console.error("Generation error:", error);
