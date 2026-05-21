@@ -538,7 +538,11 @@ export function PublicReviewFlow({
 
     // ─── Shared card wrapper ────────────────────────────────────────────
 
-    const renderCardWrapper = (children: React.ReactNode, contentClassName?: string) => (
+    const renderCardWrapper = (
+        children: React.ReactNode,
+        contentClassName?: string,
+        footerClassName?: string
+    ) => (
         <div
             className={cn(
                 "min-h-screen flex items-center justify-center p-4 transition-all duration-500",
@@ -587,7 +591,12 @@ export function PublicReviewFlow({
 
                 {/* Powered by footer */}
                 {!hideBranding && (
-                    <div className="pt-2.5 pb-2.5 text-center border-t border-border dark:border-white/10">
+                    <div
+                        className={cn(
+                            "py-4 text-center border-t border-border dark:border-white/10",
+                            footerClassName
+                        )}
+                    >
                         <div className="text-xs text-muted-foreground font-medium tracking-wide flex items-center justify-center gap-1.5">
                             <span>Powered by</span>
                             {footerLink ? (
@@ -1279,7 +1288,7 @@ export function PublicReviewFlow({
 
                     <button
                         type="button"
-                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
+                        className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto pt-0.5"
                         onClick={() => {
                             setRating(null);
                             setSelectedTags([]);
@@ -1293,7 +1302,8 @@ export function PublicReviewFlow({
                         Back
                     </button>
                 </div>,
-            "overflow-visible flex flex-col relative z-20"
+            "overflow-visible flex flex-col relative z-20",
+            "pt-0 pb-4"
         );
     }
 
