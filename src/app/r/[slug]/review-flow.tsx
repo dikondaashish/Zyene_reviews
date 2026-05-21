@@ -1076,9 +1076,9 @@ export function PublicReviewFlow({
                 <div className="flex flex-col gap-4">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                        <div className="h-1 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                        <div className="h-1 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                        <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                        <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
                     </div>
 
                     <div className="text-center space-y-0.5">
@@ -1315,9 +1315,9 @@ export function PublicReviewFlow({
             <div className="px-8 py-20 text-center space-y-6">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
-                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
-                        <div className="h-1.5 flex-1 bg-primary/70 rounded-full animate-pulse dark:bg-primary/60" />
+                        <div className="h-2 flex-1 bg-primary rounded-full" />
+                        <div className="h-2 flex-1 bg-primary rounded-full" />
+                        <div className="h-2 flex-1 bg-primary/70 rounded-full animate-pulse dark:bg-primary/60" />
                     </div>
 
                     <div className="flex justify-center">
@@ -1342,9 +1342,9 @@ export function PublicReviewFlow({
             <div className="px-8 py-10 space-y-8 animate-in fade-in slide-in-from-right-4 duration-400">
                     {/* Step indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
-                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
-                        <div className="h-1.5 flex-1 bg-primary rounded-full" />
+                        <div className="h-2 flex-1 bg-primary rounded-full" />
+                        <div className="h-2 flex-1 bg-primary rounded-full" />
+                        <div className="h-2 flex-1 bg-primary rounded-full" />
                     </div>
 
                     <div className="text-center space-y-1">
