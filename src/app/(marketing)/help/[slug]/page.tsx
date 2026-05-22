@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
     HELP_ARTICLE_MAP,
     HELP_CATEGORY_SLUGS,
@@ -9,7 +9,6 @@ import {
     helpArticleNestedPath,
 } from "@/lib/phase4/help-data";
 import { HelpCategoryView } from "@/components/marketing/help-category-view";
-import { HelpArticleView } from "@/components/marketing/help-article-view";
 
 export function generateStaticParams() {
     return [
@@ -43,26 +42,7 @@ export async function generateMetadata(
         };
     }
 
-    const article = HELP_ARTICLE_MAP[slug];
-    if (!article) return {};
-    const catInfo = HELP_CATEGORIES[article.category];
-    const articleTitle = `${article.title} — ${catInfo.label} | Zyene Reviews Help`;
-    const canonicalUrl = `https://zyenereviews.com${helpArticleNestedPath(article)}`;
-    return {
-        title: articleTitle,
-        description: article.excerpt,
-        alternates: { canonical: canonicalUrl },
-        openGraph: {
-            title: articleTitle,
-            description: article.excerpt,
-            url: canonicalUrl,
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: articleTitle,
-            description: article.excerpt,
-        },
-    };
+    return {};
 }
 
 export default async function HelpSlugPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -75,5 +55,5 @@ export default async function HelpSlugPage({ params }: { params: Promise<{ slug:
     const article = HELP_ARTICLE_MAP[slug];
     if (!article) notFound();
 
-    return <HelpArticleView article={article} canonicalPath={`/help/${slug}`} />;
+    permanentRedirect(helpArticleNestedPath(article));
 }

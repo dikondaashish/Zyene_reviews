@@ -4,7 +4,6 @@ import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
 import {
     HELP_ARTICLE_MAP,
     HELP_CATEGORY_SLUGS,
-    HELP_SLUGS,
     helpArticleNestedPath,
 } from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
@@ -239,7 +238,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // ─────────────────────────────────────────────
     const partnerPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-        { url: `${BASE_URL}/agencies`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
     ];
 
     // ─────────────────────────────────────────────
@@ -297,12 +295,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: now,
             changeFrequency: "monthly" as const,
             priority: 0.6,
-        })),
-        ...HELP_SLUGS.map((slug) => ({
-            url: `${BASE_URL}/help/${slug}`,
-            lastModified: now,
-            changeFrequency: "monthly" as const,
-            priority: 0.55,
         })),
     ];
 
