@@ -50,14 +50,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 2. Conversion pages — Phase 2 (uncomment when live)
+    // 2. Conversion pages — Phase 2 (live)
     // ─────────────────────────────────────────────
-    // const conversionPages: MetadataRoute.Sitemap = [
-    //     { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
-    //     { url: `${BASE_URL}/features`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    //     { url: `${BASE_URL}/how-it-works`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    //     { url: `${BASE_URL}/integrations`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    // ];
+    const conversionPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
+        { url: `${BASE_URL}/features`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+        { url: `${BASE_URL}/how-it-works`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+        { url: `${BASE_URL}/integrations`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    ];
 
     // ─────────────────────────────────────────────
     // 3. Industry verticals — Phase 3 (uncomment when live)
@@ -183,10 +183,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return [
         ...corePages,
+        ...conversionPages,
         ...docPages,
         ...legalPages,
         // Uncomment as each phase ships:
-        // ...conversionPages,
         // ...industryPages,
         // ...comparePages,
     ];

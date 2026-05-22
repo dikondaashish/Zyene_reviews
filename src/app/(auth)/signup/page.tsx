@@ -144,20 +144,54 @@ function SignupForm() {
     if (isSuccess) {
         return (
             <div className="text-center space-y-6">
-                <div className="mx-auto w-16 h-16 bg-secondary rounded-lg flex items-center justify-center border border-border">
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
                     <CheckCircle2 className="h-8 w-8 text-primary" />
                 </div>
                 <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-foreground">Check your email</h2>
+                    <h2 className="text-2xl font-bold text-foreground">Check your inbox</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                        We&apos;ve sent a confirmation link to{" "}
-                        <span className="font-medium text-foreground">{email}</span>.
-                        <br />
-                        Click the link to activate your account.
+                        We sent a verification link to{" "}
+                        <span className="font-semibold text-foreground">{email}</span>.
                     </p>
                 </div>
+
+                {/* Step-by-step guidance */}
+                <div className="text-left bg-muted rounded-xl p-5 space-y-3 border border-border">
+                    {[
+                        { step: "1", text: "Open your email inbox (check Spam/Junk if you don't see it within a minute)." },
+                        { step: "2", text: "Click the \"Confirm your account\" link in the email from Zyene Reviews." },
+                        { step: "3", text: "You'll be taken directly into your dashboard to connect your Google Business Profile." },
+                    ].map((item) => (
+                        <div key={item.step} className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
+                                {item.step}
+                            </span>
+                            <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                    Didn&apos;t receive the email?{" "}
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            const supabase = createClient();
+                            const { error } = await supabase.auth.resend({ type: "signup", email });
+                            if (error) {
+                                toast.error("Could not resend. Please try again in a moment.");
+                            } else {
+                                toast.success("Verification email re-sent. Check your inbox.");
+                            }
+                        }}
+                        className="font-medium text-primary hover:brightness-90 transition-colors underline underline-offset-2"
+                    >
+                        Resend verification email
+                    </button>
+                </p>
+
                 <Link href="/login">
-                    <button className="mt-2 text-sm font-medium text-primary hover:brightness-90 transition-colors">
+                    <button type="button" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                         ← Back to Login
                     </button>
                 </Link>
@@ -178,12 +212,12 @@ function SignupForm() {
             {/* Header */}
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tight text-foreground">
-                    Create an account
+                    {inviteToken ? "Join your team" : "Start your free trial"}
                 </h1>
-                <p className="text-muted-foreground">
-                    {inviteToken ?
-                        "You have been invited to a team. Use the same email the invitation was sent to—you will not need to create a new business or pick a plan."
-                    :   "Start managing your business reviews in minutes"}
+                <p className="text-muted-foreground leading-relaxed">
+                    {inviteToken
+                        ? "You've been invited to a team on Zyene Reviews. Use the same email the invitation was sent to — you won't need to create a new business or pick a plan."
+                        : "7-day free trial. No credit card lock-in. Cancel anytime before day 7 and you won't be charged."}
                 </p>
             </div>
 
@@ -203,16 +237,20 @@ function SignupForm() {
                     </svg>
                     Sign up with Google
                 </button>
-                <p className="text-center text-[11px] text-muted-foreground leading-relaxed px-1">
-                    Google sign-up doesn&apos;t ask for your phone. After you&apos;re in, add your mobile under{" "}
-                    <Link
-                        href="/settings/notifications"
-                        className="font-medium text-foreground underline underline-offset-2 hover:text-primary"
-                    >
-                        Settings → Notifications
-                    </Link>{" "}
-                    if you want SMS review alerts. SMS notifications are only sent after you add your phone number and provide consent.
-                </p>
+                {/* Google OAuth scope explanation */}
+                <div className="rounded-lg bg-muted border border-border px-4 py-3">
+                    <p className="text-[11.5px] text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Why Google asks for business access:</span>{" "}
+                        Zyene uses your Google Business Profile to sync reviews, post AI replies, and track performance — the core of the product. We never post to Google without your approval and never share your data with third parties.
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-2">
+                        No phone number needed for Google sign-up. Add it later under{" "}
+                        <Link href="/settings/notifications" className="font-medium text-foreground underline underline-offset-2 hover:text-primary">
+                            Settings → Notifications
+                        </Link>{" "}
+                        if you want SMS review alerts.
+                    </p>
+                </div>
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
