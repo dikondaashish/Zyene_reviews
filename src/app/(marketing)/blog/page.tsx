@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS, type ContentPillar } from "@/lib/phase4/blog-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
 
 export const metadata: Metadata = {
     title: "Blog — Review Management & Local SEO for Local Businesses | Zyene Reviews",
@@ -144,15 +144,7 @@ export default function BlogHubPage() {
                 <div className="container mx-auto max-w-2xl text-center">
                     <h2 className="text-3xl font-bold text-foreground mb-3">Get the latest guides in your inbox</h2>
                     <p className="text-muted-foreground mb-8">Monthly digest of our best posts on Google reviews, local SEO, and reputation management.</p>
-                    <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                        <input
-                            type="email"
-                            placeholder="your@email.com"
-                            className="flex-1 h-11 rounded-lg border border-border bg-background px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                        />
-                        <Button className="h-11 px-6 rounded-lg shrink-0">Subscribe</Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-3">No spam. Unsubscribe anytime.</p>
+                    <NewsletterSignup source="blog" />
                 </div>
             </section>
         </>

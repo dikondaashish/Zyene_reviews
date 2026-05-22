@@ -48,6 +48,7 @@ export default function robots(): MetadataRoute.Robots {
                     // Phase 5 — trust & social proof
                     "/case-studies",
                     "/case-studies/",
+                    "/partners",
                 ],
                 disallow: [
                     "/api/",

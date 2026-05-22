@@ -16,6 +16,11 @@ import {
     googleSeoAeoHeatmapWorker,
     googleSeoAeoSyncWorker,
 } from "@/services/inngest/sync-worker";
+import {
+    trialNurtureWorker,
+    onboardingDripWorker,
+    winbackWorker,
+} from "@/services/inngest/growth-functions";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -51,6 +56,9 @@ export const { GET, POST, PUT } = serve({
         googleSeoAeoAiVisibilityWorker,
         googleSeoAeoHeatmapWorker,
         googleSeoAeoSyncWorker,
+        trialNurtureWorker,
+        onboardingDripWorker,
+        winbackWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

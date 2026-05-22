@@ -490,6 +490,19 @@ export async function GET(request: Request) {
                     Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
                 });
 
+                try {
+                    const { scheduleTrialNurture } = await import("@/lib/growth/schedule-growth-emails");
+                    await scheduleTrialNurture({
+                        email,
+                        userName: fullName || "there",
+                        userId: data.user.id,
+                        organizationId: org.id,
+                    });
+                } catch (nurtureErr) {
+                    console.error("Failed to schedule trial nurture:", nurtureErr);
+                    Sentry.captureException(nurtureErr, { tags: { route: "auth-callback", step: "schedule_trial_nurture" } });
+                }
+
                 // New users go to onboarding on app subdomain
                 return NextResponse.redirect(`${appUrl}/onboarding`);
             }

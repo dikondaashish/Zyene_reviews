@@ -192,7 +192,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 10. Case Studies — Phase 5
+    // 10. Partners — Phase 6
+    // ─────────────────────────────────────────────
+    const partnerPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    ];
+
+    // ─────────────────────────────────────────────
+    // 11. Case Studies — Phase 5
     // ─────────────────────────────────────────────
     const caseStudyPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
@@ -251,6 +258,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...blogPages,
         ...resourcePages,
         ...helpPages,
+        ...partnerPages,
         ...caseStudyPages,
         ...docPages,
         ...legalPages,

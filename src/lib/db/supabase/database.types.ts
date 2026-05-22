@@ -1589,6 +1589,83 @@ export type Database = {
         }
         Relationships: []
       }
+      growth_email_runs: {
+        Row: {
+          completed_at: string | null
+          id: string
+          organization_id: string | null
+          recipient_email: string
+          sequence_key: string
+          started_at: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          organization_id?: string | null
+          recipient_email: string
+          sequence_key: string
+          started_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          organization_id?: string | null
+          recipient_email?: string
+          sequence_key?: string
+          started_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "growth_email_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string
+          subscribed_at: string
+          unsubscribed_at: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       stripe_webhook_events: {
         Row: {
           event_id: string

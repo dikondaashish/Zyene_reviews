@@ -94,6 +94,35 @@ type ScheduledReviewRequestSendEvent = {
     };
 };
 
+type TrialNurtureStartEvent = {
+    data: {
+        email: string;
+        userName: string;
+        dashboardUrl: string;
+        userId?: string;
+        organizationId?: string;
+    };
+};
+
+type OnboardingDripStartEvent = {
+    data: {
+        email: string;
+        userName: string;
+        dashboardUrl: string;
+        billingUrl: string;
+        organizationId: string;
+    };
+};
+
+type WinbackStartEvent = {
+    data: {
+        email: string;
+        userName: string;
+        rejoinUrl: string;
+        organizationId?: string;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -107,6 +136,9 @@ type Events = {
     "google-seo-aeo/heatmap.run": GoogleSeoAeoHeatmapRunEvent;
     "google-seo-aeo/sync.run": GoogleSeoAeoSyncRunEvent;
     "review-request/scheduled.send": ScheduledReviewRequestSendEvent;
+    "growth/trial-nurture.start": TrialNurtureStartEvent;
+    "growth/onboarding-drip.start": OnboardingDripStartEvent;
+    "growth/winback.start": WinbackStartEvent;
 };
 
 // Create a client to send and receive events

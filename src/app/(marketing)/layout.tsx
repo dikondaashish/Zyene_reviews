@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award } from "lucide-react";
+import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award, Handshake } from "lucide-react";
 import { FooterTrustStrip } from "@/components/marketing/social-proof";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { CookieBanner } from "@/components/ui/cookie-banner";
+import { UtmCapture } from "@/components/marketing/utm-capture";
+import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
 
 const PUBLIC_STATUS_URL = "https://status.zyenereviews.com/";
 
@@ -29,6 +31,7 @@ const RESOURCES_LINKS = [
     { href: "/resources", label: "Free Guides", icon: FileText, desc: "In-depth playbooks for local business owners" },
     { href: "/help", label: "Help Center", icon: HelpCircle, desc: "Setup guides, how-tos, and troubleshooting" },
     { href: "/case-studies", label: "Case Studies", icon: Award, desc: "Before/after results from local businesses" },
+    { href: "/partners", label: "Partners", icon: Handshake, desc: "Agencies, POS integrations, and co-marketing" },
 ];
 
 export default function MarketingLayout({
@@ -50,6 +53,7 @@ export default function MarketingLayout({
             "/docs", "/login", "/signup", "/about", "/contact", "/help",
             "/privacy", "/terms", "/data-retention", "/security",
             "/case-studies",
+            "/partners",
             "/pricing", "/features", "/how-it-works", "/integrations",
             "/industries", "/compare",
             "/blog", "/resources", "/help",
@@ -300,6 +304,13 @@ export default function MarketingLayout({
                 )}
             </header>
 
+            <Suspense fallback={null}>
+                <UtmCapture />
+            </Suspense>
+            <Suspense fallback={null}>
+                <AdLandingBanner />
+            </Suspense>
+
             <main className="min-w-0 flex-1">
                 {children}
             </main>
@@ -365,6 +376,7 @@ export default function MarketingLayout({
                                 <li><Link href="/resources/local-seo-checklist" className="hover:text-primary transition-colors">Local SEO Checklist</Link></li>
                                 <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
                                 <li><Link href="/case-studies" className="hover:text-primary transition-colors">Case Studies</Link></li>
+                                <li><Link href="/partners" className="hover:text-primary transition-colors">Partners</Link></li>
                             </ul>
                         </div>
 
@@ -374,6 +386,7 @@ export default function MarketingLayout({
                             <ul className="space-y-2.5 text-sm text-muted-foreground">
                                 <li><Link href="/about" className="hover:text-primary transition-colors">About</Link></li>
                                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+                                <li><Link href="/partners" className="hover:text-primary transition-colors">Partners</Link></li>
                                 <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
                                 <li>
                                     <a href={PUBLIC_STATUS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">

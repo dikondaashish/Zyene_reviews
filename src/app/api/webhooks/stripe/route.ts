@@ -162,11 +162,26 @@ export async function POST(request: Request) {
                     console.error("Error sending subscription success email:", emailErr);
                     Sentry.captureException(emailErr, { extra: { organizationId, eventType: "checkout.session.completed" } });
                 }
+
+                if (subscription.status === "trialing" && session.customer_details?.email) {
+                    try {
+                        const { scheduleTrialNurture } = await import("@/lib/growth/schedule-growth-emails");
+                        await scheduleTrialNurture({
+                            email: session.customer_details.email,
+                            userName: session.customer_details.name || "there",
+                            organizationId,
+                        });
+                    } catch (nurtureErr) {
+                        console.error("Error scheduling trial nurture:", nurtureErr);
+                    }
+                }
                 break;
             }
 
             case "customer.subscription.updated": {
                 const subscription = event.data.object as Stripe.Subscription;
+                const previousAttributes = (event.data as { previous_attributes?: { status?: string } })
+                    .previous_attributes;
                 const customerId =
                     typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
                 if (!customerId) {
@@ -179,6 +194,32 @@ export async function POST(request: Request) {
                 await supabase.from("organizations").update(updateData).eq("stripe_customer_id", customerId);
 
                 console.log(`🔄 Subscription updated for customer ${customerId}: ${updateData.plan_status}`);
+
+                if (
+                    previousAttributes?.status === "trialing" &&
+                    subscription.status === "active"
+                ) {
+                    try {
+                        const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+                        if (customer && !customer.deleted && customer.email) {
+                            const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
+                            const { data: orgRow } = await supabase
+                                .from("organizations")
+                                .select("id")
+                                .eq("stripe_customer_id", customerId)
+                                .maybeSingle();
+                            if (orgRow?.id) {
+                                await scheduleOnboardingDrip({
+                                    email: customer.email,
+                                    userName: customer.name || "there",
+                                    organizationId: orgRow.id,
+                                });
+                            }
+                        }
+                    } catch (dripErr) {
+                        console.error("Error scheduling onboarding drip:", dripErr);
+                    }
+                }
                 break;
             }
 
@@ -238,6 +279,20 @@ export async function POST(request: Request) {
                     }
                 } catch (emailErr) {
                     console.error("Error sending cancellation email:", emailErr);
+                }
+
+                try {
+                    const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+                    if (customer && !customer.deleted && customer.email) {
+                        const { scheduleWinbackFollowUp } = await import("@/lib/growth/schedule-growth-emails");
+                        await scheduleWinbackFollowUp({
+                            email: customer.email,
+                            userName: customer.name || "there",
+                            organizationId: canceledOrg?.id,
+                        });
+                    }
+                } catch (winbackErr) {
+                    console.error("Error scheduling win-back sequence:", winbackErr);
                 }
                 break;
             }

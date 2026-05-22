@@ -21,6 +21,7 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/data-retention",
     "/security",
     "/case-studies",
+    "/partners",
     "/docs",
 ] as const;
 
