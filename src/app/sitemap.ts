@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
 import { HELP_SLUGS } from "@/lib/phase4/help-data";
+import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 
 const BASE_URL = "https://zyenereviews.com";
 
@@ -182,6 +183,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "yearly",
             priority: 0.3,
         },
+        {
+            url: `${BASE_URL}/security`,
+            lastModified: now,
+            changeFrequency: "yearly",
+            priority: 0.55,
+        },
+    ];
+
+    // ─────────────────────────────────────────────
+    // 10. Case Studies — Phase 5
+    // ─────────────────────────────────────────────
+    const caseStudyPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        ...CASE_STUDY_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/case-studies/${slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+        })),
     ];
 
     // ─────────────────────────────────────────────
@@ -231,6 +251,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...blogPages,
         ...resourcePages,
         ...helpPages,
+        ...caseStudyPages,
         ...docPages,
         ...legalPages,
     ];

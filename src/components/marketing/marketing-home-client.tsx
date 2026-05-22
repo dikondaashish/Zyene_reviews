@@ -20,6 +20,13 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import {
+  PlatformStatsBadge,
+  CustomerLogoBar,
+  TestimonialGrid,
+  LiveWidgetPreview,
+  ThirdPartyTrustRow,
+} from "@/components/marketing/social-proof";
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
@@ -109,6 +116,9 @@ export function MarketingHomeClient() {
                   View pricing →
                 </Link>
               </motion.div>
+              <motion.div variants={fadeInUp} className="mt-8">
+                <PlatformStatsBadge />
+              </motion.div>
             </motion.div>
 
             {/* Right Visual */}
@@ -172,18 +182,25 @@ export function MarketingHomeClient() {
         </div>
       </section>
 
+      <CustomerLogoBar />
+
       {/* 1.5 TRUST BADGES */}
       <section className="w-full py-10 px-4 border-y border-border bg-muted/40">
         <div className="container mx-auto max-w-[1200px]">
           <p className="text-center text-xs text-muted-foreground font-bold mb-8 tracking-widest uppercase">
             Built with trust and security
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-300">
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> 256-bit Encryption</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><ShieldCheck className="w-8 h-8" /> GDPR Compliant</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><CheckCircle2 className="w-8 h-8" /> No Review Gating</div>
-            <div className="flex items-center gap-2 font-bold text-2xl tracking-tighter"><Lock className="w-8 h-8" /> Secure OAuth</div>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 hover:opacity-100 transition-all duration-300">
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="w-7 h-7" /> 256-bit Encryption</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><ShieldCheck className="w-7 h-7" /> GDPR Compliant</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><CheckCircle2 className="w-7 h-7" /> No Review Gating</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="w-7 h-7" /> Secure OAuth</Link>
           </div>
+          <p className="text-center mt-6">
+            <Link href="/security" className="text-xs font-semibold text-primary hover:brightness-90">
+              Read our security &amp; trust overview →
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -645,6 +662,12 @@ export function MarketingHomeClient() {
           </motion.div>
         </div>
       </section>
+
+      <TestimonialGrid limit={3} />
+
+      <LiveWidgetPreview />
+
+      <ThirdPartyTrustRow />
 
       {/* 7. FAQ SECTION */}
       <section className="w-full py-24 px-4 bg-muted">

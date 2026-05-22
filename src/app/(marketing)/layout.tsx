@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle } from "lucide-react";
+import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award } from "lucide-react";
+import { FooterTrustStrip } from "@/components/marketing/social-proof";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +28,7 @@ const RESOURCES_LINKS = [
     { href: "/blog", label: "Blog", icon: BookOpen, desc: "Practical guides on Google reviews and local SEO" },
     { href: "/resources", label: "Free Guides", icon: FileText, desc: "In-depth playbooks for local business owners" },
     { href: "/help", label: "Help Center", icon: HelpCircle, desc: "Setup guides, how-tos, and troubleshooting" },
+    { href: "/case-studies", label: "Case Studies", icon: Award, desc: "Before/after results from local businesses" },
 ];
 
 export default function MarketingLayout({
@@ -46,7 +48,8 @@ export default function MarketingLayout({
     useEffect(() => {
         [
             "/docs", "/login", "/signup", "/about", "/contact", "/help",
-            "/privacy", "/terms", "/data-retention",
+            "/privacy", "/terms", "/data-retention", "/security",
+            "/case-studies",
             "/pricing", "/features", "/how-it-works", "/integrations",
             "/industries", "/compare",
             "/blog", "/resources", "/help",
@@ -318,6 +321,9 @@ export default function MarketingLayout({
                             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                                 Review management and local SEO for owner-operators — at a fraction of enterprise pricing.
                             </p>
+                            <div className="mt-4">
+                                <FooterTrustStrip />
+                            </div>
                             <p className="mt-4 text-xs text-muted-foreground/70">
                                 © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                             </p>
@@ -358,6 +364,7 @@ export default function MarketingLayout({
                                 <li><Link href="/resources/negative-review-templates" className="hover:text-primary transition-colors">Response Templates</Link></li>
                                 <li><Link href="/resources/local-seo-checklist" className="hover:text-primary transition-colors">Local SEO Checklist</Link></li>
                                 <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
+                                <li><Link href="/case-studies" className="hover:text-primary transition-colors">Case Studies</Link></li>
                             </ul>
                         </div>
 
@@ -382,6 +389,9 @@ export default function MarketingLayout({
                             <ul className="space-y-2.5 text-sm text-muted-foreground">
                                 <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
                                 <li><Link href="/terms" className="hover:text-primary transition-colors">Terms</Link></li>
+                                <li><Link href="/security" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                                    <ShieldCheck className="h-3.5 w-3.5" /> Security
+                                </Link></li>
                                 <li><Link href="/data-retention" className="hover:text-primary transition-colors">Data Retention</Link></li>
                                 <li>
                                     <button

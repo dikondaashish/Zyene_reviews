@@ -8,6 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { INDUSTRY_MAP, INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { IndustryTrustBadge } from "@/components/marketing/social-proof";
+import { getIndustryTrustLabel } from "@/lib/phase5/social-proof-data";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
@@ -75,9 +77,14 @@ export default async function IndustryPage(
                                 <span className="text-foreground font-medium">{data.name}</span>
                             </nav>
 
-                            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-5">
-                                <span className="text-lg">{data.emoji}</span>
-                                Built for {data.name}
+                            <div className="flex flex-wrap items-center gap-3 mb-5">
+                                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20">
+                                    <span className="text-lg">{data.emoji}</span>
+                                    Built for {data.name}
+                                </div>
+                                <IndustryTrustBadge
+                                    label={getIndustryTrustLabel(slug, data.name)}
+                                />
                             </div>
                             <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-5 leading-[1.05]">
                                 {data.heroHeadline}

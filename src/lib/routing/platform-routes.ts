@@ -19,6 +19,8 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/privacy",
     "/terms",
     "/data-retention",
+    "/security",
+    "/case-studies",
     "/docs",
 ] as const;
 

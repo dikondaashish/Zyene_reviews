@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check, Zap, Crown, ShieldCheck, ChevronDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Plan } from "@/services/stripe/plans";
+import { CustomerLogoBar, PlatformStatsBadge } from "@/components/marketing/social-proof";
 
 // ─── Billing Toggle ───────────────────────────────────────────────────────────
 
@@ -291,8 +292,13 @@ export function PricingPageClient({
                         7-day free trial on every paid plan.
                     </p>
                     <BillingToggle interval={interval} onChange={setInterval} />
+                    <div className="mt-8 flex justify-center">
+                        <PlatformStatsBadge />
+                    </div>
                 </div>
             </section>
+
+            <CustomerLogoBar title="Trusted by local businesses on every plan" />
 
             {/* ── Plan Cards ── */}
             <section className="pb-24 px-4 bg-background">

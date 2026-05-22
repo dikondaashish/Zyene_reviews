@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
 
 export const metadata: Metadata = {
     title: "Features — Zyene Reviews",
@@ -262,6 +263,10 @@ export default function FeaturesPage() {
                     );
                 })}
             </section>
+
+            <CustomerLogoBar title="Features trusted by local businesses nationwide" />
+
+            <TestimonialGrid limit={3} title="Built for businesses like yours" />
 
             {/* ── Integrations Bar ── */}
             <section className="py-16 px-4 bg-muted border-t border-border">
