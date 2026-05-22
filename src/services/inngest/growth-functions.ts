@@ -25,7 +25,7 @@ async function markSequenceCompleted(sequenceKey: string, email: string, organiz
     await q;
 }
 
-/** 7-day trial nurture — one email per step with Inngest sleep delays */
+/** Trial nurture (days 2–7) — one email per step; day-1 welcome is sent on signup */
 export const trialNurtureWorker = inngest.createFunction(
     { id: "growth-trial-nurture", name: "Growth Trial Nurture" },
     { event: "growth/trial-nurture.start" },

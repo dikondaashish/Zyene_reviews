@@ -175,6 +175,19 @@ export async function POST(request: Request) {
                         console.error("Error scheduling trial nurture:", nurtureErr);
                     }
                 }
+
+                if (subscription.status === "active" && session.customer_details?.email) {
+                    try {
+                        const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
+                        await scheduleOnboardingDrip({
+                            email: session.customer_details.email,
+                            userName: session.customer_details.name || "there",
+                            organizationId,
+                        });
+                    } catch (dripErr) {
+                        console.error("Error scheduling onboarding drip (direct paid):", dripErr);
+                    }
+                }
                 break;
             }
 

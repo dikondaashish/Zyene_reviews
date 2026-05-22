@@ -14,7 +14,7 @@ export function welcomeEmail({
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Zyene Reviews account is ready</title>
+    <title>Welcome to Zyene Reviews — connect Google to get started</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fcfbfa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; min-height: 100vh;">
@@ -28,15 +28,15 @@ export function welcomeEmail({
                             </div>
 
                             <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 700; color: #18181b; letter-spacing: -0.025em;">
-                                Hi ${userName},
+                                Welcome, ${userName} — your 7-day trial is live
                             </h1>
-                            <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.6; color: #52525b;">
-                                Your Zyene Reviews account is ready.
+                            <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #52525b;">
+                                <strong>Day 1:</strong> Connect your Google Business Profile so new reviews sync automatically and you get instant alerts. It takes about 2 minutes.
                             </p>
 
                             <div style="margin-bottom: 24px;">
                                 <a href="${loginUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 15px; border: 1px solid #27272a;">
-                                    Open dashboard
+                                    Connect Google in dashboard
                                 </a>
                             </div>
 
@@ -78,12 +78,12 @@ export function welcomeEmailText({
     return [
         `Hi ${userName},`,
         "",
-        "Your Zyene Reviews account is ready.",
+        "Welcome — your 7-day trial is live.",
         "",
-        "Open dashboard:",
+        "Day 1: Connect your Google Business Profile (about 2 minutes):",
         loginUrl,
         "",
-        "Recommended next steps:",
+        "Then:",
         "- Connect your Google Business Profile",
         "- Check your first review insights",
         "- Send your first review request",

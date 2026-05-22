@@ -12,37 +12,44 @@ export interface GrowthEmailStep {
 }
 
 /**
- * Trial nurture: 5 emails on days 1, 2, 3, 5, 7 (blueprint).
- * Immediate welcome email is sent separately on signup (Day 1: Welcome + connect Google).
+ * Trial nurture: 6 emails on days 2–7 (blueprint).
+ * Day 1 (welcome + connect Google) is sent immediately on signup via welcome-email.ts.
  */
 export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
     {
-        key: "trial_day1_connect_google",
-        dayOffset: 1,
-        delayHours: 24,
-        subject: "Day 1: Connect Google and see every review in one inbox",
-        preview: "Link your Google Business Profile in under 2 minutes.",
-    },
-    {
         key: "trial_day2_first_request",
         dayOffset: 2,
-        delayHours: 48,
+        delayHours: 24,
         subject: "Day 2: Send your first review request",
         preview: "SMS, email, or link — pick what fits your customers.",
     },
     {
         key: "trial_day3_ai_replies",
         dayOffset: 3,
-        delayHours: 72,
+        delayHours: 48,
         subject: "Day 3: Reply to reviews in one click with AI",
         preview: "Professional responses in your brand voice — you stay in control.",
     },
     {
+        key: "trial_day4_feedback_shield",
+        dayOffset: 4,
+        delayHours: 72,
+        subject: "Day 4: Protect your rating with the Negative Feedback Shield",
+        preview: "Route unhappy customers to private feedback before they hit Google.",
+    },
+    {
         key: "trial_day5_competitors",
         dayOffset: 5,
-        delayHours: 120,
+        delayHours: 96,
         subject: "Day 5: See how you stack up against competitors",
         preview: "Track nearby businesses and close the review gap.",
+    },
+    {
+        key: "trial_day6_case_study",
+        dayOffset: 6,
+        delayHours: 120,
+        subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
+        preview: "A real local business playbook you can copy this week.",
     },
     {
         key: "trial_day7_upgrade",

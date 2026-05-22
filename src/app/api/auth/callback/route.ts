@@ -482,7 +482,7 @@ export async function GET(request: Request) {
 
                 sendEmail({
                     to: email,
-                    subject: "Your Zyene Reviews account is ready",
+                    subject: "Welcome to Zyene Reviews — connect Google to get started",
                     html: welcomeEmail({ userName: fullName || "User", loginUrl }),
                     text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
                 }).catch(err => {
