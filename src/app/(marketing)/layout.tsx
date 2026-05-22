@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale } from "lucide-react";
+import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +23,12 @@ const SOLUTIONS_LINKS = [
     { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene vs Birdeye, Podium, NiceJob, GatherUp" },
 ];
 
+const RESOURCES_LINKS = [
+    { href: "/blog", label: "Blog", icon: BookOpen, desc: "Practical guides on Google reviews and local SEO" },
+    { href: "/resources", label: "Free Guides", icon: FileText, desc: "In-depth playbooks for local business owners" },
+    { href: "/help", label: "Help Center", icon: HelpCircle, desc: "Setup guides, how-tos, and troubleshooting" },
+];
+
 export default function MarketingLayout({
     children,
 }: {
@@ -31,8 +37,10 @@ export default function MarketingLayout({
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [productOpen, setProductOpen] = useState(false);
     const [solutionsOpen, setSolutionsOpen] = useState(false);
+    const [resourcesOpen, setResourcesOpen] = useState(false);
     const productRef = useRef<HTMLDivElement>(null);
     const solutionsRef = useRef<HTMLDivElement>(null);
+    const resourcesRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -41,6 +49,7 @@ export default function MarketingLayout({
             "/privacy", "/terms", "/data-retention",
             "/pricing", "/features", "/how-it-works", "/integrations",
             "/industries", "/compare",
+            "/blog", "/resources", "/help",
         ].forEach((href) => router.prefetch(href));
     }, [router]);
 
@@ -51,6 +60,9 @@ export default function MarketingLayout({
             }
             if (solutionsRef.current && !solutionsRef.current.contains(e.target as Node)) {
                 setSolutionsOpen(false);
+            }
+            if (resourcesRef.current && !resourcesRef.current.contains(e.target as Node)) {
+                setResourcesOpen(false);
             }
         }
         document.addEventListener("mousedown", handleClick);
@@ -167,9 +179,45 @@ export default function MarketingLayout({
                             )}
                         </div>
 
-                        <Link href="/docs" className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors">
-                            Docs
-                        </Link>
+                        {/* Resources dropdown */}
+                        <div ref={resourcesRef} className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setResourcesOpen(!resourcesOpen)}
+                                onMouseEnter={() => { setResourcesOpen(true); setProductOpen(false); setSolutionsOpen(false); }}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors ${resourcesOpen ? "text-foreground bg-accent" : ""}`}
+                            >
+                                Resources
+                                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${resourcesOpen ? "rotate-180" : ""}`} />
+                            </button>
+                            {resourcesOpen && (
+                                <div
+                                    onMouseLeave={() => setResourcesOpen(false)}
+                                    className="absolute left-0 top-full mt-1 w-72 rounded-xl border border-border bg-card shadow-xl overflow-hidden z-50"
+                                >
+                                    {RESOURCES_LINKS.map((item) => {
+                                        const Icon = item.icon;
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setResourcesOpen(false)}
+                                                className="flex items-start gap-3 px-4 py-3.5 hover:bg-accent transition-colors group"
+                                            >
+                                                <div className="mt-0.5 p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                                                    <Icon className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-foreground text-[13px]">{item.label}</div>
+                                                    <div className="text-xs text-muted-foreground mt-0.5">{item.desc}</div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
                         <Link href="/about" className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors">
                             About
                         </Link>
@@ -226,7 +274,13 @@ export default function MarketingLayout({
                             </Link>
                         ))}
                         <div className="pt-1 border-t border-border/50 mt-1" />
-                        <Link href="/docs" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>Docs</Link>
+                        <p className="px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Resources</p>
+                        {RESOURCES_LINKS.map((item) => (
+                            <Link key={item.href} href={item.href} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>
+                                {item.label}
+                            </Link>
+                        ))}
+                        <div className="pt-1 border-t border-border/50 mt-1" />
                         <Link href="/about" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
                         <Link href="/contact" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
                         <div className="pt-1 border-t border-border/50 mt-1">
@@ -250,9 +304,9 @@ export default function MarketingLayout({
 
             <footer className="mt-auto border-t border-border/70 bg-canvas">
                 <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-8">
-                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6">
+                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
                         {/* Brand */}
-                        <div className="col-span-2 sm:col-span-3 md:col-span-5 lg:col-span-2">
+                        <div className="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-2">
                             <Link href="/" className="inline-flex items-center gap-2 mb-4">
                                 <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60">
                                     <Image src="/Main%20logo.png" alt="Zyene Reviews" width={32} height={32} className="h-full w-full object-cover" />
@@ -291,6 +345,19 @@ export default function MarketingLayout({
                                 <li><Link href="/industries/dental" className="hover:text-primary transition-colors">Dental</Link></li>
                                 <li><Link href="/industries/home-services" className="hover:text-primary transition-colors">Home Services</Link></li>
                                 <li><Link href="/compare" className="hover:text-primary transition-colors">Compare Tools</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Resources */}
+                        <div>
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Resources</h4>
+                            <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
+                                <li><Link href="/resources" className="hover:text-primary transition-colors">Free Guides</Link></li>
+                                <li><Link href="/resources/google-reviews-guide" className="hover:text-primary transition-colors">Google Reviews Guide</Link></li>
+                                <li><Link href="/resources/negative-review-templates" className="hover:text-primary transition-colors">Response Templates</Link></li>
+                                <li><Link href="/resources/local-seo-checklist" className="hover:text-primary transition-colors">Local SEO Checklist</Link></li>
+                                <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
                             </ul>
                         </div>
 

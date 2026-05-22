@@ -1,0 +1,118 @@
+import Link from "next/link";
+import { Lightbulb, AlertTriangle, ArrowRight } from "lucide-react";
+import type { ContentSection } from "@/lib/phase4/blog-data";
+import { Button } from "@/components/ui/button";
+
+// Renders the structured content section array used by blog posts, resource guides, and help articles.
+export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
+    return (
+        <div className="prose-zyene space-y-5 text-foreground">
+            {sections.map((section, i) => {
+                switch (section.type) {
+                    case "h2":
+                        return (
+                            <h2 key={i} className="text-2xl font-bold text-foreground mt-10 mb-3 first:mt-0 scroll-mt-24" id={section.text?.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
+                                {section.text}
+                            </h2>
+                        );
+                    case "h3":
+                        return (
+                            <h3 key={i} className="text-lg font-bold text-foreground mt-7 mb-2">
+                                {section.text}
+                            </h3>
+                        );
+                    case "p":
+                        return (
+                            <p key={i} className="text-base text-muted-foreground leading-relaxed">
+                                {section.text}
+                            </p>
+                        );
+                    case "ul":
+                        return (
+                            <ul key={i} className="space-y-2 pl-1">
+                                {section.items?.map((item, j) => (
+                                    <li key={j} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        );
+                    case "ol":
+                        return (
+                            <ol key={i} className="space-y-3 pl-1 counter-reset-list">
+                                {section.items?.map((item, j) => (
+                                    <li key={j} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
+                                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary">
+                                            {j + 1}
+                                        </span>
+                                        <span className="mt-0.5">{item}</span>
+                                    </li>
+                                ))}
+                            </ol>
+                        );
+                    case "tip":
+                        return (
+                            <div key={i} className="flex gap-3 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
+                                <Lightbulb className="h-5 w-5 shrink-0 text-primary mt-0.5" />
+                                <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
+                            </div>
+                        );
+                    case "warning":
+                        return (
+                            <div key={i} className="flex gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-5 py-4">
+                                <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                                <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
+                            </div>
+                        );
+                    case "quote":
+                        return (
+                            <blockquote key={i} className="rounded-xl border-l-4 border-primary bg-muted px-6 py-4">
+                                <p className="text-sm text-foreground leading-relaxed whitespace-pre-line font-mono">{section.text}</p>
+                            </blockquote>
+                        );
+                    case "cta":
+                        return (
+                            <div key={i} className="rounded-xl border border-primary/30 bg-primary/5 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <p className="text-sm font-semibold text-foreground">{section.ctaLabel}</p>
+                                <Link href={section.ctaHref ?? "/signup"} className="shrink-0">
+                                    <Button size="sm" className="gap-2 rounded-lg">
+                                        Get Started <ArrowRight className="h-3.5 w-3.5" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        );
+                    case "table":
+                        return (
+                            <div key={i} className="overflow-x-auto rounded-xl border border-border">
+                                <table className="w-full text-sm border-collapse">
+                                    <thead>
+                                        <tr className="bg-muted">
+                                            {section.table?.headers.map((h, j) => (
+                                                <th key={j} className="px-4 py-3 font-semibold text-foreground border-b border-border text-left">
+                                                    {h}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {section.table?.rows.map((row, j) => (
+                                            <tr key={j} className="border-b border-border last:border-0 hover:bg-muted/30">
+                                                {row.map((cell, k) => (
+                                                    <td key={k} className="px-4 py-3 text-muted-foreground">
+                                                        {cell}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        );
+                    default:
+                        return null;
+                }
+            })}
+        </div>
+    );
+}

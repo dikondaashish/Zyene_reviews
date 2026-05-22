@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
+import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
+import { HELP_SLUGS } from "@/lib/phase4/help-data";
 
 const BASE_URL = "https://zyenereviews.com";
 
@@ -181,11 +184,53 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
     ];
 
+    // ─────────────────────────────────────────────
+    // 7. Blog — Phase 4
+    // ─────────────────────────────────────────────
+    const blogPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+        ...BLOG_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/blog/${slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.75,
+        })),
+    ];
+
+    // ─────────────────────────────────────────────
+    // 8. Resource Guides — Phase 4
+    // ─────────────────────────────────────────────
+    const resourcePages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/resources`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        ...RESOURCE_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/resources/${slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.75,
+        })),
+    ];
+
+    // ─────────────────────────────────────────────
+    // 9. Help Center Articles — Phase 4
+    // ─────────────────────────────────────────────
+    const helpPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/help`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+        ...HELP_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/help/${slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.6,
+        })),
+    ];
+
     return [
         ...corePages,
         ...conversionPages,
         ...industryPages,
         ...comparePages,
+        ...blogPages,
+        ...resourcePages,
+        ...helpPages,
         ...docPages,
         ...legalPages,
     ];
