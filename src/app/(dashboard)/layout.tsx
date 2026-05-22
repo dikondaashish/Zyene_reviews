@@ -60,9 +60,9 @@ export default async function DashboardLayout({
             : null;
 
     const headerContent = (
-        <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:gap-3">
+        <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 sm:gap-2 lg:flex-nowrap lg:gap-2">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2 lg:gap-2">
                     <OrganizationDisplay organization={organization ? { 
                         id: organization.id, 
                         name: organization.name || "Your Organization" 
