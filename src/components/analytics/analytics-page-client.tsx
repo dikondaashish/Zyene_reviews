@@ -107,14 +107,14 @@ export function AnalyticsPageClient({
         | null;
 
     return (
-        <div className="flex flex-1 flex-col gap-8 p-4 md:p-8 overflow-x-hidden relative text-foreground">
+        <div className="relative flex min-w-0 flex-1 flex-col gap-8 overflow-x-hidden p-4 text-foreground md:p-8">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="text-4xl font-extrabold tracking-tight flex items-center gap-3">
+                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-extrabold tracking-tight sm:gap-3 sm:text-4xl">
                             <Gauge className="w-9 h-9 text-primary" />
                             Analytics
                             {isDemo && (
@@ -133,7 +133,7 @@ export function AnalyticsPageClient({
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 bg-muted/40 p-1 rounded-xl border border-border/50 backdrop-blur-md">
+                    <div className="flex w-full flex-col gap-2 rounded-xl border border-border/50 bg-muted/40 p-1 backdrop-blur-md sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                         <ReportGenerator businessName={businessName || undefined} dateRange={d.rangeLabel} />
                         <ExportDataButton businessId={businessId} range={range} platform={platform} />
                     </div>

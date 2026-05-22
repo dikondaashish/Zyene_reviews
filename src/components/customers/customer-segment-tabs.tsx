@@ -36,7 +36,7 @@ interface CustomerSegmentTabsProps {
 
 export function CustomerSegmentTabs({ value, onChange, counts }: CustomerSegmentTabsProps) {
     return (
-        <div className="flex gap-2 overflow-x-auto border-t border-border/50 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-wrap lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+        <div className="grid min-w-0 grid-cols-2 gap-2 border-t border-border/50 pt-4 sm:grid-cols-3 md:flex md:flex-wrap md:gap-2">
             {TABS.map((t) => {
                 const n = counts[t.id];
                 const active = value === t.id;
@@ -46,13 +46,15 @@ export function CustomerSegmentTabs({ value, onChange, counts }: CustomerSegment
                         type="button"
                         onClick={() => onChange(t.id)}
                         className={cn(
-                            "shrink-0 snap-start rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                            "min-w-0 rounded-full px-2.5 py-2 text-left text-xs font-medium transition-colors sm:px-3 sm:py-1.5 sm:text-center md:shrink-0",
                             active
                                 ? "bg-primary text-primary-foreground shadow-sm"
                                 : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
                         )}
                     >
-                        {t.label} ({n})
+                        <span className="block truncate">
+                            {t.label} ({n})
+                        </span>
                     </button>
                 );
             })}

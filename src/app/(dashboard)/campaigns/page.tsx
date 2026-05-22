@@ -136,24 +136,25 @@ export default function CampaignsPage() {
         c.total_sent > 0 ? Math.round((c.total_opened / c.total_sent) * 100) : 0;
 
     return (
-        <div className="flex flex-1 flex-col gap-6 p-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Campaigns</h1>
-                    <p className="text-muted-foreground">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                    <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Campaigns</h1>
+                    <p className="text-sm text-muted-foreground sm:text-base">
                         Create and manage automated review request campaigns
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <Button variant="outline" asChild className="hidden sm:flex">
-                        <Link href="/campaigns/templates">
+                <div className="grid w-full grid-cols-1 gap-2 min-[400px]:grid-cols-2 sm:w-auto sm:flex sm:flex-wrap sm:items-center sm:gap-3">
+                    <Button variant="outline" asChild className="w-full sm:w-auto">
+                        <Link href="/campaigns/templates" className="flex w-full items-center justify-center">
                             <LayoutGrid className="mr-2 h-4 w-4" />
-                            Browse Templates
+                            <span className="sm:hidden">Templates</span>
+                            <span className="hidden sm:inline">Browse Templates</span>
                         </Link>
                     </Button>
-                    <Button asChild>
-                        <Link href="/campaigns/new">
+                    <Button asChild className="w-full sm:w-auto">
+                        <Link href="/campaigns/new" className="flex w-full items-center justify-center">
                             <Plus className="mr-2 h-4 w-4" />
                             Create Campaign
                         </Link>

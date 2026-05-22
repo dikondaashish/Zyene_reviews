@@ -158,7 +158,7 @@ function NewCampaignForm() {
     };
 
     return (
-        <div className="flex flex-1 flex-col gap-6 p-6 max-w-3xl mx-auto w-full">
+        <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
             {/* Header */}
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
@@ -228,7 +228,7 @@ function NewCampaignForm() {
 
                             <div className="space-y-3">
                                 <Label>Channel</Label>
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                                     {([
                                         { value: "sms" as const, label: "SMS", icon: MessageSquare, desc: "Text message" },
                                         { value: "email" as const, label: "Email", icon: Mail, desc: "Email message" },
@@ -371,7 +371,7 @@ function NewCampaignForm() {
                             <div className="space-y-3">
                                 <Label>Send Delay</Label>
                                 <p className="text-xs text-muted-foreground">How long after adding contacts should the message be sent?</p>
-                                <div className="grid grid-cols-5 gap-2">
+                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                                     {DELAY_OPTIONS.map((opt) => (
                                         <button
                                             key={opt.value}
@@ -391,7 +391,7 @@ function NewCampaignForm() {
                             <Separator />
 
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
                                         <Label>Follow-up Message</Label>
                                         <p className="text-xs text-muted-foreground mt-1">
@@ -408,7 +408,7 @@ function NewCampaignForm() {
                                     <div className="space-y-4 pl-0 border-l-2 border-primary/20 ml-0 rounded-r-lg bg-muted/30 p-4">
                                         <div className="space-y-2">
                                             <Label>Follow-up Delay</Label>
-                                            <div className="grid grid-cols-3 gap-2">
+                                            <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 lg:grid-cols-3">
                                                 {FOLLOW_UP_OPTIONS.map((opt) => (
                                                     <button
                                                         key={opt.value}
@@ -505,16 +505,17 @@ function NewCampaignForm() {
             </Card>
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <Button
                     variant="outline"
+                    className="w-full sm:w-auto"
                     onClick={() => step > 0 ? setStep(step - 1) : router.push("/campaigns")}
                 >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     {step > 0 ? "Back" : "Cancel"}
                 </Button>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2 min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-end">
                     {step === STEPS.length - 1 ? (
                         <>
                             <Button variant="outline" onClick={() => saveCampaign("draft")} disabled={saving}>

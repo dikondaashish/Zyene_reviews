@@ -300,9 +300,9 @@ export default async function GoogleSeoAeoPage() {
             : "No address";
 
     return (
-        <div className="space-y-6 p-4 md:p-8">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-bold tracking-tight">Google SEO/AEO</h2>
+        <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
+            <div className="flex min-w-0 flex-col gap-2">
+                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Google SEO/AEO</h2>
                 <p className="text-sm text-muted-foreground">
                     Optimization diagnostics and direct Google-ready fixes for {businessName}.
                 </p>
@@ -312,7 +312,7 @@ export default async function GoogleSeoAeoPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
+                    <CardTitle className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span>Optimization Score</span>
                         <span className="text-3xl font-bold">{score}%</span>
                     </CardTitle>
@@ -334,9 +334,9 @@ export default async function GoogleSeoAeoPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                     {audits.map((a) => (
-                        <div key={a.id} className="rounded-lg border p-3 flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                                <div className="flex items-center gap-2">
+                        <div key={a.id} className="flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
                                     {a.status === "pass" ? (
                                         <CheckCircle2 className="h-4 w-4 text-chart-2" />
                                     ) : a.status === "fail" ? (
@@ -366,7 +366,7 @@ export default async function GoogleSeoAeoPage() {
                             {(() => {
                                 const fixAction = getAuditFixAction(a.id);
                                 return (
-                            <Button asChild size="sm" variant="outline">
+                            <Button asChild size="sm" variant="outline" className="w-full shrink-0 sm:w-auto">
                                 <Link href={fixAction.href}>{fixAction.label}</Link>
                             </Button>
                                 );
@@ -394,8 +394,8 @@ export default async function GoogleSeoAeoPage() {
                         <p className="text-sm text-muted-foreground">No tracked competitors yet.</p>
                     ) : (
                         competitors!.map((c, i) => (
-                            <div key={c.id} className="rounded-lg border p-3 flex items-center justify-between gap-3">
-                                <div>
+                            <div key={c.id} className="flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                                <div className="min-w-0">
                                     <p className="font-medium">
                                         #{i + 1} {c.name}
                                     </p>

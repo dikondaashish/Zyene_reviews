@@ -803,7 +803,7 @@ export default async function DashboardPage() {
     const reviewsCount = displayTotalReviews;
 
     return (
-        <div className="flex flex-col gap-6 w-full">
+        <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden">
             <MilestoneCelebration currentCount={displayTotalReviews} type="reviews" isDemo={useDemoData} scopeKey={business.id || "default"} />
             
             {/* Demo Mode Banner */}
@@ -1250,9 +1250,9 @@ export default async function DashboardPage() {
             </div>
 
             {/* Bottom Row: Recent Reviews + Needs Attention */}
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
                 {/* Spotlight Reviews */}
-                <div className="min-w-0 flex flex-col h-full" data-tour-target="tour-recent-reviews">
+                <div className="min-w-0 flex flex-col overflow-hidden" data-tour-target="tour-recent-reviews">
                     {recentReviews.length > 0 ? (
                         <div className="flex-1 flex flex-col">
                             <DashboardAnimatedReviewCardsLazy
@@ -1289,7 +1289,7 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* Needs Attention */}
-                <div data-tour-target="tour-needs-attention">
+                <div className="min-w-0 overflow-hidden" data-tour-target="tour-needs-attention">
                     <NeedsAttention
                         reviews={mapAttentionRows(
                             attentionReviews.filter(

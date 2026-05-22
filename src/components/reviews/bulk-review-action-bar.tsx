@@ -49,22 +49,33 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
     if (selectedIds.length === 0) return null;
 
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4 duration-300">
-            <div className="bg-foreground text-background rounded-full px-4 py-2 flex items-center gap-4 border border-border">
-                <div className="flex items-center gap-2 border-r border-border/40 pr-4">
-                    <div className="bg-primary text-primary-foreground text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
-                        {selectedIds.length}
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[max(1rem,env(safe-area-inset-bottom))] animate-in slide-in-from-bottom-4 duration-300 sm:px-4">
+            <div className="pointer-events-auto flex w-full max-w-lg flex-col gap-2 rounded-2xl border border-border bg-foreground px-3 py-2.5 text-background shadow-lg sm:max-w-none sm:flex-row sm:items-center sm:gap-3 sm:rounded-full sm:px-4">
+                <div className="flex items-center justify-between gap-2 sm:justify-start sm:border-r sm:border-border/40 sm:pr-3">
+                    <div className="flex items-center gap-2">
+                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                            {selectedIds.length}
+                        </div>
+                        <span className="text-xs font-medium">Selected</span>
                     </div>
-                    <span className="text-xs font-medium">Selected</span>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={onClearSelection}
+                        className="h-8 w-8 shrink-0 rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background sm:hidden"
+                        aria-label="Clear selection"
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
                     <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => handleBulkStatusUpdate('ignored')}
                         disabled={isUpdating}
-                        className="h-8 text-xs text-background/80 hover:text-background hover:bg-background/20 rounded-full"
+                        className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
                         {isUpdating ? (
                             <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
@@ -79,21 +90,22 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         variant="ghost"
                         onClick={() => handleBulkStatusUpdate('pending')}
                         disabled={isUpdating}
-                        className="h-8 text-xs text-background/80 hover:text-background hover:bg-background/20 rounded-full"
+                        className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
-                        <Check className="w-3.5 h-3.5 mr-1.5 text-chart-2" />
-                        Move to Pending
+                        <Check className="mr-1.5 h-3.5 w-3.5 text-chart-2" />
+                        Pending
                     </Button>
                 </div>
 
-                <div className="pl-2 border-l border-border/40">
+                <div className="hidden border-l border-border/40 pl-2 sm:block">
                     <Button
                         size="sm"
                         variant="ghost"
                         onClick={onClearSelection}
-                        className="h-8 w-8 p-0 text-background/70 hover:text-background hover:bg-background/20 rounded-full"
+                        className="h-8 w-8 rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background"
+                        aria-label="Clear selection"
                     >
-                        <X className="w-4 h-4" />
+                        <X className="h-4 w-4" />
                     </Button>
                 </div>
             </div>

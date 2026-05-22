@@ -215,8 +215,137 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
         }
     };
 
+    const renderActionsMenu = (member: Member) => {
+        const showOwnerAdminRoleItems =
+            member.type === "member" &&
+            (currentUserRole === "owner" || currentUserRole === "admin");
+        const showManagerRoleItems = member.type === "member" && currentUserRole === "manager";
+
+        if (!canOpenActionsMenu(member)) {
+            return canManage ? (
+                <span className="text-xs text-muted-foreground">—</span>
+            ) : (
+                <span className="text-xs text-muted-foreground">View only</span>
+            );
+        }
+
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        disabled={isLoadingId === member.id}
+                    >
+                        <span className="sr-only">Open menu</span>
+                        {isLoadingId === member.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <MoreHorizontal className="h-4 w-4" />
+                        )}
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    {member.type === "invite" && (
+                        <DropdownMenuItem onClick={() => handleResendInvite(member.id)}>
+                            Resend email
+                        </DropdownMenuItem>
+                    )}
+                    {member.type === "invite" && <DropdownMenuSeparator />}
+                    {showOwnerAdminRoleItems && (
+                        <>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "admin")}>
+                                Make Admin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>
+                                Make Manager
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>
+                                Make Member
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>
+                                Make Viewer
+                            </DropdownMenuItem>
+                        </>
+                    )}
+                    {showManagerRoleItems && (
+                        <>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>
+                                Make Manager
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>
+                                Make Member
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>
+                                Make Viewer
+                            </DropdownMenuItem>
+                        </>
+                    )}
+                    {(showOwnerAdminRoleItems || showManagerRoleItems) && <DropdownMenuSeparator />}
+                    <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={() => handleRemove(member.id, member.type)}
+                    >
+                        Remove
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
+    };
+
     return (
-        <div className="rounded-md border">
+        <div className="min-w-0">
+            <div className="space-y-3 lg:hidden">
+                {members.map((member) => (
+                    <div
+                        key={member.id}
+                        className="flex min-w-0 items-start gap-3 rounded-xl border border-border bg-card p-4"
+                    >
+                        <Avatar className="h-10 w-10 shrink-0">
+                            <AvatarImage src={member.user?.avatar_url} />
+                            <AvatarFallback>
+                                {member.type === "member"
+                                    ? getInitials(member.user?.full_name || "")
+                                    : "?"}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1 space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                                <div className="min-w-0">
+                                    <p className="break-words text-sm font-medium">
+                                        {member.type === "member"
+                                            ? member.user?.full_name
+                                            : "Invited Member"}
+                                    </p>
+                                    <p className="break-all text-xs text-muted-foreground">
+                                        {member.type === "member"
+                                            ? member.user?.email
+                                            : member.email}
+                                    </p>
+                                </div>
+                                {renderActionsMenu(member)}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <Badge variant={getRoleBadgeColor(member.role)} className="capitalize">
+                                    {member.role}
+                                </Badge>
+                                <Badge
+                                    variant={member.status === "active" ? "default" : "secondary"}
+                                    className={
+                                        member.status === "active"
+                                            ? "bg-chart-2 hover:bg-chart-2/90"
+                                            : "bg-chart-4 hover:bg-chart-4/90"
+                                    }
+                                >
+                                    {member.status}
+                                </Badge>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="hidden rounded-md border lg:block">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -227,13 +356,7 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {members.map((member) => {
-                        const showOwnerAdminRoleItems =
-                            member.type === "member" &&
-                            (currentUserRole === "owner" || currentUserRole === "admin");
-                        const showManagerRoleItems = member.type === "member" && currentUserRole === "manager";
-
-                        return (
+                    {members.map((member) => (
                         <TableRow key={member.id}>
                             <TableCell className="flex items-center gap-3">
                                 <Avatar className="h-9 w-9">
@@ -263,55 +386,12 @@ export function TeamTable({ members, currentUserId, currentUserRole }: TeamTable
                                     {member.status}
                                 </Badge>
                             </TableCell>
-                            <TableCell className="text-right">
-                                {canOpenActionsMenu(member) ? (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0" disabled={isLoadingId === member.id}>
-                                                <span className="sr-only">Open menu</span>
-                                                {isLoadingId === member.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreHorizontal className="h-4 w-4" />}
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            {member.type === "invite" && (
-                                                <DropdownMenuItem onClick={() => handleResendInvite(member.id)}>
-                                                    Resend email
-                                                </DropdownMenuItem>
-                                            )}
-                                            {member.type === "invite" && <DropdownMenuSeparator />}
-                                            {showOwnerAdminRoleItems && (
-                                                <>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "admin")}>Make Admin</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>Make Manager</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>Make Member</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>Make Viewer</DropdownMenuItem>
-                                                </>
-                                            )}
-                                            {showManagerRoleItems && (
-                                                <>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "manager")}>Make Manager</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "member")}>Make Member</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleRoleChange(member.id, "viewer")}>Make Viewer</DropdownMenuItem>
-                                                </>
-                                            )}
-                                            {(showOwnerAdminRoleItems || showManagerRoleItems) && <DropdownMenuSeparator />}
-                                            <DropdownMenuItem className="text-destructive" onClick={() => handleRemove(member.id, member.type)}>
-                                                Remove
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                ) : canManage ? (
-                                    <span className="text-muted-foreground text-xs">—</span>
-                                ) : (
-                                    <span className="text-muted-foreground text-xs">View only</span>
-                                )}
-                            </TableCell>
+                            <TableCell className="text-right">{renderActionsMenu(member)}</TableCell>
                         </TableRow>
-                    );
-                    })}
+                    ))}
                 </TableBody>
             </Table>
+            </div>
         </div>
     );
 }

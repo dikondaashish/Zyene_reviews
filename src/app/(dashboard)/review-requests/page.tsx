@@ -178,23 +178,23 @@ export default async function ReviewRequestsPage(props: {
     const isEmpty = totalSent === 0;
 
     return (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex min-w-0 flex-col gap-6 h-full overflow-x-hidden">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                    <h1 className="flex flex-wrap items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
                         Review Requests
-                        <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
                             {totalSent || 0}
                         </span>
                     </h1>
-                    <p className="text-muted-foreground text-sm mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                         Track all review requests sent to your customers.
                     </p>
                 </div>
-                <Button asChild>
-                    <Link href="/campaigns">
-                        <Send className="w-4 h-4 mr-2" />
+                <Button asChild className="w-full shrink-0 sm:w-auto">
+                    <Link href="/campaigns" className="flex w-full items-center justify-center">
+                        <Send className="mr-2 h-4 w-4" />
                         Create Campaign
                     </Link>
                 </Button>
@@ -203,7 +203,7 @@ export default async function ReviewRequestsPage(props: {
             {!isEmpty && (
                 <>
                     {/* Stats Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
@@ -264,11 +264,11 @@ export default async function ReviewRequestsPage(props: {
                     </div>
 
                     {/* Tabs */}
-                    <div>
-                        <div className="bg-muted p-1 rounded-lg inline-flex">
+                    <div className="min-w-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <div className="inline-flex min-w-max rounded-lg bg-muted p-1">
                             <Link href={getTabUrl("all")}>
                                 <div
-                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                                    className={`shrink-0 rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${
                                         filterStatus === "all"
                                             ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
@@ -279,7 +279,7 @@ export default async function ReviewRequestsPage(props: {
                             </Link>
                             <Link href={getTabUrl("pending")}>
                                 <div
-                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                                    className={`shrink-0 rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${
                                         filterStatus === "pending"
                                             ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
@@ -290,7 +290,7 @@ export default async function ReviewRequestsPage(props: {
                             </Link>
                             <Link href={getTabUrl("opened")}>
                                 <div
-                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                                    className={`shrink-0 rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${
                                         filterStatus === "opened"
                                             ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
@@ -301,7 +301,7 @@ export default async function ReviewRequestsPage(props: {
                             </Link>
                             <Link href={getTabUrl("clicked")}>
                                 <div
-                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                                    className={`shrink-0 rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${
                                         filterStatus === "clicked"
                                             ? "bg-background text-foreground"
                                             : "text-muted-foreground hover:text-foreground"
@@ -313,8 +313,57 @@ export default async function ReviewRequestsPage(props: {
                         </div>
                     </div>
 
-                    {/* Table */}
-                    <Card>
+                    {/* Mobile / tablet cards */}
+                    <div className="space-y-3 lg:hidden">
+                        {filteredRequests.length > 0 ? (
+                            filteredRequests.map((req) => {
+                                const status = getRequestStatus(
+                                    req.opened_at,
+                                    req.clicked_at,
+                                    req.completed_at
+                                );
+                                const contact =
+                                    req.channel === "sms"
+                                        ? req.customer_phone || "N/A"
+                                        : req.channel === "email"
+                                          ? req.customer_email || "N/A"
+                                          : [req.customer_phone, req.customer_email]
+                                                  .filter(Boolean)
+                                                  .join(" · ") || "N/A";
+                                return (
+                                    <div
+                                        key={req.id}
+                                        className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-sm"
+                                    >
+                                        <div className="flex items-start justify-between gap-2">
+                                            <p className="break-words font-semibold text-foreground">
+                                                {req.customer_name || "Unknown"}
+                                            </p>
+                                            <StatusBadge status={status} />
+                                        </div>
+                                        <p className="mt-1 break-all text-sm text-muted-foreground">{contact}</p>
+                                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                                            <ChannelBadge channel={req.channel} />
+                                            <span className="text-xs text-muted-foreground">
+                                                {req.sent_at
+                                                    ? formatDistanceToNow(new Date(req.sent_at), {
+                                                          addSuffix: true,
+                                                      })
+                                                    : "—"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="rounded-xl border border-dashed py-8 text-center text-sm text-muted-foreground">
+                                No review requests with this status yet.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Desktop table */}
+                    <Card className="hidden lg:block">
                         <CardContent className="p-0">
                             <div className="overflow-x-auto">
                                 <Table>

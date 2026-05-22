@@ -167,7 +167,7 @@ export function GeneralSettingsForm({
             )}
 
             {/* Submit Button Area */}
-            <div className="px-6 pb-6 pt-2 flex justify-end">
+            <div className="flex flex-col gap-2 px-4 pb-6 pt-2 max-lg:items-stretch sm:px-6 lg:flex-row lg:justify-end">
                 <Button
                     type="submit"
                     disabled={isLoading || !hasChanges}

@@ -82,7 +82,7 @@ interface AnimatedReviewCardsProps {
 }
 
 const cardVariants = cva(
-    "col-start-1 row-start-1 w-full max-w-xl justify-self-center overflow-hidden rounded-xl border border-border bg-background shadow-sm",
+    "col-start-1 row-start-1 w-full max-w-full justify-self-center overflow-hidden rounded-xl border border-border bg-background shadow-sm sm:max-w-xl",
     {
         variants: {
             theme: {
@@ -401,8 +401,8 @@ export const AnimatedReviewCards = ({
     const carouselRegion = (
         <div
             className={cn(
-                "relative mx-auto w-full overflow-hidden rounded-xl px-1 sm:px-2",
-                showShell ? "min-h-[300px] pb-2 pt-1 sm:min-h-[310px]" : "min-h-[360px] pb-2 pt-2 sm:min-h-[380px]"
+                "relative mx-auto w-full max-w-full overflow-hidden rounded-xl px-0 sm:px-2",
+                showShell ? "min-h-[280px] pb-2 pt-1 sm:min-h-[300px]" : "min-h-[320px] pb-2 pt-2 sm:min-h-[360px]"
             )}
             onMouseEnter={() => setHoverPause(true)}
             onMouseLeave={() => setHoverPause(false)}
@@ -459,7 +459,7 @@ export const AnimatedReviewCards = ({
                                     cursor: interactionType,
                                     className: classNames?.card,
                                 }),
-                                "h-[min(280px,58vh)] min-h-[220px] sm:h-[260px] sm:min-h-[240px] md:h-[252px]",
+                                "h-[min(260px,52vh)] min-h-[200px] sm:h-[240px] sm:min-h-[220px] md:h-[252px]",
                                 index > 0 && "cursor-default"
                             )}
                         >
@@ -470,8 +470,8 @@ export const AnimatedReviewCards = ({
                             )}
                         >
                             {index === 0 ? (
-                                <div className={cn("mb-3 flex min-h-0 items-start justify-between gap-2", classNames?.header)}>
-                                    <div className="flex min-w-0 flex-1 gap-3">
+                                <div className={cn("mb-3 flex min-h-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between", classNames?.header)}>
+                                    <div className="flex min-w-0 flex-1 gap-2.5 sm:gap-3">
                                         <Avatar className={cn("h-10 w-10 shrink-0 ring-1 ring-border", classNames?.avatar)}>
                                             {review?.avatar ? (
                                                 <AvatarImage
@@ -492,11 +492,11 @@ export const AnimatedReviewCards = ({
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="min-w-0 flex-1 space-y-1">
-                                            <div className="flex flex-wrap items-center gap-2">
+                                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                                                 <h2
                                                     className={nameVariants({
                                                         theme,
-                                                        className: cn("truncate text-[15px]", classNames?.name),
+                                                        className: cn("max-w-full break-words text-[15px] leading-snug", classNames?.name),
                                                     })}
                                                 >
                                                     {review?.name}
@@ -589,8 +589,8 @@ export const AnimatedReviewCards = ({
 
                             <p
                                 className={cn(
-                                    "min-h-0 flex-1 overflow-hidden text-sm leading-relaxed",
-                                    index === 0 ? "line-clamp-5" : "line-clamp-3",
+                                    "min-h-0 flex-1 overflow-hidden text-sm leading-relaxed break-words",
+                                    index === 0 ? "line-clamp-4 sm:line-clamp-5" : "line-clamp-2 sm:line-clamp-3",
                                     textVariants({ theme, className: classNames?.text })
                                 )}
                             >
@@ -598,7 +598,7 @@ export const AnimatedReviewCards = ({
                             </p>
 
                             {index === 0 && theme === "default" && labels ? (
-                                <div className="mt-auto flex shrink-0 items-center justify-between gap-2 border-t border-border/50 pt-3">
+                                <div className="mt-auto flex shrink-0 flex-col gap-2 border-t border-border/50 pt-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex flex-wrap items-center gap-2">
                                         <Link
                                             href="/reviews"
@@ -692,32 +692,34 @@ export const AnimatedReviewCards = ({
 
     const topNav =
         showShell && labels ? (
-            <div className="flex items-center gap-1">
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
-                    aria-label={labels.prev}
-                    disabled={navDisabled}
-                    onClick={() => rotateBackward()}
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="min-w-[2.75rem] text-center text-xs tabular-nums text-muted-foreground">
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:flex-initial sm:justify-end">
+                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                     {counterCurrent} / {orderLen}
                 </span>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
-                    aria-label={labels.next}
-                    disabled={navDisabled}
-                    onClick={() => rotateForward()}
-                >
-                    <ChevronRight className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-0.5">
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8"
+                        aria-label={labels.prev}
+                        disabled={navDisabled}
+                        onClick={() => rotateBackward()}
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8"
+                        aria-label={labels.next}
+                        disabled={navDisabled}
+                        onClick={() => rotateForward()}
+                    >
+                        <ChevronRight className="h-4 w-4" />
+                    </Button>
+                </div>
             </div>
         ) : null;
 
@@ -732,27 +734,27 @@ export const AnimatedReviewCards = ({
     return (
         <div className={cn("not-prose relative w-full h-full", classNames?.container)}>
             {showShell ? (
-                <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm md:p-6">
-                    <div className="mb-1 flex shrink-0 flex-col gap-3 border-b border-border/60 pb-4 sm:mb-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                        <div className="min-w-0 flex-1 space-y-1">
-                            <h2 className="text-lg font-semibold tracking-tight text-foreground">{shellTitle}</h2>
+                <div className="flex h-full min-w-0 flex-col rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5 md:p-6">
+                    <div className="mb-2 flex shrink-0 flex-col gap-2.5 border-b border-border/60 pb-3 sm:gap-3 sm:pb-4">
+                        <div className="min-w-0 space-y-0.5">
+                            <h2 className="text-base font-semibold tracking-tight text-foreground sm:text-lg">{shellTitle}</h2>
                             {shellSubtitle ? (
-                                <p className="text-sm leading-snug text-muted-foreground">{shellSubtitle}</p>
+                                <p className="text-xs leading-snug text-muted-foreground sm:text-sm">{shellSubtitle}</p>
                             ) : null}
                         </div>
-                        <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
+                        <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2">
                             {topNav}
                             {manageAllHref && manageAllLabel ? (
                                 <Link
                                     href={manageAllHref}
-                                    className="text-xs font-medium text-primary hover:underline sm:text-right"
+                                    className="shrink-0 text-xs font-medium text-primary hover:underline"
                                 >
                                     {manageAllLabel}
                                 </Link>
                             ) : null}
                         </div>
                     </div>
-                    <div className="pt-2 flex-1">{body}</div>
+                    <div className="min-w-0 flex-1 pt-1 sm:pt-2">{body}</div>
                 </div>
             ) : (
                 <div className="flex flex-col h-full w-full items-center">{body}</div>

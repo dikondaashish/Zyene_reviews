@@ -430,24 +430,24 @@ export function NeedsAttention({
                 className
             )}
         >
-            <div className="flex items-center justify-between gap-3 border-b border-border bg-chart-4/25 px-5 py-4 dark:bg-chart-4/15">
+            <div className="flex flex-col gap-2 border-b border-border bg-chart-4/25 px-4 py-3.5 dark:bg-chart-4/15 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-4">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                     <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                         <AlertTriangle className="h-4 w-4" aria-hidden />
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                         <p className="text-[13.5px] font-semibold tracking-tight text-foreground">{copy.title}</p>
-                        <p className="truncate text-[11.5px] text-muted-foreground">{subtitleFor(copy, urgentCount)}</p>
+                        <p className="text-[11.5px] leading-snug text-muted-foreground">{subtitleFor(copy, urgentCount)}</p>
                     </div>
                 </div>
                 {viewAllHref ? (
-                    <Button variant="ghost" size="sm" className="shrink-0 text-[13px]" asChild>
+                    <Button variant="ghost" size="sm" className="h-8 shrink-0 self-start px-2 text-[13px] sm:self-center" asChild>
                         <Link href={viewAllHref}>{copy.viewAll}</Link>
                     </Button>
                 ) : null}
             </div>
 
-            <ul className="divide-y divide-border">
+            <ul className="max-h-[min(480px,58vh)] divide-y divide-border overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
                 {reviews.map((review) => {
                     const open = expandedId === review.id;
                     const id = review.id;
@@ -476,7 +476,7 @@ export function NeedsAttention({
                                 type="button"
                                 onClick={() => toggleRow(id)}
                                 className={cn(
-                                    "flex w-full items-start gap-3.5 px-5 py-3.5 text-left transition-colors duration-200 ease-out",
+                                    "flex w-full min-w-0 items-start gap-3 px-4 py-3.5 text-left transition-colors duration-200 ease-out sm:gap-3.5 sm:px-5",
                                     "hover:bg-[rgb(241,235,222)] dark:hover:bg-chart-4/10",
                                     open && "bg-chart-4/10 dark:bg-chart-4/5",
                                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -498,9 +498,11 @@ export function NeedsAttention({
                                         </span>
                                     </AvatarFallback>
                                 </Avatar>
-                                <div className="min-w-0 flex-1 space-y-1.5">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-[13.5px] font-semibold text-foreground">{review.author}</span>
+                                <div className="min-w-0 flex-1 space-y-1.5 overflow-hidden">
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                        <span className="max-w-full break-words text-[13.5px] font-semibold leading-snug text-foreground">
+                                            {review.author}
+                                        </span>
                                         <span className="inline-flex items-center gap-0.5" aria-label={`${rating} of 5 stars`}>
                                             {Array.from({ length: 5 }).map((_, i) => (
                                                 <Star
@@ -543,11 +545,11 @@ export function NeedsAttention({
                                             ))}
                                         </div>
                                     ) : null}
-                                    <p className="line-clamp-2 text-[13px] leading-snug text-muted-foreground">{review.text}</p>
+                                    <p className="line-clamp-2 break-words text-[13px] leading-snug text-muted-foreground">{review.text}</p>
                                 </div>
                                 <ChevronDown
                                     className={cn(
-                                        "mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                                        "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 sm:mt-1",
                                         open && "rotate-180"
                                     )}
                                     aria-hidden
@@ -557,11 +559,11 @@ export function NeedsAttention({
                             {open ? (
                                 <div
                                     className={cn(
-                                        "border-t border-border bg-muted/50 pb-4 pl-[70px] pr-5 pt-3",
+                                        "border-t border-border bg-muted/50 px-4 pb-4 pt-3 sm:px-5",
                                         "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-2 motion-safe:duration-500 motion-safe:ease-[cubic-bezier(0.2,0.8,0.2,1)]"
                                     )}
                                 >
-                                    <div className="rounded-xl border border-border bg-card p-3.5 shadow-sm">
+                                    <div className="rounded-xl border border-border bg-card p-3 shadow-sm sm:p-3.5">
                                         <div className="mb-3 flex flex-wrap items-center gap-2">
                                             <Reply className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
                                             <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
@@ -698,7 +700,7 @@ export function NeedsAttention({
                                                         </div>
 
                                                         {!isSent ? (
-                                                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                                            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                                                                 <div className="flex flex-wrap items-center gap-1">
                                                                     <Button
                                                                         type="button"
@@ -742,10 +744,10 @@ export function NeedsAttention({
                                                                         </DropdownMenuContent>
                                                                     </DropdownMenu>
                                                                 </div>
-                                                                <div className="flex flex-col items-end gap-1">
+                                                                <div className="flex w-full flex-col gap-1 sm:w-auto sm:items-end">
                                                                     <Button
                                                                         type="button"
-                                                                        className="gap-2 bg-primary text-primary-foreground hover:brightness-95"
+                                                                        className="w-full gap-2 bg-primary text-primary-foreground hover:brightness-95 sm:w-auto"
                                                                         disabled={
                                                                             isSub ||
                                                                             !draft.trim() ||
@@ -762,7 +764,7 @@ export function NeedsAttention({
                                                                         {copy.sendReply}
                                                                     </Button>
                                                                     {isDemo ? (
-                                                                        <p className="max-w-[220px] text-right text-[10px] text-muted-foreground">
+                                                                        <p className="text-left text-[10px] text-muted-foreground sm:max-w-[220px] sm:text-right">
                                                                             {copy.demoSendHint}
                                                                         </p>
                                                                     ) : null}

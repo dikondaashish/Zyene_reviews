@@ -36,9 +36,9 @@ export function CustomerFilters({
     const hasFilters = Boolean(searchQuery || tagFilter);
 
     return (
-        <div className="mb-0 flex flex-col gap-3 p-0">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
-                <div className="relative flex-1 w-full group">
+        <div className="mb-0 flex min-w-0 flex-col gap-3 p-0">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <div className="relative w-full min-w-0 flex-1 group">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
                         placeholder="Search by name, email, or phone..."
@@ -50,8 +50,8 @@ export function CustomerFilters({
                     />
                 </div>
 
-                <div className="flex w-full flex-col gap-1.5 lg:w-auto lg:min-w-[200px]">
-                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground lg:sr-only">
+                <div className="flex w-full min-w-0 flex-col gap-1.5 sm:w-auto sm:min-w-[200px]">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:sr-only">
                         Filter by tag
                     </span>
                     <Select
@@ -60,7 +60,7 @@ export function CustomerFilters({
                     >
                         <SelectTrigger
                             size="sm"
-                            className="h-9 w-full rounded-lg border-border lg:w-[220px]"
+                            className="h-9 w-full rounded-lg border-border sm:w-[220px]"
                             aria-label="Filter by tag"
                         >
                             <SelectValue placeholder="Filter by tag" />
@@ -80,10 +80,10 @@ export function CustomerFilters({
                     <Button
                         variant="ghost"
                         onClick={clearFilters}
-                        className="h-9 shrink-0 rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive"
+                        className="h-9 w-full shrink-0 justify-center rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive sm:w-auto sm:justify-start"
                     >
-                        <X className="h-4 w-4 mr-2" />
-                        Clear
+                        <X className="mr-2 h-4 w-4" />
+                        Clear filters
                     </Button>
                 )}
             </div>

@@ -243,16 +243,16 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const maxFunnel = Math.max(campaign.total_sent, 1);
 
     return (
-        <div className="flex flex-1 flex-col gap-6 p-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                     <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-2xl font-bold tracking-tight">{campaign.name}</h1>
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="break-words text-xl font-bold tracking-tight sm:text-2xl">{campaign.name}</h1>
                             <Badge
                                 variant={campaign.status === "active" ? "default" : "secondary"}
                                 className={
@@ -272,8 +272,8 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" onClick={toggleStatus}>
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" className="flex-1 sm:flex-initial" onClick={toggleStatus}>
                         {campaign.status === "active" ? (
                             <><Pause className="mr-2 h-4 w-4" />Pause</>
                         ) : (

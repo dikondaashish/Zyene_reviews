@@ -127,7 +127,7 @@ export function AutoReplyToolbar({
             title="Upgrade to use Auto commenter"
             description="Auto commenter posts AI replies to eligible Google reviews. It is available on Starter, Professional, and Enterprise."
         />
-        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <div className="flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">
                 <Bot className="h-4 w-4 shrink-0 text-sync-action" aria-hidden />
                 <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-foreground cursor-pointer">
@@ -164,8 +164,8 @@ export function AutoReplyToolbar({
 
             {enabled && (
                 <>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground whitespace-nowrap">
+                    <div className="flex w-full min-w-0 flex-col gap-1.5 sm:w-auto sm:flex-row sm:items-center sm:gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                             Min stars
                         </span>
                         <Select
@@ -173,7 +173,7 @@ export function AutoReplyToolbar({
                             onValueChange={(v) => void onMinRatingChange(v)}
                             disabled={saving}
                         >
-                            <SelectTrigger className="h-10 w-[130px] text-sm bg-background md:h-8 md:text-xs">
+                            <SelectTrigger className="h-9 w-full bg-background text-sm sm:w-[130px] md:h-8 md:text-xs">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

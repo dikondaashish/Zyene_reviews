@@ -155,7 +155,7 @@ export default async function IntegrationsPage() {
     const totalReviews = visibleRollup?.totalVisible ?? 0;
 
     return (
-        <div className="flex flex-1 flex-col gap-10 p-4 sm:p-6 lg:p-8">
+        <div className="flex min-w-0 flex-1 flex-col gap-10 overflow-x-hidden p-4 sm:p-6 lg:gap-10 lg:p-8">
             {/* ── Page Header ── */}
             <div className="space-y-4">
                 <div className="flex flex-col gap-1">

@@ -78,15 +78,15 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
     return (
         <div className={cn(
-            "group relative overflow-hidden bg-card border border-border rounded-lg p-5 space-y-4 transition-all duration-300 border-l-4",
+            "group relative min-w-0 overflow-hidden space-y-4 rounded-lg border border-border border-l-4 bg-card p-4 transition-all duration-300 sm:p-5",
             "hover:-translate-y-0.5 hover:shadow-lg hover:border-canvas-elevated/60",
             status === "open" ? "border-l-red-500" : 
             status === "contacted" ? "border-l-primary" : "border-l-primary opacity-90"
         )}>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-canvas-elevated/35 via-canvas-elevated/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             {/* Header */}
-            <div className="relative z-10 flex justify-between items-start">
-                <div className="flex gap-3">
+            <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex min-w-0 gap-3">
                     <div className={cn(
                         "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border",
                         status === "open" ? "bg-destructive/10 text-destructive border-destructive/20" : 
@@ -94,9 +94,9 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                     )}>
                         <User className="w-5 h-5" />
                     </div>
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <div className="font-semibold text-sm text-foreground line-clamp-1">
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <div className="break-words text-sm font-semibold text-foreground">
                                 {customerName}
                             </div>
                             {feedback.category && (
@@ -112,10 +112,10 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                     </div>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex w-full items-center sm:w-auto sm:shrink-0">
                     <Select value={status} onValueChange={handleStatusUpdate} disabled={isUpdating}>
                         <SelectTrigger className={cn(
-                            "h-7 w-[110px] text-[10px] font-bold uppercase tracking-wider border-none ring-0 focus:ring-0",
+                            "h-8 w-full min-w-[120px] text-[10px] font-bold uppercase tracking-wider border-none ring-0 focus:ring-0 sm:w-[110px]",
                             status === "open" ? "bg-destructive/10 text-destructive" : 
                             status === "contacted" ? "bg-chart-4/12 text-chart-4" : "bg-chart-2/10 text-chart-2"
                         )}>
@@ -138,8 +138,8 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
             {/* Content */}
             <div className="relative z-10 space-y-3">
-                <div className="text-sm text-foreground leading-relaxed bg-muted p-3 rounded-md border border-border italic">
-                    "{feedback.content}"
+                <div className="rounded-md border border-border bg-muted p-3 text-sm italic leading-relaxed text-foreground break-words">
+                    &ldquo;{feedback.content}&rdquo;
                 </div>
 
                 {feedback.selected_staff && feedback.selected_staff.length > 0 && (
@@ -155,16 +155,16 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
                     </div>
                 )}
 
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                     {displayEmail && (
-                        <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
-                            <Mail className="w-3 h-3" />
-                            <a href={`mailto:${displayEmail}`} className="hover:underline">{displayEmail}</a>
+                        <div className="flex min-w-0 items-start gap-1.5 text-[11px] text-muted-foreground">
+                            <Mail className="mt-0.5 h-3 w-3 shrink-0" />
+                            <a href={`mailto:${displayEmail}`} className="break-all hover:underline">{displayEmail}</a>
                         </div>
                     )}
                     {displayPhone && (
-                        <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
-                            <Phone className="w-3 h-3 shrink-0" />
+                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                            <Phone className="h-3 w-3 shrink-0" />
                             <a href={`tel:${displayPhone.replace(/\s/g, "")}`} className="hover:underline">
                                 {displayPhone}
                             </a>

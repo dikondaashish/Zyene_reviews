@@ -48,10 +48,10 @@ export function ReviewManagement({
     const allSelected = reviews.length > 0 && selectedCount === reviews.length;
 
     return (
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
             {/* Selection Controls */}
             {reviews.length > 0 && (
-                <div className="flex items-center gap-2 mb-2">
+                <div className="mb-2 flex min-w-0 flex-wrap items-center gap-2">
                     <Button
                         variant="ghost"
                         size="sm"

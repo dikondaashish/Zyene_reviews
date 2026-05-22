@@ -72,7 +72,7 @@ export function OrganizationNameForm({ organization }: OrganizationNameFormProps
                 </div>
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="flex flex-col gap-2 pt-2 max-lg:items-stretch lg:flex-row lg:justify-end">
                 <Button type="submit" disabled={saving || name.trim() === organization.name} size="sm">
                     {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Save Changes

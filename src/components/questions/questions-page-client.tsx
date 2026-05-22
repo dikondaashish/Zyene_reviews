@@ -154,9 +154,9 @@ export function QuestionsPageClient({
     };
 
     return (
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4 overflow-x-hidden">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as "all" | "unanswered")}>
-                <TabsList variant="line" className="w-full justify-start border-b border-border">
+                <TabsList variant="line" className="w-full min-w-0 justify-start overflow-x-auto border-b border-border">
                     <TabsTrigger value="all">All</TabsTrigger>
                     <TabsTrigger value="unanswered">Unanswered</TabsTrigger>
                 </TabsList>
@@ -171,66 +171,135 @@ export function QuestionsPageClient({
                     </p>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-lg border border-border bg-card">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="min-w-[200px]">Question</TableHead>
-                                <TableHead>Asked by</TableHead>
-                                <TableHead>Updated</TableHead>
-                                <TableHead className="text-center">Answers</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filtered.map((q) => (
-                                <TableRow key={q.id}>
-                                    <TableCell className="max-w-md align-top">
-                                        <p className="text-sm leading-snug">{q.question_text}</p>
-                                        {q.upvote_count > 0 && (
-                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                {q.upvote_count} upvote{q.upvote_count === 1 ? "" : "s"}
-                                            </p>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="text-sm text-muted-foreground">
-                                        {q.author_display_name || "—"}
-                                    </TableCell>
-                                    <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                        {q.google_update_time
-                                            ? formatDistanceToNow(new Date(q.google_update_time), {
-                                                  addSuffix: true,
-                                              })
-                                            : "—"}
-                                    </TableCell>
-                                    <TableCell className="text-center text-sm">
-                                        {q.total_answer_count}
-                                    </TableCell>
-                                    <TableCell>
-                                        {q.has_merchant_answer ? (
-                                            <Badge variant="secondary">Answered</Badge>
-                                        ) : (
-                                            <Badge variant="outline" className="border-chart-4/35 bg-chart-4/12 text-chart-4">
-                                                Needs answer
-                                            </Badge>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <Button
-                                            size="sm"
+                <>
+                    <div className="space-y-3 lg:hidden">
+                        {filtered.map((q) => (
+                            <div
+                                key={q.id}
+                                className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-sm"
+                            >
+                                <div className="flex flex-wrap items-start justify-between gap-2">
+                                    {q.has_merchant_answer ? (
+                                        <Badge variant="secondary">Answered</Badge>
+                                    ) : (
+                                        <Badge
                                             variant="outline"
-                                            onClick={() => openAnswer(q.id)}
-                                            disabled={isDemo && q.has_merchant_answer}
+                                            className="border-chart-4/35 bg-chart-4/12 text-chart-4"
                                         >
-                                            {q.has_merchant_answer && !isDemo ? "Update answer" : "Answer"}
-                                        </Button>
-                                    </TableCell>
+                                            Needs answer
+                                        </Badge>
+                                    )}
+                                    {q.upvote_count > 0 ? (
+                                        <span className="text-xs text-muted-foreground">
+                                            {q.upvote_count} upvote{q.upvote_count === 1 ? "" : "s"}
+                                        </span>
+                                    ) : null}
+                                </div>
+                                <p className="mt-2 break-words text-sm leading-snug">{q.question_text}</p>
+                                <dl className="mt-3 grid grid-cols-2 gap-2 border-t border-border pt-3 text-xs">
+                                    <div>
+                                        <dt className="font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Asked by
+                                        </dt>
+                                        <dd className="mt-0.5 text-foreground">
+                                            {q.author_display_name || "—"}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Updated
+                                        </dt>
+                                        <dd className="mt-0.5 text-muted-foreground">
+                                            {q.google_update_time
+                                                ? formatDistanceToNow(new Date(q.google_update_time), {
+                                                      addSuffix: true,
+                                                  })
+                                                : "—"}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt className="font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Answers
+                                        </dt>
+                                        <dd className="mt-0.5">{q.total_answer_count}</dd>
+                                    </div>
+                                </dl>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="mt-3 w-full"
+                                    onClick={() => openAnswer(q.id)}
+                                    disabled={isDemo && q.has_merchant_answer}
+                                >
+                                    {q.has_merchant_answer && !isDemo ? "Update answer" : "Answer"}
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="hidden overflow-x-auto rounded-lg border border-border bg-card lg:block">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="min-w-[200px]">Question</TableHead>
+                                    <TableHead>Asked by</TableHead>
+                                    <TableHead>Updated</TableHead>
+                                    <TableHead className="text-center">Answers</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                            </TableHeader>
+                            <TableBody>
+                                {filtered.map((q) => (
+                                    <TableRow key={q.id}>
+                                        <TableCell className="max-w-md align-top">
+                                            <p className="text-sm leading-snug">{q.question_text}</p>
+                                            {q.upvote_count > 0 && (
+                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                    {q.upvote_count} upvote{q.upvote_count === 1 ? "" : "s"}
+                                                </p>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">
+                                            {q.author_display_name || "—"}
+                                        </TableCell>
+                                        <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                                            {q.google_update_time
+                                                ? formatDistanceToNow(new Date(q.google_update_time), {
+                                                      addSuffix: true,
+                                                  })
+                                                : "—"}
+                                        </TableCell>
+                                        <TableCell className="text-center text-sm">
+                                            {q.total_answer_count}
+                                        </TableCell>
+                                        <TableCell>
+                                            {q.has_merchant_answer ? (
+                                                <Badge variant="secondary">Answered</Badge>
+                                            ) : (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="border-chart-4/35 bg-chart-4/12 text-chart-4"
+                                                >
+                                                    Needs answer
+                                                </Badge>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => openAnswer(q.id)}
+                                                disabled={isDemo && q.has_merchant_answer}
+                                            >
+                                                {q.has_merchant_answer && !isDemo ? "Update answer" : "Answer"}
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </>
             )}
 
             {isDemo && (

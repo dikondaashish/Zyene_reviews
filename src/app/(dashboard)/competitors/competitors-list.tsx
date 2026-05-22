@@ -443,9 +443,9 @@ export function CompetitorsList({
     );
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div className="flex w-full min-w-0 items-stretch gap-1 rounded-lg border bg-muted/30 p-1 lg:w-fit lg:items-center">
+        <div className="min-w-0 space-y-6 overflow-x-hidden sm:space-y-8">
+            <div className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex w-full min-w-0 items-stretch gap-1 rounded-lg border bg-muted/30 p-1 sm:max-w-md lg:w-fit lg:max-w-none lg:items-center">
                     {rangeOptions.map((opt) => {
                         const active = optimisticRange === opt.value;
                         return (
@@ -461,12 +461,13 @@ export function CompetitorsList({
                         );
                     })}
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
                     {competitors.length > 0 ? (
                         <Button
                             variant="outline"
                             size="sm"
                             disabled={syncWatchLoading}
+                            className="w-full sm:w-auto"
                             onClick={() => void handleSyncCompetitorWatch()}
                         >
                             {syncWatchLoading ? (
@@ -478,21 +479,24 @@ export function CompetitorsList({
                             <span className="hidden md:inline">Sync from Google</span>
                         </Button>
                     ) : null}
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
                         <a
                             href={`/api/competitors/export?range=${optimisticRange}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="flex w-full items-center justify-center"
                         >
                             <Download className="h-4 w-4 md:mr-2" />
                             <span className="md:hidden">CSV</span>
                             <span className="hidden md:inline">Export CSV</span>
                         </a>
                     </Button>
-                    <AddCompetitorDialog
-                        businessId={businessId}
-                        onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
-                    />
+                    <div className="col-span-2 w-full sm:col-span-1 sm:w-auto [&_button]:w-full sm:[&_button]:w-auto">
+                        <AddCompetitorDialog
+                            businessId={businessId}
+                            onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -523,9 +527,9 @@ export function CompetitorsList({
                         {activeOwnSearchKeywords.slice(0, 12).map((k) => (
                             <li
                                 key={`${k.monthStart}-${k.keyword}`}
-                                className="flex items-center justify-between gap-2 rounded-md border bg-muted/20 px-3 py-2 text-sm"
+                                className="flex min-w-0 flex-col gap-1 rounded-md border bg-muted/20 px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-2"
                             >
-                                <span className="truncate font-medium" title={k.keyword}>
+                                <span className="break-words font-medium" title={k.keyword}>
                                     {k.keyword}
                                 </span>
                                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
@@ -543,9 +547,9 @@ export function CompetitorsList({
             </Card>
             )}
 
-            <Card className="border-border bg-canvas-elevated text-foreground">
-                <CardHeader className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:space-y-0">
-                    <div className="space-y-1.5">
+            <Card className="min-w-0 border-border bg-canvas-elevated text-foreground">
+                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
+                    <div className="min-w-0 space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
                             <Sparkles className="h-5 w-5 text-chart-4" />
                             AI market positioning brief
@@ -559,7 +563,7 @@ export function CompetitorsList({
                             type="button"
                             variant="secondary"
                             size="sm"
-                            className="shrink-0"
+                            className="w-full shrink-0 sm:w-auto"
                             disabled={briefGenLoading}
                             onClick={() => void handleGenerateMarketBrief()}
                         >
@@ -665,8 +669,8 @@ export function CompetitorsList({
                                     </span>
                                 ) : null}
                             </div>
-                            <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-3 lg:grid-cols-5">
-                                <div className="rounded border p-2">
+                            <div className="grid grid-cols-1 gap-2 text-sm min-[380px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                                <div className="min-w-0 rounded border p-2">
                                     <p className="text-muted-foreground text-xs">Scanned</p>
                                     <p className="font-semibold">{latestRun.scanned}</p>
                                 </div>
@@ -720,9 +724,9 @@ export function CompetitorsList({
                     <CardContent>
                         <ul className="space-y-2">
                             {alertEvents.slice(0, 15).map((ev) => (
-                                <li key={ev.id} className="flex flex-col gap-0.5 rounded-lg border p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-                                    <span className="font-medium">{ev.title}</span>
-                                    <span className="text-xs text-muted-foreground">
+                                <li key={ev.id} className="flex min-w-0 flex-col gap-1 rounded-lg border p-3 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                                    <span className="break-words font-medium">{ev.title}</span>
+                                    <span className="shrink-0 text-xs text-muted-foreground sm:text-right">
                                         <TimeAgo date={ev.created_at} />
                                     </span>
                                 </li>
@@ -756,7 +760,7 @@ export function CompetitorsList({
                             onSuccess={(newCompetitor) => setCompetitors([newCompetitor, ...competitors])}
                         />
 
-                        <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                        <div className="mt-10 grid grid-cols-2 gap-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground min-[400px]:grid-cols-4 min-[400px]:gap-4">
                             <div className="flex flex-col items-center gap-2">
                                 <div className="p-2 bg-primary/10 rounded-lg text-primary"><Star className="h-4 w-4" /></div>
                                 Rating Tracking
@@ -796,8 +800,8 @@ export function CompetitorsList({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                                <div className="rounded-lg border p-3">
+                            <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 lg:grid-cols-4">
+                                <div className="min-w-0 rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">Your rank (by period rating)</p>
                                     <p className="text-xl font-semibold">
                                         {activeBenchmarkRange.rank ? `#${activeBenchmarkRange.rank}` : "—"}
@@ -807,7 +811,7 @@ export function CompetitorsList({
                                         </span>
                                     </p>
                                 </div>
-                                <div className="rounded-lg border p-3">
+                                <div className="min-w-0 rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">Your avg rating ({activeBenchmarkRange.label})</p>
                                     <p className="text-xl font-semibold">
                                         {activeOwnBusinessInRange.avgRating !== null
@@ -818,7 +822,7 @@ export function CompetitorsList({
                                         {activeOwnBusinessInRange.reviewCount} reviews in period
                                     </p>
                                 </div>
-                                <div className="rounded-lg border p-3">
+                                <div className="min-w-0 rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">You vs market end (rating)</p>
                                     <p className="text-xl font-semibold">
                                         {activeBenchmarkRange.yourAvgVsMarketEnd === null
@@ -833,7 +837,7 @@ export function CompetitorsList({
                                         )}
                                     </p>
                                 </div>
-                                <div className="rounded-lg border p-3">
+                                <div className="min-w-0 rounded-lg border p-3">
                                     <p className="text-xs text-muted-foreground">Avg competitor review gain</p>
                                     <p className="text-xl font-semibold">
                                         {activeBenchmarkRange.marketAvgReviewGain === null
@@ -858,7 +862,7 @@ export function CompetitorsList({
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4 pt-0">
-                            <div className="lg:hidden space-y-3">
+                            <div className="space-y-3 lg:hidden">
                                 {competitors.map((competitor) => {
                                     const syncing = isSyncing(competitor);
                                     const updatedAt = competitor.updated_at ? (
@@ -882,9 +886,9 @@ export function CompetitorsList({
                                     return (
                                         <div
                                             key={`card-${competitor.id}`}
-                                            className="rounded-lg border bg-card p-4 shadow-sm"
+                                            className="min-w-0 rounded-lg border bg-card p-3 shadow-sm sm:p-4"
                                         >
-                                            <div className="flex items-start justify-between gap-3">
+                                            <div className="flex min-w-0 items-start gap-3">
                                                 <div className="min-w-0 flex-1 space-y-2">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         <p className="font-semibold leading-snug break-words">
@@ -911,7 +915,7 @@ export function CompetitorsList({
                                                     size="sm"
                                                     disabled={isDeleting === competitor.id}
                                                     onClick={() => setDeleteConfirm(competitor.id)}
-                                                    className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                                    className="mt-0.5 shrink-0 self-start text-destructive hover:bg-destructive/10 hover:text-destructive"
                                                     aria-label={`Remove ${competitor.name}`}
                                                 >
                                                     {isDeleting === competitor.id ? (
@@ -1161,14 +1165,14 @@ export function CompetitorsList({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 lg:grid-cols-3">
                                 {movementCards.map((m) => {
                                     const hasData = m.hasBaseline && m.ratingDelta !== null && m.reviewsDelta !== null;
                                     const ratingUp = (m.ratingDelta ?? 0) > 0;
                                     const reviewsUp = (m.reviewsDelta ?? 0) > 0;
                                     return (
-                                        <div key={m.competitorId} className="rounded-lg border p-3 bg-card">
-                                            <p className="font-semibold text-sm mb-2 truncate">{m.name}</p>
+                                        <div key={m.competitorId} className="min-w-0 rounded-lg border bg-card p-3">
+                                            <p className="mb-2 break-words text-sm font-semibold">{m.name}</p>
                                             {!hasData ? (
                                                 <p className="text-xs text-muted-foreground">
                                                     Need at least two snapshots in this range to compute movement.
@@ -1215,10 +1219,10 @@ export function CompetitorsList({
                                         .map(({ competitor, insight }) => {
                                             if (!insight) return null;
                                             return (
-                                                <div key={insight.id} className="rounded-lg border p-4 bg-card">
-                                                    <div className="flex items-center justify-between gap-2">
-                                                        <p className="font-semibold text-sm">{competitor.name}</p>
-                                                        <Badge variant={priorityBadgeVariant(insight.priority)}>
+                                                <div key={insight.id} className="min-w-0 rounded-lg border bg-card p-4">
+                                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                                        <p className="break-words text-sm font-semibold">{competitor.name}</p>
+                                                        <Badge variant={priorityBadgeVariant(insight.priority)} className="w-fit shrink-0">
                                                             {String(insight.priority || "low").toUpperCase()}
                                                         </Badge>
                                                     </div>
@@ -1293,9 +1297,9 @@ export function CompetitorsList({
                                         const competitorName =
                                             competitors.find((c) => c.id === event.competitor_id)?.name || "Competitor";
                                         return (
-                                            <div key={event.id} className="rounded-lg border p-3">
-                                                <div className="flex items-start justify-between gap-2">
-                                                    <p className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
+                                            <div key={event.id} className="min-w-0 rounded-lg border p-3">
+                                                <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                                                    <p className="min-w-0 flex-1 break-words text-sm font-medium leading-snug">
                                                         {event.title || event.event_type}
                                                     </p>
                                                     <span className="shrink-0 text-xs text-muted-foreground">
@@ -1334,11 +1338,12 @@ export function CompetitorsList({
                                         <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
-                                    <div className="h-75 w-full min-h-[220px]">
+                                    <div className="min-w-0 overflow-x-auto -mx-1 px-1 sm:mx-0 sm:overflow-visible sm:px-0">
+                                        <div className="h-[220px] w-full min-w-[260px] sm:min-w-0">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart
                                                 data={chartData}
-                                                margin={{ top: 12, right: 12, left: 0, bottom: 28 }}
+                                                margin={{ top: 12, right: 8, left: -8, bottom: 36 }}
                                             >
                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                                                 <XAxis
@@ -1346,14 +1351,16 @@ export function CompetitorsList({
                                                     axisLine={false}
                                                     tickLine={false}
                                                     interval={0}
-                                                    tick={{ fontSize: 11 }}
-                                                    height={40}
+                                                    tick={{ fontSize: 10 }}
+                                                    height={48}
                                                 />
                                                 <YAxis
                                                     domain={[0, 5]}
                                                     ticks={[1, 2, 3, 4, 5]}
                                                     axisLine={false}
                                                     tickLine={false}
+                                                    width={28}
+                                                    tick={{ fontSize: 10 }}
                                                 />
                                                 <Tooltip
                                                     cursor={{ fill: "transparent" }}
@@ -1399,6 +1406,7 @@ export function CompetitorsList({
                                                 </Bar>
                                             </BarChart>
                                         </ResponsiveContainer>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -1418,11 +1426,12 @@ export function CompetitorsList({
                                         <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
                                         Competitors
                                     </p>
-                                    <div className="h-75 w-full min-h-[220px]">
+                                    <div className="min-w-0 overflow-x-auto -mx-1 px-1 sm:mx-0 sm:overflow-visible sm:px-0">
+                                        <div className="h-[220px] w-full min-w-[260px] sm:min-w-0">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart
                                                 data={chartData}
-                                                margin={{ top: 12, right: 12, left: 0, bottom: 28 }}
+                                                margin={{ top: 12, right: 8, left: -8, bottom: 36 }}
                                             >
                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                                                 <XAxis
@@ -1430,10 +1439,10 @@ export function CompetitorsList({
                                                     axisLine={false}
                                                     tickLine={false}
                                                     interval={0}
-                                                    tick={{ fontSize: 11 }}
-                                                    height={40}
+                                                    tick={{ fontSize: 10 }}
+                                                    height={48}
                                                 />
-                                                <YAxis axisLine={false} tickLine={false} />
+                                                <YAxis axisLine={false} tickLine={false} width={36} tick={{ fontSize: 10 }} />
                                                 <Tooltip
                                                     cursor={{ fill: "transparent" }}
                                                     content={({ active, payload }) => {
@@ -1479,6 +1488,7 @@ export function CompetitorsList({
                                                 </Bar>
                                             </BarChart>
                                         </ResponsiveContainer>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -1496,10 +1506,10 @@ export function CompetitorsList({
                             Are you sure you want to remove {competitors.find(c => c.id === deleteConfirm)?.name}? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <div className="flex gap-3 justify-end">
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
+                        <AlertDialogCancel className="w-full sm:w-auto">Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            className="bg-destructive hover:bg-destructive/90"
+                            className="w-full bg-destructive hover:bg-destructive/90 sm:w-auto"
                             disabled={isDeleting === deleteConfirm}
                             onClick={() => handleDelete(deleteConfirm!)}
                         >

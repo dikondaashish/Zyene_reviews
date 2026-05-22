@@ -93,7 +93,7 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-3 bg-canvas p-3 sm:p-4 lg:gap-4 lg:p-6 min-h-[calc(100vh-4rem)] max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <main className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden bg-canvas p-3 sm:p-4 min-h-[calc(100vh-4rem)] max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:gap-4 lg:p-6 lg:overflow-x-visible lg:pb-6">
                 {children}
             </main>
             <footer className="mt-4 flex flex-col gap-3 border-t border-[rgb(229,231,235)] bg-[rgb(247,245,239)] px-3 py-4 text-[11.5px] text-[rgb(138,143,134)] dark:border-white/10 dark:bg-[rgb(32,21,21)] dark:text-[rgb(197,192,177)] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">

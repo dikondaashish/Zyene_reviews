@@ -144,7 +144,7 @@ function CustomerActionsDropdown({
     setOptedOut: (customer: Customer, value: boolean) => void;
 }) {
     return (
-        <div className="text-right" onClick={(e) => e.stopPropagation()}>
+        <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
@@ -520,7 +520,7 @@ export function CustomerTable({
     const columnCount = columns.length;
 
     return (
-        <div className="w-full">
+        <div className="min-w-0 w-full">
             <div className="space-y-3 lg:hidden">
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => {
@@ -538,38 +538,29 @@ export function CustomerTable({
                                         router.push(`/customers/${customer.id}`);
                                     }
                                 }}
-                                className="cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/20"
+                                className="cursor-pointer rounded-xl border border-border bg-card p-3 shadow-sm transition-colors hover:bg-muted/20 sm:p-4"
                             >
-                                <div className="flex items-start gap-3">
-                                    <div onClick={(e) => e.stopPropagation()} className="pt-0.5">
+                                <div className="flex min-w-0 items-start gap-3">
+                                    <div onClick={(e) => e.stopPropagation()} className="shrink-0 pt-0.5">
                                         <Checkbox
                                             checked={row.getIsSelected()}
                                             onCheckedChange={(value) => row.toggleSelected(!!value)}
                                             aria-label="Select row"
                                         />
                                     </div>
-                                    <div className="min-w-0 flex-1 space-y-2">
-                                        <div className="flex items-start justify-between gap-2">
-                                            <div className="min-w-0">
-                                                <p className="font-semibold leading-snug break-words text-foreground">
-                                                    {display || "Unnamed Customer"}
-                                                </p>
-                                                {customer.is_opted_out ? (
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="mt-1 h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-chart-4"
-                                                    >
-                                                        Opted out
-                                                    </Badge>
-                                                ) : null}
-                                            </div>
-                                            <CustomerActionsDropdown
-                                                customer={customer}
-                                                onEditName={() => setEditingNameId(customer.id)}
-                                                onSendRequest={() => onSendRequest?.(customer)}
-                                                onDelete={() => setDeleteTarget(customer)}
-                                                setOptedOut={setOptedOut}
-                                            />
+                                    <div className="min-w-0 flex-1 space-y-2.5">
+                                        <div className="min-w-0 space-y-1">
+                                            <p className="break-words text-[15px] font-semibold leading-snug text-foreground">
+                                                {display || "Unnamed Customer"}
+                                            </p>
+                                            {customer.is_opted_out ? (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-chart-4"
+                                                >
+                                                    Opted out
+                                                </Badge>
+                                            ) : null}
                                         </div>
                                         <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                             {customer.email ? (
@@ -585,14 +576,13 @@ export function CustomerTable({
                                                 </span>
                                             ) : null}
                                         </div>
-                                        <div className="min-w-0 max-w-full [&_button]:max-w-none">
                                         <CustomerTagsCell
                                             customer={customer}
                                             onSaveTags={saveTags}
                                             tagPillClass={tagPillClass}
+                                            className="w-full max-w-full"
                                         />
-                                        </div>
-                                        <dl className="grid grid-cols-2 gap-2 border-t border-border pt-2 text-xs">
+                                        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-2.5 text-xs">
                                             <div>
                                                 <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                                                     Requests
@@ -635,6 +625,24 @@ export function CustomerTable({
                                                 </>
                                             ) : null}
                                         </dl>
+                                        <div
+                                            className="flex items-center justify-between gap-2 border-t border-border pt-2.5"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <Link
+                                                href={`/customers/${customer.id}`}
+                                                className="text-xs font-medium text-primary hover:underline"
+                                            >
+                                                View details
+                                            </Link>
+                                            <CustomerActionsDropdown
+                                                customer={customer}
+                                                onEditName={() => setEditingNameId(customer.id)}
+                                                onSendRequest={() => onSendRequest?.(customer)}
+                                                onDelete={() => setDeleteTarget(customer)}
+                                                setOptedOut={setOptedOut}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -646,7 +654,7 @@ export function CustomerTable({
                     </div>
                 )}
             </div>
-            <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm lg:block">
+            <div className="hidden overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm lg:block">
                 <Table>
                     <TableHeader className="bg-muted/40">
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -706,17 +714,17 @@ export function CustomerTable({
                 </Table>
             </div>
             <div className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-center text-xs text-muted-foreground sm:text-left">
+                <div className="text-left text-xs text-muted-foreground">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
-                <div className="flex items-center justify-center gap-2 sm:justify-end">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
-                        className="h-8 rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted"
+                        className="h-9 w-full rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted sm:h-8 sm:w-auto"
                     >
                         Previous
                     </Button>
@@ -725,7 +733,7 @@ export function CustomerTable({
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
-                        className="h-8 rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted"
+                        className="h-9 w-full rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted sm:h-8 sm:w-auto"
                     >
                         Next
                     </Button>
@@ -768,10 +776,12 @@ function CustomerTagsCell({
     customer,
     onSaveTags,
     tagPillClass,
+    className,
 }: {
     customer: Customer;
     onSaveTags: (customer: Customer, tags: string[]) => void | Promise<void>;
     tagPillClass: (tag: string) => string;
+    className?: string;
 }) {
     const [open, setOpen] = React.useState(false);
     const [input, setInput] = React.useState("");
@@ -800,7 +810,10 @@ function CustomerTagsCell({
             <PopoverTrigger asChild>
                 <button
                     type="button"
-                    className="flex max-w-[220px] flex-wrap items-center gap-1 rounded-md border border-transparent p-1 text-left transition-colors hover:border-border hover:bg-muted/40"
+                    className={cn(
+                        "flex w-full max-w-full flex-wrap items-center gap-1 rounded-md border border-transparent p-1 text-left transition-colors hover:border-border hover:bg-muted/40 sm:max-w-[220px]",
+                        className
+                    )}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {tags.length > 0 ? (

@@ -44,7 +44,7 @@ export default async function CustomersPage() {
     const initialCustomers = await enrichCustomersWithReviewLinkage(supabase, businessId, rawCustomers || []);
 
     return (
-        <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-5 sm:py-6 lg:px-6">
+        <div className="mx-auto min-w-0 max-w-[1200px] overflow-x-hidden px-4 py-4 sm:px-5 sm:py-6 lg:px-6">
             <CustomerManagement businessId={businessId as string} initialCustomers={initialCustomers} />
         </div>
     );

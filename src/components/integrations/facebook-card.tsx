@@ -222,7 +222,7 @@ export function FacebookIntegrationCard({
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* Stats grid */}
-                        <div className="grid grid-cols-3 gap-3 text-center">
+                        <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
                             <div className="rounded-lg bg-card p-2 border border-border">
                                 <div className="flex items-center justify-center gap-1 text-sm font-semibold">
                                     <Star className="h-3.5 w-3.5 text-chart-4" />

@@ -385,9 +385,9 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
     const databaseEmpty = listEmpty && customers.length === 0;
 
     return (
-        <div className="animate-in fade-in duration-500">
-            <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-                <div className="min-w-0 space-y-1">
+        <div className="min-w-0 animate-in fade-in overflow-x-hidden duration-500">
+            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-start sm:gap-5 lg:items-end">
+                <div className="min-w-0 flex-1 space-y-1">
                     <div className="mb-1 flex items-center gap-2">
                         <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
                             <Users className="h-4 w-4 text-primary" />
@@ -399,11 +399,11 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     </p>
                 </div>
 
-                <div className="flex w-full flex-wrap gap-2 lg:w-auto lg:justify-end">
+                <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:w-auto sm:justify-end">
                     <Button
                         variant="outline"
                         onClick={() => setIsImportModalOpen(true)}
-                        className="h-9 min-w-0 flex-1 rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:flex-initial sm:px-4"
+                        className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                     >
                         <Upload className="h-4 w-4 shrink-0 md:mr-2" />
                         <span className="md:hidden">Import</span>
@@ -413,7 +413,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         variant="outline"
                         onClick={() => void handleExportCsv()}
                         disabled={isExporting}
-                        className="h-9 min-w-0 flex-1 rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:flex-initial sm:px-4"
+                        className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                     >
                         <Download className="h-4 w-4 shrink-0 md:mr-2" />
                         <span className="md:hidden">Export</span>
@@ -421,7 +421,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     </Button>
                     <Button
                         onClick={() => setIsAddModalOpen(true)}
-                        className="h-9 min-w-0 flex-1 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 sm:flex-initial sm:px-4"
+                        className="h-9 w-full rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                     >
                         <UserPlus className="h-4 w-4 shrink-0 md:mr-2" />
                         <span className="md:hidden">Add</span>
@@ -430,12 +430,12 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 </div>
             </div>
 
-            <div className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
-                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
+            <div className="mb-6 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 xl:grid-cols-4">
+                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
                         <Users className="h-4 w-4 text-primary" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Total Customers
                         </p>
@@ -444,11 +444,11 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         </h3>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-2/10">
+                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-2/10">
                         <Percent className="h-4 w-4 text-chart-2" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Review conversion
                         </p>
@@ -458,11 +458,11 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-4/10">
+                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/10">
                         <MessageCircleOff className="h-4 w-4 text-chart-4" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Never reviewed
                         </p>
@@ -472,11 +472,11 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                         <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-4/15">
+                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
                         <BarChart3 className="h-4 w-4 text-chart-4" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Avg requests sent
                         </p>
@@ -488,7 +488,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 </div>
             </div>
 
-            <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-border/60 bg-muted/15 p-4 shadow-sm sm:p-5">
+            <div className="mb-6 flex min-w-0 flex-col gap-4 rounded-2xl border border-border/60 bg-muted/15 p-3 shadow-sm sm:p-5">
                 <CustomerFilters
                     searchQuery={search}
                     allTags={allTagsForFilter}

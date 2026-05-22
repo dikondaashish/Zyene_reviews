@@ -226,39 +226,43 @@ export function ReviewsPageClient({
     }, [businessId]);
 
     return (
-        <>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <div className="min-w-0">
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 flex-1">
+                    <h1 className="flex flex-wrap items-center gap-2 text-xl font-bold tracking-tight sm:gap-3 sm:text-2xl">
                         Reviews
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                                {count || 0}
-                            </span>
-                            {isDemo && (
-                                <Badge
-                                    variant="outline"
-                                    className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1 px-2.5 py-0.5 font-normal tracking-tight"
-                                >
-                                    <Eye className="w-3 h-3" />
-                                    Interactive Demo
-                                </Badge>
-                            )}
-                        </div>
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
+                            {count || 0}
+                        </span>
+                        {isDemo && (
+                            <Badge
+                                variant="outline"
+                                className="flex items-center gap-1 border-primary/30 bg-primary/10 px-2.5 py-0.5 font-normal tracking-tight text-primary"
+                            >
+                                <Eye className="h-3 w-3" />
+                                Interactive Demo
+                            </Badge>
+                        )}
                     </h1>
-                    <p className="text-muted-foreground text-sm mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                         Manage and respond to your customer reviews.
                     </p>
                 </div>
-                <div className="flex flex-col items-stretch gap-3 sm:items-end">
-                    <div className="flex gap-2 flex-wrap justify-end">
-                        <Button variant="outline" asChild>
-                            <a href={`/api/reviews/export?type=${type}`}>
-                                <Download className="w-4 h-4 mr-2" />
-                                Export CSV
+                <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:items-end">
+                    <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
+                        <Button variant="outline" className="w-full sm:w-auto" asChild>
+                            <a
+                                href={`/api/reviews/export?type=${type}`}
+                                className="flex w-full items-center justify-center"
+                            >
+                                <Download className="mr-2 h-4 w-4" />
+                                <span className="sm:hidden">Export</span>
+                                <span className="hidden sm:inline">Export CSV</span>
                             </a>
                         </Button>
-                        <SyncButton businessId={businessId} />
+                        <div className="w-full sm:w-auto [&_button]:w-full sm:[&_button]:w-auto">
+                            <SyncButton businessId={businessId} />
+                        </div>
                     </div>
                     {isGoogleConnected && (
                         <AutoReplyToolbar
@@ -272,22 +276,23 @@ export function ReviewsPageClient({
             </div>
 
             {/* Tab Switcher */}
-            <div className="flex items-center gap-3">
-                <div className="bg-muted p-1 rounded-lg inline-flex">
-                    <button onClick={() => handleTypeChange("public")}>
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${type === "public" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-                            Public Reviews ({publicCount})
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <div className="inline-flex w-full min-w-0 rounded-lg bg-muted p-1 sm:w-auto">
+                    <button type="button" className="min-w-0 flex-1" onClick={() => handleTypeChange("public")}>
+                        <div className={`cursor-pointer rounded-md px-3 py-2 text-center text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${type === "public" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                            Public ({publicCount})
                         </div>
                     </button>
-                    <button onClick={() => handleTypeChange("private")}>
-                        <div className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${type === "private" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-                            Private Feedback ({privateCount})
-                            <Lock className="w-3 h-3" />
+                    <button type="button" className="min-w-0 flex-1" onClick={() => handleTypeChange("private")}>
+                        <div className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-1.5 sm:text-sm ${type === "private" ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                            Private ({privateCount})
+                            <Lock className="h-3 w-3 shrink-0" />
                         </div>
                     </button>
                 </div>
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
                 {(loading || isImportingGoogleReviews) && (
-                    <Loader2 className="w-4 h-4 ml-3 animate-spin text-muted-foreground" />
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 )}
                 {isImportingGoogleReviews && (
                     <span className="text-xs text-muted-foreground">Importing from Google…</span>
@@ -296,6 +301,7 @@ export function ReviewsPageClient({
                     <Button
                         size="sm"
                         variant="outline"
+                        className="w-full sm:w-auto"
                         onClick={handleBackfillAi}
                         disabled={isBackfillingAi}
                     >
@@ -309,6 +315,7 @@ export function ReviewsPageClient({
                         )}
                     </Button>
                 )}
+                </div>
             </div>
 
             {/* Content */}
@@ -373,21 +380,23 @@ export function ReviewsPageClient({
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-4 pb-8">
+                <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 pb-8 sm:flex sm:justify-center sm:gap-3">
                     <Button
                         variant="outline"
                         size="sm"
+                        className="h-9 w-full sm:h-8 sm:w-auto"
                         disabled={page <= 1 || loading}
                         onClick={() => handlePageChange(page - 1)}
                     >
                         Previous
                     </Button>
-                    <div className="text-sm flex items-center text-muted-foreground">
-                        Page {page} of {totalPages}
+                    <div className="text-center text-sm text-muted-foreground tabular-nums">
+                        {page} / {totalPages}
                     </div>
                     <Button
                         variant="outline"
                         size="sm"
+                        className="h-9 w-full sm:h-8 sm:w-auto"
                         disabled={page >= totalPages || loading}
                         onClick={() => handlePageChange(page + 1)}
                     >
@@ -402,6 +411,6 @@ export function ReviewsPageClient({
                 title="Upgrade for AI review analysis"
                 description="AI review features are available on active Starter, Professional, and Enterprise plans."
             />
-        </>
+        </div>
     );
 }

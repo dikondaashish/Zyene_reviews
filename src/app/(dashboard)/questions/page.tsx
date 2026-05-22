@@ -74,12 +74,12 @@ export default async function QuestionsPage() {
     }
 
     return (
-        <div className="flex w-full flex-col gap-6">
+        <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden p-4 lg:p-6">
             {isDemo && <DemoModeBanner className="mb-0" />}
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Google Q&A</h1>
+                <div className="min-w-0">
+                    <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Google Q&A</h1>
                     <p className="mt-1 text-sm text-muted-foreground">
                         Questions from your Google Business Profile. Answers appear publicly on Search and Maps.
                     </p>
