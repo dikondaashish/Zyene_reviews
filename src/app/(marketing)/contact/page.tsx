@@ -99,13 +99,21 @@ export default function ContactPage() {
                             Ready to get started?
                         </h2>
                         <p className="text-muted-foreground mb-6 text-sm">
-                            Try Zyene Reviews free for 7 days. No credit card required.
+                            Try Zyene Reviews free for 7 days. Cancel before the trial ends — no charge.
                         </p>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="rounded-md px-8 py-6 font-medium">
-                                Start Free Trial
-                            </Button>
-                        </Link>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                                <Button className="rounded-md px-8 py-6 font-medium">
+                                    Start Free Trial
+                                </Button>
+                            </Link>
+                            <Link
+                                href="/#pricing"
+                                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                View pricing →
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

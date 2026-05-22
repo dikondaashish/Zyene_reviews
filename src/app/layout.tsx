@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/lib/language-context";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import Script from "next/script";
 import "./globals.css";
 
@@ -142,6 +143,8 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <QueryProvider>
+              <OrganizationJsonLd />
+              <WebSiteJsonLd />
               {children}
               <Toaster />
               <CookieBanner />

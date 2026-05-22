@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { Shield, Database, Lock, Clock } from "lucide-react";
 
-export const metadata = {
-    title: "Data Retention Policy - Zyene Reviews",
-    description: "Our policy regarding data storage, retention limits, and deletion protocols.",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Data Retention Policy",
+    description:
+        "Zyene Reviews data retention policy. How long we store your data, when it is deleted, and how to request deletion. GDPR and CCPA compliant.",
+    alternates: { canonical: "https://zyenereviews.com/data-retention" },
+    openGraph: {
+        title: "Data Retention Policy — Zyene Reviews",
+        description: "Data storage timelines, deletion schedules, and your rights under GDPR and CCPA.",
+        url: "https://zyenereviews.com/data-retention",
+    },
 };
 
 export default function DataRetentionPage() {

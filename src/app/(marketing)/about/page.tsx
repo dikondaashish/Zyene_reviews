@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Building2, Mail, Shield, Users } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Building2, Mail, Shield, Users } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "About Zyene Reviews",
@@ -108,28 +109,48 @@ export default function AboutPage() {
                             Zyene Reviews is a SaaS platform that connects to your Google Business Profile through
                             Google&apos;s official OAuth authorization. Once connected, our platform helps you:
                         </p>
-                        <ul className="space-y-2 text-muted-foreground">
+                        <ul className="space-y-2 text-muted-foreground mb-8">
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Monitor and respond to customer reviews from a single dashboard
+                                Monitor and respond to customer reviews from Google, Facebook, and Yelp in one dashboard
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Generate AI-powered reply suggestions to save time
+                                Generate AI-powered reply suggestions and auto-respond to reviews hands-free
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Send review requests to customers via email, SMS, or shareable links
+                                Send review requests to customers via email, SMS, or shareable links — with the Negative Feedback Shield routing low ratings to private resolution
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Track sentiment trends and receive real-time alerts on new reviews
+                                Track competitors, monitor your Google Business Profile performance, and optimize for local SEO
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Manage multiple business locations from one account
+                                Manage multiple business locations from one account — starting at $29.99/mo
                             </li>
                         </ul>
+                        <div className="flex flex-wrap gap-4">
+                            <Link
+                                href="/#features"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:brightness-90 transition-colors"
+                            >
+                                See all features <ArrowRight className="h-4 w-4" />
+                            </Link>
+                            <Link
+                                href="/#pricing"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                View pricing <ArrowRight className="h-4 w-4" />
+                            </Link>
+                            <Link
+                                href="/docs"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                Read the docs <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </div>
                     </div>
 
                     <div className="border-t border-border pt-8 mt-8">
