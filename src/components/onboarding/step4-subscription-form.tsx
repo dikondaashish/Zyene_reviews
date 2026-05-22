@@ -359,10 +359,10 @@ export function Step4SubscriptionForm({
           disabled={busy}
           className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
         >
-          Skip for now
+          Explore free for now — upgrade anytime from Settings
         </button>
         <p className="text-[11px] text-muted-foreground/50 max-w-xs text-center leading-relaxed">
-          Free plan: View-only access. No AI replies, no review requests, no smart insights.
+          Without a plan: view-only access. AI replies, review requests, and smart insights unlock on any paid plan.
         </p>
       </div>
     </div>
