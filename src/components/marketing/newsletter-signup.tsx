@@ -3,6 +3,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
+
+function readUtmCookie() {
+    if (typeof document === "undefined") return {};
+    const match = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${UTM_COOKIE_NAME}=`));
+    if (!match) return {};
+    const parsed = deserializeUtm(decodeURIComponent(match.split("=").slice(1).join("=")));
+    return {
+        utm_source: parsed?.utm_source,
+        utm_medium: parsed?.utm_medium,
+        utm_campaign: parsed?.utm_campaign,
+    };
+}
 
 export function NewsletterSignup({
     source = "newsletter",
@@ -25,7 +40,7 @@ export function NewsletterSignup({
             const res = await fetch("/api/marketing/newsletter/subscribe", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email.trim(), source }),
+                body: JSON.stringify({ email: email.trim(), source, ...readUtmCookie() }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {

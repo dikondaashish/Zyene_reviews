@@ -49,6 +49,7 @@ export default function robots(): MetadataRoute.Robots {
                     "/case-studies",
                     "/case-studies/",
                     "/partners",
+                    "/agencies",
                 ],
                 disallow: [
                     "/api/",

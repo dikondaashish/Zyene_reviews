@@ -54,6 +54,8 @@ export default function MarketingLayout({
             "/privacy", "/terms", "/data-retention", "/security",
             "/case-studies",
             "/partners",
+            "/agencies",
+            "/newsletter",
             "/pricing", "/features", "/how-it-works", "/integrations",
             "/industries", "/compare",
             "/blog", "/resources", "/help",

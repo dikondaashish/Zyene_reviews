@@ -116,10 +116,10 @@ export function onboardingDripEmail({
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Check your usage in Settings → Billing. Need more locations? Professional supports up to 3 with independent limits per location.</p>`,
             cta: "Manage billing",
         },
-        convert_engagement_check: {
-            subject: "Need help setting up auto-replies or widgets?",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Reply to this email if you want help configuring auto-commenter, embeddable widgets, or Zapier — we'll walk you through it.</p>`,
-            cta: "Contact support",
+        convert_last_chance_offer: {
+            subject: "Last chance: lock in your plan before limits reset",
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan — keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:#16a34a;">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
+            cta: "Manage billing",
         },
     };
     const step = steps[stepKey] ?? steps.convert_benefits_recap;
@@ -148,14 +148,54 @@ export function winbackFollowUpEmail({
     };
 }
 
-export function newsletterWelcomeEmail({ email }: { email: string }): { subject: string; html: string } {
+export function newsletterWelcomeEmail({
+    email,
+    unsubscribeUrl,
+}: {
+    email: string;
+    unsubscribeUrl: string;
+}): { subject: string; html: string } {
     return {
         subject: "You're subscribed to Zyene Reviews Monthly",
         html: growthEmailLayout({
             userName: "there",
-            bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing (<strong>${email}</strong>). Once a month you'll get product updates, Google review tips, and new case studies for local business owners.</p>`,
+            bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing (<strong>${email}</strong>). Once a month you'll get product updates, Google review tips, and new case studies for local business owners.</p>
+<p style="font-size:12px;color:#a1a1aa;margin-top:24px;"><a href="${unsubscribeUrl}" style="color:#a1a1aa;">Unsubscribe</a></p>`,
             ctaLabel: "Read the blog",
             ctaUrl: "https://zyenereviews.com/blog",
+        }),
+    };
+}
+
+export function monthlyNewsletterEmail({
+    monthLabel,
+    productUpdate,
+    tipTitle,
+    tipBody,
+    caseStudyLink,
+    caseStudyTitle,
+    unsubscribeUrl,
+}: {
+    monthLabel: string;
+    productUpdate: string;
+    tipTitle: string;
+    tipBody: string;
+    caseStudyLink: string;
+    caseStudyTitle: string;
+    unsubscribeUrl: string;
+}): { subject: string; html: string } {
+    return {
+        subject: `Zyene Reviews Monthly — ${monthLabel}`,
+        html: growthEmailLayout({
+            userName: "there",
+            bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;"><strong>Product update:</strong> ${productUpdate}</p>
+<h3 style="font-size:18px;color:#18181b;margin:24px 0 8px;">${tipTitle}</h3>
+<p style="font-size:16px;line-height:1.6;color:#52525b;">${tipBody}</p>
+<h3 style="font-size:18px;color:#18181b;margin:24px 0 8px;">Case study</h3>
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${caseStudyLink}" style="color:#16a34a;">${caseStudyTitle} →</a></p>
+<p style="font-size:12px;color:#a1a1aa;margin-top:32px;"><a href="${unsubscribeUrl}" style="color:#a1a1aa;">Unsubscribe from Zyene Reviews Monthly</a></p>`,
+            ctaLabel: "Start your free trial",
+            ctaUrl: "https://zyenereviews.com/pricing",
         }),
     };
 }

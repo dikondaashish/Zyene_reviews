@@ -61,8 +61,17 @@ export async function POST(request: Request) {
         }
     }
 
+    const { data: subscriber } = await admin
+        .from("marketing_subscribers")
+        .select("id")
+        .eq("email", email)
+        .maybeSingle();
+
     try {
-        const { subject, html } = newsletterWelcomeEmail({ email });
+        const unsubscribeUrl = subscriber?.id
+            ? `https://zyenereviews.com/newsletter/unsubscribe?id=${subscriber.id}`
+            : "https://zyenereviews.com/newsletter/unsubscribe";
+        const { subject, html } = newsletterWelcomeEmail({ email, unsubscribeUrl });
         await sendEmail({ to: email, subject, html });
     } catch (err) {
         console.error("[newsletter] welcome email failed:", err);

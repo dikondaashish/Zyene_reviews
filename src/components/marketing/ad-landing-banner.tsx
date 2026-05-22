@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useMarketingSignupUrl } from "@/lib/growth/marketing-signup-url";
 import { getGoogleAdsBanner } from "@/lib/phase6/google-ads-data";
 import { getMetaAdsBanner } from "@/lib/phase6/meta-ads-data";
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
@@ -19,6 +20,7 @@ function readUtmCookie(): ReturnType<typeof deserializeUtm> {
 
 export function AdLandingBanner({ className = "" }: { className?: string }) {
     const searchParams = useSearchParams();
+    const signupUrl = useMarketingSignupUrl("/signup");
 
     const banner = useMemo(() => {
         const campaign =
@@ -46,7 +48,7 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
                     </div>
                 </div>
                 <Link
-                    href="/signup"
+                    href={signupUrl}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:brightness-90 shrink-0"
                 >
                     Start 7-day free trial <ArrowRight className="h-3.5 w-3.5" />

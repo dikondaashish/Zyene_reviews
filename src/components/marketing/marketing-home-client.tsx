@@ -27,6 +27,7 @@ import {
   LiveWidgetPreview,
   ThirdPartyTrustRow,
 } from "@/components/marketing/social-proof";
+import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
@@ -668,6 +669,16 @@ export function MarketingHomeClient() {
       <LiveWidgetPreview />
 
       <ThirdPartyTrustRow />
+
+      <section className="w-full py-16 px-4 bg-muted border-t border-border">
+        <div className="container mx-auto max-w-2xl text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Zyene Reviews Monthly</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            Product updates, Google review tips, and case studies — once a month.
+          </p>
+          <NewsletterSignup source="homepage" />
+        </div>
+      </section>
 
       {/* 7. FAQ SECTION */}
       <section className="w-full py-24 px-4 bg-muted">

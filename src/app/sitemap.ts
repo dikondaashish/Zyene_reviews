@@ -196,6 +196,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // ─────────────────────────────────────────────
     const partnerPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+        { url: `${BASE_URL}/agencies`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
     ];
 
     // ─────────────────────────────────────────────

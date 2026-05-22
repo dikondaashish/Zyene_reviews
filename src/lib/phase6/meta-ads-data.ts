@@ -18,13 +18,23 @@ export interface MetaAdsCampaign {
 export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
     {
         audience: "industry",
-        audienceLabel: "Local business owners (by industry)",
+        audienceLabel: "Local business owners (restaurants)",
         creativeHook: "From 12 reviews to 87 in 60 days",
-        creativeDetail: "Before/after review count for restaurants, dental, HVAC, and salons.",
+        creativeDetail: "Before/after review count for restaurants.",
         landingPath: "/industries/restaurants",
-        utmCampaign: "meta_industry",
+        utmCampaign: "meta_industry_restaurants",
         headline: "Real results from businesses like yours",
         subheadline: "See how local owners grew Google reviews with automated requests and AI replies.",
+    },
+    {
+        audience: "industry",
+        audienceLabel: "Local business owners (dental)",
+        creativeHook: "From 23 to 89 Google reviews in 90 days",
+        creativeDetail: "Before/after review count for dental practices.",
+        landingPath: "/industries/dental",
+        utmCampaign: "meta_industry_dental",
+        headline: "Dental practices growing reviews on autopilot",
+        subheadline: "SMS requests, private feedback routing, and AI replies — starting at $29.99/mo.",
     },
     {
         audience: "retarget_competitor",
@@ -51,5 +61,9 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
 export function getMetaAdsBanner(utmCampaign: string | null | undefined): MetaAdsCampaign | null {
     if (!utmCampaign) return null;
     const normalized = utmCampaign.toLowerCase();
-    return META_ADS_CAMPAIGNS.find((c) => c.utmCampaign === normalized) ?? null;
+    return (
+        META_ADS_CAMPAIGNS.find((c) => c.utmCampaign === normalized) ??
+        META_ADS_CAMPAIGNS.find((c) => normalized.startsWith("meta_industry")) ??
+        null
+    );
 }

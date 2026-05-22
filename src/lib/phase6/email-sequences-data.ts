@@ -11,7 +11,10 @@ export interface GrowthEmailStep {
     preview: string;
 }
 
-/** 7 emails over 7 days after signup (Day 1 welcome sent separately on signup) */
+/**
+ * Trial nurture: 5 emails on days 1, 2, 3, 5, 7 (blueprint).
+ * Immediate welcome email is sent separately on signup (Day 1: Welcome + connect Google).
+ */
 export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
     {
         key: "trial_day1_connect_google",
@@ -35,25 +38,11 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         preview: "Professional responses in your brand voice — you stay in control.",
     },
     {
-        key: "trial_day4_feedback_shield",
-        dayOffset: 4,
-        delayHours: 96,
-        subject: "Day 4: Protect your rating with the Negative Feedback Shield",
-        preview: "Route unhappy customers privately before they post publicly.",
-    },
-    {
         key: "trial_day5_competitors",
         dayOffset: 5,
         delayHours: 120,
         subject: "Day 5: See how you stack up against competitors",
         preview: "Track nearby businesses and close the review gap.",
-    },
-    {
-        key: "trial_day6_case_study",
-        dayOffset: 6,
-        delayHours: 144,
-        subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
-        preview: "Real outcomes from a practice like yours.",
     },
     {
         key: "trial_day7_upgrade",
@@ -88,11 +77,11 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
         preview: "Tips to hit your monthly limits efficiently.",
     },
     {
-        key: "convert_engagement_check",
+        key: "convert_last_chance_offer",
         dayOffset: 14,
         delayHours: 336,
-        subject: "Need help setting up auto-replies or widgets?",
-        preview: "Reply to this email — we'll help you configure it.",
+        subject: "Last chance: lock in your plan before limits reset",
+        preview: "Stay on paid — keep AI replies, competitor tracking, and review automation.",
     },
 ];
 
