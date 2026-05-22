@@ -125,7 +125,7 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
             <CardFooter className="flex flex-col gap-2 pt-0 sm:flex-row">
                 <Button asChild size="sm" className="w-full sm:flex-1">
                     <Link
-                        href="/integrations/zapier"
+                        href="/settings/integrations/zapier"
                         className="inline-flex items-center justify-center"
                     >
                         Full setup guide

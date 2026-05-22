@@ -1,15 +1,8 @@
 import { ImageResponse } from "next/og";
 import { RESOURCE_MAP } from "@/lib/phase4/resource-data";
 
-export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateImageMetadata({ params }: { params: Promise<{ guide: string }> }) {
-    const { guide } = await params;
-    const resource = RESOURCE_MAP[guide];
-    return [{ id: guide, alt: resource?.metaTitle ?? "Zyene Reviews Resource Guide" }];
-}
 
 export default async function OgImage({ params }: { params: Promise<{ guide: string }> }) {
     const { guide } = await params;

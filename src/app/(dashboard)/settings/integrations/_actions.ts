@@ -54,10 +54,10 @@ export async function disconnectGoogle(platformId: string) {
         throw new Error("Failed to disconnect");
     }
 
-    revalidatePath("/(dashboard)/integrations", "page");
+    revalidatePath("/(dashboard)/settings/integrations", "page");
     revalidatePath("/(dashboard)/reviews", "page");
-    revalidatePath("/integrations", "page");
+    revalidatePath("/settings/integrations", "page");
     revalidatePath("/reviews", "page");
 
-    redirect("/integrations");
+    redirect("/settings/integrations");
 }

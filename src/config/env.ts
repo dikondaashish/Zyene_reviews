@@ -72,7 +72,7 @@ export function getAppDashboardUrl(): string {
 }
 
 export function getAppIntegrationsUrl(): string {
-    return `${getAppBaseUrl()}/integrations`;
+    return `${getAppBaseUrl()}/settings/integrations`;
 }
 
 /**

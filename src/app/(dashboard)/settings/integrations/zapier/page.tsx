@@ -60,7 +60,7 @@ export default async function ZapierIntegrationPage() {
         <div className="flex flex-1 flex-col gap-10 p-4 sm:p-6 lg:p-8">
             <div className="space-y-4">
                 <Link
-                    href="/integrations"
+                    href="/settings/integrations"
                     className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" />

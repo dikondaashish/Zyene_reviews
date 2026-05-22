@@ -1,17 +1,8 @@
 import { ImageResponse } from "next/og";
 import { INDUSTRY_MAP } from "@/lib/phase3/industry-data";
 
-export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateImageMetadata(
-    { params }: { params: Promise<{ industry: string }> }
-) {
-    const { industry } = await params;
-    const data = INDUSTRY_MAP[industry];
-    return [{ id: "og", alt: data ? `${data.name} Review Management — Zyene Reviews` : "Industry Solutions — Zyene Reviews" }];
-}
 
 export default async function OgImage(
     { params }: { params: Promise<{ industry: string }> }

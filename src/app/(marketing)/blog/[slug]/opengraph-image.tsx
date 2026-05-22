@@ -1,15 +1,8 @@
 import { ImageResponse } from "next/og";
-import { BLOG_POST_MAP, BLOG_SLUGS, PILLAR_LABELS } from "@/lib/phase4/blog-data";
+import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/phase4/blog-data";
 
-export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateImageMetadata({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params;
-    const post = BLOG_POST_MAP[slug];
-    return [{ id: slug, alt: post?.metaTitle ?? "Zyene Reviews Blog" }];
-}
 
 export default async function OgImage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

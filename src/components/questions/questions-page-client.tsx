@@ -305,7 +305,7 @@ export function QuestionsPageClient({
             {isDemo && (
                 <p className="text-center text-xs text-muted-foreground">
                     Showing sample Q&A.{" "}
-                    <Link href="/integrations" className="text-primary underline underline-offset-2">
+                    <Link href="/settings/integrations" className="text-primary underline underline-offset-2">
                         Connect Google
                     </Link>{" "}
                     to load real questions.

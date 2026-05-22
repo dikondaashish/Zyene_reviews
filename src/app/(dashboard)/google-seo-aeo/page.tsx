@@ -96,7 +96,7 @@ export default async function GoogleSeoAeoPage() {
                             Connect Google Business Profile first to start SEO/AEO auditing.
                         </p>
                         <Button asChild className="mt-4">
-                            <Link href="/integrations">Open Integrations</Link>
+                            <Link href="/settings/integrations">Open Integrations</Link>
                         </Button>
                     </CardContent>
                 </Card>

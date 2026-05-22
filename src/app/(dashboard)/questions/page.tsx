@@ -88,7 +88,7 @@ export default async function QuestionsPage() {
                     {isGoogleConnected && <SyncButton />}
                     {isDemo && (
                         <Button asChild>
-                            <Link href="/integrations">Connect Google</Link>
+                            <Link href="/settings/integrations">Connect Google</Link>
                         </Button>
                     )}
                 </div>

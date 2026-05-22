@@ -33,7 +33,7 @@ export function GettingStartedBanner({
   if (!mounted || isDismissed) return null;
 
   const items = [
-    { label: "Connect Google Business Profile", done: googleConnected, href: "/integrations" },
+    { label: "Connect Google Business Profile", done: googleConnected, href: "/settings/integrations" },
     { label: "Add your first customer", done: customerCount > 0, href: "/customers" },
     { label: "Send your first review request", done: requestSent, href: "/requests" },
     { label: "Set up notification preferences", done: notificationsConfigured, href: "/settings/notifications" },

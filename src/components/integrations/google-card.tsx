@@ -28,7 +28,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { disconnectGoogle } from "@/app/(dashboard)/integrations/_actions";
+import { disconnectGoogle } from "@/app/(dashboard)/settings/integrations/_actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/client";
@@ -183,8 +183,8 @@ export function GoogleIntegrationCard({
             const rootDomain =
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
             const redirectTo = rootDomain.includes("localhost")
-                ? `http://${rootDomain}/api/auth/callback?next=/integrations&biz=${encodeURIComponent(businessId)}`
-                : `https://auth.${rootDomain}/api/auth/callback?next=/integrations&biz=${encodeURIComponent(businessId)}`;
+                ? `http://${rootDomain}/api/auth/callback?next=/settings/integrations&biz=${encodeURIComponent(businessId)}`
+                : `https://auth.${rootDomain}/api/auth/callback?next=/settings/integrations&biz=${encodeURIComponent(businessId)}`;
 
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",

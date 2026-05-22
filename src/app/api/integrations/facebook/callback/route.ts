@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
+import { getAppIntegrationsUrl } from "@/config/env";
 import { exchangeCodeForToken, getLongLivedToken } from "@/services/facebook/client";
 import { getPages } from "@/services/facebook/adapter";
+
+function integrationsRedirect(query: string) {
+    const base = getAppIntegrationsUrl();
+    return NextResponse.redirect(`${base}${query.startsWith("?") ? query : `?${query}`}`);
+}
 
 /**
  * GET: Facebook OAuth callback.
@@ -19,15 +25,11 @@ export async function GET(request: Request) {
     // Handle OAuth denial
     if (error) {
         console.error("[Facebook Callback] OAuth error:", error);
-        return NextResponse.redirect(
-            new URL("/integrations?fb_error=denied", request.url)
-        );
+        return integrationsRedirect("?fb_error=denied");
     }
 
     if (!code || !stateParam) {
-        return NextResponse.redirect(
-            new URL("/integrations?fb_error=missing_params", request.url)
-        );
+        return integrationsRedirect("?fb_error=missing_params");
     }
 
     // Decode state
@@ -37,9 +39,7 @@ export async function GET(request: Request) {
             Buffer.from(stateParam, "base64url").toString("utf-8")
         );
     } catch {
-        return NextResponse.redirect(
-            new URL("/integrations?fb_error=invalid_state", request.url)
-        );
+        return integrationsRedirect("?fb_error=invalid_state");
     }
 
     const rootDomain =
@@ -75,9 +75,7 @@ export async function GET(request: Request) {
             })),
         };
 
-        const response = NextResponse.redirect(
-            new URL("/integrations?fb_select_page=true", request.url)
-        );
+        const response = integrationsRedirect("?fb_select_page=true");
 
         // Set cookie with page data (encrypted in production, HttpOnly)
         response.cookies.set("fb_connect_data", JSON.stringify(fbData), {
@@ -91,8 +89,6 @@ export async function GET(request: Request) {
         return response;
     } catch (err: unknown) {
         console.error("[Facebook Callback] Token exchange failed:", err);
-        return NextResponse.redirect(
-            new URL("/integrations?fb_error=token_failed", request.url)
-        );
+        return integrationsRedirect("?fb_error=token_failed");
     }
 }

@@ -40,7 +40,7 @@ export function DemoModeBanner({ className = "" }: DemoModeBannerProps) {
                 </div>
                 
                 <div className="flex items-center gap-3 shrink-0">
-                    <Link href="/integrations">
+                    <Link href="/settings/integrations">
                         <Button size="lg" className="bg-background text-foreground hover:bg-background/90 font-bold border-none px-6 h-12 rounded-xl group/btn">
                             Connect Real Profile
                             <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />

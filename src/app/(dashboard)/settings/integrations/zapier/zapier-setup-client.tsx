@@ -157,7 +157,7 @@ export function ZapierSetupClient({
                                         webhook URL is signed by it.
                                     </p>
                                     <Button asChild size="sm" variant="outline" className="h-7 px-2.5 text-xs">
-                                        <Link href="/integrations#developer-api" className="inline-flex items-center gap-1.5">
+                                        <Link href="/settings/integrations#developer-api" className="inline-flex items-center gap-1.5">
                                             <KeyRound className="h-3 w-3" />
                                             Generate API key
                                         </Link>

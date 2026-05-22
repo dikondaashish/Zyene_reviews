@@ -12,7 +12,7 @@ type CheckResult = {
 const REQUIRED_FILES = [
   "src/lib/auth/business-context.ts",
   "src/components/dashboard/business-switcher.tsx",
-  "src/app/(dashboard)/integrations/page.tsx",
+  "src/app/(dashboard)/settings/integrations/page.tsx",
   "src/app/(dashboard)/settings/team/page.tsx",
   "src/app/api/team/invite/route.ts",
   "src/app/api/team/[id]/route.ts",

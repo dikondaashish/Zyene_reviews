@@ -243,7 +243,7 @@ export function AppSidebar({
         },
         {
             title: dict.nav.integrations,
-            url: "/integrations",
+            url: "/settings/integrations",
             icon: Plug,
         },
         ]

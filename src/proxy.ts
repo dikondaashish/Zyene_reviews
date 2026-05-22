@@ -300,6 +300,14 @@ export async function proxy(request: NextRequest) {
             );
         }
 
+        // Legacy integrations URLs (pre–marketing /integrations page)
+        if (pathname === "/integrations" || pathname.startsWith("/integrations/")) {
+            const target = pathname.replace(/^\/integrations/, "/settings/integrations");
+            return createResponse(
+                NextResponse.redirect(new URL(target, request.url))
+            );
+        }
+
         // Pass strictly dashboard paths? Or allow all?
         // For now allow all, but redirect logic handles unauth.
         return supabaseResponse;

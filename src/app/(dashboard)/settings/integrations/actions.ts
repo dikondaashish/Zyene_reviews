@@ -32,7 +32,7 @@ export async function disconnectGoogle(platformId: string) {
     }
 
     // Revalidate the integrations page cache
-    revalidatePath("/(dashboard)/integrations", "page");
+    revalidatePath("/(dashboard)/settings/integrations", "page");
 
     // Redirect to onboarding since GBP is no longer connected
     redirect("/onboarding");

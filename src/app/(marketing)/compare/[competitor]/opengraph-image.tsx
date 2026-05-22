@@ -1,17 +1,8 @@
 import { ImageResponse } from "next/og";
 import { COMPETITOR_MAP } from "@/lib/phase3/competitor-data";
 
-export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateImageMetadata(
-    { params }: { params: Promise<{ competitor: string }> }
-) {
-    const { competitor } = await params;
-    const data = COMPETITOR_MAP[competitor];
-    return [{ id: "og", alt: data ? `Zyene Reviews vs ${data.name} — 2026 Comparison` : "Compare Zyene Reviews" }];
-}
 
 export default async function OgImage(
     { params }: { params: Promise<{ competitor: string }> }
