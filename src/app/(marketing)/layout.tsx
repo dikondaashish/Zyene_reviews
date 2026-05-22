@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, ShieldCheck } from "lucide-react";
+import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -18,6 +18,11 @@ const PRODUCT_LINKS = [
     { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo — no contracts" },
 ];
 
+const SOLUTIONS_LINKS = [
+    { href: "/industries", label: "By Industry", icon: Building2, desc: "Restaurants, dental, auto repair, and more" },
+    { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene vs Birdeye, Podium, NiceJob, GatherUp" },
+];
+
 export default function MarketingLayout({
     children,
 }: {
@@ -25,7 +30,9 @@ export default function MarketingLayout({
 }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [productOpen, setProductOpen] = useState(false);
+    const [solutionsOpen, setSolutionsOpen] = useState(false);
     const productRef = useRef<HTMLDivElement>(null);
+    const solutionsRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -33,14 +40,17 @@ export default function MarketingLayout({
             "/docs", "/login", "/signup", "/about", "/contact", "/help",
             "/privacy", "/terms", "/data-retention",
             "/pricing", "/features", "/how-it-works", "/integrations",
+            "/industries", "/compare",
         ].forEach((href) => router.prefetch(href));
     }, [router]);
 
-    // Close product dropdown when clicking outside
     useEffect(() => {
         function handleClick(e: MouseEvent) {
             if (productRef.current && !productRef.current.contains(e.target as Node)) {
                 setProductOpen(false);
+            }
+            if (solutionsRef.current && !solutionsRef.current.contains(e.target as Node)) {
+                setSolutionsOpen(false);
             }
         }
         document.addEventListener("mousedown", handleClick);
@@ -84,7 +94,7 @@ export default function MarketingLayout({
                             <button
                                 type="button"
                                 onClick={() => setProductOpen(!productOpen)}
-                                onMouseEnter={() => setProductOpen(true)}
+                                onMouseEnter={() => { setProductOpen(true); setSolutionsOpen(false); }}
                                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors ${productOpen ? "text-foreground bg-accent" : ""}`}
                             >
                                 Product
@@ -102,6 +112,45 @@ export default function MarketingLayout({
                                                 key={item.href}
                                                 href={item.href}
                                                 onClick={() => setProductOpen(false)}
+                                                className="flex items-start gap-3 px-4 py-3.5 hover:bg-accent transition-colors group"
+                                            >
+                                                <div className="mt-0.5 p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                                                    <Icon className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-foreground text-[13px]">{item.label}</div>
+                                                    <div className="text-xs text-muted-foreground mt-0.5">{item.desc}</div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Solutions dropdown */}
+                        <div ref={solutionsRef} className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setSolutionsOpen(!solutionsOpen)}
+                                onMouseEnter={() => { setSolutionsOpen(true); setProductOpen(false); }}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors ${solutionsOpen ? "text-foreground bg-accent" : ""}`}
+                            >
+                                Solutions
+                                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${solutionsOpen ? "rotate-180" : ""}`} />
+                            </button>
+                            {solutionsOpen && (
+                                <div
+                                    onMouseLeave={() => setSolutionsOpen(false)}
+                                    className="absolute left-0 top-full mt-1 w-72 rounded-xl border border-border bg-card shadow-xl overflow-hidden z-50"
+                                >
+                                    {SOLUTIONS_LINKS.map((item) => {
+                                        const Icon = item.icon;
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setSolutionsOpen(false)}
                                                 className="flex items-start gap-3 px-4 py-3.5 hover:bg-accent transition-colors group"
                                             >
                                                 <div className="mt-0.5 p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
@@ -170,6 +219,13 @@ export default function MarketingLayout({
                             </Link>
                         ))}
                         <div className="pt-1 border-t border-border/50 mt-1" />
+                        <p className="px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Solutions</p>
+                        {SOLUTIONS_LINKS.map((item) => (
+                            <Link key={item.href} href={item.href} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>
+                                {item.label}
+                            </Link>
+                        ))}
+                        <div className="pt-1 border-t border-border/50 mt-1" />
                         <Link href="/docs" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>Docs</Link>
                         <Link href="/about" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
                         <Link href="/contact" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
@@ -194,9 +250,9 @@ export default function MarketingLayout({
 
             <footer className="mt-auto border-t border-border/70 bg-canvas">
                 <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-8">
-                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6">
                         {/* Brand */}
-                        <div className="col-span-2 sm:col-span-2 md:col-span-4 lg:col-span-2">
+                        <div className="col-span-2 sm:col-span-3 md:col-span-5 lg:col-span-2">
                             <Link href="/" className="inline-flex items-center gap-2 mb-4">
                                 <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60">
                                     <Image src="/Main%20logo.png" alt="Zyene Reviews" width={32} height={32} className="h-full w-full object-cover" />
@@ -223,6 +279,18 @@ export default function MarketingLayout({
                                 <li><Link href="/integrations" className="hover:text-primary transition-colors">Integrations</Link></li>
                                 <li><Link href="/docs" className="hover:text-primary transition-colors">Docs</Link></li>
                                 <li><Link href="/docs/api" className="hover:text-primary transition-colors">API</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Solutions */}
+                        <div>
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Solutions</h4>
+                            <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/industries" className="hover:text-primary transition-colors">By Industry</Link></li>
+                                <li><Link href="/industries/restaurants" className="hover:text-primary transition-colors">Restaurants</Link></li>
+                                <li><Link href="/industries/dental" className="hover:text-primary transition-colors">Dental</Link></li>
+                                <li><Link href="/industries/home-services" className="hover:text-primary transition-colors">Home Services</Link></li>
+                                <li><Link href="/compare" className="hover:text-primary transition-colors">Compare Tools</Link></li>
                             </ul>
                         </div>
 

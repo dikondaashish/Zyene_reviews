@@ -60,30 +60,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 3. Industry verticals — Phase 3 (uncomment when live)
+    // 3. Industry verticals — Phase 3 (live)
     // ─────────────────────────────────────────────
-    // const industryPages: MetadataRoute.Sitemap = [
-    //     { url: `${BASE_URL}/industries`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    //     { url: `${BASE_URL}/industries/restaurants`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/dental`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/auto-repair`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/salons`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/home-services`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/medical`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/hotels`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/industries/fitness`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // ];
+    const industryPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/industries`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${BASE_URL}/industries/restaurants`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/dental`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/auto-repair`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/salons`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/home-services`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/medical`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/hotels`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/fitness`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    ];
 
     // ─────────────────────────────────────────────
-    // 4. Comparison pages — Phase 3 (uncomment when live)
+    // 4. Comparison pages — Phase 3 (live)
     // ─────────────────────────────────────────────
-    // const comparePages: MetadataRoute.Sitemap = [
-    //     { url: `${BASE_URL}/compare`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    //     { url: `${BASE_URL}/compare/birdeye`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    //     { url: `${BASE_URL}/compare/podium`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/compare/nicejob`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    //     { url: `${BASE_URL}/compare/gatherup`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // ];
+    const comparePages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/compare`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${BASE_URL}/compare/birdeye`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${BASE_URL}/compare/podium`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/compare/nicejob`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/compare/gatherup`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    ];
 
     // ─────────────────────────────────────────────
     // 5. Developer docs (all live)
@@ -184,10 +184,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return [
         ...corePages,
         ...conversionPages,
+        ...industryPages,
+        ...comparePages,
         ...docPages,
         ...legalPages,
-        // Uncomment as each phase ships:
-        // ...industryPages,
-        // ...comparePages,
     ];
 }
