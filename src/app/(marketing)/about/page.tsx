@@ -6,6 +6,7 @@ export const metadata: Metadata = {
     title: "About Zyene Reviews",
     description:
         "Learn about Zyene Reviews — a reputation management platform built for local businesses. Our mission is to make online reputation management accessible and ethical for every local business owner.",
+    alternates: { canonical: "https://zyenereviews.com/about" },
     openGraph: {
         title: "About Zyene Reviews",
         description:

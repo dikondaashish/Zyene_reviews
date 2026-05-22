@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     title: "Contact Us",
     description:
         "Reach out to the Zyene Reviews team for support, sales, or general inquiries. We typically respond within 24 hours, Monday through Friday.",
+    alternates: { canonical: "https://zyenereviews.com/contact" },
     openGraph: {
         title: "Contact Zyene Reviews",
         description:
