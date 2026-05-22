@@ -88,6 +88,24 @@ export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
         rating: 5,
         caseStudySlug: "apex-hvac-denver",
     },
+    {
+        quote: "Clients mention their stylist in reviews now because our replies feel personal — but I'm not writing them from scratch at 10pm anymore.",
+        author: "Isabella Chen",
+        role: "Owner",
+        company: "Bella's Salon & Spa",
+        industry: "Salons & Spas",
+        rating: 5,
+        caseStudySlug: "bellas-salon-portland",
+    },
+    {
+        quote: "We're not a franchise — but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
+        author: "Tom Reyes",
+        role: "Service Manager",
+        company: "Precision Auto Works",
+        industry: "Auto Repair",
+        rating: 5,
+        caseStudySlug: "precision-auto-works-phoenix",
+    },
 ];
 
 export const THIRD_PARTY_TRUST: ThirdPartyTrustLink[] = [

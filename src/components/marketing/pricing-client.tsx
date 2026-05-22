@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Check, Zap, Crown, ShieldCheck, ChevronDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Plan } from "@/services/stripe/plans";
-import { CustomerLogoBar, PlatformStatsBadge } from "@/components/marketing/social-proof";
+import { CustomerLogoBar, PlatformStatsBadge, TestimonialGrid } from "@/components/marketing/social-proof";
 
 // ─── Billing Toggle ───────────────────────────────────────────────────────────
 
@@ -409,6 +409,12 @@ export function PricingPageClient({
                     </p>
                 </div>
             </section>
+
+            <TestimonialGrid
+                limit={3}
+                title="Trusted by owners on every plan"
+                subtitle="See how local businesses grew reviews and ratings with Zyene — full stories in our case studies."
+            />
 
             {/* ── FAQ ── */}
             <section className="py-20 px-4 bg-muted border-t border-border">
