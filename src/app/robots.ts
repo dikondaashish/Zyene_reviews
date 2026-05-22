@@ -51,6 +51,10 @@ export default function robots(): MetadataRoute.Robots {
                     "/partners",
                     "/tools",
                     "/agencies",
+                    "/demo",
+                    "/enterprise",
+                    "/es",
+                    "/es/",
                 ],
                 disallow: [
                     "/api/",

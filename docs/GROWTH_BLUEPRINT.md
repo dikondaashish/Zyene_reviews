@@ -315,7 +315,7 @@ zyenereviews.com (marketing)
 │   └── /help/integrations
 ├── /about                      ← Company + team + mission
 ├── /contact                    ← Support + sales + demo booking
-├── /demo                       ← Enterprise demo / Calendly
+├── /demo                       ← Enterprise demo / Cal.com
 ├── /security                   ← Trust center
 ├── /docs/*                     ← Developer documentation (exists)
 ├── /privacy                    ← Privacy policy (exists)
@@ -900,7 +900,7 @@ The product already has upgrade modals at:
 
 | Action | Detail |
 |--------|--------|
-| Create `/demo` page | Calendly embed or form for sales team |
+| Create `/demo` page | Cal.com embed or form for sales team |
 | Create `/enterprise` page | Custom pricing, SLA, SSO, dedicated AM, white-label |
 | Hire/assign sales | Inbound leads from demo page and `sales@` email |
 | Create sales deck | PDF/Notion with product screenshots, case studies, pricing |

@@ -4,6 +4,7 @@ import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
 import { HELP_SLUGS } from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
+import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
 
 const BASE_URL = "https://zyenereviews.com";
 
@@ -193,7 +194,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 10. Free tools — Phase 7
+    // 10. Enterprise & agencies — Phase 8
+    // ─────────────────────────────────────────────
+    const enterprisePages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/demo`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/enterprise`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${BASE_URL}/agencies`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/es/industries`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+        ...LOCALIZED_INDUSTRY_PAGES.map((p) => ({
+            url: `${BASE_URL}/es/industries/${p.localizedSlug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.65,
+        })),
+    ];
+
+    // ─────────────────────────────────────────────
+    // 11. Free tools — Phase 7
     // ─────────────────────────────────────────────
     const toolPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/tools`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
@@ -274,6 +291,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...resourcePages,
         ...helpPages,
         ...partnerPages,
+        ...enterprisePages,
         ...toolPages,
         ...caseStudyPages,
         ...docPages,

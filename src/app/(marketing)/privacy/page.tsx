@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { REGIONAL_COMPLIANCE_SECTIONS } from "@/lib/phase8/compliance-data";
 
 export const metadata: Metadata = {
     title: "Privacy Policy",
@@ -126,7 +127,25 @@ export default function PrivacyPolicyPage() {
                         We do not sell, rent, or share your phone number with third parties for their marketing purposes.
                     </p>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">10. Contact Information</h2>
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">10. Regional Privacy Rights (GDPR, CCPA, LGPD)</h2>
+                    <p className="mb-6">
+                        In addition to the practices above, users in the European Union, United Kingdom, California, and
+                        Brazil have specific rights under applicable regulations. Summaries below; contact{" "}
+                        <a href="mailto:privacy@zyenereviews.com">privacy@zyenereviews.com</a> to exercise your rights.
+                    </p>
+                    {REGIONAL_COMPLIANCE_SECTIONS.map((section) => (
+                        <div key={section.id} className="mb-8">
+                            <h3 className="text-xl font-semibold mt-6 mb-2">{section.title}</h3>
+                            <p className="mb-3">{section.summary}</p>
+                            <ul className="list-disc pl-6 space-y-2">
+                                {section.bullets.map((b) => (
+                                    <li key={b}>{b}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+
+                    <h2 className="text-2xl font-semibold mt-10 mb-4">11. Contact Information</h2>
                     <p>
                         To ask questions or comment about this privacy policy and our privacy practices, contact us at: <a href="mailto:support@zyenereviews.com">support@zyenereviews.com</a>.
                     </p>

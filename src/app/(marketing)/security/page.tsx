@@ -48,8 +48,8 @@ const SECURITY_SECTIONS = [
     },
     {
         icon: Globe,
-        title: "GDPR & privacy compliance",
-        body: "We process personal data under lawful bases documented in our Privacy Policy. You can export or delete customer data from your dashboard. We honor data subject requests and maintain a Data Processing Agreement for enterprise customers upon request.",
+        title: "GDPR, CCPA & LGPD",
+        body: "We process personal data under lawful bases documented in our Privacy Policy (Section 10: Regional Privacy Rights). GDPR and UK rights, California CPRA requests, and Brazil LGPD rights are supported — contact privacy@zyenereviews.com. Enterprise customers may request a Data Processing Agreement.",
     },
     {
         icon: ShieldCheck,

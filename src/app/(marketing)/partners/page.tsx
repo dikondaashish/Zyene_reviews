@@ -76,9 +76,14 @@ export default function PartnersPage() {
                                 Contact partnerships <Mail className="ml-2 h-4 w-4" />
                             </Button>
                         </a>
+                        <Link href="/agencies">
+                            <Button size="lg" variant="outline" className="rounded-xl px-8">
+                                Agency program <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </Link>
                         <Link href="/integrations">
                             <Button size="lg" variant="outline" className="rounded-xl px-8">
-                                View integrations <ArrowRight className="ml-2 h-4 w-4" />
+                                Integrations
                             </Button>
                         </Link>
                     </div>

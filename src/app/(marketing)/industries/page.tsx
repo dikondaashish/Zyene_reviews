@@ -9,7 +9,13 @@ export const metadata: Metadata = {
     title: "Industries — Zyene Reviews",
     description:
         "Zyene Reviews is built for local businesses across every industry. Explore how review management, AI replies, and the Negative Feedback Shield work for your specific business type.",
-    alternates: { canonical: "https://zyenereviews.com/industries" },
+    alternates: {
+        canonical: "https://zyenereviews.com/industries",
+        languages: {
+            en: "https://zyenereviews.com/industries",
+            es: "https://zyenereviews.com/es/industries",
+        },
+    },
     openGraph: {
         title: "Review Management for Every Industry — Zyene Reviews",
         description:
@@ -45,8 +51,13 @@ export default function IndustriesHubPage() {
                         Review management built<br />
                         <span className="text-primary">for your industry</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+                    <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
                         Every industry has unique challenges when it comes to online reputation. Zyene is tailored to help local businesses in each vertical grow their reviews, protect their reputation, and rank higher on Google Maps.
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-10">
+                        <Link href="/es/industries" className="text-primary hover:underline font-medium">
+                            Ver soluciones en español →
+                        </Link>
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/signup">

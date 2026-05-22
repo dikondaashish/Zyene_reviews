@@ -83,6 +83,11 @@ export default function ContactPage() {
                             >
                                 sales@zyenereviews.com
                             </a>
+                            <p className="text-sm text-muted-foreground mt-3">
+                                <Link href="/demo" className="text-primary hover:underline">Book a demo</Link>
+                                {" · "}
+                                <Link href="/enterprise" className="text-primary hover:underline">Enterprise overview</Link>
+                            </p>
                         </div>
 
                         <div className="bg-muted rounded-lg p-6 border border-border">

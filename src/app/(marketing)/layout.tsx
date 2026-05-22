@@ -24,6 +24,8 @@ const PRODUCT_LINKS = [
 const SOLUTIONS_LINKS = [
     { href: "/industries", label: "By Industry", icon: Building2, desc: "Restaurants, dental, auto repair, and more" },
     { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene vs Birdeye, Podium, NiceJob, GatherUp" },
+    { href: "/enterprise", label: "Enterprise", icon: Building2, desc: "Multi-location brands, SLA, SSO, white-label" },
+    { href: "/agencies", label: "Agencies", icon: Handshake, desc: "White-label review management for agencies" },
 ];
 
 const RESOURCES_LINKS = [
@@ -338,7 +340,14 @@ export default function MarketingLayout({
                             <div className="mt-4">
                                 <FooterTrustStrip />
                             </div>
-                            <p className="mt-4 text-xs text-muted-foreground/70">
+                            <p className="mt-3 text-xs text-muted-foreground">
+                                <Link href="/es/industries" className="hover:text-primary transition-colors">
+                                    Industrias (Español)
+                                </Link>
+                                <span className="mx-1.5 text-border">·</span>
+                                Dashboard in EN, ES, FR, DE, NL, PT
+                            </p>
+                            <p className="mt-2 text-xs text-muted-foreground/70">
                                 © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                             </p>
                         </div>
@@ -381,6 +390,8 @@ export default function MarketingLayout({
                                 <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
                                 <li><Link href="/case-studies" className="hover:text-primary transition-colors">Case Studies</Link></li>
                                 <li><Link href="/partners" className="hover:text-primary transition-colors">Partners</Link></li>
+                                <li><Link href="/agencies" className="hover:text-primary transition-colors">Agencies</Link></li>
+                                <li><Link href="/es/industries" className="hover:text-primary transition-colors">Industrias (ES)</Link></li>
                             </ul>
                         </div>
 
@@ -390,6 +401,8 @@ export default function MarketingLayout({
                             <ul className="space-y-2.5 text-sm text-muted-foreground">
                                 <li><Link href="/about" className="hover:text-primary transition-colors">About</Link></li>
                                 <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+                                <li><Link href="/demo" className="hover:text-primary transition-colors">Book a demo</Link></li>
+                                <li><Link href="/enterprise" className="hover:text-primary transition-colors">Enterprise</Link></li>
                                 <li><Link href="/partners" className="hover:text-primary transition-colors">Partners</Link></li>
                                 <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
                                 <li>
