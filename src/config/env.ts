@@ -59,6 +59,18 @@ export const ROOT_DOMAIN = NEXT_PUBLIC_ROOT_DOMAIN;
 export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
 export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
 
+/** Public review-request pages only (business slugs). Not the marketing site. */
+export const REVIEW_CAPTURE_DOMAIN = optional(
+    "NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN",
+    "www.collectratings.com"
+);
+
+export function getReviewCaptureOrigin(): string {
+    const host = REVIEW_CAPTURE_DOMAIN.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const protocol = host.includes("localhost") ? "http" : "https";
+    return `${protocol}://${host}`;
+}
+
 /**
  * Browser-facing origin for the signed-in app (dashboard, integrations, etc.).
  * In production this should be `https://app.<ROOT_DOMAIN>` via NEXT_PUBLIC_APP_URL.

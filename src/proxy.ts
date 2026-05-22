@@ -1,6 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { globalApiRateLimit } from "@/lib/auth/rate-limit";
+import {
+    getMarketingSiteOrigin,
+    isBusinessSlugPath,
+    isPlatformRoute,
+} from "@/lib/routing/platform-routes";
 
 /** True when the browser Origin matches this request's Host (same deployment / custom review domains like collectratings.com). */
 function originMatchesRequestHost(origin: string | null | undefined, hostHeader: string): boolean {
@@ -322,26 +327,29 @@ export async function proxy(request: NextRequest) {
     ];
 
     if (reviewDomains.includes(hostname)) {
-        // Leave the root empty (return 404 or just simple text) to prevent users from finding the platform
+        // Root has no marketing site — review capture only.
         if (pathname === "/") {
             return new NextResponse("", { status: 404 });
         }
 
-        // Allow platform internals to work normally on review domains.
-        // This is required so client-side tracking calls like /api/track/review-open
-        // are not rewritten to /r/api/... and dropped.
-        const reviewReservedPrefixes = ["/api", "/_next", "/static", "/favicon.ico"];
-        const isReviewReserved = reviewReservedPrefixes.some((prefix) => pathname.startsWith(prefix));
-        if (isReviewReserved) {
-            return createResponse(supabaseResponse);
+        // Platform/marketing paths belong on zyenereviews.com, not collectratings.com.
+        if (isPlatformRoute(pathname)) {
+            const marketingOrigin = getMarketingSiteOrigin(rootDomain);
+            const target = new URL(pathname, marketingOrigin);
+            target.search = request.nextUrl.search;
+            return createResponse(NextResponse.redirect(target, 301));
         }
 
-        // Rewrite everything else to the /r/[slug] review path.
-        // IMPORTANT: `new URL("/r/foo", request.url)` drops the original query string (?ref=...).
-        // Clone nextUrl, change pathname only, so ?ref=<requestId> survives for server + client tracking.
+        // Only single-segment business slugs rewrite to /r/[slug].
+        if (!isBusinessSlugPath(pathname)) {
+            const marketingOrigin = getMarketingSiteOrigin(rootDomain);
+            const target = new URL(pathname, marketingOrigin);
+            target.search = request.nextUrl.search;
+            return createResponse(NextResponse.redirect(target, 301));
+        }
+
         const rewriteUrl = request.nextUrl.clone();
-        rewriteUrl.pathname = `/r${pathname}`;
-        console.log(`[proxy] review domain rewrite: ${hostname}${pathname}${rewriteUrl.search} → ${rewriteUrl.pathname}${rewriteUrl.search}`);
+        rewriteUrl.pathname = `/r${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
         return createResponse(NextResponse.rewrite(rewriteUrl));
     }
 
@@ -414,37 +422,14 @@ export async function proxy(request: NextRequest) {
         // 1. Landing page -> pass
         if (pathname === "/") return supabaseResponse;
 
-        // 2. Reserved prefixes that should NOT be rewritten
-        const reservedPrefixes = [
-            "/api",
-            "/_next",
-            "/static",
-            "/favicon.ico",
-            "/favicon_io",
-            "/integrations",
-            "/login",
-            "/signup",
-            "/forgot-password",
-            "/privacy",
-            "/terms",
-            "/data-retention",
-            "/help",
-            "/about",
-            "/contact",
-            "/docs",
-            "/r/", // Keep legacy paths working
-            "/w/", // Embeddable widgets
-        ];
+        // 2. Platform + marketing routes stay on zyenereviews.com (never → collectratings).
+        const isReserved = isPlatformRoute(pathname);
 
-        const isReserved = reservedPrefixes.some(prefix => pathname.startsWith(prefix));
-
-        // 3. Redirect business slug-like paths to collectratings.com to avoid
-        // duplicate content across apex domains and keep canonical slug traffic
-        // on the review domain.
-        if (!isReserved && !pathname.includes(".")) {
+        // 3. Single-segment business slugs → collectratings.com (canonical review URLs).
+        if (!isReserved && isBusinessSlugPath(pathname)) {
             const targetUrl = request.nextUrl.clone();
             targetUrl.protocol = "https";
-            targetUrl.hostname = "collectratings.com";
+            targetUrl.hostname = "www.collectratings.com";
             targetUrl.port = "";
             return createResponse(NextResponse.redirect(targetUrl, 301));
         }
