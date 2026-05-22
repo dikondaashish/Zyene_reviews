@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
+
+export const metadata: Metadata = {
+    title: "Use with AI",
+    description: "Integrate Zyene Reviews with AI tools. Use MCP, REST API responses, and structured data in your AI workflows for review management automation.",
+    alternates: { canonical: "https://zyenereviews.com/docs/install" },
+    openGraph: { title: "Use with AI — Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools, MCP, and automation pipelines.", url: "https://zyenereviews.com/docs/install" },
+    twitter: { card: "summary_large_image", title: "Use with AI — Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools and automation workflows." },
+};
 
 export default function DocsInstallWithAiPage() {
     const docsApiUrl = `${BASE_URL}/docs/api`;

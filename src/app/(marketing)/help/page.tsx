@@ -5,6 +5,17 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Help Center — Zyene Reviews",
     description: "Find guides, tutorials, and answers to common questions about Zyene Reviews. Get started quickly or troubleshoot any issue.",
+    alternates: { canonical: "https://zyenereviews.com/help" },
+    openGraph: {
+        title: "Help Center — Zyene Reviews",
+        description: "Guides, tutorials, and answers for Getting Started, Analytics, Campaigns, Billing, Integrations, and Plugins.",
+        url: "https://zyenereviews.com/help",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Help Center — Zyene Reviews",
+        description: "Guides, tutorials, and answers for Getting Started, Analytics, Campaigns, Billing, and Integrations.",
+    },
 };
 
 const categories = [

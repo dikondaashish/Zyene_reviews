@@ -13,6 +13,11 @@ export const metadata: Metadata = {
         description: "Data storage timelines, deletion schedules, and your rights under GDPR and CCPA.",
         url: "https://zyenereviews.com/data-retention",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Data Retention Policy — Zyene Reviews",
+        description: "How long Zyene Reviews stores your data, when it is deleted, and your GDPR/CCPA rights.",
+    },
 };
 
 export default function DataRetentionPage() {

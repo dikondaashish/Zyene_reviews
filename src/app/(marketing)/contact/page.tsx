@@ -13,6 +13,12 @@ export const metadata: Metadata = {
             "Get in touch with our support team or talk to sales about Enterprise plans. We typically respond within 24 hours.",
         url: "https://zyenereviews.com/contact",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Contact Zyene Reviews",
+        description:
+            "Reach us at support@zyenereviews.com. Mon–Fri, 9am–6pm EST. We typically respond within 24 hours.",
+    },
 };
 
 export default function ContactPage() {

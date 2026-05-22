@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
+
+export const metadata: Metadata = {
+    title: "Plugins & Embeds",
+    description: "Embed a review carousel, rating badge, or review feed on your website using Zyene Reviews iframe widgets. Copy-paste setup, no coding required.",
+    alternates: { canonical: "https://zyenereviews.com/docs/plugins" },
+    openGraph: { title: "Plugins & Embeds — Zyene Reviews Docs", description: "Embed review carousels, rating badges, and review feeds on your website — copy-paste iframe setup.", url: "https://zyenereviews.com/docs/plugins" },
+    twitter: { card: "summary_large_image", title: "Plugins & Embeds — Zyene Reviews", description: "Embed review carousels and rating badges on your website — no code required." },
+};
 
 export default function DocsPluginsPage() {
     const embedBase = `${BASE_URL}/w`;

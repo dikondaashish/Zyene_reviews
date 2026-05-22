@@ -10,6 +10,11 @@ export const metadata: Metadata = {
         description: "How Zyene Reviews handles your data: GDPR compliant, Google API Limited Use, secure OAuth.",
         url: "https://zyenereviews.com/privacy",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Privacy Policy — Zyene Reviews",
+        description: "GDPR compliant, Google API Limited Use policy, secure OAuth. Learn how Zyene Reviews protects your data.",
+    },
 };
 
 export default function PrivacyPolicyPage() {

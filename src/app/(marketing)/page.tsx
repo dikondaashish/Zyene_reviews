@@ -16,6 +16,12 @@ export const metadata: Metadata = {
         url: "https://zyenereviews.com/",
         type: "website",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Zyene Reviews — Review Management for Local Businesses",
+        description:
+            "AI-powered review management, competitor tracking, and local SEO for local businesses. Starting at $29.99/mo. 7-day free trial.",
+    },
 };
 
 const HOME_FAQS = [
