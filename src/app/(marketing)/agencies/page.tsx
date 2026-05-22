@@ -28,6 +28,11 @@ export const metadata: Metadata = {
         description: "White-label review management for marketing and web agencies.",
         url: "https://zyenereviews.com/agencies",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Agencies — Zyene Reviews",
+        description: "White-label review management for marketing and web agencies.",
+    },
 };
 
 export default function AgenciesPage() {

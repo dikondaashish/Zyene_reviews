@@ -21,15 +21,26 @@ export async function generateMetadata({
     const { industry } = await params;
     const data = getLocalizedIndustry("es", industry);
     if (!data) return {};
+    const canonicalUrl = `https://zyenereviews.com/es/industries/${industry}`;
     return {
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: {
-            canonical: `https://zyenereviews.com/es/industries/${industry}`,
+            canonical: canonicalUrl,
             languages: {
                 en: `https://zyenereviews.com/industries/${data.industrySlug}`,
-                es: `https://zyenereviews.com/es/industries/${industry}`,
+                es: canonicalUrl,
             },
+        },
+        openGraph: {
+            title: data.metaTitle,
+            description: data.metaDescription,
+            url: canonicalUrl,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: data.metaTitle,
+            description: data.metaDescription,
         },
     };
 }

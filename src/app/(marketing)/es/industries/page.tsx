@@ -12,6 +12,16 @@ export const metadata: Metadata = {
         canonical: "https://zyenereviews.com/es/industries",
         languages: { en: "https://zyenereviews.com/industries", es: "https://zyenereviews.com/es/industries" },
     },
+    openGraph: {
+        title: "Industrias — Zyene Reviews",
+        description: "Gestión de reseñas para restaurantes, clínicas, talleres y más — en español.",
+        url: "https://zyenereviews.com/es/industries",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Industrias — Zyene Reviews",
+        description: "Gestión de reseñas para restaurantes, clínicas, talleres y más — en español.",
+    },
 };
 
 export default function EsIndustriesHubPage() {

@@ -31,6 +31,11 @@ export const metadata: Metadata = {
         description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
         url: "https://zyenereviews.com/enterprise",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Zyene Reviews Enterprise",
+        description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
+    },
 };
 
 export default function EnterprisePage() {

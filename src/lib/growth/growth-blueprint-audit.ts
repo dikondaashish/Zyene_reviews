@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Automated audit — GROWTH_BLUEPRINT §§ 0–4, 14–16 + page architecture table
+// Automated audit — GROWTH_BLUEPRINT §§ 0–8, 14–16 + page architecture table
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { existsSync, readFileSync } from "node:fs";
@@ -390,6 +390,101 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
         if (!inventoryPaths.has(`/compare/${comp}`)) {
             items.push({ id: `p3-comp-${comp}`, severity: "error", area: "phase3", message: `Comparison page /compare/${comp} not in inventory (§3.2)` });
         }
+    }
+
+    // ── Phase 4 checks ──────────────────────────────────────────────────
+    const phase4Routes = ["blog", "resources"];
+    for (const route of phase4Routes) {
+        if (!existsSync(path.join(APP_ROOT, `${route}/page.tsx`))) {
+            items.push({ id: `p4-${route}`, severity: "error", area: "content", message: `/${route} page missing (§4)` });
+        }
+    }
+
+    if (BLOG_SLUGS.length < 4) {
+        items.push({ id: "p4-blog-count", severity: "error", area: "content", message: `Blueprint needs 4+ blog posts; found ${BLOG_SLUGS.length} (§4.1)` });
+    }
+
+    const expectedGuides = ["google-reviews-guide", "negative-review-templates", "local-seo-checklist", "review-request-templates"];
+    for (const guide of expectedGuides) {
+        if (!inventoryPaths.has(`/resources/${guide}`)) {
+            items.push({ id: `p4-guide-${guide}`, severity: "error", area: "content", message: `Resource guide /resources/${guide} not in inventory (§4.2)` });
+        }
+    }
+
+    const expectedHelpCategories = ["getting-started", "reviews", "campaigns", "analytics", "billing", "integrations"];
+    for (const cat of expectedHelpCategories) {
+        if (!HELP_CATEGORY_SLUGS.includes(cat)) {
+            items.push({ id: `p4-help-cat-${cat}`, severity: "error", area: "content", message: `Help category "${cat}" missing (§4.3)` });
+        }
+    }
+
+    // ── Phase 5 checks ──────────────────────────────────────────────────
+    if (CASE_STUDY_SLUGS.length < 3) {
+        items.push({ id: "p5-case-studies", severity: "error", area: "content", message: `Blueprint needs 3-5 case studies; found ${CASE_STUDY_SLUGS.length} (§5.1)` });
+    }
+
+    if (!existsSync(path.join(APP_ROOT, "security/page.tsx"))) {
+        items.push({ id: "p5-security", severity: "error", area: "pages", message: "/security page missing (§5.4)" });
+    }
+
+    if (!existsSync(path.join(APP_ROOT, "case-studies/page.tsx"))) {
+        items.push({ id: "p5-case-studies-page", severity: "error", area: "pages", message: "/case-studies page missing (§5.1)" });
+    }
+
+    // ── Phase 6 checks ──────────────────────────────────────────────────
+    if (!existsSync(path.join(APP_ROOT, "partners/page.tsx"))) {
+        items.push({ id: "p6-partners", severity: "error", area: "pages", message: "/partners page missing (§6.3)" });
+    }
+
+    const newsletterApiPath = path.join(process.cwd(), "src/app/api/marketing/newsletter/subscribe/route.ts");
+    if (!existsSync(newsletterApiPath)) {
+        items.push({ id: "p6-newsletter-api", severity: "error", area: "architecture", message: "Newsletter subscribe API missing (§6.4)" });
+    }
+
+    const emailSeqPath = path.join(process.cwd(), "src/lib/phase6/email-sequences-data.ts");
+    if (!existsSync(emailSeqPath)) {
+        items.push({ id: "p6-email-sequences", severity: "error", area: "content", message: "Trial nurture email sequences missing (§6.4)" });
+    }
+
+    // ── Phase 7 checks ──────────────────────────────────────────────────
+    const phase7ToolRoutes = ["tools", "tools/review-link-generator", "tools/reputation-score-checker", "tools/review-response-generator"];
+    for (const route of phase7ToolRoutes) {
+        if (!existsSync(path.join(APP_ROOT, `${route}/page.tsx`))) {
+            items.push({ id: `p7-${route}`, severity: "error", area: "pages", message: `/${route} page missing (§7.3)` });
+        }
+    }
+
+    const plgAttrPath = path.join(process.cwd(), "src/lib/growth/plg-attribution.ts");
+    if (!existsSync(plgAttrPath)) {
+        items.push({ id: "p7-plg-attribution", severity: "error", area: "architecture", message: "PLG attribution tracking missing (§7.1)" });
+    }
+
+    const referralPath = path.join(process.cwd(), "src/lib/growth/referral.ts");
+    if (!existsSync(referralPath)) {
+        items.push({ id: "p7-referral", severity: "error", area: "architecture", message: "Referral program module missing (§7.2)" });
+    }
+
+    const upgradeModalCopyPath = path.join(process.cwd(), "src/lib/phase7/upgrade-modal-copy.ts");
+    if (!existsSync(upgradeModalCopyPath)) {
+        items.push({ id: "p7-upgrade-copy", severity: "error", area: "content", message: "Upgrade modal copy data missing (§7.4)" });
+    }
+
+    // ── Phase 8 checks ──────────────────────────────────────────────────
+    const phase8Routes = ["demo", "enterprise", "agencies"];
+    for (const route of phase8Routes) {
+        if (!existsSync(path.join(APP_ROOT, `${route}/page.tsx`))) {
+            items.push({ id: `p8-${route}`, severity: "error", area: "pages", message: `/${route} page missing (§8)` });
+        }
+    }
+
+    const esIndustriesPath = path.join(APP_ROOT, "es/industries/page.tsx");
+    if (!existsSync(esIndustriesPath)) {
+        items.push({ id: "p8-es-industries", severity: "error", area: "pages", message: "Spanish industry pages missing (§8.3)" });
+    }
+
+    const salesDeckPath = path.join(process.cwd(), "docs/ENTERPRISE_SALES_DECK.md");
+    if (!existsSync(salesDeckPath)) {
+        items.push({ id: "p8-sales-deck", severity: "warning", area: "content", message: "Enterprise sales deck not found (§8.1)" });
     }
 
     if (items.filter((i) => i.severity === "error").length === 0 && items.length === 0) {

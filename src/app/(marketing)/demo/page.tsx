@@ -17,6 +17,11 @@ export const metadata: Metadata = {
         description: "Enterprise demo for multi-location brands, franchises, and agencies.",
         url: "https://zyenereviews.com/demo",
     },
+    twitter: {
+        card: "summary_large_image",
+        title: "Book a Demo — Zyene Reviews",
+        description: "Enterprise demo for multi-location brands, franchises, and agencies.",
+    },
 };
 
 export default function DemoPage() {
