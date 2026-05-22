@@ -27,6 +27,7 @@ const SOLUTIONS_LINKS = [
 ];
 
 const RESOURCES_LINKS = [
+    { href: "/tools", label: "Free Tools", icon: Sparkles, desc: "Review link generator, reputation checker, response templates" },
     { href: "/blog", label: "Blog", icon: BookOpen, desc: "Practical guides on Google reviews and local SEO" },
     { href: "/resources", label: "Free Guides", icon: FileText, desc: "In-depth playbooks for local business owners" },
     { href: "/help", label: "Help Center", icon: HelpCircle, desc: "Setup guides, how-tos, and troubleshooting" },
@@ -371,6 +372,7 @@ export default function MarketingLayout({
                         <div>
                             <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Resources</h4>
                             <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/tools" className="hover:text-primary transition-colors">Free Tools</Link></li>
                                 <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
                                 <li><Link href="/resources" className="hover:text-primary transition-colors">Free Guides</Link></li>
                                 <li><Link href="/resources/google-reviews-guide" className="hover:text-primary transition-colors">Google Reviews Guide</Link></li>

@@ -3,6 +3,7 @@ import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
 import { HELP_SLUGS } from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 
 const BASE_URL = "https://zyenereviews.com";
 
@@ -192,7 +193,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 10. Partners — Phase 6
+    // 10. Free tools — Phase 7
+    // ─────────────────────────────────────────────
+    const toolPages: MetadataRoute.Sitemap = [
+        { url: `${BASE_URL}/tools`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+        ...FREE_TOOLS.map((tool) => ({
+            url: `${BASE_URL}/tools/${tool.slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.75,
+        })),
+    ];
+
+    // ─────────────────────────────────────────────
+    // 11. Partners — Phase 6
     // ─────────────────────────────────────────────
     const partnerPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
@@ -260,6 +274,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ...resourcePages,
         ...helpPages,
         ...partnerPages,
+        ...toolPages,
         ...caseStudyPages,
         ...docPages,
         ...legalPages,

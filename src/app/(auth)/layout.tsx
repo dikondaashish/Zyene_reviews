@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Zap, BarChart3 } from "lucide-react";
+import { Suspense } from "react";
+import { UtmCapture } from "@/components/marketing/utm-capture";
 
 export default function AuthLayout({
     children,
@@ -114,6 +116,9 @@ export default function AuthLayout({
                     {children}
                 </div>
             </div>
+            <Suspense fallback={null}>
+                <UtmCapture />
+            </Suspense>
         </div>
     );
 }

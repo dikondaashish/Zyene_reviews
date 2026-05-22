@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { UpgradeModal } from "@/components/settings/upgrade-modal";
 
 type CustomerSearchRow = {
     id: string;
@@ -141,6 +142,7 @@ export function SendRequestDialog({
     const [suggestions, setSuggestions] = useState<CustomerSearchRow[]>([]);
     const [suggestLoading, setSuggestLoading] = useState(false);
     const [suggestOpen, setSuggestOpen] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const nameDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const nameWrapRef = useRef<HTMLDivElement>(null);
 
@@ -336,6 +338,12 @@ export function SendRequestDialog({
             router.refresh();
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : "Something went wrong.";
+            const limitHit =
+                /monthly limit/i.test(msg) ||
+                /upgrade your plan/i.test(msg);
+            if (limitHit) {
+                setShowUpgradeModal(true);
+            }
             toast.error("Could not send request", { description: msg });
         } finally {
             setIsLoading(false);
@@ -565,6 +573,11 @@ export function SendRequestDialog({
                     </form>
                 </Form>
             </DialogContent>
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                context="review_request_limit"
+            />
         </Dialog>
     );
 }

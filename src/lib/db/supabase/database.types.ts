@@ -1141,6 +1141,7 @@ export type Database = {
           plan: string
           plan_status: string
           primary_color: string
+          referred_by_user_id: string | null
           slug: string
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -1167,6 +1168,7 @@ export type Database = {
           plan?: string
           plan_status?: string
           primary_color?: string
+          referred_by_user_id?: string | null
           slug: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -1193,6 +1195,7 @@ export type Database = {
           plan?: string
           plan_status?: string
           primary_color?: string
+          referred_by_user_id?: string | null
           slug?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -1626,6 +1629,61 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_conversions: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          id: string
+          referee_organization_id: string
+          referee_user_id: string | null
+          referrer_user_id: string
+          rewarded_at: string | null
+          status: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referee_organization_id: string
+          referee_user_id?: string | null
+          referrer_user_id: string
+          rewarded_at?: string | null
+          status?: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referee_organization_id?: string
+          referee_user_id?: string | null
+          referrer_user_id?: string
+          rewarded_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_conversions_referee_organization_id_fkey"
+            columns: ["referee_organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_conversions_referee_user_id_fkey"
+            columns: ["referee_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_conversions_referrer_user_id_fkey"
+            columns: ["referrer_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]

@@ -1,3 +1,5 @@
+import { plgEmailFooterHtml, plgEmailFooterPlain } from "@/lib/growth/plg-attribution";
+
 interface ReviewRequestEmailProps {
     customerName: string;
     businessName: string;
@@ -66,6 +68,7 @@ export function reviewRequestEmailPlainText({
         "",
         "Thank you,",
         signoff,
+        plgEmailFooterPlain(),
     ].join("\n");
 }
 
@@ -122,6 +125,7 @@ export function reviewRequestEmail({
     <p style="margin:0 0 16px;color:${muted};">If it&rsquo;s easier, just reply to this email and let me know how it went &mdash; I read every response.</p>
     <p style="margin:0 0 4px;">Thank you,</p>
     <p style="margin:0;">${signoff}</p>
+    ${plgEmailFooterHtml()}
   </div>
 </body>
 </html>`;

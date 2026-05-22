@@ -187,6 +187,12 @@ export async function POST(request: Request) {
                     } catch (dripErr) {
                         console.error("Error scheduling onboarding drip (direct paid):", dripErr);
                     }
+                    try {
+                        const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
+                        await processReferralConversionReward(organizationId);
+                    } catch (refErr) {
+                        console.error("Error processing referral reward:", refErr);
+                    }
                 }
                 break;
             }
@@ -227,6 +233,8 @@ export async function POST(request: Request) {
                                     userName: customer.name || "there",
                                     organizationId: orgRow.id,
                                 });
+                                const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
+                                await processReferralConversionReward(orgRow.id);
                             }
                         }
                     } catch (dripErr) {

@@ -124,8 +124,7 @@ export function AutoReplyToolbar({
         <UpgradeModal
             isOpen={upgradeOpen}
             onClose={() => setUpgradeOpen(false)}
-            title="Upgrade to use Auto commenter"
-            description="Auto commenter posts AI replies to eligible Google reviews. It is available on Starter, Professional, and Enterprise."
+            context="auto_commenter"
         />
         <div className="flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">

@@ -351,8 +351,7 @@ export function QuestionsPageClient({
             <UpgradeModal
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
-                title="Upgrade for AI suggestions"
-                description="AI review features are available on active Starter, Professional, and Enterprise plans."
+                context="ai_reply_plan"
             />
         </div>
     );

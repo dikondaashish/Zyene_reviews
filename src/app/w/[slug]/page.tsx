@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { ReviewCarousel } from "@/components/widgets/review-carousel";
 import { ReviewBadge } from "@/components/widgets/review-badge";
+import { WidgetPlgFooter } from "@/components/widgets/widget-plg-footer";
 import { notFound } from "next/navigation";
 import { AccessError } from "@/components/public/access-error";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
@@ -29,6 +30,7 @@ export default async function WidgetPage({
         .select(`
             id,
             name,
+            hide_branding,
             organization:organizations (
                 plan,
                 plan_status
@@ -86,16 +88,19 @@ export default async function WidgetPage({
               : 5;
 
     return (
-        <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0">
-            {widgetType === "badge" ? (
-                <ReviewBadge
-                    businessName={business.name ?? "Reviews"}
-                    avgRating={averageRating}
-                    totalReviews={reviewCount}
-                />
-            ) : (
-                <ReviewCarousel reviews={formattedReviews} businessName={business.name ?? "Reviews"} />
-            )}
+        <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0 flex flex-col">
+            <div className="flex-1 min-h-0">
+                {widgetType === "badge" ? (
+                    <ReviewBadge
+                        businessName={business.name ?? "Reviews"}
+                        avgRating={averageRating}
+                        totalReviews={reviewCount}
+                    />
+                ) : (
+                    <ReviewCarousel reviews={formattedReviews} businessName={business.name ?? "Reviews"} />
+                )}
+            </div>
+            {!(business as { hide_branding?: boolean | null }).hide_branding && <WidgetPlgFooter />}
         </div>
     );
 }

@@ -28,6 +28,23 @@ import {
 } from "@/lib/utils/review-page-background";
 import { ensureCompleteReviewText } from "@/lib/review-flow/ensure-complete-review";
 import { formatTagForDisplay, resolveReviewFlowTags } from "@/lib/review-flow/tag-display";
+import { buildPlgMarketingUrl, PLG_FOOTER_LABEL } from "@/lib/growth/plg-attribution";
+
+function ZyeneReviewsPlgLink({ className }: { className?: string }) {
+    return (
+        <a
+            href={buildPlgMarketingUrl("review-page")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+                "inline-flex items-center gap-1.5 font-bold tracking-tight text-foreground hover:text-foreground/80 transition-colors underline-offset-2 hover:underline",
+                className
+            )}
+        >
+            {PLG_FOOTER_LABEL}
+        </a>
+    );
+}
 import {
     buildTagsSelected,
     EVERYTHING_TAG,
@@ -569,7 +586,7 @@ export function PublicReviewFlow({
             )}>
                 {children}
 
-                {/* Powered by footer */}
+                {/* Powered by footer — Phase 7 PLG link with UTM when using default Zyene branding */}
                 {!hideBranding && (
                     <div
                         className={cn(
@@ -577,42 +594,33 @@ export function PublicReviewFlow({
                             footerClassName
                         )}
                     >
-                        <div className="text-xs text-muted-foreground font-medium tracking-wide flex items-center justify-center gap-1.5">
-                            <span>Powered by</span>
-                            {footerLink ? (
-                                <a
-                                    href={footerLink.startsWith("http") ? footerLink : `https://${footerLink}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 no-underline"
-                                >
-                                    {footerLogoUrl && (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                            src={footerLogoUrl}
-                                            alt="Footer Logo"
-                                            className="h-4 w-4 object-contain"
-                                        />
-                                    )}
-                                    <span className="text-foreground font-bold tracking-tight hover:text-foreground/80 transition-colors">
-                                        {footerCompanyName || "Zyene"}
-                                    </span>
-                                </a>
-                            ) : (
-                                <span className="inline-flex items-center gap-1.5">
-                                    {footerLogoUrl && (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                            src={footerLogoUrl}
-                                            alt="Footer Logo"
-                                            className="h-4 w-4 object-contain"
-                                        />
-                                    )}
-                                    <span className="text-foreground font-bold tracking-tight">
-                                        {footerCompanyName || "Zyene"}
-                                    </span>
-                                </span>
-                            )}
+                        <div className="text-xs text-muted-foreground font-medium tracking-wide flex flex-col items-center justify-center gap-1">
+                            <div className="flex items-center justify-center gap-1.5">
+                                <span>Powered by</span>
+                                {footerLink ? (
+                                    <a
+                                        href={footerLink.startsWith("http") ? footerLink : `https://${footerLink}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 no-underline"
+                                    >
+                                        {footerLogoUrl && (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img
+                                                src={footerLogoUrl}
+                                                alt="Footer Logo"
+                                                className="h-4 w-4 object-contain"
+                                            />
+                                        )}
+                                        <span className="text-foreground font-bold tracking-tight hover:text-foreground/80 transition-colors">
+                                            {footerCompanyName || "Zyene"}
+                                        </span>
+                                    </a>
+                                ) : (
+                                    <ZyeneReviewsPlgLink />
+                                )}
+                            </div>
+                            {footerLink ? <ZyeneReviewsPlgLink className="text-[10px]" /> : null}
                         </div>
                     </div>
                 )}

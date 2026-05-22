@@ -5,10 +5,10 @@ import React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/db/supabase/client"
-import { Store, ArrowLeft, Lock } from "lucide-react"
+import { Store, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
-import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href"
+import { BusinessLimitUpgradePanel } from "@/components/businesses/business-limit-upgrade-panel"
 
 import { useRouter } from "next/navigation"
 import { getActiveBusinessId } from "@/lib/auth/business-context"
@@ -106,37 +106,7 @@ export default function AddBusinessPage() {
                         Back to Businesses
                     </Link>
                 </div>
-
-                <div className="max-w-lg mx-auto w-full">
-                    <Card className="border-primary/30 bg-primary/10 overflow-hidden">
-                        <div className="bg-primary h-1.5 w-full" />
-                        <CardHeader className="text-center pt-8">
-                            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30">
-                                <Lock className="h-7 w-7 text-primary" />
-                            </div>
-                            <CardTitle className="text-2xl font-bold text-foreground">Plan Limit Reached</CardTitle>
-                            <CardDescription className="text-muted-foreground font-medium">
-                                Maximum business locations reached for your current plan.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-center pb-8">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                You&apos;ve reached the maximum number of business locations allowed on your current plan. 
-                                Upgrade to a higher plan to add more locations and unlock premium features for all your businesses.
-                            </p>
-                            <div className="pt-2">
-                                <Link href={BUSINESS_LIMIT_UPGRADE_BILLING_HREF}>
-                                    <Button
-                                        size="lg"
-                                        className="w-full gap-2"
-                                    >
-                                        Verify Plans & Upgrade
-                                    </Button>
-                                </Link>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                <BusinessLimitUpgradePanel />
             </div>
         )
     }

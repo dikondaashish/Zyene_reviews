@@ -19,6 +19,42 @@ import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
 import { inngest } from "@/services/inngest/client";
 import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
+import {
+    deserializeUtm,
+    UTM_COOKIE_NAME,
+    type UtmParams,
+} from "@/lib/growth/utm";
+import { isValidReferrerUserId } from "@/lib/growth/referral";
+import type { Json } from "@/lib/db/supabase/database.types";
+
+function parseUtmFromRequest(request: Request): UtmParams | null {
+    const cookieHeader = request.headers.get("cookie") ?? "";
+    const utmCookie = cookieHeader
+        .split("; ")
+        .find((row) => row.startsWith(`${UTM_COOKIE_NAME}=`));
+    if (!utmCookie) return null;
+    const raw = decodeURIComponent(utmCookie.split("=").slice(1).join("="));
+    return deserializeUtm(raw);
+}
+
+function resolveReferrerUserId(request: Request, newUserId: string): string | null {
+    const urlRef = new URL(request.url).searchParams.get("ref");
+    const candidates = [urlRef];
+    const cookieHeader = request.headers.get("cookie") ?? "";
+    const utmCookie = cookieHeader
+        .split("; ")
+        .find((row) => row.startsWith(`${UTM_COOKIE_NAME}=`));
+    if (utmCookie) {
+        const raw = decodeURIComponent(utmCookie.split("=").slice(1).join("="));
+        const utm = deserializeUtm(raw);
+        if (utm?.ref) candidates.push(utm.ref);
+    }
+    for (const ref of candidates) {
+        if (!isValidReferrerUserId(ref) || ref === newUserId) continue;
+        return ref;
+    }
+    return null;
+}
 
 function signUpPhoneFromUserMetadata(user: { user_metadata?: Record<string, unknown> }): string | null {
     const raw = user.user_metadata?.phone;
@@ -387,12 +423,26 @@ export async function GET(request: Request) {
                     return NextResponse.redirect(`${appUrl}/`);
                 }
 
+                const referrerUserId = resolveReferrerUserId(request, data.user.id);
+                let referredByUserId: string | null = null;
+                if (referrerUserId) {
+                    const { data: referrerRow } = await admin
+                        .from("users")
+                        .select("id")
+                        .eq("id", referrerUserId)
+                        .maybeSingle();
+                    if (referrerRow?.id) {
+                        referredByUserId = referrerRow.id;
+                    }
+                }
+
                 const { data: org, error: orgError } = await admin
                     .from("organizations")
                     .insert({
                         name: `${fullName}'s Org`,
                         slug: slug,
                         type: "business",
+                        referred_by_user_id: referredByUserId,
                     })
                     .select()
                     .single();
@@ -467,13 +517,33 @@ export async function GET(request: Request) {
                     status: "active",
                 });
 
+                if (referredByUserId) {
+                    const { error: referralPendingErr } = await admin.from("referral_conversions").insert({
+                        referrer_user_id: referredByUserId,
+                        referee_organization_id: org.id,
+                        referee_user_id: data.user.id,
+                        status: "pending",
+                    });
+                    if (referralPendingErr && referralPendingErr.code !== "23505") {
+                        console.error("[auth-callback] referral_conversions insert failed:", referralPendingErr);
+                    }
+                }
+
+                const signupUtm = parseUtmFromRequest(request);
+                const signupMetadata = {
+                    email,
+                    full_name: fullName,
+                    ...(signupUtm ? { attribution: signupUtm, ...(signupUtm.ref ? { plg_ref: signupUtm.ref } : {}) } : {}),
+                    ...(referredByUserId ? { referred_by_user_id: referredByUserId } : {}),
+                } as unknown as Json;
+
                 await admin.from("events").insert({
                     organization_id: org.id,
                     user_id: data.user.id,
                     event_type: "user.signed_up",
                     entity_type: "user",
                     entity_id: data.user.id,
-                    metadata: { email, full_name: fullName },
+                    metadata: signupMetadata,
                 });
 
                 const { sendEmail } = await import("@/services/resend/send-email");

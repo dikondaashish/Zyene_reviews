@@ -8,6 +8,7 @@ import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
 import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
 import { WidgetCard } from "@/components/integrations/widget-card";
+import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card";
 import {
     Store,
     Utensils,
@@ -296,24 +297,22 @@ export default async function IntegrationsPage() {
                 </div>
             </section>
 
-            {canUsePublicWidget && (
-                <>
-                    {/* ── Divider ── */}
-                    <hr className="border-border/50" />
-
-                    {/* ── Section 3: Website Elements ── */}
-                    <section className="space-y-5">
-                        <SectionHeader
-                            title="Website Elements"
-                            description="Embed your top reviews directly on your own website"
-                            icon={MonitorPlay}
-                        />
-                        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-                            <WidgetCard businessSlug={business.slug || ""} />
-                        </div>
-                    </section>
-                </>
-            )}
+            {/* ── Website Elements (widgets) ── */}
+            <hr className="border-border/50" />
+            <section className="space-y-5">
+                <SectionHeader
+                    title="Website Elements"
+                    description="Embed your top reviews directly on your own website"
+                    icon={MonitorPlay}
+                />
+                {canUsePublicWidget ? (
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+                        <WidgetCard businessSlug={business.slug || ""} />
+                    </div>
+                ) : (
+                    <WidgetUpgradeCard />
+                )}
+            </section>
         </div>
     );
 }

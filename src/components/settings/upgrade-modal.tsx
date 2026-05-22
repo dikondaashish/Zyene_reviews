@@ -16,18 +16,29 @@ import * as PricingCard from "@/components/ui/pricing-card";
 import { PLANS } from "@/services/stripe/plans";
 import { cn } from "@/lib/utils";
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
+import {
+    getUpgradeModalCopy,
+    type UpgradeModalContext,
+} from "@/lib/phase7/upgrade-modal-copy";
 
 export function UpgradeModal({
     isOpen,
     onClose,
-    title = "Upgrade Your Plan",
-    description = "You've reached your usage limit. Please upgrade to continue.",
+    title,
+    description,
+    context,
 }: {
     isOpen: boolean;
     onClose: () => void;
     title?: string;
     description?: string;
+    /** Phase 7.4 — specific unlock copy when set */
+    context?: UpgradeModalContext;
 }) {
+    const copy = context ? getUpgradeModalCopy(context) : null;
+    const resolvedTitle = title ?? copy?.title ?? "Upgrade Your Plan";
+    const resolvedDescription =
+        description ?? copy?.description ?? "You've reached your usage limit. Please upgrade to continue.";
     const [interval, setInterval] = useState<"month" | "year">("month");
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
@@ -78,8 +89,8 @@ export function UpgradeModal({
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="w-[95vw] max-w-5xl sm:max-w-3xl md:max-w-5xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl">{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+                    <DialogTitle className="text-2xl">{resolvedTitle}</DialogTitle>
+                    <DialogDescription>{resolvedDescription}</DialogDescription>
                 </DialogHeader>
 
                 <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-4 md:p-6 mt-4">

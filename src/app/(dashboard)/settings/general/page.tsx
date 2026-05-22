@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { GeneralSettingsForm } from "@/components/settings/general-settings-form";
 import { DeleteAccountSection } from "@/components/settings/delete-account-section";
 import { RestartTourSection } from "@/components/settings/restart-tour-section";
+import { ReferralCard } from "@/components/settings/referral-card";
 
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
@@ -56,6 +57,8 @@ export default async function GeneralSettingsPage() {
                 }
                 canEditOrganizationName={canEditOrganizationName}
             />
+
+            <ReferralCard />
 
             {/* Product Tour */}
             <RestartTourSection />

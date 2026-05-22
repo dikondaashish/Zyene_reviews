@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { getPlanByPriceId, isPaidPlanTierDowngrade, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
+import { introTrialDaysForOrganization } from "@/lib/growth/referral";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
                 stripe_customer_id: string | null;
                 stripe_subscription_id: string | null;
                 name: string;
+                referred_by_user_id: string | null;
             } | null;
         }
 
@@ -210,6 +212,7 @@ export async function POST(request: Request) {
         const cancelUrl = source === "onboarding" ? onboardingCancelUrl : billingCancelUrl;
 
         const includeIntroTrial = await isEligibleForIntroTrial(stripeCustomerId);
+        const trialDays = introTrialDaysForOrganization(org.referred_by_user_id);
 
         const session = await stripe.checkout.sessions.create({
             customer: stripeCustomerId,
@@ -223,7 +226,7 @@ export async function POST(request: Request) {
             ...(includeIntroTrial
                 ? {
                       subscription_data: {
-                          trial_period_days: 7,
+                          trial_period_days: trialDays,
                           trial_settings: {
                               end_behavior: {
                                   missing_payment_method: "cancel",

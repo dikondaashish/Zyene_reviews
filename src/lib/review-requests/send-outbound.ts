@@ -23,6 +23,7 @@ import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
+import { plgSmsFooter } from "@/lib/growth/plg-attribution";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import {
     bumpCustomerAfterSend,
@@ -320,7 +321,7 @@ export async function sendOutboundReviewRequest(
     let emailLegStatus: "sent" | "failed" | null = null;
 
     if (channel === "sms" && phoneNorm) {
-        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}${plgSmsFooter()}`;
         const r = await sendSMS(phoneNorm, messageBody);
         if (!r.sent) {
             sendStatus = "failed";
@@ -359,7 +360,7 @@ export async function sendOutboundReviewRequest(
             emailLegStatus = "sent";
         }
     } else if (channel === "both" && phoneNorm && emailNorm) {
-        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}`;
+        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback — it only takes 30 seconds: ${reviewLink}${plgSmsFooter()}`;
         const smsR = await sendSMS(phoneNorm, messageBody);
 
         const html = reviewRequestEmail({

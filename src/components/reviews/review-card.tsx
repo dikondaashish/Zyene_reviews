@@ -934,16 +934,7 @@ export function ReviewCard({
             <UpgradeModal
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
-                title={
-                    upgradeModalKind === "plan"
-                        ? "Upgrade for AI reply suggestions"
-                        : "Upgrade Your Plan"
-                }
-                description={
-                    upgradeModalKind === "plan"
-                        ? "AI-assisted replies are available on Starter, Professional, and Enterprise. Choose a plan to continue."
-                        : "You've reached your monthly AI reply limit. Please upgrade your plan to continue using AI features."
-                }
+                context={upgradeModalKind === "plan" ? "ai_reply_plan" : "ai_reply_limit"}
             />
             <Dialog open={!!activePhoto} onOpenChange={(open) => !open && setActivePhoto(null)}>
                 <DialogContent className="sm:max-w-4xl p-2">

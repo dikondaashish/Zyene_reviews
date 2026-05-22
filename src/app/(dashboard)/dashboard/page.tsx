@@ -43,6 +43,7 @@ import { GoogleConnectButton } from "@/components/dashboard/google-connect-butto
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { GoogleConnectEmptyState } from "@/components/dashboard/google-connect-empty-state";
 import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
+import { ReferralCard } from "@/components/settings/referral-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -847,6 +848,9 @@ export default async function DashboardPage() {
                     />
                 </div>
             )}
+
+            {/* Refer a friend — Phase 7.2 (Dashboard + Settings) */}
+            <ReferralCard />
 
             {/* Smart Review Insights & Customer Portal Row */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

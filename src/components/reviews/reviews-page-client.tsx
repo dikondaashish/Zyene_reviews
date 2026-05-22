@@ -408,8 +408,7 @@ export function ReviewsPageClient({
             <UpgradeModal
                 isOpen={showUpgradeModal}
                 onClose={() => setShowUpgradeModal(false)}
-                title="Upgrade for AI review analysis"
-                description="AI review features are available on active Starter, Professional, and Enterprise plans."
+                context="ai_analysis"
             />
         </div>
     );
