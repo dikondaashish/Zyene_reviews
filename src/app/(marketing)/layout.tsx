@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award, Handshake } from "lucide-react";
+import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award, Handshake, Bot, Globe, TrendingUp } from "lucide-react";
 import { FooterTrustStrip } from "@/components/marketing/social-proof";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,12 @@ import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
 const PUBLIC_STATUS_URL = "https://status.zyenereviews.com/";
 
 const PRODUCT_LINKS = [
-    { href: "/features", label: "Features", icon: Sparkles, desc: "Everything Zyene can do for your business" },
+    { href: "/features", label: "Features Overview", icon: Sparkles, desc: "Everything Zyene can do for your business" },
+    { href: "/features/review-monitoring", label: "Review Monitoring", icon: Sparkles, desc: "Unified inbox + real-time alerts" },
+    { href: "/features/ai-replies", label: "AI-Powered Replies", icon: Bot, desc: "One-click drafts and auto-commenter" },
+    { href: "/features/review-collection", label: "Review Collection", icon: ShieldCheck, desc: "Negative Feedback Shield included" },
+    { href: "/features/competitor-tracking", label: "Competitor Tracking", icon: TrendingUp, desc: "Ratings, trends, and AI briefs" },
+    { href: "/features/local-seo", label: "Local SEO Dashboard", icon: Globe, desc: "GBP keywords and performance" },
     { href: "/how-it-works", label: "How It Works", icon: GitBranch, desc: "4 steps to more 5-star reviews" },
     { href: "/integrations", label: "Integrations", icon: Zap, desc: "Google, Zapier, Square, and more" },
     { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo — no contracts" },

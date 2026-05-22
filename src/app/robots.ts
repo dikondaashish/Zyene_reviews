@@ -58,6 +58,7 @@ export default function robots(): MetadataRoute.Robots {
                 ],
                 disallow: [
                     "/api/",
+                    "/growth",
                     "/onboarding",
                     "/dashboard",
                     "/settings",

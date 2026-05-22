@@ -1,9 +1,15 @@
 import type { MetadataRoute } from "next";
 import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
-import { HELP_SLUGS } from "@/lib/phase4/help-data";
+import {
+    HELP_ARTICLE_MAP,
+    HELP_CATEGORY_SLUGS,
+    HELP_SLUGS,
+    helpArticleNestedPath,
+} from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
+import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
 import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
 
 const BASE_URL = "https://zyenereviews.com";
@@ -61,6 +67,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const conversionPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
         { url: `${BASE_URL}/features`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+        ...FEATURE_PILLAR_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/features/${slug}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+        })),
         { url: `${BASE_URL}/how-it-works`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
         { url: `${BASE_URL}/integrations`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     ];
@@ -274,11 +286,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // ─────────────────────────────────────────────
     const helpPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/help`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+        ...HELP_CATEGORY_SLUGS.map((cat) => ({
+            url: `${BASE_URL}/help/${cat}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.65,
+        })),
+        ...Object.values(HELP_ARTICLE_MAP).map((article) => ({
+            url: `${BASE_URL}${helpArticleNestedPath(article)}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.6,
+        })),
         ...HELP_SLUGS.map((slug) => ({
             url: `${BASE_URL}/help/${slug}`,
             lastModified: now,
             changeFrequency: "monthly" as const,
-            priority: 0.6,
+            priority: 0.55,
         })),
     ];
 

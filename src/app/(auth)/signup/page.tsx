@@ -104,7 +104,7 @@ function SignupForm() {
         }
 
         const phoneTrimmed = phone.trim();
-        if (!isPlausibleMobileNumber(phoneTrimmed)) {
+        if (phoneTrimmed && !isPlausibleMobileNumber(phoneTrimmed)) {
             toast.error("Enter a valid mobile number with country code (e.g. +1 555 123 4567).");
             setIsLoading(false);
             return;
@@ -120,7 +120,7 @@ function SignupForm() {
             options: {
                 data: {
                     full_name: fullName,
-                    phone: phoneTrimmed,
+                    ...(phoneTrimmed ? { phone: phoneTrimmed } : {}),
                     sms_review_alerts_consent: smsReviewAlertsConsent,
                     ...(inviteToken ? { invite_token: inviteToken } : {}),
                 },
@@ -284,7 +284,7 @@ function SignupForm() {
 
                     <div className="space-y-1.5">
                         <label htmlFor="phone" className="block text-sm font-medium text-foreground">
-                            Mobile number
+                            Mobile number <span className="text-muted-foreground font-normal">(optional)</span>
                         </label>
                         <input
                             id="phone"
@@ -292,13 +292,12 @@ function SignupForm() {
                             placeholder="+1 555 123 4567"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
-                            required
                             disabled={isLoading}
                             autoComplete="tel"
                             className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                         />
                         <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
-                            <Phone className="h-3 w-3 shrink-0" /> Include your country code. Your number is saved to your profile; SMS is only used if you opt in below.
+                            <Phone className="h-3 w-3 shrink-0" /> Add your number now or later in Settings → Notifications. Only used for SMS review alerts if you opt in.
                         </p>
 
                         <div className="flex items-start gap-3 px-1 pt-1">

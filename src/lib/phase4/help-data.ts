@@ -53,7 +53,7 @@ const gs1: HelpArticle = {
             "Enter your business address or service area",
         ]},
         { type: "h2", text: "Step 4: Your 7-Day Free Trial Starts" },
-        { type: "p", text: "You now have full access to all features for 7 days — no credit card required upfront. At the end of the trial, you'll be asked to choose a plan. If you cancel before day 7, you won't be charged anything." },
+        { type: "p", text: "You now have full access to all features for 7 days. Cancel before the trial ends and you won't be charged. At the end of the trial, your subscription starts automatically — no lock-in, cancel anytime from billing settings." },
         { type: "h2", text: "Next Steps" },
         { type: "ul", items: [
             "Connect your Google Business Profile",
@@ -774,3 +774,22 @@ export const HELP_BY_CATEGORY: Record<HelpCategory, HelpArticle[]> = {
     "billing": [bill1, bill2, bill3, bill4],
     "integrations": [int1, int2, int3, int4],
 };
+
+/** URL segment for category hub pages: /help/{category} */
+export const HELP_CATEGORY_SLUGS: HelpCategory[] = [
+    "getting-started",
+    "reviews",
+    "campaigns",
+    "analytics",
+    "billing",
+    "integrations",
+];
+
+export function isHelpCategory(slug: string): slug is HelpCategory {
+    return (HELP_CATEGORY_SLUGS as string[]).includes(slug);
+}
+
+/** Canonical nested article URL per blueprint: /help/{category}/{article} */
+export function helpArticleNestedPath(article: HelpArticle): string {
+    return `/help/${article.category}/${article.slug}`;
+}

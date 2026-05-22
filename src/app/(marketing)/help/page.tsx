@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, Mail, Search } from "lucide-react";
 import type { Metadata } from "next";
-import { HELP_BY_CATEGORY, HELP_CATEGORIES, type HelpCategory } from "@/lib/phase4/help-data";
+import {
+    HELP_BY_CATEGORY,
+    HELP_CATEGORIES,
+    helpArticleNestedPath,
+    type HelpCategory,
+} from "@/lib/phase4/help-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
@@ -65,22 +70,27 @@ export default function HelpCenterPage() {
                         return (
                             <div key={categoryKey}>
                                 {/* Category header */}
-                                <div className="flex items-center gap-3 mb-6">
+                                <Link
+                                    href={`/help/${categoryKey}`}
+                                    className="flex items-center gap-3 mb-6 group w-fit"
+                                >
                                     <div className="p-2.5 bg-primary/10 text-primary rounded-lg border border-primary/20 text-xl leading-none">
                                         {catInfo.emoji}
                                     </div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-foreground">{catInfo.label}</h2>
+                                        <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                                            {catInfo.label}
+                                        </h2>
                                         <p className="text-sm text-muted-foreground">{catInfo.description}</p>
                                     </div>
-                                </div>
+                                </Link>
 
                                 {/* Article list */}
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     {articles.map((article) => (
                                         <Link
                                             key={article.slug}
-                                            href={`/help/${article.slug}`}
+                                            href={helpArticleNestedPath(article)}
                                             className="group flex items-start justify-between gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/40 hover:shadow-sm transition-all"
                                         >
                                             <div className="flex-1 min-w-0">

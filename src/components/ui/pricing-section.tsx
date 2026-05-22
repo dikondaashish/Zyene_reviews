@@ -50,7 +50,7 @@ const pricingData: PricingCardProps[] = [
       "500 email review requests / month",
       "500 SMS review requests / month",
       "1,500 AI-generated review draft requests / month (public review link flow, step 3)",
-      "Unlimited AI reply suggestions & Auto commenter",
+      "Unlimited AI reply suggestions & Auto commenter (inbox replies)",
     ],
     cta: "Start 7-day free trial",
     href: "/signup",

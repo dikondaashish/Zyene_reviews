@@ -7,6 +7,7 @@
 export const MARKETING_ROUTE_PREFIXES = [
     "/pricing",
     "/features",
+    "/customers",
     "/how-it-works",
     "/integrations",
     "/industries",
@@ -21,6 +22,7 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/data-retention",
     "/security",
     "/case-studies",
+    "/customers",
     "/partners",
     "/agencies",
     "/demo",
@@ -29,6 +31,7 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/newsletter",
     "/tools",
     "/docs",
+    "/growth",
 ] as const;
 
 /** Auth, app, and infrastructure paths — never business slugs on any host. */

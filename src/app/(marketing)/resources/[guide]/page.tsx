@@ -121,7 +121,7 @@ export default async function ResourceGuidePage(
                             {/* Guide footer CTA */}
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
-                                <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial — no credit card required.</p>
+                                <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial — no credit card lock-in.</p>
                                 <Link href="/signup">
                                     <Button className="gap-2">
                                         Start Free Trial <ArrowRight className="h-4 w-4" />

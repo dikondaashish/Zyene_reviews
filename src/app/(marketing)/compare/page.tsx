@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Check, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { COMPETITORS } from "@/lib/phase3/competitor-data";
+import { POSITIONING } from "@/lib/growth/product-foundation";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
@@ -63,8 +64,11 @@ export default function CompareHubPage() {
                         See how Zyene<br />
                         <span className="text-primary">compares to the rest</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+                    <p className="text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
                         We believe in honest comparisons. Here&apos;s where Zyene wins, where competitors win, and how to decide what&apos;s right for your business.
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-10 max-w-xl mx-auto">
+                        {POSITIONING.oneLiner}
                     </p>
                     <Link href="/signup">
                         <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">

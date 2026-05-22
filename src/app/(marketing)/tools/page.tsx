@@ -10,6 +10,16 @@ export const metadata: Metadata = {
     description:
         "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
     alternates: { canonical: "https://zyenereviews.com/tools" },
+    openGraph: {
+        title: "Free Review Tools — Zyene Reviews",
+        description: "Generate a Google review link, check your reputation score, and draft review responses — free, no signup required.",
+        url: "https://zyenereviews.com/tools",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Free Review Tools — Zyene Reviews",
+        description: "Generate a Google review link, check your reputation score, and draft review responses — free.",
+    },
 };
 
 const ICONS = {

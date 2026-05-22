@@ -7,6 +7,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
+import { PlatformPillarsSection } from "@/components/marketing/platform-pillars-section";
+import { POSITIONING } from "@/lib/growth/product-foundation";
 
 export const metadata: Metadata = {
     title: "Features — Zyene Reviews",
@@ -78,7 +80,7 @@ const PILLARS = [
         highlight: true,
     },
     {
-        id: "competitor-intelligence",
+        id: "competitor-tracking",
         icon: TrendingUp,
         iconBg: "bg-orange-500/10",
         iconColor: "text-orange-600 dark:text-orange-400",
@@ -157,8 +159,12 @@ export default function FeaturesPage() {
                         Everything you need to<br />
                         <span className="text-primary">own your online reputation</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                        Six powerful pillars built specifically for local business owners. Each one designed to save you time and win you more customers.
+                    <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+                        Ten product pillars for local business owners — six deep-dives below, plus CRM,
+                        multi-location, integrations, and team collaboration.
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-10 max-w-xl mx-auto italic">
+                        {POSITIONING.oneLiner}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/signup">
@@ -182,16 +188,16 @@ export default function FeaturesPage() {
                         {PILLARS.map((pillar) => {
                             const Icon = pillar.icon;
                             return (
-                                <a
+                                <Link
                                     key={pillar.id}
-                                    href={`#${pillar.id}`}
+                                    href={`/features/${pillar.id}`}
                                     className="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-card border border-transparent hover:border-border transition-all text-center group"
                                 >
                                     <div className={`${pillar.iconBg} p-3 rounded-xl`}>
                                         <Icon className={`h-5 w-5 ${pillar.iconColor}`} />
                                     </div>
                                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors leading-tight">{pillar.title.split("&")[0].trim()}</span>
-                                </a>
+                                </Link>
                             );
                         })}
                     </div>
@@ -231,11 +237,19 @@ export default function FeaturesPage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <Link href={pillar.cta.href}>
-                                        <Button variant={pillar.highlight ? "default" : "outline"} className="gap-2">
-                                            {pillar.cta.label} <ArrowRight className="h-4 w-4" />
-                                        </Button>
-                                    </Link>
+                                    <div className="flex flex-wrap items-center gap-4">
+                                        <Link href={pillar.cta.href}>
+                                            <Button variant={pillar.highlight ? "default" : "outline"} className="gap-2">
+                                                {pillar.cta.label} <ArrowRight className="h-4 w-4" />
+                                            </Button>
+                                        </Link>
+                                        <Link
+                                            href={`/features/${pillar.id}`}
+                                            className="text-sm font-medium text-primary hover:underline"
+                                        >
+                                            Feature page →
+                                        </Link>
+                                    </div>
                                 </div>
 
                                 {/* Visual block */}
@@ -263,6 +277,8 @@ export default function FeaturesPage() {
                     );
                 })}
             </section>
+
+            <PlatformPillarsSection />
 
             <CustomerLogoBar title="Features trusted by local businesses nationwide" />
 

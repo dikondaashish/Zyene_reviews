@@ -30,6 +30,8 @@
 <a id="1-product-foundation"></a>
 ## 1. Product Foundation — What We Actually Sell
 
+> **Status: Complete (May 2026)** — Canonical data in `src/lib/growth/product-foundation.ts` (10 pillars, Negative Feedback Shield, plan table, ICP, positioning). Reflected on `/features`, `/pricing`, industry pages, and comparisons.
+
 Before building any growth engine, we must be crystal clear about what we deliver.
 
 ### 1.1 Core Product Pillars
@@ -100,6 +102,8 @@ This is **not just a feature — it's a selling point competitors charge $300/mo
 <a id="2-market-position"></a>
 ## 2. Market Position & Competitive Landscape
 
+> **Status: Complete (May 2026)** — Positioning in `product-foundation.ts`; live comparison pages at `/compare/*` powered by `src/lib/phase3/competitor-data.ts` (Birdeye, Podium, NiceJob, GatherUp).
+
 ### 2.1 Where We Sit
 
 ```
@@ -164,6 +168,8 @@ Price ($/mo per location)
 <a id="3-current-state-audit"></a>
 ## 3. Current State Audit — Where We Are Today
 
+> **Status: Updated May 2026** — Section 3.2 gaps below were **resolved in Phases 0–8**. See §3.3 for what remains operational (outside the codebase).
+
 ### 3.1 What's Working (Inside)
 
 - ✅ Full review inbox with Google/Facebook/Yelp sync
@@ -183,45 +189,42 @@ Price ($/mo per location)
 - ✅ Product tour and getting-started checklist
 - ✅ Developer docs with API reference
 
-### 3.2 What's Broken or Missing (Outside)
+### 3.2 Resolved — Former Critical Gaps (Phases 0–8)
 
-#### Critical (Blocking Customer Acquisition)
+| Former gap | Resolution |
+|------------|------------|
+| No sitemap / robots | `src/app/sitemap.ts`, `src/app/robots.ts` |
+| No OG / Twitter / JSON-LD | Per-page metadata + `json-ld` components |
+| No `/pricing`, `/features` | Live conversion pages |
+| No industry / compare pages | `/industries/*`, `/compare/*` |
+| Help dead links | 23 articles + category hubs `/help/{category}` + nested URLs |
+| About/Contact hidden | Header + footer nav |
+| No blog / resources | `/blog`, `/resources` |
+| Domain confusion | `metadataBase` → `https://zyenereviews.com` in root layout |
+| No case studies / security / integrations | `/case-studies`, `/security`, `/integrations` |
+| No demo / enterprise | `/demo`, `/enterprise`, Cal.com |
+| reset-password missing | `/reset-password` |
+| Homepage SEO | Server `metadata` + `MarketingHomeClient` (not full-page client SEO) |
+| Annual pricing | Toggle on `/pricing` via `PricingPageClient` |
+| Email capture | Newsletter + free tools + `marketing_subscribers` |
 
-| Gap | Impact | Priority |
-|-----|--------|----------|
-| **No sitemap.xml** | Google can't efficiently crawl marketing pages | P0 |
-| **No robots.txt** | No crawl directives; dashboard might be indexed | P0 |
-| **No Open Graph / Twitter cards** | Links shared on social show no image/description | P0 |
-| **No JSON-LD structured data** | No rich snippets in search results | P0 |
-| **No standalone /pricing page** | Can't run ads to pricing; weak SEO for "pricing" queries | P0 |
-| **No standalone /features page** | Features buried in long scroll | P0 |
-| **No industry landing pages** | Can't rank for "review management for dentists" etc. | P0 |
-| **No comparison pages** | Can't rank for "Birdeye alternative" (high-intent keyword) | P0 |
-| **Help center is dead links** | `/help` categories link to `#` — zero articles exist | P0 |
-| **About/Contact not in navigation** | Pages exist but are invisible to visitors | P0 |
-| **Homepage is one giant scroll** | All content on one URL = one ranking opportunity | P1 |
-| **No blog or content hub** | Zero organic content marketing | P1 |
-| **Domain confusion** | `metadataBase` = collectratings.com, copy says zyenereviews.com | P1 |
+### 3.3 Remaining (Operational — Not Code Gaps)
 
-#### Important (Competitive Parity)
-
-| Gap | Impact |
-|-----|--------|
-| No case studies with real metrics | No social proof beyond 3 generic testimonials |
-| No product demo or video | Visitors can't see the product before signup |
-| No integrations marketing page | API/Zapier/POS hidden in docs |
-| No security/trust page | Enterprise buyers need this |
-| Trial messaging contradicts ("no card" vs Stripe checkout) | Signup friction |
-| No annual pricing toggle on marketing page | Only shown in onboarding step 4 |
-| No logo bar from real customers | Trust section uses compliance badges only |
-| No email capture / lead magnet | No way to nurture visitors who aren't ready to buy |
-| Marketing homepage is `"use client"` | Server-rendered text would be better for SEO |
-| reset-password route missing | Broken funnel link |
+| Item | Owner | Notes |
+|------|-------|-------|
+| G2 / Capterra profiles | Marketing | Listed in implementation matrix as `external` |
+| Google Ads / Meta pixels | Marketing | Run with UTM capture on site |
+| Product demo **video** | Marketing | `/demo` + Cal.com live; video optional |
+| Agency product dashboard | Product | Waitlist at `/agencies`; matrix `deferred` |
+| Permissioned customer logos | Marketing | Case studies use composite stories until approved |
+| NPS in-app survey | Product | Target KPI; not yet shipped |
 
 ---
 
 <a id="4-growth-architecture"></a>
 ## 4. Growth Architecture Overview
+
+> **Status: Complete (May 2026)** — Flywheel implemented end-to-end. Target URLs in §4.2 live (see `src/lib/growth/page-inventory.ts`). Feature deep-links: `/features/review-monitoring` … `/features/analytics`. Nav matches §4.3 in `src/app/(marketing)/layout.tsx`. `/customers` redirects to `/case-studies`.
 
 ### 4.1 The Growth Flywheel
 
@@ -274,13 +277,13 @@ Price ($/mo per location)
 ```
 zyenereviews.com (marketing)
 ├── /                           ← Homepage (hero + summary)
-├── /features                   ← Deep feature breakdown
-│   ├── /features/review-monitoring
-│   ├── /features/ai-replies
-│   ├── /features/review-collection
-│   ├── /features/competitor-tracking
-│   ├── /features/local-seo
-│   └── /features/analytics
+├── /features                   ← Deep feature breakdown (live)
+│   ├── /features/review-monitoring      ← live
+│   ├── /features/ai-replies             ← live
+│   ├── /features/review-collection      ← live
+│   ├── /features/competitor-tracking    ← live
+│   ├── /features/local-seo              ← live
+│   └── /features/analytics              ← live
 ├── /pricing                    ← Plans, limits, FAQ, calculator
 ├── /how-it-works               ← Visual 3-step flow
 ├── /integrations               ← Google, Yelp, FB, Zapier, API, POS
@@ -298,8 +301,9 @@ zyenereviews.com (marketing)
 │   ├── /compare/podium
 │   ├── /compare/nicejob
 │   └── /compare/gatherup
-├── /customers                  ← Case studies hub
-│   ├── /customers/[slug]       ← Individual case study
+├── /case-studies               ← Case studies hub (canonical)
+│   ├── /case-studies/[slug]    ← Individual case study
+│   └── /customers → redirects to /case-studies
 ├── /blog                       ← Content hub
 │   ├── /blog/[slug]            ← Individual post
 ├── /resources                  ← Guides hub
@@ -326,7 +330,7 @@ auth.zyenereviews.com
 ├── /login
 ├── /signup
 ├── /forgot-password
-└── /reset-password             ← Currently missing — must create
+└── /reset-password             ← live
 
 app.zyenereviews.com
 ├── /onboarding
@@ -350,7 +354,7 @@ collectratings.com
 - Review Monitoring → `/features/review-monitoring`
 - AI-Powered Replies → `/features/ai-replies`
 - Review Collection → `/features/review-collection`
-- Competitor Tracking → `/features/competitor-tracking`
+- Competitor Tracking → `/features/competitor-tracking` (live)
 - Local SEO Dashboard → `/features/local-seo`
 - Integrations → `/integrations`
 
@@ -366,7 +370,7 @@ collectratings.com
 - Blog → `/blog`
 - Guides → `/resources`
 - Help Center → `/help`
-- Case Studies → `/customers`
+- Case Studies → `/case-studies`
 - Compare Alternatives → `/compare`
 - Security → `/security`
 
@@ -386,6 +390,15 @@ API Docs         Home Services   Compare         Demo
 
 <a id="phase-0"></a>
 ## Phase 0 — Fix the Foundation (Week 1–2)
+
+> **Status: Complete (May 2026)**
+> All engineering deliverables verified:
+> - `/reset-password` route: `src/app/(auth)/reset-password/page.tsx`
+> - Help Center dead links: replaced `#` anchors with real article links using `helpArticleNestedPath()` — `src/app/(marketing)/help/page.tsx`
+> - About + Contact: added to both desktop/mobile nav and footer — `src/app/(marketing)/layout.tsx`
+> - Copy contradictions resolved: "no credit card required" → "no credit card lock-in"; "2-hour response" → "within 24 hours" everywhere; "Unlimited AI replies" clarified with "(inbox replies)" qualifier
+> - Domain: `metadataBase` set to `https://zyenereviews.com` — `src/app/layout.tsx`
+> - Trial messaging aligned across homepage, pricing, FAQ, contact, signup, help, and all CTA sections
 
 > **Goal:** Fix broken things that actively hurt credibility and SEO before building anything new.
 
@@ -432,6 +445,16 @@ Update in: homepage hero, pricing cards, FAQ, contact page, signup panel, onboar
 
 <a id="phase-1"></a>
 ## Phase 1 — SEO & Discoverability Engine (Week 2–4)
+
+> **Status: Complete (May 2026)**
+> All engineering deliverables verified:
+> - Dynamic `sitemap.ts` with all marketing, industry, comparison, blog, help, feature pillar URLs — `src/app/sitemap.ts`
+> - `robots.ts` disallowing `/api/`, `/onboarding`, `/growth`, and app paths — `src/app/robots.ts`
+> - Open Graph metadata on every `(marketing)` page (unique title + description + url)
+> - Twitter `summary_large_image` cards on every `(marketing)` page
+> - JSON-LD: `OrganizationJsonLd` in root layout, `SoftwareApplicationJsonLd` + `FAQPageJsonLd` on homepage, `FAQPageJsonLd` + `ProductJsonLd` on pricing — `src/components/seo/json-ld.tsx`
+> - Dynamic OG images: 19 `opengraph-image.tsx` files across all marketing routes
+> - Per-page unique `metadata` exports on all `(marketing)` pages with canonical URLs
 
 > **Goal:** Make the site crawlable, shareable, and indexable. This is the foundation everything else builds on.
 
@@ -513,6 +536,15 @@ Help articles → Related features, Getting started
 
 <a id="phase-2"></a>
 ## Phase 2 — Conversion Architecture (Week 4–6)
+
+> **Status: Complete (May 2026)**
+> All engineering deliverables verified:
+> - `/pricing` page with plan cards, monthly/annual toggle (`BillingToggle`), FAQ accordion, comparison mini-table, and `ProductJsonLd` + `FAQPageJsonLd` structured data — `src/app/(marketing)/pricing/page.tsx`
+> - `/features` page with 6 feature pillars, 4 platform pillars, integrations bar, CTA — `src/app/(marketing)/features/page.tsx`
+> - `/how-it-works` page with visual 4-step flow — `src/app/(marketing)/how-it-works/page.tsx`
+> - `/integrations` page with platform cards (Google, Facebook, Yelp, Zapier, REST API, Widgets, POS) and developer section — `src/app/(marketing)/integrations/page.tsx`
+> - Signup flow: `src/app/(auth)/signup/page.tsx` with aligned trial messaging ("7-day free trial. No credit card lock-in.")
+> - Feature sub-pages: `/features/[pillar]` for all 6 deep-dive feature pages — `src/app/(marketing)/features/[pillar]/page.tsx`
 
 > **Goal:** Create standalone pages that serve as landing pages for ads, SEO, and referrals. Make the buying decision easy.
 
@@ -609,6 +641,14 @@ Business Profile in      when new reviews           requests via SMS,       beat
 
 <a id="phase-3"></a>
 ## Phase 3 — Industry Verticals & Comparison Engine (Week 6–10)
+
+> **Status: Complete (May 2026)**
+> All engineering deliverables verified:
+> - `/industries` hub page — `src/app/(marketing)/industries/page.tsx`
+> - All 8 industry pages (restaurants, dental, auto-repair, salons, home-services, medical, hotels, fitness) with industry-specific pain points, feature mapping, use cases, pricing, and OG images — `src/app/(marketing)/industries/[industry]/page.tsx` + `src/lib/phase3/industry-data.ts`
+> - `/compare` hub page with competitor grid and summary table — `src/app/(marketing)/compare/page.tsx`
+> - All 4 competitor comparison pages (birdeye, podium, nicejob, gatherup) with honest "where competitor wins", feature breakdown, pricing comparison — `src/app/(marketing)/compare/[competitor]/page.tsx` + `src/lib/phase3/competitor-data.ts`
+> - Per-page OG images, Open Graph/Twitter metadata, canonical URLs for all industry and comparison pages
 
 > **Goal:** Capture high-intent search traffic from business owners looking for solutions in their specific industry and from people comparing tools.
 
@@ -927,6 +967,8 @@ The product already has upgrade modals at:
 <a id="kpi-dashboard"></a>
 ## KPI Dashboard — How to Measure Growth
 
+> **Status: Complete (May 2026)** — Live dashboard at [`/growth`](https://zyenereviews.com/growth) (password-protected, not indexed). Definitions in `src/lib/growth/kpi-definitions.ts`; live values from `src/lib/growth/kpi-metrics.ts`. API: `GET /api/internal/growth-metrics`. Runbook: [`docs/GROWTH_OPERATIONS.md`](./GROWTH_OPERATIONS.md).
+
 ### Acquisition Metrics
 
 | Metric | Source | Target (6 months) |
@@ -966,6 +1008,8 @@ The product already has upgrade modals at:
 
 <a id="page-architecture-map"></a>
 ## Page Architecture Map — Complete URL Inventory
+
+> **Status: Complete (May 2026)** — Canonical inventory: `src/lib/growth/page-inventory.ts` (100+ routes including blog, help, tools, ES pages, PLG surfaces). Browse and filter on `/growth` → **Page architecture** tab. Sitemap: `src/app/sitemap.ts`.
 
 ### Existing Pages (Keep & Improve)
 
@@ -1009,22 +1053,29 @@ The product already has upgrade modals at:
 | `/compare/podium` | Phase 3 | P1 | SEO + Conversion |
 | `/compare/nicejob` | Phase 3 | P1 | SEO + Conversion |
 | `/compare/gatherup` | Phase 3 | P2 | SEO + Conversion |
-| `/customers` (case studies) | Phase 5 | P1 | Trust |
-| `/customers/[slug]` | Phase 5 | P1 | Trust |
+| `/case-studies` (case studies) | Phase 5 | P1 | Trust — **live** (blueprint originally `/customers`) |
+| `/case-studies/[slug]` | Phase 5 | P1 | Trust |
 | `/blog` | Phase 4 | P1 | SEO + Authority |
 | `/blog/[slug]` | Phase 4 | P1 | SEO + Authority |
 | `/resources` | Phase 4 | P2 | SEO + Lead gen |
 | `/resources/[slug]` | Phase 4 | P2 | SEO + Lead gen |
-| `/help/[category]` | Phase 4 | P1 | Support + SEO |
-| `/help/[category]/[article]` | Phase 4 | P1 | Support + SEO |
+| `/help/[category]` | Phase 4 | P1 | Support + SEO — **live** (e.g. `/help/getting-started`) |
+| `/help/[category]/[article]` | Phase 4 | P1 | Support + SEO — **live** (canonical nested URLs) |
 | `/security` | Phase 5 | P1 | Trust |
 | `/demo` | Phase 8 | P2 | Enterprise |
+| `/enterprise` | Phase 8 | P2 | Enterprise |
 | `/agencies` | Phase 8 | P2 | Enterprise |
+| `/tools` + `/tools/*` | Phase 7 | P1 | Lead gen |
+| `/es/industries/*` | Phase 8 | P2 | SEO (ES) |
+| `/growth` | Ops | — | Internal KPI dashboard (noindex) |
 
 ---
 
 <a id="implementation-priority-matrix"></a>
 ## Implementation Priority Matrix
+
+> **Status: Complete (May 2026)** — All Phase 0–8 engineering deliverables marked **complete** in `src/lib/growth/implementation-matrix.ts`. View timeline and task status on `/growth` → **Priority matrix** tab. Ongoing/external items (GSC, G2, paid ads, agency dashboard) documented in [`docs/GROWTH_OPERATIONS.md`](./GROWTH_OPERATIONS.md).
+
 
 ### Must Do First (Phase 0–1) — Foundation
 
@@ -1097,8 +1148,8 @@ No comparisons           /compare/birdeye         Authority content        Inter
 
 Every phase builds on the previous one. Don't skip phases — the foundation must be solid before content works, and content must exist before paid acquisition is efficient.
 
-**Start with Phase 0. Today.**
+**Phases 0–8 are shipped.** Operate growth via `/growth`, this blueprint, and `docs/GROWTH_OPERATIONS.md`.
 
 ---
 
-*This document is the growth source of truth for Zyene Reviews. Update it as phases complete and metrics come in.*
+*This document is the growth source of truth for Zyene Reviews. Update it as metrics evolve and new routes ship.*
