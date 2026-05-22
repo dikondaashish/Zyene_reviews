@@ -33,12 +33,16 @@ const syneDisplay = Syne({
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://collectratings.com"),
+  metadataBase: new URL("https://zyenereviews.com"),
   alternates: {
     canonical: "/",
   },
-  title: "Zyene Reviews - Reputation Management for Local Businesses",
-  description: "Automate your customer reviews and grow your business with Zyene Reviews.",
+  title: {
+    default: "Zyene Reviews — Review Management for Local Businesses",
+    template: "%s | Zyene Reviews",
+  },
+  description:
+    "Monitor, respond to, and grow your Google reviews with AI. Zyene Reviews gives local businesses a full reputation management platform starting at $29.99/mo — with no annual contracts.",
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -55,6 +59,41 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Zyene Reviews",
   },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://zyenereviews.com",
+    siteName: "Zyene Reviews",
+    title: "Zyene Reviews — Review Management for Local Businesses",
+    description:
+      "Monitor, respond to, and grow your Google reviews with AI. Full reputation management platform starting at $29.99/mo — no annual contracts.",
+    images: [
+      {
+        url: "/og/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Zyene Reviews — Reputation Management for Local Businesses",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Zyene Reviews — Review Management for Local Businesses",
+    description:
+      "Monitor, respond to, and grow your Google reviews with AI. Starting at $29.99/mo — no annual contracts.",
+    images: ["/og/og-default.png"],
+    site: "@zyenereviews",
+  },
+  keywords: [
+    "review management",
+    "reputation management",
+    "google reviews",
+    "local business reviews",
+    "AI review replies",
+    "review requests",
+    "competitor tracking",
+    "local SEO",
+  ],
 };
 
 export const viewport: Viewport = {

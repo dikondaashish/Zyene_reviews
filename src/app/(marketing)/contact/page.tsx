@@ -1,8 +1,19 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Mail, Clock, MessageSquare, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+    title: "Contact Us",
+    description:
+        "Reach out to the Zyene Reviews team for support, sales, or general inquiries. We typically respond within 24 hours, Monday through Friday.",
+    openGraph: {
+        title: "Contact Zyene Reviews",
+        description:
+            "Get in touch with our support team or talk to sales about Enterprise plans. We typically respond within 24 hours.",
+        url: "https://zyenereviews.com/contact",
+    },
+};
 
 export default function ContactPage() {
     return (

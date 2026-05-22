@@ -1,82 +1,114 @@
 import Link from "next/link";
-import { ArrowRight, Mail, FileText, Phone } from "lucide-react";
+import { ArrowRight, Mail, FileText, BarChart3, Megaphone, CreditCard, BookOpen, Zap } from "lucide-react";
+import type { Metadata } from "next";
 
-export const metadata = {
-    title: "Help Center - Zyene Reviews",
-    description: "Support and Help Center for Zyene Reviews users.",
+export const metadata: Metadata = {
+    title: "Help Center — Zyene Reviews",
+    description: "Find guides, tutorials, and answers to common questions about Zyene Reviews. Get started quickly or troubleshoot any issue.",
 };
 
-export default function HelpCenterPage() {
-    const categories = [
-        {
-            title: "Getting Started",
-            description: "Learn how to connect your first review platform and send your first request.",
-            icon: FileText,
-            href: "/help/getting-started"
-        },
-        {
-            title: "Dashboard & Analytics",
-            description: "Understand your review metrics and how to track competitor performance.",
-            icon: FileText,
-            href: "/help/analytics"
-        },
-        {
-            title: "Automated Campaigns",
-            description: "Set up SMS and Email campaigns to automatically request reviews.",
-            icon: FileText,
-            href: "/help/campaigns"
-        },
-        {
-            title: "Account & Billing",
-            description: "Manage your subscription, organization members, and notification settings.",
-            icon: FileText,
-            href: "/help/billing"
-        }
-    ];
+const categories = [
+    {
+        title: "Getting Started",
+        description: "Connect your Google Business Profile, send your first review request, and set up your dashboard.",
+        icon: BookOpen,
+        href: "/docs",
+        badge: "Start here",
+    },
+    {
+        title: "Dashboard & Analytics",
+        description: "Understand your review metrics, track competitor performance, and read the engagement funnel.",
+        icon: BarChart3,
+        href: "/docs/how-it-works",
+        badge: null,
+    },
+    {
+        title: "Automated Campaigns",
+        description: "Set up SMS and email campaigns to automatically request reviews from your customers.",
+        icon: Megaphone,
+        href: "/docs",
+        badge: null,
+    },
+    {
+        title: "Integrations & API",
+        description: "Connect Zapier, use the REST API, embed review widgets, and set up POS triggers.",
+        icon: Zap,
+        href: "/docs/api",
+        badge: null,
+    },
+    {
+        title: "Account & Billing",
+        description: "Manage your subscription, upgrade your plan, invite team members, and set notifications.",
+        icon: CreditCard,
+        href: "/contact",
+        badge: null,
+    },
+    {
+        title: "Plugins & Embeds",
+        description: "Add a review carousel or rating badge to your website with a simple iframe snippet.",
+        icon: FileText,
+        href: "/docs/plugins",
+        badge: null,
+    },
+];
 
+export default function HelpCenterPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Header section */}
+            {/* Header */}
             <section className="bg-muted border-b border-border py-20">
                 <div className="container px-4 md:px-6 mx-auto max-w-5xl text-center">
                     <h1 className="text-4xl font-bold tracking-tight mb-4">How can we help you today?</h1>
                     <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                        Search our knowledge base or browse categories below to find answers to your questions.
+                        Browse categories below or email our team — we&apos;re here Monday through Friday, 9am–6pm EST.
                     </p>
-                    <div className="max-w-xl mx-auto flex items-center bg-background rounded-lg border border-border px-4 py-2">
-                        <input
-                            type="text"
-                            placeholder="Search for articles, guides..."
-                            className="flex-1 bg-transparent border-none focus:outline-none px-2 py-2 text-foreground placeholder:text-muted-foreground"
-                        />
-                        <button className="bg-primary text-primary-foreground border border-primary rounded-md px-6 py-2 font-medium hover:brightness-95 transition">
-                            Search
-                        </button>
-                    </div>
+                    <a
+                        href="mailto:support@zyenereviews.com"
+                        className="inline-flex items-center gap-2 bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition"
+                    >
+                        <Mail className="w-4 h-4" />
+                        Email support@zyenereviews.com
+                    </a>
                 </div>
             </section>
 
             {/* Categories */}
             <section className="py-20 bg-background">
                 <div className="container px-4 md:px-6 mx-auto max-w-5xl">
-                    <h2 className="text-2xl font-bold mb-8">Browse Categories</h2>
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <h2 className="text-2xl font-bold mb-2">Browse by topic</h2>
+                    <p className="text-muted-foreground mb-8">
+                        Most answers live in our{" "}
+                        <Link href="/docs" className="text-primary hover:brightness-90 underline underline-offset-2">
+                            developer docs
+                        </Link>
+                        . Full help articles are coming soon.
+                    </p>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {categories.map((category) => (
                             <Link
-                                href="#"
+                                href={category.href}
                                 key={category.title}
-                            className="group flex p-6 rounded-lg border border-border bg-card hover:border-primary/30 transition-all items-start"
+                                className="group flex flex-col p-6 rounded-lg border border-border bg-card hover:border-primary/40 hover:shadow-sm transition-all"
                             >
-                                <div className="p-3 bg-primary/10 text-primary rounded-md border border-primary/20 mr-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                                    <category.icon className="w-6 h-6" />
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2.5 bg-primary/10 text-primary rounded-md border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors shrink-0">
+                                        <category.icon className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-base font-semibold group-hover:text-primary transition-colors">
+                                        {category.title}
+                                    </h3>
+                                    {category.badge && (
+                                        <span className="ml-auto text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                                            {category.badge}
+                                        </span>
+                                    )}
                                 </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{category.title}</h3>
-                                    <p className="text-muted-foreground mb-4">{category.description}</p>
-                                    <span className="text-primary text-sm font-medium flex items-center">
-                                        View Articles <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                                    </span>
-                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                                    {category.description}
+                                </p>
+                                <span className="mt-4 text-primary text-sm font-medium flex items-center gap-1">
+                                    View guides <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </span>
                             </Link>
                         ))}
                     </div>
@@ -89,17 +121,23 @@ export default function HelpCenterPage() {
                     <div className="p-10 bg-card rounded-lg border border-border">
                         <h2 className="text-2xl font-bold mb-4">Still need help?</h2>
                         <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                            Our support team is available Monday through Friday, 9am to 6pm EST. We typically respond within 2 hours.
+                            Our support team is available Monday through Friday, 9am–6pm EST.
+                            We typically respond within 24 hours.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <a href="mailto:support@zyenereviews.com" className="inline-flex items-center justify-center bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition">
+                            <a
+                                href="mailto:support@zyenereviews.com"
+                                className="inline-flex items-center justify-center bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition"
+                            >
                                 <Mail className="w-5 h-5 mr-2" />
                                 Email Support
                             </a>
-                            <a href="#" className="inline-flex items-center justify-center bg-background border border-border text-foreground px-6 py-3 rounded-md font-medium hover:bg-accent transition">
-                                <Phone className="w-5 h-5 mr-2" />
-                                Call Us
-                            </a>
+                            <Link
+                                href="/contact"
+                                className="inline-flex items-center justify-center bg-background border border-border text-foreground px-6 py-3 rounded-md font-medium hover:bg-accent transition"
+                            >
+                                View all contact options
+                            </Link>
                         </div>
                     </div>
                 </div>

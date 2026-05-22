@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -54,15 +54,21 @@ export default function MarketingLayout({
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-                        <Link href="#features" className="hover:text-primary transition-colors">
+                    <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-muted-foreground">
+                        <Link href="/#features" className="hover:text-primary transition-colors">
                             Features
                         </Link>
-                        <Link href="#pricing" className="hover:text-primary transition-colors">
+                        <Link href="/#pricing" className="hover:text-primary transition-colors">
                             Pricing
                         </Link>
                         <Link href="/docs" className="hover:text-primary transition-colors">
                             Docs
+                        </Link>
+                        <Link href="/about" className="hover:text-primary transition-colors">
+                            About
+                        </Link>
+                        <Link href="/contact" className="hover:text-primary transition-colors">
+                            Contact
                         </Link>
                         <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="hover:text-primary transition-colors">
                             Log In
@@ -107,18 +113,22 @@ export default function MarketingLayout({
 
                 {/* Mobile Menu */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
-                        <Link href="#features" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
-                        <Link href="#pricing" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
-                        <Link href="/docs" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2" onClick={() => setMobileMenuOpen(false)}>Docs</Link>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2">
-                            Log In
-                        </Link>
-                        <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
-                            <Button className="w-full rounded-md">
-                                Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
+                    <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-1">
+                        <Link href="/#features" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5" onClick={() => setMobileMenuOpen(false)}>Features</Link>
+                        <Link href="/#pricing" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
+                        <Link href="/docs" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5" onClick={() => setMobileMenuOpen(false)}>Docs</Link>
+                        <Link href="/about" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5" onClick={() => setMobileMenuOpen(false)}>About</Link>
+                        <Link href="/contact" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+                        <div className="pt-1 border-t border-border/50">
+                            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/login" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5">
+                                Log In
+                            </Link>
+                            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`} className="block mt-1">
+                                <Button className="w-full rounded-md">
+                                    Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 )}
             </header>
@@ -129,49 +139,91 @@ export default function MarketingLayout({
             <CookieBanner />
 
             <footer className="mt-auto border-t border-border/70 bg-canvas">
-                <div className="container mx-auto flex max-w-7xl flex-row flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-9 sm:px-8">
-                    <p className="text-left text-[13px] font-normal leading-normal text-[#8a8f86]">
-                        © {new Date().getFullYear()} Zyene, Inc. · Local to Global
-                    </p>
-                    <nav
-                        className="flex flex-wrap items-center justify-end gap-x-8 gap-y-1 text-[13px] font-normal leading-normal text-[#8a8f86]"
-                        aria-label="Legal, privacy, and system status"
-                    >
-                        <Link
-                            href="/terms"
-                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
-                        >
-                            Legal
-                        </Link>
-                        <Link
-                            href="/privacy"
-                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
-                        >
-                            Privacy
-                        </Link>
-                        <a
-                            href={PUBLIC_STATUS_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#8a8f86] no-underline transition-colors hover:text-foreground"
-                        >
-                            Status
-                        </a>
-                        <button
-                            type="button"
-                            className="cursor-pointer bg-transparent p-0 text-[13px] font-normal leading-normal text-[#8a8f86] no-underline transition-colors hover:text-foreground"
-                            onClick={() => {
-                                const w = window as Window & { openCookiePreferences?: () => void };
-                                if (typeof w.openCookiePreferences === "function") {
-                                    w.openCookiePreferences();
-                                } else {
-                                    window.dispatchEvent(new Event("zyene:open-cookie-preferences"));
-                                }
-                            }}
-                        >
-                            Manage cookies
-                        </button>
-                    </nav>
+                {/* Main footer columns */}
+                <div className="container mx-auto max-w-7xl px-4 py-12 sm:px-8">
+                    <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                        {/* Brand */}
+                        <div className="col-span-2 sm:col-span-2 md:col-span-4 lg:col-span-2">
+                            <Link href="/" className="inline-flex items-center gap-2 mb-4">
+                                <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60">
+                                    <Image
+                                        src="/Main%20logo.png"
+                                        alt="Zyene Reviews"
+                                        width={32}
+                                        height={32}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <span className="font-bold text-base text-foreground">
+                                    <span className="text-primary">Zyene</span> Reviews
+                                </span>
+                            </Link>
+                            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+                                Review management and local SEO for owner-operators — at a fraction of enterprise pricing.
+                            </p>
+                            <p className="mt-4 text-xs text-muted-foreground/70">
+                                © {new Date().getFullYear()} Zyene, Inc. · Local to Global
+                            </p>
+                        </div>
+
+                        {/* Product */}
+                        <div>
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Product</h4>
+                            <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/#features" className="hover:text-primary transition-colors">Features</Link></li>
+                                <li><Link href="/#pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
+                                <li><Link href="/docs" className="hover:text-primary transition-colors">Docs</Link></li>
+                                <li><Link href="/docs/api" className="hover:text-primary transition-colors">API</Link></li>
+                                <li><Link href="/docs/plugins" className="hover:text-primary transition-colors">Widgets</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Company */}
+                        <div>
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Company</h4>
+                            <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/about" className="hover:text-primary transition-colors">About</Link></li>
+                                <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+                                <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
+                                <li>
+                                    <a
+                                        href={PUBLIC_STATUS_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="hover:text-primary transition-colors"
+                                    >
+                                        Status
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Legal */}
+                        <div>
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">Legal</h4>
+                            <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
+                                <li><Link href="/terms" className="hover:text-primary transition-colors">Terms</Link></li>
+                                <li><Link href="/data-retention" className="hover:text-primary transition-colors">Data Retention</Link></li>
+                                <li>
+                                    <button
+                                        type="button"
+                                        className="cursor-pointer bg-transparent p-0 text-sm text-muted-foreground hover:text-primary transition-colors text-left"
+                                        onClick={() => {
+                                            const w = window as Window & { openCookiePreferences?: () => void };
+                                            if (typeof w.openCookiePreferences === "function") {
+                                                w.openCookiePreferences();
+                                            } else {
+                                                window.dispatchEvent(new Event("zyene:open-cookie-preferences"));
+                                            }
+                                        }}
+                                    >
+                                        Manage cookies
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </div>

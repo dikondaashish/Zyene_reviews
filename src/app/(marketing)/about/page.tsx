@@ -1,6 +1,17 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Building2, Mail, Shield, Users } from "lucide-react";
+
+export const metadata: Metadata = {
+    title: "About Zyene Reviews",
+    description:
+        "Learn about Zyene Reviews — a reputation management platform built for local businesses. Our mission is to make online reputation management accessible and ethical for every local business owner.",
+    openGraph: {
+        title: "About Zyene Reviews",
+        description:
+            "Zyene Reviews is a product of Zyene, Inc. We help local businesses monitor reviews, respond with AI, and grow their reputation — ethically and affordably.",
+        url: "https://zyenereviews.com/about",
+    },
+};
 
 export default function AboutPage() {
     return (

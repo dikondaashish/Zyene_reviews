@@ -562,7 +562,7 @@ export default function MarketingPage() {
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-muted-foreground font-light">
-              Start with a 7-day free trial. No credit card required.
+              Start with a 7-day free trial. Cancel before the trial ends and you won&apos;t be charged.
             </p>
           </motion.div>
 
@@ -582,9 +582,9 @@ export default function MarketingPage() {
                 <span className="text-4xl font-bold text-foreground">$29.99</span>
                 <span className="text-muted-foreground">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial on checkout (where eligible)</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial — cancel anytime, no charge</p>
               <ul className="space-y-3 text-sm text-muted-foreground flex-1 mb-8">
-                {["1 business location on your plan", "Google Business Profile, Facebook, and Yelp review sync", "500 email review requests / month", "500 SMS review requests / month", "1,500 AI-generated review draft requests / month (public review link flow, step 3)", "Unlimited AI reply suggestions & Auto commenter", "Competitor tracking", "Dashboard, analytics & team alerts", "POS & Automation trigger review requests automatically from payment and workflow tools", "Developer API", "Up to 5 team members"].map((f) => (
+                {["1 business location", "Google Business Profile, Facebook, and Yelp review sync", "500 email review requests / month", "500 SMS review requests / month", "1,500 AI-generated review draft requests / month", "1,500 AI reply suggestions / month + Auto commenter", "Competitor tracking", "Dashboard, analytics & team alerts", "Zapier, API, and POS automation triggers", "Developer API", "Up to 5 team members"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}
@@ -611,9 +611,9 @@ export default function MarketingPage() {
                 <span className="text-4xl font-bold">$59.99</span>
                 <span className="text-[color:var(--marketing-footer-muted)]">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial on checkout (where eligible)</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial — cancel anytime, no charge</p>
               <ul className="space-y-3 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
-                {["Everything in Starter, plus:", "3 business locations (limits per location)", "200 email review requests extra / month per location", "200 SMS review requests extra / month per location", "500 review link requests extra / month per location", "Unlimited AI reply suggestions & Auto commenter", "Competitor tracking", "Dashboard, analytics & team alerts", "POS & Automation trigger review requests automatically from payment and workflow tools", "Developer API", "Priority customer support", "Up to 15 team members"].map((f) => (
+                {["Everything in Starter, plus:", "Up to 3 business locations (limits scale per location)", "700 email + 700 SMS review requests / month per location", "2,000 AI reply suggestions / month per location", "Priority customer support", "Up to 15 team members"].map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     {f}
@@ -672,7 +672,7 @@ export default function MarketingPage() {
           >
             <FAQItem
               question="How does the 7-day free trial work?"
-              answer="Sign up with any plan and get full access for 7 days — no credit card required until the trial ends. If you cancel within 7 days, you won't be charged."
+              answer="Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts — cancel anytime from your billing settings."
             />
             <FAQItem
               question="How do review requests work?"
@@ -687,8 +687,8 @@ export default function MarketingPage() {
               answer="Yes! The Professional plan supports up to 3 locations with independent limits per location. Enterprise plans offer unlimited locations."
             />
             <FAQItem
-              question="What happens to negative reviews?"
-              answer="All customers are invited to share feedback through your review page. Our platform helps you respond quickly to concerns and improve your service. Every customer gets the same experience regardless of their rating. You're notified instantly of all feedback."
+              question="What happens to negative feedback?"
+              answer="Customers who rate their experience 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. You're notified instantly either way. This is the Negative Feedback Shield — it's included on every paid plan."
             />
             <FAQItem
               question="Can I cancel anytime?"
