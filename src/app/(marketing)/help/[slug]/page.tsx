@@ -24,7 +24,7 @@ export async function generateMetadata(
 
     if (isHelpCategory(slug)) {
         const cat = HELP_CATEGORIES[slug];
-        const catTitle = `${cat.label} ,  Help Center | Zyene Reviews`;
+        const catTitle = `${cat.label} — Help Center`;
         return {
             title: catTitle,
             description: cat.description,

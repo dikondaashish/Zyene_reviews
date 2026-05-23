@@ -30,7 +30,7 @@ export function EnterpriseHeroSection() {
                         Review operations at enterprise scale
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed mb-8">
-                        Custom pricing for franchises, multi-location brands, and high-volume operators ,  without
+                        Custom pricing for franchises, multi-location brands, and high-volume operators—without
                         Birdeye-style contracts or per-location surprise fees.
                     </p>
                     <div className="flex flex-wrap gap-4">
@@ -41,7 +41,7 @@ export function EnterpriseHeroSection() {
                         </Link>
                         <a href={DEFAULT_CAL_COM_BOOKING_URL} target="_blank" rel="noopener noreferrer">
                             <Button size="lg" variant="outline" className="rounded-xl px-8">
-                                Cal.com ,  30 min
+                                Cal.com—30 min
                             </Button>
                         </a>
                         <a href={enterpriseSalesGmailComposeUrl()} target="_blank" rel="noopener noreferrer">

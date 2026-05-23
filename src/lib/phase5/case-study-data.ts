@@ -63,7 +63,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         quoteAuthor: "Dr. Priya Mehta",
         quoteRole: "Owner, Sunrise Dental",
         timeline: "90 days on Zyene Starter",
-        metaTitle: "Sunrise Dental Case Study — 23 to 89 Google Reviews | Zyene Reviews",
+        metaTitle: "Sunrise Dental Case Study — 23 to 89 Google Reviews",
         metaDescription:
             "How Sunrise Dental grew from 23 to 89 Google reviews in 90 days using Zyene's Negative Feedback Shield, SMS review requests, and AI replies.",
         keywords: ["dental review management case study", "google reviews dental practice", "zyene reviews case study"],
@@ -97,7 +97,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         quoteAuthor: "Marcus Webb",
         quoteRole: "Owner, Wolfpack BBQ",
         timeline: "60 days on Zyene Professional",
-        metaTitle: "Wolfpack BBQ Case Study — Restaurant Review Growth | Zyene Reviews",
+        metaTitle: "Wolfpack BBQ Case Study — Restaurant Review Growth",
         metaDescription:
             "How Wolfpack BBQ added 64 five-star Google reviews in 60 days with automated SMS requests and the Negative Feedback Shield.",
         keywords: ["restaurant review management case study", "get more restaurant google reviews", "zyene restaurant reviews"],
@@ -131,7 +131,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         quoteAuthor: "James Ortiz",
         quoteRole: "Owner, Apex HVAC & Plumbing",
         timeline: "First 90 days on Zyene Starter",
-        metaTitle: "Apex HVAC Case Study — Home Services Reputation | Zyene Reviews",
+        metaTitle: "Apex HVAC Case Study — Home Services Reputation",
         metaDescription:
             "How Apex HVAC grew Google reviews 229% and cut public 1-star reviews 70% with Zyene review automation and the Negative Feedback Shield.",
         keywords: ["home services review management", "hvac google reviews", "zyene case study"],
@@ -165,7 +165,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         quoteAuthor: "Isabella Chen",
         quoteRole: "Owner, Bella's Salon & Spa",
         timeline: "45 days on Zyene Starter",
-        metaTitle: "Bella's Salon Case Study — Salon Review Management | Zyene Reviews",
+        metaTitle: "Bella's Salon Case Study — Salon Review Management",
         metaDescription:
             "How Bella's Salon doubled Google review velocity and reached 4.9 stars in 45 days with Zyene automated requests and AI replies.",
         keywords: ["salon review management", "google reviews salon spa", "zyene reviews salon"],
@@ -199,7 +199,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         quoteAuthor: "Tom Reyes",
         quoteRole: "Service Manager, Precision Auto Works",
         timeline: "120 days on Zyene Starter",
-        metaTitle: "Precision Auto Works Case Study — Auto Repair SEO | Zyene Reviews",
+        metaTitle: "Precision Auto Works Case Study — Auto Repair SEO",
         metaDescription:
             "How Precision Auto Works grew Google reviews 395% and reached top-3 local map rankings with Zyene review requests and competitor tracking.",
         keywords: ["auto repair review management", "mechanic google reviews", "zyene auto repair case study"],

@@ -7,7 +7,7 @@ export function ThirdPartyTrustRow() {
                 <div className="text-center mb-10">
                     <h2 className="text-2xl font-bold text-foreground mb-2">Verified on the platforms you already trust</h2>
                     <p className="text-sm text-muted-foreground">
-                        We&apos;re building our presence on third-party review sites ,  get early access and help shape our profile.
+                        We&apos;re building our presence on third-party review sites—get early access and help shape our profile.
                     </p>
                 </div>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

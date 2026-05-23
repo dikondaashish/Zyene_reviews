@@ -14,7 +14,7 @@ export function PartnersOutreachSection() {
                         <h2 className="text-2xl font-bold text-foreground">Paid acquisition playbook</h2>
                     </div>
                     <p className="text-sm text-muted-foreground mb-10">
-                        Campaign structure for Google Ads and Meta ,  use UTM parameters for attribution (
+                        Campaign structure for Google Ads and Meta—use UTM parameters for attribution (
                         <code className="text-xs bg-background px-1 py-0.5 rounded">utm_source</code>,{" "}
                         <code className="text-xs bg-background px-1 py-0.5 rounded">utm_campaign</code>).
                     </p>

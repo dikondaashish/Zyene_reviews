@@ -20,7 +20,7 @@ export function FeaturesHeroSection() {
                         <span className="text-primary">own your online reputation</span>
                     </h1>
                     <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
-                        Ten product pillars for local business owners ,  six deep-dives below, plus CRM,
+                        Ten product pillars for local business owners—six deep-dives below, plus CRM,
                         multi-location, integrations, and team collaboration.
                     </p>
                     <p className="text-sm text-muted-foreground mb-10 max-w-xl mx-auto italic">

@@ -44,28 +44,13 @@ export function MarketingLayoutFooterResourcesColumn() {
                 </Link>
             </li>
             <li>
-                <Link href="/help" className="hover:text-primary transition-colors">
-                    Help Center
-                </Link>
-            </li>
-            <li>
                 <Link href="/case-studies" className="hover:text-primary transition-colors">
                     Case Studies
                 </Link>
             </li>
             <li>
-                <Link href="/partners" className="hover:text-primary transition-colors">
-                    Partners
-                </Link>
-            </li>
-            <li>
                 <Link href="/agencies" className="hover:text-primary transition-colors">
                     Agencies
-                </Link>
-            </li>
-            <li>
-                <Link href="/es/industries" className="hover:text-primary transition-colors">
-                    Industrias (ES)
                 </Link>
             </li>
         </MarketingLayoutFooterLinkColumn>

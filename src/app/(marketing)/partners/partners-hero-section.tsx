@@ -14,7 +14,7 @@ export function PartnersHeroSection() {
                         Grow with Zyene Reviews
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                        Agencies, POS providers, associations, and automation platforms ,  partner with us to bring
+                        Agencies, POS providers, associations, and automation platforms—partner with us to bring
                         affordable review management to local businesses.
                     </p>
                     <div className="mt-8 flex flex-wrap gap-4">

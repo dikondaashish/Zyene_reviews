@@ -3,7 +3,7 @@ import { MarketingHomeClient } from "@/components/marketing/marketing-home-clien
 import { SoftwareApplicationJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-    title: "Zyene Reviews, Review Management for Local Businesses",
+    title: "Review Management for Local Businesses",
     description:
         "Monitor, respond to, and grow your Google reviews with AI. The only review management platform with a Negative Feedback Shield, routing bad reviews to private resolution before they hit Google. Starting at $29.99/mo, no annual contract.",
     alternates: {

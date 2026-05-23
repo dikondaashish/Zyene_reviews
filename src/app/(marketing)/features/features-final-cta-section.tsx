@@ -12,7 +12,7 @@ export function FeaturesFinalCtaSection() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-4xl font-bold text-foreground mb-4">All features. One platform. One price.</h2>
                     <p className="text-xl text-muted-foreground mb-10">
-                        Starting at $29.99/mo ,  no annual contracts, no add-ons, no surprises.
+                        Starting at $29.99/mo—no annual contracts, no add-ons, no surprises.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link href="/signup">

@@ -4,7 +4,7 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-    title: "Unsubscribe, Zyene Reviews Monthly",
+    title: "Unsubscribe",
     robots: { index: false, follow: false },
 };
 

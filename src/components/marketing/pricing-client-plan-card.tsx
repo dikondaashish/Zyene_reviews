@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { Check, Zap, Crown, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Plan } from "@/services/stripe/plans";
+import { PLANS, type Plan } from "@/services/stripe/plans";
+
+function strikethroughMonthlyPrice(plan: Plan): string | null {
+    if (plan.interval === "year") {
+        const monthlyId = plan.id.replace("_yearly", "_monthly");
+        const monthlyPlan = PLANS.find((p) => p.id === monthlyId);
+        return monthlyPlan?.price != null ? monthlyPlan.price.toFixed(2) : null;
+    }
+    return plan.originalPrice != null ? plan.originalPrice.toFixed(2) : null;
+}
 
 export function PricingClientPlanCard({
     plan,
@@ -18,10 +27,7 @@ export function PricingClientPlanCard({
     const monthlyEquivalent =
         plan.interval === "year" && plan.price ? (plan.price / 12).toFixed(2) : plan.price?.toFixed(2);
 
-    const originalMonthlyEquivalent =
-        plan.interval === "year" && plan.originalPrice
-            ? (plan.originalPrice / 12).toFixed(2)
-            : plan.originalPrice?.toFixed(2);
+    const strikethroughPrice = strikethroughMonthlyPrice(plan);
 
     if (isPopular) {
         return (
@@ -37,9 +43,9 @@ export function PricingClientPlanCard({
                     For growing multi-location businesses
                 </p>
                 <div className="mb-1">
-                    {originalMonthlyEquivalent && (
+                    {strikethroughPrice && (
                         <span className="text-base line-through text-[color:var(--marketing-footer-muted)] mr-2">
-                            ${originalMonthlyEquivalent}
+                            ${strikethroughPrice}
                         </span>
                     )}
                     <span className="text-5xl font-bold">${monthlyEquivalent}</span>
@@ -104,8 +110,8 @@ export function PricingClientPlanCard({
             </div>
             <p className="text-sm text-muted-foreground mb-6">Perfect for single-location businesses</p>
             <div className="mb-1">
-                {originalMonthlyEquivalent && (
-                    <span className="text-base line-through text-muted-foreground mr-2">${originalMonthlyEquivalent}</span>
+                {strikethroughPrice && (
+                    <span className="text-base line-through text-muted-foreground mr-2">${strikethroughPrice}</span>
                 )}
                 <span className="text-5xl font-bold text-foreground">${monthlyEquivalent}</span>
                 <span className="text-muted-foreground ml-1 text-sm">/mo</span>

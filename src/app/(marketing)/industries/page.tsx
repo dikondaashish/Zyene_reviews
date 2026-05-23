@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Industries, Zyene Reviews",
+    title: "Industries",
     description:
         "Zyene Reviews is built for local businesses across every industry. Explore how review management, AI replies, and the Negative Feedback Shield work for your specific business type.",
     alternates: {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Review Management for Every Industry, Zyene Reviews",
+        title: "Review Management for Every Industry",
         description:
             "From restaurants to dental practices to gyms, Zyene helps local businesses in every industry grow their reviews and protect their reputation.",
         url: "https://zyenereviews.com/industries",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Review Management for Every Industry, Zyene Reviews",
+        title: "Review Management for Every Industry",
         description: "From restaurants to gyms, Zyene helps local businesses in every industry grow their reviews.",
     },
 };

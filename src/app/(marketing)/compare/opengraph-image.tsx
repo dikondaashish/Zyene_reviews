@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp ,  2026";
+export const alt = "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp—2026";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -21,7 +21,7 @@ export default function OgImage() {
                         ))}
                     </div>
                     <div style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: "12px", padding: "10px 24px", color: "#4ade80", fontSize: "17px", fontWeight: "700" }}>
-                        Zyene starts at $29.99/mo ,  no annual contract
+                        Zyene starts at $29.99/mo—no annual contract
                     </div>
                 </div>
             </div>

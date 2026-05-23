@@ -51,7 +51,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Restaurant owners use Zyene to get more 5-star reviews, respond to diners instantly with AI, and protect their reputation before bad reviews go public.",
         emoji: "🍽️",
         accentColor: "orange",
-        metaTitle: "Restaurant Review Management — Zyene Reviews",
+        metaTitle: "Restaurant Review Management",
         metaDescription: "Zyene helps restaurants get more Google reviews, respond faster with AI, and protect their reputation with the Negative Feedback Shield. Starting at $29.99/mo.",
         targetKeywords: ["restaurant review management", "google reviews for restaurants", "restaurant reputation management", "how to get more restaurant reviews"],
         painPoints: [
@@ -97,7 +97,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Dental practices use Zyene to attract new patients, respond to reviews professionally, and protect their reputation with the Negative Feedback Shield.",
         emoji: "🦷",
         accentColor: "blue",
-        metaTitle: "Dental Practice Review Management — Zyene Reviews",
+        metaTitle: "Dental Practice Review Management",
         metaDescription: "Help your dental practice get more Google reviews and new patients. Zyene's AI replies, Negative Feedback Shield, and competitor tracking are built for dentists. Starting at $29.99/mo.",
         targetKeywords: ["dental practice reviews", "dentist reputation management", "dental google reviews", "how to get more dental patient reviews"],
         painPoints: [
@@ -143,7 +143,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Auto repair shops use Zyene to build trust with new customers, respond to reviews professionally, and protect their reputation online.",
         emoji: "🔧",
         accentColor: "gray",
-        metaTitle: "Auto Repair Review Management — Zyene Reviews",
+        metaTitle: "Auto Repair Review Management",
         metaDescription: "Build trust, get more Google reviews, and protect your auto repair shop's reputation. Zyene's AI replies and Negative Feedback Shield are built for mechanics. Starting at $29.99/mo.",
         targetKeywords: ["auto repair google reviews", "mechanic reputation management", "auto shop reviews", "car repair reputation management"],
         painPoints: [
@@ -189,7 +189,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Salon and spa owners use Zyene to grow their 5-star review count, respond to clients professionally, and shield their reputation from bad experiences.",
         emoji: "💅",
         accentColor: "pink",
-        metaTitle: "Salon & Spa Review Management — Zyene Reviews",
+        metaTitle: "Salon & Spa Review Management",
         metaDescription: "Grow your salon or spa's Google reviews and protect your reputation. Zyene's AI replies, review requests, and Negative Feedback Shield are built for beauty businesses. Starting at $29.99/mo.",
         targetKeywords: ["salon review management", "spa google reviews", "hair salon reputation management", "beauty salon reviews"],
         painPoints: [
@@ -235,7 +235,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Plumbers, HVAC technicians, electricians, and other home services professionals use Zyene to build trust online and win more jobs.",
         emoji: "🏠",
         accentColor: "teal",
-        metaTitle: "Home Services Review Management — Zyene Reviews",
+        metaTitle: "Home Services Review Management",
         metaDescription: "Build trust and win more home services jobs with more Google reviews. Zyene's Negative Feedback Shield and AI replies are built for plumbers, HVAC, electricians, and more. Starting at $29.99/mo.",
         targetKeywords: ["plumber reviews", "HVAC reputation management", "home services google reviews", "electrician review management", "contractor reputation management"],
         painPoints: [
@@ -281,7 +281,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Doctors, clinics, and healthcare providers use Zyene to attract new patients, respond professionally to reviews, and protect their practice's reputation.",
         emoji: "🏥",
         accentColor: "blue",
-        metaTitle: "Medical Practice Review Management — Zyene Reviews",
+        metaTitle: "Medical Practice Review Management",
         metaDescription: "Help your medical practice get more Google reviews and attract new patients. Zyene's AI replies and Negative Feedback Shield are HIPAA-aware and built for healthcare. Starting at $29.99/mo.",
         targetKeywords: ["doctor review management", "clinic reputation management", "medical practice reviews", "healthcare reputation management", "physician google reviews"],
         painPoints: [
@@ -327,7 +327,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Hotels and hospitality businesses use Zyene to respond to guests faster, protect their reputation, and rank higher on Google Maps.",
         emoji: "🏨",
         accentColor: "indigo",
-        metaTitle: "Hotel Review Management — Zyene Reviews",
+        metaTitle: "Hotel Review Management",
         metaDescription: "Hotels and hospitality businesses use Zyene to respond faster, protect their reputation, and rank higher on Google. Negative Feedback Shield and AI replies. Starting at $29.99/mo.",
         targetKeywords: ["hotel review management", "hospitality reviews", "hotel reputation management", "hotel google reviews", "hotel response management"],
         painPoints: [
@@ -373,7 +373,7 @@ export const INDUSTRIES: IndustryData[] = [
         heroSub: "Gyms, fitness studios, and personal trainers use Zyene to attract new members, retain existing ones, and protect their reputation online.",
         emoji: "💪",
         accentColor: "green",
-        metaTitle: "Gym & Fitness Review Management — Zyene Reviews",
+        metaTitle: "Gym & Fitness Review Management",
         metaDescription: "Help your gym or fitness studio get more Google reviews and attract new members. Zyene's Negative Feedback Shield and AI replies are built for fitness businesses. Starting at $29.99/mo.",
         targetKeywords: ["gym reviews", "fitness studio reputation management", "personal trainer reviews", "gym google reviews", "fitness center reputation"],
         painPoints: [

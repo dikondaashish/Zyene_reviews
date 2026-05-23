@@ -150,7 +150,7 @@ const guide2: ResourceGuide = {
     purpose: "Rank for 'how to respond to bad reviews' cluster",
     lastUpdated: "2026-05-01",
     readMinutes: 14,
-    metaTitle: "20+ Negative Review Response Templates (Google Reviews) — Zyene Reviews",
+    metaTitle: "20+ Negative Review Response Templates (Google Reviews)",
     metaDescription: "Ready-to-use templates for responding to any negative Google review. 20+ templates organized by complaint type with customization instructions.",
     keywords: ["negative review response templates", "how to respond to bad reviews", "google review response templates", "1 star review response", "bad review templates"],
     tableOfContents: [
@@ -231,7 +231,7 @@ const guide3: ResourceGuide = {
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
     lastUpdated: "2026-05-01",
     readMinutes: 16,
-    metaTitle: "Local SEO Checklist for 2026 (40+ Action Items) — Zyene Reviews",
+    metaTitle: "Local SEO Checklist for 2026 (40+ Action Items)",
     metaDescription: "The definitive local SEO checklist for 2026. 40+ action items across GBP optimization, citations, reviews, on-page SEO, and link building for local businesses.",
     keywords: ["local seo checklist", "local seo checklist 2026", "local business seo checklist", "google local seo", "local seo guide 2026"],
     tableOfContents: [
@@ -354,7 +354,7 @@ const guide4: ResourceGuide = {
     purpose: "Rank for 'review request email' and 'review request templates' cluster",
     lastUpdated: "2026-05-01",
     readMinutes: 12,
-    metaTitle: "15+ Review Request Templates (SMS & Email) — Zyene Reviews",
+    metaTitle: "15+ Review Request Templates (SMS & Email)",
     metaDescription: "Ready-to-use SMS and email templates for requesting Google reviews. 15+ templates for restaurants, healthcare, home services, and more with proven conversion copy.",
     keywords: ["review request templates", "review request email template", "review request sms", "google review request template", "how to ask for google reviews"],
     tableOfContents: [

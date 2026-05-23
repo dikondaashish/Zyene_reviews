@@ -34,7 +34,7 @@ export function DemoRequestForm() {
             setDone(true);
             e.currentTarget.reset();
         } catch {
-            setError("Network error ,  try again");
+            setError("Network error—try again");
         } finally {
             setLoading(false);
         }
@@ -43,7 +43,7 @@ export function DemoRequestForm() {
     if (done) {
         return (
             <p className="text-sm text-chart-2 text-center py-8">
-                Thank you ,  our sales team will contact you within one business day.
+                Thank you—our sales team will contact you within one business day.
             </p>
         );
     }

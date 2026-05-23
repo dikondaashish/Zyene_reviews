@@ -25,7 +25,7 @@ export default async function OgImage(
                     </div>
                     <div style={{ fontSize: "18px", color: "rgba(255,255,255,0.55)", marginBottom: "24px" }}>AI replies · Negative Feedback Shield · Competitor tracking</div>
                     <div style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: "12px", padding: "10px 24px", color: "#4ade80", fontSize: "17px", fontWeight: "700" }}>
-                        Starting at $29.99/mo ,  7-day free trial
+                        Starting at $29.99/mo—7-day free trial
                     </div>
                 </div>
             </div>

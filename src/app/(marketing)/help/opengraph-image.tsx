@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Help Center ,  Zyene Reviews";
+export const alt = "Help Center—Zyene Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -33,7 +33,7 @@ export default function OgImage() {
                         <span style={{ color: "#4ade80" }}>Help Center</span>
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "760px" }}>
-                        Guides, tutorials, and answers ,  Getting Started, Analytics, Campaigns, Billing, and Integrations
+                        Guides, tutorials, and answers—Getting Started, Analytics, Campaigns, Billing, and Integrations
                     </div>
                 </div>
             </div>

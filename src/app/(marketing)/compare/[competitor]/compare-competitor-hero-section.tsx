@@ -16,7 +16,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
 
                     <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
                         <Sparkles className="size-3.5" />
-                        Honest Comparison ,  2026
+                        Honest Comparison—2026
                     </div>
                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-5 leading-[1.05]">
                         Zyene Reviews<br />

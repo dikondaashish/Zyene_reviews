@@ -93,7 +93,7 @@ export function ContactContentSection() {
                             Ready to get started?
                         </h2>
                         <p className="text-muted-foreground mb-6 text-sm">
-                            Try Zyene Reviews free for 7 days. Cancel before the trial ends ,  no charge.
+                            Try Zyene Reviews free for 7 days. Cancel before the trial ends—no charge.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link href={SIGNUP_URL}>

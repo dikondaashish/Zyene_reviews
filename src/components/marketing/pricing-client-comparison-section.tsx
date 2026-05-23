@@ -17,7 +17,7 @@ export function PricingClientComparisonSection() {
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl font-bold text-foreground mb-2 text-center">See how we compare</h2>
                 <p className="text-muted-foreground text-center mb-10">
-                    Enterprise features at owner-operator pricing ,  no annual contracts required.
+                    Enterprise features at owner-operator pricing—no annual contracts required.
                 </p>
                 <div className="overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="w-full text-sm text-left border-collapse">

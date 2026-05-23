@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default: "Zyene Reviews ,  Review Management for Local Businesses",
+    default: "Review Management for Local Businesses",
     template: "%s | Zyene Reviews",
   },
   description:
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
         url: "/og/og-default.png",
         width: 1200,
         height: 630,
-        alt: "Zyene Reviews ,  Reputation Management for Local Businesses",
+        alt: "Zyene Reviews — Reputation Management for Local Businesses",
       },
     ],
   },

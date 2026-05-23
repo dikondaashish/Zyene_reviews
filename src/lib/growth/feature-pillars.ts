@@ -31,7 +31,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "review-monitoring",
         title: "Review Monitoring & Inbox",
         tagline: "Never miss a review — across every platform",
-        metaTitle: "Review Monitoring & Inbox — Zyene Reviews Features",
+        metaTitle: "Review Monitoring & Inbox",
         metaDescription:
             "Centralized Google, Facebook, and Yelp review inbox with real-time alerts, sentiment analysis, and urgency scoring for local businesses.",
         bullets: [
@@ -47,7 +47,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "ai-replies",
         title: "AI-Powered Review Replies",
         tagline: "Professional responses in seconds, in your voice",
-        metaTitle: "AI-Powered Review Replies — Zyene Reviews Features",
+        metaTitle: "AI-Powered Review Replies",
         metaDescription:
             "One-click AI reply drafts, auto-commenter, and tone control. Save hours every week on Google review responses.",
         bullets: [
@@ -63,7 +63,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "review-collection",
         title: "Review Collection & Negative Feedback Shield",
         tagline: "Get more 5-star reviews. Route bad ones privately.",
-        metaTitle: "Review Collection & Negative Feedback Shield — Zyene Reviews",
+        metaTitle: "Review Collection & Negative Feedback Shield",
         metaDescription:
             "SMS, email, and QR review campaigns with the Negative Feedback Shield — unhappy customers resolve privately before posting on Google.",
         bullets: [
@@ -80,7 +80,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "competitor-tracking",
         title: "Competitor Intelligence",
         tagline: "Know exactly where you stand in your market",
-        metaTitle: "Competitor Tracking — Zyene Reviews Features",
+        metaTitle: "Competitor Tracking",
         metaDescription:
             "Track competitor ratings, review volume, and trends. AI market briefs and alerts included on all paid plans.",
         bullets: [
@@ -96,7 +96,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "local-seo",
         title: "Local SEO Dashboard",
         tagline: "Optimize your Google Business Profile to rank higher",
-        metaTitle: "Local SEO Dashboard — Zyene Reviews Features",
+        metaTitle: "Local SEO Dashboard",
         metaDescription:
             "GBP keyword performance, search insights, and actionable SEO fixes — included on Starter, not locked behind enterprise tiers.",
         bullets: [
@@ -112,7 +112,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         slug: "analytics",
         title: "Analytics & Reporting",
         tagline: "Understand what's working and share results",
-        metaTitle: "Analytics & Reporting — Zyene Reviews Features",
+        metaTitle: "Analytics & Reporting",
         metaDescription:
             "Review trends, engagement funnel, sentiment breakdown, PDF reports, and CSV exports for local business teams.",
         bullets: [

@@ -437,16 +437,7 @@ export async function proxy(request: NextRequest) {
         }
 
         // 2. Platform + marketing routes stay on zyenereviews.com (never → collectratings).
-        const isReserved = isPlatformRoute(pathname);
-
-        // 3. Single-segment business slugs → collectratings.com (canonical review URLs).
-        if (!isReserved && isBusinessSlugPath(pathname)) {
-            const targetUrl = request.nextUrl.clone();
-            targetUrl.protocol = "https";
-            targetUrl.hostname = "www.collectratings.com";
-            targetUrl.port = "";
-            return createResponse(NextResponse.redirect(targetUrl, 301));
-        }
+        // Unknown paths (including invalid single-segment URLs) fall through to Next.js not-found.
 
         return supabaseResponse;
     }

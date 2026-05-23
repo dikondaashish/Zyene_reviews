@@ -15,7 +15,7 @@ export function IntegrationsHeroSection() {
                     <span className="text-primary">you already use</span>
                 </h1>
                 <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                    From Google to your POS system, Zyene plugs into your existing workflow ,  so getting more reviews never requires changing how you work.
+                    From Google to your POS system, Zyene plugs into your existing workflow—so getting more reviews never requires changing how you work.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link href="/signup">

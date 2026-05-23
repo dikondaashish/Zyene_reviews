@@ -5,7 +5,7 @@ import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-    title: "Industrias, Gestión de reseñas en español | Zyene Reviews",
+    title: "Industrias, Gestión de reseñas en español",
     description:
         "Páginas en español para restaurantes, clínicas, talleres, salones y más. Automatiza reseñas de Google con Zyene Reviews.",
     alternates: {
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
         languages: { en: "https://zyenereviews.com/industries", es: "https://zyenereviews.com/es/industries" },
     },
     openGraph: {
-        title: "Industrias, Zyene Reviews",
+        title: "Industrias",
         description: "Gestión de reseñas para restaurantes, clínicas, talleres y más, en español.",
         url: "https://zyenereviews.com/es/industries",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Industrias, Zyene Reviews",
+        title: "Industrias",
         description: "Gestión de reseñas para restaurantes, clínicas, talleres y más, en español.",
     },
 };

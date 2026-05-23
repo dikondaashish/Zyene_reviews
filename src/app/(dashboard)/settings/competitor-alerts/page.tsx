@@ -9,7 +9,7 @@ import { Target } from "lucide-react";
 import { canManageCompetitorWatchSettings } from "@/lib/competitors/watch-access";
 
 export const metadata = {
-    title: "Competitor alerts - Zyene Reviews",
+    title: "Competitor alerts",
     description: "Thresholds for competitor monitoring alerts.",
 };
 

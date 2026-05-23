@@ -30,7 +30,7 @@ export async function generateMetadata(
     if (!article || article.category !== category) return {};
     const catInfo = HELP_CATEGORIES[category];
     const path = helpArticleNestedPath(article);
-    const pageTitle = `${article.title} ,  ${catInfo.label} | Zyene Reviews Help`;
+    const pageTitle = `${article.title} — ${catInfo.label}`;
     const canonicalUrl = `https://zyenereviews.com${path}`;
     return {
         title: pageTitle,

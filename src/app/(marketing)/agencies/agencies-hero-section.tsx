@@ -22,7 +22,7 @@ export function AgenciesHeroSection() {
                         Manage client reputations under your brand
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed mb-8">
-                        Zyene Reviews gives agencies a affordable alternative to Birdeye ,  with white-label widgets,
+                        Zyene Reviews gives agencies an affordable alternative to Birdeye—with white-label widgets,
                         bulk pricing, and referral revenue on every client you bring.
                     </p>
                     <div className="flex flex-wrap gap-4">

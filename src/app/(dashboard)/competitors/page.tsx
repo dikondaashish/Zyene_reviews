@@ -1,5 +1,5 @@
 export const metadata = {
-    title: "Competitors - Zyene Reviews",
+    title: "Competitors",
     description: "Monitor your competitors' ratings and performance.",
 };
 

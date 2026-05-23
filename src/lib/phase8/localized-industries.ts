@@ -23,7 +23,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "restaurantes",
         industrySlug: "restaurants",
         name: "Restaurantes",
-        metaTitle: "Gestión de reseñas para restaurantes | Zyene Reviews",
+        metaTitle: "Gestión de reseñas para restaurantes",
         metaDescription:
             "Automatiza solicitudes de reseñas en Google, responde con IA y protege tu reputación. Hecho para restaurantes independientes y cadenas locales.",
         heroTitle: "Más reseñas de 5 estrellas para tu restaurante",
@@ -40,7 +40,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "dental",
         industrySlug: "dental",
         name: "Clínicas dentales",
-        metaTitle: "Software de reseñas para clínicas dentales | Zyene Reviews",
+        metaTitle: "Software de reseñas para clínicas dentales",
         metaDescription:
             "Cumple normativas de privacidad, pide reseñas de forma ética y mejora tu presencia local en Google Maps.",
         heroTitle: "Reputación online para clínicas dentales",
@@ -57,7 +57,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "servicios-hogar",
         industrySlug: "home-services",
         name: "Servicios del hogar",
-        metaTitle: "Reseñas para servicios del hogar | Zyene Reviews",
+        metaTitle: "Reseñas para servicios del hogar",
         metaDescription:
             "Fontanería, HVAC, electricidad y más: convierte trabajos terminados en reseñas de Google automáticamente.",
         heroTitle: "Más trabajos gracias a mejores reseñas",
@@ -74,7 +74,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "salones",
         industrySlug: "salons",
         name: "Salones y spas",
-        metaTitle: "Gestión de reseñas para salones | Zyene Reviews",
+        metaTitle: "Gestión de reseñas para salones",
         metaDescription:
             "Pide reseñas después de cada cita, responde rápido y muestra tus mejores comentarios en tu web.",
         heroTitle: "Llena tu agenda con reseñas reales",
@@ -91,7 +91,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "reparacion-automotriz",
         industrySlug: "auto-repair",
         name: "Talleres mecánicos",
-        metaTitle: "Reseñas para talleres y auto repair | Zyene Reviews",
+        metaTitle: "Reseñas para talleres y auto repair",
         metaDescription:
             "Convierte órdenes de trabajo completadas en reseñas de Google. Ideal para talleres independientes.",
         heroTitle: "Confianza en Google para tu taller",
@@ -108,7 +108,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "medicos",
         industrySlug: "medical",
         name: "Consultorios médicos",
-        metaTitle: "Reseñas para consultorios y clínicas | Zyene Reviews",
+        metaTitle: "Reseñas para consultorios y clínicas",
         metaDescription:
             "Gestión de reputación para prácticas médicas locales con enfoque en privacidad y tono profesional.",
         heroTitle: "Reputación médica sin comprometer la privacidad",
@@ -125,7 +125,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "hoteles",
         industrySlug: "hotels",
         name: "Hoteles y hospedaje",
-        metaTitle: "Reseñas para hoteles y hospedaje | Zyene Reviews",
+        metaTitle: "Reseñas para hoteles y hospedaje",
         metaDescription:
             "Mejora tu puntuación en Google y TripAdvisor con solicitudes post-estancia y respuestas centralizadas.",
         heroTitle: "Mejor rating para tu propiedad",
@@ -142,7 +142,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         localizedSlug: "gimnasios",
         industrySlug: "fitness",
         name: "Gimnasios y fitness",
-        metaTitle: "Reseñas para gimnasios y estudios fitness | Zyene Reviews",
+        metaTitle: "Reseñas para gimnasios y estudios fitness",
         metaDescription:
             "Pide reseñas a nuevos miembros, responde con IA y compite con cadenas grandes en tu zona.",
         heroTitle: "Destaca frente a las grandes cadenas",

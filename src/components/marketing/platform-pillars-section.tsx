@@ -4,7 +4,7 @@ import { PRODUCT_PILLARS } from "@/lib/growth/product-foundation";
 
 const PLATFORM_PILLAR_ICONS = [Users, Building2, Code2, UserCog] as const;
 
-/** Blueprint §1.1 pillars 7–10 ,  surfaced on /features (deep pages are §4.2 six pillars). */
+/** Blueprint §1.1 pillars 7–10—surfaced on /features (deep pages are §4.2 six pillars). */
 const PLATFORM_PILLAR_NUMBERS = [7, 8, 9, 10] as const;
 
 export function PlatformPillarsSection() {
@@ -20,7 +20,7 @@ export function PlatformPillarsSection() {
                         Built for teams, locations, and integrations
                     </h2>
                     <p className="text-muted-foreground">
-                        All ten product pillars from our foundation ,  six deep-dives above, plus CRM,
+                        All ten product pillars from our foundation—six deep-dives above, plus CRM,
                         multi-location, API, and collaboration on every paid plan.
                     </p>
                 </div>

@@ -26,7 +26,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                     Pricing built for {data.name.toLowerCase()}
                                 </h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    No per-location surcharges. No annual contracts. Full access to every feature ,  AI replies, Negative Feedback Shield, competitor tracking ,  starting at $29.99/mo.
+                                    No per-location surcharges. No annual contracts. Full access to every feature—AI replies, Negative Feedback Shield, competitor tracking—starting at $29.99/mo.
                                 </p>
                                 <ul className="space-y-2.5 mb-8">
                                     {[
