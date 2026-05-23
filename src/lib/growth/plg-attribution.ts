@@ -2,6 +2,8 @@
 // Product-led growth attribution — Phase 7
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { plgEmailFooterHtml as buildPlgEmailFooterHtml } from "@/lib/email/transactional-email-styles";
+
 export type PlgRefSource = "review-page" | "widget" | "review-request";
 
 const MARKETING_ORIGIN = "https://zyenereviews.com";
@@ -24,9 +26,7 @@ export function plgSmsFooter(): string {
 
 export function plgEmailFooterHtml(): string {
     const href = buildPlgMarketingUrl("review-request");
-    return `<p style="margin:24px 0 0;font-size:11px;color:#a1a1aa;line-height:1.5;text-align:center;">
-Review management powered by <a href="${href}" style="color:#71717a;text-decoration:underline;">Zyene Reviews</a>
-</p>`;
+    return buildPlgEmailFooterHtml(href);
 }
 
 export function plgEmailFooterPlain(): string {

@@ -9,6 +9,7 @@ import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
 import { PlatformPillarsSection } from "@/components/marketing/platform-pillars-section";
 import { POSITIONING } from "@/lib/growth/product-foundation";
+import { INTEGRATION_BRAND_CHIPS } from "@/lib/marketing/integration-brands";
 
 export const metadata: Metadata = {
     title: "Features — Zyene Reviews",
@@ -33,8 +34,8 @@ const PILLARS = [
     {
         id: "review-monitoring",
         icon: Star,
-        iconBg: "bg-yellow-500/10",
-        iconColor: "text-yellow-600 dark:text-yellow-400",
+        iconBg: "bg-chart-4/10",
+        iconColor: "text-chart-4",
         title: "Review Monitoring & Inbox",
         tagline: "Never miss a review — across every platform",
         bullets: [
@@ -49,8 +50,8 @@ const PILLARS = [
     {
         id: "ai-replies",
         icon: Bot,
-        iconBg: "bg-blue-500/10",
-        iconColor: "text-blue-600 dark:text-blue-400",
+        iconBg: "bg-chart-1/10",
+        iconColor: "text-chart-1",
         title: "AI-Powered Review Replies",
         tagline: "Professional responses in seconds, in your voice",
         bullets: [
@@ -65,8 +66,8 @@ const PILLARS = [
     {
         id: "review-collection",
         icon: ShieldCheck,
-        iconBg: "bg-green-500/10",
-        iconColor: "text-green-600 dark:text-green-400",
+        iconBg: "bg-chart-2/10",
+        iconColor: "text-chart-2",
         title: "Review Collection & Negative Feedback Shield",
         tagline: "Get more 5-star reviews. Route bad ones privately.",
         bullets: [
@@ -82,8 +83,8 @@ const PILLARS = [
     {
         id: "competitor-tracking",
         icon: TrendingUp,
-        iconBg: "bg-orange-500/10",
-        iconColor: "text-orange-600 dark:text-orange-400",
+        iconBg: "bg-primary/10",
+        iconColor: "text-primary",
         title: "Competitor Intelligence",
         tagline: "Know exactly where you stand in your market",
         bullets: [
@@ -98,8 +99,8 @@ const PILLARS = [
     {
         id: "local-seo",
         icon: Globe,
-        iconBg: "bg-purple-500/10",
-        iconColor: "text-purple-600 dark:text-purple-400",
+        iconBg: "bg-sync-action/10",
+        iconColor: "text-sync-action",
         title: "Local SEO Dashboard",
         tagline: "Optimize your Google Business Profile to rank higher",
         bullets: [
@@ -114,8 +115,8 @@ const PILLARS = [
     {
         id: "analytics",
         icon: BarChart3,
-        iconBg: "bg-rose-500/10",
-        iconColor: "text-rose-600 dark:text-rose-400",
+        iconBg: "bg-destructive/10",
+        iconColor: "text-destructive",
         title: "Analytics & Reporting",
         tagline: "Understand what's working and share results",
         bullets: [
@@ -129,14 +130,7 @@ const PILLARS = [
     },
 ];
 
-const INTEGRATIONS = [
-    { name: "Google Business Profile", color: "#4285F4", letter: "G" },
-    { name: "Facebook Reviews", color: "#1877F2", letter: "f" },
-    { name: "Yelp", color: "#D32323", letter: "Y" },
-    { name: "Zapier", color: "#FF4A00", letter: "Z" },
-    { name: "Square", color: "#006AFF", letter: "S" },
-    { name: "REST API", color: "#6B7280", letter: "</>" },
-];
+const INTEGRATIONS = INTEGRATION_BRAND_CHIPS;
 
 export default function FeaturesPage() {
     return (
@@ -265,7 +259,7 @@ export default function FeaturesPage() {
                                                 {[1, 2, 3, 4, 5].map((s) => (
                                                     <Star
                                                         key={s}
-                                                        className={`h-4 w-4 ${pillar.id === "review-monitoring" || pillar.id === "review-collection" || pillar.id === "analytics" ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"}`}
+                                                        className={`h-4 w-4 ${pillar.id === "review-monitoring" || pillar.id === "review-collection" || pillar.id === "analytics" ? "fill-chart-4 text-chart-4" : "text-muted-foreground/20"}`}
                                                     />
                                                 ))}
                                             </div>

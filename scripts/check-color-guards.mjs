@@ -14,6 +14,8 @@ const SKIP_BASENAMES = new Set([
   "send-competitor-alert-email.ts",
   "generate-qr.ts",
   "review-page-background.ts",
+  "opengraph-image.tsx",
+  "transactional-email-styles.ts",
 ]);
 
 const TAILWIND_PALETTE_RE =
@@ -50,6 +52,9 @@ function shouldIgnoreHexMatch(line, index) {
   // Ignore anchor/id-ish fragments like href="#features" or "#2026-04"
   if (/href\s*=\s*["']$/.test(before)) return true;
   if (/^#[0-9]+-/.test(after)) return true;
+
+  // Ignore HTML numeric entities like &#125; or &#123;
+  if (line[index - 1] === "&") return true;
 
   return false;
 }
@@ -102,6 +107,6 @@ for (const file of violations) {
 }
 
 console.error(
-  "Use semantic tokens/classes instead. Skipped: resend/templates, qr-code-card.tsx, report-generator.tsx, layout.tsx, public-profile-editor.tsx, send-competitor-alert-email.ts, generate-qr.ts, review-page-background.ts."
+  "Use semantic tokens/classes instead. Skipped: resend/templates, qr-code-card.tsx, report-generator.tsx, layout.tsx, public-profile-editor.tsx, send-competitor-alert-email.ts, generate-qr.ts, review-page-background.ts, opengraph-image.tsx, transactional-email-styles.ts."
 );
 process.exit(1);

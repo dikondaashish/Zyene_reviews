@@ -8,7 +8,7 @@ export interface CustomerLogo {
     industry: string;
     /** Display initials when logo image not licensed */
     initials: string;
-    color: string;
+    colorClass: string;
 }
 
 export interface TestimonialCard {
@@ -50,14 +50,14 @@ export function getPlatformStats() {
 
 /** Representative local businesses — swap for licensed logos when available */
 export const CUSTOMER_LOGOS: CustomerLogo[] = [
-    { name: "Sunrise Dental", industry: "Dental", initials: "SD", color: "#3b82f6" },
-    { name: "Wolfpack BBQ", industry: "Restaurant", initials: "WB", color: "#f97316" },
-    { name: "Apex HVAC", industry: "Home Services", initials: "AH", color: "#06b6d4" },
-    { name: "Bella's Salon", industry: "Salon", initials: "BS", color: "#ec4899" },
-    { name: "Precision Auto", industry: "Auto Repair", initials: "PA", color: "#6366f1" },
-    { name: "Harbor Legal", industry: "Legal", initials: "HL", color: "#64748b" },
-    { name: "Green Leaf Cafe", industry: "Cafe", initials: "GL", color: "#22c55e" },
-    { name: "Summit Fitness", industry: "Fitness", initials: "SF", color: "#a855f7" },
+    { name: "Sunrise Dental", industry: "Dental", initials: "SD", colorClass: "bg-chart-1" },
+    { name: "Wolfpack BBQ", industry: "Restaurant", initials: "WB", colorClass: "bg-primary" },
+    { name: "Apex HVAC", industry: "Home Services", initials: "AH", colorClass: "bg-chart-2" },
+    { name: "Bella's Salon", industry: "Salon", initials: "BS", colorClass: "bg-chart-5" },
+    { name: "Precision Auto", industry: "Auto Repair", initials: "PA", colorClass: "bg-sync-action" },
+    { name: "Harbor Legal", industry: "Legal", initials: "HL", colorClass: "bg-muted-foreground" },
+    { name: "Green Leaf Cafe", industry: "Cafe", initials: "GL", colorClass: "bg-chart-2" },
+    { name: "Summit Fitness", industry: "Fitness", initials: "SF", colorClass: "bg-sync-action" },
 ];
 
 export const FEATURED_TESTIMONIALS: TestimonialCard[] = [

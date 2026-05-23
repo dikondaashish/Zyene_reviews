@@ -60,8 +60,8 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                         );
                     case "warning":
                         return (
-                            <div key={i} className="flex gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-5 py-4">
-                                <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                            <div key={i} className="flex gap-3 rounded-xl border border-chart-4/20 bg-chart-4/5 px-5 py-4">
+                                <AlertTriangle className="h-5 w-5 shrink-0 text-chart-4 mt-0.5" />
                                 <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
                             </div>
                         );

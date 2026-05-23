@@ -111,6 +111,14 @@
   --google-logo-yellow: #fbbc05;
   --google-logo-red: #ea4335;
   --brand-facebook: #1877f2;
+  --brand-yelp: #d32323;
+  --brand-zapier: #ff4a00;
+  --brand-square: #006aff;
+  --brand-clover: #1da462;
+  --brand-hubspot: #8b5cf6;
+  --brand-toast: #ff6b35;
+  --brand-api-neutral: #6b7280;
+  --code-block-bg: #0d1117;
   --sync-action: #695be8;
   --sync-action-hover: color-mix(in oklab, #695be8 88%, black);
   /* Public review-flow offer strip (sky → teal); stops are brand-agnostic */

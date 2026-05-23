@@ -36,10 +36,10 @@ export const PILLAR_LABELS: Record<ContentPillar, string> = {
 };
 
 export const PILLAR_COLORS: Record<ContentPillar, string> = {
-    "google-reviews": "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20",
-    "responding-to-reviews": "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20",
-    "local-seo": "text-green-600 dark:text-green-400 bg-green-500/10 border-green-500/20",
-    "reputation-management": "text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/20",
-    "industry-specific": "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-500/20",
-    "competitor-analysis": "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
+    "google-reviews": "text-chart-1 bg-chart-1/10 border-chart-1/20",
+    "responding-to-reviews": "text-sync-action bg-sync-action/10 border-sync-action/20",
+    "local-seo": "text-chart-2 bg-chart-2/10 border-chart-2/20",
+    "reputation-management": "text-destructive bg-destructive/10 border-destructive/20",
+    "industry-specific": "text-primary bg-primary/10 border-primary/20",
+    "competitor-analysis": "text-chart-4 bg-chart-4/10 border-chart-4/20",
 };

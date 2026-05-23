@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { sendEmail } from "@/services/resend/send-email";
+import { referralRewardEmailHtml } from "@/lib/email/transactional-email-styles";
 
 /**
  * When a referred organization converts to paid, reward the referrer (1 free month credit).
@@ -100,10 +101,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
             await sendEmail({
                 to: referrerUser.email,
                 subject: "You earned a free month — referral reward",
-                html: `<p style="font-size:16px;color:#52525b;">Hi ${name},</p>
-<p style="font-size:16px;color:#52525b;">Someone you referred just became a paying Zyene Reviews customer. We've applied a <strong>1-month account credit</strong> to your Stripe balance (or will reflect on your next invoice).</p>
-<p style="font-size:16px;color:#52525b;">Keep sharing your referral link from Settings → Refer a friend.</p>
-<p style="font-size:13px;color:#a1a1aa;">— The Zyene Reviews Team</p>`,
+                html: referralRewardEmailHtml(name),
             });
         } catch (err) {
             console.error("[referral] reward email failed:", err);

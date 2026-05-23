@@ -5,6 +5,10 @@ import {
 } from "@/lib/phase7/review-response-templates";
 import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
 import { sendEmail } from "@/services/resend/send-email";
+import {
+    reviewResponseBonusEmailHtml,
+    reviewResponseBonusItemHtml,
+} from "@/lib/email/transactional-email-styles";
 
 export async function POST(request: Request) {
     let body: {
@@ -45,18 +49,14 @@ export async function POST(request: Request) {
 
     const bonus = renderBonusTemplates(businessName);
     const bonusHtml = bonus
-        .map((b) => `<p style="font-size:14px;color:#52525b;"><strong>${b.label}</strong><br/>${b.text}</p>`)
+        .map((b) => reviewResponseBonusItemHtml(b.label, b.text))
         .join("");
 
     try {
         await sendEmail({
             to: email.toLowerCase(),
             subject: "5 more review response templates",
-            html: `<p style="font-size:16px;color:#52525b;">Your draft reply:</p>
-<blockquote style="border-left:3px solid #e4e4e7;padding-left:12px;color:#52525b;">${primary}</blockquote>
-<h3 style="font-size:16px;color:#18181b;">5 bonus templates</h3>
-${bonusHtml}
-<p style="font-size:14px;color:#71717a;"><a href="https://zyenereviews.com/signup?utm_source=free_tool&utm_medium=review_response">Try AI replies in your brand voice</a> — 7-day free trial.</p>`,
+            html: reviewResponseBonusEmailHtml(primary, bonusHtml),
         });
     } catch (err) {
         console.error("[tools/review-response] email failed:", err);

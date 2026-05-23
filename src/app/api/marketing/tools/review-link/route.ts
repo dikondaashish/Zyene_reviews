@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { fetchPublicPlaceMetrics } from "@/lib/phase7/places-public";
 import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
 import { sendEmail } from "@/services/resend/send-email";
+import { reviewLinkEmailHtml } from "@/lib/email/transactional-email-styles";
 
 export async function POST(request: Request) {
     let body: { email?: string; placeId?: string };
@@ -33,10 +34,7 @@ export async function POST(request: Request) {
         await sendEmail({
             to: body.email!.trim().toLowerCase(),
             subject: `Your Google review link for ${metrics.name}`,
-            html: `<p style="font-size:16px;color:#52525b;">Here is your direct Google review link for <strong>${metrics.name}</strong>:</p>
-<p style="font-size:16px;"><a href="${metrics.reviewLink}" style="color:#16a34a;">${metrics.reviewLink}</a></p>
-<p style="font-size:14px;color:#71717a;">Share this link via SMS, email, or QR code. Customers tap once to leave a review on Google.</p>
-<p style="font-size:14px;color:#71717a;">Want automated requests and AI replies? <a href="https://zyenereviews.com/signup?utm_source=free_tool&utm_medium=review_link">Start a 7-day free trial</a>.</p>`,
+            html: reviewLinkEmailHtml(metrics.name, metrics.reviewLink),
         });
     } catch (err) {
         console.error("[tools/review-link] email failed:", err);

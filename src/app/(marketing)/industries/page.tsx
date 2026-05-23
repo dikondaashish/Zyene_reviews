@@ -132,7 +132,7 @@ export default function IndustriesHubPage() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <div className="flex justify-center gap-1 mb-5">
                         {[1, 2, 3, 4, 5].map((s) => (
-                            <Star key={s} className="h-7 w-7 fill-yellow-400 text-yellow-400" />
+                            <Star key={s} className="h-7 w-7 fill-chart-4 text-chart-4" />
                         ))}
                     </div>
                     <h2 className="text-4xl font-bold text-foreground mb-4">

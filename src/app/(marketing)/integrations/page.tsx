@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 const INTEGRATIONS = [
     {
         name: "Google Business Profile",
-        color: "#4285F4",
+        color: "var(--brand-google)",
         letter: "G",
         badge: null,
         status: "live" as const,
@@ -42,7 +42,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Facebook Reviews",
-        color: "#1877F2",
+        color: "var(--brand-facebook)",
         letter: "f",
         badge: null,
         status: "live" as const,
@@ -57,7 +57,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Yelp",
-        color: "#D32323",
+        color: "var(--brand-yelp)",
         letter: "Y",
         badge: null,
         status: "live" as const,
@@ -72,7 +72,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Zapier",
-        color: "#FF4A00",
+        color: "var(--brand-zapier)",
         letter: "Z",
         badge: null,
         status: "live" as const,
@@ -88,7 +88,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Square",
-        color: "#006AFF",
+        color: "var(--brand-square)",
         letter: "S",
         badge: null,
         status: "live" as const,
@@ -103,7 +103,7 @@ const INTEGRATIONS = [
     },
     {
         name: "REST API",
-        color: "#6B7280",
+        color: "var(--brand-api-neutral)",
         letter: "</>",
         badge: null,
         status: "live" as const,
@@ -119,7 +119,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Website Review Widget",
-        color: "#8B5CF6",
+        color: "var(--brand-hubspot)",
         letter: "W",
         badge: null,
         status: "live" as const,
@@ -135,7 +135,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Clover POS",
-        color: "#1DA462",
+        color: "var(--brand-clover)",
         letter: "C",
         badge: "Coming Soon",
         status: "soon" as const,
@@ -149,7 +149,7 @@ const INTEGRATIONS = [
     },
     {
         name: "Toast POS",
-        color: "#FF6B35",
+        color: "var(--brand-toast)",
         letter: "T",
         badge: "Coming Soon",
         status: "soon" as const,
@@ -326,41 +326,41 @@ export default function IntegrationsPage() {
                         </div>
 
                         {/* Code block */}
-                        <div className="bg-[#0d1117] rounded-2xl border border-white/10 p-6 font-mono text-sm overflow-hidden">
+                        <div className="bg-[color:var(--code-block-bg)] rounded-2xl border border-white/10 p-6 font-mono text-sm overflow-hidden">
                             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-                                <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                                <span className="w-3 h-3 rounded-full bg-green-500/70" />
+                                <span className="w-3 h-3 rounded-full bg-destructive/70" />
+                                <span className="w-3 h-3 rounded-full bg-chart-4/70" />
+                                <span className="w-3 h-3 rounded-full bg-chart-2/70" />
                                 <span className="text-white/30 text-xs ml-2">POST /v1/requests</span>
                             </div>
                             <pre className="text-[13px] leading-relaxed overflow-x-auto text-left whitespace-pre">
                                 <code>
-                                    <span className="text-blue-400">curl</span>{" "}
-                                    <span className="text-green-400">-X POST</span>{" \\\n"}
+                                    <span className="text-chart-1">curl</span>{" "}
+                                    <span className="text-chart-2">-X POST</span>{" \\\n"}
                                     {"  "}
-                                    <span className="text-yellow-300">https://api.zyenereviews.com/v1/requests</span>{" \\\n"}
+                                    <span className="text-chart-4">https://api.zyenereviews.com/v1/requests</span>{" \\\n"}
                                     {"  "}
-                                    <span className="text-green-400">-H</span>{" "}
-                                    <span className="text-orange-300">&quot;Authorization: Bearer $API_KEY&quot;</span>{" \\\n"}
+                                    <span className="text-chart-2">-H</span>{" "}
+                                    <span className="text-primary">&quot;Authorization: Bearer $API_KEY&quot;</span>{" \\\n"}
                                     {"  "}
-                                    <span className="text-green-400">-H</span>{" "}
-                                    <span className="text-orange-300">&quot;Content-Type: application/json&quot;</span>{" \\\n"}
+                                    <span className="text-chart-2">-H</span>{" "}
+                                    <span className="text-primary">&quot;Content-Type: application/json&quot;</span>{" \\\n"}
                                     {"  "}
-                                    <span className="text-green-400">-d</span>{" "}
-                                    <span className="text-orange-300">&apos;&#123;</span>{"\n"}
+                                    <span className="text-chart-2">-d</span>{" "}
+                                    <span className="text-primary">&apos;&#123;</span>{"\n"}
                                     {"    "}
-                                    <span className="text-orange-300">&quot;customer_name&quot;: &quot;Jane Smith&quot;,</span>{"\n"}
+                                    <span className="text-primary">&quot;customer_name&quot;: &quot;Jane Smith&quot;,</span>{"\n"}
                                     {"    "}
-                                    <span className="text-orange-300">&quot;phone&quot;: &quot;+15551234567&quot;,</span>{"\n"}
+                                    <span className="text-primary">&quot;phone&quot;: &quot;+15551234567&quot;,</span>{"\n"}
                                     {"    "}
-                                    <span className="text-orange-300">&quot;channel&quot;: &quot;sms&quot;,</span>{"\n"}
+                                    <span className="text-primary">&quot;channel&quot;: &quot;sms&quot;,</span>{"\n"}
                                     {"    "}
-                                    <span className="text-orange-300">&quot;location_id&quot;: &quot;loc_abc123&quot;</span>{"\n"}
+                                    <span className="text-primary">&quot;location_id&quot;: &quot;loc_abc123&quot;</span>{"\n"}
                                     {"  "}
-                                    <span className="text-orange-300">&#125;&apos;</span>
+                                    <span className="text-primary">&#125;&apos;</span>
                                 </code>
                             </pre>
-                            <div className="mt-4 pt-3 border-t border-white/10 text-green-400 text-xs">
+                            <div className="mt-4 pt-3 border-t border-white/10 text-chart-2 text-xs">
                                 ✓ 200 OK — Review request sent via SMS
                             </div>
                         </div>

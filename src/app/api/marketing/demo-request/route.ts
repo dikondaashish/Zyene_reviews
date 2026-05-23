@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { captureMarketingLead } from "@/lib/phase8/capture-marketing-lead";
 import { ENTERPRISE_SALES_EMAIL } from "@/lib/phase8/enterprise-data";
 import { sendEmail } from "@/services/resend/send-email";
+import { emailMutedFooter } from "@/lib/email/transactional-email-styles";
 
 export async function POST(request: Request) {
     let body: {
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
 </ul>
 <p><strong>Message:</strong></p>
 <p>${message.replace(/\n/g, "<br/>")}</p>
-<p style="color:#71717a;font-size:12px;">Submitted via zyenereviews.com/demo</p>`,
+${emailMutedFooter("Submitted via zyenereviews.com/demo")}`,
             replyTo: email,
         });
         await sendEmail({

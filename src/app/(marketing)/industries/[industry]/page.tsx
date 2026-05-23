@@ -116,7 +116,7 @@ export default async function IndustryPage(
                                 <div className="text-2xl font-bold text-foreground mb-2">{data.name}</div>
                                 <div className="flex justify-center gap-1 mb-4">
                                     {[1, 2, 3, 4, 5].map((s) => (
-                                        <Star key={s} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                                        <Star key={s} className="h-5 w-5 fill-chart-4 text-chart-4" />
                                     ))}
                                 </div>
                                 <div className="space-y-2 text-sm text-muted-foreground">
@@ -227,7 +227,7 @@ export default async function IndustryPage(
                                 <p className="text-sm text-muted-foreground leading-relaxed">{data.useCase.actionTaken}</p>
                             </div>
                             <div>
-                                <div className="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400 mb-3">Result</div>
+                                <div className="text-xs font-bold uppercase tracking-wider text-chart-2 mb-3">Result</div>
                                 <p className="text-sm text-muted-foreground leading-relaxed">{data.useCase.resultAfter}</p>
                             </div>
                         </div>
@@ -292,7 +292,7 @@ export default async function IndustryPage(
             <section className="py-20 px-4 bg-muted border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
                     <div className="flex justify-center gap-1 mb-5">
-                        {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-6 w-6 fill-yellow-400 text-yellow-400" />)}
+                        {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-6 w-6 fill-chart-4 text-chart-4" />)}
                     </div>
                     <h2 className="text-4xl font-bold text-foreground mb-4">{data.ctaJoinCopy}</h2>
                     <p className="text-xl text-muted-foreground mb-10">
