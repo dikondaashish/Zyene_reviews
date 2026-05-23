@@ -1,4 +1,6 @@
--- 20260405164200_backfill_encrypted_tokens.sql
+-- OAuth token encryption (step 2): batch backfill plaintext → access_token_encrypted columns.
+-- Uses encrypt_token on integrations and review_platforms where encrypted values are still NULL.
+-- Run before finalize_token_encryption (20260405164400) drops plaintext columns.
 
 -- 1. Create a helper function to backfill tokens in batches
 -- This handles both integrations and review_platforms tables

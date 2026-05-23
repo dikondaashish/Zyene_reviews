@@ -1,4 +1,6 @@
--- 20260405164000_add_encrypted_columns.sql
+-- OAuth token encryption (step 1): pgcrypto, *_encrypted columns, encrypt_token/decrypt_token RPCs.
+-- Reads the AES key from internal.vault_config (created in the consolidated sibling migration).
+-- Part of the April 2026 encryption cluster; do not edit—add forward fixes in new migrations only.
 
 -- 1. Enable pgcrypto (idempotent)
 CREATE EXTENSION IF NOT EXISTS pgcrypto;

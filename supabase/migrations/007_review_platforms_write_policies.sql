@@ -1,5 +1,7 @@
--- Allow authenticated users to delete their own review_platforms
--- (via business → org membership check)
+-- RLS write policies for review_platforms (connect / update / disconnect Google, etc.).
+-- Scoped via get_user_org_ids(): users may mutate platforms only for their org's businesses.
+-- Complements 006 (public SELECT) and initial_schema read policies.
+
 CREATE POLICY review_platforms_delete ON review_platforms
   FOR DELETE USING (
     business_id IN (

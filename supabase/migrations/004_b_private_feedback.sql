@@ -1,5 +1,7 @@
+-- Private feedback for low-star public review flow (1–3 stars).
+-- Anonymous visitors may INSERT; org members may SELECT rows for their businesses.
+-- Extended later by migrations for recovery tools, contact modes, and dashboard UPDATE RLS.
 
--- Create private_feedback table
 CREATE TABLE IF NOT EXISTS private_feedback (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
