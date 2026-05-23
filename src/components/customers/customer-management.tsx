@@ -1,627 +1,94 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { Upload, RefreshCcw, Users, UserPlus, Percent, MessageCircleOff, BarChart3, Download, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { toast } from "sonner";
-import { CustomerTable, Customer } from "@/components/customers/customer-table";
-import { CustomerFilters } from "@/components/customers/customer-filters";
-import { CustomerSegmentTabs, type SmartSegmentTab, type SegmentCounts } from "@/components/customers/customer-segment-tabs";
+import type { Customer } from "@/components/customers/customer-table";
+import { useCustomerManagement } from "@/components/customers/use-customer-management";
+import { CustomerManagementHeader } from "@/components/customers/customer-management-header";
+import { CustomerManagementStatsGrid } from "@/components/customers/customer-management-stats-grid";
+import { CustomerManagementFilterToolbar } from "@/components/customers/customer-management-filter-toolbar";
+import { CustomerManagementListRegion } from "@/components/customers/customer-management-list-region";
+import { CustomerManagementDialogs } from "@/components/customers/customer-management-dialogs";
 import { BulkActionBar } from "@/components/customers/bulk-action-bar";
-import { AddCustomerModal } from "@/components/customers/add-customer-modal";
-import { CSVImportModal } from "@/components/customers/csv-import-modal";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import confetti from "canvas-confetti";
-
-function csvEscape(value: string): string {
-    if (/[",\n\r]/.test(value)) {
-        return `"${value.replace(/"/g, '""')}"`;
-    }
-    return value;
-}
-
-async function fetchAllCustomersForExport(businessId: string): Promise<Customer[]> {
-    const limit = 5000;
-    let page = 1;
-    const all: Customer[] = [];
-    for (;;) {
-        const res = await fetch(
-            `/api/customers?businessId=${encodeURIComponent(businessId)}&limit=${limit}&page=${page}`,
-            { cache: "no-store" }
-        );
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-            throw new Error(json.error || "Failed to load customers");
-        }
-        const payload = json.data;
-        const batch = (payload.customers ?? []) as Customer[];
-        all.push(...batch);
-        if (batch.length < limit) break;
-        page += 1;
-        if (page > 500) break;
-    }
-    return all;
-}
-
-function buildCustomerExportCsv(customers: Customer[]): string {
-    const lines: string[] = [];
-    lines.push(
-        [
-            "name",
-            "email",
-            "phone",
-            "tags",
-            "visits",
-            "spend",
-            "requests_sent",
-            "last_sent_at",
-            "has_reviewed",
-        ].join(",")
-    );
-    for (const c of customers) {
-        const name = `${c.first_name ?? ""} ${c.last_name ?? ""}`.trim();
-        const tagStr = (c.tags ?? []).join("; ");
-        const visits = String(c.visit_count ?? 0);
-        const spend = ((c.total_spend_cents ?? 0) / 100).toFixed(2);
-        const reqs = String(c.total_requests_sent ?? 0);
-        const last = c.last_request_sent_at ?? "";
-        const reviewed = c.has_linked_review ? "true" : "false";
-        lines.push(
-            [name, c.email ?? "", c.phone ?? "", tagStr, visits, spend, reqs, last, reviewed]
-                .map((cell) => csvEscape(String(cell)))
-                .join(",")
-        );
-    }
-    return lines.join("\n");
-}
 
 interface CustomerManagementProps {
     businessId: string;
     initialCustomers: Customer[];
 }
 
-type BulkActionPayload = {
-    tags?: string[];
-    mode?: "add" | "remove";
-};
-
-const emptySegmentCounts: SegmentCounts = {
-    all: 0,
-    never_reviewed: 0,
-    already_reviewed: 0,
-    recent: 0,
-    no_contact: 0,
-    opted_out: 0,
-};
-
 export function CustomerManagement({ businessId, initialCustomers }: CustomerManagementProps) {
-    const router = useRouter();
-    const [customers, setCustomers] = useState<Customer[]>(initialCustomers);
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
-    const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
-
-    const [search, setSearch] = useState("");
-    const [tagFilter, setTagFilter] = useState("");
-    const [smartTab, setSmartTab] = useState<SmartSegmentTab>("all");
-    const [isExporting, setIsExporting] = useState(false);
-
-    const [stats, setStats] = useState<{
-        totalCustomers: number;
-        reviewConversionPercent: number;
-        neverReviewedCount: number;
-        avgRequestsSent: number;
-        segmentCounts: SegmentCounts;
-    } | null>(null);
-
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-
-    const loadStats = useCallback(async () => {
-        if (!businessId) return;
-        try {
-            const res = await fetch(`/api/customers/stats?businessId=${encodeURIComponent(businessId)}`, {
-                cache: "no-store",
-            });
-            const json = await res.json();
-            if (!res.ok || json.success === false) {
-                throw new Error(json.error || "Failed to load stats");
-            }
-            const d = json.data ?? json;
-            setStats({
-                totalCustomers: d.totalCustomers,
-                reviewConversionPercent: d.reviewConversionPercent,
-                neverReviewedCount: d.neverReviewedCount,
-                avgRequestsSent: d.avgRequestsSent,
-                segmentCounts: d.segmentCounts ?? emptySegmentCounts,
-            });
-        } catch (e) {
-        }
-    }, [businessId]);
-
-    useEffect(() => {
-        loadStats();
-    }, [loadStats]);
-
-    const fetchCustomers = useCallback(async (opts?: { silent?: boolean }) => {
-        if (!businessId) return;
-
-        if (!opts?.silent) {
-            setIsLoading(true);
-        }
-        try {
-            const queryParams = new URLSearchParams({
-                businessId: businessId,
-                search: search,
-                limit: "5000",
-            });
-            if (tagFilter) {
-                queryParams.set("tags", tagFilter);
-            }
-
-            const response = await fetch(`/api/customers?${queryParams}`, { cache: "no-store" });
-            const json = await response.json();
-
-            if (!response.ok || json.success === false) {
-                throw new Error(json.error || "Request failed");
-            }
-            const payload = json.data ?? json;
-            setCustomers(payload.customers || []);
-            await loadStats();
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "An unexpected error occurred";
-            toast.error("Failed to fetch customers: " + message);
-        } finally {
-            if (!opts?.silent) {
-                setIsLoading(false);
-            }
-        }
-    }, [businessId, search, tagFilter, loadStats]);
-
-    useEffect(() => {
-        if (search || tagFilter) {
-            fetchCustomers();
-        } else {
-            setCustomers(initialCustomers);
-        }
-    }, [search, tagFilter, initialCustomers, fetchCustomers]);
-
-    const since30 = useMemo(() => {
-        const d = new Date();
-        d.setDate(d.getDate() - 30);
-        return d;
-    }, []);
-
-    const displayedCustomers = useMemo(() => {
-        const list = customers;
-        switch (smartTab) {
-            case "never_reviewed":
-                return list.filter((c) => (c.total_requests_sent ?? 0) > 0 && !c.has_linked_review);
-            case "already_reviewed":
-                return list.filter((c) => Boolean(c.has_linked_review));
-            case "recent":
-                return list.filter((c) => {
-                    const created = new Date(c.created_at).getTime();
-                    const last = c.last_request_sent_at ? new Date(c.last_request_sent_at).getTime() : 0;
-                    return created >= since30.getTime() || last >= since30.getTime();
-                });
-            case "no_contact":
-                return list.filter((c) => !(c.email ?? "").trim() && !(c.phone ?? "").trim());
-            case "opted_out":
-                return list.filter((c) => Boolean(c.is_opted_out));
-            default:
-                return list;
-        }
-    }, [customers, smartTab, since30]);
-
-    const handleBulkAction = async (action: "delete" | "tag" | "request", data?: BulkActionPayload) => {
-        if (!businessId || selectedIds.length === 0) return;
-
-        const promise = fetch("/api/customers/bulk", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ids: selectedIds,
-                businessId: businessId,
-                action,
-                data,
-            }),
-        });
-
-        toast.promise(promise, {
-            loading: `Processing bulk ${action}...`,
-            success: (response) => {
-                if (action === "request") {
-                    const root = document.documentElement;
-                    const cs = getComputedStyle(root);
-                    const c1 = cs.getPropertyValue("--chart-1").trim() || "var(--primary)";
-                    const c2 = cs.getPropertyValue("--chart-2").trim() || "var(--primary)";
-                    const c3 = cs.getPropertyValue("--chart-3").trim() || "var(--primary)";
-                    confetti({
-                        particleCount: 150,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: [c1, c2, c3],
-                    });
-                    return "Review requests sent successfully!";
-                }
-                void fetchCustomers({ silent: true });
-                setSelectedIds([]);
-                return `Bulk ${action} completed!`;
-            },
-            error: "Failed to perform bulk action",
-        });
-    };
-
-    const handleCustomerUpdated = (updated: Customer) => {
-        setCustomers((prev) => prev.map((c) => (c.id === updated.id ? { ...c, ...updated } : c)));
-        loadStats();
-    };
-
-    const sendRequestToCustomer = async (customer: Customer) => {
-        if (!businessId) return;
-        if (customer.is_opted_out) {
-            toast.error("This contact opted out of review requests.");
-            return;
-        }
-        if (!customer.phone) {
-            toast.error("Add a phone number to send an SMS review request.");
-            return;
-        }
-        try {
-            const response = await fetch("/api/customers/bulk", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ids: [customer.id],
-                    businessId,
-                    action: "request",
-                }),
-            });
-            const json = await response.json();
-            if (!response.ok) {
-                throw new Error(json.error || "Failed to send request");
-            }
-            toast.success("Review request sent!");
-            await fetchCustomers({ silent: true });
-        } catch (e) {
-            toast.error(e instanceof Error ? e.message : "Failed to send request");
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        try {
-            const response = await fetch("/api/customers", {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, businessId }),
-            });
-            if (!response.ok) throw new Error("Failed to delete");
-            setCustomers((prev) => prev.filter((c) => c.id !== id));
-            setSelectedIds((prev) => prev.filter((x) => x !== id));
-            toast.success("Customer deleted");
-            router.refresh();
-            await fetchCustomers({ silent: true });
-        } catch (error) {
-            toast.error("Failed to delete customer");
-        }
-    };
-
-    const onBulkSendCampaign = () => {
-        if (selectedIds.length === 0) return;
-        const eligibleIds = displayedCustomers
-            .filter((c) => selectedIds.includes(c.id) && !c.is_opted_out)
-            .map((c) => c.id);
-        if (eligibleIds.length === 0) {
-            toast.error("None of the selected contacts can receive requests (opted out).");
-            return;
-        }
-        if (eligibleIds.length < selectedIds.length) {
-            toast.message(`Skipping ${selectedIds.length - eligibleIds.length} opted-out contact(s).`);
-        }
-        const q = encodeURIComponent(eligibleIds.join(","));
-        router.push(`/campaigns/new?customerIds=${q}`);
-        toast.message("Continue in the campaign builder with your selected customers.");
-    };
-
-    const handleExportCsv = async () => {
-        if (!businessId) return;
-        setIsExporting(true);
-        try {
-            const all = await fetchAllCustomersForExport(businessId);
-            const csv = buildCustomerExportCsv(all);
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `customers-export-${new Date().toISOString().slice(0, 10)}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            toast.success(`Exported ${all.length} customer(s).`);
-        } catch (e) {
-            toast.error(e instanceof Error ? e.message : "Export failed");
-        } finally {
-            setIsExporting(false);
-        }
-    };
-
-    const allTagsForFilter = useMemo(() => {
-        const set = new Set<string>();
-        for (const c of initialCustomers) {
-            for (const t of c.tags || []) {
-                if (t) set.add(t);
-            }
-        }
-        for (const c of customers) {
-            for (const t of c.tags || []) {
-                if (t) set.add(t);
-            }
-        }
-        return Array.from(set).sort((a, b) => a.localeCompare(b));
-    }, [initialCustomers, customers]);
-
-    const selectedEligibleForSend = useMemo(() => {
-        return displayedCustomers.filter((c) => selectedIds.includes(c.id) && !c.is_opted_out).length;
-    }, [displayedCustomers, selectedIds]);
-
-    const bulkSendBlocked = selectedIds.length > 0 && selectedEligibleForSend === 0;
-
-    const segmentCountsForTabs = stats?.segmentCounts ?? emptySegmentCounts;
-
-    const listEmpty = !isLoading && displayedCustomers.length === 0;
-    const filteredEmpty = listEmpty && customers.length > 0;
-    const databaseEmpty = listEmpty && customers.length === 0;
+    const cm = useCustomerManagement(businessId, initialCustomers);
 
     return (
         <div className="min-w-0 animate-in fade-in overflow-x-hidden duration-500">
-            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-start sm:gap-5 lg:items-end">
-                <div className="min-w-0 flex-1 space-y-1">
-                    <div className="mb-1 flex items-center gap-2">
-                        <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
-                            <Users className="h-4 w-4 text-primary" />
-                        </div>
-                        <h1 className="text-xl font-bold tracking-tight text-foreground lg:text-2xl">Customers</h1>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                        Manage your customer database and trigger review campaigns.
-                    </p>
-                </div>
+            <CustomerManagementHeader
+                onImportClick={() => cm.setIsImportModalOpen(true)}
+                onExportClick={() => void cm.handleExportCsv()}
+                onAddClick={() => cm.setIsAddModalOpen(true)}
+                isExporting={cm.isExporting}
+            />
 
-                <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:w-auto sm:justify-end">
-                    <Button
-                        variant="outline"
-                        onClick={() => setIsImportModalOpen(true)}
-                        className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
-                    >
-                        <Upload className="h-4 w-4 shrink-0 md:mr-2" />
-                        <span className="md:hidden">Import</span>
-                        <span className="hidden md:inline">Import CSV</span>
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={() => void handleExportCsv()}
-                        disabled={isExporting}
-                        className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
-                    >
-                        <Download className="h-4 w-4 shrink-0 md:mr-2" />
-                        <span className="md:hidden">Export</span>
-                        <span className="hidden md:inline">Export CSV</span>
-                    </Button>
-                    <Button
-                        onClick={() => setIsAddModalOpen(true)}
-                        className="h-9 w-full rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
-                    >
-                        <UserPlus className="h-4 w-4 shrink-0 md:mr-2" />
-                        <span className="md:hidden">Add</span>
-                        <span className="hidden md:inline">Add Customer</span>
-                    </Button>
-                </div>
-            </div>
+            <CustomerManagementStatsGrid stats={cm.stats} />
 
-            <div className="mb-6 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 xl:grid-cols-4">
-                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
-                        <Users className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Total Customers
-                        </p>
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {stats?.totalCustomers ?? "—"}
-                        </h3>
-                    </div>
-                </div>
-                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-2/10">
-                        <Percent className="h-4 w-4 text-chart-2" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Review conversion
-                        </p>
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {stats != null ? `${stats.reviewConversionPercent}%` : "—"}
-                        </h3>
-                        <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
-                    </div>
-                </div>
-                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/10">
-                        <MessageCircleOff className="h-4 w-4 text-chart-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Never reviewed
-                        </p>
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {stats?.neverReviewedCount ?? "—"}
-                        </h3>
-                        <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
-                    </div>
-                </div>
-                <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-chart-4/15">
-                        <BarChart3 className="h-4 w-4 text-chart-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Avg requests sent
-                        </p>
-                        <h3 className="text-xl font-semibold text-foreground">
-                            {stats != null ? stats.avgRequestsSent : "—"}
-                        </h3>
-                        <p className="text-[10px] text-muted-foreground">Per customer (all contacts)</p>
-                    </div>
-                </div>
-            </div>
+            <CustomerManagementFilterToolbar
+                searchQuery={cm.search}
+                allTags={cm.allTagsForFilter}
+                tagFilter={cm.tagFilter}
+                onTagFilterChange={cm.setTagFilter}
+                onSearchChange={cm.setSearch}
+                smartTab={cm.smartTab}
+                onSmartTabChange={cm.setSmartTab}
+                segmentCounts={cm.segmentCountsForTabs}
+            />
 
-            <div className="mb-6 flex min-w-0 flex-col gap-4 rounded-2xl border border-border/60 bg-muted/15 p-3 shadow-sm sm:p-5">
-                <CustomerFilters
-                    searchQuery={search}
-                    allTags={allTagsForFilter}
-                    tagFilter={tagFilter}
-                    onTagFilterChange={setTagFilter}
-                    onSearchChange={setSearch}
-                />
-
-                <CustomerSegmentTabs value={smartTab} onChange={setSmartTab} counts={segmentCountsForTabs} />
-            </div>
-
-            {selectedIds.length > 0 && (
+            {cm.selectedIds.length > 0 && (
                 <BulkActionBar
-                    selectedCount={selectedIds.length}
-                    onClear={() => setSelectedIds([])}
-                    onDelete={() => setBulkDeleteOpen(true)}
-                    onSendRequests={onBulkSendCampaign}
-                    onAddTag={() => handleBulkAction("tag", { tags: ["VIP"], mode: "add" })}
-                    sendRequestsBlocked={bulkSendBlocked}
+                    selectedCount={cm.selectedIds.length}
+                    onClear={() => cm.setSelectedIds([])}
+                    onDelete={() => cm.setBulkDeleteOpen(true)}
+                    onSendRequests={cm.onBulkSendCampaign}
+                    onAddTag={() => void cm.handleBulkAction("tag", { tags: ["VIP"], mode: "add" })}
+                    sendRequestsBlocked={cm.bulkSendBlocked}
                     sendRequestsBlockedReason="Selected contacts are opted out of review requests."
                 />
             )}
 
-            {isLoading ? (
-                <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-border/80 bg-card shadow-sm">
-                    <RefreshCcw className="mb-4 h-10 w-10 animate-spin text-primary" />
-                    <p className="font-medium text-muted-foreground">Loading your customers...</p>
-                </div>
-            ) : listEmpty ? (
-                <Card className="rounded-2xl border-dashed border-border/80 bg-card/80 shadow-sm">
-                    <CardContent className="flex flex-col items-center gap-4 px-6 py-14 text-center sm:px-10">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-muted/40">
-                            {filteredEmpty ? (
-                                <Search className="h-6 w-6 text-muted-foreground" />
-                            ) : (
-                                <Users className="h-6 w-6 text-muted-foreground" />
-                            )}
-                        </div>
-                        <div className="max-w-md space-y-2">
-                            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                                {databaseEmpty ? "No customers yet" : "No contacts in this view"}
-                            </h2>
-                            <p className="text-sm leading-relaxed text-muted-foreground">
-                                {databaseEmpty
-                                    ? "Add contacts manually or import a CSV to start sending review requests and tracking engagement."
-                                    : "Try the “All” tab, adjust your search or tag filter, or pick another segment — your contacts are still in the full list."}
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap items-center justify-center gap-2">
-                            {databaseEmpty ? (
-                                <>
-                                    <Button
-                                        onClick={() => setIsAddModalOpen(true)}
-                                        className="rounded-lg bg-primary px-4 font-semibold"
-                                    >
-                                        <UserPlus className="mr-2 h-4 w-4" />
-                                        Add customer
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setIsImportModalOpen(true)}
-                                        className="rounded-lg border-border"
-                                    >
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Import CSV
-                                    </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <Button variant="outline" className="rounded-lg" onClick={() => setSmartTab("all")}>
-                                        Show all contacts
-                                    </Button>
-                                    {(search || tagFilter) && (
-                                        <Button
-                                            variant="ghost"
-                                            className="rounded-lg text-muted-foreground"
-                                            onClick={() => {
-                                                setSearch("");
-                                                setTagFilter("");
-                                            }}
-                                        >
-                                            Clear search & tag filters
-                                        </Button>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-            ) : (
-                <CustomerTable
-                    data={displayedCustomers}
-                    businessId={businessId}
-                    onDelete={handleDelete}
-                    onCustomerUpdated={handleCustomerUpdated}
-                    onSendRequest={sendRequestToCustomer}
-                    onSelectionChange={setSelectedIds}
-                />
-            )}
-
-            <AddCustomerModal
-                open={isAddModalOpen}
-                onOpenChange={setIsAddModalOpen}
-                onSuccess={() => void fetchCustomers({ silent: true })}
+            <CustomerManagementListRegion
                 businessId={businessId}
-            />
-            <CSVImportModal
-                open={isImportModalOpen}
-                onOpenChange={setIsImportModalOpen}
-                onSuccess={() => void fetchCustomers({ silent: true })}
+                isLoading={cm.isLoading}
+                listEmpty={cm.listEmpty}
+                filteredEmpty={cm.filteredEmpty}
+                databaseEmpty={cm.databaseEmpty}
+                displayedCustomers={cm.displayedCustomers}
+                search={cm.search}
+                tagFilter={cm.tagFilter}
+                onClearFilters={() => {
+                    cm.setSearch("");
+                    cm.setTagFilter("");
+                }}
+                onShowAllTab={() => cm.setSmartTab("all")}
+                onOpenAdd={() => cm.setIsAddModalOpen(true)}
+                onOpenImport={() => cm.setIsImportModalOpen(true)}
+                onDelete={cm.handleDelete}
+                onCustomerUpdated={cm.handleCustomerUpdated}
+                onSendRequest={cm.sendRequestToCustomer}
+                onSelectionChange={cm.setSelectedIds}
             />
 
-            <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete {selectedIds.length} customer(s)?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This will permanently remove the selected contacts from this business. This cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={() => {
-                                setBulkDeleteOpen(false);
-                                void handleBulkAction("delete");
-                            }}
-                        >
-                            Delete Selected
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <CustomerManagementDialogs
+                businessId={businessId}
+                bulkDeleteOpen={cm.bulkDeleteOpen}
+                onBulkDeleteOpenChange={cm.setBulkDeleteOpen}
+                selectedIds={cm.selectedIds}
+                onBulkDeleteConfirm={() => {
+                    cm.setBulkDeleteOpen(false);
+                    void cm.handleBulkAction("delete");
+                }}
+                isAddModalOpen={cm.isAddModalOpen}
+                onAddModalOpenChange={cm.setIsAddModalOpen}
+                onAddSuccess={() => void cm.fetchCustomers({ silent: true })}
+                isImportModalOpen={cm.isImportModalOpen}
+                onImportModalOpenChange={cm.setIsImportModalOpen}
+                onImportSuccess={() => void cm.fetchCustomers({ silent: true })}
+            />
         </div>
     );
 }
