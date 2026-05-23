@@ -34,7 +34,7 @@ export function CompetitorsTrackedSection({
                 <CardTitle>Tracked Competitors</CardTitle>
                 <CardDescription>
                     Ratings and reviews from Google Places. Primary category, website, and short
-                    description come from public listing data after sync — not competitors&apos; private
+                    description come from public listing data after sync ,  not competitors&apos; private
                     search-keyword reports.
                 </CardDescription>
             </CardHeader>

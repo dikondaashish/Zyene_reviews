@@ -16,7 +16,7 @@ export function CaseStudiesHeroSection() {
                         Results local businesses achieve with Zyene
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                        Representative outcomes from restaurants, dental practices, home services, salons, and auto repair —
+                        Representative outcomes from restaurants, dental practices, home services, salons, and auto repair , 
                         built from typical customer journeys. Permissioned customer stories will replace these as they become available.
                     </p>
                 </div>

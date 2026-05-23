@@ -17,17 +17,23 @@ export function parseMarketPositioningBriefPayload(parsed: unknown): MarketPosit
         throw new Error("Missing headline or overview");
     }
     const positioningBullets = Array.isArray(o.positioning_bullets)
-        ? o.positioning_bullets.map((x) => String(x ?? "").trim()).filter(Boolean).slice(0, 8)
+        ? o.positioning_bullets
+              .reduce<string[]>((acc, x) => {
+                  const value = String(x ?? "").trim();
+                  if (value) acc.push(value);
+                  return acc;
+              }, [])
+              .slice(0, 8)
         : [];
     const opportunityActions = Array.isArray(o.opportunity_actions)
         ? o.opportunity_actions
-              .map((a) => {
+              .reduce<Array<{ title: string; detail: string }>>((acc, a) => {
                   const row = a as Record<string, unknown>;
                   const title = String(row?.title ?? "").trim();
                   const detail = String(row?.detail ?? "").trim();
-                  return title && detail ? { title, detail } : null;
-              })
-              .filter((x): x is { title: string; detail: string } => x !== null)
+                  if (title && detail) acc.push({ title, detail });
+                  return acc;
+              }, [])
               .slice(0, 5)
         : [];
     const dataLimitations = String(o.data_limitations ?? "").trim();

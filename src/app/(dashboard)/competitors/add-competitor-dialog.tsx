@@ -277,7 +277,7 @@ export function AddCompetitorDialog({
                                         setFieldErrors({ ...fieldErrors, googleUrl: "" });
                                     }
                                 }}
-                                placeholder="Filled when you pick a search result — or paste a link"
+                                placeholder="Filled when you pick a search result, or paste a link"
                                 disabled={isSubmitting}
                                 className={cn(
                                     "h-11",

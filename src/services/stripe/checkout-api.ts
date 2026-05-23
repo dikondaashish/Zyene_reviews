@@ -58,9 +58,10 @@ export async function handleBillingCheckout(request: Request) {
         }
 
         // Security: Validate priceId against known plans to prevent spoofing
-        const validPriceIds = PLANS
-            .map((p) => p.stripePriceId)
-            .filter(Boolean);
+        const validPriceIds = PLANS.reduce<string[]>((acc, p) => {
+            if (p.stripePriceId) acc.push(p.stripePriceId);
+            return acc;
+        }, []);
 
         if (!validPriceIds.includes(priceId)) {
             return apiError("Invalid plan selected", { status: 400, details: requestId });

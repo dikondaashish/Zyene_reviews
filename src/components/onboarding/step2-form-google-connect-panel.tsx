@@ -56,7 +56,7 @@ export function Step2FormGoogleConnectPanel({ onConnectClick }: { onConnectClick
                     {[
                         "Auto-import all your reviews",
                         "AI-powered response suggestions",
-                        "Real-time sync — new reviews appear instantly",
+                        "Real-time sync, new reviews appear instantly",
                     ].map((benefit) => (
                         <div key={benefit} className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
                             <CheckCircle2 className="text-primary shrink-0 size-4" />

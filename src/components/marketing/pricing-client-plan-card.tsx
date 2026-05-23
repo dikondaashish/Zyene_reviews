@@ -50,7 +50,7 @@ export function PricingClientPlanCard({
                         Billed ${plan.price?.toFixed(2)}/year
                     </p>
                 )}
-                <p className="text-sm text-primary font-semibold mb-6">7-day free trial — cancel anytime, no charge</p>
+                <p className="text-sm text-primary font-semibold mb-6">7-day free trial, cancel anytime, no charge</p>
                 <ul className="space-y-2.5 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
                     {plan.features.map((f) => (
                         <li key={f} className="flex items-start gap-2">
@@ -113,7 +113,7 @@ export function PricingClientPlanCard({
             {plan.interval === "year" && (
                 <p className="text-xs text-muted-foreground mb-1">Billed ${plan.price?.toFixed(2)}/year</p>
             )}
-            <p className="text-sm text-primary font-semibold mb-6">7-day free trial — cancel anytime, no charge</p>
+            <p className="text-sm text-primary font-semibold mb-6">7-day free trial, cancel anytime, no charge</p>
             <ul className="space-y-2.5 text-sm text-muted-foreground flex-1 mb-8">
                 {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2">

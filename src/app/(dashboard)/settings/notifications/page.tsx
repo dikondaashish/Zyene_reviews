@@ -76,7 +76,7 @@ export default async function NotificationSettingsPage() {
                 </p>
                 <p className="text-xs text-muted-foreground mt-2 max-w-lg">
                     If you signed up with Google, add your mobile number below (and turn on SMS alerts) to receive
-                    urgent review texts—Google sign-up doesn&apos;t collect your phone.
+                    urgent review texts, Google sign-up doesn&apos;t collect your phone.
                 </p>
             </div>
             <NotificationForm

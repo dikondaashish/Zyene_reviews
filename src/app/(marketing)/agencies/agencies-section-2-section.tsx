@@ -23,7 +23,7 @@ export function AgenciesSection2Section() {
                         <h2 className="text-3xl font-bold">White-label branding</h2>
                     </div>
                     <p className="text-muted-foreground mb-8 max-w-2xl">
-                        We already support <strong>hide_branding</strong> on review collection flows — market it to
+                        We already support <strong>hide_branding</strong> on review collection flows, market it to
                         clients as your proprietary reputation stack. Enterprise client accounts unlock full white-label
                         widgets without the “Powered by Zyene” footer.
                     </p>

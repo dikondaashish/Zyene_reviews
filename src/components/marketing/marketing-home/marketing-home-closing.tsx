@@ -28,7 +28,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
         <div className="container mx-auto max-w-2xl text-center">
           <h2 className="text-2xl font-bold text-foreground mb-2">Zyene Reviews Monthly</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            Product updates, Google review tips, and case studies — once a month.
+            Product updates, Google review tips, and case studies ,  once a month.
           </p>
           <NewsletterSignup source="homepage" />
         </div>
@@ -51,7 +51,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
           >
             <MarketingHomeFaqItem
               question="How does the 7-day free trial work?"
-              answer="Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts — cancel anytime from your billing settings."
+              answer="Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts ,  cancel anytime from your billing settings."
             />
             <MarketingHomeFaqItem
               question="How do review requests work?"
@@ -59,7 +59,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
             />
             <MarketingHomeFaqItem
               question="Does Zyene post AI replies directly to Google?"
-              answer="Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google — keeping you in full control of your responses. The Auto commenter feature can post replies automatically on your behalf."
+              answer="Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google ,  keeping you in full control of your responses. The Auto commenter feature can post replies automatically on your behalf."
             />
             <MarketingHomeFaqItem
               question="Can I manage multiple locations?"
@@ -67,7 +67,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
             />
             <MarketingHomeFaqItem
               question="What happens to negative feedback?"
-              answer="Customers who rate their experience 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. You're notified instantly either way. This is the Negative Feedback Shield — included on every paid plan."
+              answer="Customers who rate their experience 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. You're notified instantly either way. This is the Negative Feedback Shield ,  included on every paid plan."
             />
             <MarketingHomeFaqItem
               question="Can I cancel anytime?"

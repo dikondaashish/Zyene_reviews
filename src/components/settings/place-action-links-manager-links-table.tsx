@@ -73,7 +73,7 @@ export function PlaceActionLinksManagerLinksTable({
                                         {row.is_preferred && <Badge variant="secondary">Preferred</Badge>}
                                         {row.is_broken && <Badge variant="destructive">Possibly broken</Badge>}
                                         {!row.is_preferred && !row.is_broken ? (
-                                            <span className="text-xs text-muted-foreground">—</span>
+                                            <span className="text-xs text-muted-foreground">,</span>
                                         ) : null}
                                     </div>
                                 </TableCell>

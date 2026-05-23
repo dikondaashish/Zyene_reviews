@@ -9,7 +9,7 @@ import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { getUpgradeModalCopy } from "@/lib/phase7/upgrade-modal-copy";
 import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
 
-/** Plan limit UI for /businesses/add — Phase 7.4 business location hook */
+/** Plan limit UI for /businesses/add ,  Phase 7.4 business location hook */
 export function BusinessLimitUpgradePanel() {
     const [upgradeOpen, setUpgradeOpen] = useState(false);
     const copy = getUpgradeModalCopy("business_location");

@@ -52,7 +52,7 @@ export function DashboardViewExtendedStats({
                                     : "text-destructive"
                         }`}
                     >
-                        {hasSentimentData ? `${positivePercent.toFixed(0)}%` : "—"}
+                        {hasSentimentData ? `${positivePercent.toFixed(0)}%` : "-"}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                         {hasSentimentData
@@ -75,7 +75,7 @@ export function DashboardViewExtendedStats({
                             !hasEngagementData ? "text-muted-foreground" : ""
                         }`}
                     >
-                        {hasEngagementData ? `${engagementRate.toFixed(1)}%` : "—"}
+                        {hasEngagementData ? `${engagementRate.toFixed(1)}%` : "-"}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                         {hasEngagementData

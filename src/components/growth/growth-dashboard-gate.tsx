@@ -26,7 +26,7 @@ export function GrowthDashboardGate() {
             }
             window.location.reload();
         } catch {
-            setError("Network error — try again");
+            setError("Network error ,  try again");
         } finally {
             setLoading(false);
         }

@@ -175,7 +175,10 @@ export async function fetchGrowthKpiSnapshot(
     ).length;
 
     const signupOrgIds = new Set(
-        signupEvents.map((e) => e.organization_id).filter(Boolean) as string[]
+        signupEvents.reduce<string[]>((acc, e) => {
+            if (e.organization_id) acc.push(e.organization_id);
+            return acc;
+        }, [])
     );
     const businessToOrg = new Map<string, string>();
     if (signupOrgIds.size > 0) {

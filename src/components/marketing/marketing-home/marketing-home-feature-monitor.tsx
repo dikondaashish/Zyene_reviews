@@ -62,7 +62,7 @@ export function MarketingHomeFeatureMonitor({
               </Link>
             </div>
 
-            {/* Right Side — Mockup */}
+            {/* Right Side ,  Mockup */}
             <div className="w-full md:w-1/2 bg-muted p-8 md:p-16 flex items-center justify-center min-h-[500px]">
               <div className="bg-card p-6 rounded-lg w-full max-w-md border border-border">
                 <div className="w-full h-48 rounded-lg mb-6 relative overflow-hidden">

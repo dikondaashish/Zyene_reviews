@@ -66,7 +66,7 @@ export function CustomerManagementListRegion({
                         <p className="text-sm leading-relaxed text-muted-foreground">
                             {databaseEmpty
                                 ? "Add contacts manually or import a CSV to start sending review requests and tracking engagement."
-                                : "Try the “All” tab, adjust your search or tag filter, or pick another segment — your contacts are still in the full list."}
+                                : "Try the “All” tab, adjust your search or tag filter, or pick another segment, your contacts are still in the full list."}
                         </p>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">

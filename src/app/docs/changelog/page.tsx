@@ -4,10 +4,10 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
 export const metadata: Metadata = {
     title: "Changelog",
-    description: "Zyene Reviews product changelog — new features, improvements, API changes, and bug fixes listed by release date.",
+    description: "Zyene Reviews product changelog, new features, improvements, API changes, and bug fixes listed by release date.",
     alternates: { canonical: "https://zyenereviews.com/docs/changelog" },
-    openGraph: { title: "Changelog — Zyene Reviews", description: "New features, improvements, API changes, and bug fixes by release date.", url: "https://zyenereviews.com/docs/changelog" },
-    twitter: { card: "summary_large_image", title: "Changelog — Zyene Reviews", description: "New features, API changes, and bug fixes by release date." },
+    openGraph: { title: "Changelog, Zyene Reviews", description: "New features, improvements, API changes, and bug fixes by release date.", url: "https://zyenereviews.com/docs/changelog" },
+    twitter: { card: "summary_large_image", title: "Changelog, Zyene Reviews", description: "New features, API changes, and bug fixes by release date." },
 };
 
 export default function DocsChangelogPage() {

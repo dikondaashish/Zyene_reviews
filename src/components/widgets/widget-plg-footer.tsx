@@ -11,7 +11,7 @@ export function WidgetPlgFooter() {
                 rel="noopener noreferrer"
                 className="text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-                Get your own review widget — free trial
+                Get your own review widget ,  free trial
             </a>
         </div>
     );

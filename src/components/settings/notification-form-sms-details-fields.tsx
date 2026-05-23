@@ -91,7 +91,7 @@ export function NotificationFormSmsDetailsFields({ form }: { form: UseFormReturn
                     <NotificationFormFieldHelpTip label="What quiet hours do">
                         <p>
                             During this window we <strong>do not send SMS</strong> alerts. Instant emails and the
-                            weekly digest are <strong>not</strong> affected—only texts. If your quiet period
+                            weekly digest are <strong>not</strong> affected, only texts. If your quiet period
                             crosses midnight, both times are still used correctly.
                         </p>
                     </NotificationFormFieldHelpTip>

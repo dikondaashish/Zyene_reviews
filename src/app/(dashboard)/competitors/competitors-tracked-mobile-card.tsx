@@ -25,7 +25,7 @@ export function CompetitorsTrackedMobileCard({
     const updatedAt = competitor.updated_at ? (
         <TimeAgo date={competitor.updated_at} />
     ) : (
-        "—"
+        ", "
     );
 
     return (
@@ -75,11 +75,11 @@ export function CompetitorsTrackedMobileCard({
                     </dt>
                     <dd className="mt-0.5 text-muted-foreground">
                         {syncing ? (
-                            "—"
+                            ", "
                         ) : places?.primaryType ? (
                             <span title={places.typesPreview ?? undefined}>{places.primaryType}</span>
                         ) : (
-                            "—"
+                            ", "
                         )}
                     </dd>
                 </div>
@@ -89,11 +89,11 @@ export function CompetitorsTrackedMobileCard({
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">,</span>
                         ) : (
                             <span className="inline-flex items-center gap-1">
                                 <Star className="shrink-0 fill-chart-4 text-chart-4 size-3.5" />
-                                {competitor.average_rating || "—"}
+                                {competitor.average_rating || "-"}
                             </span>
                         )}
                     </dd>
@@ -104,7 +104,7 @@ export function CompetitorsTrackedMobileCard({
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">,</span>
                         ) : (
                             (competitor.total_reviews || 0).toLocaleString()
                         )}

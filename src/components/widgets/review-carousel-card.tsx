@@ -38,7 +38,7 @@ export function ReviewCarouselCard({
                     {review.author_name || "Valued Customer"}
                 </span>
                 <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {mounted ? new Date(review.created_at).toLocaleDateString([], { month: 'short', year: 'numeric' }) : "—"}
+                    {mounted ? new Date(review.created_at).toLocaleDateString([], { month: 'short', year: 'numeric' }) : "-"}
                 </span>
             </div>
         </div>

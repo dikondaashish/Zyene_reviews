@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Review Management for Every Industry — Zyene Reviews";
+export const alt = "Review Management for Every Industry ,  Zyene Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,7 +20,7 @@ export default function OgImage() {
                             <div key={item} style={{ background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: "10px", padding: "8px 14px", color: "rgba(255,255,255,0.8)", fontSize: "13px", fontWeight: "600" }}>{item}</div>
                         ))}
                     </div>
-                    <div style={{ fontSize: "17px", color: "rgba(255,255,255,0.5)" }}>Starting at $29.99/mo — 7-day free trial</div>
+                    <div style={{ fontSize: "17px", color: "rgba(255,255,255,0.5)" }}>Starting at $29.99/mo, 7-day free trial</div>
                 </div>
             </div>
         ),

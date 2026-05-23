@@ -36,7 +36,7 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
                         </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                        {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "—"}
+                        {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "-"}
                     </p>
                 </div>
             </div>

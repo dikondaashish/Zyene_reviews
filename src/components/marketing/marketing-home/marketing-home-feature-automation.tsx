@@ -50,7 +50,7 @@ export function MarketingHomeFeatureAutomation({
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-foreground mb-1">Auto-Request Reviews</h4>
-                    <p className="text-muted-foreground font-light leading-relaxed">Automatically send SMS or email campaigns to recent customers asking for reviews — while the Negative Feedback Shield routes low ratings privately.</p>
+                    <p className="text-muted-foreground font-light leading-relaxed">Automatically send SMS or email campaigns to recent customers asking for reviews, while the Negative Feedback Shield routes low ratings privately.</p>
                   </div>
                 </div>
               </div>

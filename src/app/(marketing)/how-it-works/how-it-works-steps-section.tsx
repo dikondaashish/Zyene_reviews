@@ -26,7 +26,7 @@ export function HowItWorksStepsSection() {
                                     <div className={`${step.iconBg} p-2.5 rounded-xl`}>
                                         <Icon className={`${step.iconColor} size-6`} />
                                     </div>
-                                    <span className={`text-sm font-bold uppercase tracking-wider ${step.iconColor}`}>Step {step.step} — {step.title}</span>
+                                    <span className={`text-sm font-bold uppercase tracking-wider ${step.iconColor}`}>Step {step.step}, {step.title}</span>
                                 </div>
                                 <h2 className="text-4xl font-bold text-foreground mb-4 leading-tight">{step.headline}</h2>
                                 <p className="text-muted-foreground leading-relaxed mb-8 text-lg">{step.description}</p>

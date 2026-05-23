@@ -5,7 +5,7 @@ export function formatReviewRequestContact(req: {
     customer_phone?: string | null;
     customer_email?: string | null;
 }) {
-    return [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") || "—";
+    return [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") || ", ";
 }
 
 export function reviewRequestChannelCell(channel: string | null | undefined) {
@@ -30,7 +30,7 @@ export function reviewRequestChannelCell(channel: string | null | undefined) {
     return (
         <div className="flex items-center gap-1.5">
             <Mail className="shrink-0 text-muted-foreground size-3.5" />
-            <span className="font-medium uppercase">{ch || "—"}</span>
+            <span className="font-medium uppercase">{ch || "-"}</span>
         </div>
     );
 }

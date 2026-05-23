@@ -32,7 +32,7 @@ export function MarketingHomeHowAndTestimonials({
             {[
               { step: "1", title: "Connect", body: "Securely connect your Google Business Profile through Google's official authorization. We request only the permissions needed to read and help you respond to reviews." },
               { step: "2", title: "Get Alerted", body: "Instant SMS when reviews arrive. Our AI analyzes sentiment and flags urgency so you know which reviews need attention first." },
-              { step: "3", title: "Reply & Grow", body: "One-tap AI replies. Ask customers for reviews via email, SMS, or shareable links — while the Negative Feedback Shield routes low ratings to private resolution." },
+              { step: "3", title: "Reply & Grow", body: "One-tap AI replies. Ask customers for reviews via email, SMS, or shareable links, while the Negative Feedback Shield routes low ratings to private resolution." },
             ].map(({ step, title, body }) => (
               <motion.div key={step} variants={fadeInUp} className="flex flex-col items-center text-center px-4">
                 <div className="h-20 w-20 bg-primary text-primary-foreground rounded-md border border-primary flex items-center justify-center mb-8 text-3xl font-bold z-10">

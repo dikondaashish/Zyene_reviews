@@ -3,14 +3,14 @@ import { MarketingHomeClient } from "@/components/marketing/marketing-home-clien
 import { SoftwareApplicationJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-    title: "Zyene Reviews — Review Management for Local Businesses",
+    title: "Zyene Reviews, Review Management for Local Businesses",
     description:
-        "Monitor, respond to, and grow your Google reviews with AI. The only review management platform with a Negative Feedback Shield — routing bad reviews to private resolution before they hit Google. Starting at $29.99/mo, no annual contract.",
+        "Monitor, respond to, and grow your Google reviews with AI. The only review management platform with a Negative Feedback Shield, routing bad reviews to private resolution before they hit Google. Starting at $29.99/mo, no annual contract.",
     alternates: {
         canonical: "https://zyenereviews.com/",
     },
     openGraph: {
-        title: "Zyene Reviews — Review Management for Local Businesses",
+        title: "Zyene Reviews, Review Management for Local Businesses",
         description:
             "AI-powered review management, competitor tracking, and local SEO for local businesses. Starting at $29.99/mo. 7-day free trial.",
         url: "https://zyenereviews.com/",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Zyene Reviews — Review Management for Local Businesses",
+        title: "Zyene Reviews, Review Management for Local Businesses",
         description:
             "AI-powered review management, competitor tracking, and local SEO for local businesses. Starting at $29.99/mo. 7-day free trial.",
     },
@@ -28,7 +28,7 @@ const HOME_FAQS = [
     {
         question: "How does the 7-day free trial work?",
         answer:
-            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts — cancel anytime from your billing settings.",
+            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts, cancel anytime from your billing settings.",
     },
     {
         question: "How do review requests work?",
@@ -38,7 +38,7 @@ const HOME_FAQS = [
     {
         question: "Does Zyene post AI replies directly to Google?",
         answer:
-            "Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google — keeping you in full control of your responses. The Auto commenter feature can post replies automatically on your behalf.",
+            "Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google, keeping you in full control of your responses. The Auto commenter feature can post replies automatically on your behalf.",
     },
     {
         question: "Can I manage multiple locations?",
@@ -48,7 +48,7 @@ const HOME_FAQS = [
     {
         question: "What happens to negative feedback?",
         answer:
-            "Customers who rate 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. This is the Negative Feedback Shield — included on every paid plan.",
+            "Customers who rate 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. This is the Negative Feedback Shield, included on every paid plan.",
     },
     {
         question: "Can I cancel anytime?",

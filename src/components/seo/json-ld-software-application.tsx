@@ -19,7 +19,7 @@ export function SoftwareApplicationJsonLd() {
             "Review monitoring from Google, Facebook, Yelp",
             "AI-powered review reply suggestions",
             "Auto-commenter for hands-free Google replies",
-            "Negative Feedback Shield — private routing for 1-3 star feedback",
+            "Negative Feedback Shield, private routing for 1-3 star feedback",
             "SMS, email, and link review request campaigns",
             "Competitor tracking with AI market briefs",
             "Google Business Profile SEO dashboard",

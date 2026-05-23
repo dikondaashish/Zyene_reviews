@@ -27,7 +27,7 @@ export function ReviewContentFeedbackOfferSection({ form }: ReviewContentTabProp
                 <div>
                     <p className="text-sm font-medium text-foreground">Special offer message</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                        Optional banner above &quot;Your feedback&quot; — use it to acknowledge the issue and mention a goodwill offer (e.g. discount or follow-up).
+                        Optional banner above &quot;Your feedback&quot; ,  use it to acknowledge the issue and mention a goodwill offer (e.g. discount or follow-up).
                     </p>
                 </div>
             </div>
@@ -64,7 +64,7 @@ export function ReviewContentFeedbackOfferSection({ form }: ReviewContentTabProp
                             <FormLabel>Custom message (optional)</FormLabel>
                             <FormControl>
                                 <Textarea
-                                    placeholder={`We're sorry for the inconvenience. We'd like to make things right with a special offer for you — we'll follow up with the details.`}
+                                    placeholder={`We're sorry for the inconvenience. We'd like to make things right with a special offer for you, we'll follow up with the details.`}
                                     className="min-h-[100px] bg-muted/30 focus:bg-background transition-colors resize-none text-sm"
                                     maxLength={500}
                                     {...field}

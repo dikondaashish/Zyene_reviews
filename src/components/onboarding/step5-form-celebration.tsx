@@ -5,7 +5,7 @@ import { CheckCircle2, Sparkles, Star } from "lucide-react";
 
 const CHECK_ITEMS = [
     { label: "Business profile created", delay: 0.1, always: true },
-    { label: "Google Business syncing — reviews appear within ~1 hour", delay: 0.2, always: false },
+    { label: "Google Business syncing ,  reviews appear within ~1 hour", delay: 0.2, always: false },
     { label: "Review templates ready", delay: 0.3, always: true },
 ] as const;
 

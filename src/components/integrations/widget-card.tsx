@@ -110,6 +110,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                             <iframe
                                 src={previewType === "badge" ? badgePreviewUrl : carouselPreviewUrl}
                                 title={previewType === "badge" ? "Badge preview" : "Carousel preview"}
+                                sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
                                 className="w-full border-0"
                                 style={{ minHeight: previewType === "badge" ? 360 : 440 }}
                             />

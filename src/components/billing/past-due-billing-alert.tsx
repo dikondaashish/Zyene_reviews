@@ -8,7 +8,7 @@ export type PastDueBillingAlertLayout = "banner" | "panel";
 
 export interface PastDueBillingAlertProps {
     layout: PastDueBillingAlertLayout;
-    /** CTA: label, disabled, loading, handler — parent decides (billing page vs dashboard banner). */
+    /** CTA: label, disabled, loading, handler ,  parent decides (billing page vs dashboard banner). */
     action: {
         label: string;
         disabled?: boolean;

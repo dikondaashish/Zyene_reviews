@@ -1,15 +1,20 @@
 export function parseCompetitorsMarketBrief(rawBrief: Record<string, unknown> | null) {
     if (!rawBrief || typeof rawBrief !== "object" || !rawBrief.id) return null;
     const bullets = Array.isArray(rawBrief.positioning_bullets)
-        ? rawBrief.positioning_bullets.map((x) => String(x ?? "")).filter(Boolean)
+        ? rawBrief.positioning_bullets.reduce<string[]>((acc, x) => {
+              const value = String(x ?? "");
+              if (value) acc.push(value);
+              return acc;
+          }, [])
         : [];
     const actions = Array.isArray(rawBrief.opportunity_actions)
-        ? rawBrief.opportunity_actions
-              .map((a) => {
-                  const o = a as Record<string, unknown>;
-                  return { title: String(o.title ?? "").trim(), detail: String(o.detail ?? "").trim() };
-              })
-              .filter((a) => a.title && a.detail)
+        ? rawBrief.opportunity_actions.reduce<Array<{ title: string; detail: string }>>((acc, a) => {
+              const o = a as Record<string, unknown>;
+              const title = String(o.title ?? "").trim();
+              const detail = String(o.detail ?? "").trim();
+              if (title && detail) acc.push({ title, detail });
+              return acc;
+          }, [])
         : [];
     return {
         id: String(rawBrief.id),

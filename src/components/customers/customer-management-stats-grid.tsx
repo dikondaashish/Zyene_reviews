@@ -14,7 +14,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Total Customers
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "—"}</h3>
+                    <h3 className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</h3>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
@@ -26,7 +26,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                         Review conversion
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">
-                        {stats != null ? `${stats.reviewConversionPercent}%` : "—"}
+                        {stats != null ? `${stats.reviewConversionPercent}%` : "-"}
                     </h3>
                     <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
                 </div>
@@ -39,7 +39,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Never reviewed
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "—"}</h3>
+                    <h3 className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</h3>
                     <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                         Avg requests sent
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">
-                        {stats != null ? stats.avgRequestsSent : "—"}
+                        {stats != null ? stats.avgRequestsSent : "-"}
                     </h3>
                     <p className="text-[10px] text-muted-foreground">Per customer (all contacts)</p>
                 </div>

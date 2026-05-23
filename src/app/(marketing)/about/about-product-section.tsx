@@ -21,7 +21,7 @@ export function AboutProductSection() {
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Send review requests to customers via email, SMS, or shareable links — with the Negative Feedback Shield routing low ratings to private resolution
+                                Send review requests to customers via email, SMS, or shareable links ,  with the Negative Feedback Shield routing low ratings to private resolution
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
@@ -29,7 +29,7 @@ export function AboutProductSection() {
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-primary mt-1">✓</span>
-                                Manage multiple business locations from one account — starting at $29.99/mo
+                                Manage multiple business locations from one account ,  starting at $29.99/mo
                             </li>
                         </ul>
                         <div className="flex flex-wrap gap-4">

@@ -107,7 +107,7 @@ export function ReputationScoreCheckerClient() {
                             </Button>
                         </form>
                     )}
-                    {fullSent && <p className="text-sm text-chart-2 text-center">Full report sent — check your inbox.</p>}
+                    {fullSent && <p className="text-sm text-chart-2 text-center">Full report sent, check your inbox.</p>}
                     {error && <p className="text-sm text-destructive text-center">{error}</p>}
                 </div>
             </section>

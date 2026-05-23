@@ -35,7 +35,7 @@ export function ZyenePlatformReviewRequestFunnelCard({
                     </CardTitle>
                     <div className="flex flex-wrap items-center gap-2">
                         <p className="text-xs text-muted-foreground font-medium">
-                            Track every step from send to Google review — {dateRange}
+                            Track every step from send to Google review ,  {dateRange}
                         </p>
                         <Badge
                             variant="secondary"

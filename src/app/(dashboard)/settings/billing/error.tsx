@@ -28,7 +28,7 @@ export default function BillingError({
                     Billing Error
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                    We couldn&apos;t load your billing information. This might be a temporary issue — please try again.
+                    We couldn&apos;t load your billing information. This might be a temporary issue ,  please try again.
                 </p>
             </div>
             <Button onClick={() => reset()} className="gap-2 mt-2">

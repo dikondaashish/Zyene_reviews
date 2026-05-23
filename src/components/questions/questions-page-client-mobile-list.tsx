@@ -36,7 +36,7 @@ export function QuestionsPageClientMobileList({
                             <dt className="font-semibold uppercase tracking-wide text-muted-foreground">
                                 Asked by
                             </dt>
-                            <dd className="mt-0.5 text-foreground">{q.author_display_name || "—"}</dd>
+                            <dd className="mt-0.5 text-foreground">{q.author_display_name || "-"}</dd>
                         </div>
                         <div>
                             <dt className="font-semibold uppercase tracking-wide text-muted-foreground">
@@ -47,7 +47,7 @@ export function QuestionsPageClientMobileList({
                                     ? formatDistanceToNow(new Date(q.google_update_time), {
                                           addSuffix: true,
                                       })
-                                    : "—"}
+                                    : "-"}
                             </dd>
                         </div>
                         <div>

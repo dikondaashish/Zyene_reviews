@@ -22,7 +22,7 @@ export function AgenciesSection3Section() {
                 <div className="container mx-auto max-w-5xl">
                     <h2 className="text-3xl font-bold mb-8">Agency pricing tiers</h2>
                     <p className="text-muted-foreground mb-10 max-w-2xl">
-                        Custom per-client pricing and bulk discounts — contact partnerships to activate. Stripe plan IDs
+                        Custom per-client pricing and bulk discounts ,  contact partnerships to activate. Stripe plan IDs
                         for agency_* tiers are assigned after onboarding.
                     </p>
                     <div className="grid md:grid-cols-3 gap-6">

@@ -27,7 +27,7 @@ export function ApiContentSection() {
                         <h1 className="mb-0 mt-0">Developer API</h1>
                         <p className="text-muted-foreground">
                             JSON over HTTPS on your Zyene workspace. Examples below use{" "}
-                            <code className="text-foreground">{apiOrigin}</code>—the same host as the dashboard.
+                            <code className="text-foreground">{apiOrigin}</code>, the same host as the dashboard.
                         </p>
 
                         <h2 id="authentication">Authentication</h2>

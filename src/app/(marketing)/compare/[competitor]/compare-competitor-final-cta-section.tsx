@@ -12,7 +12,7 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
                         No annual contract. No credit card lock-in.<br />
-                        Cancel before day 7 — pay nothing.
+                        Cancel before day 7 ,  pay nothing.
                     </p>
                     <Link href="/signup">
                         <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">

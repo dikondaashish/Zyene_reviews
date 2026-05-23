@@ -26,15 +26,15 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                     Pricing built for {data.name.toLowerCase()}
                                 </h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    No per-location surcharges. No annual contracts. Full access to every feature — AI replies, Negative Feedback Shield, competitor tracking — starting at $29.99/mo.
+                                    No per-location surcharges. No annual contracts. Full access to every feature ,  AI replies, Negative Feedback Shield, competitor tracking ,  starting at $29.99/mo.
                                 </p>
                                 <ul className="space-y-2.5 mb-8">
                                     {[
-                                        "7-day free trial — full access, no charge",
-                                        "Cancel anytime — no cancellation fees",
+                                        "7-day free trial, full access, no charge",
+                                        "Cancel anytime, no cancellation fees",
                                         "Starter: 1 location, $29.99/mo",
                                         "Professional: up to 3 locations, $59.99/mo",
-                                        "Enterprise: unlimited locations — contact us",
+                                        "Enterprise: unlimited locations, contact us",
                                     ].map((item) => (
                                         <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                                             <Check className="text-primary shrink-0 mt-0.5 size-4" />

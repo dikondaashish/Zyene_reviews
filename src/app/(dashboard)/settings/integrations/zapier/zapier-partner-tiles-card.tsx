@@ -18,7 +18,7 @@ function SimpleIconMark({ icon }: { icon: SimpleIconData }) {
     );
 }
 
-/** High-res favicon via Google — used when a brand is not in Simple Icons. */
+/** High-res favicon via Google ,  used when a brand is not in Simple Icons. */
 function FaviconMark({ domain, label }: { domain: string; label: string }) {
     const src = `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=128`;
     return (
@@ -85,7 +85,7 @@ export function ZapierPartnerTilesCard() {
                     Popular tools that work via Zapier
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                    Anything Zapier supports works here — these are the ones our customers wire up most often.
+                    Anything Zapier supports works here ,  these are the ones our customers wire up most often.
                 </p>
             </CardHeader>
             <CardContent className="pt-5">

@@ -104,7 +104,7 @@ export function DashboardViewGoogleHealth({
                                     : "text-destructive"
                         }`}
                     >
-                        {googleProfileHealthScore !== null ? `${googleProfileHealthScore}` : "—"}
+                        {googleProfileHealthScore !== null ? `${googleProfileHealthScore}` : "-"}
                         {googleProfileHealthScore !== null && (
                             <span className="text-lg font-semibold text-muted-foreground">/100</span>
                         )}

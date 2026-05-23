@@ -95,7 +95,7 @@ export function ZapierSetupClient({
                         icon={Store}
                         iconWrapClass="bg-chart-4/15 text-chart-4 ring-chart-4/25"
                         title="Your POS or CRM fires the trigger"
-                        description="When a job is completed, an invoice is paid, or a row is added to a sheet — pick whatever signals 'service is done'."
+                        description="When a job is completed, an invoice is paid, or a row is added to a sheet ,  pick whatever signals 'service is done'."
                     />
                     <HowItWorksStep
                         index={2}
@@ -109,7 +109,7 @@ export function ZapierSetupClient({
                         icon={Send}
                         iconWrapClass="bg-primary/10 text-primary ring-primary/25"
                         title="We send the review request automatically"
-                        description="SMS, email, or both — using the same plan limits, opt-out logic, and templates as the dashboard."
+                        description="SMS, email, or both ,  using the same plan limits, opt-out logic, and templates as the dashboard."
                     />
 
                     <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-muted/50 p-3 text-xs text-foreground/90">
@@ -117,7 +117,7 @@ export function ZapierSetupClient({
                         <p>
                             <span className="font-medium text-foreground">Tip:</span>{" "}
                             Set <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">channel</code> to{" "}
-                            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">both</code> when you have a phone <em>and</em> an email — Zyene
+                            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">both</code> when you have a phone <em>and</em> an email, Zyene
                             will gracefully fall back to whichever channel succeeds if one fails.
                         </p>
                     </div>
@@ -153,7 +153,7 @@ export function ZapierSetupClient({
                                 <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
                                 <div className="space-y-2">
                                     <p>
-                                        You need a Developer API key before you can use Zapier — the
+                                        You need a Developer API key before you can use Zapier ,  the
                                         webhook URL is signed by it.
                                     </p>
                                     <Button asChild size="sm" variant="outline" className="h-7 px-2.5 text-xs">
@@ -193,7 +193,7 @@ export function ZapierSetupClient({
                                 </Button>
                             </div>
                             <p className="mt-1.5 text-[11px] text-muted-foreground">
-                                Treat this URL like a password — it includes your API key.
+                                Treat this URL like a password ,  it includes your API key.
                                 Connected to business{" "}
                                 <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
                                     {businessIdShort}
@@ -249,7 +249,7 @@ export function ZapierSetupClient({
                             Configure your Zap
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                            Five minutes in Zapier — no code needed.
+                            Five minutes in Zapier ,  no code needed.
                         </p>
                     </CardHeader>
                     <CardContent className="pt-5">
@@ -300,7 +300,7 @@ export function ZapierSetupClient({
                                 title="Paste the webhook URL"
                                 body={
                                     <>
-                                        Use the URL from the panel above — it already contains your API
+                                        Use the URL from the panel above ,  it already contains your API
                                         key. Set <span className="font-medium">Payload Type</span> to{" "}
                                         <span className="font-mono">json</span>.
                                     </>

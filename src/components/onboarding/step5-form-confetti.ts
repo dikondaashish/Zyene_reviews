@@ -4,9 +4,13 @@ export async function fireOnboardingConfetti() {
         const confetti = confettiModule.default;
         const root = document.documentElement;
         const cs = getComputedStyle(root);
-        const themeColors = (["--chart-1", "--chart-2", "--chart-3", "--chart-4"] as const)
-            .map((v) => cs.getPropertyValue(v).trim())
-            .filter(Boolean);
+        const themeColors = (["--chart-1", "--chart-2", "--chart-3", "--chart-4"] as const).reduce<
+            string[]
+        >((acc, v) => {
+            const value = cs.getPropertyValue(v).trim();
+            if (value) acc.push(value);
+            return acc;
+        }, []);
         const colors =
             themeColors.length >= 4
                 ? themeColors

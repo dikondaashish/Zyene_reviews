@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "How It Works — Zyene Reviews. 4 steps to more 5-star reviews.";
+export const alt = "How It Works ,  Zyene Reviews. 4 steps to more 5-star reviews.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

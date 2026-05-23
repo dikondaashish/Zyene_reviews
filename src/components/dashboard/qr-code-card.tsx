@@ -68,7 +68,7 @@ export function QRCodeCard({ businessId, businessSlug, businessName, businessLog
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `${businessName} — Leave a Review`,
+                    title: `${businessName}, Leave a Review`,
                     url: reviewUrl,
                 });
             } catch {

@@ -88,7 +88,7 @@ export function TagsStepCustomInput({
                     </div>
                     {addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS && (
                         <p className="text-xs text-muted-foreground text-center">
-                            4 max — remove one to add another
+                            4 max ,  remove one to add another
                         </p>
                     )}
                 </div>

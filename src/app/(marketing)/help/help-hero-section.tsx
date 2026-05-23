@@ -8,7 +8,7 @@ export function HelpHeroSection() {
                 <div className="container mx-auto max-w-5xl text-center">
                     <h1 className="text-4xl font-bold tracking-tight mb-4">How can we help you?</h1>
                     <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                        Browse guides by topic below, or email our support team — available Monday through Friday, 9am–6pm EST.
+                        Browse guides by topic below, or email our support team ,  available Monday through Friday, 9am–6pm EST.
                     </p>
                     <a
                         href="mailto:support@zyenereviews.com"

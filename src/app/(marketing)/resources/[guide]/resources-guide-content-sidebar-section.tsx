@@ -35,7 +35,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             {/* Guide footer CTA */}
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
-                                <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial — no credit card lock-in.</p>
+                                <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial, no credit card lock-in.</p>
                                 <Link href="/signup">
                                     <Button className="gap-2">
                                         Start Free Trial <ArrowRight className="size-4" />
@@ -48,7 +48,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                         <aside className="hidden lg:block space-y-6 sticky top-24">
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
-                                <p className="text-xs text-muted-foreground mb-4">Everything in this guide — automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
+                                <p className="text-xs text-muted-foreground mb-4">Everything in this guide, automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
                                 <Link href="/signup">
                                     <Button size="sm" className="w-full gap-2">
                                         Start Free Trial <ArrowRight className="size-3.5" />

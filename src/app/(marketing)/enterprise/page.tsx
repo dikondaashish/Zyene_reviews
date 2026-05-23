@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Enterprise — Custom Pricing, SLA, SSO & White-Label | Zyene Reviews",
+    title: "Enterprise, Custom Pricing, SLA, SSO & White-Label | Zyene Reviews",
     description:
         "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, white-label widgets, and custom integrations.",
     alternates: { canonical: "https://zyenereviews.com/enterprise" },

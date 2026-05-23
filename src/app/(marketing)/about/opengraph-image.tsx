@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "About Zyene Reviews — Reputation Management for Local Businesses";
+export const alt = "About Zyene Reviews ,  Reputation Management for Local Businesses";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -33,7 +33,7 @@ export default function OgImage() {
                         About <span style={{ color: "#4ade80" }}>Zyene Reviews</span>
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "800px" }}>
-                        Built by Zyene, Inc. — making reputation management accessible and ethical for every local business
+                        Built by Zyene, Inc. ,  making reputation management accessible and ethical for every local business
                     </div>
                 </div>
             </div>

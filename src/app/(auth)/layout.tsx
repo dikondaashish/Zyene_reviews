@@ -10,7 +10,7 @@ export default function AuthLayout({
 }) {
     return (
         <div className="flex min-h-screen min-w-0 overflow-x-clip bg-background text-foreground">
-            {/* Left Branded Panel — espresso band uses marketing tokens so it stays on-brand in light + dark */}
+            {/* Left Branded Panel ,  espresso band uses marketing tokens so it stays on-brand in light + dark */}
             <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-[color:var(--marketing-footer-bg)] flex-col justify-between p-12 text-[color:var(--marketing-footer-fg)]">
                 {/* Background pattern */}
                 <div
@@ -45,7 +45,7 @@ export default function AuthLayout({
                             reputation with ease
                         </h2>
                         <p className="text-[color:var(--marketing-footer-muted)] text-lg leading-relaxed max-w-md">
-                            Monitor reviews, respond faster with AI, and grow your business — all from one dashboard.
+                            Monitor reviews, respond faster with AI, and grow your business ,  all from one dashboard.
                         </p>
                     </div>
 

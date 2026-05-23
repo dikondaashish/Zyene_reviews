@@ -42,8 +42,11 @@ export function parseCompetitorInsightPayload(parsed: unknown): CompetitorInsigh
     const confidence = Number.isFinite(confidenceRaw) ? Math.min(1, Math.max(0, confidenceRaw)) : 0.5;
     const recommendations = Array.isArray(o.recommendations)
         ? o.recommendations
-              .map((r) => String(r ?? "").trim())
-              .filter(Boolean)
+              .reduce<string[]>((acc, r) => {
+                  const value = String(r ?? "").trim();
+                  if (value) acc.push(value);
+                  return acc;
+              }, [])
               .slice(0, 3)
         : [];
     const whyItMatters =

@@ -11,7 +11,7 @@ import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import Script from "next/script";
 import "./globals.css";
 
-/** Inline before paint — keeps `class="dark"` in sync with localStorage + system (next-themes). */
+/** Inline before paint ,  keeps `class="dark"` in sync with localStorage + system (next-themes). */
 const themeInitScript = `(()=>{try{var t=localStorage.getItem('theme');var d=document.documentElement.classList;var dark=t==='dark'||(t!=='light'&&(!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);d.toggle('dark',!!dark);}catch(e){}})();`;
 
 const inter = Inter({
@@ -24,7 +24,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-/** Display / marketing hero face — geometric, Degular-like; UI stays Inter per docs/DESIGN.md */
+/** Display / marketing hero face ,  geometric, Degular-like; UI stays Inter per docs/DESIGN.md */
 const syneDisplay = Syne({
   variable: "--font-display",
   subsets: ["latin"],
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default: "Zyene Reviews — Review Management for Local Businesses",
+    default: "Zyene Reviews ,  Review Management for Local Businesses",
     template: "%s | Zyene Reviews",
   },
   description:
-    "Monitor, respond to, and grow your Google reviews with AI. Zyene Reviews gives local businesses a full reputation management platform starting at $29.99/mo — with no annual contracts.",
+    "Monitor, respond to, and grow your Google reviews with AI. Zyene Reviews gives local businesses a full reputation management platform starting at $29.99/mo, with no annual contracts.",
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -65,23 +65,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://zyenereviews.com",
     siteName: "Zyene Reviews",
-    title: "Zyene Reviews — Review Management for Local Businesses",
+    title: "Zyene Reviews, Review Management for Local Businesses",
     description:
-      "Monitor, respond to, and grow your Google reviews with AI. Full reputation management platform starting at $29.99/mo — no annual contracts.",
+      "Monitor, respond to, and grow your Google reviews with AI. Full reputation management platform starting at $29.99/mo, no annual contracts.",
     images: [
       {
         url: "/og/og-default.png",
         width: 1200,
         height: 630,
-        alt: "Zyene Reviews — Reputation Management for Local Businesses",
+        alt: "Zyene Reviews ,  Reputation Management for Local Businesses",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zyene Reviews — Review Management for Local Businesses",
+    title: "Zyene Reviews, Review Management for Local Businesses",
     description:
-      "Monitor, respond to, and grow your Google reviews with AI. Starting at $29.99/mo — no annual contracts.",
+      "Monitor, respond to, and grow your Google reviews with AI. Starting at $29.99/mo, no annual contracts.",
     images: ["/og/og-default.png"],
     site: "@zyenereviews",
   },

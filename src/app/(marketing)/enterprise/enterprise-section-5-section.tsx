@@ -37,7 +37,7 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
                         </h3>
                         <p className="text-sm text-muted-foreground mb-4">
                             Product overview, case studies, pricing framework, and security summary for your
-                            procurement team — maintained in{" "}
+                            procurement team, maintained in{" "}
                             <code className="text-xs bg-muted px-1 rounded">docs/ENTERPRISE_SALES_DECK.md</code>.
                         </p>
                         <p className="text-sm text-muted-foreground mb-6">

@@ -63,7 +63,10 @@ export async function handleProrationPreview(request: Request) {
 
     const { priceId } = parsed;
 
-    const validPriceIds = PLANS.map((p) => p.stripePriceId).filter(Boolean) as string[];
+    const validPriceIds = PLANS.reduce<string[]>((acc, p) => {
+        if (p.stripePriceId) acc.push(p.stripePriceId);
+        return acc;
+    }, []);
     if (!validPriceIds.includes(priceId)) {
         return apiError("Invalid plan selected", { status: 400, details: requestId });
     }

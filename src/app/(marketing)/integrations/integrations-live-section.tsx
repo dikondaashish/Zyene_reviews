@@ -6,7 +6,7 @@ export function IntegrationsLiveSection() {
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-6xl">
                 <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Live integrations</h2>
-                <p className="text-muted-foreground text-center mb-12">Connect today — no waitlist, available on all paid plans.</p>
+                <p className="text-muted-foreground text-center mb-12">Connect today, no waitlist, available on all paid plans.</p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {LIVE_INTEGRATIONS.map((int) => (
                         <div key={int.name} className="bg-card border border-border rounded-2xl p-7 flex flex-col hover:shadow-md transition-shadow group">

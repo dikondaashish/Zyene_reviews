@@ -16,7 +16,7 @@ export function AboutMissionSection() {
                                 Zyene, Inc
                             </a>
                         </strong>
-                        . We build software that helps local businesses manage their online reputation — so they can
+                        . We build software that helps local businesses manage their online reputation ,  so they can
                         focus on what they do best: serving their customers.
                     </p>
 

@@ -48,14 +48,14 @@ export function QuestionsPageClientDesktopTable({
                                 )}
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                                {q.author_display_name || "—"}
+                                {q.author_display_name || "-"}
                             </TableCell>
                             <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                                 {q.google_update_time
                                     ? formatDistanceToNow(new Date(q.google_update_time), {
                                           addSuffix: true,
                                       })
-                                    : "—"}
+                                    : "-"}
                             </TableCell>
                             <TableCell className="text-center text-sm">{q.total_answer_count}</TableCell>
                             <TableCell>

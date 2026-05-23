@@ -56,7 +56,7 @@ export function ZyenePlatformKeyMetricsRow({
                 },
                 {
                     title: "Avg Rating Given",
-                    value: allSourceAvgRating > 0 ? allSourceAvgRating.toFixed(1) : "—",
+                    value: allSourceAvgRating > 0 ? allSourceAvgRating.toFixed(1) : "-",
                     desc: `From ${allSourceRatingsGivenLength} ratings`,
                     delta: getDelta(allSourceAvgRating, prevAllSourceAvgRating),
                     icon: Star,

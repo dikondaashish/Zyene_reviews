@@ -11,7 +11,7 @@ export function CaseStudiesSlugRelatedSection({ study, slug, related }: { study:
                             Get results like {study.company}
                         </h2>
                         <p className="text-muted-foreground mb-6">
-                            Start your 7-day free trial — same features, no annual contract.
+                            Start your 7-day free trial ,  same features, no annual contract.
                         </p>
                         <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-10 py-6 font-semibold rounded-xl">

@@ -20,7 +20,7 @@ export function MarketingLayoutFooterBrand() {
                 </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-                Review management and local SEO for owner-operators — at a fraction of enterprise
+                Review management and local SEO for owner-operators ,  at a fraction of enterprise
                 pricing.
             </p>
             <div className="mt-4">

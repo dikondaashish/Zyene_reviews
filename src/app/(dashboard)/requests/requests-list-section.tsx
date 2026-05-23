@@ -64,7 +64,7 @@ export function RequestsListSection({
                                     <div className="shrink-0 text-right text-xs text-muted-foreground">
                                         {req.created_at
                                             ? formatDistanceToNow(new Date(req.created_at), { addSuffix: true })
-                                            : "—"}
+                                            : "-"}
                                     </div>
                                 </div>
                                 <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">

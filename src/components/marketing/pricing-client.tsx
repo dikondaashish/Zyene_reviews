@@ -42,7 +42,7 @@ export function PricingPageClient({
             <TestimonialGrid
                 limit={3}
                 title="Trusted by owners on every plan"
-                subtitle="See how local businesses grew reviews and ratings with Zyene — full stories in our case studies."
+                subtitle="See how local businesses grew reviews and ratings with Zyene ,  full stories in our case studies."
             />
             <PricingClientFaqSection />
             <PricingClientFinalCtaSection signupUrl={signupUrl} />

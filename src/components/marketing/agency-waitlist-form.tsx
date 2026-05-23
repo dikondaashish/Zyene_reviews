@@ -38,7 +38,7 @@ export function AgencyWaitlistForm() {
     }
 
     if (done) {
-        return <p className="text-sm text-chart-2">You&apos;re on the waitlist — we&apos;ll email you when the agency dashboard opens.</p>;
+        return <p className="text-sm text-chart-2">You&apos;re on the waitlist, we&apos;ll email you when the agency dashboard opens.</p>;
     }
 
     return (

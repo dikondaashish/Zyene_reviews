@@ -26,7 +26,7 @@ export function CompetitorsTrackedDesktopRow({
     const updatedAt = competitor.updated_at ? (
         <TimeAgo date={competitor.updated_at} />
     ) : (
-        "—"
+        ", "
     );
 
     return (
@@ -54,28 +54,28 @@ export function CompetitorsTrackedDesktopRow({
             </TableCell>
             <TableCell className="align-top text-sm text-muted-foreground">
                 {syncing ? (
-                    "—"
+                    ", "
                 ) : places?.primaryType ? (
                     <span title={places.typesPreview ?? undefined}>{places.primaryType}</span>
                 ) : (
-                    "—"
+                    ", "
                 )}
             </TableCell>
             <TableCell className="align-top">
                 <div className="flex items-center text-sm">
                     {syncing ? (
-                        <span className="text-muted-foreground">—</span>
+                        <span className="text-muted-foreground">,</span>
                     ) : (
                         <>
                             <Star className="text-chart-4 fill-chart-4 mr-1 size-4" />
-                            {competitor.average_rating || "—"}
+                            {competitor.average_rating || "-"}
                         </>
                     )}
                 </div>
             </TableCell>
             <TableCell className="align-top">
                 {syncing ? (
-                    <span className="text-muted-foreground">—</span>
+                    <span className="text-muted-foreground">,</span>
                 ) : (
                     competitor.total_reviews || 0
                 )}
@@ -92,7 +92,7 @@ export function CompetitorsTrackedDesktopRow({
                         Site
                     </a>
                 ) : (
-                    <span className="text-muted-foreground text-xs">—</span>
+                    <span className="text-muted-foreground text-xs">,</span>
                 )}
             </TableCell>
             <TableCell className="align-top">

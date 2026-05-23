@@ -102,7 +102,10 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         // Non-fatal for MVP: keep description empty and fail this check.
     }
 
-    const topKeywordList = keywords.slice(0, 12).map((k) => k.keyword).filter(Boolean);
+    const topKeywordList = keywords.slice(0, 12).reduce<string[]>((acc, k) => {
+        if (k.keyword) acc.push(k.keyword);
+        return acc;
+    }, []);
     const { audits, score, measuredCount } = buildGoogleSeoAeoAudits({
         listingDescription,
         keywordCoverage: calcKeywordCoverage(listingDescription, topKeywordList),

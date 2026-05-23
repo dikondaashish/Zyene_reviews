@@ -70,8 +70,11 @@ export async function handleOptimizeBusinessDescription(request: Request) {
     }
 
     const keywordList = topKeywords
-        .map((k) => k.trim())
-        .filter(Boolean)
+        .reduce<string[]>((acc, k) => {
+            const trimmed = k.trim();
+            if (trimmed) acc.push(trimmed);
+            return acc;
+        }, [])
         .slice(0, 12)
         .join(", ");
 

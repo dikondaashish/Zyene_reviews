@@ -26,15 +26,21 @@ export function tagsForAi(selected: string[]): TagsForAiResult {
         return { mode: "everything" };
     }
 
-    const custom = selected
-        .filter((t) => t.startsWith(CUSTOM_TAG_PREFIX))
-        .map((t) => t.slice(CUSTOM_TAG_PREFIX.length).trim())
-        .filter(Boolean);
+    const custom = selected.reduce<string[]>((acc, t) => {
+        if (t.startsWith(CUSTOM_TAG_PREFIX)) {
+            const value = t.slice(CUSTOM_TAG_PREFIX.length).trim();
+            if (value) acc.push(value);
+        }
+        return acc;
+    }, []);
 
-    const presets = selected
-        .filter((t) => !t.startsWith(CUSTOM_TAG_PREFIX) && t !== EVERYTHING_TAG)
-        .map((t) => t.replace(/^[^\s]+\s/, "").trim())
-        .filter(Boolean);
+    const presets = selected.reduce<string[]>((acc, t) => {
+        if (!t.startsWith(CUSTOM_TAG_PREFIX) && t !== EVERYTHING_TAG) {
+            const value = t.replace(/^[^\s]+\s/, "").trim();
+            if (value) acc.push(value);
+        }
+        return acc;
+    }, []);
 
     return { mode: "specific", presets, custom };
 }

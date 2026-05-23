@@ -56,7 +56,7 @@ export function NotificationFormEmailFields({ form }: { form: UseFormReturn<Noti
                                         One summary email (usually Monday morning) with new reviews from the{" "}
                                         <strong>last 7 days</strong> and a short snapshot for this business. You can
                                         keep this on while turning off instant email alerts, or the other way
-                                        around—they work independently.
+                                        around, they work independently.
                                     </p>
                                 </NotificationFormFieldHelpTip>
                             </div>

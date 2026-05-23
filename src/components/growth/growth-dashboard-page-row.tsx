@@ -20,7 +20,7 @@ export function GrowthDashboardPageRow({ page }: { page: GrowthPageEntry }) {
             <td className="py-2 px-2">{page.priority}</td>
             <td className="py-2 px-2 text-muted-foreground">{page.pageType}</td>
             <td className="py-2 px-2">{page.status}</td>
-            <td className="py-2 px-2">{page.inSitemap ? "yes" : "—"}</td>
+            <td className="py-2 px-2">{page.inSitemap ? "yes" : "-"}</td>
             <td className="py-2 px-3 text-xs text-muted-foreground max-w-xs">{page.notes ?? ""}</td>
         </tr>
     );

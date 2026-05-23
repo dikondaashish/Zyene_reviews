@@ -91,16 +91,16 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right hidden lg:table-cell text-muted-foreground tabular-nums font-medium">
-                                    {row.profileViews !== undefined ? row.profileViews.toLocaleString() : "—"}
+                                    {row.profileViews !== undefined ? row.profileViews.toLocaleString() : "-"}
                                 </TableCell>
                                 <TableCell className="text-right hidden lg:table-cell text-muted-foreground tabular-nums font-medium">
-                                    {row.callClicks !== undefined ? row.callClicks.toLocaleString() : "—"}
+                                    {row.callClicks !== undefined ? row.callClicks.toLocaleString() : "-"}
                                 </TableCell>
                                 <TableCell className="text-right hidden xl:table-cell text-muted-foreground tabular-nums font-medium">
-                                    {row.directionRequests !== undefined ? row.directionRequests.toLocaleString() : "—"}
+                                    {row.directionRequests !== undefined ? row.directionRequests.toLocaleString() : "-"}
                                 </TableCell>
                                 <TableCell className="text-right hidden xl:table-cell text-muted-foreground tabular-nums font-medium">
-                                    {row.websiteClicks !== undefined ? row.websiteClicks.toLocaleString() : "—"}
+                                    {row.websiteClicks !== undefined ? row.websiteClicks.toLocaleString() : "-"}
                                 </TableCell>
                             </TableRow>
                         ))

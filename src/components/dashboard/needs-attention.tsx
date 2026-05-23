@@ -22,7 +22,7 @@ export function NeedsAttention({
     viewAllHref?: string;
     copy?: Partial<NeedsAttentionCopy>;
     className?: string;
-    /** Starter+ — same gate as the reviews inbox AI suggester. */
+    /** Starter+ ,  same gate as the reviews inbox AI suggester. */
     planAllowsAiReplies?: boolean;
     /** Simulated drafts only; posting to Google is disabled. */
     isDemo?: boolean;

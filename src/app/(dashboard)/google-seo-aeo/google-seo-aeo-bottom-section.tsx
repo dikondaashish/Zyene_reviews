@@ -105,7 +105,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                                     <div key={cell.cell_label} className="rounded-lg border p-3">
                                         <p className="text-sm font-medium">{cell.cell_label}</p>
                                         <p className="text-xs text-muted-foreground mt-1">
-                                            Rank #{cell.rank_position ?? "—"} · Visibility {cell.visibility_score}%
+                                            Rank #{cell.rank_position ?? "-"} · Visibility {cell.visibility_score}%
                                         </p>
                                     </div>
                                 ))}

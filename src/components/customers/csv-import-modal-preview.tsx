@@ -24,8 +24,8 @@ export function CsvImportModalPreview({
                     <tbody>
                         {csvData.slice(0, 3).map((row, idx) => (
                             <tr key={idx} className="border-b last:border-0">
-                                <td className="py-1 pr-2 truncate font-medium">{row.name || "—"}</td>
-                                <td className="py-1 truncate text-muted-foreground">{row.email || "—"}</td>
+                                <td className="py-1 pr-2 truncate font-medium">{row.name || "-"}</td>
+                                <td className="py-1 truncate text-muted-foreground">{row.email || "-"}</td>
                             </tr>
                         ))}
                     </tbody>

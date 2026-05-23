@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     title: "Quickstart Guide",
     description: "Get Zyene Reviews set up in minutes. Connect your Google Business Profile, configure review requests, and start monitoring reviews from day one.",
     alternates: { canonical: "https://zyenereviews.com/docs/quickstart" },
-    openGraph: { title: "Quickstart — Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring — complete quickstart guide.", url: "https://zyenereviews.com/docs/quickstart" },
-    twitter: { card: "summary_large_image", title: "Quickstart — Zyene Reviews Docs", description: "Get Zyene Reviews set up in minutes. Step-by-step quickstart guide." },
+    openGraph: { title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring, complete quickstart guide.", url: "https://zyenereviews.com/docs/quickstart" },
+    twitter: { card: "summary_large_image", title: "Quickstart, Zyene Reviews Docs", description: "Get Zyene Reviews set up in minutes. Step-by-step quickstart guide." },
 };
 
 export default function DocsQuickstartPage() {
@@ -37,7 +37,7 @@ export default function DocsQuickstartPage() {
 
                         <p>
                             Connect your workspace, create an API key, and call a live endpoint in a few minutes. Curl examples use
-                            your Zyene API host—the same origin you use to sign in to the dashboard (<code>{base}</code>).
+                            your Zyene API host, the same origin you use to sign in to the dashboard (<code>{base}</code>).
                         </p>
 
                         <h2 id="prerequisites">Prerequisites</h2>
@@ -56,7 +56,7 @@ export default function DocsQuickstartPage() {
                         <ol>
                             <li>Open Integrations in the app.</li>
                             <li>Locate the Developer API section and generate a key (prefix <code>zy_</code>).</li>
-                            <li>Store it in a secret manager — it is shown only once.</li>
+                            <li>Store it in a secret manager, it is shown only once.</li>
                         </ol>
 
                         <h2 id="first-request">First request</h2>

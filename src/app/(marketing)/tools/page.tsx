@@ -6,19 +6,19 @@ import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-    title: "Free Tools — Review Links, Reputation Score & Response Templates | Zyene Reviews",
+    title: "Free Tools, Review Links, Reputation Score & Response Templates | Zyene Reviews",
     description:
         "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
     alternates: { canonical: "https://zyenereviews.com/tools" },
     openGraph: {
-        title: "Free Review Tools — Zyene Reviews",
-        description: "Generate a Google review link, check your reputation score, and draft review responses — free, no signup required.",
+        title: "Free Review Tools, Zyene Reviews",
+        description: "Generate a Google review link, check your reputation score, and draft review responses, free, no signup required.",
         url: "https://zyenereviews.com/tools",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Free Review Tools — Zyene Reviews",
-        description: "Generate a Google review link, check your reputation score, and draft review responses — free.",
+        title: "Free Review Tools, Zyene Reviews",
+        description: "Generate a Google review link, check your reputation score, and draft review responses, free.",
     },
 };
 
@@ -77,7 +77,7 @@ export default function FreeToolsHubPage() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-2xl font-bold mb-3">Want automation behind these tools?</h2>
                     <p className="text-muted-foreground mb-6">
-                        Zyene sends review requests, drafts AI replies, and tracks competitors — from $29.99/mo with a 7-day free trial.
+                        Zyene sends review requests, drafts AI replies, and tracks competitors ,  from $29.99/mo with a 7-day free trial.
                     </p>
                     <Button asChild size="lg" className="rounded-full">
                         <Link href="/signup">Start free trial</Link>

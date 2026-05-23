@@ -12,7 +12,7 @@ export function CaseStudiesCtaSection() {
                     <TrendingUp className="text-primary mx-auto mb-4 size-10" />
                     <h2 className="text-3xl font-bold text-foreground mb-3">Want results like these?</h2>
                     <p className="text-muted-foreground mb-8">
-                        Start your 7-day free trial — no annual contract. Same tools these businesses used.
+                        Start your 7-day free trial ,  no annual contract. Same tools these businesses used.
                     </p>
                     <Link href={SIGNUP_URL}>
                         <Button size="lg" className="px-10 py-6 font-semibold rounded-xl">

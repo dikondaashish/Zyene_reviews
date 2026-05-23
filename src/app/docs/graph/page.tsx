@@ -4,10 +4,10 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
 export const metadata: Metadata = {
     title: "Review Graph",
-    description: "Learn about the Zyene Reviews review graph model — how reviews, ratings, sources, and sentiment connect across Google, Yelp, and Facebook.",
+    description: "Learn about the Zyene Reviews review graph model, how reviews, ratings, sources, and sentiment connect across Google, Yelp, and Facebook.",
     alternates: { canonical: "https://zyenereviews.com/docs/graph" },
-    openGraph: { title: "Review Graph — Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in the Zyene graph model.", url: "https://zyenereviews.com/docs/graph" },
-    twitter: { card: "summary_large_image", title: "Review Graph — Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in Zyene." },
+    openGraph: { title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in the Zyene graph model.", url: "https://zyenereviews.com/docs/graph" },
+    twitter: { card: "summary_large_image", title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in Zyene." },
 };
 
 export default function DocsReviewGraphPage() {
@@ -30,23 +30,23 @@ export default function DocsReviewGraphPage() {
                         <h1 className="mb-0 mt-0">Review Graph</h1>
                         <p>
                             The review graph is the linked model of businesses, platforms, reviews, responses, outbound requests,
-                            and member activity. It is not a separate product surface — it is how Zyene reasons about state and
+                            and member activity. It is not a separate product surface ,  it is how Zyene reasons about state and
                             permissions.
                         </p>
 
                         <h2 id="entities">Entities</h2>
                         <ul>
                             <li>
-                                <strong>Organization</strong> — billing and membership boundary.
+                                <strong>Organization</strong>, billing and membership boundary.
                             </li>
                             <li>
-                                <strong>Business</strong> — the public brand location you manage.
+                                <strong>Business</strong>, the public brand location you manage.
                             </li>
                             <li>
-                                <strong>Review platform row</strong> — credentials and sync health for a vendor connection.
+                                <strong>Review platform row</strong>, credentials and sync health for a vendor connection.
                             </li>
                             <li>
-                                <strong>Review</strong> — normalized customer feedback record.
+                                <strong>Review</strong>, normalized customer feedback record.
                             </li>
                         </ul>
 

@@ -16,7 +16,7 @@ export function OrganizationJsonLd() {
             height: 512,
         },
         description:
-            "Zyene Reviews is a review management and local SEO platform for local businesses. Monitor Google, Facebook, and Yelp reviews, respond with AI, collect reviews via SMS and email, and track competitors — starting at $29.99/mo.",
+            "Zyene Reviews is a review management and local SEO platform for local businesses. Monitor Google, Facebook, and Yelp reviews, respond with AI, collect reviews via SMS and email, and track competitors, starting at $29.99/mo.",
         contactPoint: [
             {
                 "@type": "ContactPoint",

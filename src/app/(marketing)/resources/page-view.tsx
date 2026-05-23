@@ -84,7 +84,7 @@ export default function ResourcesHubPage() {
             <section className="py-20 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-3xl font-bold text-foreground mb-3">Ready to put this into practice?</h2>
-                    <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial — no credit card lock-in.</p>
+                    <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, no credit card lock-in.</p>
                     <Link href="/signup">
                         <Button size="lg" className="gap-2 rounded-xl">
                             Start Free Trial <ArrowRight className="size-4" />

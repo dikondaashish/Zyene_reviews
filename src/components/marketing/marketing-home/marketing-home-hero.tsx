@@ -34,7 +34,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                 variants={fadeInUp}
                 className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed font-light"
               >
-                The review management platform built for <span className="font-bold text-foreground">local businesses</span> —
+                The review management platform built for <span className="font-bold text-foreground">local businesses</span> , 
                 helping owners monitor reviews, respond faster, and build trust in a digital-first world.
               </motion.p>
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 items-center">

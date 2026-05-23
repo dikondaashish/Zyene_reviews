@@ -8,8 +8,8 @@ export const metadata: Metadata = {
     title: "Use with AI",
     description: "Integrate Zyene Reviews with AI tools. Use MCP, REST API responses, and structured data in your AI workflows for review management automation.",
     alternates: { canonical: "https://zyenereviews.com/docs/install" },
-    openGraph: { title: "Use with AI — Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools, MCP, and automation pipelines.", url: "https://zyenereviews.com/docs/install" },
-    twitter: { card: "summary_large_image", title: "Use with AI — Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools and automation workflows." },
+    openGraph: { title: "Use with AI, Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools, MCP, and automation pipelines.", url: "https://zyenereviews.com/docs/install" },
+    twitter: { card: "summary_large_image", title: "Use with AI, Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools and automation workflows." },
 };
 
 export default function DocsInstallWithAiPage() {
@@ -35,7 +35,7 @@ export default function DocsInstallWithAiPage() {
                     <div id="doc-page-content" className="min-w-0 flex-1">
                         <h1 className="mb-0 mt-0">Use with AI</h1>
                         <p>
-                            Zyene Reviews is <strong>hosted, proprietary software</strong>. You do not run our codebase—you integrate
+                            Zyene Reviews is <strong>hosted, proprietary software</strong>. You do not run our codebase, you integrate
                             from <strong>your</strong> project (Node, Python, workers, automation tools) using the public HTTP API and
                             an API key from the dashboard. Use this page when you want Cursor, Copilot, or similar tools to follow our
                             docs while you build.
@@ -45,17 +45,17 @@ export default function DocsInstallWithAiPage() {
                         <ul>
                             <li>Add our doc URLs as context in your editor.</li>
                             <li>Generate code that calls <code>/api/v1/…</code> on your Zyene host.</li>
-                            <li>Store <code>zy_</code> keys only in your secrets—never in source or chat logs.</li>
+                            <li>Store <code>zy_</code> keys only in your secrets, never in source or chat logs.</li>
                         </ul>
 
                         <h2 id="urls">Doc URLs</h2>
                         <p>Paste into your AI tool or attach as documentation context:</p>
                         <DocCodeBlock
                             language="bash"
-                            code={`# API Reference — auth, payloads, errors
+                            code={`# API Reference ,  auth, payloads, errors
 ${docsApiUrl}
 
-# Cookbook — curl recipes
+# Cookbook ,  curl recipes
 ${docsCookbookUrl}`}
                         />
 

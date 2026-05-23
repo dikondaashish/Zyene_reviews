@@ -44,7 +44,7 @@ export function TeamTableMemberActionsMenu({
 
     if (!canOpen) {
         return canManage ? (
-            <span className="text-xs text-muted-foreground">—</span>
+            <span className="text-xs text-muted-foreground">,</span>
         ) : (
             <span className="text-xs text-muted-foreground">View only</span>
         );

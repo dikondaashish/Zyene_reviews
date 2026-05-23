@@ -41,10 +41,10 @@ export function CampaignDetailContacts({ requests, mounted }: CampaignDetailCont
                             {requests.map((req) => (
                                 <TableRow key={req.id}>
                                     <TableCell className="font-medium">
-                                        {req.customer_name || "—"}
+                                        {req.customer_name || "-"}
                                     </TableCell>
                                     <TableCell className="text-sm">
-                                        {req.customer_phone || req.customer_email || "—"}
+                                        {req.customer_phone || req.customer_email || "-"}
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant="outline" className="text-xs capitalize">
@@ -59,7 +59,7 @@ export function CampaignDetailContacts({ requests, mounted }: CampaignDetailCont
                                     <TableCell className="text-sm text-muted-foreground">
                                         {req.sent_at && mounted
                                             ? new Date(req.sent_at).toLocaleString()
-                                            : "—"}
+                                            : "-"}
                                     </TableCell>
                                 </TableRow>
                             ))}

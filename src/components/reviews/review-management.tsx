@@ -11,7 +11,7 @@ interface ReviewManagementProps {
     reviews: ReviewManagementItem[];
     businessId: string;
     googleMapsListingUrl?: string | null;
-    /** Starter+ / Professional / Enterprise — required for AI suggest-reply */
+    /** Starter+ / Professional / Enterprise ,  required for AI suggest-reply */
     planAllowsAiReplies: boolean;
     onRefresh?: () => void;
 }

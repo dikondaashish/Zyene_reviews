@@ -15,7 +15,7 @@ export function GrowthDashboardKpiRow({ def, metric }: { def: KpiDefinition; met
             </td>
             <td className="py-3 px-2 text-sm text-muted-foreground align-top whitespace-nowrap">{def.source}</td>
             <td className="py-3 px-2 text-sm align-top whitespace-nowrap">{def.targetLabel}</td>
-            <td className="py-3 px-2 text-sm font-mono align-top whitespace-nowrap">{metric?.displayValue ?? "—"}</td>
+            <td className="py-3 px-2 text-sm font-mono align-top whitespace-nowrap">{metric?.displayValue ?? "-"}</td>
             <td className="py-3 pl-2 align-top">
                 <span
                     className={cn(

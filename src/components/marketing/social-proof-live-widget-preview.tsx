@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 const STATIC_REVIEWS = [
     { name: "Sarah M.", text: "Best experience we've had. Professional and fast.", stars: 5 },
     { name: "James T.", text: "They went above and beyond. Highly recommend.", stars: 5 },
-    { name: "Lisa K.", text: "Great service — will definitely come back.", stars: 5 },
+    { name: "Lisa K.", text: "Great service ,  will definitely come back.", stars: 5 },
 ];
 
 export function LiveWidgetPreview() {
@@ -18,7 +18,7 @@ export function LiveWidgetPreview() {
                 <div className="text-center mb-10">
                     <h2 className="text-3xl font-bold text-foreground mb-2">See reviews live on your website</h2>
                     <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                        Embed a review carousel or star badge on your site — the same widget your customers&apos; visitors see.
+                        Embed a review carousel or star badge on your site ,  the same widget your customers&apos; visitors see.
                     </p>
                 </div>
                 <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-lg">
@@ -26,6 +26,7 @@ export function LiveWidgetPreview() {
                         <iframe
                             src={widgetSrc}
                             title="Zyene Reviews widget preview"
+                            sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
                             className="w-full h-[280px] border-0"
                             loading="lazy"
                         />
@@ -49,7 +50,7 @@ export function LiveWidgetPreview() {
                                             ))}
                                         </div>
                                         <p className="text-sm text-foreground">{r.text}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">— {r.name}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">- {r.name}</p>
                                     </div>
                                 ))}
                             </div>

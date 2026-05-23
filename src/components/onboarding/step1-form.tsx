@@ -59,7 +59,7 @@ export function Step1Form({ onNext, isLoading, organizationId, initialOrgName = 
             >
                 <Sparkles className="text-primary mt-0.5 shrink-0 size-4" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-foreground">Quick setup</span> — Most users complete
+                    <span className="font-semibold text-foreground">Quick setup</span>, Most users complete
                     onboarding in under 2 minutes. We&apos;ll guide you through each step.
                 </p>
             </motion.div>

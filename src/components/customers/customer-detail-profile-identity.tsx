@@ -83,7 +83,7 @@ export function CustomerDetailProfileIdentity({
                             </button>
                             {!name && customer.phone && (
                                 <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    Showing phone below — add a name so this contact is easier to find.
+                                    Showing phone below ,  add a name so this contact is easier to find.
                                 </p>
                             )}
                             {customer.is_opted_out ? (

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Features — Zyene Reviews. Review management built for local businesses.";
+export const alt = "Features ,  Zyene Reviews. Review management built for local businesses.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -18,7 +18,7 @@ export default function OgImage() {
                     </div>
                     <div style={{ fontSize: "20px", color: "rgba(255,255,255,0.55)", marginBottom: "36px" }}>AI replies · Review collection · Competitor tracking · Local SEO</div>
                     <div style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: "12px", padding: "12px 28px", color: "#4ade80", fontSize: "18px", fontWeight: "700" }}>
-                        Starting at $29.99/mo — 7-day free trial
+                        Starting at $29.99/mo ,  7-day free trial
                     </div>
                 </div>
             </div>

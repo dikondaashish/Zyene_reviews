@@ -6,8 +6,8 @@ export const metadata: Metadata = {
     title: "Developer Documentation",
     description: "Complete documentation for Zyene Reviews. Connect Google Business Profile, manage reviews, send review requests via API, and embed widgets.",
     alternates: { canonical: "https://zyenereviews.com/docs" },
-    openGraph: { title: "Developer Docs — Zyene Reviews", description: "Full API reference, integration guides, plugin setup, and quickstart for Zyene Reviews.", url: "https://zyenereviews.com/docs" },
-    twitter: { card: "summary_large_image", title: "Developer Docs — Zyene Reviews", description: "API reference, integration guides, quickstart, and plugin setup." },
+    openGraph: { title: "Developer Docs, Zyene Reviews", description: "Full API reference, integration guides, plugin setup, and quickstart for Zyene Reviews.", url: "https://zyenereviews.com/docs" },
+    twitter: { card: "summary_large_image", title: "Developer Docs, Zyene Reviews", description: "API reference, integration guides, quickstart, and plugin setup." },
 };
 
 export default function DocsOverviewPage() {
@@ -33,7 +33,7 @@ export default function DocsOverviewPage() {
                         <h1 className="mb-0 mt-0">Overview</h1>
                         <p className="text-lg">
                             Zyene Reviews is <strong>hosted software</strong> for local brands: we pull in reviews from connected
-                            platforms, normalize them, and give your team one place to respond, analyze, and automate—with an HTTP API
+                            platforms, normalize them, and give your team one place to respond, analyze, and automate, with an HTTP API
                             when you need it in your own stack.
                         </p>
 
@@ -43,16 +43,16 @@ export default function DocsOverviewPage() {
 
                         <ul>
                             <li>
-                                <strong>Review aggregation</strong> — historical import and ongoing sync where platforms allow.
+                                <strong>Review aggregation</strong>, historical import and ongoing sync where platforms allow.
                             </li>
                             <li>
-                                <strong>Developer API</strong> — read reviews, send review requests, pull analytics with an API key.
+                                <strong>Developer API</strong>, read reviews, send review requests, pull analytics with an API key.
                             </li>
                             <li>
-                                <strong>Connectors</strong> — OAuth and sync for networks like Google Business Profile.
+                                <strong>Connectors</strong>, OAuth and sync for networks like Google Business Profile.
                             </li>
                             <li>
-                                <strong>Embeds &amp; optional RAG</strong> — widgets for your site and semantic search over your corpus
+                                <strong>Embeds &amp; optional RAG</strong>, widgets for your site and semantic search over your corpus
                                 where enabled.
                             </li>
                         </ul>
@@ -60,7 +60,7 @@ export default function DocsOverviewPage() {
                         <h2 id="how-it-works">At a glance</h2>
                         <p>
                             Zyene connects to your public review sources, normalizes what customers said, and keeps a timeline of
-                            changes—new reviews, edits, owner replies, and outbound requests—so dashboards, alerts, and API clients
+                            changes, new reviews, edits, owner replies, and outbound requests, so dashboards, alerts, and API clients
                             stay consistent.
                         </p>
 

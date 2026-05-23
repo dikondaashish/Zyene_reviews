@@ -43,7 +43,7 @@ export function ReviewRequestsListSection({ filteredRequests }: { filteredReques
                                     <span className="text-xs text-muted-foreground">
                                         {req.sent_at
                                             ? formatDistanceToNow(new Date(req.sent_at), { addSuffix: true })
-                                            : "—"}
+                                            : "-"}
                                     </span>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@ export function ReviewRequestsListSection({ filteredRequests }: { filteredReques
                                                         ? formatDistanceToNow(new Date(req.sent_at), {
                                                               addSuffix: true,
                                                           })
-                                                        : "—"}
+                                                        : "-"}
                                                 </TableCell>
                                                 <TableCell>
                                                     <StatusBadge status={status} />

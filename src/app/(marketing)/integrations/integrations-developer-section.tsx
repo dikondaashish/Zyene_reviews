@@ -13,7 +13,7 @@ export function IntegrationsDeveloperSection() {
                         </div>
                         <h2 className="text-4xl font-bold mb-4 leading-tight">Build exactly what your business needs</h2>
                         <p className="text-[color:var(--marketing-footer-muted)] mb-6 leading-relaxed text-lg">
-                            Our REST API gives full programmatic access to reviews, requests, responses, analytics, and webhooks. Included on every paid plan — no enterprise contract required.
+                            Our REST API gives full programmatic access to reviews, requests, responses, analytics, and webhooks. Included on every paid plan ,  no enterprise contract required.
                         </p>
                         <ul className="space-y-3 mb-8">
                             {[
@@ -78,7 +78,7 @@ export function IntegrationsDeveloperSection() {
                             </code>
                         </pre>
                         <div className="mt-4 pt-3 border-t border-white/10 text-chart-2 text-xs">
-                            ✓ 200 OK — Review request sent via SMS
+                            ✓ 200 OK ,  Review request sent via SMS
                         </div>
                     </div>
                 </div>

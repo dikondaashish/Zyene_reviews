@@ -35,7 +35,7 @@ export function DashboardViewGoogleHealthLodging({
                                 : "text-destructive"
                     }`}
                 >
-                    {googleLodgingHealthScore !== null ? `${googleLodgingHealthScore}` : "—"}
+                    {googleLodgingHealthScore !== null ? `${googleLodgingHealthScore}` : "-"}
                     {googleLodgingHealthScore !== null && (
                         <span className="text-lg font-semibold text-muted-foreground">/100</span>
                     )}

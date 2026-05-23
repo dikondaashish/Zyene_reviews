@@ -43,7 +43,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
                 <span className="text-4xl font-bold text-foreground">$29.99</span>
                 <span className="text-muted-foreground">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial — cancel anytime, no charge</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial, cancel anytime, no charge</p>
               <ul className="space-y-3 text-sm text-muted-foreground flex-1 mb-8">
                 {[
                   "1 business location",
@@ -84,7 +84,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
                 <span className="text-4xl font-bold">$59.99</span>
                 <span className="text-[color:var(--marketing-footer-muted)]">/mo</span>
               </div>
-              <p className="text-sm text-primary font-medium mb-6">7-day free trial — cancel anytime, no charge</p>
+              <p className="text-sm text-primary font-medium mb-6">7-day free trial, cancel anytime, no charge</p>
               <ul className="space-y-3 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
                 {[
                   "Everything in Starter, plus:",

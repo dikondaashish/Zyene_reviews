@@ -23,12 +23,12 @@ export function normalizeUrgencyForDb(raw: unknown): number {
 
 export function normalizeThemesForDb(raw: unknown): string[] {
     if (!Array.isArray(raw)) return [];
-    return raw
-        .map((t) =>
-            String(t)
-                .toLowerCase()
-                .trim()
-                .replace(/\s+/g, "_")
-        )
-        .filter(Boolean);
+    return raw.reduce<string[]>((acc, t) => {
+        const normalized = String(t)
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "_");
+        if (normalized) acc.push(normalized);
+        return acc;
+    }, []);
 }

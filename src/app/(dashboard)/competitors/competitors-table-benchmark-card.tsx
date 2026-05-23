@@ -30,7 +30,7 @@ export function CompetitorsTableBenchmarkCard({
                     snapshot in this period (or current totals if no snapshot yet).{" "}
                     {!activeBenchmarkRange.marketBenchmarkAvailable && competitorsCount > 0 ? (
                         <span className="text-chart-4 dark:text-chart-4">
-                            Competitor ratings are not loaded yet — run Sync from Google or wait for the
+                            Competitor ratings are not loaded yet ,  run Sync from Google or wait for the
                             next sync.
                         </span>
                     ) : activeBenchmarkRange.marketEndUsedFallback ? (
@@ -43,10 +43,10 @@ export function CompetitorsTableBenchmarkCard({
                     <div className="min-w-0 rounded-lg border p-3">
                         <p className="text-xs text-muted-foreground">Your rank (by period rating)</p>
                         <p className="text-xl font-semibold">
-                            {activeBenchmarkRange.rank ? `#${activeBenchmarkRange.rank}` : "—"}
+                            {activeBenchmarkRange.rank ? `#${activeBenchmarkRange.rank}` : "-"}
                             <span className="text-sm text-muted-foreground">
                                 {" "}
-                                / {activeBenchmarkRange.totalRanked || "—"}
+                                / {activeBenchmarkRange.totalRanked || "-"}
                             </span>
                         </p>
                     </div>
@@ -57,7 +57,7 @@ export function CompetitorsTableBenchmarkCard({
                         <p className="text-xl font-semibold">
                             {activeOwnBusinessInRange.avgRating !== null
                                 ? activeOwnBusinessInRange.avgRating.toFixed(1)
-                                : "—"}
+                                : "-"}
                         </p>
                         <p className="text-[11px] text-muted-foreground mt-1">
                             {activeOwnBusinessInRange.reviewCount} reviews in period
@@ -67,7 +67,7 @@ export function CompetitorsTableBenchmarkCard({
                         <p className="text-xs text-muted-foreground">You vs market end (rating)</p>
                         <p className="text-xl font-semibold">
                             {activeBenchmarkRange.yourAvgVsMarketEnd === null
-                                ? "—"
+                                ? ", "
                                 : `${activeBenchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${activeBenchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
                         </p>
                         <p className="text-[11px] text-muted-foreground mt-1">
@@ -82,7 +82,7 @@ export function CompetitorsTableBenchmarkCard({
                         <p className="text-xs text-muted-foreground">Avg competitor review gain</p>
                         <p className="text-xl font-semibold">
                             {activeBenchmarkRange.marketAvgReviewGain === null
-                                ? "—"
+                                ? ", "
                                 : `${activeBenchmarkRange.marketAvgReviewGain > 0 ? "+" : ""}${Math.round(activeBenchmarkRange.marketAvgReviewGain)}`}
                         </p>
                         <p className="text-[11px] text-muted-foreground mt-1">

@@ -4,10 +4,10 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
 export const metadata: Metadata = {
     title: "Content Types",
-    description: "Reference for all Zyene Reviews content types — review objects, feedback submissions, campaign messages, location records, and team member structures.",
+    description: "Reference for all Zyene Reviews content types, review objects, feedback submissions, campaign messages, location records, and team member structures.",
     alternates: { canonical: "https://zyenereviews.com/docs/content-types" },
-    openGraph: { title: "Content Types — Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, and team members.", url: "https://zyenereviews.com/docs/content-types" },
-    twitter: { card: "summary_large_image", title: "Content Types — Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, team members." },
+    openGraph: { title: "Content Types, Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, and team members.", url: "https://zyenereviews.com/docs/content-types" },
+    twitter: { card: "summary_large_image", title: "Content Types, Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, team members." },
 };
 
 export default function DocsContentTypesPage() {
