@@ -21,7 +21,7 @@ export function NewCampaignStepIndicator({ step, setStep }: NewCampaignStepIndic
                                     : "bg-muted text-muted-foreground"
                             }`}
                     >
-                        {i < step ? <Check className="h-3.5 w-3.5" /> : <span className="text-xs">{i + 1}</span>}
+                        {i < step ? <Check className="size-3.5" /> : <span className="text-xs">{i + 1}</span>}
                         <span className="hidden sm:inline">{s}</span>
                     </button>
                     {i < STEPS.length - 1 && (

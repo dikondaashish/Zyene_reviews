@@ -29,7 +29,7 @@ export function OnboardingStepTwoSection({
     if (!business) {
         return (
             <div className="flex items-center justify-center py-16">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <Loader2 className="animate-spin text-primary size-8" />
             </div>
         );
     }
@@ -47,7 +47,7 @@ export function OnboardingStepTwoSection({
                 onClick={() => setCurrentStep(1)}
                 className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer group"
             >
-                <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                <ArrowLeft className="group-hover:-translate-x-0.5 transition-transform size-3.5" />
                 Back
             </button>
             <div className="relative">

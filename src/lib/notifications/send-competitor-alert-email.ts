@@ -67,20 +67,22 @@ export async function sendCompetitorAlertEmail(payload: CompetitorAlertEmailPayl
       </div>
     `;
 
-    for (const member of members) {
-        const email = (member.users as { email?: string } | null)?.email;
-        if (!email) continue;
-        const pref = prefs?.find((p) => p.user_id === member.user_id);
-        const emailEnabled = pref ? pref.email_enabled !== false : true;
-        if (!emailEnabled) continue;
+    await Promise.all(
+        members.map(async (member) => {
+            const email = (member.users as { email?: string } | null)?.email;
+            if (!email) return;
+            const pref = prefs?.find((p) => p.user_id === member.user_id);
+            const emailEnabled = pref ? pref.email_enabled !== false : true;
+            if (!emailEnabled) return;
 
-        await sendEmail({
-            to: email,
-            subject: `[${businessName}] ${payload.title}`,
-            html,
-            text: `${payload.title}\n\n${payload.summary}\n\n${APP_URL}/competitors`,
-        });
-    }
+            await sendEmail({
+                to: email,
+                subject: `[${businessName}] ${payload.title}`,
+                html,
+                text: `${payload.title}\n\n${payload.summary}\n\n${APP_URL}/competitors`,
+            });
+        })
+    );
 }
 
 function escapeHtml(s: string): string {

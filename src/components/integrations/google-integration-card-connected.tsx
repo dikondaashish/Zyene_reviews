@@ -66,7 +66,7 @@ export function GoogleIntegrationCardConnected({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
+                        <div className="flex items-center justify-center rounded-lg bg-card border border-border size-10">
                             <GoogleCardGoogleIcon />
                         </div>
                         <div>
@@ -75,7 +75,7 @@ export function GoogleIntegrationCardConnected({
                         </div>
                     </div>
                     <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1.5 border-0">
-                        <CheckCircle2 className="h-3 w-3" />
+                        <CheckCircle2 className="size-3" />
                         Connected
                     </Badge>
                 </div>

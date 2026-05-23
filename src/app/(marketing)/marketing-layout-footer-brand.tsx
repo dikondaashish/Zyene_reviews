@@ -12,7 +12,7 @@ export function MarketingLayoutFooterBrand() {
                         alt="Zyene Reviews"
                         width={32}
                         height={32}
-                        className="h-full w-full object-cover"
+                        className="object-cover size-full"
                     />
                 </div>
                 <span className="font-bold text-base text-foreground">

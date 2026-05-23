@@ -14,7 +14,7 @@ export function CaseStudiesSlugApproachSection({ study, slug, related }: { study
                         <ul className="space-y-3">
                             {study.solutionFeatures.map((feature) => (
                                 <li key={feature} className="flex items-start gap-3 text-muted-foreground">
-                                    <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                                    <Check className="text-primary shrink-0 mt-0.5 size-5" />
                                     <span>{feature}</span>
                                 </li>
                             ))}

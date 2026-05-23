@@ -19,7 +19,7 @@ export function CustomerManagementHeader({
             <div className="min-w-0 flex-1 space-y-1">
                 <div className="mb-1 flex items-center gap-2">
                     <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
-                        <Users className="h-4 w-4 text-primary" />
+                        <Users className="text-primary size-4" />
                     </div>
                     <h1 className="text-xl font-bold tracking-tight text-foreground lg:text-2xl">Customers</h1>
                 </div>
@@ -34,7 +34,7 @@ export function CustomerManagementHeader({
                     onClick={onImportClick}
                     className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                 >
-                    <Upload className="h-4 w-4 shrink-0 md:mr-2" />
+                    <Upload className="shrink-0 md:mr-2 size-4" />
                     <span className="md:hidden">Import</span>
                     <span className="hidden md:inline">Import CSV</span>
                 </Button>
@@ -44,7 +44,7 @@ export function CustomerManagementHeader({
                     disabled={isExporting}
                     className="h-9 w-full rounded-lg border-border px-3 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/50 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                 >
-                    <Download className="h-4 w-4 shrink-0 md:mr-2" />
+                    <Download className="shrink-0 md:mr-2 size-4" />
                     <span className="md:hidden">Export</span>
                     <span className="hidden md:inline">Export CSV</span>
                 </Button>
@@ -52,7 +52,7 @@ export function CustomerManagementHeader({
                     onClick={onAddClick}
                     className="h-9 w-full rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 sm:w-auto sm:flex-1 sm:flex-initial md:px-4"
                 >
-                    <UserPlus className="h-4 w-4 shrink-0 md:mr-2" />
+                    <UserPlus className="shrink-0 md:mr-2 size-4" />
                     <span className="md:hidden">Add</span>
                     <span className="hidden md:inline">Add Customer</span>
                 </Button>

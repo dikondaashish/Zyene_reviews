@@ -9,13 +9,13 @@ export function ZapierPageHeader() {
                 href="/settings/integrations"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-                <ArrowLeft className="h-3.5 w-3.5" />
+                <ArrowLeft className="size-3.5" />
                 Back to Integrations
             </Link>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-start gap-4">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-border bg-white shadow-sm ring-1 ring-border dark:bg-white">
-                        <svg role="img" viewBox="0 0 24 24" className="h-8 w-8" aria-hidden>
+                    <div className="flex shrink-0 items-center justify-center rounded-xl border border-border bg-white shadow-sm ring-1 ring-border dark:bg-white size-14">
+                        <svg role="img" viewBox="0 0 24 24" className="size-8" aria-hidden>
                             <title>{siZapier.title}</title>
                             <path fill={`#${siZapier.hex}`} d={siZapier.path} />
                         </svg>

@@ -34,7 +34,7 @@ export function LiveWidgetPreview() {
                             <div className="flex items-center gap-2 mb-6">
                                 <div className="flex -space-x-1">
                                     {[1, 2, 3, 4, 5].map((i) => (
-                                        <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                                        <Star key={i} className="fill-primary text-primary size-5" />
                                     ))}
                                 </div>
                                 <span className="text-lg font-bold text-foreground">4.8</span>
@@ -45,7 +45,7 @@ export function LiveWidgetPreview() {
                                     <div key={r.name} className="bg-background border border-border rounded-xl p-4">
                                         <div className="flex gap-0.5 mb-2">
                                             {Array.from({ length: r.stars }).map((_, i) => (
-                                                <Star key={i} className="h-3 w-3 fill-primary text-primary" />
+                                                <Star key={i} className="fill-primary text-primary size-3" />
                                             ))}
                                         </div>
                                         <p className="text-sm text-foreground">{r.text}</p>

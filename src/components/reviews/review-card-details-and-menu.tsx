@@ -44,7 +44,7 @@ export function ReviewCardDetailsAndMenu({
                             size="sm"
                             className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
                         >
-                            <Info className="w-3.5 h-3.5 mr-1" />
+                            <Info className="mr-1 size-3.5" />
                             Details
                         </Button>
                     </DialogTrigger>
@@ -68,9 +68,9 @@ export function ReviewCardDetailsAndMenu({
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full"
+                            className="p-0 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full size-8"
                         >
-                            <MoreHorizontal className="w-4 h-4" />
+                            <MoreHorizontal className="size-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">

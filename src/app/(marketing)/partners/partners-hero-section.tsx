@@ -8,7 +8,7 @@ export function PartnersHeroSection() {
         <section className="pt-24 pb-16 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-4">
-                        <Handshake className="h-3 w-3" /> Partners
+                        <Handshake className="size-3" /> Partners
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
                         Grow with Zyene Reviews
@@ -20,12 +20,12 @@ export function PartnersHeroSection() {
                     <div className="mt-8 flex flex-wrap gap-4">
                         <a href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=Partnership%20inquiry`}>
                             <Button size="lg" className="rounded-xl px-8">
-                                Contact partnerships <Mail className="ml-2 h-4 w-4" />
+                                Contact partnerships <Mail className="ml-2 size-4" />
                             </Button>
                         </a>
                         <Link href="/agencies">
                             <Button size="lg" variant="outline" className="rounded-xl px-8">
-                                Agency program <ArrowRight className="ml-2 h-4 w-4" />
+                                Agency program <ArrowRight className="ml-2 size-4" />
                             </Button>
                         </Link>
                         <Link href="/integrations">

@@ -50,8 +50,10 @@ export async function createOAuthAddBusinessRecord(params: {
 
     if (!newBusiness) return;
 
-    const { data: encAccess } = await admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" });
-    const { data: encRefresh } = await admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" });
+    const [{ data: encAccess }, { data: encRefresh }] = await Promise.all([
+        admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" }),
+        admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" }),
+    ]);
 
     await admin.from("review_platforms").insert({
         business_id: newBusiness.id,

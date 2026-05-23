@@ -65,7 +65,7 @@ export function PlaceActionLinksManagerLinksTable({
                                                 </span>
                                             ) : null}
                                         </span>
-                                        <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                        <ExternalLink className="mt-0.5 shrink-0 size-3.5" />
                                     </a>
                                 </TableCell>
                                 <TableCell className="align-top">
@@ -88,9 +88,9 @@ export function PlaceActionLinksManagerLinksTable({
                                         aria-label="Remove link"
                                     >
                                         {deletingId === row.id ? (
-                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            <Loader2 className="animate-spin size-4" />
                                         ) : (
-                                            <Trash2 className="h-4 w-4" />
+                                            <Trash2 className="size-4" />
                                         )}
                                     </Button>
                                 </TableCell>

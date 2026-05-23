@@ -38,7 +38,7 @@ export function SmartInsightsCardSuggestionsTab({
                                 onClick={() => onSuggestionHeaderClick(i)}
                             >
                                 <div className="shrink-0 pt-0.5">
-                                    <div className="w-8 h-8 rounded-lg bg-[rgba(218,84,59,0.1)] flex items-center justify-center">
+                                    <div className="rounded-lg bg-[rgba(218,84,59,0.1)] flex items-center justify-center size-8">
                                         <Sparkles
                                             className={`w-4 h-4 ${
                                                 (suggestion.urgency || "").toLowerCase().includes("now")

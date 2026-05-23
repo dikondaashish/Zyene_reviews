@@ -50,7 +50,7 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
         <div className="bg-primary text-primary-foreground py-3 px-4 flex items-center justify-between gap-4 z-50">
             <div className="flex items-center gap-3">
                 <div className="bg-primary/80 rounded-full p-1.5 hidden md:block">
-                    <Mail className="h-4 w-4" />
+                    <Mail className="size-4" />
                 </div>
                 <div className="text-sm font-medium">
                     <span className="opacity-90">Please verify your email address (</span>
@@ -73,7 +73,7 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
                     onClick={() => setIsVisible(false)}
                     className="p-1 hover:bg-primary/80 rounded-lg transition-colors"
                 >
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                 </button>
             </div>
         </div>

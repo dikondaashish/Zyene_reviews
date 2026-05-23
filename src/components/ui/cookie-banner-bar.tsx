@@ -18,7 +18,7 @@ export function CookieBannerBar({
             <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-border rounded-xl bg-card">
                 <div className="flex items-start sm:items-center gap-4">
                     <div className="hidden sm:flex p-2 bg-primary/10 rounded-full border border-primary/20">
-                        <Cookie className="h-6 w-6 text-primary" />
+                        <Cookie className="text-primary size-6" />
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-foreground">We value your privacy</p>

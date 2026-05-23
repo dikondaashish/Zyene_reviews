@@ -55,10 +55,15 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             let totalSyncedFull = 0;
             const seenGoogleExternalIds = new Set<string>();
 
-            for (const review of googleReviews) {
-                const stats = await processGoogleReview(admin, context.platform, review, autoReplySettings);
+            const syncStats = await Promise.all(
+                googleReviews.map((review) =>
+                    processGoogleReview(admin, context.platform, review, autoReplySettings)
+                )
+            );
+            for (let i = 0; i < googleReviews.length; i++) {
+                const stats = syncStats[i];
                 if (stats.upserted) totalSyncedFull++;
-                if (review.reviewId) seenGoogleExternalIds.add(review.reviewId);
+                if (googleReviews[i].reviewId) seenGoogleExternalIds.add(googleReviews[i].reviewId!);
             }
 
             // Safe to reconcile only if we fetched every page Google had (not truncated) and counts match when API gives a total.

@@ -19,11 +19,11 @@ export function GoogleLodgingAccessibilityHousekeepingTab({
 }) {
     const a = (lodging.accessibility as Record<string, unknown>) || {};
     const h = (lodging.housekeeping as Record<string, unknown>) || {};
-    const [mob, setMob] = useState(googleLodgingBoolVal(a.mobilityAccessible));
-    const [mobPark, setMobPark] = useState(googleLodgingBoolVal(a.mobilityAccessibleParking));
-    const [mobEl, setMobEl] = useState(googleLodgingBoolVal(a.mobilityAccessibleElevator));
-    const [hk, setHk] = useState(googleLodgingBoolVal(h.housekeepingAvailable));
-    const [daily, setDaily] = useState(googleLodgingBoolVal(h.dailyHousekeeping));
+    const [mob, setMob] = useState(() => googleLodgingBoolVal(a.mobilityAccessible));
+    const [mobPark, setMobPark] = useState(() => googleLodgingBoolVal(a.mobilityAccessibleParking));
+    const [mobEl, setMobEl] = useState(() => googleLodgingBoolVal(a.mobilityAccessibleElevator));
+    const [hk, setHk] = useState(() => googleLodgingBoolVal(h.housekeepingAvailable));
+    const [daily, setDaily] = useState(() => googleLodgingBoolVal(h.dailyHousekeeping));
 
     return (
         <div className="space-y-4 max-w-md">

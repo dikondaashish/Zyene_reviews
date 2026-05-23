@@ -28,25 +28,25 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
         { 
             id: "all", 
             name: "All Platforms", 
-            icon: <LayoutGrid className="w-4 h-4" />,
+            icon: <LayoutGrid className="size-4" />,
             color: "text-primary"
         },
         { 
             id: "zyene", 
             name: "Own Platform", 
-            icon: <Globe className="w-4 h-4" />,
+            icon: <Globe className="size-4" />,
             color: "text-primary"
         },
         { 
             id: "google", 
             name: "Google", 
-            icon: <Chrome className="w-4 h-4 text-brand-google" />,
+            icon: <Chrome className="text-brand-google size-4" />,
             color: "text-primary"
         },
         { 
             id: "facebook", 
             name: "Facebook", 
-            icon: <Facebook className="w-4 h-4 text-brand-facebook" />,
+            icon: <Facebook className="text-brand-facebook size-4" />,
             color: "text-primary"
         },
     ];
@@ -115,7 +115,7 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
                         className="text-xs text-primary/80 hover:underline flex items-center gap-1"
                     >
                         collectratings.com/{businessSlug}
-                        <Globe className="w-3 h-3 ml-1" />
+                        <Globe className="ml-1 size-3" />
                     </a>
                 </motion.div>
             )}

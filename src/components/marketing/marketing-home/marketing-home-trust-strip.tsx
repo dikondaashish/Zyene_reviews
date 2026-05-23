@@ -25,10 +25,10 @@ export function MarketingHomeTrustStrip({
             Built with trust and security
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 hover:opacity-100 transition-all duration-300">
-            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="w-7 h-7" /> 256-bit Encryption</Link>
-            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><ShieldCheck className="w-7 h-7" /> GDPR Compliant</Link>
-            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><CheckCircle2 className="w-7 h-7" /> No Review Gating</Link>
-            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="w-7 h-7" /> Secure OAuth</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="size-7" /> 256-bit Encryption</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><ShieldCheck className="size-7" /> GDPR Compliant</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><CheckCircle2 className="size-7" /> No Review Gating</Link>
+            <Link href="/security" className="flex items-center gap-2 font-bold text-xl tracking-tighter hover:text-primary transition-colors"><Lock className="size-7" /> Secure OAuth</Link>
           </div>
           <p className="text-center mt-6">
             <Link href="/security" className="text-xs font-semibold text-primary hover:brightness-90">

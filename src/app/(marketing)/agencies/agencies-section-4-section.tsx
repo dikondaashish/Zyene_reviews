@@ -20,7 +20,7 @@ export function AgenciesSection4Section() {
         <section className="py-20 px-4 bg-muted border-b border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-3 mb-4">
-                        <LayoutDashboard className="h-8 w-8 text-primary" />
+                        <LayoutDashboard className="text-primary size-8" />
                         <h2 className="text-3xl font-bold">{AGENCY_DASHBOARD_ROADMAP.title}</h2>
                         <span className="text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary px-2 py-1 rounded-full">
                             {AGENCY_DASHBOARD_ROADMAP.status}

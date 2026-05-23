@@ -10,7 +10,7 @@ export function MarketingHomePricingEnterprise({ fadeInUp }: { fadeInUp: Variant
             {/* Enterprise */}
             <motion.div variants={fadeInUp} className="bg-card border border-border rounded-lg p-8 flex flex-col">
               <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck className="h-5 w-5 text-primary" />
+                <ShieldCheck className="text-primary size-5" />
                 <h3 className="text-xl font-semibold text-foreground">Enterprise</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-6">For large organizations with custom needs.</p>
@@ -31,7 +31,7 @@ export function MarketingHomePricingEnterprise({ fadeInUp }: { fadeInUp: Variant
                   "Uptime SLA & security review options",
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <Check className="text-primary shrink-0 mt-0.5 size-4" />
                     {f}
                   </li>
                 ))}

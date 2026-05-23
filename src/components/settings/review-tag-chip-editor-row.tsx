@@ -34,7 +34,7 @@ export function ReviewTagChipEditorRow({
                     <Button
                         type="button"
                         variant="outline"
-                        className="h-10 w-10 shrink-0 rounded-lg p-0 text-lg"
+                        className="shrink-0 rounded-lg p-0 text-lg size-10"
                         aria-label={`Icon for ${item.label || "tag"}`}
                     >
                         {item.emoji || "⭐"}
@@ -71,12 +71,12 @@ export function ReviewTagChipEditorRow({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 shrink-0 text-muted-foreground hover:text-destructive"
+                className="shrink-0 text-muted-foreground hover:text-destructive size-10"
                 onClick={() => onRemove(index)}
                 disabled={!canRemove}
                 aria-label="Remove tag"
             >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
             </Button>
         </div>
     );

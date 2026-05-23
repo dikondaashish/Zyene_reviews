@@ -58,7 +58,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                             <TableRow key={row.platform} className="transition-colors hover:bg-muted/20">
                                 <TableCell className="font-bold py-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex items-center justify-center h-8 w-8 rounded-lg border bg-background shrink-0">
+                                        <div className="flex items-center justify-center rounded-lg border bg-background shrink-0 size-8">
                                             {(row.platform.toLowerCase() === "google") ? (
                                                 <GoogleIcon />
                                             ) : (

@@ -61,7 +61,7 @@ export function ResetPasswordForm() {
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             tabIndex={-1}
                         >
-                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                         </button>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export function ResetPasswordForm() {
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             tabIndex={-1}
                         >
-                            {showConfirm ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            {showConfirm ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                         </button>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ export function ResetPasswordForm() {
                     disabled={isLoading || !sessionReady}
                     className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     {!sessionReady && !sessionError ? "Verifying link…" : "Update password"}
                 </button>
             </form>

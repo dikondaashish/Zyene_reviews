@@ -45,46 +45,49 @@ export async function syncYelpReviewsForPlatform(
         let alertsCount = 0;
 
         // 3. Upsert each review
-        for (const review of yelpReviews) {
-            const reviewData = {
-                business_id: platform.business_id,
-                platform: "yelp" as const,
-                platform_id: platform.id,
-                external_id: review.externalId,
-                external_url: review.externalUrl,
-                author_name: review.authorName,
-                author_avatar_url: review.authorAvatarUrl,
-                rating: review.rating,
-                text: review.content,
-                review_date: review.publishedAt,
-                response_status: "pending" as const,
-                // Yelp does not support replies via API
-            };
+        const syncOutcomes = await Promise.all(
+            yelpReviews.map(async (review) => {
+                const reviewData = {
+                    business_id: platform.business_id,
+                    platform: "yelp" as const,
+                    platform_id: platform.id,
+                    external_id: review.externalId,
+                    external_url: review.externalUrl,
+                    author_name: review.authorName,
+                    author_avatar_url: review.authorAvatarUrl,
+                    rating: review.rating,
+                    text: review.content,
+                    review_date: review.publishedAt,
+                    response_status: "pending" as const,
+                };
 
-            const { data: upserted, error: upsertError } = await admin
-                .from("reviews")
-                .upsert(reviewData, {
-                    onConflict: "business_id, platform, external_id",
-                })
-                .select()
-                .single();
+                const { data: upserted, error: upsertError } = await admin
+                    .from("reviews")
+                    .upsert(reviewData, {
+                        onConflict: "business_id, platform, external_id",
+                    })
+                    .select()
+                    .single();
 
-            if (upsertError) {
-                logger.error({ err: upsertError
-                 }, `[Yelp Sync] Upsert error for review ${review.externalId}:`);
-                continue;
-            }
+                if (upsertError) {
+                    logger.error(
+                        { err: upsertError },
+                        `[Yelp Sync] Upsert error for review ${review.externalId}:`
+                    );
+                    return { analyzed: false, alerted: false };
+                }
 
-            // 4. AI analysis for new unanalyzed reviews
-            if (upserted && !upserted.sentiment && upserted.text) {
-                analyzedCount++;
-                const analysisResult = await analyzeReview(upserted);
+                if (upserted && !upserted.sentiment && upserted.text) {
+                    const analysisResult = await analyzeReview(upserted);
+                    await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
+                    return { analyzed: true, alerted: true };
+                }
 
-                // 5. Send alert (Email always, SMS if urgent)
-                await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
-                alertsCount++;
-            }
-        }
+                return { analyzed: false, alerted: false };
+            })
+        );
+        analyzedCount = syncOutcomes.filter((o) => o.analyzed).length;
+        alertsCount = syncOutcomes.filter((o) => o.alerted).length;
 
         // 6. Update platform stats
         const { count, data: allReviews } = await admin

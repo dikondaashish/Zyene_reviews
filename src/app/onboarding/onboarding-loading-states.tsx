@@ -5,9 +5,9 @@ import { Loader2 } from "lucide-react";
 export function OnboardingLoadError({ message }: { message: string }) {
     return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-6">
-            <div className="w-14 h-14 rounded-2xl bg-destructive/10 flex items-center justify-center">
+            <div className="rounded-2xl bg-destructive/10 flex items-center justify-center size-14">
                 <svg
-                    className="w-7 h-7 text-destructive"
+                    className="text-destructive size-7"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -36,7 +36,7 @@ export function OnboardingCheckoutVerifying() {
     return (
         <div className="flex items-center justify-center min-h-[60vh]">
             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <Loader2 className="animate-spin text-primary size-8" />
                 <p className="text-sm text-muted-foreground font-medium">
                     Confirming your subscription…
                 </p>
@@ -51,7 +51,7 @@ export function OnboardingInitialLoading() {
             <div className="flex flex-col items-center gap-4">
                 <div className="relative">
                     <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping" />
-                    <Loader2 className="h-8 w-8 animate-spin text-primary relative z-10" />
+                    <Loader2 className="animate-spin text-primary relative z-10 size-8" />
                 </div>
                 <p className="text-sm text-muted-foreground font-medium">Setting things up...</p>
             </div>

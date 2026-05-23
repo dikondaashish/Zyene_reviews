@@ -31,7 +31,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                                     <div className="space-y-2">
                                         {post.internalLinks.map((link) => (
                                             <Link key={link.href} href={link.href} className="flex items-center gap-2 text-sm text-primary hover:brightness-90 transition-all group">
-                                                <ArrowRight className="h-3.5 w-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
+                                                <ArrowRight className="shrink-0 group-hover:translate-x-1 transition-transform size-3.5" />
                                                 {link.label}
                                             </Link>
                                         ))}
@@ -45,7 +45,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                                 <p className="text-muted-foreground mb-5">7-day free trial. Full access. No credit card lock-in.</p>
                                 <Link href="/signup">
                                     <Button className="gap-2">
-                                        Start Free Trial <ArrowRight className="h-4 w-4" />
+                                        Start Free Trial <ArrowRight className="size-4" />
                                     </Button>
                                 </Link>
                             </div>
@@ -59,7 +59,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                                 <p className="text-xs text-muted-foreground mb-4">7-day trial. AI replies, review requests, Negative Feedback Shield. Starting at $29.99/mo.</p>
                                 <Link href="/signup">
                                     <Button size="sm" className="w-full gap-2">
-                                        Start Free Trial <ArrowRight className="h-3.5 w-3.5" />
+                                        Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>
                                 </Link>
                             </div>
@@ -75,7 +75,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                                                     {related.title}
                                                 </p>
                                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                    <Clock className="h-3 w-3" />
+                                                    <Clock className="size-3" />
                                                     {related.readMinutes} min
                                                 </div>
                                             </Link>

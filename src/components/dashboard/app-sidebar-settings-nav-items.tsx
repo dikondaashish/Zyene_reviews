@@ -41,7 +41,7 @@ export function AppSidebarSettingsNavItems({
                         >
                             <Settings className={isSettingsActive ? "text-primary" : ""} />
                             <span className={isSettingsActive ? "font-semibold" : ""}>{settingsLabel}</span>
-                            <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 size-4" />
                         </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>

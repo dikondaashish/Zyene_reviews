@@ -105,19 +105,27 @@ export async function syncGooglePerformanceForPlatform(
             value: r.value,
         }));
 
-        let dailyUpserted = 0;
+        const dailyChunks: typeof dailyRows[] = [];
         for (let i = 0; i < dailyRows.length; i += PERFORMANCE_METRICS_BATCH_SIZE) {
             const chunk = dailyRows.slice(i, i + PERFORMANCE_METRICS_BATCH_SIZE);
-            if (chunk.length === 0) continue;
-            const { error } = await admin.from("google_performance_metrics").upsert(chunk, {
-                onConflict: "review_platform_id,metric_date,metric_key,dimension_key",
-            });
+            if (chunk.length > 0) dailyChunks.push(chunk);
+        }
+        const dailyUpsertResults = await Promise.all(
+            dailyChunks.map((chunk) =>
+                admin.from("google_performance_metrics").upsert(chunk, {
+                    onConflict: "review_platform_id,metric_date,metric_key,dimension_key",
+                })
+            )
+        );
+        let dailyUpserted = 0;
+        for (let i = 0; i < dailyUpsertResults.length; i++) {
+            const { error } = dailyUpsertResults[i];
             if (error) {
                 logger.error({ err: error }, "[PerformanceSync] daily upsert error:");
                 Sentry.captureException(error);
                 throw error;
             }
-            dailyUpserted += chunk.length;
+            dailyUpserted += dailyChunks[i].length;
         }
 
         let keywordUpserted = 0;

@@ -23,7 +23,7 @@ export default async function NewsletterUnsubscribePage({
             <div className="max-w-md w-full bg-card border border-border rounded-2xl p-10 text-center">
                 {success ? (
                     <>
-                        <CheckCircle2 className="h-12 w-12 text-primary mx-auto mb-4" />
+                        <CheckCircle2 className="text-primary mx-auto mb-4 size-12" />
                         <h1 className="text-2xl font-bold text-foreground mb-2">You&apos;re unsubscribed</h1>
                         <p className="text-muted-foreground mb-6">
                             {email
@@ -33,7 +33,7 @@ export default async function NewsletterUnsubscribePage({
                     </>
                 ) : (
                     <>
-                        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <AlertCircle className="text-muted-foreground mx-auto mb-4 size-12" />
                         <h1 className="text-2xl font-bold text-foreground mb-2">Unsubscribe</h1>
                         <p className="text-muted-foreground mb-6">
                             {error === "missing"

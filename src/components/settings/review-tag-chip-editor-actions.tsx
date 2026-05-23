@@ -23,7 +23,7 @@ export function ReviewTagChipEditorActions({
                     onClick={onAdd}
                     disabled={itemCount >= MAX_TAGS}
                 >
-                    <Plus className="h-3.5 w-3.5" />
+                    <Plus className="size-3.5" />
                     Add tag
                 </Button>
                 <Button
@@ -33,7 +33,7 @@ export function ReviewTagChipEditorActions({
                     className="gap-1.5 text-muted-foreground"
                     onClick={onReset}
                 >
-                    <RotateCcw className="h-3.5 w-3.5" />
+                    <RotateCcw className="size-3.5" />
                     Reset to category defaults
                 </Button>
             </div>

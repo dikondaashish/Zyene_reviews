@@ -42,7 +42,7 @@ export function TeamTableDesktopTable(props: TeamTableDesktopTableProps) {
                     {members.map((member) => (
                         <TableRow key={member.id}>
                             <TableCell className="flex items-center gap-3">
-                                <Avatar className="h-9 w-9">
+                                <Avatar className="size-9">
                                     <AvatarImage src={member.user?.avatar_url} />
                                     <AvatarFallback>
                                         {member.type === "member"

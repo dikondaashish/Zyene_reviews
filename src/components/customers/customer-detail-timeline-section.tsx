@@ -20,8 +20,8 @@ export function CustomerDetailTimelineSection({ timeline }: { timeline: Timeline
                 <CardContent className="p-0">
                     {timeline.length === 0 ? (
                         <div className="flex flex-col items-center justify-center gap-2 px-6 py-14 text-center">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-                                <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                            <div className="flex items-center justify-center rounded-full bg-muted size-12">
+                                <MessageSquare className="text-muted-foreground size-5" />
                             </div>
                             <p className="text-sm font-medium text-foreground">No activity yet</p>
                             <p className="max-w-md text-sm text-muted-foreground">

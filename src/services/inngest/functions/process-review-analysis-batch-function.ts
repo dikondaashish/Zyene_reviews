@@ -93,40 +93,42 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                 logger.error({ err: typeof aiResults }, "[Batch Analysis] AI result is not an array:");
                 throw new Error("AI returned non-array batch result");
             }
-            for (const result of aiResults as Array<{
-                reviewId?: string;
-                id?: string;
-                sentiment?: string;
-                urgency?: number;
-                themes?: string[];
-                summary?: string;
-            }>) {
-                const reviewRowId = result.reviewId ?? result.id;
-                if (!reviewRowId) {
-                    continue;
-                }
-
-                const { error: updateError } = await supabase
-                    .from("reviews")
-                    .update({
-                        sentiment: normalizeSentimentForDb(result.sentiment),
-                        urgency_score: normalizeUrgencyForDb(result.urgency),
-                        themes: normalizeThemesForDb(result.themes),
-                        ai_summary: result.summary ?? "",
-                    })
-                    .eq("id", reviewRowId);
-
-                if (updateError) {
-                    logger.error({ err: updateError }, `[Batch Analysis] Update failed for ${reviewRowId}:`);
-                }
-
-                if (result.urgency !== undefined && result.urgency >= 7) {
-                    const reviewObj = reviews.find((r: { id: string }) => r.id === reviewRowId);
-                    if (reviewObj) {
-                        await sendReviewAlert({ ...reviewObj, ...result });
+            await Promise.all(
+                (aiResults as Array<{
+                    reviewId?: string;
+                    id?: string;
+                    sentiment?: string;
+                    urgency?: number;
+                    themes?: string[];
+                    summary?: string;
+                }>).map(async (result) => {
+                    const reviewRowId = result.reviewId ?? result.id;
+                    if (!reviewRowId) {
+                        return;
                     }
-                }
-            }
+
+                    const { error: updateError } = await supabase
+                        .from("reviews")
+                        .update({
+                            sentiment: normalizeSentimentForDb(result.sentiment),
+                            urgency_score: normalizeUrgencyForDb(result.urgency),
+                            themes: normalizeThemesForDb(result.themes),
+                            ai_summary: result.summary ?? "",
+                        })
+                        .eq("id", reviewRowId);
+
+                    if (updateError) {
+                        logger.error({ err: updateError }, `[Batch Analysis] Update failed for ${reviewRowId}:`);
+                    }
+
+                    if (result.urgency !== undefined && result.urgency >= 7) {
+                        const reviewObj = reviews.find((r: { id: string }) => r.id === reviewRowId);
+                        if (reviewObj) {
+                            await sendReviewAlert({ ...reviewObj, ...result });
+                        }
+                    }
+                })
+            );
         });
 
         return { status: "completed", processed: aiResults.length };

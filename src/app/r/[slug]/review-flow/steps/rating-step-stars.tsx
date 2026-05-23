@@ -24,7 +24,7 @@ export function RatingStepStars({ rating, hoverRating, onRate, onHoverRating }: 
                 >
                     <Star
                         className={cn(
-                            "w-12 h-12 sm:w-14 sm:h-14 transition-colors duration-200",
+                            "sm:w-14 sm:h-14 transition-colors duration-200 size-12",
                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
                                 ? "fill-chart-4 text-chart-4"
                                 : "fill-muted text-muted-foreground/40 dark:fill-[rgb(51,65,85)] dark:text-[rgb(100,116,139)]"

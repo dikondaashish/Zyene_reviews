@@ -34,7 +34,7 @@ export function CsvImportModalPreview({
 
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 space-y-3">
                 <div className="flex gap-3">
-                    <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <ShieldCheck className="text-primary shrink-0 mt-0.5 size-5" />
                     <div className="space-y-1">
                         <p className="text-sm font-semibold text-foreground">Compliance Acknowledgment</p>
                         <p className="text-xs text-muted-foreground leading-relaxed">

@@ -56,13 +56,13 @@ export function SlugEditorForm({
                                     />
                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                                         {isChecking && (
-                                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                            <Loader2 className="animate-spin text-muted-foreground size-4" />
                                         )}
                                         {!isChecking && isAvailable === true && (
-                                            <Check className="h-4 w-4 text-chart-2" />
+                                            <Check className="text-chart-2 size-4" />
                                         )}
                                         {!isChecking && isAvailable === false && (
-                                            <X className="h-4 w-4 text-destructive" />
+                                            <X className="text-destructive size-4" />
                                         )}
                                     </div>
                                 </div>

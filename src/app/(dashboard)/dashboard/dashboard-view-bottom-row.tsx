@@ -53,7 +53,7 @@ export function DashboardViewBottomRow({
                     </div>
                 ) : (
                     <div className="flex flex-col flex-1 items-center justify-center rounded-2xl border border-dashed border-border bg-card/30 py-20">
-                        <MessageSquare className="mb-4 h-10 w-10 text-muted-foreground/30" />
+                        <MessageSquare className="mb-4 text-muted-foreground/30 size-10" />
                         <p className="text-sm text-muted-foreground">
                             {dict.dashboard.review_spotlight_empty}
                         </p>

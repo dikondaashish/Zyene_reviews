@@ -37,7 +37,7 @@ export function AgenciesSection3Section() {
                                 <ul className="space-y-2 flex-1 mb-6">
                                     {tier.highlights.map((h) => (
                                         <li key={h} className="flex gap-2 text-sm text-muted-foreground">
-                                            <Check className="h-4 w-4 text-primary shrink-0" />
+                                            <Check className="text-primary shrink-0 size-4" />
                                             {h}
                                         </li>
                                     ))}

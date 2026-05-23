@@ -99,7 +99,7 @@ export function BusinessesCardsSection({
 
                                 {rating != null && (
                                     <div className="flex items-center gap-1.5 text-sm">
-                                        <Star className="h-4 w-4 text-chart-4 fill-chart-4" />
+                                        <Star className="text-chart-4 fill-chart-4 size-4" />
                                         <span className="font-medium">{Number(rating).toFixed(1)}</span>
                                         {totalReviews > 0 && (
                                             <span className="text-muted-foreground">({totalReviews} reviews)</span>
@@ -110,14 +110,14 @@ export function BusinessesCardsSection({
                                 <div className="flex items-center gap-2 text-xs pt-1 border-t mt-1">
                                     {isConnected ? (
                                         <>
-                                            <CheckCircle2 className="h-3.5 w-3.5 text-chart-2" />
+                                            <CheckCircle2 className="text-chart-2 size-3.5" />
                                             <span className="text-chart-2 dark:text-chart-2">
                                                 Google Business Profile connected
                                             </span>
                                         </>
                                     ) : (
                                         <>
-                                            <AlertCircle className="h-3.5 w-3.5 text-chart-4" />
+                                            <AlertCircle className="text-chart-4 size-3.5" />
                                             <span className="text-chart-4 dark:text-chart-4">Google not connected</span>
                                         </>
                                     )}

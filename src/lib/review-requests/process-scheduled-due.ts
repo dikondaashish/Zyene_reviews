@@ -30,11 +30,12 @@ export async function processDueScheduledReviewRequests(options: { limit?: numbe
         throw error;
     }
 
-    const results = { attempted: 0, sent: 0, failed: 0, skipped: 0 };
+    const outcomes = await Promise.all(
+        (due ?? []).map((row) => processOneScheduled(admin, row as DueRow))
+    );
 
-    for (const row of due ?? []) {
-        results.attempted++;
-        const outcome = await processOneScheduled(admin, row as DueRow);
+    const results = { attempted: outcomes.length, sent: 0, failed: 0, skipped: 0 };
+    for (const outcome of outcomes) {
         if (outcome === "sent") results.sent++;
         else if (outcome === "failed") results.failed++;
         else results.skipped++;

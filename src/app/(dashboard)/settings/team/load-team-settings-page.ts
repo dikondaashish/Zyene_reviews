@@ -27,8 +27,10 @@ export type TeamSettingsPageData =
       };
 
 export async function loadTeamSettingsPage(userId: string): Promise<TeamSettingsPageData> {
-    const supabase = await createClient();
-    const { businessId, business, organization } = await getActiveBusinessId();
+    const [supabase, { businessId, business, organization }] = await Promise.all([
+        createClient(),
+        getActiveBusinessId(),
+    ]);
 
     if (!businessId || !business) {
         return { kind: "no-business" };
@@ -52,9 +54,13 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
 
     const canInviteTeam = canManageBusinessTeam(currentUserMember.role);
 
-    const { data: members, error: membersError } = await supabase
-        .from("business_members")
-        .select(`
+    const [
+        { data: members, error: membersError },
+        { data: invites, error: invitesError },
+    ] = await Promise.all([
+        supabase
+            .from("business_members")
+            .select(`
             id,
             role,
             status,
@@ -66,13 +72,13 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
                 avatar_url
             )
         `)
-        .eq("business_id", businessId);
-
-    const { data: invites, error: invitesError } = await supabase
-        .from("invitations")
-        .select("*")
-        .eq("business_id", businessId)
-        .is("accepted_at", null);
+            .eq("business_id", businessId),
+        supabase
+            .from("invitations")
+            .select("*")
+            .eq("business_id", businessId)
+            .is("accepted_at", null),
+    ]);
 
     if (membersError || invitesError) {
         logger.error({ err: membersError || invitesError }, "[Team settings] Team data fetch failed:");

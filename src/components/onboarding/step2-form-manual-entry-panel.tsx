@@ -105,12 +105,12 @@ export function Step2FormManualEntryPanel({
                 >
                     {advancing || isLoading ? (
                         <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...
+                            <Loader2 className="mr-2 animate-spin size-5" /> Saving...
                         </>
                     ) : (
                         <>
                             Continue
-                            <ArrowRight className="ml-2 h-5 w-5" />
+                            <ArrowRight className="ml-2 size-5" />
                         </>
                     )}
                 </Button>
@@ -118,7 +118,7 @@ export function Step2FormManualEntryPanel({
                 <div className="space-y-3 pt-3">
                     <p className="text-[11px] text-muted-foreground/50 flex items-center justify-center gap-1.5 font-medium">
                         <svg
-                            className="w-3 h-3 shrink-0"
+                            className="shrink-0 size-3"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"

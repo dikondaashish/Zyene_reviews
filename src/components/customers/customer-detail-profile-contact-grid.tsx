@@ -15,8 +15,8 @@ export function CustomerDetailProfileContactGrid({ customer }: { customer: Custo
                         : "border-dashed border-muted-foreground/20 bg-muted/15"
                 )}
             >
-                <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted/80">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
+                <span className="mt-0.5 flex shrink-0 items-center justify-center rounded-lg bg-muted/80 size-10">
+                    <Phone className="text-muted-foreground size-4" />
                 </span>
                 <div className="min-w-0">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Phone</p>
@@ -35,8 +35,8 @@ export function CustomerDetailProfileContactGrid({ customer }: { customer: Custo
                         : "border-dashed border-muted-foreground/20 bg-muted/15"
                 )}
             >
-                <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted/80">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="mt-0.5 flex shrink-0 items-center justify-center rounded-lg bg-muted/80 size-10">
+                    <Mail className="text-muted-foreground size-4" />
                 </span>
                 <div className="min-w-0">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Email</p>

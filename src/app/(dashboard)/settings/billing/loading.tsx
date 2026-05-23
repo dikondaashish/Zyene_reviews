@@ -55,7 +55,7 @@ export default function BillingLoading() {
                             <CardContent className="flex-1 space-y-3">
                                 {[1, 2, 3, 4, 5, 6].map((j) => (
                                     <div key={j} className="flex items-center gap-2">
-                                        <Skeleton className="h-4 w-4 rounded-full shrink-0" />
+                                        <Skeleton className="rounded-full shrink-0 size-4" />
                                         <Skeleton className="h-4 w-full" />
                                     </div>
                                 ))}

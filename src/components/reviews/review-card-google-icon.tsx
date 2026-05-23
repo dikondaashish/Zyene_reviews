@@ -1,4 +1,4 @@
-export function ReviewCardGoogleIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
+export function ReviewCardGoogleIcon({ className = "size-3.5" }: { className?: string }) {
     return (
         <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
             <path

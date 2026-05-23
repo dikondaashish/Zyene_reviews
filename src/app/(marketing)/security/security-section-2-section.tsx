@@ -13,8 +13,8 @@ export function SecuritySection2Section() {
                                 key={section.title}
                                 className="flex flex-col sm:flex-row gap-6 p-8 rounded-2xl border border-border bg-card hover:border-primary/20 transition-colors"
                             >
-                                <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
-                                    <Icon className="h-6 w-6" />
+                                <div className="shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20 size-12">
+                                    <Icon className="size-6" />
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-bold text-foreground mb-2">{section.title}</h2>

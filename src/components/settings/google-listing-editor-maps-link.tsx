@@ -14,7 +14,7 @@ export function GoogleListingEditorMapsLink({ meta }: { meta: GoogleListingMeta 
                 className="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
             >
                 View on Google Maps
-                <ExternalLink className="h-3.5 w-3.5" />
+                <ExternalLink className="size-3.5" />
             </a>
             {meta.primaryCategoryDisplay && (
                 <span className="text-muted-foreground"> · {meta.primaryCategoryDisplay}</span>

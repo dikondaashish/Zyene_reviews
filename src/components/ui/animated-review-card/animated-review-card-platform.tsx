@@ -22,7 +22,7 @@ export function SpotlightRatingStars({ rating, className }: { rating: number; cl
                     key={i}
                     strokeWidth={i < r ? 0 : 1.35}
                     className={cn(
-                        "h-3.5 w-3.5 shrink-0 text-chart-4 sm:h-4 sm:w-4",
+                        "shrink-0 text-chart-4 sm:h-4 sm:w-4 size-3.5",
                         i < r ? "fill-chart-4" : "fill-none"
                     )}
                     aria-hidden
@@ -32,7 +32,7 @@ export function SpotlightRatingStars({ rating, className }: { rating: number; cl
     );
 }
 
-function GooglePlatformIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
+function GooglePlatformIcon({ className = "size-3.5" }: { className?: string }) {
     return (
         <svg viewBox="0 0 24 24" className={className} aria-hidden>
             <path
@@ -58,31 +58,31 @@ function GooglePlatformIcon({ className = "h-3.5 w-3.5" }: { className?: string 
 function PlatformGlyph({ platform }: { platform: string }) {
     const p = platform.toLowerCase();
     if (p === "google") {
-        return <GooglePlatformIcon className="h-3.5 w-3.5" />;
+        return <GooglePlatformIcon className="size-3.5" />;
     }
     if (p === "facebook") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[rgb(24,119,242)] text-[10px] font-bold leading-none text-white">
+            <span className="inline-flex items-center justify-center rounded-full bg-[rgb(24,119,242)] text-[10px] font-bold leading-none text-white size-3.5">
                 f
             </span>
         );
     }
     if (p === "yelp") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[rgb(255,26,26)] text-[9px] font-bold leading-none text-white">
+            <span className="inline-flex items-center justify-center rounded-full bg-[rgb(255,26,26)] text-[9px] font-bold leading-none text-white size-3.5">
                 Y
             </span>
         );
     }
     if (p === "zyene") {
         return (
-            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[9px] font-bold leading-none text-primary-foreground">
+            <span className="inline-flex items-center justify-center rounded-full bg-primary text-[9px] font-bold leading-none text-primary-foreground size-3.5">
                 Z
             </span>
         );
     }
     return (
-        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-muted text-[9px] font-semibold uppercase leading-none text-muted-foreground">
+        <span className="inline-flex items-center justify-center rounded-full bg-muted text-[9px] font-semibold uppercase leading-none text-muted-foreground size-3.5">
             {platform.slice(0, 1)}
         </span>
     );

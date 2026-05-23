@@ -9,7 +9,7 @@ export function IndustriesIndustryHowZyeneSolvesItSection({ data }: { data: Indu
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-4">
-                            <Sparkles className="h-3.5 w-3.5" /> How Zyene solves it
+                            <Sparkles className="size-3.5" /> How Zyene solves it
                         </div>
                         <h2 className="text-3xl font-bold text-foreground">
                             Everything a {data.nameSingular.toLowerCase()} needs
@@ -21,7 +21,7 @@ export function IndustriesIndustryHowZyeneSolvesItSection({ data }: { data: Indu
                             return (
                                 <div key={i} className="bg-card border border-border rounded-2xl p-7 flex gap-5">
                                     <div className="bg-primary/10 p-3 rounded-xl h-fit shrink-0">
-                                        <Icon className="h-6 w-6 text-primary" />
+                                        <Icon className="text-primary size-6" />
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-bold text-foreground mb-2">{solution.title}</h3>

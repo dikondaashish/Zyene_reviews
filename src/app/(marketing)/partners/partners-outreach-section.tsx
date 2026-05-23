@@ -10,7 +10,7 @@ export function PartnersOutreachSection() {
         <section className="py-20 px-4 bg-muted border-t border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-2 mb-2">
-                        <BarChart3 className="h-5 w-5 text-primary" />
+                        <BarChart3 className="text-primary size-5" />
                         <h2 className="text-2xl font-bold text-foreground">Paid acquisition playbook</h2>
                     </div>
                     <p className="text-sm text-muted-foreground mb-10">

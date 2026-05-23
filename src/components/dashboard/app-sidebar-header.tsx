@@ -26,7 +26,7 @@ export function AppSidebarHeader() {
                                     alt="Zyene Reviews"
                                     width={36}
                                     height={36}
-                                    className="h-full w-full object-cover"
+                                    className="object-cover size-full"
                                     priority
                                 />
                             </div>
@@ -40,11 +40,11 @@ export function AppSidebarHeader() {
             </SidebarMenu>
             <button
                 type="button"
-                className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted/50 md:hidden"
+                className="absolute right-3 top-3 inline-flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted/50 md:hidden size-8"
                 aria-label="Close sidebar"
                 onClick={() => setOpenMobile(false)}
             >
-                <X className="h-5 w-5" />
+                <X className="size-5" />
             </button>
         </div>
     );

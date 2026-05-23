@@ -8,7 +8,7 @@ export function PrivateFeedbackCardStars({ rating }: { rating: number }) {
             {[...Array(5)].map((_, i) => (
                 <Star
                     key={i}
-                    className={cn("w-3.5 h-3.5", i < rating ? colorClass : "text-muted-foreground/40 fill-muted")}
+                    className={cn("size-3.5", i < rating ? colorClass : "text-muted-foreground/40 fill-muted")}
                 />
             ))}
         </div>

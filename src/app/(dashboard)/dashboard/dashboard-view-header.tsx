@@ -30,7 +30,7 @@ export function DashboardViewHeader({ user, dict, business }: Props) {
                         variant="outline"
                         className="h-[38px] w-full gap-2 rounded-full border-border/60 bg-background px-4 font-medium text-[13px] hover:bg-muted lg:w-auto"
                     >
-                        <Send className="h-3.5 w-3.5 shrink-0" />
+                        <Send className="shrink-0 size-3.5" />
                         <span className="md:hidden">Request</span>
                         <span className="hidden md:inline">Request review</span>
                     </Button>

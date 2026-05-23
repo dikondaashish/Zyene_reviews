@@ -24,7 +24,7 @@ export function IndustriesIndustryUseCaseSection({ data }: { data: IndustryData 
                     </div>
                     <div className="bg-card border border-border rounded-3xl p-10 shadow-sm">
                         <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
-                            <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-2xl shrink-0">
+                            <div className="bg-primary/10 rounded-2xl flex items-center justify-center text-2xl shrink-0 size-14">
                                 {data.emoji}
                             </div>
                             <div>

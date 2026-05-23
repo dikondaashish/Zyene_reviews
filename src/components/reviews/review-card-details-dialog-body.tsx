@@ -77,7 +77,7 @@ export function ReviewCardDetailsDialogBody({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline"
                     >
-                        <ExternalLink className="w-3.5 h-3.5" aria-hidden />
+                        <ExternalLink className="size-3.5" aria-hidden />
                         Open listing on Google Maps
                     </a>
                     <p className="mt-1 text-xs text-muted-foreground">

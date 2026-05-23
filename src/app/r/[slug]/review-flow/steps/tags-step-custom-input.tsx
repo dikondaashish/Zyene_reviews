@@ -49,7 +49,7 @@ export function TagsStepCustomInput({
                             : undefined,
                 }}
             >
-                <Pencil className="h-4 w-4 shrink-0" aria-hidden />
+                <Pencil className="shrink-0 size-4" aria-hidden />
                 Add your own words
             </button>
 
@@ -112,7 +112,7 @@ export function TagsStepCustomInput({
                                 className="rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/20"
                                 aria-label={`Remove ${tag}`}
                             >
-                                <X className="h-3.5 w-3.5" />
+                                <X className="size-3.5" />
                             </button>
                         </span>
                     ))}

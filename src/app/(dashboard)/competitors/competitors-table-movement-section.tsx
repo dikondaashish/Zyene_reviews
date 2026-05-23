@@ -45,11 +45,11 @@ export function CompetitorsTableMovementSection({
                                             <span className="text-muted-foreground">Rating change</span>
                                             <span className="inline-flex items-center gap-1 font-medium">
                                                 {ratingUp ? (
-                                                    <ArrowUp className="h-3 w-3 text-chart-2" />
+                                                    <ArrowUp className="text-chart-2 size-3" />
                                                 ) : (m.ratingDelta ?? 0) < 0 ? (
-                                                    <ArrowDown className="h-3 w-3 text-sync-action" />
+                                                    <ArrowDown className="text-sync-action size-3" />
                                                 ) : (
-                                                    <Minus className="h-3 w-3 text-muted-foreground" />
+                                                    <Minus className="text-muted-foreground size-3" />
                                                 )}
                                                 {(m.ratingDelta ?? 0).toFixed(1)}
                                             </span>
@@ -58,11 +58,11 @@ export function CompetitorsTableMovementSection({
                                             <span className="text-muted-foreground">Review change</span>
                                             <span className="inline-flex items-center gap-1 font-medium">
                                                 {reviewsUp ? (
-                                                    <ArrowUp className="h-3 w-3 text-chart-2" />
+                                                    <ArrowUp className="text-chart-2 size-3" />
                                                 ) : (m.reviewsDelta ?? 0) < 0 ? (
-                                                    <ArrowDown className="h-3 w-3 text-sync-action" />
+                                                    <ArrowDown className="text-sync-action size-3" />
                                                 ) : (
-                                                    <Minus className="h-3 w-3 text-muted-foreground" />
+                                                    <Minus className="text-muted-foreground size-3" />
                                                 )}
                                                 {(m.reviewsDelta ?? 0) > 0 ? "+" : ""}
                                                 {m.reviewsDelta ?? 0}

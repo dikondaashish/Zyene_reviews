@@ -60,13 +60,13 @@ export default function FreeToolsHubPage() {
                                 href={`/tools/${tool.slug}`}
                                 className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
                             >
-                                <Icon className="h-10 w-10 text-primary mb-4" />
+                                <Icon className="text-primary mb-4 size-10" />
                                 <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                                     {tool.title}
                                 </h2>
                                 <p className="text-sm text-muted-foreground flex-1">{tool.description}</p>
                                 <span className="mt-6 text-sm font-semibold text-primary inline-flex items-center gap-1">
-                                    Use tool <ArrowRight className="h-4 w-4" />
+                                    Use tool <ArrowRight className="size-4" />
                                 </span>
                             </Link>
                         );

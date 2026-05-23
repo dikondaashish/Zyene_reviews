@@ -44,7 +44,7 @@ export function PlaceActionLinksManagerCreateForm({
                 <Label>Link type</Label>
                 {typesLoading ? (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="animate-spin size-4" />
                         Loading types from Google…
                     </div>
                 ) : types.length === 0 ? (
@@ -93,7 +93,7 @@ export function PlaceActionLinksManagerCreateForm({
             <Button type="submit" disabled={creating || typesLoading || !types.length}>
                 {creating ? (
                     <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 animate-spin size-4" />
                         Adding…
                     </>
                 ) : (

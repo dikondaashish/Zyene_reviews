@@ -45,9 +45,9 @@ export function DashboardViewCharts({
                             className={`flex shrink-0 items-center gap-1 self-start rounded-md px-2 py-1 text-xs font-semibold sm:self-auto ${totalReviewsTrend > 0 ? "bg-[rgb(229,238,221)] text-[rgb(62,95,46)]" : "bg-destructive/10 text-destructive"}`}
                         >
                             {totalReviewsTrend > 0 ? (
-                                <TrendingUp className="h-3 w-3" />
+                                <TrendingUp className="size-3" />
                             ) : (
-                                <TrendingUp className="h-3 w-3 rotate-180" />
+                                <TrendingUp className="rotate-180 size-3" />
                             )}
                             <span className="max-sm:sr-only">
                                 {Math.abs(totalReviewsTrend)}% vs 30d prior
@@ -73,7 +73,7 @@ export function DashboardViewCharts({
                     </div>
                     <div className="flex shrink-0 items-center gap-1 text-xl font-medium tracking-tight">
                         {displayAverageRating.toFixed(1)}
-                        <Star className="h-4 w-4 fill-chart-4 text-chart-4" strokeWidth={1} />
+                        <Star className="fill-chart-4 text-chart-4 size-4" strokeWidth={1} />
                     </div>
                 </CardHeader>
                 <CardContent className="flex-1 pt-6 pb-6">

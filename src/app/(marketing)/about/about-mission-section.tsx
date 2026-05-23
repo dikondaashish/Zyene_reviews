@@ -22,8 +22,8 @@ export function AboutMissionSection() {
 
                     <div className="grid md:grid-cols-2 gap-8 mb-16">
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20">
-                                <Building2 className="h-6 w-6" />
+                            <div className="bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20 size-12">
+                                <Building2 className="size-6" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-foreground mb-1">Our Mission</h3>
@@ -35,8 +35,8 @@ export function AboutMissionSection() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20">
-                                <Users className="h-6 w-6" />
+                            <div className="bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20 size-12">
+                                <Users className="size-6" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-foreground mb-1">Who We Serve</h3>
@@ -48,8 +48,8 @@ export function AboutMissionSection() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20">
-                                <Shield className="h-6 w-6" />
+                            <div className="bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20 size-12">
+                                <Shield className="size-6" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-foreground mb-1">Our Values</h3>
@@ -61,8 +61,8 @@ export function AboutMissionSection() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20">
-                                <Mail className="h-6 w-6" />
+                            <div className="bg-primary/10 text-primary rounded-md flex items-center justify-center shrink-0 border border-primary/20 size-12">
+                                <Mail className="size-6" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-foreground mb-1">Get in Touch</h3>

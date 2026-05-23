@@ -48,7 +48,7 @@ export function CSVImportModal(props: CsvImportModalProps) {
                         onClick={m.handleImport}
                         disabled={m.isLoading || m.csvData.length === 0 || !m.hasConsent}
                     >
-                        {m.isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {m.isLoading ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                         {m.isLoading ? "Importing..." : "Import Customers"}
                     </Button>
                 </DialogFooter>

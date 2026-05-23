@@ -40,7 +40,7 @@ export function SpotlightActiveFace({ review, theme, classNames, labels, starCol
     return (
         <div className={cn("mb-3 flex min-h-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between", classNames?.header)}>
             <div className="flex min-w-0 flex-1 gap-2.5 sm:gap-3">
-                <Avatar className={cn("h-10 w-10 shrink-0 ring-1 ring-border", classNames?.avatar)}>
+                <Avatar className={cn("shrink-0 ring-1 ring-border size-10", classNames?.avatar)}>
                     {review?.avatar ? (
                         <AvatarImage src={review.avatar} alt={review.name} referrerPolicy="no-referrer" />
                     ) : null}
@@ -77,7 +77,7 @@ export function SpotlightActiveFace({ review, theme, classNames, labels, starCol
                                     <Star
                                         key={i}
                                         className={cn(
-                                            "h-4 w-4 md:h-5 md:w-5",
+                                            "md:h-5 md:w-5 size-4",
                                             i < (review?.rating ?? 0)
                                                 ? classNames?.activeStarColor || starColors.active
                                                 : classNames?.inactiveStarColor || starColors.inactive,
@@ -104,10 +104,10 @@ export function SpotlightActiveFace({ review, theme, classNames, labels, starCol
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 shrink-0 text-muted-foreground"
+                            className="shrink-0 text-muted-foreground size-8"
                             aria-label="Review actions"
                         >
-                            <MoreHorizontal className="h-4 w-4" />
+                            <MoreHorizontal className="size-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

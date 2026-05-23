@@ -24,7 +24,7 @@ export function RequestsPageHeader({
             <div className="flex w-full min-w-0 flex-wrap items-center gap-2 lg:w-auto lg:shrink-0">
                 <Button variant="outline" className="min-w-0 flex-1 sm:flex-initial" asChild>
                     <a href={`/api/requests/export`} className="inline-flex items-center justify-center gap-2">
-                        <Download className="h-4 w-4 shrink-0" />
+                        <Download className="shrink-0 size-4" />
                         <span className="md:hidden">Export</span>
                         <span className="hidden md:inline">Export CSV</span>
                     </a>

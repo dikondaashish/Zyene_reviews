@@ -398,9 +398,9 @@ function HowItWorksStep({
                 {index}
             </span>
             <div
-                className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ring-1 ${iconWrapClass}`}
+                className={`mt-0.5 flex shrink-0 items-center justify-center rounded-lg ring-1 ${iconWrapClass} size-10`}
             >
-                <Icon className="h-5 w-5" aria-hidden />
+                <Icon className="size-5" aria-hidden />
             </div>
             <div className="min-w-0">
                 <p className="text-sm font-semibold leading-tight">{title}</p>
@@ -421,7 +421,7 @@ function SetupStep({
 }) {
     return (
         <li className="flex gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border">
+            <span className="mt-0.5 flex shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border size-7">
                 {index}
             </span>
             <div className="min-w-0">

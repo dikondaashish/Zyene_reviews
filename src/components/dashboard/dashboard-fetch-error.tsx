@@ -27,8 +27,8 @@ export function DashboardFetchError({
             className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border bg-card px-6 py-10 text-center"
             role="alert"
         >
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-destructive/30 bg-destructive/10">
-                <AlertTriangle className="h-6 w-6 text-destructive" aria-hidden />
+            <div className="flex items-center justify-center rounded-lg border border-destructive/30 bg-destructive/10 size-12">
+                <AlertTriangle className="text-destructive size-6" aria-hidden />
             </div>
             <div className="space-y-1 max-w-md">
                 <h2 className="text-lg font-semibold text-foreground">{title}</h2>

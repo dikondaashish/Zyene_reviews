@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { COMPARISON_ROWS } from "./pricing-client-constants";
 
 function CellIcon({ value }: { value: boolean | string }) {
-    if (value === true) return <Check className="h-5 w-5 text-primary mx-auto" />;
+    if (value === true) return <Check className="text-primary mx-auto size-5" />;
     if (value === false)
         return <span className="text-muted-foreground/40 text-xl mx-auto block text-center">—</span>;
     return <span className="text-xs text-muted-foreground text-center block">{value}</span>;

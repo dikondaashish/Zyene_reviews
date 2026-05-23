@@ -13,7 +13,7 @@ export function GoogleIntegrationCardErrorState({ onReconnect }: { onReconnect: 
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
+                        <div className="flex items-center justify-center rounded-lg bg-card border border-border size-10">
                             <GoogleCardGoogleIcon />
                         </div>
                         <div>
@@ -22,7 +22,7 @@ export function GoogleIntegrationCardErrorState({ onReconnect }: { onReconnect: 
                         </div>
                     </div>
                     <Badge variant="destructive" className="gap-1.5">
-                        <AlertTriangle className="h-3 w-3" />
+                        <AlertTriangle className="size-3" />
                         Connection Error
                     </Badge>
                 </div>
@@ -37,7 +37,7 @@ export function GoogleIntegrationCardErrorState({ onReconnect }: { onReconnect: 
             </CardContent>
             <CardFooter>
                 <Button className="w-full" onClick={onReconnect}>
-                    <RefreshCw className="mr-2 h-4 w-4" />
+                    <RefreshCw className="mr-2 size-4" />
                     Reconnect Google Account
                 </Button>
             </CardFooter>

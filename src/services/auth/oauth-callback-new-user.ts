@@ -178,8 +178,10 @@ export async function runOAuthNewUserSignup(params: {
         metadata: signupMetadata,
     });
 
-    const { sendEmail } = await import("@/services/resend/send-email");
-    const { welcomeEmail, welcomeEmailText } = await import("@/services/resend/templates/welcome-email");
+    const [{ sendEmail }, { welcomeEmail, welcomeEmailText }] = await Promise.all([
+        import("@/services/resend/send-email"),
+        import("@/services/resend/templates/welcome-email"),
+    ]);
     const loginUrl = `${appUrl}/login`;
 
     sendEmail({

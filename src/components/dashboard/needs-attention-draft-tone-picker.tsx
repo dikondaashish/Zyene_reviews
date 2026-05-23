@@ -26,7 +26,7 @@ export function NeedsAttentionDraftTonePicker({
 }) {
     return (
         <div className="mb-3 flex flex-wrap items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-sync-action" aria-hidden />
+            <Sparkles className="text-sync-action size-3.5" aria-hidden />
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">AI tone</span>
             <div className="flex flex-wrap gap-1.5">
                 {TONES.map((tone) => (

@@ -66,25 +66,29 @@ export async function getGoogleLocationSelector(request: NextRequest) {
             locations: Array<{ name: string; title: string; storeCode?: string | null }>;
         }> = [];
 
-        for (const acc of accounts.slice(0, 8)) {
-            const resourceName = acc.name; // accounts/{id}
-            let locations: Array<{ name: string; title: string; storeCode?: string | null }> = [];
-            try {
-                const locs = await listLocations(accessToken, resourceName);
-                locations = locs.map((l) => ({
-                    name: l.name,
-                    title: l.title || l.name,
-                    storeCode: l.storeCode ?? null,
-                }));
-            } catch {
-                locations = [];
-            }
-            accountSummaries.push({
-                resourceName,
-                accountName: acc.accountName || resourceName.replace(/^accounts\//, ""),
-                locations: locations.slice(0, 50),
-            });
-        }
+        accountSummaries.push(
+            ...(await Promise.all(
+                accounts.slice(0, 8).map(async (acc) => {
+                    const resourceName = acc.name;
+                    let locations: Array<{ name: string; title: string; storeCode?: string | null }> = [];
+                    try {
+                        const locs = await listLocations(accessToken, resourceName);
+                        locations = locs.map((l) => ({
+                            name: l.name,
+                            title: l.title || l.name,
+                            storeCode: l.storeCode ?? null,
+                        }));
+                    } catch {
+                        locations = [];
+                    }
+                    return {
+                        resourceName,
+                        accountName: acc.accountName || resourceName.replace(/^accounts\//, ""),
+                        locations: locations.slice(0, 50),
+                    };
+                })
+            ))
+        );
 
         return apiOk({
             accounts: accountSummaries,

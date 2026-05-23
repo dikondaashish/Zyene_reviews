@@ -39,29 +39,30 @@ export async function GET(request: Request) {
     const monthLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
     const caseStudyLink = `${SITE_ORIGIN}/case-studies/${edition.caseStudySlug}`;
 
-    let sent = 0;
-    let failed = 0;
+    const sendResults = await Promise.all(
+        subscribers.map(async (sub) => {
+            const unsubscribeUrl = `${SITE_ORIGIN}/newsletter/unsubscribe?id=${sub.id}`;
+            const { subject, html } = monthlyNewsletterEmail({
+                monthLabel,
+                productUpdate: edition.productUpdate,
+                tipTitle: edition.tipTitle,
+                tipBody: edition.tipBody,
+                caseStudyLink,
+                caseStudyTitle: edition.caseStudyTitle,
+                unsubscribeUrl,
+            });
 
-    for (const sub of subscribers) {
-        const unsubscribeUrl = `${SITE_ORIGIN}/newsletter/unsubscribe?id=${sub.id}`;
-        const { subject, html } = monthlyNewsletterEmail({
-            monthLabel,
-            productUpdate: edition.productUpdate,
-            tipTitle: edition.tipTitle,
-            tipBody: edition.tipBody,
-            caseStudyLink,
-            caseStudyTitle: edition.caseStudyTitle,
-            unsubscribeUrl,
-        });
-
-        try {
-            await sendEmail({ to: sub.email, subject, html });
-            sent++;
-        } catch (err) {
-            logger.error({ err: err }, `[cron/monthly-newsletter] failed for ${sub.email}:`);
-            failed++;
-        }
-    }
+            try {
+                await sendEmail({ to: sub.email, subject, html });
+                return "sent" as const;
+            } catch (err) {
+                logger.error({ err: err }, `[cron/monthly-newsletter] failed for ${sub.email}:`);
+                return "failed" as const;
+            }
+        })
+    );
+    const sent = sendResults.filter((r) => r === "sent").length;
+    const failed = sendResults.filter((r) => r === "failed").length;
 
     return NextResponse.json({
         success: true,

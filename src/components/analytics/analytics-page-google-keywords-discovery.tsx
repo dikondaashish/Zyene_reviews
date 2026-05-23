@@ -18,7 +18,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="space-y-1">
                         <CardTitle className="text-xl font-bold flex items-center gap-2">
-                            <Search className="w-5 h-5 text-primary" />
+                            <Search className="text-primary size-5" />
                             Search Keywords
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -34,7 +34,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                         {searchKeywords.slice(0, 10).map((k, i) => (
                             <div key={i} className="flex items-center justify-between group/item">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-6 h-6 rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover/item:bg-primary/20 group-hover/item:text-primary transition-colors">
+                                    <div className="rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover/item:bg-primary/20 group-hover/item:text-primary transition-colors size-6">
                                         {i + 1}
                                     </div>
                                     <span className="text-sm text-foreground/70 group-hover/item:text-foreground transition-colors">
@@ -66,7 +66,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                         ))}
                         {searchKeywords.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
-                                <Search className="w-10 h-10 opacity-20" />
+                                <Search className="opacity-20 size-10" />
                                 <p className="text-sm">No keyword data available for this selection</p>
                             </div>
                         )}

@@ -16,7 +16,7 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                     </p>
                     <Link href="/signup">
                         <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
-                            Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                            Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Button>
                     </Link>
                     <p className="mt-5 text-sm text-muted-foreground">

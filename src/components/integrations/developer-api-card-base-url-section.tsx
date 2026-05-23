@@ -26,7 +26,7 @@ export function DeveloperApiCardBaseUrlSection({
                     className="h-7 px-2 text-xs text-muted-foreground"
                     onClick={onCopyBaseUrl}
                 >
-                    {baseCopied ? <Check className="h-3.5 w-3.5 text-chart-2" /> : <Copy className="h-3.5 w-3.5" />}
+                    {baseCopied ? <Check className="text-chart-2 size-3.5" /> : <Copy className="size-3.5" />}
                     <span className="ml-1.5">Copy</span>
                 </Button>
             </div>

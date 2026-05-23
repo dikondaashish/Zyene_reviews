@@ -10,7 +10,7 @@ export function MarketingLayoutHeaderBrand() {
                     alt="Zyene Reviews logo"
                     width={36}
                     height={36}
-                    className="h-full w-full object-cover"
+                    className="object-cover size-full"
                     priority
                 />
             </div>

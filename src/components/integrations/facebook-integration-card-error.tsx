@@ -20,18 +20,18 @@ export function FacebookIntegrationCardError({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
+                        <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
                         <CardTitle className="text-base">Facebook</CardTitle>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs font-medium text-destructive">
-                        <XCircle className="h-3.5 w-3.5" />
+                        <XCircle className="size-3.5" />
                         Error
                     </div>
                 </div>
             </CardHeader>
             <CardContent>
                 <div className="flex items-start gap-2 rounded-lg bg-destructive/10 dark:bg-destructive/20 p-3 text-sm">
-                    <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+                    <AlertTriangle className="text-destructive mt-0.5 shrink-0 size-4" />
                     <div>
                         <p className="font-medium text-destructive dark:text-destructive">
                             {platform?.sync_status === "error_token_expired" ? "Access token expired" : "Sync error"}
@@ -42,7 +42,7 @@ export function FacebookIntegrationCardError({
                     </div>
                 </div>
                 <Button size="sm" className="w-full mt-3" onClick={handleConnect} disabled={connecting}>
-                    {connecting ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : null}
+                    {connecting ? <Loader2 className="mr-1 animate-spin size-3.5" /> : null}
                     Reconnect Facebook
                 </Button>
             </CardContent>

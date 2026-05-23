@@ -39,16 +39,17 @@ export async function assertTeamInviteSeatAvailable(
         return apiError("This person is already on the team for this business.", { status: 400 });
     }
 
-    const { count: currentMemberCount } = await supabase
-        .from("business_members")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", params.businessId);
-
-    const { count: pendingInviteCount } = await supabase
-        .from("invitations")
-        .select("*", { count: "exact", head: true })
-        .eq("business_id", params.businessId)
-        .is("accepted_at", null);
+    const [{ count: currentMemberCount }, { count: pendingInviteCount }] = await Promise.all([
+        supabase
+            .from("business_members")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", params.businessId),
+        supabase
+            .from("invitations")
+            .select("*", { count: "exact", head: true })
+            .eq("business_id", params.businessId)
+            .is("accepted_at", null),
+    ]);
 
     const totalSeats = Number(currentMemberCount || 0) + Number(pendingInviteCount || 0);
     if (maxMembers !== -1 && totalSeats >= maxMembers) {

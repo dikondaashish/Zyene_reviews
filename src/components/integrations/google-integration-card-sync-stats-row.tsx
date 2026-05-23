@@ -17,14 +17,14 @@ export function GoogleIntegrationCardSyncStatsRow({
             <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg bg-muted/50 p-3 text-center">
                     <div className="flex items-center justify-center gap-1.5 text-muted-foreground mb-1">
-                        <Star className="h-3.5 w-3.5" />
+                        <Star className="size-3.5" />
                         <span className="text-xs font-medium uppercase tracking-wide">Reviews Synced</span>
                     </div>
                     <p className="text-xl font-bold">{displayReviewCount}</p>
                 </div>
                 <div className="rounded-lg bg-muted/50 p-3 text-center">
                     <div className="flex items-center justify-center gap-1.5 text-muted-foreground mb-1">
-                        <Clock className="h-3.5 w-3.5" />
+                        <Clock className="size-3.5" />
                         <span className="text-xs font-medium uppercase tracking-wide">Last Synced</span>
                     </div>
                     <p className="text-sm font-semibold mt-1">

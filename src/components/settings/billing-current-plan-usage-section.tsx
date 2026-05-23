@@ -13,11 +13,11 @@ export function BillingCurrentPlanUsageSection(props: { billing: BillingDict; di
     return (
         <div className="space-y-4 pt-2">
             <h3 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">{b.usage_title}</h3>
-            <UsageBar label={b.email_requests} stat={displayUsage.emailRequests} icon={<Mail className="h-3.5 w-3.5" />} />
-            <UsageBar label={b.sms_requests} stat={displayUsage.smsRequests} icon={<MessageSquare className="h-3.5 w-3.5" />} />
-            <UsageBar label={b.link_requests} stat={displayUsage.linkRequests} icon={<LinkIcon className="h-3.5 w-3.5" />} />
-            <UsageBar label={b.smart_replies} stat={displayUsage.smartReplies} icon={<Bot className="h-3.5 w-3.5" />} />
-            <UsageBar label={b.locations} stat={displayUsage.businesses} icon={<MapPin className="h-3.5 w-3.5" />} />
+            <UsageBar label={b.email_requests} stat={displayUsage.emailRequests} icon={<Mail className="size-3.5" />} />
+            <UsageBar label={b.sms_requests} stat={displayUsage.smsRequests} icon={<MessageSquare className="size-3.5" />} />
+            <UsageBar label={b.link_requests} stat={displayUsage.linkRequests} icon={<LinkIcon className="size-3.5" />} />
+            <UsageBar label={b.smart_replies} stat={displayUsage.smartReplies} icon={<Bot className="size-3.5" />} />
+            <UsageBar label={b.locations} stat={displayUsage.businesses} icon={<MapPin className="size-3.5" />} />
         </div>
     );
 }

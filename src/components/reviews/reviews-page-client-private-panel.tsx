@@ -16,8 +16,8 @@ export function ReviewsPageClientPrivatePanel({ loading, reviews }: ReviewsPageC
                 reviews.map((feedback) => <PrivateFeedbackCard key={feedback.id} feedback={feedback} />)
             ) : (
                 <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
-                    <div className="h-12 w-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
-                        <Lock className="h-6 w-6 text-destructive/40" />
+                    <div className="bg-destructive/10 rounded-full flex items-center justify-center mb-4 size-12">
+                        <Lock className="text-destructive/40 size-6" />
                     </div>
                     <h3 className="text-lg font-medium text-foreground">No private feedback yet</h3>
                     <p className="text-muted-foreground max-w-sm mt-1">

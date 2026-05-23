@@ -22,10 +22,10 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
         )}>
             <CardContent className={cn("p-4 flex flex-col h-full", compact && "p-3")}>
                 <div className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300",
+                    "rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 size-10",
                     template.color
                 )}>
-                    <Icon className="w-5 h-5" />
+                    <Icon className="size-5" />
                 </div>
                 
                 <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
@@ -44,7 +44,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                 >
                     <Link href={`/campaigns/new?templateId=${template.id}`}>
                         Use Template
-                        <ArrowRight className="w-3.5 h-3.5 ml-2 transition-transform group-hover/btn:translate-x-1" />
+                        <ArrowRight className="ml-2 transition-transform group-hover/btn:translate-x-1 size-3.5" />
                     </Link>
                 </Button>
             </CardContent>

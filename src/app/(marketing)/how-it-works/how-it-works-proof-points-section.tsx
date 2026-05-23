@@ -12,7 +12,7 @@ export function HowItWorksProofPointsSection() {
                             const Icon = point.icon;
                             return (
                                 <div key={point.label} className="bg-card border border-border rounded-2xl p-6 text-center">
-                                    <Icon className="h-8 w-8 text-primary mx-auto mb-3" />
+                                    <Icon className="text-primary mx-auto mb-3 size-8" />
                                     <div className="text-4xl font-black text-foreground mb-2">{point.value}</div>
                                     <div className="text-sm text-muted-foreground leading-snug">{point.label}</div>
                                 </div>

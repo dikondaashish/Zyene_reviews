@@ -48,7 +48,7 @@ export function MarketingLayoutNavDropdown({
                                 className="flex items-start gap-3 px-4 py-3.5 hover:bg-accent transition-colors group"
                             >
                                 <div className="mt-0.5 p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-                                    <Icon className="h-4 w-4 text-primary" />
+                                    <Icon className="text-primary size-4" />
                                 </div>
                                 <div>
                                     <div className="font-semibold text-foreground text-[13px]">

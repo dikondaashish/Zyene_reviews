@@ -5,8 +5,8 @@ export default function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-muted/40 p-4">
             <div className="bg-card p-8 rounded-lg border border-border text-center max-w-md w-full">
-                <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Store className="h-8 w-8 text-muted-foreground" />
+                <div className="bg-muted rounded-full flex items-center justify-center mx-auto mb-6 size-16">
+                    <Store className="text-muted-foreground size-8" />
                 </div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">Business Not Found</h2>
                 <p className="text-muted-foreground mb-6">

@@ -43,8 +43,8 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     return (
         <Card className="flex flex-col relative overflow-hidden transition-all duration-300 hover:border-primary/50 group">
             <CardHeader className="flex flex-row items-center gap-4 pb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
-                    <Code2 className="h-6 w-6" />
+                <div className="flex items-center justify-center rounded-xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary size-12">
+                    <Code2 className="size-6" />
                 </div>
                 <div>
                     <CardTitle className="text-xl">Website Widgets</CardTitle>
@@ -64,11 +64,11 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                         </pre>
                         <div className="flex items-center justify-end gap-2">
                             <Button variant="outline" size="sm" onClick={() => setPreviewType("carousel")}>
-                                <Eye className="mr-1 h-4 w-4" />
+                                <Eye className="mr-1 size-4" />
                                 Preview
                             </Button>
                             <Button variant="secondary" size="sm" onClick={() => handleCopy("carousel")}>
-                                {copiedType === "carousel" ? <Check className="h-4 w-4 mr-1 text-chart-2" /> : <Copy className="h-4 w-4 mr-1" />}
+                                {copiedType === "carousel" ? <Check className="mr-1 text-chart-2 size-4" /> : <Copy className="mr-1 size-4" />}
                                 {copiedType === "carousel" ? "Copied" : "Copy"}
                             </Button>
                         </div>
@@ -83,11 +83,11 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                         </pre>
                         <div className="flex items-center justify-end gap-2">
                             <Button variant="outline" size="sm" onClick={() => setPreviewType("badge")}>
-                                <Eye className="mr-1 h-4 w-4" />
+                                <Eye className="mr-1 size-4" />
                                 Preview
                             </Button>
                             <Button variant="secondary" size="sm" onClick={() => handleCopy("badge")}>
-                                {copiedType === "badge" ? <Check className="h-4 w-4 mr-1 text-chart-2" /> : <Copy className="h-4 w-4 mr-1" />}
+                                {copiedType === "badge" ? <Check className="mr-1 text-chart-2 size-4" /> : <Copy className="mr-1 size-4" />}
                                 {copiedType === "badge" ? "Copied" : "Copy"}
                             </Button>
                         </div>

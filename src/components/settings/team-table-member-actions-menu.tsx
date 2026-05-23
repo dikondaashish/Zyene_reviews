@@ -53,12 +53,12 @@ export function TeamTableMemberActionsMenu({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0" disabled={isLoadingId === member.id}>
+                <Button variant="ghost" className="p-0 size-8" disabled={isLoadingId === member.id}>
                     <span className="sr-only">Open menu</span>
                     {isLoadingId === member.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="animate-spin size-4" />
                     ) : (
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="size-4" />
                     )}
                 </Button>
             </DropdownMenuTrigger>

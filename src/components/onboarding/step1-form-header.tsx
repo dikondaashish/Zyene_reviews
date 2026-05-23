@@ -12,8 +12,8 @@ export function Step1FormHeader() {
                 transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
                 className="inline-flex"
             >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-                    <Building2 className="w-7 h-7 text-primary" />
+                <div className="rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto size-14">
+                    <Building2 className="text-primary size-7" />
                 </div>
             </motion.div>
 

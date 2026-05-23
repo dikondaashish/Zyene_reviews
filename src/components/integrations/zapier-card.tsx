@@ -39,8 +39,8 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                            <Zap className="h-5 w-5 text-primary" />
+                        <div className="flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 size-10">
+                            <Zap className="text-primary size-5" />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Zapier</p>
@@ -63,7 +63,7 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
             <CardContent className="space-y-3 pb-3">
                 {!apiKey && (
                     <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
-                        <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                        <AlertTriangle className="shrink-0 mt-0.5 size-3.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}
                             section below first &mdash; the webhook URL is signed by it.
@@ -89,9 +89,9 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                             disabled={!apiKey}
                         >
                             {copied ? (
-                                <Check className="h-4 w-4 text-chart-2" />
+                                <Check className="text-chart-2 size-4" />
                             ) : (
-                                <Copy className="h-4 w-4" />
+                                <Copy className="size-4" />
                             )}
                         </Button>
                     </div>
@@ -129,7 +129,7 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                         className="inline-flex items-center justify-center"
                     >
                         Full setup guide
-                        <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                        <ArrowRight className="ml-2 size-3.5" />
                     </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm" className="w-full sm:flex-1">
@@ -139,7 +139,7 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center"
                     >
-                        <ExternalLink className="mr-2 h-3.5 w-3.5" />
+                        <ExternalLink className="mr-2 size-3.5" />
                         Open Zapier
                     </a>
                 </Button>

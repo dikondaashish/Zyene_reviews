@@ -75,9 +75,9 @@ export function CustomerDetailProfileIdentity({
                                     </span>
                                 ) : (
                                     <span className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-muted-foreground sm:text-3xl">
-                                        <UserRound className="h-7 w-7 shrink-0 opacity-60" />
+                                        <UserRound className="shrink-0 opacity-60 size-7" />
                                         Add a display name
-                                        <ChevronRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+                                        <ChevronRight className="opacity-0 transition-opacity group-hover:opacity-100 size-5" />
                                     </span>
                                 )}
                             </button>

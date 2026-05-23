@@ -14,7 +14,7 @@ export function HelpHeroSection() {
                         href="mailto:support@zyenereviews.com"
                         className="inline-flex items-center gap-2 bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition"
                     >
-                        <Mail className="w-4 h-4" />
+                        <Mail className="size-4" />
                         Email support@zyenereviews.com
                     </a>
                 </div>

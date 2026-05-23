@@ -45,7 +45,7 @@ export function DashboardViewGoogleHealth({
                         <CardTitle className="text-sm font-medium">
                             {dict.dashboard.unanswered_qa}
                         </CardTitle>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        <HelpCircle className="text-muted-foreground size-4" />
                     </CardHeader>
                     <CardContent>
                         <div
@@ -67,7 +67,7 @@ export function DashboardViewGoogleHealth({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">{dict.dashboard.broken_links}</CardTitle>
-                    <Link2 className="h-4 w-4 text-muted-foreground" />
+                    <Link2 className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div
@@ -90,7 +90,7 @@ export function DashboardViewGoogleHealth({
                     <CardTitle className="text-sm font-medium">
                         {dict.dashboard.listing_completeness}
                     </CardTitle>
-                    <ListChecks className="h-4 w-4 text-muted-foreground" />
+                    <ListChecks className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div

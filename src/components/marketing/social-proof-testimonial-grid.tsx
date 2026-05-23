@@ -30,7 +30,7 @@ export function TestimonialGrid({
                         href="/case-studies"
                         className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:brightness-90"
                     >
-                        View all case studies <ArrowRight className="h-4 w-4" />
+                        View all case studies <ArrowRight className="size-4" />
                     </Link>
                 </div>
             </div>

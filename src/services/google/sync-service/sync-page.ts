@@ -139,13 +139,18 @@ export async function syncGoogleReviewsPage(
 
     // Trigger AI Analysis for this page's chunk
     if (reviewIdsToAnalyze.length > 0) {
+        const analysisChunks: string[][] = [];
         for (let i = 0; i < reviewIdsToAnalyze.length; i += AI_ANALYSIS_BATCH_SIZE) {
-            const chunk = reviewIdsToAnalyze.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
-            await inngest.send({
-                name: "review/analyze.batch",
-                data: { reviewIds: chunk }
-            });
+            analysisChunks.push(reviewIdsToAnalyze.slice(i, i + AI_ANALYSIS_BATCH_SIZE));
         }
+        await Promise.all(
+            analysisChunks.map((chunk) =>
+                inngest.send({
+                    name: "review/analyze.batch",
+                    data: { reviewIds: chunk },
+                })
+            )
+        );
     }
 
     context.reviewsProcessed += syncedCount;

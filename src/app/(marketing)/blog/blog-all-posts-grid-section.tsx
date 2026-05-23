@@ -22,7 +22,7 @@ export function BlogAllPostsGridSection({ posts }: { posts: typeof BLOG_POSTS })
                                 </p>
                                 <div className="flex items-center justify-between text-xs text-muted-foreground mt-auto">
                                     <div className="flex items-center gap-1">
-                                        <Clock className="h-3 w-3" />
+                                        <Clock className="size-3" />
                                         {post.readMinutes} min
                                     </div>
                                     <span>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>

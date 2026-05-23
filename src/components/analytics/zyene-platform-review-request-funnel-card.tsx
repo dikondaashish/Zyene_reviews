@@ -30,7 +30,7 @@ export function ZyenePlatformReviewRequestFunnelCard({
             <CardHeader>
                 <div className="space-y-1">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-primary" />
+                        <Zap className="text-primary size-5" />
                         Review Request Funnel
                     </CardTitle>
                     <div className="flex flex-wrap items-center gap-2">
@@ -61,12 +61,12 @@ export function ZyenePlatformReviewRequestFunnelCard({
                             >
                                 <div className="relative flex flex-col items-center gap-2 p-4 rounded-xl border border-border/50 bg-card/50 hover:border-primary/20 transition-all group">
                                     <div
-                                        className="h-10 w-10 rounded-xl flex items-center justify-center transition-colors"
+                                        className="rounded-xl flex items-center justify-center transition-colors size-10"
                                         style={{
                                             backgroundColor: `color-mix(in oklab, ${step.color} 18%, transparent)`,
                                         }}
                                     >
-                                        <step.icon className="h-5 w-5" style={{ color: step.color }} />
+                                        <step.icon className="size-5" style={{ color: step.color }} />
                                     </div>
                                     <span className="text-2xl font-black tracking-tight">
                                         {step.count.toLocaleString()}

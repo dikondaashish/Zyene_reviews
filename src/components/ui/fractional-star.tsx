@@ -11,11 +11,11 @@ export function FractionalStar({
 }: {
     fill: number;
     className?: string;
-    /** Size for both outline and fill stars, e.g. "h-10 w-10" */
+    /** Size for both outline and fill stars, e.g. "size-10" */
     starClassName?: string;
 }) {
     const f = Math.max(0, Math.min(1, fill));
-    const size = starClassName ?? "h-4 w-4";
+    const size = starClassName ?? "size-4";
 
     return (
         <span className={cn("relative inline-block shrink-0", size, className)}>

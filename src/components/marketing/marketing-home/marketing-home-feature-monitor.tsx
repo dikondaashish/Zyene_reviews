@@ -26,7 +26,7 @@ export function MarketingHomeFeatureMonitor({
             {/* Left Side */}
             <div className="w-full md:w-1/2 p-12 md:p-16 lg:p-20">
               <div className="flex items-center gap-2 text-primary font-semibold mb-8">
-                <Zap className="h-5 w-5" /> Effortless Monitoring
+                <Zap className="size-5" /> Effortless Monitoring
               </div>
 
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-foreground mb-12 leading-tight">
@@ -36,7 +36,7 @@ export function MarketingHomeFeatureMonitor({
               <div className="space-y-8">
                 <div className="flex max-w-md">
                   <div className="mr-4 mt-1">
-                    <MessageSquare className="h-6 w-6 text-primary" />
+                    <MessageSquare className="text-primary size-6" />
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-foreground mb-1">Instant SMS Alerts</h4>
@@ -46,7 +46,7 @@ export function MarketingHomeFeatureMonitor({
 
                 <div className="flex max-w-md">
                   <div className="mr-4 mt-1">
-                    <LayoutDashboard className="h-6 w-6 text-primary" />
+                    <LayoutDashboard className="text-primary size-6" />
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-foreground mb-1">Centralized Dashboard</h4>
@@ -57,7 +57,7 @@ export function MarketingHomeFeatureMonitor({
 
               <Link href="/#pricing">
                 <Button variant="outline" className="mt-12 text-foreground bg-muted hover:bg-accent rounded-md px-6 py-6 font-medium">
-                  See Pricing <ArrowRight className="ml-2 h-4 w-4" />
+                  See Pricing <ArrowRight className="ml-2 size-4" />
                 </Button>
               </Link>
             </div>
@@ -70,16 +70,16 @@ export function MarketingHomeFeatureMonitor({
                   <img
                     src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=300&fit=crop&q=80"
                     alt="Local business storefront"
-                    className="w-full h-full object-cover rounded-lg"
+                    className="object-cover rounded-lg size-full"
                   />
                   <div className="absolute bottom-3 left-3 bg-card px-4 py-2 rounded-full border border-border text-sm font-semibold flex items-center gap-2 text-muted-foreground">
-                    <Clock className="w-4 h-4 text-primary" /> Ping: 12:45 PM
+                    <Clock className="text-primary size-4" /> Ping: 12:45 PM
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div className="p-4 border border-primary/20 rounded-lg bg-primary/10 flex gap-4 items-center">
-                    <div className="h-10 w-10 bg-primary/20 rounded-md flex items-center justify-center shrink-0">
+                    <div className="bg-primary/20 rounded-md flex items-center justify-center shrink-0 size-10">
                       <span className="font-bold text-primary">1</span>
                     </div>
                     <div>
@@ -88,7 +88,7 @@ export function MarketingHomeFeatureMonitor({
                     </div>
                   </div>
                   <div className="p-4 border border-border rounded-lg bg-muted flex gap-4 items-center opacity-60">
-                    <div className="h-10 w-10 bg-border rounded-md flex items-center justify-center shrink-0">
+                    <div className="bg-border rounded-md flex items-center justify-center shrink-0 size-10">
                       <span className="font-bold text-muted-foreground">2</span>
                     </div>
                     <div>

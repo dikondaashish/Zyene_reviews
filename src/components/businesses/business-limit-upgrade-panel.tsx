@@ -24,8 +24,8 @@ export function BusinessLimitUpgradePanel() {
                 <Card className="border-primary/30 bg-primary/10 overflow-hidden">
                     <div className="bg-primary h-1.5 w-full" />
                     <CardHeader className="text-center pt-8">
-                        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30">
-                            <Lock className="h-7 w-7 text-primary" />
+                        <div className="mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30 size-14">
+                            <Lock className="text-primary size-7" />
                         </div>
                         <CardTitle className="text-2xl font-bold text-foreground">{copy.title}</CardTitle>
                         <CardDescription className="text-muted-foreground font-medium">

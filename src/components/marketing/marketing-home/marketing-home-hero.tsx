@@ -40,7 +40,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 items-center">
                 <Link href={SIGNUP_URL}>
                   <Button size="lg" className="rounded-md px-8 py-7 text-[1.1rem] font-medium transition-all">
-                    Start Your 7-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                    Start Your 7-Day Free Trial <ArrowRight className="ml-2 size-5" />
                   </Button>
                 </Link>
                 <Link href="/#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
@@ -65,7 +65,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                 <img
                   src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80"
                   alt="Business owner reviewing customer feedback on tablet"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 object-cover size-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
               </div>
@@ -81,8 +81,8 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                 className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-16 bg-card p-6 rounded-lg border border-border max-w-[320px] w-[90%]"
               >
                 <div className="flex items-center gap-3 border-b border-border pb-4 mb-4">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
-                    <Star className="h-4 w-4 fill-current" />
+                  <div className="rounded-full bg-primary/10 text-primary flex items-center justify-center border border-primary/20 size-8">
+                    <Star className="fill-current size-4" />
                   </div>
                   <h3 className="font-semibold text-foreground">Real-time Review Alerts</h3>
                 </div>
@@ -90,20 +90,20 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                 <div className="space-y-3">
                   <div className="flex items-center justify-between bg-muted p-2 rounded-md">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-border"></div>
+                      <div className="rounded-full bg-border size-8"></div>
                       <span className="text-sm font-medium text-muted-foreground">John Doe</span>
                     </div>
                     <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20">
-                      <CheckCircle2 className="w-3 h-3" /> 5-Star Left
+                      <CheckCircle2 className="size-3" /> 5-Star Left
                     </span>
                   </div>
                   <div className="flex items-center justify-between bg-muted p-2 rounded-md">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-border"></div>
+                      <div className="rounded-full bg-border size-8"></div>
                       <span className="text-sm font-medium text-muted-foreground">Sarah Smith</span>
                     </div>
                     <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20">
-                      <AlertCircle className="w-3 h-3" /> 1-Star Alert
+                      <AlertCircle className="size-3" /> 1-Star Alert
                     </span>
                   </div>
                 </div>

@@ -48,7 +48,7 @@ export function MarketingHomeComparison({
                       <td className="p-6 border-r border-border bg-primary/5">
                         {typeof row.zyene === 'boolean'
                           ? (row.zyene
-                              ? <CheckCircle2 className="text-primary w-6 h-6" />
+                              ? <CheckCircle2 className="text-primary size-6" />
                               : <span className="text-sm text-muted-foreground">No</span>)
                           : <span className="font-bold text-foreground">{row.zyene}</span>
                         }
@@ -56,7 +56,7 @@ export function MarketingHomeComparison({
                       <td className="p-6">
                         {typeof row.comp === 'boolean'
                           ? (row.comp
-                              ? <CheckCircle2 className="text-primary w-6 h-6" />
+                              ? <CheckCircle2 className="text-primary size-6" />
                               : <span className="text-sm text-muted-foreground">No</span>)
                           : <span className="text-muted-foreground text-sm">{row.comp}</span>
                         }

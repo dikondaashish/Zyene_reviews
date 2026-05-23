@@ -9,7 +9,7 @@ import { BusinessLimitUpgradePanel } from "@/components/businesses/business-limi
 export function AddBusinessLoadingView() {
     return (
         <div className="flex items-center justify-center min-h-[400px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            <div className="animate-spin rounded-full border-b-2 border-primary size-8" />
         </div>
     );
 }
@@ -22,7 +22,7 @@ export function AddBusinessLimitView() {
                     href="/businesses"
                     className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
                 >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                     Back to Businesses
                 </Link>
             </div>
@@ -39,7 +39,7 @@ export function AddBusinessConnectView({ onConnect }: { onConnect: () => void })
                     href="/businesses"
                     className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
                 >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                     Back to Businesses
                 </Link>
             </div>
@@ -47,8 +47,8 @@ export function AddBusinessConnectView({ onConnect }: { onConnect: () => void })
             <div className="max-w-lg mx-auto w-full">
                 <Card>
                     <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-                            <Store className="h-6 w-6 text-primary" />
+                        <div className="mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 border border-primary/20 size-12">
+                            <Store className="text-primary size-6" />
                         </div>
                         <CardTitle className="text-2xl">Add a Business</CardTitle>
                         <CardDescription>

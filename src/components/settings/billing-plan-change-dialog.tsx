@@ -57,7 +57,7 @@ export function BillingPlanChangeDialog(props: {
                         <div className="space-y-3 text-muted-foreground text-sm">
                             {prorationPreview === "loading" && (
                                 <div className="flex items-center gap-2 text-foreground">
-                                    <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden />
+                                    <Loader2 className="animate-spin shrink-0 size-4" aria-hidden />
                                     <span>{b.proration_preview_loading}</span>
                                 </div>
                             )}

@@ -26,7 +26,7 @@ export function SecuritySection3Section() {
                         href="mailto:security@zyenereviews.com?subject=Security%20inquiry"
                         className="inline-flex items-center gap-2 text-primary font-semibold hover:brightness-90"
                     >
-                        <Mail className="h-4 w-4" />
+                        <Mail className="size-4" />
                         security@zyenereviews.com
                     </a>
                 </div>

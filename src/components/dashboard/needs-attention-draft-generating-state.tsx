@@ -6,7 +6,7 @@ export function NeedsAttentionDraftGeneratingState({ copy }: { copy: NeedsAttent
     return (
         <div className="flex justify-center py-3">
             <Button type="button" disabled className="gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                <Loader2 className="animate-spin size-4" aria-hidden />
                 {copy.drafting}
             </Button>
         </div>

@@ -32,8 +32,8 @@ export function BusinessContextEmptyState({
     return (
         <div className="flex flex-1 flex-col items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-none">
-                <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
-                    <Icon className="h-6 w-6 text-primary" aria-hidden />
+                <div className="mx-auto mb-5 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 size-12">
+                    <Icon className="text-primary size-6" aria-hidden />
                 </div>
                 <h1 className="text-xl font-semibold tracking-tight text-foreground mb-2">
                     {title}

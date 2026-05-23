@@ -30,7 +30,7 @@ export function CompetitorsListMarketBriefCard({
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="min-w-0 space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-chart-4" />
+                            <Sparkles className="text-chart-4 size-5" />
                             AI market positioning brief
                         </CardTitle>
                         <CardDescription className="text-muted-foreground">
@@ -47,9 +47,9 @@ export function CompetitorsListMarketBriefCard({
                             onClick={() => void onGenerateMarketBrief()}
                         >
                             {briefGenLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin md:mr-2" />
+                                <Loader2 className="animate-spin md:mr-2 size-4" />
                             ) : (
-                                <Sparkles className="h-4 w-4 md:mr-2" />
+                                <Sparkles className="md:mr-2 size-4" />
                             )}
                             <span className="md:hidden">{marketBriefLatest ? "Regenerate" : "Brief"}</span>
                             <span className="hidden md:inline">

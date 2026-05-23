@@ -110,7 +110,7 @@ export function ReviewResponseGeneratorClient() {
                             className="w-full rounded-lg border border-border px-4 py-3 text-sm"
                         />
                         <Button type="button" onClick={generate} disabled={loading} className="w-full">
-                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate response"}
+                            {loading ? <Loader2 className="animate-spin size-4" /> : "Generate response"}
                         </Button>
                     </div>
                     {response && (

@@ -23,9 +23,9 @@ export function TeamManagementPanelPermissionMatrix() {
                             {(["owner", "admin", "manager", "member", "viewer"] as const).map((role) => (
                                 <td key={role} className="px-4 py-3 text-center">
                                     {row[role] ? (
-                                        <Check className="mx-auto h-4 w-4 text-chart-2" />
+                                        <Check className="mx-auto text-chart-2 size-4" />
                                     ) : (
-                                        <Minus className="mx-auto h-4 w-4 text-muted-foreground/80" />
+                                        <Minus className="mx-auto text-muted-foreground/80 size-4" />
                                     )}
                                 </td>
                             ))}

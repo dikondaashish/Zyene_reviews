@@ -75,7 +75,7 @@ export function OnboardingGlassStepsSection({
                                 onClick={() => setCurrentStep(2)}
                                 className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
                             >
-                                <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                                <ArrowLeft className="group-hover:-translate-x-0.5 transition-transform size-3.5" />
                                 Back
                             </button>
                             <Step3Form
@@ -102,7 +102,7 @@ export function OnboardingGlassStepsSection({
                                 onClick={() => setCurrentStep(3)}
                                 className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
                             >
-                                <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                                <ArrowLeft className="group-hover:-translate-x-0.5 transition-transform size-3.5" />
                                 Back
                             </button>
                             <Step4SubscriptionForm

@@ -22,7 +22,7 @@ export default function DemoPage() {
             <section className="pt-24 pb-12 px-4 border-b border-border bg-background">
                 <div className="container mx-auto max-w-4xl text-center">
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-4">
-                        <Calendar className="h-3 w-3" /> Enterprise sales
+                        <Calendar className="size-3" /> Enterprise sales
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                         See Zyene Reviews live
@@ -45,7 +45,7 @@ export default function DemoPage() {
                             <iframe
                                 src={calComEmbedUrl}
                                 title="Schedule a Zyene Reviews demo on Cal.com"
-                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                                sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
                                 className="w-full min-h-[520px] rounded-xl border border-border"
                             />
                         ) : (
@@ -84,12 +84,12 @@ export default function DemoPage() {
                         <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-3">
                             <a href={`mailto:${ENTERPRISE_SALES_EMAIL}?subject=Enterprise%20demo%20request`}>
                                 <Button variant="outline" size="sm" className="gap-2">
-                                    <Mail className="h-4 w-4" /> Email sales directly
+                                    <Mail className="size-4" /> Email sales directly
                                 </Button>
                             </a>
                             <Link href="/enterprise">
                                 <Button variant="ghost" size="sm" className="gap-2">
-                                    Enterprise overview <ArrowRight className="h-4 w-4" />
+                                    Enterprise overview <ArrowRight className="size-4" />
                                 </Button>
                             </Link>
                         </div>

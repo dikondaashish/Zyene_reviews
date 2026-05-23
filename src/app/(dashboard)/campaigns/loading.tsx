@@ -17,7 +17,7 @@ export default function CampaignsLoading() {
                     <Card key={i}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-4 w-4 rounded-full" />
+                            <Skeleton className="rounded-full size-4" />
                         </CardHeader>
                         <CardContent>
                             <Skeleton className="h-8 w-16 mb-1" />
@@ -40,7 +40,7 @@ export default function CampaignsLoading() {
                         {[1, 2, 3, 4, 5].map((i) => (
                             <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
                                 <div className="flex items-center gap-4">
-                                    <Skeleton className="h-10 w-10 rounded-lg" />
+                                    <Skeleton className="rounded-lg size-10" />
                                     <div className="space-y-2">
                                         <Skeleton className="h-4 w-32" />
                                         <Skeleton className="h-3 w-24" />
@@ -55,7 +55,7 @@ export default function CampaignsLoading() {
                                         <Skeleton className="h-3 w-16" />
                                         <Skeleton className="h-3 w-12" />
                                     </div>
-                                    <Skeleton className="h-8 w-8 rounded-full" />
+                                    <Skeleton className="rounded-full size-8" />
                                 </div>
                             </div>
                         ))}

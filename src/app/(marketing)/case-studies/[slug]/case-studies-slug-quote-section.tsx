@@ -7,7 +7,7 @@ import { SIGNUP_URL } from "@/config/env";
 export function CaseStudiesSlugQuoteSection({ study, slug, related }: { study: (typeof CASE_STUDY_MAP)[string]; slug: string; related: (typeof CASE_STUDY_MAP)[string][] }) {
     return (
         <section className="bg-muted border border-border rounded-2xl p-8 relative">
-                        <Quote className="h-8 w-8 text-primary/30 absolute top-6 left-6" />
+                        <Quote className="text-primary/30 absolute top-6 left-6 size-8" />
                         <blockquote className="text-lg text-foreground leading-relaxed pl-10 mb-6">
                             &ldquo;{study.quote}&rdquo;
                         </blockquote>

@@ -14,7 +14,7 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
 
     if (!reviews || reviews.length === 0) {
         return (
-            <div className="flex h-full w-full items-center justify-center p-8 bg-card border border-border rounded-xl font-sans">
+            <div className="flex items-center justify-center p-8 bg-card border border-border rounded-xl font-sans size-full">
                 <p className="text-muted-foreground text-sm">No reviews to display yet.</p>
             </div>
         );

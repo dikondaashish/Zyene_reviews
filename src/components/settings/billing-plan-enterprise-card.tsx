@@ -50,7 +50,7 @@ export function BillingPlanEnterpriseCard(props: {
                         rel="noopener noreferrer"
                         className={cn(buttonVariants({ variant: "outline", size: "default" }), "w-full gap-2 font-semibold")}
                     >
-                        <Mail className="h-4 w-4" aria-hidden />
+                        <Mail className="size-4" aria-hidden />
                         Contact sales
                     </a>
                 )}
@@ -60,7 +60,7 @@ export function BillingPlanEnterpriseCard(props: {
                     {enterprisePlan.features.map((feature) => (
                         <PricingCard.ListItem key={feature}>
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="h-4 w-4 text-chart-2" aria-hidden />
+                                <CheckCircle2 className="text-chart-2 size-4" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

@@ -96,7 +96,7 @@ export function ZyenePlatformKeyMetricsRow({
                                 <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground truncate">
                                     {metric.title}
                                 </CardTitle>
-                                <metric.icon className="h-4 w-4 text-primary" />
+                                <metric.icon className="text-primary size-4" />
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <div className="text-3xl font-black tracking-tight leading-none">
@@ -109,8 +109,8 @@ export function ZyenePlatformKeyMetricsRow({
                                             trendColor
                                         )}
                                     >
-                                        {isPositive && <TrendingUp className="h-3 w-3" />}
-                                        {isNeg && <ArrowDownRight className="h-3 w-3" />}
+                                        {isPositive && <TrendingUp className="size-3" />}
+                                        {isNeg && <ArrowDownRight className="size-3" />}
                                         {Math.abs(metric.delta).toFixed(1)}%
                                     </div>
                                     <p className="text-xs text-muted-foreground font-medium line-clamp-1">

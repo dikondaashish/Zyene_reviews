@@ -22,7 +22,7 @@ export function FacebookIntegrationCardDisconnected({
         <Card>
             <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
-                    <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
+                    <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
                     <CardTitle className="text-base">Facebook</CardTitle>
                 </div>
                 <CardDescription>Track Facebook and Instagram page reviews &amp; recommendations</CardDescription>
@@ -37,9 +37,9 @@ export function FacebookIntegrationCardDisconnected({
                 </div>
                 <Button className="w-full" onClick={handleConnect} disabled={connecting}>
                     {connecting ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Loader2 className="mr-2 animate-spin size-4" />
                     ) : (
-                        <FacebookBrandIcon className="h-4 w-4 mr-2 shrink-0" aria-hidden />
+                        <FacebookBrandIcon className="mr-2 shrink-0 size-4" aria-hidden />
                     )}
                     Connect Facebook Page
                 </Button>

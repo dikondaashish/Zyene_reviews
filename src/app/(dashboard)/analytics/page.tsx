@@ -22,8 +22,10 @@ export default async function AnalyticsPage({
         return redirect("/login");
     }
 
-    const { businessId, business } = await getActiveBusinessId();
-    const sp = await searchParams;
+    const [{ businessId, business }, sp] = await Promise.all([
+        getActiveBusinessId(),
+        searchParams,
+    ]);
     const range = sp.range || "30d";
     const platform = sp.platform || "all";
 

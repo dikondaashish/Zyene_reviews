@@ -13,7 +13,7 @@ export function AnalyticsPageVolumeThemesRow({ d }: { d: AnalyticsFullRangePaylo
                 <CardHeader>
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Globe className="w-5 h-5 text-primary" />
+                            <Globe className="text-primary size-5" />
                             Review Volume
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -32,7 +32,7 @@ export function AnalyticsPageVolumeThemesRow({ d }: { d: AnalyticsFullRangePaylo
                 <CardHeader>
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Sparkles className="w-5 h-5 text-primary" />
+                            <Sparkles className="text-primary size-5" />
                             Common Themes
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">

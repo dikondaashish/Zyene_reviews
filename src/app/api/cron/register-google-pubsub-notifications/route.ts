@@ -51,35 +51,30 @@ export async function GET(request: Request) {
         }
     }
 
-    const results: Array<{
-        googleAccountId: string;
-        platformId: string;
-        ok: boolean;
-        error?: string;
-    }> = [];
-
-    for (const [googleAccountId, platformId] of accountToPlatformId) {
-        try {
-            const { accessToken } = await getValidGoogleToken(platformId);
-            if (!accessToken) {
-                throw new Error("No access token (reconnect Google or check platform row)");
+    const results = await Promise.all(
+        [...accountToPlatformId.entries()].map(async ([googleAccountId, platformId]) => {
+            try {
+                const { accessToken } = await getValidGoogleToken(platformId);
+                if (!accessToken) {
+                    throw new Error("No access token (reconnect Google or check platform row)");
+                }
+                const accountName = `accounts/${googleAccountId}`;
+                await registerNotifications(accessToken, accountName, topicName);
+                log.info(
+                    { googleAccountId, platformId, topic: topicName },
+                    "Registered GBP Pub/Sub notification settings for account"
+                );
+                return { googleAccountId, platformId, ok: true as const };
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                log.warn(
+                    { googleAccountId, platformId, err: msg },
+                    "Failed to register GBP Pub/Sub notification settings for account"
+                );
+                return { googleAccountId, platformId, ok: false as const, error: msg };
             }
-            const accountName = `accounts/${googleAccountId}`;
-            await registerNotifications(accessToken, accountName, topicName);
-            results.push({ googleAccountId, platformId, ok: true });
-            log.info(
-                { googleAccountId, platformId, topic: topicName },
-                "Registered GBP Pub/Sub notification settings for account"
-            );
-        } catch (e: unknown) {
-            const msg = e instanceof Error ? e.message : String(e);
-            results.push({ googleAccountId, platformId, ok: false, error: msg });
-            log.warn(
-                { googleAccountId, platformId, err: msg },
-                "Failed to register GBP Pub/Sub notification settings for account"
-            );
-        }
-    }
+        })
+    );
 
     return NextResponse.json({
         success: true,

@@ -55,7 +55,7 @@ export function QuestionsPageClientAnswerDialog({
                         onClick={onSuggest}
                         disabled={suggesting || !activeId}
                     >
-                        <Sparkles className="h-3.5 w-3.5" />
+                        <Sparkles className="size-3.5" />
                         {suggesting ? "Suggesting…" : "Suggest with AI"}
                     </Button>
                 </div>

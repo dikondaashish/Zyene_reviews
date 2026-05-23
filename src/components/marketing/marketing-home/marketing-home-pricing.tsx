@@ -34,7 +34,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
             {/* Starter */}
             <motion.div variants={fadeInUp} className="bg-card border border-border rounded-lg p-8 flex flex-col">
               <div className="flex items-center gap-2 mb-2">
-                <Zap className="h-5 w-5 text-primary" />
+                <Zap className="text-primary size-5" />
                 <h3 className="text-xl font-semibold text-foreground">Starter</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-6">Perfect for single-location businesses</p>
@@ -59,7 +59,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
                   "Up to 5 team members",
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <Check className="text-primary shrink-0 mt-0.5 size-4" />
                     {f}
                   </li>
                 ))}
@@ -75,7 +75,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
             <motion.div variants={fadeInUp} className="bg-[color:var(--marketing-footer-bg)] text-[color:var(--marketing-footer-fg)] border-2 border-primary rounded-lg p-8 flex flex-col relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-4 py-1 rounded-full">Most Popular</div>
               <div className="flex items-center gap-2 mb-2">
-                <Crown className="h-5 w-5 text-primary" />
+                <Crown className="text-primary size-5" />
                 <h3 className="text-xl font-semibold">Professional</h3>
               </div>
               <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-6">For growing multi-location businesses</p>
@@ -95,7 +95,7 @@ export function MarketingHomePricing({ fadeInUp, staggerContainer }: MarketingHo
                   "Up to 15 team members",
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <Check className="text-primary shrink-0 mt-0.5 size-4" />
                     {f}
                   </li>
                 ))}

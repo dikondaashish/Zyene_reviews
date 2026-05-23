@@ -27,7 +27,7 @@ export function PlaceholderCard({
         toast.success(
             `We'll notify you when ${name} integration is available!`,
             {
-                icon: <Bell className="h-4 w-4" />,
+                icon: <Bell className="size-4" />,
             }
         );
     };
@@ -40,7 +40,7 @@ export function PlaceholderCard({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/80 border border-border">
+                        <div className="flex items-center justify-center rounded-xl bg-muted/80 border border-border size-10">
                             {icon}
                         </div>
                         <div>
@@ -54,7 +54,7 @@ export function PlaceholderCard({
                         variant="secondary"
                         className="gap-1 text-[10px] shrink-0 font-medium"
                     >
-                        <Clock className="h-3 w-3" />
+                        <Clock className="size-3" />
                         Coming Soon
                     </Badge>
                 </div>
@@ -67,7 +67,7 @@ export function PlaceholderCard({
                     className="w-full text-xs h-8"
                     onClick={handleNotify}
                 >
-                    <Bell className="mr-1.5 h-3 w-3" />
+                    <Bell className="mr-1.5 size-3" />
                     Notify Me When Available
                 </Button>
             </CardContent>

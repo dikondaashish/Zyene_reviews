@@ -70,7 +70,7 @@ export function MarketingLayoutFooterLegalColumn() {
                     href="/security"
                     className="hover:text-primary transition-colors flex items-center gap-1.5"
                 >
-                    <ShieldCheck className="h-3.5 w-3.5" /> Security
+                    <ShieldCheck className="size-3.5" /> Security
                 </Link>
             </li>
             <li>

@@ -27,7 +27,7 @@ export function BusinessInfoForm({ business }: BusinessInfoFormProps) {
                 <BusinessInfoFormAddressFields form={form} />
                 <BusinessInfoFormMetaFields form={form} />
                 <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     Save Changes
                 </Button>
             </form>

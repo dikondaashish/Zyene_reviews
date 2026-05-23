@@ -45,7 +45,7 @@ export function GeneralSettingsForm({
                     disabled={f.isLoading || !f.hasChanges}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                    {f.isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {f.isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     Save Changes
                 </Button>
             </div>

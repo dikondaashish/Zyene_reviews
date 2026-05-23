@@ -17,8 +17,8 @@ export default function DataRetentionPage() {
 
                 <div className="bg-card p-8 md:p-12 rounded-lg border border-border">
                     <div className="mb-10 text-center">
-                        <div className="w-16 h-16 bg-primary/10 text-primary rounded-lg border border-primary/20 flex items-center justify-center mx-auto mb-6">
-                            <Database className="w-8 h-8" />
+                        <div className="bg-primary/10 text-primary rounded-lg border border-primary/20 flex items-center justify-center mx-auto mb-6 size-16">
+                            <Database className="size-8" />
                         </div>
                         <h1 className="text-4xl font-bold tracking-tight mb-4 text-foreground">Data Retention Policy</h1>
                         <p className="text-muted-foreground text-lg">Last Updated: March 2026</p>
@@ -31,12 +31,12 @@ export default function DataRetentionPage() {
 
                         <div className="grid sm:grid-cols-2 gap-6 my-10 not-prose">
                             <div className="p-6 border rounded-lg bg-muted border-border">
-                                <Clock className="w-8 h-8 text-primary mb-4" />
+                                <Clock className="text-primary mb-4 size-8" />
                                 <h3 className="text-lg font-bold mb-2 text-foreground">Aggressive Retention Limits</h3>
                                 <p className="text-sm text-muted-foreground">We do not store review data indefinitely. Cached reviews are purged after 2 years unless actively synced.</p>
                             </div>
                             <div className="p-6 border rounded-lg bg-muted border-border">
-                                <Shield className="w-8 h-8 text-primary mb-4" />
+                                <Shield className="text-primary mb-4 size-8" />
                                 <h3 className="text-lg font-bold mb-2 text-foreground">Anonymization</h3>
                                 <p className="text-sm text-muted-foreground">Customer PII (email, phone) attached to review requests are anonymized 90 days after the campaign completes.</p>
                             </div>

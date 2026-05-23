@@ -14,7 +14,7 @@ export function WidgetPageContentSection({
     formattedReviews,
 }: WidgetPageContentSectionProps) {
     return (
-        <div className="w-full h-full min-h-25 bg-background overflow-hidden m-0 p-0 flex flex-col">
+        <div className="min-h-25 bg-background overflow-hidden m-0 p-0 flex flex-col size-full">
             <div className="flex-1 min-h-0">
                 {widgetType === "badge" ? (
                     <ReviewBadge

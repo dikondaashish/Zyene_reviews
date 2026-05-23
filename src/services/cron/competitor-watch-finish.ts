@@ -64,13 +64,15 @@ export async function finalizeCompetitorWatchRun(params: {
         }
     }
 
-    for (const payload of alertEmailQueue) {
-        try {
-            await sendCompetitorAlertEmail(payload);
-        } catch (e) {
-            logger.error({ err: e }, "[cron/competitor-watch] competitor alert email failed:");
-        }
-    }
+    await Promise.all(
+        alertEmailQueue.map(async (payload) => {
+            try {
+                await sendCompetitorAlertEmail(payload);
+            } catch (e) {
+                logger.error({ err: e }, "[cron/competitor-watch] competitor alert email failed:");
+            }
+        })
+    );
 
     if (appEventsToInsert.length > 0) {
         const { error: insertAppEventsErr } = await (admin.from("events" as never) as any).insert(appEventsToInsert);
@@ -94,31 +96,36 @@ export async function finalizeCompetitorWatchRun(params: {
         created_at: string;
     }> = [];
 
-    for (const [competitorId, input] of insightInputByCompetitor.entries()) {
-        const insight = await generateCompetitorInsight({
-            competitorName: input.competitorName,
-            ratingNow: input.ratingNow,
-            reviewsNow: input.reviewsNow,
-            ratingDelta: input.ratingDelta,
-            reviewsDelta: input.reviewsDelta,
-            events: input.events,
-        });
-        if (!insight) continue;
-        insightRowsToInsert.push({
-            competitor_id: competitorId,
-            business_id: input.businessId,
-            range_key: "30d",
-            summary: insight.summary,
-            priority: insight.priority,
-            confidence: Number(insight.confidence.toFixed(2)),
-            why_it_matters: insight.whyItMatters,
-            owner_suggestion: insight.ownerSuggestion,
-            actions: insight.actions,
-            recommendations: insight.recommendations,
-            model: process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview",
-            created_at: now.toISOString(),
-        });
-    }
+    const insightResults = await Promise.all(
+        [...insightInputByCompetitor.entries()].map(async ([competitorId, input]) => {
+            const insight = await generateCompetitorInsight({
+                competitorName: input.competitorName,
+                ratingNow: input.ratingNow,
+                reviewsNow: input.reviewsNow,
+                ratingDelta: input.ratingDelta,
+                reviewsDelta: input.reviewsDelta,
+                events: input.events,
+            });
+            if (!insight) return null;
+            return {
+                competitor_id: competitorId,
+                business_id: input.businessId,
+                range_key: "30d",
+                summary: insight.summary,
+                priority: insight.priority,
+                confidence: Number(insight.confidence.toFixed(2)),
+                why_it_matters: insight.whyItMatters,
+                owner_suggestion: insight.ownerSuggestion,
+                actions: insight.actions,
+                recommendations: insight.recommendations,
+                model: process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview",
+                created_at: now.toISOString(),
+            };
+        })
+    );
+    insightRowsToInsert.push(
+        ...insightResults.filter((row): row is NonNullable<typeof row> => row !== null)
+    );
 
     if (insightRowsToInsert.length > 0) {
         const { error: insertInsightsErr } = await (admin.from("competitor_insights" as never) as any).insert(

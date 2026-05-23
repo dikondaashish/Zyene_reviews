@@ -91,18 +91,18 @@ export function CustomerNameCell({
             <div className="flex gap-2 mt-1 flex-wrap">
                 {customer.email && (
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Mail className="h-3 w-3" /> {customer.email}
+                        <Mail className="size-3" /> {customer.email}
                     </span>
                 )}
                 {customer.phone && (
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Phone className="h-3 w-3" /> {customer.phone}
+                        <Phone className="size-3" /> {customer.phone}
                     </span>
                 )}
             </div>
             </div>
             <ChevronRight
-                className="mt-1 h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-70"
+                className="mt-1 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-70 size-4"
                 aria-hidden
             />
         </div>

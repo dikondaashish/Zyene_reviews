@@ -24,7 +24,7 @@ export function HowItWorksStepsSection() {
                                 <div className="flex items-center gap-3 mb-4">
                                     <span className="text-6xl font-black text-primary/20 leading-none">{step.step}</span>
                                     <div className={`${step.iconBg} p-2.5 rounded-xl`}>
-                                        <Icon className={`h-6 w-6 ${step.iconColor}`} />
+                                        <Icon className={`${step.iconColor} size-6`} />
                                     </div>
                                     <span className={`text-sm font-bold uppercase tracking-wider ${step.iconColor}`}>Step {step.step} — {step.title}</span>
                                 </div>
@@ -33,7 +33,7 @@ export function HowItWorksStepsSection() {
                                 <ul className="space-y-3">
                                     {step.bullets.map((b) => (
                                         <li key={b} className="flex items-start gap-3">
-                                            <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                                            <Check className="text-primary shrink-0 mt-0.5 size-5" />
                                             <span className="text-muted-foreground">{b}</span>
                                         </li>
                                     ))}
@@ -46,7 +46,7 @@ export function HowItWorksStepsSection() {
                                     <div className={`absolute left-0 top-0 bottom-0 w-1 ${step.accentColor} border-l-4`} />
                                     <div className="flex flex-col gap-4 pl-2">
                                         <div className={`flex items-center gap-3 ${step.iconBg} p-3 rounded-xl w-fit`}>
-                                            <Icon className={`h-8 w-8 ${step.iconColor}`} />
+                                            <Icon className={`${step.iconColor} size-8`} />
                                             <span className="font-bold text-foreground text-lg">{step.title}</span>
                                         </div>
                                         <div className="space-y-3 font-mono text-sm text-muted-foreground bg-card/80 border border-border rounded-xl p-4">

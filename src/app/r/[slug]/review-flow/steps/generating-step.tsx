@@ -11,10 +11,10 @@ export function GeneratingStep() {
 
             <div className="flex justify-center">
                 <div className="relative">
-                    <div className="h-16 w-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse">
-                        <Sparkles className="h-8 w-8 text-primary-foreground" />
+                    <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse size-16">
+                        <Sparkles className="text-primary-foreground size-8" />
                     </div>
-                    <div className="absolute -top-1 -right-1 h-4 w-4 bg-chart-4 rounded-full animate-ping" />
+                    <div className="absolute -top-1 -right-1 bg-chart-4 rounded-full animate-ping size-4" />
                 </div>
             </div>
             <div>

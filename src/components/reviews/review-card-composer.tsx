@@ -39,7 +39,7 @@ export function ReviewCardComposer({
             {review.platform !== "yelp" && (
                 <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
                     <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-sync-action" />
+                        <Sparkles className="text-sync-action size-4" />
                         <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">AI Tone</span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -59,7 +59,7 @@ export function ReviewCardComposer({
                             >
                                 {loadingTone === tone ? (
                                     <span className="flex items-center gap-2">
-                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                        <Loader2 className="animate-spin size-3" />
                                         {tone}
                                     </span>
                                 ) : (
@@ -88,7 +88,7 @@ export function ReviewCardComposer({
                         className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-sync-action/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-sync-action border border-sync-action/20"
                         aria-live="polite"
                     >
-                        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-sync-action/100" />
+                        <span className="inline-block animate-pulse rounded-full bg-sync-action/100 size-1.5" />
                         Writing
                     </span>
                 )}

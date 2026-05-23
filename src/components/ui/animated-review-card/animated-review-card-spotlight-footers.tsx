@@ -33,7 +33,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                         href="/reviews"
                         className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/70"
                     >
-                        <Reply className="h-3.5 w-3.5" aria-hidden />
+                        <Reply className="size-3.5" aria-hidden />
                         Reply
                     </Link>
                     <Button
@@ -43,7 +43,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                         className="h-8 gap-1 rounded-full px-2 text-xs font-medium text-muted-foreground hover:text-foreground"
                         onClick={() => toast.message("Open Reviews to thank customers or follow up.")}
                     >
-                        <Heart className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+                        <Heart className="size-3.5" strokeWidth={1.5} aria-hidden />
                         Thank
                     </Button>
                 </div>
@@ -52,7 +52,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                     className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                     Open
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                    <ArrowRight className="size-3.5" aria-hidden />
                 </Link>
             </div>
         );
@@ -66,7 +66,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                         <Star
                             key={i}
                             className={cn(
-                                "h-4 w-4 md:h-5 md:w-5",
+                                "md:h-5 md:w-5 size-4",
                                 i < (review?.rating ?? 0)
                                     ? classNames?.activeStarColor || starColors.active
                                     : classNames?.inactiveStarColor || starColors.inactive,

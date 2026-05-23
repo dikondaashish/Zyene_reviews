@@ -15,7 +15,7 @@ export function BusinessesPageHeader({ atLimit }: { atLimit: boolean }) {
             </div>
             <Link href={atLimit ? BUSINESS_LIMIT_UPGRADE_BILLING_HREF : "/businesses/add"}>
                 <Button className="gap-2" variant={atLimit ? "outline" : "default"}>
-                    {atLimit ? <Lock className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                    {atLimit ? <Lock className="size-4" /> : <Plus className="size-4" />}
                     Add a business
                     {atLimit && (
                         <Badge variant="secondary" className="ml-1 bg-primary/10 text-primary border-primary/20">

@@ -20,12 +20,12 @@ export function GoogleLodgingPetsBusinessTab({
 }) {
     const pets = (lodging.pets as Record<string, unknown>) || {};
     const b = (lodging.business as Record<string, unknown>) || {};
-    const [petsAllowed, setPetsAllowed] = useState(googleLodgingBoolVal(pets.petsAllowed));
-    const [dogs, setDogs] = useState(googleLodgingBoolVal(pets.dogsAllowed));
-    const [cats, setCats] = useState(googleLodgingBoolVal(pets.catsAllowed));
-    const [petsFree, setPetsFree] = useState(googleLodgingBoolVal(pets.petsAllowedFree));
-    const [bizCenter, setBizCenter] = useState(googleLodgingBoolVal(b.businessCenter));
-    const [meetRooms, setMeetRooms] = useState(googleLodgingBoolVal(b.meetingRooms));
+    const [petsAllowed, setPetsAllowed] = useState(() => googleLodgingBoolVal(pets.petsAllowed));
+    const [dogs, setDogs] = useState(() => googleLodgingBoolVal(pets.dogsAllowed));
+    const [cats, setCats] = useState(() => googleLodgingBoolVal(pets.catsAllowed));
+    const [petsFree, setPetsFree] = useState(() => googleLodgingBoolVal(pets.petsAllowedFree));
+    const [bizCenter, setBizCenter] = useState(() => googleLodgingBoolVal(b.businessCenter));
+    const [meetRooms, setMeetRooms] = useState(() => googleLodgingBoolVal(b.meetingRooms));
     const [meetCount, setMeetCount] = useState(String(b.meetingRoomsCount ?? ""));
 
     return (

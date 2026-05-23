@@ -81,7 +81,7 @@ export function BrandingFormCropDialog({
                         disabled={uploadingLogo || !completedCrop?.width || !completedCrop?.height}
                         className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
-                        {uploadingLogo ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {uploadingLogo ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                         {uploadingLogo ? "Saving..." : "Save Crop"}
                     </Button>
                 </DialogFooter>

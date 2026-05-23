@@ -40,13 +40,13 @@ export function PublicProfileEditorShareQrBlock({
         <>
             <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
                 <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
-                    <div className="h-10 w-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center flex-shrink-0 border border-primary/20">
-                        <LinkIcon className="h-5 w-5" />
+                    <div className="bg-primary/10 text-primary rounded-lg flex items-center justify-center flex-shrink-0 border border-primary/20 size-10">
+                        <LinkIcon className="size-5" />
                     </div>
                     <div className="min-w-0 flex flex-col">
                         <div className="flex items-center gap-1.5">
                             <span className="font-semibold text-sm truncate text-foreground">Shareable Link</span>
-                            <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                            <HelpCircle className="text-muted-foreground size-3" />
                         </div>
                         <p className="text-xs text-muted-foreground truncate font-mono">{previewUrl}</p>
                     </div>
@@ -63,7 +63,7 @@ export function PublicProfileEditorShareQrBlock({
                 >
                     {copied ? (
                         <>
-                            <Check className="h-3.5 w-3.5 mr-1.5" />
+                            <Check className="mr-1.5 size-3.5" />
                             COPIED
                         </>
                     ) : (
@@ -73,10 +73,10 @@ export function PublicProfileEditorShareQrBlock({
                 <button
                     type="button"
                     onClick={onOpenQr}
-                    className="h-10 w-10 rounded-lg border border-border bg-card flex items-center justify-center shrink-0 hover:bg-muted transition-colors"
+                    className="rounded-lg border border-border bg-card flex items-center justify-center shrink-0 hover:bg-muted transition-colors size-10"
                     aria-label="Show QR Code"
                 >
-                    <QrCode className="h-5 w-5 text-muted-foreground" />
+                    <QrCode className="text-muted-foreground size-5" />
                 </button>
             </div>
 
@@ -84,7 +84,7 @@ export function PublicProfileEditorShareQrBlock({
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <QrCode className="h-5 w-5" />
+                            <QrCode className="size-5" />
                             QR Code
                         </DialogTitle>
                         <DialogDescription>Scan this QR code to open your review page.</DialogDescription>
@@ -93,7 +93,7 @@ export function PublicProfileEditorShareQrBlock({
                         <div className="bg-card p-4 rounded-xl border border-border">
                             {qrLoading ? (
                                 <div className="h-[200px] w-[200px] flex items-center justify-center">
-                                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                                    <Loader2 className="animate-spin text-muted-foreground size-8" />
                                 </div>
                             ) : qrDataUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
@@ -107,15 +107,15 @@ export function PublicProfileEditorShareQrBlock({
                         <p className="text-sm text-muted-foreground font-mono">{previewUrl}</p>
                         <div className="grid grid-cols-3 gap-2 w-full">
                             <Button variant="outline" size="sm" onClick={onDownloadQr} disabled={!qrDataUrl} className="text-xs">
-                                <Download className="h-3.5 w-3.5 mr-1.5" />
+                                <Download className="mr-1.5 size-3.5" />
                                 Download
                             </Button>
                             <Button variant="outline" size="sm" onClick={onPrintQr} disabled={!qrDataUrl} className="text-xs">
-                                <Printer className="h-3.5 w-3.5 mr-1.5" />
+                                <Printer className="mr-1.5 size-3.5" />
                                 Print
                             </Button>
                             <Button variant="outline" size="sm" onClick={onShare} className="text-xs">
-                                <Share2 className="h-3.5 w-3.5 mr-1.5" />
+                                <Share2 className="mr-1.5 size-3.5" />
                                 Share
                             </Button>
                         </div>

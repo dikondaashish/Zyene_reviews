@@ -51,7 +51,7 @@ export function CSVImportDialog({ open, onOpenChange, onImport, isImporting }: C
                     >
                         {isImporting ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Loader2 className="mr-2 animate-spin size-4" />
                                 Importing...
                             </>
                         ) : (

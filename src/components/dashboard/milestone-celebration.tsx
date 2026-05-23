@@ -55,7 +55,7 @@ export function MilestoneCelebration({ currentCount, type, isDemo, scopeKey }: M
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
                             <div className="bg-primary/20 p-2 rounded-full">
-                                {milestoneType === "rating" ? <Sparkles className="h-6 w-6 text-primary" /> : <Trophy className="h-6 w-6 text-primary" />}
+                                {milestoneType === "rating" ? <Sparkles className="text-primary size-6" /> : <Trophy className="text-primary size-6" />}
                             </div>
                         </div>
                         <div className="ml-3 flex-1">

@@ -24,8 +24,8 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                            <Code2 className="h-5 w-5 text-sync-action dark:text-sync-action" />
+                        <div className="flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 size-10">
+                            <Code2 className="text-sync-action dark:text-sync-action size-5" />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Developer API</p>

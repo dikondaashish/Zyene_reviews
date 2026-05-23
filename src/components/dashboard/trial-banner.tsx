@@ -40,7 +40,7 @@ export function TrialBanner({ organization }: { organization: TrialOrganizationS
                         ? "bg-destructive/15 text-destructive" 
                         : "bg-primary/15 text-primary"}
                 `}>
-                    {expired ? <AlertTriangle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                    {expired ? <AlertTriangle className="size-4" /> : <Clock className="size-4" />}
                 </div>
                 <div className="text-sm font-medium">
                     {expired ? (
@@ -64,7 +64,7 @@ export function TrialBanner({ organization }: { organization: TrialOrganizationS
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border h-8 px-4"
                     }
                 >
-                    <Zap className="mr-2 h-3.5 w-3.5 fill-current" />
+                    <Zap className="mr-2 fill-current size-3.5" />
                     Upgrade Now
                 </Button>
             </div>

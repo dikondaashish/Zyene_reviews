@@ -14,8 +14,8 @@ export function WidgetUpgradeCard() {
         <>
             <Card className="max-w-2xl">
                 <CardHeader className="flex flex-row items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                        <MonitorPlay className="h-6 w-6" />
+                    <div className="flex items-center justify-center rounded-xl bg-muted text-muted-foreground size-12">
+                        <MonitorPlay className="size-6" />
                     </div>
                     <div>
                         <CardTitle className="text-xl">Website Widgets</CardTitle>

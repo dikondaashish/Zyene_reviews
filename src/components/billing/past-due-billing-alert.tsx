@@ -32,7 +32,7 @@ export function PastDueBillingAlert({ layout, action }: PastDueBillingAlertProps
             )}
             role="alert"
         >
-            <AlertTriangle className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+            <AlertTriangle className="shrink-0 text-primary size-5" aria-hidden />
             <div className="min-w-0 flex-1">
                 <p className="font-medium text-foreground">Payment past due</p>
                 <p className="text-sm text-muted-foreground">
@@ -47,7 +47,7 @@ export function PastDueBillingAlert({ layout, action }: PastDueBillingAlertProps
                 disabled={disabled || loading}
             >
                 <span className="inline-flex items-center gap-2">
-                    {loading ? <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden /> : null}
+                    {loading ? <Loader2 className="animate-spin shrink-0 size-4" aria-hidden /> : null}
                     {label}
                 </span>
             </Button>

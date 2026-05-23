@@ -40,7 +40,7 @@ export function AutoReplyToolbarControls({
     return (
         <div className="flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="flex items-center gap-2 min-w-0">
-                <Bot className="h-4 w-4 shrink-0 text-sync-action" aria-hidden />
+                <Bot className="shrink-0 text-sync-action size-4" aria-hidden />
                 <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-foreground cursor-pointer">
                     Auto commenter
                 </Label>
@@ -52,7 +52,7 @@ export function AutoReplyToolbarControls({
                                 className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                                 aria-label="How auto commenter works"
                             >
-                                <CircleHelp className="h-3.5 w-3.5" aria-hidden />
+                                <CircleHelp className="size-3.5" aria-hidden />
                             </button>
                         </TooltipTrigger>
                         <TooltipContent
@@ -70,7 +70,7 @@ export function AutoReplyToolbarControls({
                     onCheckedChange={(v) => void onToggle(!!v)}
                     disabled={saving}
                 />
-                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" aria-hidden />}
+                {saving && <Loader2 className="animate-spin text-muted-foreground size-3.5" aria-hidden />}
             </div>
 
             {enabled && (

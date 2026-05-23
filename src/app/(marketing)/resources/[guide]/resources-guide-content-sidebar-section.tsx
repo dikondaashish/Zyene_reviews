@@ -16,7 +16,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             {resource.tableOfContents.length > 0 && (
                                 <div className="mb-10 bg-muted border border-border rounded-2xl p-6">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <List className="h-4 w-4 text-primary" />
+                                        <List className="text-primary size-4" />
                                         <span className="text-sm font-bold text-foreground">Table of Contents</span>
                                     </div>
                                     <ol className="space-y-2">
@@ -38,7 +38,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial — no credit card lock-in.</p>
                                 <Link href="/signup">
                                     <Button className="gap-2">
-                                        Start Free Trial <ArrowRight className="h-4 w-4" />
+                                        Start Free Trial <ArrowRight className="size-4" />
                                     </Button>
                                 </Link>
                             </div>
@@ -51,7 +51,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <p className="text-xs text-muted-foreground mb-4">Everything in this guide — automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
                                 <Link href="/signup">
                                     <Button size="sm" className="w-full gap-2">
-                                        Start Free Trial <ArrowRight className="h-3.5 w-3.5" />
+                                        Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>
                                 </Link>
                             </div>
@@ -64,7 +64,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                             <Link key={g.slug} href={`/resources/${g.slug}`} className="group block">
                                                 <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">{g.title}</p>
                                                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                    <Clock className="h-3 w-3" />
+                                                    <Clock className="size-3" />
                                                     {g.readMinutes} min
                                                 </div>
                                             </Link>

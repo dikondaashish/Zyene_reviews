@@ -64,69 +64,66 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
     // 4. Send Alerts
     // We iterate through members to ensure even those without a 'preference' record 
     // get a critical email if they are an owner/admin.
-    for (const member of members) {
-        const userEmail = (member.users as { email?: string } | null)?.email;
-        if (!userEmail) continue;
+    await Promise.all(
+        members.map(async (member) => {
+            const userEmail = (member.users as { email?: string } | null)?.email;
+            if (!userEmail) return;
 
-        // Try to find if this user has preferences set
-        const userPref = prefs?.find(p => p.user_id === member.user_id);
+            const userPref = prefs?.find((p) => p.user_id === member.user_id);
 
-        // -- EMAIL LOGIC --
-        // Default to enabled if no preference record exists (Opt-out model)
-        const emailEnabled = userPref ? (userPref.email_enabled !== false) : true;
+            const emailEnabled = userPref ? userPref.email_enabled !== false : true;
 
-        if (emailEnabled) {
-            const emailHtml = reviewAlertEmail({
-                businessName: business.name,
-                rating: rating,
-                authorName: review.author_name || "a customer",
-                reviewText: review.text || "No content provided",
-                urgencyScore: urgency,
-                dashboardUrl: `${APP_URL}/dashboard`,
-                settingsUrl: `${APP_URL}/settings/notifications`,
-                customerEmail: review.customer_email || undefined,
-                customerPhone: review.customer_phone || undefined,
-            });
+            if (emailEnabled) {
+                const emailHtml = reviewAlertEmail({
+                    businessName: business.name,
+                    rating: rating,
+                    authorName: review.author_name || "a customer",
+                    reviewText: review.text || "No content provided",
+                    urgencyScore: urgency,
+                    dashboardUrl: `${APP_URL}/dashboard`,
+                    settingsUrl: `${APP_URL}/settings/notifications`,
+                    customerEmail: review.customer_email || undefined,
+                    customerPhone: review.customer_phone || undefined,
+                });
 
-            await sendEmail({
-                to: userEmail,
-                subject: `New Review for ${business.name} (${rating}★)`,
-                html: emailHtml
-            });
-        }
+                await sendEmail({
+                    to: userEmail,
+                    subject: `New Review for ${business.name} (${rating}★)`,
+                    html: emailHtml,
+                });
+            }
 
-        // -- SMS LOGIC (per-user threshold + low-star override) --
-        const smsThreshold = userPref?.min_urgency_for_sms ?? 7;
-        const meetsSmsUrgency = urgency >= smsThreshold || rating <= 2;
-        if (meetsSmsUrgency && userPref?.sms_enabled && userPref.sms_phone_number) {
-            // Check Quiet Hours
-            let inQuietHours = false;
-            if (userPref.quiet_hours_start && userPref.quiet_hours_end) {
-                const now = new Date();
-                const currentHours = now.getHours();
-                const currentMinutes = now.getMinutes();
-                const currentTime = currentHours * 60 + currentMinutes;
+            const smsThreshold = userPref?.min_urgency_for_sms ?? 7;
+            const meetsSmsUrgency = urgency >= smsThreshold || rating <= 2;
+            if (meetsSmsUrgency && userPref?.sms_enabled && userPref.sms_phone_number) {
+                let inQuietHours = false;
+                if (userPref.quiet_hours_start && userPref.quiet_hours_end) {
+                    const now = new Date();
+                    const currentHours = now.getHours();
+                    const currentMinutes = now.getMinutes();
+                    const currentTime = currentHours * 60 + currentMinutes;
 
-                const [startH, startM] = userPref.quiet_hours_start.split(":").map(Number);
-                const [endH, endM] = userPref.quiet_hours_end.split(":").map(Number);
-                const startTime = startH * 60 + startM;
-                const endTime = endH * 60 + endM;
+                    const [startH, startM] = userPref.quiet_hours_start.split(":").map(Number);
+                    const [endH, endM] = userPref.quiet_hours_end.split(":").map(Number);
+                    const startTime = startH * 60 + startM;
+                    const endTime = endH * 60 + endM;
 
-                if (startTime < endTime) {
-                    inQuietHours = currentTime >= startTime && currentTime <= endTime;
-                } else {
-                    inQuietHours = currentTime >= startTime || currentTime <= endTime;
+                    if (startTime < endTime) {
+                        inQuietHours = currentTime >= startTime && currentTime <= endTime;
+                    } else {
+                        inQuietHours = currentTime >= startTime || currentTime <= endTime;
+                    }
+                }
+
+                if (!inQuietHours) {
+                    const snippet = review.text ? review.text.substring(0, 80) : "";
+                    const author = review.author_name || "a customer";
+                    const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${author}\nReply: ${APP_URL}/dashboard`;
+                    await sendSMS(userPref.sms_phone_number, body);
                 }
             }
-
-            if (!inQuietHours) {
-                const snippet = review.text ? review.text.substring(0, 80) : "";
-                const author = review.author_name || "a customer";
-                const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${author}\nReply: ${APP_URL}/dashboard`;
-                await sendSMS(userPref.sms_phone_number, body);
-            }
-        }
-    }
+        })
+    );
 
     // 5. Update alert_sent status (ONLY for real reviews, not private feedback)
     if (!isPrivateFeedback) {

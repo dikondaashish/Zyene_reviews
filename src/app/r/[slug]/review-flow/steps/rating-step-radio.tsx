@@ -23,12 +23,12 @@ export function RatingStepRadio({ rating, onRate }: RatingStepRadioProps) {
                 >
                     <div
                         className={cn(
-                            "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
+                            "rounded-full border-2 flex items-center justify-center shrink-0 transition-colors size-6",
                             rating === r.value ? "border-primary" : "border-border"
                         )}
                     >
                         {rating === r.value && (
-                            <div className="h-3 w-3 rounded-full bg-primary animate-in zoom-in duration-200" />
+                            <div className="rounded-full bg-primary animate-in zoom-in duration-200 size-3" />
                         )}
                     </div>
                     <span

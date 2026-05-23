@@ -15,7 +15,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <MessageCircle className="w-5 h-5 text-primary" />
+                            <MessageCircle className="text-primary size-5" />
                             Private Feedback
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -57,7 +57,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                                                     <Star
                                                         key={i}
                                                         className={cn(
-                                                            "h-3 w-3",
+                                                            "size-3",
                                                             i < fb.rating
                                                                 ? "fill-chart-4 text-chart-4"
                                                                 : "text-muted-foreground/30"
@@ -86,7 +86,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
-                        <MessageCircle className="w-10 h-10 opacity-20" />
+                        <MessageCircle className="opacity-20 size-10" />
                         <p className="text-sm font-medium">No private feedback yet</p>
                         <p className="text-xs">Feedback appears when customers rate ≤3 stars</p>
                     </div>

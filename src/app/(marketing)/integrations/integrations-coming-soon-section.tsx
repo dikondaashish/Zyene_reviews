@@ -12,7 +12,7 @@ export function IntegrationsComingSoonSection() {
                         <div key={int.name} className="bg-card border border-border rounded-2xl p-7 opacity-80">
                             <div className="flex items-center gap-4 mb-4">
                                 <div
-                                    className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 opacity-60"
+                                    className="rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 opacity-60 size-12"
                                     style={{ backgroundColor: int.color }}
                                 >
                                     {int.letter}
@@ -28,7 +28,7 @@ export function IntegrationsComingSoonSection() {
                             <ul className="space-y-2 mb-5">
                                 {int.features.map((f) => (
                                     <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
-                                        <Clock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0 mt-0.5" />
+                                        <Clock className="text-muted-foreground/50 shrink-0 mt-0.5 size-3.5" />
                                         {f}
                                     </li>
                                 ))}
@@ -37,7 +37,7 @@ export function IntegrationsComingSoonSection() {
                                 href="mailto:hello@zyenereviews.com?subject=Waitlist%20Interest"
                                 className="text-sm font-medium text-primary hover:brightness-90 transition-colors inline-flex items-center gap-1"
                             >
-                                Join waitlist <ArrowRight className="h-3 w-3" />
+                                Join waitlist <ArrowRight className="size-3" />
                             </a>
                         </div>
                     ))}

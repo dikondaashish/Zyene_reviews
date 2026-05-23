@@ -50,7 +50,7 @@ export function HelpArticleListingsByCategorySection() {
                                                     {article.excerpt}
                                                 </p>
                                             </div>
-                                            <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-0.5" />
+                                            <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-0.5 size-4" />
                                         </Link>
                                     ))}
                                 </div>

@@ -94,7 +94,7 @@ export function CustomerDetailClient({
 
             {missingPhoneAndEmail ? (
                 <Alert className="border-chart-4/35 bg-chart-4/5 text-foreground [&>svg]:text-chart-4">
-                    <CircleAlert className="h-4 w-4" />
+                    <CircleAlert className="size-4" />
                     <AlertTitle>Add phone or email</AlertTitle>
                     <AlertDescription>
                         Campaigns need at least one channel to reach this contact. Add details below before sending a

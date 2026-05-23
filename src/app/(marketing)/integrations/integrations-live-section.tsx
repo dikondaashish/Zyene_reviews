@@ -12,7 +12,7 @@ export function IntegrationsLiveSection() {
                         <div key={int.name} className="bg-card border border-border rounded-2xl p-7 flex flex-col hover:shadow-md transition-shadow group">
                             <div className="flex items-center gap-4 mb-4">
                                 <div
-                                    className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-base shrink-0"
+                                    className="rounded-xl flex items-center justify-center text-white font-bold text-base shrink-0 size-12"
                                     style={{ backgroundColor: int.color }}
                                 >
                                     {int.letter}
@@ -28,7 +28,7 @@ export function IntegrationsLiveSection() {
                             <ul className="space-y-2">
                                 {int.features.map((f) => (
                                     <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
-                                        <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                                        <Check className="text-primary shrink-0 mt-0.5 size-3.5" />
                                         {f}
                                     </li>
                                 ))}

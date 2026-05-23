@@ -44,8 +44,8 @@ export function ReferralCard() {
         <Card id="refer-a-friend" className="scroll-mt-6">
             <CardHeader>
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Gift className="h-5 w-5" />
+                    <div className="flex items-center justify-center rounded-lg bg-primary/10 text-primary size-10">
+                        <Gift className="size-5" />
                     </div>
                     <div>
                         <CardTitle>Refer a friend</CardTitle>
@@ -77,12 +77,12 @@ export function ReferralCard() {
                                 className="flex-1 h-10 rounded-lg border border-border bg-background px-3 text-sm font-mono"
                             />
                             <Button type="button" variant="secondary" onClick={copyLink} className="shrink-0">
-                                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
+                                {copied ? <Check className="mr-1 size-4" /> : <Copy className="mr-1 size-4" />}
                                 Copy link
                             </Button>
                         </div>
                         <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                            <Users className="h-3.5 w-3.5" />
+                            <Users className="size-3.5" />
                             {data.successfulReferrals} successful referral
                             {data.successfulReferrals === 1 ? "" : "s"} so far
                         </p>

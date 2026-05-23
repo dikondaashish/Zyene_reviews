@@ -44,7 +44,7 @@ export function ForgotPasswordForm() {
                     disabled={isLoading}
                     className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     Send Reset Link
                 </button>
             </form>

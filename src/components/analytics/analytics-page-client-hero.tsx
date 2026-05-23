@@ -40,14 +40,14 @@ export function AnalyticsPageClientHero({
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
                         <h1 className="flex flex-wrap items-center gap-2 text-2xl font-extrabold tracking-tight sm:gap-3 sm:text-4xl">
-                            <Gauge className="w-9 h-9 text-primary" />
+                            <Gauge className="text-primary size-9" />
                             Analytics
                             {isDemo && (
                                 <Badge
                                     variant="outline"
                                     className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1.5 px-3 font-bold tracking-tight"
                                 >
-                                    <Sparkles className="w-3.5 h-3.5" />
+                                    <Sparkles className="size-3.5" />
                                     Demo
                                 </Badge>
                             )}

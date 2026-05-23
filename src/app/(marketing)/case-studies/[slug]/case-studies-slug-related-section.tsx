@@ -15,7 +15,7 @@ export function CaseStudiesSlugRelatedSection({ study, slug, related }: { study:
                         </p>
                         <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-10 py-6 font-semibold rounded-xl">
-                                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                                Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                             </Button>
                         </Link>
                         <p className="mt-4">

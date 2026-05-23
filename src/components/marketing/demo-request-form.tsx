@@ -86,7 +86,7 @@ export function DemoRequestForm() {
             />
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Request a demo"}
+                {loading ? <Loader2 className="animate-spin size-4" /> : "Request a demo"}
             </Button>
         </form>
     );

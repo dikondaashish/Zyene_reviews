@@ -43,7 +43,7 @@ export function Step3Form({
                 />
                 {form.formState.errors.category && (
                     <p className="text-sm font-medium text-destructive flex items-center gap-1.5 ml-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
+                        <span className="rounded-full bg-destructive shrink-0 size-1.5" />
                         {form.formState.errors.category.message}
                     </p>
                 )}
@@ -55,19 +55,19 @@ export function Step3Form({
                 >
                     {isLoading ? (
                         <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving...
+                            <Loader2 className="mr-2 animate-spin size-5" /> Saving...
                         </>
                     ) : (
                         <>
                             Continue
-                            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight className="ml-2 group-hover:translate-x-0.5 transition-transform size-5" />
                         </>
                     )}
                 </Button>
             </form>
 
             <div className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl">
-                <LayoutGrid className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <LayoutGrid className="text-primary mt-0.5 shrink-0 size-4" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
                     <span className="font-semibold text-foreground">Don&apos;t see yours?</span> Pick <strong>Other</strong>{" "}
                     and we&apos;ll customize your setup later.

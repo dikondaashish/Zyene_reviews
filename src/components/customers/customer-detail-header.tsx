@@ -22,12 +22,12 @@ export function CustomerDetailHeader({
                         "hover:text-foreground"
                     )}
                 >
-                    <ChevronLeft className="h-4 w-4 shrink-0 transition-transform group-hover/back:-translate-x-0.5" />
+                    <ChevronLeft className="shrink-0 transition-transform group-hover/back:-translate-x-0.5 size-4" />
                     Customers
                 </Link>
                 <div className="flex items-center gap-2">
                     <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
-                        <UserRound className="h-4 w-4 text-primary" />
+                        <UserRound className="text-primary size-4" />
                     </div>
                     <h1 className="min-w-0 truncate text-xl font-bold tracking-tight text-foreground lg:text-2xl">
                         {pageHeading}

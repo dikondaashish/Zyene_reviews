@@ -87,7 +87,7 @@ export function MarketingLayoutHeader() {
                     aria-label="Toggle menu"
                 >
                     {mobileMenuOpen ? (
-                        <X className="h-6 w-6" />
+                        <X className="size-6" />
                     ) : (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +99,7 @@ export function MarketingLayoutHeader() {
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6"
+                            className="size-6"
                         >
                             <line x1="4" x2="20" y1="12" y2="12" />
                             <line x1="4" x2="20" y1="6" y2="6" />

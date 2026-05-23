@@ -37,7 +37,7 @@ export function NeedsAttentionDraftReplyToolbar({
     if (isSent) {
         return (
             <p className="flex items-center gap-1 text-sm font-medium text-chart-2">
-                <Check className="h-4 w-4" aria-hidden />
+                <Check className="size-4" aria-hidden />
                 {copy.sent}
             </p>
         );
@@ -58,7 +58,7 @@ export function NeedsAttentionDraftReplyToolbar({
                         })
                     }
                 >
-                    <RefreshCw className="h-3.5 w-3.5" aria-hidden />
+                    <RefreshCw className="size-3.5" aria-hidden />
                     {copy.regenerate}
                 </Button>
                 <DropdownMenu>
@@ -88,9 +88,9 @@ export function NeedsAttentionDraftReplyToolbar({
                     onClick={() => void onSendReply(review)}
                 >
                     {isSub ? (
-                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                        <Loader2 className="animate-spin size-4" aria-hidden />
                     ) : (
-                        <Send className="h-4 w-4" aria-hidden />
+                        <Send className="size-4" aria-hidden />
                     )}
                     {copy.sendReply}
                 </Button>

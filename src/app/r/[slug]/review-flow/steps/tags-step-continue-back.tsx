@@ -23,7 +23,7 @@ export function TagsStepContinueButton({ hasTagSelection, onContinue }: TagsStep
                 onClick={onContinue}
             >
                 Continue
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="size-5" />
             </button>
         </div>
     );

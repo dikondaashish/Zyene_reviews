@@ -41,7 +41,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                                 {c.google_url ? (
                                     <Button asChild size="sm" variant="ghost">
                                         <a href={c.google_url} target="_blank" rel="noopener noreferrer">
-                                            Open <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                                            Open <ExternalLink className="ml-1 size-3.5" />
                                         </a>
                                     </Button>
                                 ) : null}

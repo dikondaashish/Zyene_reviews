@@ -38,13 +38,13 @@ export function Step1Form({ onNext, isLoading, organizationId, initialOrgName = 
                     >
                         {submitting || isLoading ? (
                             <>
-                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                <Loader2 className="mr-2 animate-spin size-5" />
                                 Saving...
                             </>
                         ) : (
                             <>
                                 Continue
-                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
+                                <ArrowRight className="ml-2 group-hover:translate-x-0.5 transition-transform size-5" />
                             </>
                         )}
                     </Button>
@@ -57,7 +57,7 @@ export function Step1Form({ onNext, isLoading, organizationId, initialOrgName = 
                 transition={{ delay: 0.3 }}
                 className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl"
             >
-                <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <Sparkles className="text-primary mt-0.5 shrink-0 size-4" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
                     <span className="font-semibold text-foreground">Quick setup</span> — Most users complete
                     onboarding in under 2 minutes. We&apos;ll guide you through each step.

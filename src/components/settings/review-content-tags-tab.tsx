@@ -130,7 +130,7 @@ export function ReviewContentTagsTab({
                                                     
                                                     {!form.watch("staff_names") && (
                                                         <div className="p-3 bg-primary/10 rounded-md border border-primary/20 flex gap-3">
-                                                            <Star className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                                                            <Star className="text-primary shrink-0 mt-0.5 size-4" />
                                                             <p className="text-xs text-primary">
                                                                 <strong>Note:</strong> Staff selection will only appear in the review flow if you add at least one name above.
                                                             </p>

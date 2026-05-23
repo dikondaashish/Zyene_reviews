@@ -13,8 +13,8 @@ export function reviewRequestChannelCell(channel: string | null | undefined) {
     if (ch === "both") {
         return (
             <div className="flex items-center gap-1.5">
-                <MessageSquare className="h-3 w-3 shrink-0 text-muted-foreground" />
-                <Mail className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <MessageSquare className="shrink-0 text-muted-foreground size-3" />
+                <Mail className="shrink-0 text-muted-foreground size-3" />
                 <span className="text-xs font-medium uppercase text-muted-foreground">Both</span>
             </div>
         );
@@ -22,14 +22,14 @@ export function reviewRequestChannelCell(channel: string | null | undefined) {
     if (ch === "sms") {
         return (
             <div className="flex items-center gap-1.5">
-                <MessageSquare className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                <MessageSquare className="shrink-0 text-muted-foreground size-3.5" />
                 <span className="font-medium uppercase">{ch}</span>
             </div>
         );
     }
     return (
         <div className="flex items-center gap-1.5">
-            <Mail className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <Mail className="shrink-0 text-muted-foreground size-3.5" />
             <span className="font-medium uppercase">{ch || "—"}</span>
         </div>
     );
@@ -60,7 +60,7 @@ export function getRequestStatusBadge(
     if (converted) {
         return (
             <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35">
-                <Star className="w-3 h-3 mr-1 fill-chart-4 text-chart-4" /> Review Left
+                <Star className="mr-1 fill-chart-4 text-chart-4 size-3" /> Review Left
             </Badge>
         );
     }

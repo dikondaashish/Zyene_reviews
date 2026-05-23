@@ -17,7 +17,7 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                 <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                 </Button>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -44,9 +44,9 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
             <div className="flex flex-wrap gap-2">
                 <Button variant="outline" className="flex-1 sm:flex-initial" onClick={toggleStatus}>
                     {campaign.status === "active" ? (
-                        <><Pause className="mr-2 h-4 w-4" />Pause</>
+                        <><Pause className="mr-2 size-4" />Pause</>
                     ) : (
-                        <><Play className="mr-2 h-4 w-4" />Activate</>
+                        <><Play className="mr-2 size-4" />Activate</>
                     )}
                 </Button>
                 <CampaignDetailAddContactsDialog campaign={campaign} detail={detail} />

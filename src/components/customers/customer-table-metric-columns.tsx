@@ -29,7 +29,7 @@ export function customerTableMetricColumns(
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Visits
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <ArrowUpDown className="ml-2 size-4" />
                     </Button>
                 ),
                 cell: ({ row }) => (
@@ -48,7 +48,7 @@ export function customerTableMetricColumns(
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Spend
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <ArrowUpDown className="ml-2 size-4" />
                     </Button>
                 ),
                 cell: ({ row }) => {

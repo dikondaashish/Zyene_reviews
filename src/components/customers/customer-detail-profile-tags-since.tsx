@@ -48,7 +48,7 @@ export function CustomerDetailProfileTagsSince({
                                 aria-label={`Remove ${tag}`}
                                 onClick={() => removeTag(tag)}
                             >
-                                <X className="h-3 w-3" />
+                                <X className="size-3" />
                             </button>
                         </Badge>
                     ))}
@@ -66,7 +66,7 @@ export function CustomerDetailProfileTagsSince({
                             className="h-9 flex-1 text-sm"
                         />
                         <Button type="button" size="sm" variant="secondary" className="shrink-0" onClick={addTag}>
-                            <Plus className="mr-1 h-3.5 w-3.5" />
+                            <Plus className="mr-1 size-3.5" />
                             Add
                         </Button>
                     </div>
@@ -74,7 +74,7 @@ export function CustomerDetailProfileTagsSince({
             </div>
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4 shrink-0 opacity-70" />
+                <Calendar className="shrink-0 opacity-70 size-4" />
                 <span>
                     Customer since{" "}
                     <span className="font-medium text-foreground">

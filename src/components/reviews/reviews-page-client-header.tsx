@@ -38,7 +38,7 @@ export function ReviewsPageClientHeader({
                             variant="outline"
                             className="flex items-center gap-1 border-primary/30 bg-primary/10 px-2.5 py-0.5 font-normal tracking-tight text-primary"
                         >
-                            <Eye className="h-3 w-3" />
+                            <Eye className="size-3" />
                             Interactive Demo
                         </Badge>
                     )}
@@ -52,7 +52,7 @@ export function ReviewsPageClientHeader({
                             href={`/api/reviews/export?type=${exportType}`}
                             className="flex w-full items-center justify-center"
                         >
-                            <Download className="mr-2 h-4 w-4" />
+                            <Download className="mr-2 size-4" />
                             <span className="sm:hidden">Export</span>
                             <span className="hidden sm:inline">Export CSV</span>
                         </a>

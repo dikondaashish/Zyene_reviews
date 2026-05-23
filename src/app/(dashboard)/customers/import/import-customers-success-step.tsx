@@ -15,8 +15,8 @@ export function ImportSuccessStep({
     return (
         <Card className="border-chart-2/30">
             <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-                <div className="h-16 w-16 bg-chart-2/15 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle2 className="h-8 w-8 text-chart-2" />
+                <div className="bg-chart-2/15 rounded-full flex items-center justify-center mb-4 size-16">
+                    <CheckCircle2 className="text-chart-2 size-8" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">Import Complete!</h3>
 

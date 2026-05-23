@@ -18,8 +18,8 @@ export function ContactContentSection() {
                     <div className="grid md:grid-cols-2 gap-8 mb-12">
                         <div className="bg-muted rounded-lg p-6 border border-border">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center">
-                                    <Mail className="h-5 w-5" />
+                                <div className="bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center size-10">
+                                    <Mail className="size-5" />
                                 </div>
                                 <h3 className="font-semibold text-foreground">Email Support</h3>
                             </div>
@@ -36,8 +36,8 @@ export function ContactContentSection() {
 
                         <div className="bg-muted rounded-lg p-6 border border-border">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center">
-                                    <Clock className="h-5 w-5" />
+                                <div className="bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center size-10">
+                                    <Clock className="size-5" />
                                 </div>
                                 <h3 className="font-semibold text-foreground">Business Hours</h3>
                             </div>
@@ -51,8 +51,8 @@ export function ContactContentSection() {
 
                         <div className="bg-muted rounded-lg p-6 border border-border">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center">
-                                    <MessageSquare className="h-5 w-5" />
+                                <div className="bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center size-10">
+                                    <MessageSquare className="size-5" />
                                 </div>
                                 <h3 className="font-semibold text-foreground">Enterprise Sales</h3>
                             </div>
@@ -74,8 +74,8 @@ export function ContactContentSection() {
 
                         <div className="bg-muted rounded-lg p-6 border border-border">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="h-10 w-10 bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center">
-                                    <HelpCircle className="h-5 w-5" />
+                                <div className="bg-primary/10 text-primary rounded-md border border-primary/20 flex items-center justify-center size-10">
+                                    <HelpCircle className="size-5" />
                                 </div>
                                 <h3 className="font-semibold text-foreground">Help Center</h3>
                             </div>

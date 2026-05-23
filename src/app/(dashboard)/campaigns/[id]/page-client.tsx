@@ -12,7 +12,7 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     if (detail.loading) {
         return (
             <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <Loader2 className="animate-spin text-muted-foreground size-8" />
             </div>
         );
     }

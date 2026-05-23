@@ -19,7 +19,7 @@ export function SmartInsightsCardHeader({
             <div className="max-w-[75%] space-y-4">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5 bg-[rgb(43,53,46)] text-white px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
-                        <Sparkles className="w-3.5 h-3.5 opacity-80" />
+                        <Sparkles className="opacity-80 size-3.5" />
                         SMART INSIGHTS
                     </div>
                     <span className="text-[13px] font-medium text-muted-foreground">

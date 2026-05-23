@@ -60,8 +60,8 @@ export function ChannelBadge({ channel }: { channel: string }) {
             <div
                 className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config_item.color}`}
             >
-                <MessageSquare className="w-3 h-3" />
-                <Mail className="w-3 h-3" />
+                <MessageSquare className="size-3" />
+                <Mail className="size-3" />
                 {config_item.label}
             </div>
         );
@@ -69,7 +69,7 @@ export function ChannelBadge({ channel }: { channel: string }) {
     const IconComponent = config_item.icon;
     return (
         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config_item.color}`}>
-            <IconComponent className="w-3 h-3" />
+            <IconComponent className="size-3" />
             {config_item.label}
         </div>
     );

@@ -70,7 +70,7 @@ export function BillingPlanTierCard(props: {
         <PricingCard.Card
             id={isPro ? BILLING_PLAN_PROFESSIONAL_ANCHOR_ID : undefined}
             className={cn(
-                "relative flex w-full max-w-none flex-col h-full scroll-mt-28",
+                "relative flex max-w-none flex-col scroll-mt-28 size-full",
                 isPro && "ring-2 ring-primary/50",
                 isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"
             )}
@@ -120,7 +120,7 @@ export function BillingPlanTierCard(props: {
                         disabled={loadingPlan === plan.stripePriceId}
                         title={!priceConfigured ? b.billing_not_configured : permissionTooltip}
                     >
-                        {loadingPlan === plan.stripePriceId ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        {loadingPlan === plan.stripePriceId ? <Loader2 className="animate-spin size-4" /> : null}
                         {planCta}
                     </Button>
                 )}
@@ -133,7 +133,7 @@ export function BillingPlanTierCard(props: {
                     {plan.features.map((feature) => (
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-chart-2" aria-hidden />
+                                <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

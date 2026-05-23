@@ -26,7 +26,7 @@ export function CaseStudiesSlugCtaSection({ study, slug, related }: { study: (ty
                             href="/case-studies"
                             className="inline-flex items-center gap-2 text-sm font-semibold text-primary mt-8 hover:brightness-90"
                         >
-                            <ArrowLeft className="h-4 w-4" /> All case studies
+                            <ArrowLeft className="size-4" /> All case studies
                         </Link>
                     </div>
                 </section>

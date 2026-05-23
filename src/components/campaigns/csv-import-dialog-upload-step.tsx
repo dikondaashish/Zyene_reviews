@@ -21,8 +21,8 @@ export function CsvImportDialogUploadStep({
                 accept=".csv"
                 onChange={onFileChange}
             />
-            <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Upload className="h-6 w-6 text-primary" />
+            <div className="bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 size-12">
+                <Upload className="text-primary size-6" />
             </div>
             <h3 className="font-semibold text-lg">Click to upload or drag and drop</h3>
             <p className="text-sm text-muted-foreground mt-1">CSV files only (max 500 contacts)</p>

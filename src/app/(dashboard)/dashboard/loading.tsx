@@ -20,7 +20,7 @@ export default function DashboardLoading() {
                     <Card key={i}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <Skeleton className="h-4 w-24" />
-                            <Icon className="h-4 w-4 text-muted-foreground/30" />
+                            <Icon className="text-muted-foreground/30 size-4" />
                         </CardHeader>
                         <CardContent className="space-y-2">
                             <Skeleton className="h-8 w-16" />
@@ -36,7 +36,7 @@ export default function DashboardLoading() {
                     <Card key={i}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-4 w-4 rounded-full" />
+                            <Skeleton className="rounded-full size-4" />
                         </CardHeader>
                         <CardContent className="space-y-3">
                             <Skeleton className="h-8 w-20" />

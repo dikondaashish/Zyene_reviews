@@ -36,7 +36,7 @@ export function CustomerPortalCardActionsFooter({
                 onClick={onCopyLink}
             >
                 <div className="flex items-center gap-3 overflow-hidden text-white/80">
-                    <Share2 className="w-4 h-4 text-white/40 shrink-0" />
+                    <Share2 className="text-white/40 shrink-0 size-4" />
                     <span className="text-[13px] truncate tracking-tight">
                         {domain}/{businessSlug}
                     </span>
@@ -53,7 +53,7 @@ export function CustomerPortalCardActionsFooter({
                         onClick={() => onShowQrChange(true)}
                         className="w-full bg-[rgb(214,93,69)] hover:bg-[rgb(194,81,58)] text-white hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]"
                     >
-                        <QrCode className="w-3.5 h-3.5 mr-2" />
+                        <QrCode className="mr-2 size-3.5" />
                         Show QR code
                     </Button>
                     <DialogContent className="sm:max-w-md p-8 border-none flex flex-col items-center">
@@ -83,7 +83,7 @@ export function CustomerPortalCardActionsFooter({
                     onClick={onShare}
                     className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]"
                 >
-                    <Share2 className="w-3.5 h-3.5 mr-2 opacity-70" />
+                    <Share2 className="mr-2 opacity-70 size-3.5" />
                     Share link
                 </Button>
                 <Button
@@ -92,7 +92,7 @@ export function CustomerPortalCardActionsFooter({
                     disabled={!qrDataUrl}
                     className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]"
                 >
-                    <Download className="w-3.5 h-3.5 mr-2 opacity-70" />
+                    <Download className="mr-2 opacity-70 size-3.5" />
                     Download
                 </Button>
                 <Button
@@ -101,7 +101,7 @@ export function CustomerPortalCardActionsFooter({
                     disabled={!qrDataUrl}
                     className="w-full bg-[rgb(47,61,47)] hover:bg-[rgb(56,71,56)] text-white/80 hover:text-white border-0 h-10 rounded-[10px] font-medium text-[12px]"
                 >
-                    <Printer className="w-3.5 h-3.5 mr-2 opacity-70" />
+                    <Printer className="mr-2 opacity-70 size-3.5" />
                     Print poster
                 </Button>
             </div>

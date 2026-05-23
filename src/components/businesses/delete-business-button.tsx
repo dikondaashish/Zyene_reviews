@@ -70,7 +70,7 @@ export function DeleteBusinessButton({
                     disabled={disabled}
                     className="h-7 px-2 border-destructive/30 text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
-                    <Trash2 className="h-3.5 w-3.5 mr-1" />
+                    <Trash2 className="mr-1 size-3.5" />
                     Delete
                 </Button>
             </AlertDialogTrigger>

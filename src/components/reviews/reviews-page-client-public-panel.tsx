@@ -45,8 +45,8 @@ export function ReviewsPageClientPublicPanel({
                     />
                 ) : (
                     <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
-                        <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mb-4">
-                            <MessageSquare className="h-6 w-6 text-muted-foreground" />
+                        <div className="bg-muted rounded-full flex items-center justify-center mb-4 size-12">
+                            <MessageSquare className="text-muted-foreground size-6" />
                         </div>
                         <h3 className="text-lg font-medium text-foreground">
                             {isImportingGoogleReviews

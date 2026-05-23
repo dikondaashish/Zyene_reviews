@@ -10,9 +10,7 @@ import { loadReviewsPageData } from "./load-reviews-page-data";
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
 }) {
-    const searchParams = await props.searchParams;
-
-    const supabase = await createClient();
+    const [searchParams, supabase] = await Promise.all([props.searchParams, createClient()]);
     const {
         data: { user },
     } = await supabase.auth.getUser();

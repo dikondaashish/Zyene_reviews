@@ -21,19 +21,19 @@ export function IntegrationsPosAutomationSection({ apiKey }: { apiKey: string | 
                 <PlaceholderCard
                     name="Square"
                     description="Auto-send review requests after Square payments"
-                    icon={<Store className="h-5 w-5 text-foreground/70" />}
+                    icon={<Store className="text-foreground/70 size-5" />}
                     accentColor="bg-foreground/70"
                 />
                 <PlaceholderCard
                     name="Clover"
                     description="Trigger review requests from Clover transactions"
-                    icon={<CreditCard className="h-5 w-5 text-chart-2" />}
+                    icon={<CreditCard className="text-chart-2 size-5" />}
                     accentColor="bg-chart-2/90"
                 />
                 <PlaceholderCard
                     name="Toast"
                     description="Connect Toast POS for automatic follow-ups"
-                    icon={<Utensils className="h-5 w-5 text-primary" />}
+                    icon={<Utensils className="text-primary size-5" />}
                     accentColor="bg-primary"
                 />
                 <ZapierCard apiKey={apiKey} />

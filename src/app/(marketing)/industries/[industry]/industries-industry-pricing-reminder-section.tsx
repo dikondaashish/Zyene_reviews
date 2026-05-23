@@ -37,7 +37,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                         "Enterprise: unlimited locations — contact us",
                                     ].map((item) => (
                                         <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                                            <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                                            <Check className="text-primary shrink-0 mt-0.5 size-4" />
                                             {item}
                                         </li>
                                     ))}
@@ -45,7 +45,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                 <div className="flex gap-4">
                                     <Link href="/signup">
                                         <Button className="gap-2">
-                                            Start Free Trial <ArrowRight className="h-4 w-4" />
+                                            Start Free Trial <ArrowRight className="size-4" />
                                         </Button>
                                     </Link>
                                     <Link href="/pricing">

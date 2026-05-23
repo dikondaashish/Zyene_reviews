@@ -27,7 +27,7 @@ export function SpotlightDeckPagination({
                         role="presentation"
                         className={cn(
                             "rounded-full transition-all duration-200",
-                            i === activeDotIndex ? "h-2 w-6 bg-foreground/80" : "h-2 w-2 bg-muted-foreground/25"
+                            i === activeDotIndex ? "h-2 w-6 bg-foreground/80" : "bg-muted-foreground/25 size-2"
                         )}
                     />
                 ))}
@@ -75,23 +75,23 @@ export function SpotlightShellTopNav({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8"
+                    className="shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8 size-9"
                     aria-label={labels.prev}
                     disabled={navDisabled}
                     onClick={() => rotateBackward()}
                 >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="size-4" />
                 </Button>
                 <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8"
+                    className="shrink-0 text-muted-foreground hover:text-foreground sm:h-8 sm:w-8 size-9"
                     aria-label={labels.next}
                     disabled={navDisabled}
                     onClick={() => rotateForward()}
                 >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="size-4" />
                 </Button>
             </div>
         </div>

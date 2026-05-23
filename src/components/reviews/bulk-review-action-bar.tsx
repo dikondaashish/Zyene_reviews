@@ -53,7 +53,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
             <div className="pointer-events-auto flex w-full max-w-lg flex-col gap-2 rounded-2xl border border-border bg-foreground px-3 py-2.5 text-background shadow-lg sm:max-w-none sm:flex-row sm:items-center sm:gap-3 sm:rounded-full sm:px-4">
                 <div className="flex items-center justify-between gap-2 sm:justify-start sm:border-r sm:border-border/40 sm:pr-3">
                     <div className="flex items-center gap-2">
-                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                        <div className="flex items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground size-5">
                             {selectedIds.length}
                         </div>
                         <span className="text-xs font-medium">Selected</span>
@@ -62,10 +62,10 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         size="sm"
                         variant="ghost"
                         onClick={onClearSelection}
-                        className="h-8 w-8 shrink-0 rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background sm:hidden"
+                        className="shrink-0 rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background sm:hidden size-8"
                         aria-label="Clear selection"
                     >
-                        <X className="h-4 w-4" />
+                        <X className="size-4" />
                     </Button>
                 </div>
 
@@ -78,9 +78,9 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
                         {isUpdating ? (
-                            <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                            <Loader2 className="mr-1.5 animate-spin size-3.5" />
                         ) : (
-                            <EyeOff className="w-3.5 h-3.5 mr-1.5" />
+                            <EyeOff className="mr-1.5 size-3.5" />
                         )}
                         Mark as Ignored
                     </Button>
@@ -92,7 +92,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         disabled={isUpdating}
                         className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
-                        <Check className="mr-1.5 h-3.5 w-3.5 text-chart-2" />
+                        <Check className="mr-1.5 text-chart-2 size-3.5" />
                         Pending
                     </Button>
                 </div>
@@ -102,10 +102,10 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         size="sm"
                         variant="ghost"
                         onClick={onClearSelection}
-                        className="h-8 w-8 rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background"
+                        className="rounded-full p-0 text-background/70 hover:bg-background/20 hover:text-background size-8"
                         aria-label="Clear selection"
                     >
-                        <X className="h-4 w-4" />
+                        <X className="size-4" />
                     </Button>
                 </div>
             </div>

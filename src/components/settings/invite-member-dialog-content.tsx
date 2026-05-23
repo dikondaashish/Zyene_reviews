@@ -82,7 +82,7 @@ export function InviteMemberDialogContent({
             </div>
             <DialogFooter>
                 <Button type="button" onClick={onInvite} disabled={isLoading || !email.trim()}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     Send Invite
                 </Button>
             </DialogFooter>

@@ -18,7 +18,7 @@ export function ReviewRequestsPageHeader({ totalSent }: { totalSent: number }) {
             </div>
             <Button asChild className="w-full shrink-0 sm:w-auto">
                 <Link href="/campaigns" className="flex w-full items-center justify-center">
-                    <Send className="mr-2 h-4 w-4" />
+                    <Send className="mr-2 size-4" />
                     Create Campaign
                 </Link>
             </Button>

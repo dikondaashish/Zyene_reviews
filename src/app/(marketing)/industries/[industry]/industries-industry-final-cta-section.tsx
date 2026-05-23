@@ -20,7 +20,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
         <section className="py-20 px-4 bg-muted border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
                     <div className="flex justify-center gap-1 mb-5">
-                        {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="h-6 w-6 fill-chart-4 text-chart-4" />)}
+                        {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="fill-chart-4 text-chart-4 size-6" />)}
                     </div>
                     <h2 className="text-4xl font-bold text-foreground mb-4">{data.ctaJoinCopy}</h2>
                     <p className="text-xl text-muted-foreground mb-10">
@@ -29,7 +29,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                     </p>
                     <Link href="/signup">
                         <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
-                            Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                            Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Button>
                     </Link>
                     <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">

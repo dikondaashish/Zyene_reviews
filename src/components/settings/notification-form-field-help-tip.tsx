@@ -18,7 +18,7 @@ export function NotificationFormFieldHelpTip({ label, children }: { label: strin
                     className="inline-flex h-11 min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     aria-label={label}
                 >
-                    <CircleHelp className="h-4 w-4" strokeWidth={2} aria-hidden />
+                    <CircleHelp className="size-4" strokeWidth={2} aria-hidden />
                 </button>
             </TooltipTrigger>
             <TooltipContent

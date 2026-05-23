@@ -115,19 +115,19 @@ export function BillingCurrentPlanCard(props: {
                         className="gap-2 order-1 sm:order-2 shrink-0"
                     >
                         {loadingPortal ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="animate-spin size-4" />
                         ) : (
-                            <CreditCard className="h-4 w-4" />
+                            <CreditCard className="size-4" />
                         )}
                         {b.manage_subscription}
-                        <ExternalLink className="h-3 w-3 opacity-70" />
+                        <ExternalLink className="opacity-70 size-3" />
                     </Button>
                 </CardFooter>
             )}
 
             {!isPaidPlan && !hasStripeCustomer && (
                 <CardFooter className="bg-primary/10 dark:bg-primary/15 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
-                    <Sparkles className="h-5 w-5 text-primary shrink-0 hidden sm:block" />
+                    <Sparkles className="text-primary shrink-0 hidden sm:block size-5" />
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-primary">{b.starter_msg}</p>
                         <p className="text-xs text-primary/90">
@@ -139,7 +139,7 @@ export function BillingCurrentPlanCard(props: {
                         className="bg-primary hover:bg-primary/90 gap-1 shrink-0 text-primary-foreground"
                         onClick={() => document.getElementById("plan-picker")?.scrollIntoView({ behavior: "smooth" })}
                     >
-                        {b.upgrade} <ArrowRight className="h-3.5 w-3.5" />
+                        {b.upgrade} <ArrowRight className="size-3.5" />
                     </Button>
                 </CardFooter>
             )}

@@ -37,7 +37,7 @@ export function DocToc({ items }: { items: TocItem[] }) {
     return (
         <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-56 shrink-0 overflow-y-auto py-8 pl-6 xl:block">
             <h4 className="mb-4 text-sm font-semibold tracking-tight text-foreground flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-border" />
+                <span className="rounded-full bg-border size-3" />
                 On this page
             </h4>
             <div className="flex flex-col gap-2.5">

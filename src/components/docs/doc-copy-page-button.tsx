@@ -44,7 +44,7 @@ export function DocCopyPageButton({ containerId, className }: DocCopyPageButtonP
                 className
             )}
         >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
             Copy page
         </button>
     );

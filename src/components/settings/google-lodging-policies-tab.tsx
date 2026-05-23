@@ -18,8 +18,8 @@ export function GoogleLodgingPoliciesTab({
     saving: boolean;
 }) {
     const pol = (lodging.policies as Record<string, unknown>) || {};
-    const [smokeFree, setSmokeFree] = useState(googleLodgingBoolVal(pol.smokeFreeProperty));
-    const [kidsFree, setKidsFree] = useState(googleLodgingBoolVal(pol.kidsStayFree));
+    const [smokeFree, setSmokeFree] = useState(() => googleLodgingBoolVal(pol.smokeFreeProperty));
+    const [kidsFree, setKidsFree] = useState(() => googleLodgingBoolVal(pol.kidsStayFree));
 
     return (
         <div className="space-y-4 max-w-md">

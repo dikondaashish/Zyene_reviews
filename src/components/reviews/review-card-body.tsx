@@ -78,7 +78,7 @@ export function ReviewCardBody({
             {googlePhotos.length > 0 && (
                 <div className="pt-2">
                     <div className="flex items-center gap-1.5 mb-2">
-                        <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
+                        <ImageIcon className="text-muted-foreground size-3.5" />
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                             Review Photos
                         </span>
@@ -89,13 +89,13 @@ export function ReviewCardBody({
                                 key={`${url}-${idx}`}
                                 type="button"
                                 onClick={() => onPhotoClick(url)}
-                                className="h-16 w-16 shrink-0 rounded-md border border-border overflow-hidden hover:opacity-90"
+                                className="shrink-0 rounded-md border border-border overflow-hidden hover:opacity-90 size-16"
                                 title="Open photo"
                             >
                                 <img
                                     src={url}
                                     alt={`Review photo ${idx + 1}`}
-                                    className="h-full w-full object-cover"
+                                    className="object-cover size-full"
                                     referrerPolicy="no-referrer"
                                     loading="lazy"
                                 />

@@ -33,7 +33,7 @@ export function PrivateFeedbackCardHeader({
             <div className="flex min-w-0 gap-3">
                 <div
                     className={cn(
-                        "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border",
+                        "rounded-full flex items-center justify-center font-bold text-sm border size-10",
                         status === "open"
                             ? "bg-destructive/10 text-destructive border-destructive/20"
                             : status === "contacted"
@@ -41,7 +41,7 @@ export function PrivateFeedbackCardHeader({
                               : "bg-chart-2/10 text-chart-2 border-chart-2/20",
                     )}
                 >
-                    <User className="w-5 h-5" />
+                    <User className="size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -79,17 +79,17 @@ export function PrivateFeedbackCardHeader({
                     <SelectContent>
                         <SelectItem value="open">
                             <span className="flex items-center gap-1.5">
-                                <Clock className="w-3 h-3" /> Open
+                                <Clock className="size-3" /> Open
                             </span>
                         </SelectItem>
                         <SelectItem value="contacted">
                             <span className="flex items-center gap-1.5">
-                                <MessageSquare className="w-3 h-3" /> Contacted
+                                <MessageSquare className="size-3" /> Contacted
                             </span>
                         </SelectItem>
                         <SelectItem value="resolved">
                             <span className="flex items-center gap-1.5">
-                                <CheckCircle2 className="w-3 h-3" /> Resolved
+                                <CheckCircle2 className="size-3" /> Resolved
                             </span>
                         </SelectItem>
                     </SelectContent>

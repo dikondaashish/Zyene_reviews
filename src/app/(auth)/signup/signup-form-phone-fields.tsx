@@ -34,7 +34,7 @@ export function SignupFormPhoneFields({
                 className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
             />
             <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
-                <Phone className="h-3 w-3 shrink-0" /> Add your number now or later in Settings →
+                <Phone className="shrink-0 size-3" /> Add your number now or later in Settings →
                 Notifications. Only used for SMS review alerts if you opt in.
             </p>
 
@@ -44,7 +44,7 @@ export function SignupFormPhoneFields({
                     type="checkbox"
                     checked={smsReviewAlertsConsent}
                     onChange={(e) => setSmsReviewAlertsConsent(e.target.checked)}
-                    className="mt-1 h-4 w-4 shrink-0 rounded border-input bg-background text-primary focus:ring-ring transition-all"
+                    className="mt-1 shrink-0 rounded border-input bg-background text-primary focus:ring-ring transition-all size-4"
                 />
                 <label
                     htmlFor="smsReviewAlertsConsent"

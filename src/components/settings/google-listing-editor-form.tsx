@@ -70,7 +70,7 @@ export function GoogleListingEditorForm({
                 <Button type="submit" disabled={saving}>
                     {saving ? (
                         <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <Loader2 className="mr-2 animate-spin size-4" />
                             Saving…
                         </>
                     ) : (

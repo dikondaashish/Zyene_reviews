@@ -35,13 +35,13 @@ export function BrandingFormColorsPanel({ form, isLoading, onSubmit }: BrandingF
                             <FormLabel className="text-base font-medium text-foreground">Brand Color</FormLabel>
                             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                 <div className="flex gap-3 items-center w-full sm:w-auto">
-                                    <div className="relative h-11 w-11 rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary">
+                                    <div className="relative rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary size-11">
                                         <div className="absolute inset-0" style={{ backgroundColor: field.value }} />
                                         <FormControl>
                                             <input
                                                 type="color"
                                                 {...field}
-                                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full p-0 border-0"
+                                                className="absolute inset-0 opacity-0 cursor-pointer p-0 border-0 size-full"
                                             />
                                         </FormControl>
                                     </div>
@@ -71,13 +71,13 @@ export function BrandingFormColorsPanel({ form, isLoading, onSubmit }: BrandingF
                             <FormLabel className="text-base font-medium text-foreground">Page background</FormLabel>
                             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                 <div className="flex gap-3 items-center w-full sm:w-auto">
-                                    <div className="relative h-11 w-11 rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary">
+                                    <div className="relative rounded-xl border border-border overflow-hidden shrink-0 transition-transform active:scale-95 cursor-pointer ring-offset-2 focus-within:ring-2 ring-primary size-11">
                                         <div className="absolute inset-0" style={{ backgroundColor: field.value }} />
                                         <FormControl>
                                             <input
                                                 type="color"
                                                 {...field}
-                                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full p-0 border-0"
+                                                className="absolute inset-0 opacity-0 cursor-pointer p-0 border-0 size-full"
                                             />
                                         </FormControl>
                                     </div>
@@ -110,7 +110,7 @@ export function BrandingFormColorsPanel({ form, isLoading, onSubmit }: BrandingF
                         disabled={isLoading || !form.formState.isDirty}
                         className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 h-10 w-full sm:w-auto transition-all active:scale-95 disabled:opacity-50"
                     >
-                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {isLoading ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                         Save Brand Settings
                     </Button>
                 </div>

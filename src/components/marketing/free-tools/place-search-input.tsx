@@ -53,7 +53,7 @@ export function PlaceSearchInput({
     return (
         <div className="relative">
             <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                 <input
                     value={query}
                     onChange={(e) => {
@@ -65,7 +65,7 @@ export function PlaceSearchInput({
                     className="w-full h-11 pl-10 pr-10 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
                 {loading && (
-                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground size-4" />
                 )}
             </div>
             {suggestions.length > 0 && (

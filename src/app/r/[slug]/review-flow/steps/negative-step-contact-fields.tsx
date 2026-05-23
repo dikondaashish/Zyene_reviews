@@ -31,7 +31,7 @@ export function NegativeStepContactFields({
                         )}
                     </label>
                     <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                         <input
                             type="email"
                             placeholder="you@example.com"
@@ -59,7 +59,7 @@ export function NegativeStepContactFields({
                         )}
                     </label>
                     <div className="relative">
-                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                         <input
                             type="tel"
                             inputMode="tel"

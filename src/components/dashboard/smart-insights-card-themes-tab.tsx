@@ -45,7 +45,7 @@ export function SmartInsightsCardThemesTab({
                                 </p>
                             </div>
                         </div>
-                        {selectedThemeIndex === i && <ChevronRight className="w-4 h-4 text-muted-foreground/50" />}
+                        {selectedThemeIndex === i && <ChevronRight className="text-muted-foreground/50 size-4" />}
                     </button>
                 ))}
             </div>

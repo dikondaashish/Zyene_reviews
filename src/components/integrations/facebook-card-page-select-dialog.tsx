@@ -42,15 +42,15 @@ export function FacebookCardPageSelectDialog({
                             onClick={() => void onSelectPage(page.pageId)}
                             disabled={confirmingPage === page.pageId}
                         >
-                            <div className="h-10 w-10 rounded-full bg-primary/15 dark:bg-primary/20 flex items-center justify-center shrink-0">
-                                <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
+                            <div className="rounded-full bg-primary/15 dark:bg-primary/20 flex items-center justify-center shrink-0 size-10">
+                                <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">{page.pageName}</p>
                                 <p className="text-xs text-muted-foreground">{page.category}</p>
                             </div>
                             {confirmingPage === page.pageId ? (
-                                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                <Loader2 className="animate-spin text-muted-foreground size-4" />
                             ) : (
                                 <span className="text-xs text-primary font-medium">Select</span>
                             )}

@@ -11,7 +11,7 @@ export function HowItWorksHeroSection() {
         <section className="pt-24 pb-20 px-4 text-center bg-background">
                 <div className="container mx-auto max-w-4xl">
                     <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                        <Sparkles className="h-3.5 w-3.5" />
+                        <Sparkles className="size-3.5" />
                         How It Works
                     </div>
                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">

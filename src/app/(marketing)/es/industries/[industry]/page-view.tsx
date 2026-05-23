@@ -34,7 +34,7 @@ export default async function EsIndustryPage({
                 <div className="container mx-auto max-w-4xl">
                     <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/es/industries" className="hover:text-primary">Industrias</Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-foreground font-medium">{data.name}</span>
                     </nav>
 
@@ -44,7 +44,7 @@ export default async function EsIndustryPage({
                     <ul className="space-y-3 mb-10">
                         {data.bullets.map((b) => (
                             <li key={b} className="flex gap-2 text-muted-foreground">
-                                <Check className="h-5 w-5 text-primary shrink-0" />
+                                <Check className="text-primary shrink-0 size-5" />
                                 {b}
                             </li>
                         ))}
@@ -53,7 +53,7 @@ export default async function EsIndustryPage({
                     <div className="flex flex-wrap gap-4">
                         <Link href="/signup">
                             <Button size="lg" className="rounded-xl">
-                                Prueba gratis <ArrowRight className="ml-2 h-4 w-4" />
+                                Prueba gratis <ArrowRight className="ml-2 size-4" />
                             </Button>
                         </Link>
                         <Link href={`/industries/${data.industrySlug}`}>

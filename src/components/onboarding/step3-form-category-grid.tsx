@@ -51,10 +51,10 @@ export function Step3FormCategoryGrid({
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
-                                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary flex items-center justify-center"
+                                        className="absolute -top-1.5 -right-1.5 rounded-full bg-primary flex items-center justify-center size-5"
                                     >
                                         <svg
-                                            className="w-3 h-3 text-primary-foreground"
+                                            className="text-primary-foreground size-3"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ export function Step3FormCategoryGrid({
                       ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"}
                     `}
                                 >
-                                    <Icon className="w-5 h-5" />
+                                    <Icon className="size-5" />
                                 </div>
                                 <span
                                     className={`text-xs font-semibold text-center leading-tight ${

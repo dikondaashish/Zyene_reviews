@@ -43,7 +43,7 @@ export function SendRequestDialog({
             <DialogTrigger asChild>
                 {trigger ?? (
                     <Button className="w-full sm:w-auto">
-                        <Send className="h-4 w-4 shrink-0 md:mr-2" />
+                        <Send className="shrink-0 md:mr-2 size-4" />
                         <span className="md:hidden">Send request</span>
                         <span className="hidden md:inline">Send Review Request</span>
                     </Button>

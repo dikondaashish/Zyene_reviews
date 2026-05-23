@@ -85,13 +85,18 @@ export async function enqueueMissingGoogleReviewAnalysis(
         return { queued: 0 };
     }
 
+    const chunks: string[][] = [];
     for (let i = 0; i < ids.length; i += AI_ANALYSIS_BATCH_SIZE) {
-        const chunk = ids.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
-        await inngest.send({
-            name: "review/analyze.batch",
-            data: { reviewIds: chunk }
-        });
+        chunks.push(ids.slice(i, i + AI_ANALYSIS_BATCH_SIZE));
     }
+    await Promise.all(
+        chunks.map((chunk) =>
+            inngest.send({
+                name: "review/analyze.batch",
+                data: { reviewIds: chunk },
+            })
+        )
+    );
 
     return { queued: ids.length };
 }

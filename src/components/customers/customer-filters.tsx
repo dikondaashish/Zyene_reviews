@@ -39,7 +39,7 @@ export function CustomerFilters({
         <div className="mb-0 flex min-w-0 flex-col gap-3 p-0">
             <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <div className="relative w-full min-w-0 flex-1 group">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary size-4" />
                     <Input
                         placeholder="Search by name, email, or phone..."
                         className="h-9 rounded-lg border-border bg-background pl-9 text-sm focus:border-primary/60 focus:ring-2 focus:ring-primary/15"
@@ -82,7 +82,7 @@ export function CustomerFilters({
                         onClick={clearFilters}
                         className="h-9 w-full shrink-0 justify-center rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive sm:w-auto sm:justify-start"
                     >
-                        <X className="mr-2 h-4 w-4" />
+                        <X className="mr-2 size-4" />
                         Clear filters
                     </Button>
                 )}

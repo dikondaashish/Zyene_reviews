@@ -23,7 +23,7 @@ export function CompareCardsSection() {
                                     <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                                         vs {comp.name}
                                     </h3>
-                                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                                    <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all size-4" />
                                 </div>
                                 <div className="text-3xl font-black text-destructive mb-1">{comp.price}<span className="text-base font-normal text-muted-foreground">/mo</span></div>
                                 <p className="text-xs text-muted-foreground mb-4">{comp.name} starting price</p>

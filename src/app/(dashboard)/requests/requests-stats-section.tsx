@@ -27,7 +27,7 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-primary">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
-                    <Send className="h-4 w-4 text-primary" />
+                    <Send className="text-primary size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{stats.totalSent}</div>
@@ -42,7 +42,7 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-emerald-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
-                    <CheckCircle2 className="h-4 w-4 text-chart-2" />
+                    <CheckCircle2 className="text-chart-2 size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{stats.deliveryRate.toFixed(1)}%</div>
@@ -52,7 +52,7 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-amber-600">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
-                    <MousePointerClick className="h-4 w-4 text-chart-4" />
+                    <MousePointerClick className="text-chart-4 size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{stats.clickRate.toFixed(1)}%</div>
@@ -62,7 +62,7 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-yellow-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Review Conversion</CardTitle>
-                    <Star className="h-4 w-4 text-chart-4" />
+                    <Star className="text-chart-4 size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{stats.conversionRate.toFixed(1)}%</div>

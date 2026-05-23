@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 export function GoogleListingEditorNotConnected() {
     return (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center space-y-3">
-            <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                <CheckCircle2 className="h-6 w-6 text-primary opacity-50" />
+            <div className="mx-auto rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 size-12">
+                <CheckCircle2 className="text-primary opacity-50 size-6" />
             </div>
             <div className="space-y-1">
                 <h3 className="text-sm font-medium text-foreground">Google not connected</h3>

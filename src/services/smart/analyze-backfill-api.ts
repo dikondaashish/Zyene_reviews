@@ -85,15 +85,19 @@ export async function handleSmartAnalyzeBackfill(request: Request) {
             return apiOk({ queued: 0, batches: 0, message: "No pending reviews for analysis." });
         }
 
-        let batchCount = 0;
+        const chunks: string[][] = [];
         for (let i = 0; i < reviewIds.length; i += AI_ANALYSIS_BATCH_SIZE) {
-            const chunk = reviewIds.slice(i, i + AI_ANALYSIS_BATCH_SIZE);
-            await inngest.send({
-                name: "review/analyze.batch",
-                data: { reviewIds: chunk }
-            });
-            batchCount++;
+            chunks.push(reviewIds.slice(i, i + AI_ANALYSIS_BATCH_SIZE));
         }
+        await Promise.all(
+            chunks.map((chunk) =>
+                inngest.send({
+                    name: "review/analyze.batch",
+                    data: { reviewIds: chunk },
+                })
+            )
+        );
+        const batchCount = chunks.length;
 
         return apiOk({
             queued: reviewIds.length,

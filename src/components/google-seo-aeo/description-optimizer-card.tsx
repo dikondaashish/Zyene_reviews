@@ -96,7 +96,7 @@ export function DescriptionOptimizerCard({
                         </Button>
                     </div>
                     <Button type="button" onClick={optimizeWithAi} disabled={optimizing} className="w-fit">
-                        {optimizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {optimizing ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                         Optimize with AI
                     </Button>
                     <Textarea
@@ -123,7 +123,7 @@ export function DescriptionOptimizerCard({
                         ))}
                     </div>
                     <Button onClick={saveToGoogle} disabled={saving}>
-                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {saving ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                         Save to Google
                     </Button>
                 </div>

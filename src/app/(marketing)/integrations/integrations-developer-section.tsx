@@ -9,7 +9,7 @@ export function IntegrationsDeveloperSection() {
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     <div>
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                            <Code2 className="h-3.5 w-3.5" /> For Developers
+                            <Code2 className="size-3.5" /> For Developers
                         </div>
                         <h2 className="text-4xl font-bold mb-4 leading-tight">Build exactly what your business needs</h2>
                         <p className="text-[color:var(--marketing-footer-muted)] mb-6 leading-relaxed text-lg">
@@ -24,7 +24,7 @@ export function IntegrationsDeveloperSection() {
                                 "Rate-limited and secure by default",
                             ].map((f) => (
                                 <li key={f} className="flex items-start gap-3 text-[color:var(--marketing-footer-list)]">
-                                    <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                                    <Check className="text-primary shrink-0 mt-0.5 size-5" />
                                     <span>{f}</span>
                                 </li>
                             ))}
@@ -32,12 +32,12 @@ export function IntegrationsDeveloperSection() {
                         <div className="flex gap-4">
                             <Link href="/docs/api">
                                 <Button className="gap-2">
-                                    <Globe className="h-4 w-4" /> Read API Docs
+                                    <Globe className="size-4" /> Read API Docs
                                 </Button>
                             </Link>
                             <Link href="/signup">
                                 <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10">
-                                    <Sparkles className="h-4 w-4" /> Get API Key Free
+                                    <Sparkles className="size-4" /> Get API Key Free
                                 </Button>
                             </Link>
                         </div>
@@ -45,9 +45,9 @@ export function IntegrationsDeveloperSection() {
 
                     <div className="bg-[color:var(--code-block-bg)] rounded-2xl border border-white/10 p-6 font-mono text-sm overflow-hidden">
                         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-                            <span className="w-3 h-3 rounded-full bg-destructive/70" />
-                            <span className="w-3 h-3 rounded-full bg-chart-4/70" />
-                            <span className="w-3 h-3 rounded-full bg-chart-2/70" />
+                            <span className="rounded-full bg-destructive/70 size-3" />
+                            <span className="rounded-full bg-chart-4/70 size-3" />
+                            <span className="rounded-full bg-chart-2/70 size-3" />
                             <span className="text-white/30 text-xs ml-2">POST /v1/requests</span>
                         </div>
                         <pre className="text-[13px] leading-relaxed overflow-x-auto text-left whitespace-pre">

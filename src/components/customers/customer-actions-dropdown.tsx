@@ -44,32 +44,32 @@ export function CustomerActionsDropdown({
         <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
+                    <Button variant="ghost" className="p-0 size-8">
                         <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="size-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[200px]">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem onClick={onEditName}>
-                        <Pencil className="mr-2 h-4 w-4" />
+                        <Pencil className="mr-2 size-4" />
                         Edit name
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link href={`/customers/${customer.id}`} className="flex cursor-pointer items-center">
-                            <Eye className="mr-2 h-4 w-4" />
+                            <Eye className="mr-2 size-4" />
                             View details
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {customer.is_opted_out ? (
                         <DropdownMenuItem onClick={() => setOptedOut(customer, false)}>
-                            <RotateCcw className="mr-2 h-4 w-4" />
+                            <RotateCcw className="mr-2 size-4" />
                             Clear opt-out
                         </DropdownMenuItem>
                     ) : (
                         <DropdownMenuItem onClick={() => setOptedOut(customer, true)}>
-                            <Ban className="mr-2 h-4 w-4" />
+                            <Ban className="mr-2 size-4" />
                             Mark as opted out
                         </DropdownMenuItem>
                     )}
@@ -80,7 +80,7 @@ export function CustomerActionsDropdown({
                                 <TooltipTrigger asChild>
                                     <span className="block w-full cursor-default">
                                         <DropdownMenuItem disabled className="pointer-events-none opacity-60">
-                                            <Send className="mr-2 h-4 w-4" />
+                                            <Send className="mr-2 size-4" />
                                             Send Request
                                         </DropdownMenuItem>
                                     </span>
@@ -92,7 +92,7 @@ export function CustomerActionsDropdown({
                         </TooltipProvider>
                     ) : (
                         <DropdownMenuItem onClick={onSendRequest}>
-                            <Send className="mr-2 h-4 w-4" />
+                            <Send className="mr-2 size-4" />
                             Send Request
                         </DropdownMenuItem>
                     )}
@@ -101,7 +101,7 @@ export function CustomerActionsDropdown({
                         className="text-destructive focus:text-destructive"
                         onClick={onDelete}
                     >
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 size-4" />
                         Delete customer
                     </DropdownMenuItem>
                 </DropdownMenuContent>

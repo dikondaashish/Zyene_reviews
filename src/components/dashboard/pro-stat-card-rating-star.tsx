@@ -3,13 +3,13 @@ import { Star } from "lucide-react";
 export function ProStatCardRatingStarSlot({ fill }: { fill: number }) {
     const f = Math.max(0, Math.min(1, fill));
     return (
-        <span className="relative inline-block h-4 w-4 shrink-0">
+        <span className="relative inline-block shrink-0 size-4">
             <Star
-                className="pointer-events-none absolute inset-0 h-4 w-4 fill-muted text-muted-foreground/45"
+                className="pointer-events-none absolute inset-0 fill-muted text-muted-foreground/45 size-4"
                 aria-hidden
             />
             <span className="absolute left-0 top-0 h-full overflow-hidden" style={{ width: `${f * 100}%` }}>
-                <Star className="pointer-events-none h-4 w-4 shrink-0 fill-chart-4 text-chart-4" aria-hidden />
+                <Star className="pointer-events-none shrink-0 fill-chart-4 text-chart-4 size-4" aria-hidden />
             </span>
         </span>
     );
@@ -23,7 +23,7 @@ export function ProStatCardTrendUpGlyph() {
             height="19"
             viewBox="0 0 18 19"
             fill="none"
-            className="inline h-4 w-4 ml-1"
+            className="inline ml-1 size-4"
             aria-hidden="true"
         >
             <path

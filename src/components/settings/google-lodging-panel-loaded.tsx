@@ -54,7 +54,7 @@ export function GoogleLodgingPanelLoaded({
                 <Progress value={healthScore} className="h-2" />
                 <div className="flex flex-wrap gap-2 pt-2">
                     <Button type="button" variant="outline" size="sm" onClick={() => void load()} disabled={saving}>
-                        <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+                        <RefreshCw className="mr-1.5 size-3.5" />
                         Reload
                     </Button>
                     <Button type="button" variant="secondary" size="sm" onClick={() => void loadGoogleUpdated()}>
@@ -121,7 +121,7 @@ export function GoogleLodgingPanelLoaded({
 export function GoogleLodgingPanelLoading() {
     return (
         <div className="flex items-center gap-2 text-sm text-muted-foreground py-8">
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="animate-spin size-4" />
             Checking Google lodging API…
         </div>
     );

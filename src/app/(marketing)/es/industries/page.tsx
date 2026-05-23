@@ -38,7 +38,7 @@ export default function EsIndustriesHubPage() {
             <section className="pt-24 pb-16 px-4">
                 <div className="container mx-auto max-w-4xl">
                     <div className="inline-flex items-center gap-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-4">
-                        <Globe className="h-3 w-3" /> Español
+                        <Globe className="size-3" /> Español
                     </div>
                     <h1 className="text-4xl font-bold mb-4">Soluciones por industria</h1>
                     <p className="text-muted-foreground mb-8 max-w-2xl">
@@ -53,7 +53,7 @@ export default function EsIndustriesHubPage() {
                                     className="flex items-center justify-between bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-colors group"
                                 >
                                     <span className="font-semibold">{p.name}</span>
-                                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                                    <ArrowRight className="text-muted-foreground group-hover:text-primary size-4" />
                                 </Link>
                             </li>
                         ))}

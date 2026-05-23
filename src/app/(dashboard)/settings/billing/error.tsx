@@ -21,7 +21,7 @@ export default function BillingError({
     return (
         <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center animate-in fade-in duration-500 bg-card">
             <div className="rounded-full bg-destructive/15 p-3">
-                <AlertCircle className="h-8 w-8 text-destructive" />
+                <AlertCircle className="text-destructive size-8" />
             </div>
             <div className="space-y-2 max-w-sm">
                 <h2 className="text-2xl font-semibold tracking-tight">
@@ -32,7 +32,7 @@ export default function BillingError({
                 </p>
             </div>
             <Button onClick={() => reset()} className="gap-2 mt-2">
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="size-4" />
                 Try again
             </Button>
         </div>

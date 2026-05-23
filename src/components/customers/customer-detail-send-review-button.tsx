@@ -32,7 +32,7 @@ export function CustomerDetailSendReviewButton({
                                 disabled
                                 className="h-9 w-full rounded-lg px-4 text-sm font-semibold sm:w-auto"
                             >
-                                <Send className="mr-2 h-4 w-4" />
+                                <Send className="mr-2 size-4" />
                                 Send review request
                             </Button>
                         </span>
@@ -53,7 +53,7 @@ export function CustomerDetailSendReviewButton({
                                 disabled
                                 className="h-9 w-full rounded-lg px-4 text-sm font-semibold sm:w-auto"
                             >
-                                <Send className="mr-2 h-4 w-4" />
+                                <Send className="mr-2 size-4" />
                                 Send review request
                             </Button>
                         </span>
@@ -80,7 +80,7 @@ export function CustomerDetailSendReviewButton({
                     type="button"
                     className="h-9 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 sm:w-auto"
                 >
-                    <Send className="mr-2 h-4 w-4 opacity-90" />
+                    <Send className="mr-2 opacity-90 size-4" />
                     Send review request
                 </Button>
             }

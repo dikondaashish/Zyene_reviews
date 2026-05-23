@@ -68,7 +68,7 @@ export function NeedsAttentionReviewRowTrigger({
                                 key={i}
                                 strokeWidth={i < rating ? 0 : 1.35}
                                 className={cn(
-                                    "h-2.5 w-2.5 shrink-0 text-chart-4",
+                                    "shrink-0 text-chart-4 size-2.5",
                                     i < rating ? "fill-chart-4" : "fill-none"
                                 )}
                                 aria-hidden
@@ -78,7 +78,7 @@ export function NeedsAttentionReviewRowTrigger({
                     <span className="text-[11px] text-muted-foreground">· {dateLabel}</span>
                     {showUrgency ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2 py-0.5 text-[11.5px] font-semibold tracking-[0.02em] text-destructive dark:bg-destructive/25 dark:text-destructive-foreground">
-                            <Flame className="h-3 w-3" aria-hidden />
+                            <Flame className="size-3" aria-hidden />
                             {urgencyText(copy, urgency)}
                         </span>
                     ) : null}
@@ -87,7 +87,7 @@ export function NeedsAttentionReviewRowTrigger({
                             variant="secondary"
                             className="border-chart-2/30 bg-chart-2/15 text-chart-2 dark:bg-chart-2/20"
                         >
-                            <Check className="mr-1 h-3 w-3" aria-hidden />
+                            <Check className="mr-1 size-3" aria-hidden />
                             {copy.sent}
                         </Badge>
                     ) : null}
@@ -108,7 +108,7 @@ export function NeedsAttentionReviewRowTrigger({
             </div>
             <ChevronDown
                 className={cn(
-                    "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 sm:mt-1",
+                    "mt-0.5 shrink-0 text-muted-foreground transition-transform duration-200 sm:mt-1 size-4",
                     open && "rotate-180"
                 )}
                 aria-hidden

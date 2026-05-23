@@ -28,7 +28,7 @@ export function UpgradeModalPlanCards({
                 return (
                     <PricingCard.Card
                         key={plan.id}
-                        className={cn("relative flex w-full max-w-none flex-col h-full", isPro && "ring-2 ring-primary/50")}
+                        className={cn("relative flex max-w-none flex-col size-full", isPro && "ring-2 ring-primary/50")}
                     >
                         {isPro && (
                             <div className="absolute -top-2 right-3 z-20">
@@ -79,7 +79,7 @@ export function UpgradeModalPlanCards({
                                 disabled={loadingPlan === plan.stripePriceId}
                             >
                                 {loadingPlan === plan.stripePriceId ? (
-                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    <Loader2 className="mr-2 animate-spin size-4" />
                                 ) : null}
                                 Start 7-day free trial
                             </Button>
@@ -89,7 +89,7 @@ export function UpgradeModalPlanCards({
                                 {plan.features.map((feature) => (
                                     <PricingCard.ListItem key={feature} className="text-xs gap-2">
                                         <span className="mt-0.5 shrink-0">
-                                            <CheckCircle2 className="h-3.5 w-3.5 text-chart-2" aria-hidden />
+                                            <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
                                         </span>
                                         <span>{feature}</span>
                                     </PricingCard.ListItem>

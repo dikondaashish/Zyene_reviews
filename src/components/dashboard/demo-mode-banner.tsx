@@ -19,12 +19,12 @@ export function DemoModeBanner({ className = "" }: DemoModeBannerProps) {
                         "linear-gradient(to right, color-mix(in oklab, var(--primary-foreground) 10%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary-foreground) 10%, transparent) 1px, transparent 1px)",
                 }}
             />
-            <div className="absolute -right-20 -top-20 w-64 h-64 bg-background/10 rounded-full blur-3xl group-hover:bg-background/20 transition-colors duration-700"></div>
+            <div className="absolute -right-20 -top-20 bg-background/10 rounded-full blur-3xl group-hover:bg-background/20 transition-colors duration-700 size-64"></div>
             
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-5 text-primary-foreground">
                     <div className="bg-background/20 backdrop-blur-md p-3 rounded-xl border border-background/30">
-                        <Sparkles className="w-8 h-8 text-primary-foreground animate-pulse" />
+                        <Sparkles className="text-primary-foreground animate-pulse size-8" />
                     </div>
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
@@ -43,7 +43,7 @@ export function DemoModeBanner({ className = "" }: DemoModeBannerProps) {
                     <Link href="/settings/integrations">
                         <Button size="lg" className="bg-background text-foreground hover:bg-background/90 font-bold border-none px-6 h-12 rounded-xl group/btn">
                             Connect Real Profile
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                            <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform size-4" />
                         </Button>
                     </Link>
                 </div>

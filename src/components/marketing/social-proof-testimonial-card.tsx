@@ -7,7 +7,7 @@ export function SocialProofTestimonialCard({ t }: { t: TestimonialCard }) {
         <div className="bg-card border border-border rounded-2xl p-6 flex flex-col h-full hover:border-primary/30 transition-colors">
             <div className="flex gap-0.5 mb-4">
                 {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                    <Star key={i} className="fill-primary text-primary size-4" />
                 ))}
             </div>
             <p className="text-sm text-foreground leading-relaxed flex-1 mb-5">&ldquo;{t.quote}&rdquo;</p>
@@ -20,7 +20,7 @@ export function SocialProofTestimonialCard({ t }: { t: TestimonialCard }) {
                     href={`/case-studies/${t.caseStudySlug}`}
                     className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 hover:brightness-90"
                 >
-                    Read case study <ArrowRight className="h-3 w-3" />
+                    Read case study <ArrowRight className="size-3" />
                 </Link>
             </div>
         </div>

@@ -17,7 +17,7 @@ export function ReviewRequestsStatsSection({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
-                    <Send className="h-4 w-4 text-muted-foreground" />
+                    <Send className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalSent}</div>
@@ -27,7 +27,7 @@ export function ReviewRequestsStatsSection({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Opened</CardTitle>
-                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <Eye className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalOpened}</div>
@@ -41,7 +41,7 @@ export function ReviewRequestsStatsSection({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Clicked</CardTitle>
-                    <MousePointer2 className="h-4 w-4 text-muted-foreground" />
+                    <MousePointer2 className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalClicked}</div>
@@ -55,7 +55,7 @@ export function ReviewRequestsStatsSection({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Converted</CardTitle>
-                    <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                    <CheckCircle2 className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{totalConverted}</div>

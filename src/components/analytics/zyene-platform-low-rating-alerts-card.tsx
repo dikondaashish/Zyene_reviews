@@ -21,7 +21,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-chart-4" />
+                            <AlertTriangle className="text-chart-4 size-5" />
                             Low Rating Alerts
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -60,7 +60,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                                     <Star
                                                         key={i}
                                                         className={cn(
-                                                            "h-3 w-3",
+                                                            "size-3",
                                                             i < stars
                                                                 ? "fill-chart-4 text-chart-4"
                                                                 : "text-muted-foreground/30"
@@ -70,7 +70,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <Clock className="h-3 w-3 text-muted-foreground" />
+                                            <Clock className="text-muted-foreground size-3" />
                                             <span className="text-[10px] text-muted-foreground font-medium">
                                                 {new Date(r.created_at).toLocaleDateString(undefined, {
                                                     month: "short",
@@ -93,7 +93,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
-                        <CheckCircle2 className="w-10 h-10 opacity-20 text-chart-2" />
+                        <CheckCircle2 className="opacity-20 text-chart-2 size-10" />
                         <p className="text-sm font-medium">No low ratings in this period! 🎉</p>
                         <p className="text-xs">All your customers are happy</p>
                     </div>

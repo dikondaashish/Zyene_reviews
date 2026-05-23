@@ -32,7 +32,7 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                             <ul key={i} className="space-y-2 pl-1">
                                 {section.items?.map((item, j) => (
                                     <li key={j} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
-                                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                        <span className="mt-1.5 shrink-0 rounded-full bg-primary size-1.5" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -43,7 +43,7 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                             <ol key={i} className="space-y-3 pl-1 counter-reset-list">
                                 {section.items?.map((item, j) => (
                                     <li key={j} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
-                                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary">
+                                        <span className="mt-0.5 flex shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary size-6">
                                             {j + 1}
                                         </span>
                                         <span className="mt-0.5">{item}</span>
@@ -54,14 +54,14 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                     case "tip":
                         return (
                             <div key={i} className="flex gap-3 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
-                                <Lightbulb className="h-5 w-5 shrink-0 text-primary mt-0.5" />
+                                <Lightbulb className="shrink-0 text-primary mt-0.5 size-5" />
                                 <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
                             </div>
                         );
                     case "warning":
                         return (
                             <div key={i} className="flex gap-3 rounded-xl border border-chart-4/20 bg-chart-4/5 px-5 py-4">
-                                <AlertTriangle className="h-5 w-5 shrink-0 text-chart-4 mt-0.5" />
+                                <AlertTriangle className="shrink-0 text-chart-4 mt-0.5 size-5" />
                                 <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
                             </div>
                         );
@@ -77,7 +77,7 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                                 <p className="text-sm font-semibold text-foreground">{section.ctaLabel}</p>
                                 <Link href={section.ctaHref ?? "/signup"} className="shrink-0">
                                     <Button size="sm" className="gap-2 rounded-lg">
-                                        Get Started <ArrowRight className="h-3.5 w-3.5" />
+                                        Get Started <ArrowRight className="size-3.5" />
                                     </Button>
                                 </Link>
                             </div>

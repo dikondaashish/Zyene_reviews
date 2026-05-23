@@ -13,7 +13,7 @@ export function CampaignDetailStats({ funnelStages }: CampaignDetailStatsProps) 
                     <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                             <div className={`rounded-lg p-2 ${stage.color} text-primary-foreground`}>
-                                <stage.icon className="h-4 w-4" />
+                                <stage.icon className="size-4" />
                             </div>
                             <div>
                                 <p className="text-2xl font-bold">{stage.value}</p>

@@ -37,7 +37,7 @@ export function CompetitorsTrackedDesktopRow({
                         {competitor.name}
                         {syncing && (
                             <Badge variant="secondary" className="flex items-center gap-1">
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="animate-spin size-3" />
                                 Syncing...
                             </Badge>
                         )}
@@ -67,7 +67,7 @@ export function CompetitorsTrackedDesktopRow({
                         <span className="text-muted-foreground">—</span>
                     ) : (
                         <>
-                            <Star className="h-4 w-4 text-chart-4 fill-chart-4 mr-1" />
+                            <Star className="text-chart-4 fill-chart-4 mr-1 size-4" />
                             {competitor.average_rating || "—"}
                         </>
                     )}
@@ -88,7 +88,7 @@ export function CompetitorsTrackedDesktopRow({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
                     >
-                        <Globe className="h-3.5 w-3.5 shrink-0" />
+                        <Globe className="shrink-0 size-3.5" />
                         Site
                     </a>
                 ) : (
@@ -103,7 +103,7 @@ export function CompetitorsTrackedDesktopRow({
                         rel="noopener noreferrer"
                         className="flex items-center text-primary hover:underline text-xs"
                     >
-                        View <ExternalLink className="h-3 w-3 ml-1" />
+                        View <ExternalLink className="ml-1 size-3" />
                     </a>
                 ) : (
                     <span className="text-muted-foreground text-xs">N/A</span>
@@ -124,9 +124,9 @@ export function CompetitorsTrackedDesktopRow({
                     className="text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
                     {isDeleting ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="animate-spin size-4" />
                     ) : (
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="size-4" />
                     )}
                 </Button>
             </TableCell>

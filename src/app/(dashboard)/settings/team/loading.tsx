@@ -19,7 +19,7 @@ export default function TeamSettingsLoading() {
                 </div>
                 {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex items-center gap-4 p-4 border-b border-border last:border-0">
-                        <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                        <Skeleton className="rounded-full shrink-0 size-10" />
                         <div className="flex-1 space-y-2">
                             <Skeleton className="h-4 w-40" />
                             <Skeleton className="h-3 w-56" />

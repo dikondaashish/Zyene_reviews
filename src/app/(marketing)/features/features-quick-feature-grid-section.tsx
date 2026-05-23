@@ -16,7 +16,7 @@ export function FeaturesQuickFeatureGridSection() {
                                     className="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-card border border-transparent hover:border-border transition-all text-center group"
                                 >
                                     <div className={`${pillar.iconBg} p-3 rounded-xl`}>
-                                        <Icon className={`h-5 w-5 ${pillar.iconColor}`} />
+                                        <Icon className={`${pillar.iconColor} size-5`} />
                                     </div>
                                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors leading-tight">{pillar.title.split("&")[0].trim()}</span>
                                 </Link>

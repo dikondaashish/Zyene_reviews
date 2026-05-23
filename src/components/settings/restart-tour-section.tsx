@@ -28,7 +28,7 @@ export function RestartTourSection() {
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                    <RotateCcw className="h-4 w-4" />
+                    <RotateCcw className="size-4" />
                     Product Tour
                 </CardTitle>
                 <CardDescription>
@@ -44,12 +44,12 @@ export function RestartTourSection() {
                 >
                     {isLoading ? (
                         <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="animate-spin size-4" />
                             Starting…
                         </>
                     ) : (
                         <>
-                            <RotateCcw className="h-4 w-4" />
+                            <RotateCcw className="size-4" />
                             Start Tour Again
                         </>
                     )}

@@ -72,7 +72,7 @@ export function SignupFormFields(props: SignupFormFieldsProps) {
                     className="w-full h-12 px-4 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
                 />
                 <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
-                    <Mail className="h-3 w-3" /> We use this for critical dashboard alerts and secure access.
+                    <Mail className="size-3" /> We use this for critical dashboard alerts and secure access.
                 </p>
             </div>
 
@@ -98,11 +98,11 @@ export function SignupFormFields(props: SignupFormFieldsProps) {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                     </button>
                 </div>
                 <p className="text-[10px] text-muted-foreground flex items-center gap-1 px-1">
-                    <ShieldCheck className="h-3 w-3" /> Help us protect your business with a strong, unique
+                    <ShieldCheck className="size-3" /> Help us protect your business with a strong, unique
                     password.
                 </p>
                 <PasswordStrengthIndicator password={password} />
@@ -113,7 +113,7 @@ export function SignupFormFields(props: SignupFormFieldsProps) {
                 disabled={isLoading}
                 className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                 Create Account
             </button>
         </form>

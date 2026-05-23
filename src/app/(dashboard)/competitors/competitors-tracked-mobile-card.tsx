@@ -39,7 +39,7 @@ export function CompetitorsTrackedMobileCard({
                         <p className="font-semibold leading-snug break-words">{competitor.name}</p>
                         {syncing ? (
                             <Badge variant="secondary" className="flex shrink-0 items-center gap-1">
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="animate-spin size-3" />
                                 Syncing…
                             </Badge>
                         ) : null}
@@ -62,9 +62,9 @@ export function CompetitorsTrackedMobileCard({
                     aria-label={`Remove ${competitor.name}`}
                 >
                     {isDeleting ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="animate-spin size-4" />
                     ) : (
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="size-4" />
                     )}
                 </Button>
             </div>
@@ -92,7 +92,7 @@ export function CompetitorsTrackedMobileCard({
                             <span className="text-muted-foreground">—</span>
                         ) : (
                             <span className="inline-flex items-center gap-1">
-                                <Star className="h-3.5 w-3.5 shrink-0 fill-chart-4 text-chart-4" />
+                                <Star className="shrink-0 fill-chart-4 text-chart-4 size-3.5" />
                                 {competitor.average_rating || "—"}
                             </span>
                         )}
@@ -125,7 +125,7 @@ export function CompetitorsTrackedMobileCard({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
                     >
-                        <Globe className="h-3.5 w-3.5 shrink-0" />
+                        <Globe className="shrink-0 size-3.5" />
                         Website
                     </a>
                 ) : null}
@@ -137,7 +137,7 @@ export function CompetitorsTrackedMobileCard({
                         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
                     >
                         Maps
-                        <ExternalLink className="h-3 w-3 shrink-0" />
+                        <ExternalLink className="shrink-0 size-3" />
                     </a>
                 ) : (
                     <span className="text-muted-foreground">Maps: N/A</span>

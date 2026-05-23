@@ -14,7 +14,7 @@ export function AnalyticsPageRatingSentimentRow({ d, isDemo }: { d: AnalyticsFul
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Gauge className="w-5 h-5 text-primary" />
+                            <Gauge className="text-primary size-5" />
                             Rating Trend
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">Average score fluctuations daily</p>
@@ -34,7 +34,7 @@ export function AnalyticsPageRatingSentimentRow({ d, isDemo }: { d: AnalyticsFul
                 <CardHeader>
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Sparkles className="w-5 h-5 text-primary" />
+                            <Sparkles className="text-primary size-5" />
                             Sentiment Breakdown
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">AI-analyzed review emotional tone</p>

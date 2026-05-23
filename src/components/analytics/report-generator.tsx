@@ -39,9 +39,9 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2"
         >
             {isGenerating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="animate-spin size-4" />
             ) : (
-                <FileDown className="h-4 w-4" />
+                <FileDown className="size-4" />
             )}
             {isGenerating ? "Generating..." : "Download PDF Report"}
         </button>

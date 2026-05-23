@@ -23,7 +23,7 @@ export default function ResourcesHubPage() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-2 mb-4">
                         <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full">
-                            <FileText className="h-3 w-3" /> Free Guides
+                            <FileText className="size-3" /> Free Guides
                         </div>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
@@ -50,11 +50,11 @@ export default function ResourcesHubPage() {
                                 </p>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Clock className="h-3.5 w-3.5" />
+                                        <Clock className="size-3.5" />
                                         {guide.readMinutes} min read
                                     </div>
                                     <span className="text-primary text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                                        Read guide <ArrowRight className="h-3.5 w-3.5" />
+                                        Read guide <ArrowRight className="size-3.5" />
                                     </span>
                                 </div>
                             </Link>
@@ -73,7 +73,7 @@ export default function ResourcesHubPage() {
                         </div>
                         <Link href="/blog" className="shrink-0">
                             <Button variant="outline" className="gap-2 rounded-xl">
-                                <BookOpen className="h-4 w-4" /> Browse the Blog
+                                <BookOpen className="size-4" /> Browse the Blog
                             </Button>
                         </Link>
                     </div>
@@ -87,7 +87,7 @@ export default function ResourcesHubPage() {
                     <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial — no credit card lock-in.</p>
                     <Link href="/signup">
                         <Button size="lg" className="gap-2 rounded-xl">
-                            Start Free Trial <ArrowRight className="h-4 w-4" />
+                            Start Free Trial <ArrowRight className="size-4" />
                         </Button>
                     </Link>
                 </div>

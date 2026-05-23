@@ -21,7 +21,7 @@ export default function RootError({
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center gap-6 p-8 text-center bg-muted/40">
             <div className="rounded-full bg-destructive/15 p-4">
-                <AlertTriangle className="h-10 w-10 text-destructive" />
+                <AlertTriangle className="text-destructive size-10" />
             </div>
 
             <div className="space-y-3 max-w-md">
@@ -36,12 +36,12 @@ export default function RootError({
 
             <div className="flex gap-4 mt-4">
                 <Button onClick={() => reset()} variant="default" className="gap-2">
-                    <RefreshCw className="h-4 w-4" />
+                    <RefreshCw className="size-4" />
                     Try again
                 </Button>
                 <Link href="/">
                     <Button variant="outline" className="gap-2">
-                        <Home className="h-4 w-4" />
+                        <Home className="size-4" />
                         Go home
                     </Button>
                 </Link>

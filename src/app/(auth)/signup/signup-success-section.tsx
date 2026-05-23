@@ -8,8 +8,8 @@ import { toast } from "sonner";
 export function SignupSuccessSection({ email }: { email: string }) {
     return (
         <div className="text-center space-y-6">
-            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
-                <CheckCircle2 className="h-8 w-8 text-primary" />
+            <div className="mx-auto bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20 size-16">
+                <CheckCircle2 className="text-primary size-8" />
             </div>
             <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-foreground">Check your inbox</h2>

@@ -10,7 +10,7 @@ export function GoogleIntegrationCardDisconnected({ onConnect }: { onConnect: ()
             <div className="h-1 bg-muted w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card border border-border">
+                    <div className="flex items-center justify-center rounded-lg bg-card border border-border size-10">
                         <GoogleCardGoogleIcon />
                     </div>
                     <div>

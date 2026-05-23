@@ -59,35 +59,41 @@ export const followUpWorker = inngest.createFunction(
       if (!requests || requests.length === 0) return;
 
       // 3. Process
-      for (const req of requests) {
-        const methods = [];
-        if ((campaign.channel === "email" || campaign.channel === "both") && req.customer_email) methods.push("email");
-        if ((campaign.channel === "sms" || campaign.channel === "both") && req.customer_phone) methods.push("sms");
+      await Promise.all(
+        requests.map(async (req) => {
+          const methods = [];
+          if ((campaign.channel === "email" || campaign.channel === "both") && req.customer_email) {
+            methods.push("email");
+          }
+          if ((campaign.channel === "sms" || campaign.channel === "both") && req.customer_phone) {
+            methods.push("sms");
+          }
 
-        try {
-          const business = Array.isArray(campaign.businesses) ? campaign.businesses[0] : campaign.businesses;
-          if (!business) continue;
+          try {
+            const business = Array.isArray(campaign.businesses) ? campaign.businesses[0] : campaign.businesses;
+            if (!business) return;
 
-          await sendReviewRequest({
-            businessId: business.id,
-            businessName: business.name,
-            senderName: (business as { sender_name?: string | null }).sender_name ?? null,
-            customerName: req.customer_name || "Customer",
-            contactMethods: methods as ("email" | "sms")[],
-            customerEmail: req.customer_email,
-            customerPhone: req.customer_phone,
-            template: campaign.follow_up_template || undefined,
-            isFollowUp: true
-          });
+            await sendReviewRequest({
+              businessId: business.id,
+              businessName: business.name,
+              senderName: (business as { sender_name?: string | null }).sender_name ?? null,
+              customerName: req.customer_name || "Customer",
+              contactMethods: methods as ("email" | "sms")[],
+              customerEmail: req.customer_email,
+              customerPhone: req.customer_phone,
+              template: campaign.follow_up_template || undefined,
+              isFollowUp: true,
+            });
 
-          await admin.from("review_requests").update({
-            is_follow_up_sent: true,
-            follow_up_sent_at: new Date().toISOString()
-          }).eq("id", req.id);
-        } catch (e) {
-          logger.error({ err: e }, `[Worker] Follow-up failed for request ${req.id}:`);
-        }
-      }
+            await admin.from("review_requests").update({
+              is_follow_up_sent: true,
+              follow_up_sent_at: new Date().toISOString(),
+            }).eq("id", req.id);
+          } catch (e) {
+            logger.error({ err: e }, `[Worker] Follow-up failed for request ${req.id}:`);
+          }
+        })
+      );
     });
   }
 );

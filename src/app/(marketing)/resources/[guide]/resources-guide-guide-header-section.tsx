@@ -10,7 +10,7 @@ export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (type
                     {/* Breadcrumb */}
                     <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/resources" className="hover:text-primary transition-colors">Resources</Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-foreground font-medium truncate max-w-xs">{resource.title}</span>
                     </nav>
 
@@ -25,7 +25,7 @@ export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (type
                     </p>
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border pt-5">
                         <div className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" />
+                            <Clock className="size-3.5" />
                             {resource.readMinutes} min read
                         </div>
                         <span>·</span>

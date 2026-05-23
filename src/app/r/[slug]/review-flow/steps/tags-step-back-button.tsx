@@ -11,7 +11,7 @@ export function TagsStepBackButton({ onBack }: TagsStepBackButtonProps) {
             className="mt-6 mb-2 flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors mx-auto"
             onClick={onBack}
         >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="size-3.5" />
             Back
         </button>
     );

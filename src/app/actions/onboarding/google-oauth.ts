@@ -139,21 +139,23 @@ export async function initializeGoogleAuth(
         const accounts = accountsData.accounts || [];
 
         if (accounts.length > 0) {
-          const allLocations: GoogleBusinessLocation[] = [];
-          
           // Step 2: List locations across all accounts
-          for (const account of accounts) {
-            const locationsResponse = await fetch(
-              `https://mybusinessbusinessinformation.googleapis.com/v1/${account.name}/locations?readMask=${encodeURIComponent("title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata")}`,
-              { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
+          const locationGroups = await Promise.all(
+            accounts.map(async (account: { name: string }) => {
+              const locationsResponse = await fetch(
+                `https://mybusinessbusinessinformation.googleapis.com/v1/${account.name}/locations?readMask=${encodeURIComponent("title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata")}`,
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+              );
 
-            if (locationsResponse.ok) {
+              if (!locationsResponse.ok) {
+                return [] as GoogleBusinessLocation[];
+              }
+
               const locationsData = await locationsResponse.json();
-              const locations = locationsData.locations || [];
-              allLocations.push(...locations);
-            }
-          }
+              return (locationsData.locations || []) as GoogleBusinessLocation[];
+            })
+          );
+          const allLocations = locationGroups.flat();
 
           // If multiple locations found, return them for user selection
           if (allLocations.length > 1) {

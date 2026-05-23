@@ -81,7 +81,7 @@ export function ReviewLinkGeneratorClient() {
                             </div>
                         )}
                         <Button type="submit" disabled={loading} className="w-full">
-                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Get my review link"}
+                            {loading ? <Loader2 className="animate-spin size-4" /> : "Get my review link"}
                         </Button>
                     </form>
                 </div>

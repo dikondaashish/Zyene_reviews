@@ -21,7 +21,7 @@ export function PricingClientFinalCtaSection({ signupUrl }: PricingClientFinalCt
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link href={signupUrl}>
                         <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
-                            Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                            Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Button>
                     </Link>
                     <a

@@ -64,7 +64,7 @@ export function GettingStartedBanner({
             onClick={startTour}
             className="h-8 gap-2 rounded-lg border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary transition-all text-xs font-semibold"
           >
-            <HelpCircle className="h-3.5 w-3.5" />
+            <HelpCircle className="size-3.5" />
             Take a quick tour
           </Button>
           <button
@@ -72,7 +72,7 @@ export function GettingStartedBanner({
             className="text-muted-foreground hover:text-foreground transition-colors p-1 mt-0.5"
             aria-label="Dismiss banner"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
       </div>
@@ -112,7 +112,7 @@ export function GettingStartedBanner({
                   }`}
               >
                 {item.done ? (
-                  <Check className="h-4 w-4 text-primary-foreground" />
+                  <Check className="text-primary-foreground size-4" />
                 ) : (
                   <span className="text-[10px] font-bold text-muted-foreground">{index + 1}</span>
                 )}

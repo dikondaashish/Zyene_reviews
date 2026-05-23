@@ -51,38 +51,43 @@ export async function handleGoogleAccountAccessGet(request: NextRequest) {
         const linkedAccountId = platform.google_account_id as string | null;
         const linkedLocId = platform.google_location_id as string;
 
-        for (const acc of accounts.slice(0, 8)) {
-            const resourceName = acc.name;
-            const rawAccountId = resourceName.replace(/^accounts\//, "");
-            let locations: { name: string; title: string }[] = [];
-            try {
-                const locs = await listLocations(accessToken, resourceName);
-                locations = locs.map((l) => ({
-                    name: l.name,
-                    title: l.title || l.name,
-                }));
-            } catch {
-                /* skip account if locations fail */
-            }
+        accountSummaries.push(
+            ...(await Promise.all(
+                accounts.slice(0, 8).map(async (acc) => {
+                    const resourceName = acc.name;
+                    const rawAccountId = resourceName.replace(/^accounts\//, "");
+                    let locations: { name: string; title: string }[] = [];
+                    try {
+                        const locs = await listLocations(accessToken, resourceName);
+                        locations = locs.map((l) => ({
+                            name: l.name,
+                            title: l.title || l.name,
+                        }));
+                    } catch {
+                        /* skip account if locations fail */
+                    }
 
-            const matchesLinkedLocation = (locName: string) =>
-                locName === `locations/${linkedLocId}` || locName.endsWith(`/locations/${linkedLocId}`);
+                    const matchesLinkedLocation = (locName: string) =>
+                        locName === `locations/${linkedLocId}` ||
+                        locName.endsWith(`/locations/${linkedLocId}`);
 
-            const isLinked =
-                !!linkedAccountId &&
-                rawAccountId === linkedAccountId &&
-                locations.some((l) => matchesLinkedLocation(l.name));
+                    const isLinked =
+                        !!linkedAccountId &&
+                        rawAccountId === linkedAccountId &&
+                        locations.some((l) => matchesLinkedLocation(l.name));
 
-            accountSummaries.push({
-                resourceName,
-                accountName: acc.accountName || rawAccountId,
-                type: acc.type,
-                verificationState: acc.verificationState,
-                locationCount: locations.length,
-                locations: locations.slice(0, 25),
-                isLinkedToZyeneReviews: isLinked,
-            });
-        }
+                    return {
+                        resourceName,
+                        accountName: acc.accountName || rawAccountId,
+                        type: acc.type,
+                        verificationState: acc.verificationState,
+                        locationCount: locations.length,
+                        locations: locations.slice(0, 25),
+                        isLinkedToZyeneReviews: isLinked,
+                    };
+                })
+            ))
+        );
 
         let admins: Awaited<ReturnType<typeof listAccountAdmins>> = [];
         if (linkedAccountId) {

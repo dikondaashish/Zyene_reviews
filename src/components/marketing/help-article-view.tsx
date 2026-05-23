@@ -43,11 +43,11 @@ export function HelpArticleView({
                         <Link href="/help" className="hover:text-primary transition-colors">
                             Help Center
                         </Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <Link href={categoryPath} className="hover:text-primary transition-colors">
                             {catInfo.label}
                         </Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-muted-foreground truncate max-w-[200px]">
                             {article.title}
                         </span>
@@ -62,7 +62,7 @@ export function HelpArticleView({
                     </h1>
                     <p className="text-lg text-muted-foreground mb-6">{article.excerpt}</p>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
+                        <Clock className="size-4" />
                         {article.readMinutes} min read
                     </div>
                 </div>
@@ -82,7 +82,7 @@ export function HelpArticleView({
                                 </div>
                                 <a href="mailto:support@zyenereviews.com" className="shrink-0">
                                     <Button variant="outline" size="sm" className="gap-2 rounded-lg">
-                                        Email Support <ArrowRight className="h-3.5 w-3.5" />
+                                        Email Support <ArrowRight className="size-3.5" />
                                     </Button>
                                 </a>
                             </div>
@@ -96,7 +96,7 @@ export function HelpArticleView({
                                 </p>
                                 <Link href="/signup">
                                     <Button size="sm" className="w-full gap-2">
-                                        Start Free Trial <ArrowRight className="h-3.5 w-3.5" />
+                                        Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>
                                 </Link>
                             </div>

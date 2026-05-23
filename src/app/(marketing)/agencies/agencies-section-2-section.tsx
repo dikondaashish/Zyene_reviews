@@ -19,7 +19,7 @@ export function AgenciesSection2Section() {
         <section className="py-20 px-4 bg-muted border-b border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-3 mb-8">
-                        <Palette className="h-8 w-8 text-primary" />
+                        <Palette className="text-primary size-8" />
                         <h2 className="text-3xl font-bold">White-label branding</h2>
                     </div>
                     <p className="text-muted-foreground mb-8 max-w-2xl">

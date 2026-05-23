@@ -35,7 +35,7 @@ export function RunAuditControls({
                 Runs this page audit pipeline only. Not tied to cron jobs or review sync.
             </p>
             <Button onClick={runSync} disabled={isPending || busy}>
-                {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {busy ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
                 Sync
             </Button>
         </div>

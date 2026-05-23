@@ -18,7 +18,7 @@ export function ReviewCarouselCard({
                         <Star
                             key={i}
                             className={cn(
-                                "w-4 h-4",
+                                "size-4",
                                 i < review.rating ? "fill-chart-4 text-chart-4" : "fill-muted text-muted-foreground/40"
                             )}
                         />

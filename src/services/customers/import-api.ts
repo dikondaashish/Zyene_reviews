@@ -66,12 +66,13 @@ export async function handleCustomersImport(req: Request) {
         let successCount = 0;
         const BATCH_SIZE = 500;
 
-        for (let i = 0; i < insertPayload.length; i += BATCH_SIZE) {
-            const batch = insertPayload.slice(i, i + BATCH_SIZE);
-            const { error } = await supabase
-                .from("customers")
-                .insert(batch);
-
+        const batchResults = await Promise.all(
+            Array.from({ length: Math.ceil(insertPayload.length / BATCH_SIZE) }, (_, index) => {
+                const batch = insertPayload.slice(index * BATCH_SIZE, index * BATCH_SIZE + BATCH_SIZE);
+                return supabase.from("customers").insert(batch).then(({ error }) => ({ batch, error }));
+            })
+        );
+        for (const { batch, error } of batchResults) {
             if (error) {
                 logger.error({ err: error }, "[Customers Import] Batch error:");
                 Sentry.captureException(error);

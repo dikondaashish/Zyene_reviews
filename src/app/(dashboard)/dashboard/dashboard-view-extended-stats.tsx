@@ -38,7 +38,7 @@ export function DashboardViewExtendedStats({
                     <CardTitle className="text-sm font-medium">
                         {dict.dashboard.positive_experience}
                     </CardTitle>
-                    <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+                    <ThumbsUp className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div
@@ -67,7 +67,7 @@ export function DashboardViewExtendedStats({
                     <CardTitle className="text-sm font-medium">
                         {dict.dashboard.engagement_rate}
                     </CardTitle>
-                    <Target className="h-4 w-4 text-muted-foreground" />
+                    <Target className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div
@@ -88,7 +88,7 @@ export function DashboardViewExtendedStats({
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">{dict.dashboard.usage_title}</CardTitle>
-                    <Send className="h-4 w-4 text-muted-foreground" />
+                    <Send className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -112,7 +112,7 @@ export function DashboardViewExtendedStats({
                                     size="sm"
                                     className="h-7 w-full text-xs border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 lg:w-auto"
                                 >
-                                    <ArrowRight className="mr-1 h-3 w-3" />
+                                    <ArrowRight className="mr-1 size-3" />
                                     {dict.dashboard.upgrade_prompt || "Upgrade"}
                                 </Button>
                             </Link>
@@ -135,7 +135,7 @@ export function DashboardViewExtendedStats({
                     <CardTitle className="text-sm font-medium">
                         {dict.dashboard.new_reviews_30d}
                     </CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <Calendar className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{newReviews30d}</div>

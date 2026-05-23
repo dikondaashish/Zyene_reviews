@@ -24,7 +24,7 @@ export function EnterpriseHeroSection() {
         <section className="pt-24 pb-16 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-4">
-                        <Building2 className="h-3 w-3" /> Enterprise
+                        <Building2 className="size-3" /> Enterprise
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                         Review operations at enterprise scale
@@ -36,7 +36,7 @@ export function EnterpriseHeroSection() {
                     <div className="flex flex-wrap gap-4">
                         <Link href="/demo">
                             <Button size="lg" className="rounded-xl px-8">
-                                Book a demo <ArrowRight className="ml-2 h-4 w-4" />
+                                Book a demo <ArrowRight className="ml-2 size-4" />
                             </Button>
                         </Link>
                         <a href={DEFAULT_CAL_COM_BOOKING_URL} target="_blank" rel="noopener noreferrer">

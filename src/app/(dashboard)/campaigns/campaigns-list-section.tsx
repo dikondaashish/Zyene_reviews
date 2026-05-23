@@ -64,7 +64,7 @@ export function CampaignsListSection({
                                             {status.label}
                                         </Badge>
                                         <Badge variant="outline" className={channel.color}>
-                                            <ChannelIcon className="mr-1 h-3 w-3" />
+                                            <ChannelIcon className="mr-1 size-3" />
                                             {channel.label}
                                         </Badge>
                                     </div>
@@ -91,23 +91,23 @@ export function CampaignsListSection({
                                             title={campaign.status === "active" ? "Pause" : "Resume"}
                                         >
                                             {campaign.status === "active" ? (
-                                                <Pause className="h-4 w-4" />
+                                                <Pause className="size-4" />
                                             ) : (
-                                                <Play className="h-4 w-4" />
+                                                <Play className="size-4" />
                                             )}
                                         </Button>
                                     )}
 
                                     <Button variant="ghost" size="icon" asChild>
                                         <Link href={`/campaigns/${campaign.id}`}>
-                                            <ArrowRight className="h-4 w-4" />
+                                            <ArrowRight className="size-4" />
                                         </Link>
                                     </Button>
 
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="size-4" />
                                             </Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>

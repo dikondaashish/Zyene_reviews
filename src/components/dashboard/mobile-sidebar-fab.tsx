@@ -18,20 +18,13 @@ export function MobileSidebarFAB() {
             variant="default"
             size="lg"
             onClick={() => toggleSidebar()}
-            className={`
-                fixed z-40 rounded-full
-                bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))]
-                right-[max(1.25rem,env(safe-area-inset-right,0px))]
-                bg-primary hover:bg-primary/90 text-primary-foreground
-                h-14 w-14 p-0
-                transition-all duration-200
-            `}
+            className={`fixed z-40 rounded-full bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] bg-primary hover:bg-primary/90 text-primary-foreground p-0 transition-all duration-200 size-14`}
             aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
         >
             {openMobile ? (
-                <X className="h-6 w-6" />
+                <X className="size-6" />
             ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="size-6" />
             )}
         </Button>
     );

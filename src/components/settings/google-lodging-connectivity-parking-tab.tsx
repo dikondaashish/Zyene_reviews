@@ -19,13 +19,13 @@ export function GoogleLodgingConnectivityParkingTab({
 }) {
     const c = (lodging.connectivity as Record<string, unknown>) || {};
     const pk = (lodging.parking as Record<string, unknown>) || {};
-    const [wifi, setWifi] = useState(googleLodgingBoolVal(c.wifiAvailable));
-    const [freeWifi, setFreeWifi] = useState(googleLodgingBoolVal(c.freeWifi));
-    const [publicWifi, setPublicWifi] = useState(googleLodgingBoolVal(c.publicAreaWifiAvailable));
-    const [parking, setParking] = useState(googleLodgingBoolVal(pk.parkingAvailable));
-    const [freePark, setFreePark] = useState(googleLodgingBoolVal(pk.freeParking));
-    const [selfPark, setSelfPark] = useState(googleLodgingBoolVal(pk.selfParkingAvailable));
-    const [valet, setValet] = useState(googleLodgingBoolVal(pk.valetParkingAvailable));
+    const [wifi, setWifi] = useState(() => googleLodgingBoolVal(c.wifiAvailable));
+    const [freeWifi, setFreeWifi] = useState(() => googleLodgingBoolVal(c.freeWifi));
+    const [publicWifi, setPublicWifi] = useState(() => googleLodgingBoolVal(c.publicAreaWifiAvailable));
+    const [parking, setParking] = useState(() => googleLodgingBoolVal(pk.parkingAvailable));
+    const [freePark, setFreePark] = useState(() => googleLodgingBoolVal(pk.freeParking));
+    const [selfPark, setSelfPark] = useState(() => googleLodgingBoolVal(pk.selfParkingAvailable));
+    const [valet, setValet] = useState(() => googleLodgingBoolVal(pk.valetParkingAvailable));
 
     return (
         <div className="space-y-6 max-w-md">

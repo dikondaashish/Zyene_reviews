@@ -20,7 +20,7 @@ export default function CustomersLoading() {
                     <Card key={i}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <Skeleton className="h-4 w-20" />
-                            <Skeleton className="h-4 w-4 rounded-full" />
+                            <Skeleton className="rounded-full size-4" />
                         </CardHeader>
                         <CardContent>
                             <Skeleton className="h-8 w-12 mb-1" />
@@ -48,7 +48,7 @@ export default function CustomersLoading() {
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                             <div key={i} className="grid grid-cols-5 p-4 border-b last:border-0 items-center">
                                 <div className="flex items-center gap-3">
-                                    <Skeleton className="h-8 w-8 rounded-full" />
+                                    <Skeleton className="rounded-full size-8" />
                                     <Skeleton className="h-4 w-32" />
                                 </div>
                                 <Skeleton className="h-4 w-40" />
@@ -56,7 +56,7 @@ export default function CustomersLoading() {
                                 <Skeleton className="h-4 w-32" />
                                 <div className="flex gap-2 justify-end">
                                     <Skeleton className="h-8 w-16" />
-                                    <Skeleton className="h-8 w-8 rounded-md" />
+                                    <Skeleton className="rounded-md size-8" />
                                 </div>
                             </div>
                         ))}

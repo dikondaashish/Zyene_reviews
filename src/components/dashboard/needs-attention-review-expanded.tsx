@@ -61,7 +61,7 @@ export function NeedsAttentionReviewExpanded({
         >
             <div className="rounded-xl border border-border bg-card p-3 shadow-sm sm:p-3.5">
                 <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <Reply className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+                    <Reply className="text-muted-foreground size-3.5" aria-hidden />
                     <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                         {copy.yourReplyLabel}
                     </span>
@@ -70,7 +70,7 @@ export function NeedsAttentionReviewExpanded({
                             variant="secondary"
                             className="border-chart-2/30 bg-chart-2/15 text-chart-2 dark:bg-chart-2/20"
                         >
-                            <Check className="mr-1 h-3 w-3" aria-hidden />
+                            <Check className="mr-1 size-3" aria-hidden />
                             {copy.sentToGoogle}
                         </Badge>
                     ) : null}

@@ -41,7 +41,7 @@ export function Step1FormOrganizationField({
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                    <Info className="text-muted-foreground cursor-help size-3.5" />
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-[250px] p-3 text-xs leading-relaxed">
                                     <p>

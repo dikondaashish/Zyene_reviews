@@ -43,7 +43,7 @@ export function AddCustomerModal({ open, onOpenChange, businessId, onSuccess }: 
                                 Cancel
                             </Button>
                             <Button type="submit" disabled={isLoading}>
-                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                                 {isLoading ? "Adding..." : "Add Customer"}
                             </Button>
                         </DialogFooter>

@@ -21,7 +21,7 @@ export function NeedsAttentionDraftStartButtons({
                     void onStartAiDraft();
                 }}
             >
-                <Sparkles className="h-4 w-4" aria-hidden />
+                <Sparkles className="size-4" aria-hidden />
                 {copy.draftWithAi}
             </Button>
             <button

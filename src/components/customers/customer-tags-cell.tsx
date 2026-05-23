@@ -88,7 +88,7 @@ export function CustomerTagsCell({
                                 aria-label={`Remove ${tag}`}
                                 onClick={() => removeTag(tag)}
                             >
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className="size-3" />
                             </button>
                         </Badge>
                     ))}
@@ -106,8 +106,8 @@ export function CustomerTagsCell({
                             }
                         }}
                     />
-                    <Button type="button" size="icon" variant="outline" className="h-8 w-8 shrink-0" onClick={addTag}>
-                        <Plus className="h-4 w-4" />
+                    <Button type="button" size="icon" variant="outline" className="shrink-0 size-8" onClick={addTag}>
+                        <Plus className="size-4" />
                     </Button>
                 </div>
             </PopoverContent>

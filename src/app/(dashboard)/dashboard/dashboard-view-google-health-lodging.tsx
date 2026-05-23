@@ -21,7 +21,7 @@ export function DashboardViewGoogleHealthLodging({
                 <CardTitle className="text-sm font-medium">
                     {dict.dashboard.lodging_completeness}
                 </CardTitle>
-                <BedDouble className="h-4 w-4 text-muted-foreground" />
+                <BedDouble className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
                 <div

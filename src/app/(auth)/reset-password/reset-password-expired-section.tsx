@@ -6,8 +6,8 @@ import { ShieldCheck } from "lucide-react";
 export function ResetPasswordExpiredSection() {
     return (
         <div className="space-y-6 text-center">
-            <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20">
-                <ShieldCheck className="h-8 w-8 text-destructive" />
+            <div className="mx-auto bg-destructive/10 rounded-lg flex items-center justify-center border border-destructive/20 size-16">
+                <ShieldCheck className="text-destructive size-8" />
             </div>
             <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-foreground">Link expired</h2>

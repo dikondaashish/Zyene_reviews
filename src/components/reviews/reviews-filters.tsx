@@ -37,7 +37,7 @@ export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps)
                 <Select value={filters.rating || "all"} onValueChange={(val) => onFilterChange("rating", val)}>
                     <SelectTrigger className="h-9 w-full text-sm border-dashed focus:ring-0 sm:w-[130px] md:h-8 md:text-xs">
                         <div className="flex items-center pointer-events-none">
-                            <Filter className="w-3 h-3 mr-2 text-muted-foreground" />
+                            <Filter className="mr-2 text-muted-foreground size-3" />
                             <SelectValue placeholder="Rating" />
                         </div>
                     </SelectTrigger>
@@ -54,7 +54,7 @@ export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps)
                 <Select value={filters.sort || "newest"} onValueChange={(val) => onFilterChange("sort", val)}>
                     <SelectTrigger className="h-9 w-full text-sm border-dashed focus:ring-0 sm:w-[150px] md:h-8 md:text-xs">
                         <div className="flex items-center pointer-events-none">
-                            <SlidersHorizontal className="w-3 h-3 mr-2 text-muted-foreground" />
+                            <SlidersHorizontal className="mr-2 text-muted-foreground size-3" />
                             <SelectValue placeholder="Sort" />
                         </div>
                     </SelectTrigger>

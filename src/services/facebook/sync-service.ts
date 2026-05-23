@@ -80,43 +80,47 @@ export async function syncFacebookReviewsForPlatform(
         let alertsCount = 0;
 
         // 3. Upsert each review
-        for (const review of fbReviews) {
-            const reviewData = {
-                business_id: platform.business_id,
-                platform: "facebook" as const,
-                platform_id: platform.id,
-                external_id: review.externalId,
-                author_name: review.authorName,
-                rating: review.rating,
-                text: review.content,
-                review_date: review.publishedAt,
-                response_status: "pending" as const,
-            };
+        const syncOutcomes = await Promise.all(
+            fbReviews.map(async (review) => {
+                const reviewData = {
+                    business_id: platform.business_id,
+                    platform: "facebook" as const,
+                    platform_id: platform.id,
+                    external_id: review.externalId,
+                    author_name: review.authorName,
+                    rating: review.rating,
+                    text: review.content,
+                    review_date: review.publishedAt,
+                    response_status: "pending" as const,
+                };
 
-            const { data: upserted, error: upsertError } = await admin
-                .from("reviews")
-                .upsert(reviewData, {
-                    onConflict: "business_id, platform, external_id",
-                })
-                .select()
-                .single();
+                const { data: upserted, error: upsertError } = await admin
+                    .from("reviews")
+                    .upsert(reviewData, {
+                        onConflict: "business_id, platform, external_id",
+                    })
+                    .select()
+                    .single();
 
-            if (upsertError) {
-                logger.error({ err: upsertError
-                 }, `[Facebook Sync] Upsert error for review ${review.externalId}:`);
-                continue;
-            }
+                if (upsertError) {
+                    logger.error(
+                        { err: upsertError },
+                        `[Facebook Sync] Upsert error for review ${review.externalId}:`
+                    );
+                    return { analyzed: false, alerted: false };
+                }
 
-            // 4. AI analysis for new unanalyzed reviews
-            if (upserted && !upserted.sentiment && upserted.text) {
-                analyzedCount++;
-                const analysisResult = await analyzeReview(upserted);
+                if (upserted && !upserted.sentiment && upserted.text) {
+                    const analysisResult = await analyzeReview(upserted);
+                    await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
+                    return { analyzed: true, alerted: true };
+                }
 
-                // Send email alert for all new reviews
-                await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
-                alertsCount++;
-            }
-        }
+                return { analyzed: false, alerted: false };
+            })
+        );
+        analyzedCount = syncOutcomes.filter((o) => o.analyzed).length;
+        alertsCount = syncOutcomes.filter((o) => o.alerted).length;
 
         // 5. Update platform stats with live page data
         let liveRatingCount = fbReviews.length;

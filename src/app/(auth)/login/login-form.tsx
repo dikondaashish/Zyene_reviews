@@ -98,9 +98,9 @@ export function LoginForm() {
                                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 {showPassword ? (
-                                    <EyeOff className="h-5 w-5" />
+                                    <EyeOff className="size-5" />
                                 ) : (
-                                    <Eye className="h-5 w-5" />
+                                    <Eye className="size-5" />
                                 )}
                             </button>
                         </div>
@@ -111,7 +111,7 @@ export function LoginForm() {
                         disabled={isLoading}
                         className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                         Sign In
                     </button>
                 </form>

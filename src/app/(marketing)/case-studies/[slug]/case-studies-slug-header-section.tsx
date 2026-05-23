@@ -10,7 +10,7 @@ export function CaseStudiesSlugHeaderSection({ study, slug, related }: { study: 
                 <div className="container mx-auto max-w-3xl">
                     <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/case-studies" className="hover:text-primary transition-colors">Case Studies</Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-foreground font-medium truncate">{study.company}</span>
                     </nav>
 

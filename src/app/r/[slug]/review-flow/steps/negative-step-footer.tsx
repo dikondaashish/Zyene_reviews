@@ -30,9 +30,9 @@ export function NegativeStepFooter({
                 disabled={isSubmitting || !canSubmitNegative}
             >
                 {isSubmitting ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="animate-spin size-5" />
                 ) : (
-                    <Send className="h-4 w-4" />
+                    <Send className="size-4" />
                 )}
                 {isSubmitting ? "Sending..." : (negativeButtonText || "Send Feedback")}
             </button>
@@ -43,7 +43,7 @@ export function NegativeStepFooter({
                     className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors"
                     onClick={onBack}
                 >
-                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <ArrowLeft className="size-3.5" />
                     Back
                 </button>
                 {googleUrl && (

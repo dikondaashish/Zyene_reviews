@@ -28,7 +28,7 @@ export function ReviewCardExistingResponse({
         <div className="relative z-10 mt-5 ml-0 animate-in rounded-md border-l-2 border-primary bg-muted p-3 text-sm fade-in zoom-in-95 duration-200 sm:ml-4">
             <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground">
-                    <CornerDownRight className="w-3 h-3 text-muted-foreground shrink-0" />
+                    <CornerDownRight className="text-muted-foreground shrink-0 size-3" />
                     <span className="font-semibold shrink-0">Your Response</span>
                     {review.responded_at && (
                         <time
@@ -69,7 +69,7 @@ export function ReviewCardExistingResponse({
                                 className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
                                 onClick={onStartEditReply}
                             >
-                                <Pencil className="mr-1 h-3 w-3" />
+                                <Pencil className="mr-1 size-3" />
                                 Edit
                             </Button>
                             <Button
@@ -79,7 +79,7 @@ export function ReviewCardExistingResponse({
                                 className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
                                 onClick={onOpenDeleteReply}
                             >
-                                <Trash2 className="mr-1 h-3 w-3" />
+                                <Trash2 className="mr-1 size-3" />
                                 Delete
                             </Button>
                         </>

@@ -6,7 +6,7 @@ export function ReviewCarouselHeader({ businessName }: { businessName: string })
             <div className="flex items-center gap-2">
                 <div className="flex -space-x-1">
                     {[1, 2, 3, 4, 5].map((i) => (
-                        <Star key={i} className="w-5 h-5 fill-chart-4 text-chart-4" />
+                        <Star key={i} className="fill-chart-4 text-chart-4 size-5" />
                     ))}
                 </div>
                 <span className="font-semibold text-foreground text-sm tracking-tight">{businessName}</span>

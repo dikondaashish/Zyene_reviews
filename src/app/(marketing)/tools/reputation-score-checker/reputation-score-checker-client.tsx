@@ -67,13 +67,13 @@ export function ReputationScoreCheckerClient() {
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">
                         <PlaceSearchInput onSelect={(p) => { setPlace(p); setPreview(null); }} />
                         <Button type="button" onClick={() => run(true)} disabled={loading || !place} className="w-full">
-                            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Check reputation"}
+                            {loading ? <Loader2 className="animate-spin size-4" /> : "Check reputation"}
                         </Button>
                     </div>
                     {preview && (
                         <div className="bg-card border border-border rounded-2xl p-6 grid gap-4 sm:grid-cols-3">
                             <div className="text-center p-4 rounded-xl bg-muted/40">
-                                <Star className="h-6 w-6 text-chart-4 mx-auto mb-2" />
+                                <Star className="text-chart-4 mx-auto mb-2 size-6" />
                                 <p className="text-2xl font-bold">{preview.averageRating.toFixed(1)}</p>
                                 <p className="text-xs text-muted-foreground">Avg rating</p>
                             </div>

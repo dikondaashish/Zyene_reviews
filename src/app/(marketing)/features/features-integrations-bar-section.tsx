@@ -21,7 +21,7 @@ export function FeaturesIntegrationsBarSection() {
                                 className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-3 hover:shadow-sm transition-shadow"
                             >
                                 <div
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                                    className="rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 size-8"
                                     style={{ backgroundColor: int.color }}
                                 >
                                     {int.letter}
@@ -32,7 +32,7 @@ export function FeaturesIntegrationsBarSection() {
                     </div>
                     <Link href="/integrations">
                         <Button variant="outline" className="gap-2">
-                            See all integrations <ArrowRight className="h-4 w-4" />
+                            See all integrations <ArrowRight className="size-4" />
                         </Button>
                     </Link>
                 </div>

@@ -11,8 +11,8 @@ export function CustomerDetailTimelineRequestItem({ item }: { item: TimelineRequ
     const tone = requestStatusTone(item.status);
     return (
         <div className="flex gap-4">
-            <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary shadow-inner">
-                <MessageSquare className="h-5 w-5" />
+            <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary shadow-inner size-11">
+                <MessageSquare className="size-5" />
             </div>
             <div className="min-w-0 flex-1 space-y-2">
                 <div className="flex flex-wrap items-center gap-2 gap-y-1">
@@ -23,13 +23,13 @@ export function CustomerDetailTimelineRequestItem({ item }: { item: TimelineRequ
                             tone.className
                         )}
                     >
-                        <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", tone.dot)} />
+                        <span className={cn("shrink-0 rounded-full size-1.5", tone.dot)} />
                         {humanizeRequestStatus(item.status)}
                     </span>
                 </div>
                 <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5 shrink-0 opacity-70" />
+                        <Clock className="shrink-0 opacity-70 size-3.5" />
                         {item.sent_at
                             ? format(parseISO(item.sent_at), "MMM d, yyyy · h:mm a")
                             : format(parseISO(item.sortAt), "MMM d, yyyy · h:mm a")}

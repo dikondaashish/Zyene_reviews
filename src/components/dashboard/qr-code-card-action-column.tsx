@@ -32,11 +32,11 @@ export function QrCodeCardActionColumn({
     return (
         <div className="w-full px-6 py-6 flex flex-col justify-center gap-3 border-t border-border/60 md:w-auto md:border-t-0 md:border-r md:min-w-[180px] md:py-8 md:pr-8 lg:pr-12">
             <Button variant="outline" size="sm" onClick={onDownload} disabled={!qrReady} className={secondaryActionClass}>
-                <Download className="h-3.5 w-3.5 mr-2" />
+                <Download className="mr-2 size-3.5" />
                 {dictDownload}
             </Button>
             <Button variant="outline" size="sm" onClick={onPrint} disabled={!qrReady} className={secondaryActionClass}>
-                <Printer className="h-3.5 w-3.5 mr-2" />
+                <Printer className="mr-2 size-3.5" />
                 {dictPrint}
             </Button>
             <Button
@@ -45,11 +45,11 @@ export function QrCodeCardActionColumn({
                 onClick={() => toast.info("Order QR coming soon!")}
                 className={primaryActionClass}
             >
-                <QrCode className="h-3.5 w-3.5 mr-2" />
+                <QrCode className="mr-2 size-3.5" />
                 {dictOrder}
             </Button>
             <Button variant="outline" size="sm" onClick={onShare} className={secondaryActionClass}>
-                <Share2 className="h-3.5 w-3.5 mr-2" />
+                <Share2 className="mr-2 size-3.5" />
                 {dictShare}
             </Button>
         </div>

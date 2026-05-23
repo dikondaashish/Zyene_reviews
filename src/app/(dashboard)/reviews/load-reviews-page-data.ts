@@ -45,8 +45,10 @@ export type ReviewsPageLoadResult =
 export async function loadReviewsPageData(
     searchParams: ReviewsPageSearchParams
 ): Promise<ReviewsPageLoadResult> {
-    const supabase = await createClient();
-    const { businessId, business, organization } = await getActiveBusinessId();
+    const [supabase, { businessId, business, organization }] = await Promise.all([
+        createClient(),
+        getActiveBusinessId(),
+    ]);
 
     const autoCommenterPlanOk = planAllowsAiReviewFeatures(
         organization?.plan ?? null,

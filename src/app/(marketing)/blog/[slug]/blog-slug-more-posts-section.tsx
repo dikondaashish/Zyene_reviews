@@ -18,7 +18,7 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="text-2xl font-bold text-foreground">More posts</h2>
                         <Link href="/blog" className="text-sm font-medium text-primary hover:brightness-90 flex items-center gap-1">
-                            View all <ArrowRight className="h-3.5 w-3.5" />
+                            View all <ArrowRight className="size-3.5" />
                         </Link>
                     </div>
                     <div className="grid md:grid-cols-3 gap-6">
@@ -33,7 +33,7 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                                         {p.title}
                                     </h3>
                                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-3">
-                                        <Clock className="h-3 w-3" />
+                                        <Clock className="size-3" />
                                         {p.readMinutes} min
                                     </div>
                                 </Link>

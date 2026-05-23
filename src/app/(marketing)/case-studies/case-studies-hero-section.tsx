@@ -10,7 +10,7 @@ export function CaseStudiesHeroSection() {
         <section className="pt-24 pb-12 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-5xl">
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-4">
-                        <Building2 className="h-3 w-3" /> Case Studies
+                        <Building2 className="size-3" /> Case Studies
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
                         Results local businesses achieve with Zyene

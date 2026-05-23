@@ -39,7 +39,7 @@ export default function ReviewsLoading() {
                             <div className="flex items-start justify-between">
                                 <div className="space-y-4 flex-1">
                                     <div className="flex items-center gap-3">
-                                        <Skeleton className="h-10 w-10 rounded-full" />
+                                        <Skeleton className="rounded-full size-10" />
                                         <div className="space-y-2">
                                             <Skeleton className="h-4 w-32" />
                                             <Skeleton className="h-3 w-24" />

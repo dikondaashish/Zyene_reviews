@@ -22,7 +22,7 @@ export function ZyenePlatformRatingDistributionCard({
             <CardHeader>
                 <div className="space-y-1">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Star className="w-5 h-5 text-primary" />
+                        <Star className="text-primary size-5" />
                         Rating Distribution
                     </CardTitle>
                     <p className="text-xs text-muted-foreground font-medium">
@@ -56,7 +56,7 @@ export function ZyenePlatformRatingDistributionCard({
                 ))}
                 {allSourceRatingsGivenLength === 0 && (
                     <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-2">
-                        <Star className="w-8 h-8 opacity-20" />
+                        <Star className="opacity-20 size-8" />
                         <p className="text-sm">No ratings given yet</p>
                     </div>
                 )}

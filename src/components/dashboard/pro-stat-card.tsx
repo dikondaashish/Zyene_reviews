@@ -45,8 +45,8 @@ export function ProStatCard({
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
             <div className="relative flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-105">
-                    <Icon className="h-5 w-5" />
+                <div className="flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-105 size-10">
+                    <Icon className="size-5" />
                 </div>
                 {hasTrend && (
                     <div
@@ -75,7 +75,7 @@ export function ProStatCard({
                             {isPositive ? (
                                 <ProStatCardTrendUpGlyph />
                             ) : isNegative ? (
-                                <TrendingDown className="ml-1 h-4 w-4" />
+                                <TrendingDown className="ml-1 size-4" />
                             ) : null}
                         </span>
                     </div>

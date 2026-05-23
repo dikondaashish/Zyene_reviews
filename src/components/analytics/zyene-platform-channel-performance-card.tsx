@@ -18,7 +18,7 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
             <CardHeader>
                 <div className="space-y-1">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Send className="w-5 h-5 text-primary" />
+                        <Send className="text-primary size-5" />
                         Channel Performance
                     </CardTitle>
                     <p className="text-xs text-muted-foreground font-medium">
@@ -34,8 +34,8 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                         <div key={ch.channel} className="space-y-3">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
-                                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                        <ChannelIcon className="h-4 w-4 text-primary" />
+                                    <div className="rounded-lg bg-primary/10 flex items-center justify-center size-8">
+                                        <ChannelIcon className="text-primary size-4" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold">{ch.channel}</p>
@@ -63,11 +63,11 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                             </div>
                             <div className="flex items-center gap-4 text-[10px] font-semibold text-muted-foreground">
                                 <span className="flex items-center gap-1">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                                    <div className="rounded-full bg-primary size-1.5" />
                                     {ch.completed} completed
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
+                                    <div className="rounded-full bg-primary/40 size-1.5" />
                                     {ch.clicked - ch.completed} clicked only
                                 </span>
                             </div>
@@ -76,7 +76,7 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                 })}
                 {channelData.every((ch) => ch.sent === 0) && (
                     <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-2">
-                        <Send className="w-8 h-8 opacity-20" />
+                        <Send className="opacity-20 size-8" />
                         <p className="text-sm">No requests sent in this period</p>
                     </div>
                 )}

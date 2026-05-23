@@ -46,7 +46,7 @@ export function CookieBannerPreferencesModal({
                         </div>
                         <input
                             type="checkbox"
-                            className="h-4 w-4 accent-primary"
+                            className="accent-primary size-4"
                             checked={preferences.analytics}
                             onChange={(e) =>
                                 onPreferencesChange((prev) => ({
@@ -66,7 +66,7 @@ export function CookieBannerPreferencesModal({
                         </div>
                         <input
                             type="checkbox"
-                            className="h-4 w-4 accent-primary"
+                            className="accent-primary size-4"
                             checked={preferences.marketing}
                             onChange={(e) =>
                                 onPreferencesChange((prev) => ({

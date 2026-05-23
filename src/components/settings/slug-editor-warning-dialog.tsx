@@ -31,7 +31,7 @@ export function SlugEditorWarningDialog({
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-destructive flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5" />
+                        <AlertTriangle className="size-5" />
                         Warning: Breaking Change
                     </AlertDialogTitle>
                     <AlertDialogDescription>

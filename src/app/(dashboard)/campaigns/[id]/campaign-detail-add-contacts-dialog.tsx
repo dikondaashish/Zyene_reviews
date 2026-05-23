@@ -43,7 +43,7 @@ export function CampaignDetailAddContactsDialog({
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    <Plus className="mr-2 h-4 w-4" />
+                    <Plus className="mr-2 size-4" />
                     Add Contacts
                 </Button>
             </DialogTrigger>
@@ -58,7 +58,7 @@ export function CampaignDetailAddContactsDialog({
                         size="sm"
                         onClick={() => setAddMode("single")}
                     >
-                        <Users className="mr-2 h-4 w-4" />
+                        <Users className="mr-2 size-4" />
                         Single
                     </Button>
                     <Button
@@ -66,7 +66,7 @@ export function CampaignDetailAddContactsDialog({
                         size="sm"
                         onClick={() => setAddMode("bulk")}
                     >
-                        <Upload className="mr-2 h-4 w-4" />
+                        <Upload className="mr-2 size-4" />
                         Bulk
                     </Button>
                     <Button
@@ -77,7 +77,7 @@ export function CampaignDetailAddContactsDialog({
                             setCsvDialogOpen(true);
                         }}
                     >
-                        <FileText className="mr-2 h-4 w-4" />
+                        <FileText className="mr-2 size-4" />
                         CSV
                     </Button>
                 </div>
@@ -90,9 +90,9 @@ export function CampaignDetailAddContactsDialog({
                     </DialogClose>
                     <Button onClick={sendToContacts} disabled={sending}>
                         {sending ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending...</>
+                            <><Loader2 className="mr-2 animate-spin size-4" />Sending...</>
                         ) : (
-                            <><Send className="mr-2 h-4 w-4" />Send Now</>
+                            <><Send className="mr-2 size-4" />Send Now</>
                         )}
                     </Button>
                 </DialogFooter>

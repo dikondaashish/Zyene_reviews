@@ -63,79 +63,78 @@ export async function runBulkReviewRequestAction(
     const actualBatch = eligibleCustomers.slice(0, batchSize);
     const adminClient = createAdminClient();
 
-    let successCount = 0;
-    let failCount = 0;
-
-    for (const customer of actualBatch) {
-        if (!customer.phone) {
-            failCount++;
-            continue;
-        }
-
-        try {
-            const { data: requestRecord, error: insertReqError } = await supabase
-                .from("review_requests")
-                .insert({
-                    business_id: businessId,
-                    customer_name: `${customer.first_name || ""} ${customer.last_name || ""}`.trim(),
-                    customer_phone: customer.phone,
-                    channel: "sms",
-                    status: "sending",
-                })
-                .select()
-                .single();
-
-            if (insertReqError || !requestRecord) {
-                logger.error({ err: insertReqError }, "Bulk insert review_request failed:");
-                failCount++;
-                continue;
+    const outcomes = await Promise.all(
+        actualBatch.map(async (customer) => {
+            if (!customer.phone) {
+                return "fail" as const;
             }
 
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-            const protocol = rootDomain.includes("localhost") ? "http" : "https";
-            const reviewCaptureDomain = rootDomain.includes("localhost")
-                ? rootDomain
-                : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
-            const reviewLink = `${protocol}://${reviewCaptureDomain}/${biz.slug}?ref=${requestRecord.id}`;
-            const messageBody = `Hi ${customer.first_name || "there"}! Thanks for visiting ${biz.name}. We'd love your feedback: ${reviewLink}`;
+            try {
+                const { data: requestRecord, error: insertReqError } = await supabase
+                    .from("review_requests")
+                    .insert({
+                        business_id: businessId,
+                        customer_name: `${customer.first_name || ""} ${customer.last_name || ""}`.trim(),
+                        customer_phone: customer.phone,
+                        channel: "sms",
+                        status: "sending",
+                    })
+                    .select()
+                    .single();
 
-            const result = await sendSMS(customer.phone, messageBody);
+                if (insertReqError || !requestRecord) {
+                    logger.error({ err: insertReqError }, "Bulk insert review_request failed:");
+                    return "fail" as const;
+                }
 
-            const rrPatch = {
-                status: result.sent ? "sent" : "failed",
-                error_message: result.error || null,
-                sent_at: result.sent ? new Date().toISOString() : null,
-            };
-            const { data: rrUpdated } = await supabase
-                .from("review_requests")
-                .update(rrPatch)
-                .eq("id", requestRecord.id)
-                .select();
-            if (!rrUpdated?.[0]) {
-                await adminClient
+                const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                const protocol = rootDomain.includes("localhost") ? "http" : "https";
+                const reviewCaptureDomain = rootDomain.includes("localhost")
+                    ? rootDomain
+                    : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
+                const reviewLink = `${protocol}://${reviewCaptureDomain}/${biz.slug}?ref=${requestRecord.id}`;
+                const messageBody = `Hi ${customer.first_name || "there"}! Thanks for visiting ${biz.name}. We'd love your feedback: ${reviewLink}`;
+
+                const result = await sendSMS(customer.phone, messageBody);
+
+                const rrPatch = {
+                    status: result.sent ? "sent" : "failed",
+                    error_message: result.error || null,
+                    sent_at: result.sent ? new Date().toISOString() : null,
+                };
+                const { data: rrUpdated } = await supabase
                     .from("review_requests")
                     .update(rrPatch)
                     .eq("id", requestRecord.id)
-                    .eq("business_id", businessId);
-            }
+                    .select();
+                if (!rrUpdated?.[0]) {
+                    await adminClient
+                        .from("review_requests")
+                        .update(rrPatch)
+                        .eq("id", requestRecord.id)
+                        .eq("business_id", businessId);
+                }
 
-            if (result.sent) {
-                successCount++;
-                await supabase
-                    .from("customers")
-                    .update({
-                        last_request_sent_at: new Date().toISOString(),
-                        total_requests_sent: (customer.total_requests_sent || 0) + 1,
-                    })
-                    .eq("id", customer.id);
-            } else {
-                failCount++;
+                if (result.sent) {
+                    await supabase
+                        .from("customers")
+                        .update({
+                            last_request_sent_at: new Date().toISOString(),
+                            total_requests_sent: (customer.total_requests_sent || 0) + 1,
+                        })
+                        .eq("id", customer.id);
+                    return "success" as const;
+                }
+
+                return "fail" as const;
+            } catch (e) {
+                logger.error({ err: customer.id, e }, "Bulk Request Error for customer");
+                return "fail" as const;
             }
-        } catch (e) {
-            logger.error({ err: customer.id, e }, "Bulk Request Error for customer");
-            failCount++;
-        }
-    }
+        })
+    );
+    const successCount = outcomes.filter((o) => o === "success").length;
+    const failCount = outcomes.filter((o) => o === "fail").length;
 
     return {
         status: 200 as const,

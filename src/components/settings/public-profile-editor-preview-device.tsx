@@ -26,13 +26,13 @@ export function PublicProfileEditorPreviewDevice({
                 <span className="text-xs font-semibold text-muted-foreground/80 tracking-widest uppercase">
                     PREVIEW
                 </span>
-                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/50" />
+                <HelpCircle className="text-muted-foreground/50 size-3.5" />
             </div>
 
             <div className="mx-auto h-[700px] w-full rounded-[2.5rem] overflow-hidden relative border-[4px] border-foreground ring-1 ring-border">
                 <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
 
-                <div className="h-full w-full overflow-y-auto no-scrollbar" style={{ background: previewBackdrop }}>
+                <div className="overflow-y-auto no-scrollbar size-full" style={{ background: previewBackdrop }}>
                     <PublicReviewFlow {...flowProps} />
                 </div>
             </div>

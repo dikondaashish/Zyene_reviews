@@ -17,7 +17,7 @@ export function ZyenePlatformPopularTagsCard({
             <CardHeader>
                 <div className="space-y-1">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Hash className="w-5 h-5 text-primary" />
+                        <Hash className="text-primary size-5" />
                         What Customers Loved
                     </CardTitle>
                     <p className="text-xs text-muted-foreground font-medium">
@@ -55,7 +55,7 @@ export function ZyenePlatformPopularTagsCard({
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-2">
-                        <Hash className="w-8 h-8 opacity-20" />
+                        <Hash className="opacity-20 size-8" />
                         <p className="text-sm">No tags selected yet</p>
                     </div>
                 )}

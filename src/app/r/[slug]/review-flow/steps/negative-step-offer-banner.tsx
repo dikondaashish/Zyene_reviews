@@ -45,28 +45,28 @@ export function NegativeStepOfferBanner({
                 aria-hidden
             />
             <div
-                className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-gradient-to-br from-primary/20 to-chart-2/20 blur-[2px]"
+                className="pointer-events-none absolute -right-10 -top-12 rounded-full bg-gradient-to-br from-primary/20 to-chart-2/20 blur-[2px] size-36"
                 aria-hidden
             />
             <div
-                className="pointer-events-none absolute -bottom-6 right-10 h-24 w-24 rounded-full bg-muted/40"
+                className="pointer-events-none absolute -bottom-6 right-10 rounded-full bg-muted/40 size-24"
                 aria-hidden
             />
             <div
                 className="pointer-events-none absolute right-20 top-3 text-primary/35"
                 aria-hidden
             >
-                <Sparkles className="h-4 w-4" strokeWidth={2} />
+                <Sparkles className="size-4" strokeWidth={2} />
             </div>
             <div className="relative flex gap-4 pl-3">
                 <div
                     className={cn(
-                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-primary-foreground",
+                        "flex shrink-0 items-center justify-center rounded-2xl text-primary-foreground size-12",
                         "bg-gradient-to-br from-primary to-chart-2 shadow-md shadow-foreground/10 ring-2 ring-primary-foreground/80"
                     )}
                     aria-hidden
                 >
-                    <Gift className="h-6 w-6" strokeWidth={2.25} />
+                    <Gift className="size-6" strokeWidth={2.25} />
                 </div>
                 <div className="min-w-0 flex-1 space-y-2 pt-0.5">
                     <div className="flex flex-wrap items-center gap-2">

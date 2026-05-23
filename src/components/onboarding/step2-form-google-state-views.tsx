@@ -29,7 +29,7 @@ export function Step2FormGoogleStateViews({
             <div className="flex flex-col items-center justify-center gap-5 py-20">
                 <div className="relative">
                     <div className="absolute inset-0 bg-primary/15 blur-2xl rounded-full animate-pulse" />
-                    <Loader2 className="h-12 w-12 animate-spin text-primary relative z-10" />
+                    <Loader2 className="animate-spin text-primary relative z-10 size-12" />
                 </div>
                 <p className="text-sm font-semibold text-foreground animate-pulse">Connecting to Google…</p>
             </div>
@@ -40,8 +40,8 @@ export function Step2FormGoogleStateViews({
         return (
             <div className="max-w-md mx-auto space-y-5 py-8">
                 <div className="text-center space-y-2">
-                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto">
-                        <MapPin className="h-7 w-7 text-primary" />
+                    <div className="rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto size-14">
+                        <MapPin className="text-primary size-7" />
                     </div>
                     <p className="font-bold text-xl text-foreground">Select your business</p>
                     <p className="text-xs text-muted-foreground">
@@ -62,9 +62,9 @@ export function Step2FormGoogleStateViews({
                                 <p className="text-[11px] text-muted-foreground mt-0.5">{loc.fullAddress}</p>
                             </div>
                             {advancing ? (
-                                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                                <Loader2 className="animate-spin text-primary size-4" />
                             ) : (
-                                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <ArrowRight className="text-muted-foreground group-hover:text-primary transition-colors size-4" />
                             )}
                         </button>
                     ))}
@@ -76,8 +76,8 @@ export function Step2FormGoogleStateViews({
     if (googleState.status === "success" && availableLocations.length === 0) {
         return (
             <div className="max-w-sm mx-auto text-center space-y-6 py-10">
-                <div className="w-16 h-16 rounded-2xl bg-chart-2/10 flex items-center justify-center mx-auto ring-1 ring-chart-2/20">
-                    <CheckCircle2 className="w-8 h-8 text-chart-2" />
+                <div className="rounded-2xl bg-chart-2/10 flex items-center justify-center mx-auto ring-1 ring-chart-2/20 size-16">
+                    <CheckCircle2 className="text-chart-2 size-8" />
                 </div>
                 <div>
                     <p className="font-bold text-chart-2 text-xl">Connected!</p>
@@ -89,7 +89,7 @@ export function Step2FormGoogleStateViews({
                     className="w-full h-12 bg-chart-2 hover:bg-chart-2/90 rounded-2xl font-semibold text-sm cursor-pointer"
                     disabled={advancing}
                 >
-                    {advancing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Continue Setup →"}
+                    {advancing ? <Loader2 className="animate-spin size-4" /> : "Continue Setup →"}
                 </Button>
             </div>
         );
@@ -107,7 +107,7 @@ export function Step2FormGoogleStateViews({
                     onClick={() => setGoogleState({ status: "idle" })}
                     className="w-full h-12 rounded-2xl font-semibold border-2 cursor-pointer"
                 >
-                    <RefreshCw className="h-4 w-4 mr-2" /> Try again
+                    <RefreshCw className="mr-2 size-4" /> Try again
                 </Button>
             </div>
         );

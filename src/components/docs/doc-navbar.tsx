@@ -21,7 +21,7 @@ export function DocNavbar() {
                             alt="Zyene Reviews"
                             width={32}
                             height={32}
-                            className="h-full w-full object-cover"
+                            className="object-cover size-full"
                             priority
                         />
                     </div>
@@ -29,7 +29,7 @@ export function DocNavbar() {
 
                 <DocSearchTrigger className="inline-flex max-w-sm flex-1 items-center md:flex">
                     <span className="flex w-full items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted md:px-3">
-                        <Search className="h-4 w-4 shrink-0" />
+                        <Search className="shrink-0 size-4" />
                         <span className="hidden md:inline">Search docs…</span>
                         <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 md:inline-flex">
                             <span className="text-xs">⌘</span>K

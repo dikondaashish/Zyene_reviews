@@ -72,9 +72,9 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
                             req.met ? "bg-chart-2/15" : "bg-muted"
                         }`}>
                             {req.met ? (
-                                <Check className="h-2 w-2 text-chart-2" strokeWidth={4} />
+                                <Check className="text-chart-2 size-2" strokeWidth={4} />
                             ) : (
-                                <X className="h-2 w-2 text-muted-foreground" strokeWidth={3} />
+                                <X className="text-muted-foreground size-2" strokeWidth={3} />
                             )}
                         </div>
                         <span className={`text-xs ${req.met ? "text-foreground/80" : "text-muted-foreground"}`}>

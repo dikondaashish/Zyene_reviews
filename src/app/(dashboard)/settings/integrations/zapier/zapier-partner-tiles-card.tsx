@@ -9,8 +9,8 @@ type SimpleIconData = { title: string; hex: string; path: string };
 
 function SimpleIconMark({ icon }: { icon: SimpleIconData }) {
     return (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-border dark:bg-white">
-            <svg role="img" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+        <div className="flex shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-border dark:bg-white size-10">
+            <svg role="img" viewBox="0 0 24 24" className="size-6" aria-hidden>
                 <title>{icon.title}</title>
                 <path fill={`#${icon.hex}`} d={icon.path} />
             </svg>
@@ -22,13 +22,13 @@ function SimpleIconMark({ icon }: { icon: SimpleIconData }) {
 function FaviconMark({ domain, label }: { domain: string; label: string }) {
     const src = `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=128`;
     return (
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-border dark:bg-white">
+        <div className="flex shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-border dark:bg-white size-10">
             <img
                 src={src}
                 alt={`${label} logo`}
                 width={28}
                 height={28}
-                className="h-7 w-7 object-contain"
+                className="object-contain size-7"
                 loading="lazy"
                 referrerPolicy="no-referrer"
             />
@@ -103,7 +103,7 @@ export function ZapierPartnerTilesCard() {
                                     variant="secondary"
                                     className="mt-1.5 gap-1 border-0 bg-chart-2/15 px-1.5 py-0.5 text-[10px] font-medium text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
                                 >
-                                    <CheckCircle2 className="h-2.5 w-2.5" aria-hidden />
+                                    <CheckCircle2 className="size-2.5" aria-hidden />
                                     Works via Zapier
                                 </Badge>
                             </div>

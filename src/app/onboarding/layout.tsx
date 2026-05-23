@@ -39,13 +39,13 @@ export default async function OnboardingLayout({
             <header className="relative z-10 border-b border-primary/20 bg-background/50 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-2.5">
-                        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl shadow-lg shadow-primary/20 ring-1 ring-background/40">
+                        <div className="flex items-center justify-center overflow-hidden rounded-xl shadow-lg shadow-primary/20 ring-1 ring-background/40 size-10">
                             <Image
                                 src="/Main%20logo.png"
                                 alt="Zyene Reviews"
                                 width={40}
                                 height={40}
-                                className="h-full w-full object-cover"
+                                className="object-cover size-full"
                                 priority
                             />
                         </div>

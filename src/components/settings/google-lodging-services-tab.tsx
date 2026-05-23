@@ -18,11 +18,11 @@ export function GoogleLodgingServicesTab({
     saving: boolean;
 }) {
     const s = (lodging.services as Record<string, unknown>) || {};
-    const [frontDesk, setFrontDesk] = useState(googleLodgingBoolVal(s.frontDesk));
-    const [hour24, setHour24] = useState(googleLodgingBoolVal(s.twentyFourHourFrontDesk));
-    const [concierge, setConcierge] = useState(googleLodgingBoolVal(s.concierge));
-    const [elevator, setElevator] = useState(googleLodgingBoolVal(s.elevator));
-    const [baggage, setBaggage] = useState(googleLodgingBoolVal(s.baggageStorage));
+    const [frontDesk, setFrontDesk] = useState(() => googleLodgingBoolVal(s.frontDesk));
+    const [hour24, setHour24] = useState(() => googleLodgingBoolVal(s.twentyFourHourFrontDesk));
+    const [concierge, setConcierge] = useState(() => googleLodgingBoolVal(s.concierge));
+    const [elevator, setElevator] = useState(() => googleLodgingBoolVal(s.elevator));
+    const [baggage, setBaggage] = useState(() => googleLodgingBoolVal(s.baggageStorage));
 
     return (
         <div className="space-y-4 max-w-md">

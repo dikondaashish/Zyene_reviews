@@ -54,7 +54,7 @@ export function HelpCategoryView({ categoryKey }: { categoryKey: HelpCategory })
                                     {article.excerpt}
                                 </p>
                                 <span className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-3">
-                                    Read guide <ArrowRight className="h-3 w-3" />
+                                    Read guide <ArrowRight className="size-3" />
                                 </span>
                             </Link>
                         ))}

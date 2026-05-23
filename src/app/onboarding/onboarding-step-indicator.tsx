@@ -31,7 +31,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                             >
                                 {isCompleted ? (
                                     <svg
-                                        className="w-4 h-4"
+                                        className="size-4"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -44,7 +44,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                                         />
                                     </svg>
                                 ) : (
-                                    <StepIcon className="w-4 h-4" />
+                                    <StepIcon className="size-4" />
                                 )}
                             </motion.div>
                             <span

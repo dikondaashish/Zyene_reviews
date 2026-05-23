@@ -34,7 +34,7 @@ export function DeveloperApiCardFooter({
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="sm" className="text-muted-foreground">
-                                <RefreshCw className="mr-2 h-3.5 w-3.5" />
+                                <RefreshCw className="mr-2 size-3.5" />
                                 Regenerate Key
                             </Button>
                         </AlertDialogTrigger>
@@ -57,13 +57,13 @@ export function DeveloperApiCardFooter({
             <div className="flex flex-wrap items-center justify-end gap-2 sm:ml-auto">
                 <Button variant="outline" size="sm" asChild>
                     <Link href={DEVELOPER_API_DOCS_COOKBOOK_PATH}>
-                        <Terminal className="mr-2 h-3.5 w-3.5" />
+                        <Terminal className="mr-2 size-3.5" />
                         Cookbook
                     </Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
                     <Link href={DEVELOPER_API_DOCS_API_PATH}>
-                        <BookOpen className="mr-2 h-3.5 w-3.5" />
+                        <BookOpen className="mr-2 size-3.5" />
                         Full Documentation
                     </Link>
                 </Button>

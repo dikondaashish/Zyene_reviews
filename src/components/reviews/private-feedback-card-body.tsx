@@ -35,7 +35,7 @@ export function PrivateFeedbackCardBody({ feedback }: { feedback: PrivateFeedbac
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 {displayEmail && (
                     <div className="flex min-w-0 items-start gap-1.5 text-[11px] text-muted-foreground">
-                        <Mail className="mt-0.5 h-3 w-3 shrink-0" />
+                        <Mail className="mt-0.5 shrink-0 size-3" />
                         <a href={`mailto:${displayEmail}`} className="break-all hover:underline">
                             {displayEmail}
                         </a>
@@ -43,7 +43,7 @@ export function PrivateFeedbackCardBody({ feedback }: { feedback: PrivateFeedbac
                 )}
                 {displayPhone && (
                     <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                        <Phone className="h-3 w-3 shrink-0" />
+                        <Phone className="shrink-0 size-3" />
                         <a href={`tel:${displayPhone.replace(/\s/g, "")}`} className="hover:underline">
                             {displayPhone}
                         </a>

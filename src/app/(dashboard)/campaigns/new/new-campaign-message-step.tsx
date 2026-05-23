@@ -46,7 +46,7 @@ export function NewCampaignMessageStep({
 
                     <div className="rounded-lg border bg-muted/50 p-4">
                         <div className="flex items-center gap-2 mb-2 text-xs font-medium text-muted-foreground">
-                            <Eye className="h-3.5 w-3.5" />
+                            <Eye className="size-3.5" />
                             Preview
                         </div>
                         <div className="relative max-w-[280px]">

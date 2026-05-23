@@ -23,7 +23,7 @@ export function ImportUploadStep({
                     className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:bg-muted transition-colors cursor-pointer"
                     onClick={() => fileInputRef.current?.click()}
                 >
-                    <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                    <UploadCloud className="mx-auto text-muted-foreground mb-4 size-12" />
                     <h3 className="text-lg font-medium text-foreground">Click to upload CSV</h3>
                     <p className="text-sm text-muted-foreground mt-2">or drag and drop your file here</p>
                     <input

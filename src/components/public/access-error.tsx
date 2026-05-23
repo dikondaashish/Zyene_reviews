@@ -15,11 +15,11 @@ export function AccessError({ type, businessName }: AccessErrorProps) {
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <Card className="w-full max-w-md mx-auto border-muted">
                 <CardHeader className="text-center space-y-4 pb-2">
-                    <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                    <div className="mx-auto bg-muted rounded-full flex items-center justify-center size-12">
                         {isSubscription ? (
-                            <Lock className="w-6 h-6 text-muted-foreground" />
+                            <Lock className="text-muted-foreground size-6" />
                         ) : (
-                            <AlertCircle className="w-6 h-6 text-muted-foreground" />
+                            <AlertCircle className="text-muted-foreground size-6" />
                         )}
                     </div>
                     <div className="space-y-2">
@@ -48,7 +48,7 @@ export function AccessError({ type, businessName }: AccessErrorProps) {
                     <Button asChild className="w-full" size="lg">
                         <Link href={isSubscription ? "https://app.zyenereviews.com/settings/billing" : "https://app.zyenereviews.com/onboarding"}>
                             {isSubscription ? "Upgrade Subscription" : "Connect Google Profile"}
-                            <ExternalLink className="ml-2 h-4 w-4" />
+                            <ExternalLink className="ml-2 size-4" />
                         </Link>
                     </Button>
                 </CardContent>

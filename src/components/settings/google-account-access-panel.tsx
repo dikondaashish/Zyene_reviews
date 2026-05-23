@@ -12,7 +12,7 @@ export function GoogleAccountAccessPanel({ businessId }: { businessId: string })
     if (loading) {
         return (
             <div className="flex items-center gap-2 text-sm text-muted-foreground py-6">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="animate-spin size-4" />
                 Loading Google accounts…
             </div>
         );

@@ -126,7 +126,7 @@ export const AnimatedReviewCards = ({
     );
 
     return (
-        <div className={cn("not-prose relative w-full h-full", classNames?.container)}>
+        <div className={cn("not-prose relative size-full", classNames?.container)}>
             {showShell && shellTitle ? (
                 <AnimatedReviewCardShell
                     shellTitle={shellTitle}
@@ -138,7 +138,7 @@ export const AnimatedReviewCards = ({
                     {body}
                 </AnimatedReviewCardShell>
             ) : (
-                <div className="flex flex-col h-full w-full items-center">{body}</div>
+                <div className="flex flex-col items-center size-full">{body}</div>
             )}
         </div>
     );

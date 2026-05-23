@@ -18,7 +18,7 @@ export function BlogSlugArticleHeaderSection({ post }: { post: (typeof BLOG_POST
                     {/* Breadcrumb */}
                     <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-foreground font-medium truncate max-w-[200px]">{post.title}</span>
                     </nav>
 
@@ -41,7 +41,7 @@ export function BlogSlugArticleHeaderSection({ post }: { post: (typeof BLOG_POST
                         <span>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
                         <span className="text-muted-foreground/40">·</span>
                         <div className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" />
+                            <Clock className="size-3.5" />
                             {post.readMinutes} min read
                         </div>
                     </div>

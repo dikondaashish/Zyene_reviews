@@ -23,7 +23,7 @@ export function InviteMemberDialog({
         <Dialog open={d.open} onOpenChange={d.setOpen}>
             <DialogTrigger asChild>
                 <Button variant={triggerVariant} className={cn(triggerClassName)}>
-                    {showPlusIcon ? <Plus className="mr-2 h-4 w-4" /> : null}
+                    {showPlusIcon ? <Plus className="mr-2 size-4" /> : null}
                     {triggerLabel}
                 </Button>
             </DialogTrigger>

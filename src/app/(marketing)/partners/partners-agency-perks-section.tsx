@@ -23,7 +23,7 @@ export function PartnersAgencyPerksSection() {
                     </ul>
                     <a href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=Agency%20partner%20application`}>
                         <Button variant="outline" className="gap-2">
-                            Apply as agency partner <ArrowRight className="h-4 w-4" />
+                            Apply as agency partner <ArrowRight className="size-4" />
                         </Button>
                     </a>
                 </div>

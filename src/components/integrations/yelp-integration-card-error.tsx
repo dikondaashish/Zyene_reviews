@@ -16,14 +16,14 @@ export function YelpIntegrationCardError({ onReconnect }: YelpIntegrationCardErr
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpCardIcon className="h-6 w-6 text-destructive" />
+                        <YelpCardIcon className="text-destructive size-6" />
                         <div>
                             <h3 className="font-semibold text-sm">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Business reviews</p>
                         </div>
                     </div>
                     <Badge variant="outline" className="border-destructive/40 bg-destructive/10 text-destructive text-[10px]">
-                        <AlertTriangle className="w-3 h-3 mr-1" /> Error
+                        <AlertTriangle className="mr-1 size-3" /> Error
                     </Badge>
                 </div>
             </CardHeader>

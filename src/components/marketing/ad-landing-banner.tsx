@@ -41,7 +41,7 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
         >
             <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-2">
-                    <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <Sparkles className="text-primary shrink-0 mt-0.5 size-4" />
                     <div>
                         <p className="text-sm font-semibold text-foreground">{banner.headline}</p>
                         <p className="text-xs text-muted-foreground">{banner.subheadline}</p>
@@ -51,7 +51,7 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
                     href={signupUrl}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:brightness-90 shrink-0"
                 >
-                    Start 7-day free trial <ArrowRight className="h-3.5 w-3.5" />
+                    Start 7-day free trial <ArrowRight className="size-3.5" />
                 </Link>
             </div>
         </div>

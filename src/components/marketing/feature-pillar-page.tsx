@@ -36,7 +36,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     <ul className="space-y-4">
                         {pillar.bullets.map((b) => (
                             <li key={b} className="flex gap-3 text-muted-foreground">
-                                <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                                <Check className="text-primary shrink-0 mt-0.5 size-5" />
                                 <span>{b}</span>
                             </li>
                         ))}
@@ -45,7 +45,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     {pillar.slug === "review-collection" ? (
                         <div className="rounded-2xl border border-primary/25 bg-primary/5 p-6">
                             <div className="flex items-center gap-2 text-primary font-semibold mb-3">
-                                <Sparkles className="h-4 w-4" />
+                                <Sparkles className="size-4" />
                                 {NEGATIVE_FEEDBACK_SHIELD.headline}
                             </div>
                             <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
@@ -62,7 +62,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     <div className="flex flex-wrap gap-4 pt-4">
                         <Link href={pillar.cta.href}>
                             <Button size="lg" className="gap-2">
-                                {pillar.cta.label} <ArrowRight className="h-4 w-4" />
+                                {pillar.cta.label} <ArrowRight className="size-4" />
                             </Button>
                         </Link>
                         <Link href="/signup">

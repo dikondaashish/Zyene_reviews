@@ -11,8 +11,7 @@ export default async function RequestsPage({
 }: {
     searchParams: Promise<{ page?: string; customer?: string }>;
 }) {
-    const sp = await searchParams;
-    const supabase = await createClient();
+    const [sp, supabase] = await Promise.all([searchParams, createClient()]);
     const {
         data: { user },
     } = await supabase.auth.getUser();

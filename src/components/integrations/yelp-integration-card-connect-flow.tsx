@@ -41,7 +41,7 @@ export function YelpIntegrationCardConnectFlow({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpCardIcon className="h-6 w-6 text-destructive" />
+                        <YelpCardIcon className="text-destructive size-6" />
                         <div>
                             <h3 className="font-semibold text-sm">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Monitor and respond to Yelp reviews</p>
@@ -56,7 +56,7 @@ export function YelpIntegrationCardConnectFlow({
                             Connect your Yelp business to sync and monitor reviews.
                         </p>
                         <Button className="h-9 text-sm" variant="destructive" onClick={() => onShowConnect(true)}>
-                            <YelpCardIcon className="h-4 w-4 mr-2 text-destructive-foreground" />
+                            <YelpCardIcon className="mr-2 text-destructive-foreground size-4" />
                             Connect Yelp
                         </Button>
                     </div>

@@ -84,7 +84,7 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <span className="font-medium text-sm">{tr.label}</span>
-                                    {!tr.available && <Badge variant="outline" className="text-xs"><Lock className="mr-1 h-3 w-3" />Coming Soon</Badge>}
+                                    {!tr.available && <Badge variant="outline" className="text-xs"><Lock className="mr-1 size-3" />Coming Soon</Badge>}
                                 </div>
                                 <span className="text-xs text-muted-foreground">{tr.desc}</span>
                             </div>

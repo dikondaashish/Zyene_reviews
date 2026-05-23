@@ -12,8 +12,8 @@ export function IntegrationsSectionHeader({
     return (
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-                    <Icon className="h-4 w-4 text-primary" />
+                <div className="flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 size-8">
+                    <Icon className="text-primary size-4" />
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
@@ -35,7 +35,7 @@ export function IntegrationsStatusBadge({ count, label }: { count: number; label
             }`}
         >
             {count > 0 && (
-                <span className="h-1.5 w-1.5 rounded-full bg-chart-2/100 animate-pulse" />
+                <span className="rounded-full bg-chart-2/100 animate-pulse size-1.5" />
             )}
             {count} {label}
         </span>

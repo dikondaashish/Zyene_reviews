@@ -45,7 +45,7 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                         <span className="truncate">{title}</span>
                         {isDemo && (
                             <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-primary/10 text-primary border-none ml-2 shrink-0 flex items-center gap-1 px-1.5 py-0 font-bold">
-                                <Sparkles className="w-2.5 h-2.5" />
+                                <Sparkles className="size-2.5" />
                                 Demo
                             </Badge>
                         )}
@@ -62,9 +62,9 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                                 "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold transition-colors",
                                 trendColor
                             )}>
-                                {isPositive && <TrendingUp className="h-3 w-3" />}
-                                {isNegative && <TrendingDown className="h-3 w-3" />}
-                                {isNeutral && <Minus className="h-3 w-3" />}
+                                {isPositive && <TrendingUp className="size-3" />}
+                                {isNegative && <TrendingDown className="size-3" />}
+                                {isNeutral && <Minus className="size-3" />}
                                 {Math.abs(trend.value).toFixed(1)}%
                             </div>
                         )}

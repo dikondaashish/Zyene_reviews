@@ -26,7 +26,7 @@ export function TeamTableMobileLayout(props: TeamTableMobileLayoutProps) {
                     key={member.id}
                     className="flex min-w-0 items-start gap-3 rounded-xl border border-border bg-card p-4"
                 >
-                    <Avatar className="h-10 w-10 shrink-0">
+                    <Avatar className="shrink-0 size-10">
                         <AvatarImage src={member.user?.avatar_url} />
                         <AvatarFallback>
                             {member.type === "member" ? teamTableMemberInitials(member.user?.full_name || "") : "?"}

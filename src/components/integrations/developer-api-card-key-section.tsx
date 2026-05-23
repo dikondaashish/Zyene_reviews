@@ -42,19 +42,19 @@ export function DeveloperApiCardKeySection({
                             onClick={onToggleShowKey}
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                         >
-                            {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showKey ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                         </button>
                     </div>
                     <Button variant="outline" size="icon" className="shrink-0" onClick={onCopy}>
-                        {copied ? <Check className="h-4 w-4 text-chart-2" /> : <Copy className="h-4 w-4" />}
+                        {copied ? <Check className="text-chart-2 size-4" /> : <Copy className="size-4" />}
                     </Button>
                 </div>
             ) : (
                 <Button onClick={onGenerate} disabled={isGenerating} className="w-full">
                     {isGenerating ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 animate-spin size-4" />
                     ) : (
-                        <Code2 className="mr-2 h-4 w-4" />
+                        <Code2 className="mr-2 size-4" />
                     )}
                     Generate API Key
                 </Button>

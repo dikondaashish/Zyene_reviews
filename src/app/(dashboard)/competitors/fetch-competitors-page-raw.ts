@@ -7,19 +7,9 @@ import { fromUntypedTable } from "@/lib/db/supabase/typed-table";
 export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Date) {
     const supabase = await createClient();
 
-    const { data: competitors, error: competitorsError } = await supabase
-        .from("competitors")
-        .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
-        .eq("business_id", businessId)
-        .order("created_at", { ascending: false });
-
-    const { data: ownBusiness } = await supabase
-        .from("businesses")
-        .select("id, name")
-        .eq("id", businessId)
-        .maybeSingle();
-
     const [
+        { data: competitors, error: competitorsError },
+        { data: ownBusiness },
         snapshotsRes,
         eventsRes,
         insightsRes,
@@ -32,6 +22,12 @@ export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Da
         ownSearchKeywords,
         latestMarketBriefRes,
     ] = await Promise.all([
+        supabase
+            .from("competitors")
+            .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
+            .eq("business_id", businessId)
+            .order("created_at", { ascending: false }),
+        supabase.from("businesses").select("id, name").eq("id", businessId).maybeSingle(),
         fromUntypedTable(supabase, "competitor_snapshots")
             .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source, metadata")
             .eq("business_id", businessId)

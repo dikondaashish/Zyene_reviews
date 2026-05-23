@@ -16,7 +16,7 @@ interface SpotlightBackFaceProps {
 export function SpotlightBackFace({ review, theme, classNames }: SpotlightBackFaceProps) {
     return (
         <div className={cn("mb-2 flex min-h-0 items-start gap-2", classNames?.header)}>
-            <Avatar className={cn("h-8 w-8 shrink-0", classNames?.avatar)}>
+            <Avatar className={cn("shrink-0 size-8", classNames?.avatar)}>
                 {review?.avatar ? (
                     <AvatarImage src={review.avatar} alt={review.name} referrerPolicy="no-referrer" />
                 ) : null}

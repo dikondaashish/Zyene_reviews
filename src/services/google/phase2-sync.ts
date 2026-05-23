@@ -63,11 +63,15 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
         }
 
         const BATCH = 50;
-        for (let i = 0; i < rows.length; i += BATCH) {
-            const chunk = rows.slice(i, i + BATCH);
-            const { error } = await admin.from("gbp_questions").upsert(chunk, {
-                onConflict: "review_platform_id,google_question_name",
-            });
+        const upsertResults = await Promise.all(
+            Array.from({ length: Math.ceil(rows.length / BATCH) }, (_, index) => {
+                const chunk = rows.slice(index * BATCH, index * BATCH + BATCH);
+                return admin.from("gbp_questions").upsert(chunk, {
+                    onConflict: "review_platform_id,google_question_name",
+                });
+            })
+        );
+        for (const { error } of upsertResults) {
             if (error) {
                 logger.error({ err: error }, "[Phase2] gbp_questions upsert:");
                 Sentry.captureException(error);
@@ -184,8 +188,10 @@ export async function syncGbpPlaceActionsForPlatform(
 }
 
 export async function syncGooglePhase2ForPlatform(platformId: string): Promise<Phase2SyncResult> {
-    const q = await syncGbpQuestionsForPlatform(platformId);
-    const p = await syncGbpPlaceActionsForPlatform(platformId, { checkLinks: true });
+    const [q, p] = await Promise.all([
+        syncGbpQuestionsForPlatform(platformId),
+        syncGbpPlaceActionsForPlatform(platformId, { checkLinks: true }),
+    ]);
 
     const success = q.success && p.success;
     return {

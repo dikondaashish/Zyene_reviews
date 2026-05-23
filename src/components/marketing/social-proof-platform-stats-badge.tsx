@@ -8,7 +8,7 @@ export function PlatformStatsBadge({ className = "" }: { className?: string }) {
             className={`inline-flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground ${className}`}
         >
             <span className="inline-flex items-center gap-1.5">
-                <Star className="h-4 w-4 fill-primary text-primary" />
+                <Star className="fill-primary text-primary size-4" />
                 <span className="font-semibold text-foreground">{stats.starRating}/5</span>
                 <span>from local business owners</span>
             </span>

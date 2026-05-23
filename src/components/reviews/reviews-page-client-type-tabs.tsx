@@ -43,13 +43,13 @@ export function ReviewsPageClientTypeTabs({
                         }`}
                     >
                         Private ({privateCount})
-                        <Lock className="h-3 w-3 shrink-0" />
+                        <Lock className="shrink-0 size-3" />
                     </div>
                 </button>
             </div>
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 {(loading || isImportingGoogleReviews) && (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    <Loader2 className="animate-spin text-muted-foreground size-4" />
                 )}
                 {isImportingGoogleReviews && (
                     <span className="text-xs text-muted-foreground">Importing from Google…</span>
@@ -58,7 +58,7 @@ export function ReviewsPageClientTypeTabs({
                     <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={onBackfillAi} disabled={isBackfillingAi}>
                         {isBackfillingAi ? (
                             <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                <Loader2 className="mr-2 animate-spin size-4" />
                                 Queuing AI...
                             </>
                         ) : (

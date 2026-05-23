@@ -30,7 +30,7 @@ export function Step4SubscriptionForm({
             <Step4SubscriptionDecorativeShell>
                 {isCancelled && (
                     <Alert className="mb-6 bg-primary/10 border-primary/20">
-                        <Zap className="h-4 w-4 text-primary" />
+                        <Zap className="text-primary size-4" />
                         <AlertTitle className="text-foreground">Payment not completed</AlertTitle>
                         <AlertDescription className="text-muted-foreground">
                             It looks like the checkout process wasn&apos;t finished. You can try again or choose a

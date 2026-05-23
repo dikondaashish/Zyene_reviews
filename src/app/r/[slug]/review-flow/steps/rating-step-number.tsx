@@ -17,7 +17,7 @@ export function RatingStepNumber({ rating, hoverRating, onRate, onHoverRating }:
                     onMouseEnter={() => onHoverRating(num)}
                     onMouseLeave={() => onHoverRating(null)}
                     className={cn(
-                        "w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-lg sm:text-xl font-bold transition-all duration-200 shadow-sm",
+                        "sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-lg sm:text-xl font-bold transition-all duration-200 shadow-sm size-12",
                         "border-2 focus:outline-none focus:ring-2 focus:ring-primary/40",
                         rating === num
                             ? "border-primary bg-primary text-primary-foreground scale-110 shadow-md ring-4 ring-primary/20 z-10"

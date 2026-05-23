@@ -47,11 +47,11 @@ export function FacebookIntegrationCardConnected({
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
+                            <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
                             <CardTitle className="text-base">Facebook</CardTitle>
                         </div>
                         <div className="flex items-center gap-1.5 text-xs font-medium text-chart-2">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            <CheckCircle2 className="size-3.5" />
                             Connected
                         </div>
                     </div>
@@ -61,21 +61,21 @@ export function FacebookIntegrationCardConnected({
                     <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
                         <div className="rounded-lg bg-card p-2 border border-border">
                             <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                <Star className="h-3.5 w-3.5 text-chart-4" />
+                                <Star className="text-chart-4 size-3.5" />
                                 {fbRatingDisplay}
                             </div>
                             <div className="text-[10px] text-muted-foreground">Rating</div>
                         </div>
                         <div className="rounded-lg bg-card p-2 border border-border">
                             <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                <MessageSquare className="h-3.5 w-3.5 text-primary" />
+                                <MessageSquare className="text-primary size-3.5" />
                                 {fbSyncedCount}
                             </div>
                             <div className="text-[10px] text-muted-foreground">Reviews</div>
                         </div>
                         <div className="rounded-lg bg-card p-2 border border-border">
                             <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                                <Clock className="text-muted-foreground size-3.5" />
                                 {!mounted
                                     ? "..."
                                     : platform?.last_synced_at
@@ -89,16 +89,16 @@ export function FacebookIntegrationCardConnected({
                     <div className="flex gap-2">
                         <Button size="sm" variant="outline" className="flex-1" onClick={handleSync} disabled={syncing}>
                             {syncing ? (
-                                <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                                <Loader2 className="mr-1 animate-spin size-3.5" />
                             ) : (
-                                <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                                <RefreshCw className="mr-1 size-3.5" />
                             )}
                             Sync Now
                         </Button>
                         {platform.external_url && (
                             <Button size="sm" variant="outline" asChild>
                                 <a href={platform.external_url} target="_blank" rel="noopener noreferrer">
-                                    <ExternalLink className="h-3.5 w-3.5" />
+                                    <ExternalLink className="size-3.5" />
                                 </a>
                             </Button>
                         )}

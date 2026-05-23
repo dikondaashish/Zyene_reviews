@@ -36,7 +36,7 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
 
             {status === "resolved" && (
                 <div className="relative z-10 pt-1 flex items-center gap-1 text-[10px] font-medium text-chart-2">
-                    <CheckCircle className="w-3 h-3" />
+                    <CheckCircle className="size-3" />
                     Conversation marked as recovered
                 </div>
             )}

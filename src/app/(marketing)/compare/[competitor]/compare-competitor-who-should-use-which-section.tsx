@@ -12,7 +12,7 @@ export function CompareCompetitorWhoShouldUseWhichSection({ data }: { data: Comp
                             <ul className="space-y-3">
                                 {data.whoShouldUseCompetitor.map((item, i) => (
                                     <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                                        <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                                        <ChevronRight className="text-muted-foreground shrink-0 mt-0.5 size-4" />
                                         {item}
                                     </li>
                                 ))}
@@ -23,7 +23,7 @@ export function CompareCompetitorWhoShouldUseWhichSection({ data }: { data: Comp
                             <ul className="space-y-3">
                                 {data.whoShouldUseZyene.map((item, i) => (
                                     <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                                        <Check className="text-primary shrink-0 mt-0.5 size-4" />
                                         {item}
                                     </li>
                                 ))}

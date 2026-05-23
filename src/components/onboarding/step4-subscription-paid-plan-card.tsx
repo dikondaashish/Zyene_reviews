@@ -37,7 +37,7 @@ export function Step4SubscriptionPaidPlanCard({
     return (
         <PricingCard.Card
             className={cn(
-                "relative flex w-full max-w-none flex-col h-full",
+                "relative flex max-w-none flex-col size-full",
                 "transition-all duration-300 hover:-translate-y-2 hover:border-border dark:hover:border-border",
                 isPro && "ring-2 ring-primary/50 hover:ring-primary/70",
             )}
@@ -79,7 +79,7 @@ export function Step4SubscriptionPaidPlanCard({
                 >
                     <span className="inline-flex items-center justify-center gap-2">
                         {(loadingPlanId === plan.id || trialEligibilityLoading) && (
-                            <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                            <Loader2 className="animate-spin shrink-0 size-4" />
                         )}
                         {!trialEligibilityLoading && (checkoutOffersTrial ? startTrialCta : subscribeCta)}
                     </span>
@@ -90,7 +90,7 @@ export function Step4SubscriptionPaidPlanCard({
                     {plan.features.map((feature) => (
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-chart-2" aria-hidden />
+                                <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

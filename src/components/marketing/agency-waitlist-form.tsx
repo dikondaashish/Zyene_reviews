@@ -61,7 +61,7 @@ export function AgencyWaitlistForm() {
                 className="w-28 h-11 rounded-lg border border-border px-4 text-sm"
             />
             <Button type="submit" disabled={loading} className="shrink-0">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Join waitlist"}
+                {loading ? <Loader2 className="animate-spin size-4" /> : "Join waitlist"}
             </Button>
             {error && <p className="text-sm text-destructive sm:col-span-3">{error}</p>}
         </form>

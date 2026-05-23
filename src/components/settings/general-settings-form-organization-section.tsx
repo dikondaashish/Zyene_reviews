@@ -27,7 +27,7 @@ export function GeneralSettingsFormOrganizationSection({
                     Organization Name
                 </label>
                 <div className="relative">
-                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                     <Input
                         value={orgName}
                         onChange={(e) => onOrgNameChange(e.target.value)}

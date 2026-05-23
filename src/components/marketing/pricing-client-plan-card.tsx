@@ -30,7 +30,7 @@ export function PricingClientPlanCard({
                     Most Popular
                 </div>
                 <div className="flex items-center gap-2 mb-1">
-                    <Crown className="h-5 w-5 text-primary" />
+                    <Crown className="text-primary size-5" />
                     <h3 className="text-xl font-bold">{plan.name}</h3>
                 </div>
                 <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-6">
@@ -54,14 +54,14 @@ export function PricingClientPlanCard({
                 <ul className="space-y-2.5 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
                     {plan.features.map((f) => (
                         <li key={f} className="flex items-start gap-2">
-                            <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                            <Check className="text-primary shrink-0 mt-0.5 size-4" />
                             {f}
                         </li>
                     ))}
                 </ul>
                 <Link href={signupUrl}>
                     <Button className="w-full rounded-lg py-6 font-semibold text-base">
-                        Start 7-day free trial <ArrowRight className="ml-2 h-4 w-4" />
+                        Start 7-day free trial <ArrowRight className="ml-2 size-4" />
                     </Button>
                 </Link>
             </div>
@@ -72,7 +72,7 @@ export function PricingClientPlanCard({
         return (
             <div className="bg-card border border-border rounded-2xl p-8 flex flex-col">
                 <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck className="h-5 w-5 text-primary" />
+                    <ShieldCheck className="text-primary size-5" />
                     <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">For large organizations with custom needs</p>
@@ -82,7 +82,7 @@ export function PricingClientPlanCard({
                 <ul className="space-y-2.5 text-sm text-muted-foreground flex-1 mb-8">
                     {plan.features.map((f) => (
                         <li key={f} className="flex items-start gap-2">
-                            <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                            <Check className="text-primary shrink-0 mt-0.5 size-4" />
                             {f}
                         </li>
                     ))}
@@ -99,7 +99,7 @@ export function PricingClientPlanCard({
     return (
         <div className="bg-card border border-border rounded-2xl p-8 flex flex-col">
             <div className="flex items-center gap-2 mb-1">
-                <Zap className="h-5 w-5 text-primary" />
+                <Zap className="text-primary size-5" />
                 <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">Perfect for single-location businesses</p>
@@ -117,14 +117,14 @@ export function PricingClientPlanCard({
             <ul className="space-y-2.5 text-sm text-muted-foreground flex-1 mb-8">
                 {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                        <Check className="text-primary shrink-0 mt-0.5 size-4" />
                         {f}
                     </li>
                 ))}
             </ul>
             <Link href={signupUrl}>
                 <Button className="w-full rounded-lg py-6 font-semibold text-base">
-                    Start 7-day free trial <ArrowRight className="ml-2 h-4 w-4" />
+                    Start 7-day free trial <ArrowRight className="ml-2 size-4" />
                 </Button>
             </Link>
         </div>

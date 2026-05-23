@@ -22,14 +22,14 @@ export default function AuthLayout({
                 />
 
                 {/* Gradient orbs */}
-                <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-1/4 right-0 w-60 h-60 bg-primary/15 rounded-full blur-[80px]" />
+                <div className="absolute top-1/4 -left-20 bg-primary/20 rounded-full blur-[100px] size-80" />
+                <div className="absolute bottom-1/4 right-0 bg-primary/15 rounded-full blur-[80px] size-60" />
 
                 {/* Logo */}
                 <div className="relative z-10">
                     <Link href="/" className="inline-flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary border border-primary">
-                            <Star className="h-5 w-5 text-primary-foreground fill-primary-foreground" />
+                        <div className="flex items-center justify-center rounded-md bg-primary border border-primary size-10">
+                            <Star className="text-primary-foreground fill-primary-foreground size-5" />
                         </div>
                         <span className="text-xl font-bold text-[color:var(--marketing-footer-fg)]">
                             <span className="text-primary">Zyene</span> Reviews
@@ -52,8 +52,8 @@ export default function AuthLayout({
                     {/* Feature pills */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-4 border border-[color:var(--marketing-footer-border)] rounded-lg bg-primary-foreground/[0.06] backdrop-blur-sm px-5 py-4 max-w-md">
-                            <div className="h-10 w-10 bg-primary/15 rounded-md flex items-center justify-center shrink-0">
-                                <Zap className="h-5 w-5 text-primary" />
+                            <div className="bg-primary/15 rounded-md flex items-center justify-center shrink-0 size-10">
+                                <Zap className="text-primary size-5" />
                             </div>
                             <div>
                                 <p className="text-[color:var(--marketing-footer-fg)] font-medium text-sm">AI-Powered Replies</p>
@@ -61,8 +61,8 @@ export default function AuthLayout({
                             </div>
                         </div>
                         <div className="flex items-center gap-4 border border-[color:var(--marketing-footer-border)] rounded-lg bg-primary-foreground/[0.06] backdrop-blur-sm px-5 py-4 max-w-md">
-                            <div className="h-10 w-10 bg-primary/15 rounded-md flex items-center justify-center shrink-0">
-                                <BarChart3 className="h-5 w-5 text-primary" />
+                            <div className="bg-primary/15 rounded-md flex items-center justify-center shrink-0 size-10">
+                                <BarChart3 className="text-primary size-5" />
                             </div>
                             <div>
                                 <p className="text-[color:var(--marketing-footer-fg)] font-medium text-sm">Real-Time Dashboard</p>
@@ -70,8 +70,8 @@ export default function AuthLayout({
                             </div>
                         </div>
                         <div className="flex items-center gap-4 border border-[color:var(--marketing-footer-border)] rounded-lg bg-primary-foreground/[0.06] backdrop-blur-sm px-5 py-4 max-w-md">
-                            <div className="h-10 w-10 bg-primary/15 rounded-md flex items-center justify-center shrink-0">
-                                <ShieldCheck className="h-5 w-5 text-primary" />
+                            <div className="bg-primary/15 rounded-md flex items-center justify-center shrink-0 size-10">
+                                <ShieldCheck className="text-primary size-5" />
                             </div>
                             <div>
                                 <p className="text-[color:var(--marketing-footer-fg)] font-medium text-sm">Secure Google OAuth</p>
@@ -103,8 +103,8 @@ export default function AuthLayout({
                 {/* Mobile logo */}
                 <div className="lg:hidden mb-10">
                     <Link href="/" className="inline-flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary border border-primary">
-                            <Star className="h-5 w-5 text-primary-foreground fill-primary-foreground" />
+                        <div className="flex items-center justify-center rounded-md bg-primary border border-primary size-10">
+                            <Star className="text-primary-foreground fill-primary-foreground size-5" />
                         </div>
                         <span className="text-xl font-bold text-foreground">
                             <span className="text-primary">Zyene</span> Reviews

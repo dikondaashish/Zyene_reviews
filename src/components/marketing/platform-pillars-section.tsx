@@ -41,7 +41,7 @@ export function PlatformPillarsSection() {
                             >
                                 <div className="flex items-start gap-4">
                                     <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
-                                        <Icon className="h-6 w-6" />
+                                        <Icon className="size-6" />
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-muted-foreground mb-1">

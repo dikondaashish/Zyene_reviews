@@ -43,14 +43,14 @@ export function YelpIntegrationCardConnected({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpCardIcon className="h-6 w-6 text-destructive" />
+                        <YelpCardIcon className="text-destructive size-6" />
                         <div>
                             <h3 className="font-semibold text-sm">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Business reviews</p>
                         </div>
                     </div>
                     <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-[10px]">
-                        <CheckCircle2 className="w-3 h-3 mr-1" /> Connected
+                        <CheckCircle2 className="mr-1 size-3" /> Connected
                     </Badge>
                 </div>
             </CardHeader>
@@ -58,13 +58,13 @@ export function YelpIntegrationCardConnected({
                 <div className="grid grid-cols-2 gap-3">
                     <div className="bg-muted rounded-md p-2.5">
                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                            <Star className="w-3 h-3" /> Reviews synced
+                            <Star className="size-3" /> Reviews synced
                         </div>
                         <p className="text-lg font-bold text-foreground">{yelpSyncedCount}</p>
                     </div>
                     <div className="bg-muted rounded-md p-2.5">
                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                            <Clock className="w-3 h-3" /> Last synced
+                            <Clock className="size-3" /> Last synced
                         </div>
                         <p className="text-xs font-medium text-foreground mt-1">
                             {!mounted
@@ -81,7 +81,7 @@ export function YelpIntegrationCardConnected({
                     </div>
                 </div>
                 <p className="text-[10px] text-chart-4 mt-3 flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" />
+                    <AlertTriangle className="size-3" />
                     Yelp API returns 3 most recent reviews per sync
                 </p>
             </CardContent>

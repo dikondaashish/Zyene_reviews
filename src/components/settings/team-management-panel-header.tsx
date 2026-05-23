@@ -47,7 +47,7 @@ export function TeamManagementPanelHeader({
             {canInviteTeam ? (
                 <div className="flex flex-wrap items-center gap-2">
                     <Button variant="outline" onClick={() => void copyLatestInviteLink()}>
-                        <Copy className="mr-2 h-4 w-4" />
+                        <Copy className="mr-2 size-4" />
                         Copy invite link
                     </Button>
                     <InviteMemberDialog inviterRole={currentUserRole} triggerLabel="Invite members" />

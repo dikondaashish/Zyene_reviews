@@ -31,7 +31,7 @@ export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprise
                         "w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:bg-muted dark:hover:bg-muted",
                     )}
                 >
-                    <Mail className="h-4 w-4" aria-hidden />
+                    <Mail className="size-4" aria-hidden />
                     Contact Sales
                 </a>
             </PricingCard.Header>
@@ -40,7 +40,7 @@ export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprise
                     {enterprisePlan.features.map((feature) => (
                         <PricingCard.ListItem key={feature}>
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="h-4 w-4 text-chart-2" aria-hidden />
+                                <CheckCircle2 className="text-chart-2 size-4" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

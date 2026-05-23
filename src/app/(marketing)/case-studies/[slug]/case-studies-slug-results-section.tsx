@@ -16,7 +16,7 @@ export function CaseStudiesSlugResultsSection({ study, slug, related }: { study:
                                     </p>
                                     <div className="flex items-baseline gap-3 mb-1">
                                         <span className="text-lg text-muted-foreground line-through">{m.before}</span>
-                                        <ArrowRight className="h-4 w-4 text-primary shrink-0" />
+                                        <ArrowRight className="text-primary shrink-0 size-4" />
                                         <span className="text-2xl font-bold text-foreground">{m.after}</span>
                                     </div>
                                     <p className="text-sm font-semibold text-primary">{m.change}</p>

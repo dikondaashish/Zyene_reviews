@@ -23,7 +23,7 @@ export function ReviewContentFeedbackOfferSection({ form }: ReviewContentTabProp
     return (
         <div className="pt-4 border-t border-border space-y-4">
             <div className="flex items-start gap-2">
-                <Gift className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <Gift className="text-primary shrink-0 mt-0.5 size-4" />
                 <div>
                     <p className="text-sm font-medium text-foreground">Special offer message</p>
                     <p className="text-xs text-muted-foreground mt-0.5">

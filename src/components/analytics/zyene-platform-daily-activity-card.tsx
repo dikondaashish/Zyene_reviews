@@ -21,7 +21,7 @@ export function ZyenePlatformDailyActivityCard({ dailyData }: { dailyData: Zyene
             <CardHeader>
                 <div className="space-y-1">
                     <CardTitle className="text-lg font-bold flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-primary" />
+                        <Sparkles className="text-primary size-5" />
                         Daily Activity
                     </CardTitle>
                     <p className="text-xs text-muted-foreground font-medium">

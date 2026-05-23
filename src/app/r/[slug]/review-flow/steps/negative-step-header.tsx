@@ -11,7 +11,7 @@ export function NegativeStepHeader({ rating, apologyMsg, negativeSubheading }: N
 
     return (
         <div className="flex items-center gap-4">
-            <div className="h-16 w-16 bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-[rgb(30,41,59)] dark:border-white/10">
+            <div className="bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-[rgb(30,41,59)] dark:border-white/10 size-16">
                 <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
             </div>
             <div className="text-left">

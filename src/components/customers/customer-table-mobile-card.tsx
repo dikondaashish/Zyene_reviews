@@ -76,13 +76,13 @@ export function CustomerTableMobileCard({
                     <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                         {customer.email ? (
                             <span className="inline-flex min-w-0 items-center gap-1 break-all">
-                                <Mail className="h-3 w-3 shrink-0" />
+                                <Mail className="shrink-0 size-3" />
                                 {customer.email}
                             </span>
                         ) : null}
                         {customer.phone ? (
                             <span className="inline-flex items-center gap-1">
-                                <Phone className="h-3 w-3 shrink-0" />
+                                <Phone className="shrink-0 size-3" />
                                 {customer.phone}
                             </span>
                         ) : null}

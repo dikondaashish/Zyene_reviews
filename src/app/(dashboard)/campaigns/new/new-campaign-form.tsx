@@ -30,7 +30,7 @@ export function NewCampaignForm() {
         <div className="mx-auto flex min-w-0 w-full max-w-3xl flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                 </Button>
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Create Campaign</h1>
@@ -73,7 +73,7 @@ export function NewCampaignForm() {
                     className="w-full sm:w-auto"
                     onClick={() => step > 0 ? setStep(step - 1) : router.push("/campaigns")}
                 >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-2 size-4" />
                     {step > 0 ? "Back" : "Cancel"}
                 </Button>
 
@@ -85,13 +85,13 @@ export function NewCampaignForm() {
                             </Button>
                             <Button onClick={() => saveCampaign("active")} disabled={saving}>
                                 {saving ? "Saving..." : "Launch Campaign"}
-                                {!saving && <ArrowRight className="ml-2 h-4 w-4" />}
+                                {!saving && <ArrowRight className="ml-2 size-4" />}
                             </Button>
                         </>
                     ) : (
                         <Button onClick={() => setStep(step + 1)} disabled={!canProceed()}>
                             Next
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                            <ArrowRight className="ml-2 size-4" />
                         </Button>
                     )}
                 </div>

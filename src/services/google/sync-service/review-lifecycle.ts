@@ -43,10 +43,19 @@ export async function hideGoogleReviewsRemovedFromSource(
     }
 
     const BATCH = 200;
+    const batchOutcomes = await Promise.all(
+        Array.from({ length: Math.ceil(toHide.length / BATCH) }, (_, index) => {
+            const ids = toHide
+                .slice(index * BATCH, index * BATCH + BATCH)
+                .map((r: { id: string }) => r.id);
+            return admin.from("reviews").update({ is_visible: false }).in("id", ids).then(({ error: upErr }) => ({
+                ids,
+                upErr,
+            }));
+        })
+    );
     let hidden = 0;
-    for (let i = 0; i < toHide.length; i += BATCH) {
-        const ids = toHide.slice(i, i + BATCH).map((r: { id: string }) => r.id);
-        const { error: upErr } = await admin.from("reviews").update({ is_visible: false }).in("id", ids);
+    for (const { ids, upErr } of batchOutcomes) {
         if (upErr) {
             logger.error({ err: upErr }, "[Sync] Soft-hide batch failed:");
         } else {

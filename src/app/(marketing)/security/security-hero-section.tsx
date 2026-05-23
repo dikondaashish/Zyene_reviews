@@ -19,8 +19,8 @@ export function SecurityHeroSection() {
     return (
         <section className="pt-24 pb-16 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-4xl text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary border border-primary/20 mb-6">
-                        <Shield className="h-8 w-8" />
+                    <div className="inline-flex items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 mb-6 size-16">
+                        <Shield className="size-8" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
                         Security &amp; trust
@@ -32,12 +32,12 @@ export function SecurityHeroSection() {
                     <div className="flex flex-wrap justify-center gap-4 mt-8">
                         <Link href="/data-retention">
                             <Button variant="outline" className="gap-2">
-                                Data retention policy <ArrowRight className="h-4 w-4" />
+                                Data retention policy <ArrowRight className="size-4" />
                             </Button>
                         </Link>
                         <Link href="/privacy">
                             <Button variant="ghost" className="gap-2 text-muted-foreground">
-                                Privacy policy <ArrowRight className="h-4 w-4" />
+                                Privacy policy <ArrowRight className="size-4" />
                             </Button>
                         </Link>
                     </div>

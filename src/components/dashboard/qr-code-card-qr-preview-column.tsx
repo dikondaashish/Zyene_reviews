@@ -70,9 +70,9 @@ export function QrCodeCardQrPreviewColumn({
                                 {domain}/{businessSlug}
                             </span>
                             {copied ? (
-                                <Check className="w-3.5 h-3.5 ml-1.5 text-green-500" />
+                                <Check className="ml-1.5 text-green-500 size-3.5" />
                             ) : (
-                                <Copy className="w-3.5 h-3.5 ml-1.5" />
+                                <Copy className="ml-1.5 size-3.5" />
                             )}
                         </div>
                     </div>
@@ -101,7 +101,7 @@ export function QrCodeCardQrPreviewColumn({
                             disabled={!qrDataUrl}
                             className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md"
                         >
-                            <Download className="h-4 w-4 mr-2" />
+                            <Download className="mr-2 size-4" />
                             {dictDownloadShort}
                         </Button>
                         <Button
@@ -109,7 +109,7 @@ export function QrCodeCardQrPreviewColumn({
                             onClick={onShare}
                             className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md"
                         >
-                            <Share2 className="h-4 w-4 mr-2" />
+                            <Share2 className="mr-2 size-4" />
                             {dictShareLink}
                         </Button>
                         <Button
@@ -118,14 +118,14 @@ export function QrCodeCardQrPreviewColumn({
                             disabled={!qrDataUrl}
                             className="h-10 w-full rounded-xl border border-border/70 bg-card/80 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-border hover:bg-muted hover:shadow-md"
                         >
-                            <Printer className="h-4 w-4 mr-2" />
+                            <Printer className="mr-2 size-4" />
                             {dictPrintShort}
                         </Button>
                         <Button
                             onClick={() => toast.info("Order QR coming soon!")}
                             className="h-10 w-full rounded-xl bg-foreground text-sm font-medium text-background shadow-sm transition-all duration-200 hover:bg-foreground/90"
                         >
-                            <ShoppingCart className="h-4 w-4 mr-2" />
+                            <ShoppingCart className="mr-2 size-4" />
                             {dictOrderNow}
                         </Button>
                     </div>

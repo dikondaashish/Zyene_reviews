@@ -12,7 +12,7 @@ export function TeamManagementPanelActivityLog({ activity }: { activity: TeamAct
                     {activity.map((item) => (
                         <li key={item.id} className="flex items-start justify-between gap-4 px-4 py-3 text-sm">
                             <div className="flex min-w-0 items-start gap-2">
-                                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
+                                <span className="mt-2 shrink-0 rounded-full bg-muted-foreground/50 size-1.5" />
                                 <p className="text-foreground/90">{item.message}</p>
                             </div>
                             <span className="shrink-0 text-xs text-muted-foreground">

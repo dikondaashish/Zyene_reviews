@@ -26,7 +26,7 @@ export function IndustriesIndustryGridSection() {
                                     {industry.heroSub.split(".")[0]}.
                                 </p>
                                 <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                                    Learn more <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                                    Learn more <ArrowRight className="group-hover:translate-x-1 transition-transform size-3.5" />
                                 </div>
                             </Link>
                         ))}

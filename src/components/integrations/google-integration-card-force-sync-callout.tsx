@@ -21,7 +21,7 @@ export function GoogleIntegrationCardForceSyncCallout({
                     : "Reviews may still be importing. If this persists, use Force Sync."}
             </p>
             <Button size="sm" variant="secondary" className="mt-2" disabled={syncButtonBusy} onClick={() => void onForceSync()}>
-                <RefreshCw className="mr-2 h-3.5 w-3.5" />
+                <RefreshCw className="mr-2 size-3.5" />
                 Force Sync
             </Button>
         </div>

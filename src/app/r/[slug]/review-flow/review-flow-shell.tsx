@@ -51,7 +51,7 @@ export function ReviewFlowShell({
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <>
                     <div
-                        className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse"
+                        className="absolute -top-40 -right-40 rounded-full blur-3xl animate-pulse size-80"
                         style={{
                             backgroundColor: reviewPageOrbRgba(
                                 useCustomPageBackdrop ? pageBgHex : DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
@@ -60,7 +60,7 @@ export function ReviewFlowShell({
                         }}
                     />
                     <div
-                        className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl animate-pulse"
+                        className="absolute -bottom-40 -left-40 rounded-full blur-3xl animate-pulse size-80"
                         style={{
                             backgroundColor: reviewPageOrbRgba(
                                 useCustomPageBackdrop ? pageBgHex : DEFAULT_REVIEW_PAGE_BACKGROUND_HEX,
@@ -104,7 +104,7 @@ export function ReviewFlowShell({
                                             <img
                                                 src={footerLogoUrl}
                                                 alt="Footer Logo"
-                                                className="h-4 w-4 object-contain"
+                                                className="object-contain size-4"
                                             />
                                         )}
                                         <span className="text-foreground font-bold tracking-tight hover:text-foreground/80 transition-colors">

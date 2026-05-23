@@ -26,7 +26,7 @@ export function FeaturesFeaturePillarsSection() {
                                 {/* Text */}
                                 <div className={isEven ? "" : "lg:col-start-2"}>
                                     <div className={`inline-flex items-center gap-2 ${pillar.iconBg} ${pillar.iconColor} text-xs font-bold px-4 py-2 rounded-full border border-current/20 mb-4`}>
-                                        <Icon className="h-3.5 w-3.5" />
+                                        <Icon className="size-3.5" />
                                         {pillar.title}
                                     </div>
                                     {pillar.highlight && (
@@ -39,7 +39,7 @@ export function FeaturesFeaturePillarsSection() {
                                     <ul className="space-y-3 mb-8">
                                         {pillar.bullets.map((b) => (
                                             <li key={b} className="flex items-start gap-3">
-                                                <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                                                <Check className="text-primary shrink-0 mt-0.5 size-5" />
                                                 <span className="text-muted-foreground">{b}</span>
                                             </li>
                                         ))}
@@ -47,7 +47,7 @@ export function FeaturesFeaturePillarsSection() {
                                     <div className="flex flex-wrap items-center gap-4">
                                         <Link href={pillar.cta.href}>
                                             <Button variant={pillar.highlight ? "default" : "outline"} className="gap-2">
-                                                {pillar.cta.label} <ArrowRight className="h-4 w-4" />
+                                                {pillar.cta.label} <ArrowRight className="size-4" />
                                             </Button>
                                         </Link>
                                         <Link
@@ -65,7 +65,7 @@ export function FeaturesFeaturePillarsSection() {
                                         <div className={`absolute inset-0 ${pillar.iconBg} opacity-30`} />
                                         <div className="relative flex flex-col items-center gap-4 text-center">
                                             <div className={`${pillar.iconBg} p-5 rounded-2xl`}>
-                                                <Icon className={`h-12 w-12 ${pillar.iconColor}`} />
+                                                <Icon className={`${pillar.iconColor} size-12`} />
                                             </div>
                                             <p className="text-sm font-semibold text-foreground">{pillar.tagline}</p>
                                             <div className="flex gap-1 mt-1">

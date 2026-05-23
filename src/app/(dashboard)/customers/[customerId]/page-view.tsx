@@ -8,8 +8,10 @@ export default async function CustomerDetailPage({
 }: {
     params: Promise<{ customerId: string }>;
 }) {
-    const { customerId } = await params;
-    const { businessId, business } = await getActiveBusinessId();
+    const [{ customerId }, { businessId, business }] = await Promise.all([
+        params,
+        getActiveBusinessId(),
+    ]);
 
     if (!businessId) {
         redirect("/customers");

@@ -21,17 +21,21 @@ export async function fetchCompetitorsRangeDataRaw(
 ) {
   const rangeStart = getCompetitorRangeStart(range);
 
-  const { data: competitors, error: competitorsError } = await supabase
-    .from("competitors")
-    .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
-    .eq("business_id", businessId)
-    .order("created_at", { ascending: false });
-
-  const { data: ownBusiness } = await supabase
-    .from("businesses")
-    .select("id, name, average_rating, total_reviews")
-    .eq("id", businessId)
-    .maybeSingle();
+  const [
+    { data: competitors, error: competitorsError },
+    { data: ownBusiness },
+  ] = await Promise.all([
+    supabase
+      .from("competitors")
+      .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
+      .eq("business_id", businessId)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("businesses")
+      .select("id, name, average_rating, total_reviews")
+      .eq("id", businessId)
+      .maybeSingle(),
+  ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
   const snapshotsPromise = (supabase.from("competitor_snapshots" as never) as any)

@@ -40,8 +40,8 @@ export function UserNav({ user }: { user: AppUserSummary }) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative rounded-full size-8">
+                    <Avatar className="size-8">
                         <AvatarImage src={user?.user_metadata?.avatar_url ?? undefined} alt={user?.email ?? undefined} />
                         <AvatarFallback>{user?.email?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                     </Avatar>
@@ -59,24 +59,24 @@ export function UserNav({ user }: { user: AppUserSummary }) {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => router.push("/settings/general")} className="cursor-pointer py-2 px-3">
-                        <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <Settings className="mr-2 text-muted-foreground size-4" />
                         <span>{dict.nav.settings}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push("/settings/team")} className="cursor-pointer py-2 px-3">
-                        <UserPlus className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <UserPlus className="mr-2 text-muted-foreground size-4" />
                         <span>{dict.nav.invite}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => router.push("/settings/billing#refer-a-friend")}
                         className="cursor-pointer py-2 px-3"
                     >
-                        <Gift className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <Gift className="mr-2 text-muted-foreground size-4" />
                         <span>{dict.nav.invite_friend}</span>
                     </DropdownMenuItem>
                     
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger className="cursor-pointer py-2 px-3">
-                            <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <Globe className="mr-2 text-muted-foreground size-4" />
                             <span>{dict.nav.language}: {currentLocaleConfig.label}</span>
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
@@ -99,7 +99,7 @@ export function UserNav({ user }: { user: AppUserSummary }) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer py-2 px-3">
-                    <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <LogOut className="mr-2 text-muted-foreground size-4" />
                     <span>{dict.nav.logout}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>

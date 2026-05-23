@@ -7,11 +7,11 @@ export function CustomerPortalCardNfcUpsell() {
                 className="bg-[rgb(0,82,204)] rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
                 onClick={() => window.open("https://zyenereviews.com/nfc-cards", "_blank")}
             >
-                <div className="absolute -left-10 -top-10 w-36 h-36 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-700">
+                <div className="absolute -left-10 -top-10 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-700 size-36">
                     <img
                         src={CUSTOMER_PORTAL_GOOGLE_G_SVG}
                         alt=""
-                        className="w-full h-full object-contain filter brightness-0 invert"
+                        className="object-contain filter brightness-0 invert size-full"
                     />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>
@@ -37,21 +37,21 @@ export function CustomerPortalCardNfcUpsell() {
                         <img
                             src="/google-nfc-card-design.png"
                             alt=""
-                            className="w-full h-full object-contain rounded-lg shadow-2xl"
+                            className="object-contain rounded-lg shadow-2xl size-full"
                         />
                     </div>
                     <div className="absolute right-[4px] top-[36px] w-[62px] h-[90px] rotate-[22deg] opacity-40 blur-[0.2px] scale-[0.95]">
                         <img
                             src="/google-nfc-card-design.png"
                             alt=""
-                            className="w-full h-full object-contain rounded-lg shadow-2xl"
+                            className="object-contain rounded-lg shadow-2xl size-full"
                         />
                     </div>
                     <div className="absolute right-[20px] top-[0px] w-[74px] h-[106px] rotate-[-6deg] z-20 transition-transform duration-500 group-hover:rotate-[-4deg] group-hover:scale-[1.02]">
                         <img
                             src="/google-nfc-card-design.png"
                             alt=""
-                            className="w-full h-full object-contain rounded-[8px] shadow-[0_15px_35px_rgba(0,0,0,0.25)]"
+                            className="object-contain rounded-[8px] shadow-[0_15px_35px_rgba(0,0,0,0.25)] size-full"
                         />
                     </div>
                 </div>

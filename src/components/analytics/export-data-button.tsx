@@ -62,9 +62,9 @@ export function ExportDataButton({ businessId, range, platform }: ExportDataButt
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
         >
             {isExporting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="animate-spin size-4" />
             ) : (
-                <Download className="h-4 w-4" />
+                <Download className="size-4" />
             )}
             {isExporting ? "Exporting..." : "Export CSV"}
         </button>

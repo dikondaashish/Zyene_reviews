@@ -18,7 +18,7 @@ export function HowItWorksFinalCtaSection() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link href="/signup">
                             <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
-                                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                                Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                             </Button>
                         </Link>
                         <Link href="/features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">

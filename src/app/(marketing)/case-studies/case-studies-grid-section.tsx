@@ -48,7 +48,7 @@ export function CaseStudiesGridSection() {
                                     href={`/case-studies/${study.slug}`}
                                     className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:brightness-90"
                                 >
-                                    Read full case study <ArrowRight className="h-4 w-4" />
+                                    Read full case study <ArrowRight className="size-4" />
                                 </Link>
                             </article>
                         ))}

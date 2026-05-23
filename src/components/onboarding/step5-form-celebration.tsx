@@ -28,8 +28,8 @@ export function Step5FormCelebration({
             >
                 <div className="relative">
                     <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping opacity-40" />
-                    <div className="relative w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20">
-                        <Sparkles className="h-8 w-8 text-primary" />
+                    <div className="relative bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20 size-16">
+                        <Sparkles className="text-primary size-8" />
                     </div>
                 </div>
             </motion.div>
@@ -60,8 +60,8 @@ export function Step5FormCelebration({
                             transition={{ delay: item.delay, duration: 0.3 }}
                             className="flex items-center gap-3 p-3.5 bg-chart-2/10 rounded-xl border border-chart-2/25"
                         >
-                            <div className="w-7 h-7 rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0">
-                                <CheckCircle2 className="h-4 w-4 text-chart-2" />
+                            <div className="rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0 size-7">
+                                <CheckCircle2 className="text-chart-2 size-4" />
                             </div>
                             <span className="text-xs font-medium text-foreground">{item.label}</span>
                         </motion.div>
@@ -74,8 +74,8 @@ export function Step5FormCelebration({
                     transition={{ delay: 0.4, duration: 0.3 }}
                     className="flex items-center gap-3 p-3.5 bg-primary/[0.04] rounded-xl border border-primary/10"
                 >
-                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Star className="h-4 w-4 text-primary" />
+                    <div className="rounded-lg bg-primary/10 flex items-center justify-center shrink-0 size-7">
+                        <Star className="text-primary size-4" />
                     </div>
                     <p className="text-xs text-muted-foreground">
                         <strong className="text-foreground">Next:</strong> Send your first review request from the

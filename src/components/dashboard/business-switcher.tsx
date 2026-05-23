@@ -54,11 +54,11 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                             : "Select a business. Open menu."
                     }
                 >
-                    <Store className="mr-2 h-4 w-4 shrink-0" />
+                    <Store className="mr-2 shrink-0 size-4" />
                     <span className="truncate">
                         {switching ? "Switching..." : activeBusiness?.name || "Select Business"}
                     </span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50 size-4" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -76,7 +76,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                         >
                             <span className="truncate">{biz.name}</span>
                             {biz.id === activeBusinessId && (
-                                <Check className="h-4 w-4 text-primary shrink-0" />
+                                <Check className="text-primary shrink-0 size-4" />
                             )}
                         </DropdownMenuItem>
                     ))
@@ -93,14 +93,14 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                             className="flex items-center justify-between w-full cursor-pointer text-primary font-medium"
                         >
                             <div className="flex items-center gap-2">
-                                <Plus className="h-4 w-4" />
+                                <Plus className="size-4" />
                                 Add a Business
                             </div>
                             <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">Upgrade</span>
                         </Link>
                     ) : (
                         <Link href="/businesses/add" className="flex items-center gap-2 cursor-pointer">
-                            <Plus className="h-4 w-4" />
+                            <Plus className="size-4" />
                             Add a Business
                         </Link>
                     )}

@@ -20,19 +20,20 @@ export async function loadCustomerDetailPageData(customerId: string, businessId:
         return { kind: "not-found" as const };
     }
 
-    const { data: reqRows } = await supabase
-        .from("review_requests")
-        .select("*")
-        .eq("business_id", businessId)
-        .order("sent_at", { ascending: false, nullsFirst: false })
-        .limit(8000);
-
-    const { data: pfRows } = await supabase
-        .from("private_feedback")
-        .select("*")
-        .eq("business_id", businessId)
-        .order("created_at", { ascending: false })
-        .limit(5000);
+    const [{ data: reqRows }, { data: pfRows }] = await Promise.all([
+        supabase
+            .from("review_requests")
+            .select("*")
+            .eq("business_id", businessId)
+            .order("sent_at", { ascending: false, nullsFirst: false })
+            .limit(8000),
+        supabase
+            .from("private_feedback")
+            .select("*")
+            .eq("business_id", businessId)
+            .order("created_at", { ascending: false })
+            .limit(5000),
+    ]);
 
     const matchedRequests = filterRequestsForCustomer(customer, reqRows ?? []);
     const matchedFeedback = filterFeedbackForCustomer(customer, pfRows ?? []);

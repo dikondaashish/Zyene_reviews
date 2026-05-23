@@ -35,7 +35,7 @@ export function ReviewBadge({
                             <FractionalStar
                                 key={i}
                                 fill={Math.min(1, Math.max(0, rating - i))}
-                                starClassName="h-10 w-10"
+                                starClassName="size-10"
                             />
                         ))}
                     </div>

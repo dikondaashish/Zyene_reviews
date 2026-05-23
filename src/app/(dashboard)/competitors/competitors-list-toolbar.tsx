@@ -55,9 +55,9 @@ export function CompetitorsListToolbar({
                             onClick={() => void onSyncCompetitorWatch()}
                         >
                             {syncWatchLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin md:mr-2" />
+                                <Loader2 className="animate-spin md:mr-2 size-4" />
                             ) : (
-                                <RefreshCw className="h-4 w-4 md:mr-2" />
+                                <RefreshCw className="md:mr-2 size-4" />
                             )}
                             <span className="md:hidden">Sync</span>
                             <span className="hidden md:inline">Sync from Google</span>
@@ -70,7 +70,7 @@ export function CompetitorsListToolbar({
                             rel="noopener noreferrer"
                             className="flex w-full items-center justify-center"
                         >
-                            <Download className="h-4 w-4 md:mr-2" />
+                            <Download className="md:mr-2 size-4" />
                             <span className="md:hidden">CSV</span>
                             <span className="hidden md:inline">Export CSV</span>
                         </a>

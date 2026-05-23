@@ -15,7 +15,7 @@ export function CustomerLogoBar({ title = "Trusted by local businesses nationwid
                             title={`${logo.name} · ${logo.industry}`}
                         >
                             <div
-                                className={`h-9 w-9 rounded-lg flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0 ${logo.colorClass}`}
+                                className={`rounded-lg flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0 ${logo.colorClass} size-9`}
                             >
                                 {logo.initials}
                             </div>

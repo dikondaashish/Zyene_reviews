@@ -52,11 +52,11 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                                 <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
                                         {a.status === "pass" ? (
-                                            <CheckCircle2 className="h-4 w-4 text-chart-2" />
+                                            <CheckCircle2 className="text-chart-2 size-4" />
                                         ) : a.status === "fail" ? (
-                                            <XCircle className="h-4 w-4 text-sync-action" />
+                                            <XCircle className="text-sync-action size-4" />
                                         ) : (
-                                            <span className="inline-flex h-4 w-4 rounded-full border border-muted-foreground/40" />
+                                            <span className="inline-flex rounded-full border border-muted-foreground/40 size-4" />
                                         )}
                                         <p className="font-medium">{a.label}</p>
                                         <Badge

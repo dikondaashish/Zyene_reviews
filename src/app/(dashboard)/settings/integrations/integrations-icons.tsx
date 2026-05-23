@@ -2,7 +2,7 @@ export function TripAdvisorIcon() {
     return (
         <svg
             viewBox="0 0 24 24"
-            className="h-5 w-5 text-chart-2"
+            className="text-chart-2 size-5"
             fill="currentColor"
         >
             <circle cx="6.5" cy="13.5" r="2" />

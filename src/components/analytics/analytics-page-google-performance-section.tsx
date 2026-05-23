@@ -36,7 +36,7 @@ export function AnalyticsPageGooglePerformanceSection({
                     <CardHeader className="pb-2">
                         <div className="space-y-1">
                             <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                <MousePointer2 className="w-5 h-5 text-primary" />
+                                <MousePointer2 className="text-primary size-5" />
                                 Listing Performance
                             </CardTitle>
                             <p className="text-xs text-muted-foreground font-medium">

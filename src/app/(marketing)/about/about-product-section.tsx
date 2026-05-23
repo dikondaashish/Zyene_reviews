@@ -37,19 +37,19 @@ export function AboutProductSection() {
                                 href="/#features"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:brightness-90 transition-colors"
                             >
-                                See all features <ArrowRight className="h-4 w-4" />
+                                See all features <ArrowRight className="size-4" />
                             </Link>
                             <Link
                                 href="/#pricing"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                             >
-                                View pricing <ArrowRight className="h-4 w-4" />
+                                View pricing <ArrowRight className="size-4" />
                             </Link>
                             <Link
                                 href="/docs"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                             >
-                                Read the docs <ArrowRight className="h-4 w-4" />
+                                Read the docs <ArrowRight className="size-4" />
                             </Link>
                         </div>
                     </div>

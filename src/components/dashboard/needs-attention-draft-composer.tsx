@@ -74,7 +74,7 @@ export function NeedsAttentionDraftComposer({
                 />
                 {typing ? (
                     <span className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full border border-sync-action/20 bg-sync-action/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-sync-action">
-                        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-sync-action" />
+                        <span className="inline-block animate-pulse rounded-full bg-sync-action size-1.5" />
                         Writing
                     </span>
                 ) : null}

@@ -43,7 +43,7 @@ export function CustomerManagementListRegion({
     if (isLoading) {
         return (
             <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-border/80 bg-card shadow-sm">
-                <RefreshCcw className="mb-4 h-10 w-10 animate-spin text-primary" />
+                <RefreshCcw className="mb-4 animate-spin text-primary size-10" />
                 <p className="font-medium text-muted-foreground">Loading your customers...</p>
             </div>
         );
@@ -52,11 +52,11 @@ export function CustomerManagementListRegion({
         return (
             <Card className="rounded-2xl border-dashed border-border/80 bg-card/80 shadow-sm">
                 <CardContent className="flex flex-col items-center gap-4 px-6 py-14 text-center sm:px-10">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-muted/40">
+                    <div className="flex items-center justify-center rounded-2xl border border-border bg-muted/40 size-14">
                         {filteredEmpty ? (
-                            <Search className="h-6 w-6 text-muted-foreground" />
+                            <Search className="text-muted-foreground size-6" />
                         ) : (
-                            <Users className="h-6 w-6 text-muted-foreground" />
+                            <Users className="text-muted-foreground size-6" />
                         )}
                     </div>
                     <div className="max-w-md space-y-2">
@@ -73,11 +73,11 @@ export function CustomerManagementListRegion({
                         {databaseEmpty ? (
                             <>
                                 <Button onClick={onOpenAdd} className="rounded-lg bg-primary px-4 font-semibold">
-                                    <UserPlus className="mr-2 h-4 w-4" />
+                                    <UserPlus className="mr-2 size-4" />
                                     Add customer
                                 </Button>
                                 <Button variant="outline" onClick={onOpenImport} className="rounded-lg border-border">
-                                    <Upload className="mr-2 h-4 w-4" />
+                                    <Upload className="mr-2 size-4" />
                                     Import CSV
                                 </Button>
                             </>

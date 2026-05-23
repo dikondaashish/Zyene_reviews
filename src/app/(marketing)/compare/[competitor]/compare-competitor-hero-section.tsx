@@ -10,12 +10,12 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     {/* Breadcrumb */}
                     <nav className="flex items-center justify-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/compare" className="hover:text-primary transition-colors">Compare</Link>
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="size-3.5" />
                         <span className="text-foreground font-medium">Zyene vs {data.name}</span>
                     </nav>
 
                     <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                        <Sparkles className="h-3.5 w-3.5" />
+                        <Sparkles className="size-3.5" />
                         Honest Comparison — 2026
                     </div>
                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-5 leading-[1.05]">
@@ -42,7 +42,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/signup">
                             <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                                Try Zyene Free for 7 Days <ArrowRight className="ml-2 h-4 w-4" />
+                                Try Zyene Free for 7 Days <ArrowRight className="ml-2 size-4" />
                             </Button>
                         </Link>
                         <Link href="/pricing">

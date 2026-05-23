@@ -45,7 +45,7 @@ export function MarketingHeaderAuth({
             return (
                 <Link href={dashboardUrl} className="block mt-2 px-2" onClick={onNavigate}>
                     <Button className="w-full rounded-md gap-2">
-                        <LayoutDashboard className="h-4 w-4" />
+                        <LayoutDashboard className="size-4" />
                         Dashboard
                     </Button>
                 </Link>
@@ -55,7 +55,7 @@ export function MarketingHeaderAuth({
         return (
             <Link href={dashboardUrl}>
                 <Button className="rounded-md px-5 ml-1 gap-2">
-                    <LayoutDashboard className="h-4 w-4" />
+                    <LayoutDashboard className="size-4" />
                     Dashboard
                 </Button>
             </Link>
@@ -74,7 +74,7 @@ export function MarketingHeaderAuth({
                 </Link>
                 <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate}>
                     <Button className="w-full rounded-md">
-                        Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+                        Start Free Trial <ArrowRight className="ml-2 size-4" />
                     </Button>
                 </Link>
             </>
@@ -88,7 +88,7 @@ export function MarketingHeaderAuth({
             </Link>
             <Link href={signupUrl}>
                 <Button className="rounded-md px-5 ml-1">
-                    Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+                    Start Free Trial <ArrowRight className="ml-2 size-4" />
                 </Button>
             </Link>
         </>

@@ -15,7 +15,7 @@ export function OrganizationDisplay({ organization }: OrganizationDisplayProps) 
             className="pointer-events-none hidden min-w-0 max-w-[min(42vw,11rem)] justify-start sm:flex lg:max-w-[220px]"
             tabIndex={-1}
         >
-            <Building2 className="mr-2 h-4 w-4 shrink-0" />
+            <Building2 className="mr-2 shrink-0 size-4" />
             <span className="truncate font-medium">
                 {organization?.name || "Organization"}
             </span>

@@ -17,7 +17,7 @@ export function HelpContactSupportSection() {
                                 href="mailto:support@zyenereviews.com"
                                 className="inline-flex items-center justify-center bg-primary text-primary-foreground border border-primary px-6 py-3 rounded-md font-medium hover:brightness-95 transition"
                             >
-                                <Mail className="w-5 h-5 mr-2" />
+                                <Mail className="mr-2 size-5" />
                                 Email Support
                             </a>
                             <Link

@@ -41,7 +41,7 @@ export function ReviewContentForm({
     if (isLoading) {
         return (
             <div className="flex justify-center p-8">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <Loader2 className="animate-spin text-muted-foreground size-6" />
             </div>
         );
     }
@@ -61,27 +61,27 @@ export function ReviewContentForm({
                                 className="h-auto w-full min-w-0 justify-start gap-0 overflow-x-auto overflow-y-hidden flex-nowrap no-scrollbar border-0 bg-transparent p-0"
                             >
                                 <TabsTrigger value="rating" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <Star className="h-3.5 w-3.5 mr-1.5" />
+                                    <Star className="mr-1.5 size-3.5" />
                                     Rating
                                 </TabsTrigger>
                                 <TabsTrigger value="tags" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <Tag className="h-3.5 w-3.5 mr-1.5" />
+                                    <Tag className="mr-1.5 size-3.5" />
                                     Tags
                                 </TabsTrigger>
                                 <TabsTrigger value="google" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <Globe className="h-3.5 w-3.5 mr-1.5" />
+                                    <Globe className="mr-1.5 size-3.5" />
                                     Review Site
                                 </TabsTrigger>
                                 <TabsTrigger value="feedback" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                                    <MessageSquare className="mr-1.5 size-3.5" />
                                     Feedback
                                 </TabsTrigger>
                                 <TabsTrigger value="success" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
+                                    <CheckCircle className="mr-1.5 size-3.5" />
                                     Success
                                 </TabsTrigger>
                                 <TabsTrigger value="branding" className="whitespace-nowrap data-[state=active]:text-primary">
-                                    <Palette className="h-3.5 w-3.5 mr-1.5" />
+                                    <Palette className="mr-1.5 size-3.5" />
                                     Branding
                                 </TabsTrigger>
                             </TabsList>
@@ -120,12 +120,12 @@ export function ReviewContentForm({
                             >
                                 {isSaving ? (
                                     <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        <Loader2 className="mr-2 animate-spin size-4" />
                                         Saving...
                                     </>
                                 ) : (
                                     <>
-                                        <Save className="mr-2 h-4 w-4" />
+                                        <Save className="mr-2 size-4" />
                                         Save Changes
                                     </>
                                 )}

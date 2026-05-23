@@ -57,58 +57,60 @@ export async function handleUserMeDelete() {
 
         const orgIds = [...new Set((memberships ?? []).map((m) => m.organization_id))];
 
-        for (const organizationId of orgIds) {
-            const { count, error: countErr } = await admin
-                .from("organization_members")
-                .select("*", { count: "exact", head: true })
-                .eq("organization_id", organizationId);
+        await Promise.all(
+            orgIds.map(async (organizationId) => {
+                const { count, error: countErr } = await admin
+                    .from("organization_members")
+                    .select("*", { count: "exact", head: true })
+                    .eq("organization_id", organizationId);
 
-            if (countErr) {
-                throw new ApiRouteError("Failed to verify organization membership", {
-                    status: 500,
-                    code: "MEMBER_COUNT_FAILED",
-                    details: countErr.message,
-                });
-            }
-
-            if ((count ?? 0) !== 1) continue;
-
-            const { data: org, error: orgErr } = await admin
-                .from("organizations")
-                .select("id, stripe_subscription_id")
-                .eq("id", organizationId)
-                .maybeSingle();
-
-            if (orgErr || !org) {
-                throw new ApiRouteError("Failed to load organization", {
-                    status: 500,
-                    code: "ORG_LOAD_FAILED",
-                    details: orgErr?.message,
-                });
-            }
-
-            const subId =
-                typeof org.stripe_subscription_id === "string" && org.stripe_subscription_id.trim()
-                    ? org.stripe_subscription_id.trim()
-                    : null;
-
-            if (subId && process.env.STRIPE_SECRET_KEY) {
-                try {
-                    await stripe.subscriptions.cancel(subId);
-                } catch (e) {
-                    logger.error({ err: e }, "[DELETE /api/users/me] Stripe subscription cancel failed:");
+                if (countErr) {
+                    throw new ApiRouteError("Failed to verify organization membership", {
+                        status: 500,
+                        code: "MEMBER_COUNT_FAILED",
+                        details: countErr.message,
+                    });
                 }
-            }
 
-            const { error: delOrgErr } = await admin.from("organizations").delete().eq("id", organizationId);
-            if (delOrgErr) {
-                throw new ApiRouteError("Failed to delete organization data", {
-                    status: 500,
-                    code: "ORG_DELETE_FAILED",
-                    details: delOrgErr.message,
-                });
-            }
-        }
+                if ((count ?? 0) !== 1) return;
+
+                const { data: org, error: orgErr } = await admin
+                    .from("organizations")
+                    .select("id, stripe_subscription_id")
+                    .eq("id", organizationId)
+                    .maybeSingle();
+
+                if (orgErr || !org) {
+                    throw new ApiRouteError("Failed to load organization", {
+                        status: 500,
+                        code: "ORG_LOAD_FAILED",
+                        details: orgErr?.message,
+                    });
+                }
+
+                const subId =
+                    typeof org.stripe_subscription_id === "string" && org.stripe_subscription_id.trim()
+                        ? org.stripe_subscription_id.trim()
+                        : null;
+
+                if (subId && process.env.STRIPE_SECRET_KEY) {
+                    try {
+                        await stripe.subscriptions.cancel(subId);
+                    } catch (e) {
+                        logger.error({ err: e }, "[DELETE /api/users/me] Stripe subscription cancel failed:");
+                    }
+                }
+
+                const { error: delOrgErr } = await admin.from("organizations").delete().eq("id", organizationId);
+                if (delOrgErr) {
+                    throw new ApiRouteError("Failed to delete organization data", {
+                        status: 500,
+                        code: "ORG_DELETE_FAILED",
+                        details: delOrgErr.message,
+                    });
+                }
+            })
+        );
 
         const { error: authDelErr } = await admin.auth.admin.deleteUser(user.id);
         if (authDelErr) {

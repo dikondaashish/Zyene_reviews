@@ -8,8 +8,7 @@ export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const supabase = await createClient();
-    const { id: businessId } = await params;
+    const [supabase, { id: businessId }] = await Promise.all([createClient(), params]);
 
     // Authenticate
     const {

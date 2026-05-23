@@ -79,24 +79,24 @@ export function ReviewContentBrandingTab({
                                     <div className="space-y-3">
                                         <FormLabel className="text-sm font-medium text-foreground">Footer Logo (Small)</FormLabel>
                                         <div className="flex items-center gap-4">
-                                            <div className="relative h-12 w-12 rounded-lg border border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0">
+                                            <div className="relative rounded-lg border border-border bg-muted/50 overflow-hidden flex items-center justify-center shrink-0 size-12">
                                                 {uploadingFooterLogo ? (
-                                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                                    <Loader2 className="animate-spin text-muted-foreground size-4" />
                                                 ) : form.watch("footer_logo_url") ? (
                                                     // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={form.watch("footer_logo_url")!} alt="Footer Logo" className="object-contain h-full w-full p-1" />
+                                                    <img src={form.watch("footer_logo_url")!} alt="Footer Logo" className="object-contain p-1 size-full" />
                                                 ) : (
-                                                    <Upload className="h-4 w-4 text-muted-foreground/40" />
+                                                    <Upload className="text-muted-foreground/40 size-4" />
                                                 )}
                                             </div>
                                             <div className="flex gap-2">
                                                 <div className="relative">
                                                     <Button variant="outline" size="sm" type="button" className="relative h-9 px-3 border-border bg-card" disabled={uploadingFooterLogo}>
-                                                        <Upload className="mr-2 h-3.5 w-3.5" />
+                                                        <Upload className="mr-2 size-3.5" />
                                                         Upload
                                                         <input
                                                             type="file"
-                                                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                                            className="absolute inset-0 opacity-0 cursor-pointer size-full"
                                                             accept="image/png, image/jpeg, image/webp"
                                                             onChange={handleFooterLogoUpload}
                                                             disabled={uploadingFooterLogo}
@@ -112,7 +112,7 @@ export function ReviewContentBrandingTab({
                                                         onClick={removeFooterLogo}
                                                         disabled={uploadingFooterLogo}
                                                     >
-                                                        <Trash className="h-3.5 w-3.5" />
+                                                        <Trash className="size-3.5" />
                                                     </Button>
                                                 )}
                                             </div>
