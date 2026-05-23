@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Star, ShieldCheck, Zap, BarChart3 } from "lucide-react";
+import { ShieldCheck, Zap, BarChart3 } from "lucide-react";
+import { ZyeneReviewsLogoLink } from "@/components/brand/zyene-reviews-logo-link";
 import { Suspense } from "react";
 import { UtmCapture } from "@/components/marketing/utm-capture";
 
@@ -27,14 +28,12 @@ export default function AuthLayout({
 
                 {/* Logo */}
                 <div className="relative z-10">
-                    <Link href="/" className="inline-flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-md bg-primary border border-primary size-10">
-                            <Star className="text-primary-foreground fill-primary-foreground size-5" />
-                        </div>
-                        <span className="text-xl font-bold text-[color:var(--marketing-footer-fg)]">
-                            <span className="text-primary">Zyene</span> Reviews
-                        </span>
-                    </Link>
+                    <ZyeneReviewsLogoLink
+                        href="/"
+                        size={40}
+                        priority
+                        wordmarkClassName="text-[color:var(--marketing-footer-fg)]"
+                    />
                 </div>
 
                 {/* Headline */}
@@ -102,14 +101,7 @@ export default function AuthLayout({
             <div className="flex min-w-0 flex-1 flex-col items-center justify-center bg-background px-6 py-12 lg:px-12">
                 {/* Mobile logo */}
                 <div className="lg:hidden mb-10">
-                    <Link href="/" className="inline-flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-md bg-primary border border-primary size-10">
-                            <Star className="text-primary-foreground fill-primary-foreground size-5" />
-                        </div>
-                        <span className="text-xl font-bold text-foreground">
-                            <span className="text-primary">Zyene</span> Reviews
-                        </span>
-                    </Link>
+                    <ZyeneReviewsLogoLink href="/" size={40} wordmarkClassName="text-foreground" />
                 </div>
 
                 <div className="w-full min-w-0 max-w-[420px]">

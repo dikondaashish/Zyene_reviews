@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";
-import { BLOG_POST_MAP, BLOG_SLUGS, BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import { ArrowRight, Clock } from "lucide-react";
+import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
@@ -32,9 +32,12 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                                     <h3 className="text-sm font-bold text-foreground mb-2 group-hover:text-primary transition-colors leading-snug flex-1">
                                         {p.title}
                                     </h3>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-3">
-                                        <Clock className="size-3" />
-                                        {p.readMinutes} min
+                                    <div className="mt-auto space-y-3 pt-3 border-t border-border">
+                                        <BlogAuthorByline author={p.author} />
+                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                            <Clock className="size-3" />
+                                            {p.readMinutes} min
+                                        </div>
                                     </div>
                                 </Link>
                             ))}

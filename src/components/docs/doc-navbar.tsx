@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Search } from "lucide-react";
+import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 import { DocSearchTrigger } from "@/components/docs/doc-search";
 import { getAppDashboardUrl, getAppIntegrationsUrl } from "@/config/env";
@@ -15,16 +15,7 @@ export function DocNavbar() {
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
             <div className="mx-auto flex h-16 min-w-0 max-w-[1400px] items-center gap-4 px-4 md:gap-8 md:px-8">
                 <Link href="/" className="group flex shrink-0 items-center gap-2">
-                    <div className="flex size-8 aspect-square items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60 transition-colors group-hover:ring-primary/50">
-                        <Image
-                            src="/favicon_io/android-chrome-192x192.png"
-                            alt="Zyene Reviews"
-                            width={32}
-                            height={32}
-                            className="object-cover size-full"
-                            priority
-                        />
-                    </div>
+                    <ZyeneReviewsLogoMark size={32} priority className="group-hover:ring-primary/50 transition-colors" />
                 </Link>
 
                 <DocSearchTrigger className="inline-flex max-w-sm flex-1 items-center md:flex">

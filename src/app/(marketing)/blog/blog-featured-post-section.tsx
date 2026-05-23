@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Clock, BookOpen, Sparkles } from "lucide-react";
-import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS, type ContentPillar } from "@/lib/phase4/blog-data";
+import { ArrowRight, Clock, Sparkles } from "lucide-react";
+import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import type { BlogPost } from "@/lib/phase4/blog-types";
+import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
-export function BlogFeaturedPostSection({ featured }: { featured: (typeof BLOG_POSTS)[number] }) {
+export function BlogFeaturedPostSection({ featured }: { featured: BlogPost }) {
     return (
         <section className="py-16 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl">
@@ -21,12 +22,21 @@ export function BlogFeaturedPostSection({ featured }: { featured: (typeof BLOG_P
                                 <p className="text-muted-foreground leading-relaxed mb-5">
                                     {featured.excerpt}
                                 </p>
-                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                    <div className="flex items-center gap-1">
-                                        <Clock className="size-3.5" />
-                                        {featured.readMinutes} min read
+                                <div className="space-y-4">
+                                    <BlogAuthorByline author={featured.author} size="md" />
+                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                        <div className="flex items-center gap-1">
+                                            <Clock className="size-3.5" />
+                                            {featured.readMinutes} min read
+                                        </div>
+                                        <span>
+                                            {new Date(featured.publishedAt).toLocaleDateString("en-US", {
+                                                month: "long",
+                                                day: "numeric",
+                                                year: "numeric",
+                                            })}
+                                        </span>
                                     </div>
-                                    <span>{new Date(featured.publishedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
                                 </div>
                             </div>
                             <div className="shrink-0 self-center">

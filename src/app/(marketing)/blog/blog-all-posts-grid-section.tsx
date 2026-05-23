@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Clock, BookOpen, Sparkles } from "lucide-react";
-import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS, type ContentPillar } from "@/lib/phase4/blog-data";
+import { Clock } from "lucide-react";
+import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
 export function BlogAllPostsGridSection({ posts }: { posts: typeof BLOG_POSTS }) {
     return (
@@ -20,12 +20,20 @@ export function BlogAllPostsGridSection({ posts }: { posts: typeof BLOG_POSTS })
                                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">
                                     {post.excerpt}
                                 </p>
-                                <div className="flex items-center justify-between text-xs text-muted-foreground mt-auto">
-                                    <div className="flex items-center gap-1">
-                                        <Clock className="size-3" />
-                                        {post.readMinutes} min
+                                <div className="mt-auto space-y-3 pt-4 border-t border-border">
+                                    <BlogAuthorByline author={post.author} />
+                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                        <div className="flex items-center gap-1">
+                                            <Clock className="size-3" />
+                                            {post.readMinutes} min
+                                        </div>
+                                        <span>
+                                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                            })}
+                                        </span>
                                     </div>
-                                    <span>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                                 </div>
                             </Link>
                         ))}

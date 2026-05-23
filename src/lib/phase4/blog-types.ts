@@ -28,6 +28,12 @@ export interface ContentSection {
     ctaHref?: string;
 }
 
+export interface BlogAuthor {
+    name: string;
+    role: string;
+    avatarUrl?: string;
+}
+
 export interface BlogPost {
     slug: string;
     title: string;
@@ -36,7 +42,7 @@ export interface BlogPost {
     pillarLabel: string;
     publishedAt: string;
     readMinutes: number;
-    author: { name: string; role: string };
+    author: BlogAuthor;
     metaTitle: string;
     metaDescription: string;
     keywords: string[];

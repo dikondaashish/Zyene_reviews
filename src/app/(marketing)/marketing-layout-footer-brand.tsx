@@ -1,20 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
 import { FooterTrustStrip } from "@/components/marketing/social-proof";
 
 export function MarketingLayoutFooterBrand() {
     return (
         <div className="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded shadow-sm ring-1 ring-border/60">
-                    <Image
-                        src="/Main%20logo.png"
-                        alt="Zyene Reviews"
-                        width={32}
-                        height={32}
-                        className="object-cover size-full"
-                    />
-                </div>
+                <ZyeneReviewsLogoMark size={32} />
                 <span className="font-bold text-base text-foreground">
                     <span className="text-primary">Zyene</span> Reviews
                 </span>

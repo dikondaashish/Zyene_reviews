@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";
-import { BLOG_POST_MAP, BLOG_SLUGS, BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import { Clock, ChevronRight } from "lucide-react";
+import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import type { BlogPost } from "@/lib/phase4/blog-types";
+import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
@@ -11,7 +12,7 @@ import { BLOG_POST_MAP, BLOG_SLUGS, BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } f
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export function BlogSlugArticleHeaderSection({ post }: { post: (typeof BLOG_POST_MAP)[string] }) {
+export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
     return (
         <header className="pt-16 pb-12 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-3xl">
@@ -34,15 +35,21 @@ export function BlogSlugArticleHeaderSection({ post }: { post: (typeof BLOG_POST
                         {post.excerpt}
                     </p>
 
-                    {/* Meta bar */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border pt-5">
-                        <span className="font-medium text-foreground">{post.author.name}</span>
-                        <span className="text-muted-foreground/40">·</span>
-                        <span>{new Date(post.publishedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-                        <span className="text-muted-foreground/40">·</span>
-                        <div className="flex items-center gap-1.5">
-                            <Clock className="size-3.5" />
-                            {post.readMinutes} min read
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-border pt-5">
+                        <BlogAuthorByline author={post.author} size="md" />
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                            <span>
+                                {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                                    month: "long",
+                                    day: "numeric",
+                                    year: "numeric",
+                                })}
+                            </span>
+                            <span className="text-muted-foreground/40 hidden sm:inline">·</span>
+                            <div className="flex items-center gap-1.5">
+                                <Clock className="size-3.5" />
+                                {post.readMinutes} min read
+                            </div>
                         </div>
                     </div>
                 </div>

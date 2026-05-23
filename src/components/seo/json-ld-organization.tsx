@@ -1,3 +1,4 @@
+import { ZYENE_REVIEWS_LOGO_SRC } from "@/lib/brand/logo";
 import { JSON_LD_BASE_URL } from "./json-ld-constants";
 import { JsonLdScript } from "./json-ld-script";
 
@@ -11,7 +12,7 @@ export function OrganizationJsonLd() {
         url: JSON_LD_BASE_URL,
         logo: {
             "@type": "ImageObject",
-            url: `${JSON_LD_BASE_URL}/Main%20logo.png`,
+            url: `${JSON_LD_BASE_URL}${ZYENE_REVIEWS_LOGO_SRC}`,
             width: 512,
             height: 512,
         },

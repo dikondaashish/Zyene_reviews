@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
 import { X } from "lucide-react";
 
 import {
@@ -20,16 +20,7 @@ export function AppSidebarHeader() {
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" asChild>
                         <Link href="/dashboard">
-                            <div className="flex aspect-square size-9 items-center justify-center overflow-hidden rounded-lg shadow-sm ring-1 ring-border/60">
-                                <Image
-                                    src="/Main%20logo.png"
-                                    alt="Zyene Reviews"
-                                    width={36}
-                                    height={36}
-                                    className="object-cover size-full"
-                                    priority
-                                />
-                            </div>
+                            <ZyeneReviewsLogoMark size={36} priority className="shadow-sm" />
                             <div className="flex flex-col gap-0.5 leading-none">
                                 <span className="font-semibold">Zyene Reviews</span>
                                 <span className="text-xs">v1.0.0</span>

@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import { Mail, Clock, MessageSquare, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
+import { ContactForm } from "./contact-form";
 
 export function ContactContentSection() {
     return (
@@ -10,10 +10,18 @@ export function ContactContentSection() {
             <div className="container mx-auto px-4 sm:px-8 max-w-4xl">
                 <div className="bg-card p-8 md:p-16 rounded-lg border border-border">
                     <h1 className="text-4xl font-bold text-foreground mb-4">Contact Us</h1>
-                    <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
+                    <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
                         Have a question, need help, or want to learn more about Zyene Reviews?
                         We&apos;re here for you.
                     </p>
+
+                    <div className="mb-12 rounded-lg border border-border bg-muted/30 p-6 md:p-8">
+                        <h2 className="text-lg font-semibold text-foreground mb-1">Send us a message</h2>
+                        <p className="text-sm text-muted-foreground mb-6">
+                            Fill out the form below and we&apos;ll get back to you within one business day.
+                        </p>
+                        <ContactForm />
+                    </div>
 
                     <div className="grid md:grid-cols-2 gap-8 mb-12">
                         <div className="bg-muted rounded-lg p-6 border border-border">
