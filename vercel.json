@@ -1,4 +1,14 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/daily-digest",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-digest",
+      "schedule": "0 14 * * 1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
