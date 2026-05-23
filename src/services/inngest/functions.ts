@@ -497,7 +497,7 @@ export const processAutoReplyReview = inngest.createFunction(
         });
 
         if (!gate.ok) {
-            console.info(`[AutoReply] Skip ${reviewId}: ${gate.reason}`);
+            logger.info({ reviewId, reason: gate.reason }, "[AutoReply] Skip");
             return { status: "skipped", reason: gate.reason };
         }
 

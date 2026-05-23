@@ -3,7 +3,7 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import { AI_ANALYSIS_BATCH_SIZE } from "../constants";
+import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
 
 /**
  * Step 3: Finalize sync (Update stats, clear lock).

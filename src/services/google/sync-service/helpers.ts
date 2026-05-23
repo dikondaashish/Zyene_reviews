@@ -2,7 +2,7 @@
 
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import type { Json } from "@/lib/db/supabase/database.types";
-import type { GoogleReview } from "../business-profile";
+import type { GoogleReview } from "@/services/google/business-profile";
 
 export type SyncError = Error & { code?: "RATE_LIMIT" | "CONFLICT" };
 export type AdminClient = ReturnType<typeof createAdminClient>;

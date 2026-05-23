@@ -81,7 +81,7 @@ export async function generateContentWithFallback(
         const returnedText = readResponseText(response);
 
         if (returnedText) {
-            console.info(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=success`);
+            logger.info({ model: primaryModel, latencyMs }, "[GEN AI SDK] success");
             return returnedText || "";
         }
 
@@ -99,7 +99,10 @@ export async function generateContentWithFallback(
 
                 const fallbackLatency = Date.now() - fallbackStart;
                 const backupText = readResponseText(backupResponse);
-                console.info(`[GEN AI SDK] model=${fallbackModel}(fallback) latency=${fallbackLatency}ms status=success`);
+                logger.info(
+                    { model: fallbackModel, latencyMs: fallbackLatency, fallback: true },
+                    "[GEN AI SDK] success",
+                );
 
                 return backupText;
             } catch (fallbackError) {

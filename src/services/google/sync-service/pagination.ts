@@ -4,12 +4,12 @@ import { logger } from "@/lib/logger";
 import {
   listReviews,
   type GoogleReview,
-} from "../business-profile";
+} from "@/services/google/business-profile";
 import {
   MAX_REVIEW_PAGES,
   PAGINATION_DELAY_MS,
   REQUEST_SMOOTHING_DELAY_MS,
-} from "../constants";
+} from "@/services/google/constants";
 import { isOrderByUnsupportedError } from "./helpers";
 
 export async function fetchGoogleReviewsPaginated(

@@ -2,8 +2,8 @@
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { refreshGoogleToken } from "../business-profile";
-import { TOKEN_EXPIRY_BUFFER_MS } from "../constants";
+import { refreshGoogleToken } from "@/services/google/business-profile";
+import { TOKEN_EXPIRY_BUFFER_MS } from "@/services/google/constants";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import type { AdminClient } from "./helpers";
 

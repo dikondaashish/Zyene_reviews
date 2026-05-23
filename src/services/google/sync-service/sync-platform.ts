@@ -12,7 +12,7 @@ import {
 import {
   MAX_REVIEW_PAGES,
   PAGINATION_DELAY_MS,
-} from "../constants";
+} from "@/services/google/constants";
 import { clearForceFullSyncFlag, syncStateObject } from "./helpers";
 import { hideGoogleReviewsRemovedFromSource } from "./review-lifecycle";
 import { extendSyncLockTtl } from "./locks";

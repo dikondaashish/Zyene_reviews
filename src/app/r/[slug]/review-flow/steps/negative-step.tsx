@@ -14,7 +14,7 @@ import {
     PrivateFeedbackContactMode,
     PrivateFeedbackOfferMode,
     RATINGS,
-} from "../types";
+} from "@/app/r/[slug]/review-flow/types";
 
 export interface NegativeStepProps {
     rating: number | null;

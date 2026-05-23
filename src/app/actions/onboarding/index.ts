@@ -1,6 +1,5 @@
 /** Onboarding server actions — barrel re-export. */
 
-export * from "./business-legacy";
 export * from "./google-oauth";
 export * from "./flow";
 export * from "./organization";

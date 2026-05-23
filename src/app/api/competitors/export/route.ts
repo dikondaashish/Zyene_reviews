@@ -42,7 +42,7 @@ export async function GET(request: Request) {
         return new NextResponse("Failed to load competitors", { status: 500 });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
+     
     const { data: snapshots, error: snapshotsError } = await (supabase
         .from("competitor_snapshots" as never) as any)
         .select("competitor_id, captured_at, average_rating, total_reviews")

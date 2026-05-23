@@ -1,6 +1,6 @@
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { RATINGS } from "../types";
+import { RATINGS } from "@/app/r/[slug]/review-flow/types";
 
 export interface RatingStepProps {
     businessName: string;

@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
-import { NotificationForm } from "../../../../components/settings/notification-form";
+import { NotificationForm } from "@/components/settings/notification-form";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";

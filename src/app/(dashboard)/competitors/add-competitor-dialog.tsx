@@ -17,7 +17,7 @@ import { Plus, Loader2, AlertCircle, MapPinned, Building2, Search, MapPin } from
 import { toast } from "sonner";
 import { addCompetitor } from "@/app/actions/competitor";
 import { Database } from "@/lib/db/supabase/database.types";
-import type { PlacesAutocompleteSuggestion } from "@/app/api/places/autocomplete/route";
+import type { PlacesAutocompleteSuggestion } from "@/services/places/places-autocomplete";
 import { cn } from "@/lib/utils";
 
 type Competitor = Database["public"]["Tables"]["competitors"]["Row"];

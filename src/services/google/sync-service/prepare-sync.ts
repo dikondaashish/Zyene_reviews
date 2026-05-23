@@ -6,8 +6,8 @@ import {
   listAccounts,
   listLocations,
   isGoogleUnauthorizedError,
-} from "../business-profile";
-import { registerNotificationsWithRetry } from "../notifications";
+} from "@/services/google/business-profile";
+import { registerNotificationsWithRetry } from "@/services/google/notifications";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import {

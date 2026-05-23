@@ -99,11 +99,7 @@ export function PublicReviewFlow({
         if (fromProp && z.string().uuid().safeParse(fromProp).success) {
             return fromProp;
         }
-        const fromUrl = parseReviewRefFromSearch();
-        if (fromUrl && !fromProp) {
-            console.info("[PublicReviewFlow] using ?ref= from window.location (prop missing)");
-        }
-        return fromUrl;
+        return parseReviewRefFromSearch();
     }, [requestId]);
 
     const ensureActiveRequestId = useCallback(async (): Promise<string | undefined> => {

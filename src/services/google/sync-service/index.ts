@@ -1,6 +1,6 @@
 /** Google review sync — public API barrel. */
 
-export { isGoogleSyncConflictError } from "../sync-lock-utils";
+export { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 
 export type { SyncResult, GoogleSyncContext } from "./types";
 

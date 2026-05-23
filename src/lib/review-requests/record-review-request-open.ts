@@ -54,11 +54,9 @@ export async function recordReviewRequestOpenForRef(args: {
         return { ok: false, reason: "update_failed" };
     }
 
-    console.info("[record-review-open] ok", {
-        requestId,
-        businessId,
-        priorStatus: existing.status,
-        nextStatus,
-    });
+    logger.info(
+        { requestId, businessId, priorStatus: existing.status, nextStatus },
+        "[record-review-open] ok",
+    );
     return { ok: true };
 }

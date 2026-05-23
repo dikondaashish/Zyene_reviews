@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { computeReviewHash } from "@/utils/review-hash";
 import { inngest } from "@/services/inngest/client";
-import { AI_ANALYSIS_BATCH_SIZE } from "../constants";
+import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
 import type { AutoReplyBusinessSettings } from "@/services/reviews/auto-reply-eligibility";
 import { publishGoogleReviewSyncProgress } from "./review-lifecycle";
 import { listReviewsWithOrderByFallback, syncStateManagerFromContext } from "./list-reviews";

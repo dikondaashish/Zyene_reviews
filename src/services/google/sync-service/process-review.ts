@@ -1,7 +1,7 @@
 /** Google review sync — process-review */
 
 import { logger } from "@/lib/logger";
-import type { GoogleReview } from "../business-profile";
+import type { GoogleReview } from "@/services/google/business-profile";
 import { computeReviewHash } from "@/utils/review-hash";
 import {
   enqueueAutoReplyJob,

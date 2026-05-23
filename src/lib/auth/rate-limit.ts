@@ -1,5 +1,5 @@
 import { Ratelimit } from '@upstash/ratelimit';
-import { redis } from '../db/redis';
+import { redis } from "@/lib/db/redis";
 
 // 1. Review Requests Rate Limit (Single sends like SMS/Email)
 // 10 requests per minute per user/business

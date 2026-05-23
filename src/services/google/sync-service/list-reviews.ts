@@ -1,7 +1,7 @@
 /** Google review sync — list-reviews */
 
 import { logger } from "@/lib/logger";
-import { listReviews } from "../business-profile";
+import { listReviews } from "@/services/google/business-profile";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 import type { GoogleSyncContext } from "./types";
 import { isOrderByUnsupportedError } from "./helpers";

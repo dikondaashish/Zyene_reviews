@@ -96,7 +96,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
         }
 
         if (data?.id) {
-            console.info("[resend] Email accepted", { id: data.id, to });
+            logger.info({ id: data.id, to }, "[resend] Email accepted");
         }
         return { sent: true, id: data?.id };
     } catch (error: unknown) {

@@ -2,7 +2,7 @@ import { logger } from "@/lib/logger";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { CustomerDetailClient } from "../../../../components/customers/customer-detail-client";
+import { CustomerDetailClient } from "@/components/customers/customer-detail-client";
 import {
     buildCustomerTimeline,
     computeDetailStats,

@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
   STALE_LOCK_TIMEOUT_MINUTES,
   SYNC_COOLDOWN_MS,
-} from "../constants";
+} from "@/services/google/constants";
 import { createSyncError, syncStateObject, type AdminClient } from "./helpers";
 
 /** Read pagination cursor saved by bootstrap or a partial sync (for Inngest resume). */
