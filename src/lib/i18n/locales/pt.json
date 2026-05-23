@@ -1,6 +1,8 @@
 {
   "nav": {
     "settings": "Configurações",
+    "invite": "Convidar",
+    "invite_friend": "Convidar um amigo",
     "logout": "Sair",
     "language": "Idioma",
     "dashboard": "Painel",

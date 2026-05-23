@@ -1,6 +1,8 @@
 {
   "nav": {
     "settings": "Instellingen",
+    "invite": "Uitnodigen",
+    "invite_friend": "Vriend uitnodigen",
     "logout": "Uitloggen",
     "language": "Taal",
     "dashboard": "Dashboard",

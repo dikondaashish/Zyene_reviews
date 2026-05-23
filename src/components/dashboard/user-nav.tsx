@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/db/supabase/client"
 import { useRouter } from "next/navigation"
-import { Globe, LogOut, Settings } from "lucide-react"
+import { Globe, Gift, LogOut, Settings, UserPlus } from "lucide-react"
 import { useLanguage, SUPPORTED_LOCALES } from "@/lib/language-context"
 import type { AppUserSummary } from "@/types/components"
 
@@ -61,6 +61,17 @@ export function UserNav({ user }: { user: AppUserSummary }) {
                     <DropdownMenuItem onClick={() => router.push("/settings/general")} className="cursor-pointer py-2 px-3">
                         <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
                         <span>{dict.nav.settings}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/settings/team")} className="cursor-pointer py-2 px-3">
+                        <UserPlus className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <span>{dict.nav.invite}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => router.push("/settings/billing#refer-a-friend")}
+                        className="cursor-pointer py-2 px-3"
+                    >
+                        <Gift className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <span>{dict.nav.invite_friend}</span>
                     </DropdownMenuItem>
                     
                     <DropdownMenuSub>

@@ -1,6 +1,8 @@
 {
   "nav": {
     "settings": "Paramètres",
+    "invite": "Inviter",
+    "invite_friend": "Inviter un ami",
     "logout": "Déconnexion",
     "language": "Langue",
     "dashboard": "Tableau de bord",

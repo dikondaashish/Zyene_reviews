@@ -1,6 +1,8 @@
 {
   "nav": {
     "settings": "Settings",
+    "invite": "Invite",
+    "invite_friend": "Invite a friend",
     "logout": "Log out",
     "language": "Language",
     "dashboard": "Dashboard",
