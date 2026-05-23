@@ -1,41 +1,45 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header";
+import { MarketingLayoutFooter } from "@/app/(marketing)/marketing-layout-footer";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 
 export default function NotFound() {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-16 text-center">
-            <Link href="/" className="mb-8 inline-flex items-center gap-2">
-                <div className="flex aspect-square size-10 items-center justify-center overflow-hidden rounded-md ring-1 ring-border/60">
-                    <Image
-                        src="/Main%20logo.png"
-                        alt="Zyene Reviews"
-                        width={40}
-                        height={40}
-                        className="size-full object-cover"
-                    />
-                </div>
-                <span className="text-lg font-bold text-foreground">
-                    <span className="text-primary">Zyene</span> Reviews
-                </span>
-            </Link>
-
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">404</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                Page not found
-            </h1>
-            <p className="mt-3 max-w-md text-base text-muted-foreground">
-                The page you&apos;re looking for doesn&apos;t exist or may have moved. Head back to the
-                homepage to explore Zyene Reviews.
-            </p>
-
-            <Link href="/" className="mt-8">
-                <Button size="lg" className="gap-2 rounded-xl px-8">
-                    <Home className="size-4" />
-                    Back to homepage
-                </Button>
-            </Link>
+        <div className="flex min-h-screen min-w-0 flex-col overflow-x-clip bg-background text-foreground">
+            <MarketingLayoutHeader />
+            <main className="min-w-0 flex-1">
+                <section className="flex min-h-[calc(100vh-12rem)] flex-col items-center justify-center px-4 py-24 text-center sm:px-8">
+                    <div className="container mx-auto max-w-2xl">
+                        <p
+                            className="font-display text-[clamp(6rem,22vw,11rem)] font-semibold leading-none tracking-tight text-primary/20 select-none"
+                            aria-hidden
+                        >
+                            404
+                        </p>
+                        <h1 className="-mt-6 text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+                            Page not found
+                        </h1>
+                        <p className="mx-auto mt-4 max-w-md text-lg text-muted-foreground leading-relaxed">
+                            The page you&apos;re looking for doesn&apos;t exist or may have moved.
+                        </p>
+                        <div className="mt-10">
+                            <Link href="/">
+                                <Button
+                                    size="lg"
+                                    className="rounded-xl px-8 py-6 text-base font-semibold"
+                                >
+                                    Back to homepage
+                                    <ArrowRight className="ml-2 size-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <CookieBanner />
+            <MarketingLayoutFooter />
         </div>
     );
 }
