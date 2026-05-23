@@ -1,0 +1,25 @@
+import type { AuditItem } from "./google-seo-aeo-audit-utils";
+
+export type GoogleSeoAeoContentProps = {
+    businessId: string;
+    businessName: string;
+    businessAddress: string;
+    score: number;
+    measuredCount: number;
+    googleAvgLive: number;
+    googleCountLive: number;
+    audits: AuditItem[];
+    listingDescription: string;
+    topKeywordList: string[];
+    competitors: Array<{
+        id: string;
+        name: string;
+        average_rating: number | null;
+        total_reviews: number | null;
+        google_url: string | null;
+    }>;
+    latestAiRun: { id: string; query: string; status: string; created_at: string } | null;
+    aiResults: Array<{ model: string; found: boolean; position: number | null; snippet: string | null }>;
+    latestHeatmapRun: { id: string; keyword: string; status: string; created_at: string } | null;
+    heatmapCells: Array<{ cell_label: string; rank_position: number | null; visibility_score: number }>;
+};
