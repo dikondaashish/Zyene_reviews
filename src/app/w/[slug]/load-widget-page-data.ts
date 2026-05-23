@@ -87,13 +87,14 @@ export async function loadWidgetPageData(
     }));
 
     const reviewCount = vr.totalVisible;
-    const averageRating =
+    const rawAverage =
         vr.totalVisible > 0
             ? vr.averageRatingVisible
             : formattedReviews.length > 0
               ? formattedReviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) /
                 formattedReviews.length
               : 5;
+    const averageRating = Number.isFinite(rawAverage) ? rawAverage : 5;
 
     return {
         kind: "ok",

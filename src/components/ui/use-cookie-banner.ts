@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { isBusinessSlugPath as pathIsBusinessSlug } from "@/lib/routing/platform-routes";
 import type { CookiePreferences } from "./cookie-banner-types";
 import { COOKIE_CONSENT_KEY, COOKIE_PREFERENCES_KEY } from "./cookie-banner-constants";
+import { safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
 
 export function useCookieBanner() {
     const [isVisible, setIsVisible] = useState(false);
@@ -24,7 +25,7 @@ export function useCookieBanner() {
         }
 
         const timer = setTimeout(() => {
-            const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+            const consent = safeLocalStorageGet(COOKIE_CONSENT_KEY);
             if (!consent) {
                 setIsVisible(true);
             }
@@ -34,7 +35,7 @@ export function useCookieBanner() {
     }, []);
 
     useEffect(() => {
-        const raw = localStorage.getItem(COOKIE_PREFERENCES_KEY);
+        const raw = safeLocalStorageGet(COOKIE_PREFERENCES_KEY);
         if (!raw) return;
         try {
             const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
@@ -67,8 +68,8 @@ export function useCookieBanner() {
     }, []);
 
     const savePreferences = (value: CookiePreferences, mode: "accepted" | "custom" | "declined") => {
-        localStorage.setItem(COOKIE_CONSENT_KEY, mode);
-        localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(value));
+        safeLocalStorageSet(COOKIE_CONSENT_KEY, mode);
+        safeLocalStorageSet(COOKIE_PREFERENCES_KEY, JSON.stringify(value));
     };
 
     const acceptCookies = () => {

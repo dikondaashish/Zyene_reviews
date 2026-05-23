@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 export type SupportedLocale = "en" | "es" | "pt" | "fr" | "de" | "nl"
 
 import { getDictionary, Dictionary } from "./i18n/dictionaries"
+import { safeLocalStorageGet, safeLocalStorageSet } from "./safe-storage"
 
 export interface LocaleConfig {
   code: SupportedLocale
@@ -38,7 +39,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   // Load saved locale on mount
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY) as SupportedLocale | null
+    const saved = safeLocalStorageGet(STORAGE_KEY) as SupportedLocale | null
     if (saved && SUPPORTED_LOCALES.some((l) => l.code === saved)) {
       setLocaleState(saved)
     }
@@ -46,7 +47,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLocale = (newLocale: SupportedLocale) => {
     setLocaleState(newLocale)
-    localStorage.setItem(STORAGE_KEY, newLocale)
+    safeLocalStorageSet(STORAGE_KEY, newLocale)
     // Also set as cookie for potential server-side use
     document.cookie = `locale=${newLocale};path=/;max-age=31536000;SameSite=Lax`
     window.location.reload()

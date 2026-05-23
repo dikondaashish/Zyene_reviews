@@ -26,7 +26,6 @@ export function LiveWidgetPreview() {
                         <iframe
                             src={widgetSrc}
                             title="Zyene Reviews widget preview"
-                            sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
                             className="w-full h-[280px] border-0"
                             loading="lazy"
                         />

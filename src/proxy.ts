@@ -26,14 +26,27 @@ function originMatchesRequestHost(origin: string | null | undefined, hostHeader:
 }
 
 export async function proxy(request: NextRequest) {
+    const { pathname } = request.nextUrl;
+    const isEmbedWidgetPath = pathname.startsWith("/w/");
+    const forwardHeaders = new Headers(request.headers);
+    if (isEmbedWidgetPath) {
+        forwardHeaders.set("x-zyene-embed-widget", "1");
+    }
+    const forwardRequest = { headers: forwardHeaders };
+
     let supabaseResponse = NextResponse.next({
-        request,
+        request: forwardRequest,
     });
 
-    const { pathname } = request.nextUrl;
     const hostHeader = request.headers.get("host") || "";
     const hostname = hostHeader.split(":")[0]?.toLowerCase() || "";
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+
+    // Public embed widgets: skip auth, subdomain routing, and rate limits.
+    if (isEmbedWidgetPath) {
+        return supabaseResponse;
+    }
+
     // --- WEBHOOK EXEMPTION ---
     // Ensure all webhook endpoints are served immediately and never redirected.
     if (pathname.startsWith("/api/webhooks") || pathname.startsWith("/api/inngest")) {

@@ -16,6 +16,7 @@ import {
 export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     const [copiedType, setCopiedType] = useState<"carousel" | "badge" | null>(null);
     const [previewType, setPreviewType] = useState<"carousel" | "badge" | null>(null);
+    const hasSlug = Boolean(businessSlug?.trim());
 
     // Always use the public apex domain for iframes — app.* requires login and redirects to auth.* (breaks embeds).
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
@@ -63,7 +64,12 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                             {carouselEmbedCode}
                         </pre>
                         <div className="flex items-center justify-end gap-2">
-                            <Button variant="outline" size="sm" onClick={() => setPreviewType("carousel")}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={!hasSlug}
+                                onClick={() => setPreviewType("carousel")}
+                            >
                                 <Eye className="mr-1 size-4" />
                                 Preview
                             </Button>
@@ -82,7 +88,12 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                             {badgeEmbedCode}
                         </pre>
                         <div className="flex items-center justify-end gap-2">
-                            <Button variant="outline" size="sm" onClick={() => setPreviewType("badge")}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={!hasSlug}
+                                onClick={() => setPreviewType("badge")}
+                            >
                                 <Eye className="mr-1 size-4" />
                                 Preview
                             </Button>
@@ -106,14 +117,17 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="w-full overflow-hidden rounded-lg border border-border bg-background">
-                        {previewType ? (
+                        {previewType && hasSlug ? (
                             <iframe
                                 src={previewType === "badge" ? badgePreviewUrl : carouselPreviewUrl}
                                 title={previewType === "badge" ? "Badge preview" : "Carousel preview"}
-                                sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
                                 className="w-full border-0"
                                 style={{ minHeight: previewType === "badge" ? 360 : 440 }}
                             />
+                        ) : previewType ? (
+                            <p className="p-8 text-center text-sm text-muted-foreground">
+                                Set a business slug in Settings → Business Information to preview your widget.
+                            </p>
                         ) : null}
                     </div>
                 </DialogContent>

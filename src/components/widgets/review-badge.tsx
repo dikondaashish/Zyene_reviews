@@ -11,7 +11,8 @@ export function ReviewBadge({
     avgRating: number;
     totalReviews: number;
 }) {
-    const rating = Math.max(0, Math.min(5, avgRating));
+    const safeAvg = Number.isFinite(avgRating) ? avgRating : 5;
+    const rating = Math.max(0, Math.min(5, safeAvg));
 
     return (
         <div className="flex min-h-[280px] w-full items-center justify-center bg-transparent p-6 font-sans">
