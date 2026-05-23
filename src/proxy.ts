@@ -28,14 +28,9 @@ function originMatchesRequestHost(origin: string | null | undefined, hostHeader:
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const isEmbedWidgetPath = pathname.startsWith("/w/");
-    const forwardHeaders = new Headers(request.headers);
-    if (isEmbedWidgetPath) {
-        forwardHeaders.set("x-zyene-embed-widget", "1");
-    }
-    const forwardRequest = { headers: forwardHeaders };
 
     let supabaseResponse = NextResponse.next({
-        request: forwardRequest,
+        request: { headers: request.headers },
     });
 
     const hostHeader = request.headers.get("host") || "";
