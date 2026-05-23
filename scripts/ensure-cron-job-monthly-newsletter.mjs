@@ -11,11 +11,12 @@
 
 import { config } from "dotenv";
 import { resolve } from "node:path";
+import { cronAppBase } from "./cron-app-base.mjs";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 
 const API = "https://api.cron-job.org";
-const JOB_URL = "https://app.zyenereviews.com/api/cron/monthly-newsletter";
+const JOB_URL = `${cronAppBase()}/api/cron/monthly-newsletter`;
 const JOB_TITLE = "Zyene — Monthly newsletter";
 const TIMEZONE = process.env.CRON_JOB_TIMEZONE?.trim() || "America/Chicago";
 

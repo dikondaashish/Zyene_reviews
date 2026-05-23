@@ -12,13 +12,12 @@
 
 import { config } from "dotenv";
 import { resolve } from "node:path";
+import { cronAppBase } from "./cron-app-base.mjs";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 
 const API = "https://api.cron-job.org";
-const appBase =
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-    "https://app.zyenereviews.com";
+const appBase = cronAppBase();
 const JOB_URL = `${appBase}/api/cron/daily-digest`;
 const JOB_TITLE = "Zyene — Daily digest heartbeat";
 const TIMEZONE = process.env.CRON_JOB_TIMEZONE?.trim() || "America/Chicago";
