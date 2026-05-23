@@ -64,15 +64,19 @@ export async function syncCompetitorWatchNow(businessId: string): Promise<{
     let snapshots = 0;
     let updated = 0;
 
-    for (const row of competitors) {
-        const r = await applyGooglePlacesMetricsToCompetitor(supabase, {
-            id: row.id,
-            business_id: row.business_id,
-            name: row.name,
-            google_url: row.google_url,
-            average_rating: row.average_rating,
-            total_reviews: row.total_reviews,
-        });
+    const results = await Promise.all(
+        competitors.map((row) =>
+            applyGooglePlacesMetricsToCompetitor(supabase, {
+                id: row.id,
+                business_id: row.business_id,
+                name: row.name,
+                google_url: row.google_url,
+                average_rating: row.average_rating,
+                total_reviews: row.total_reviews,
+            }),
+        ),
+    );
+    for (const r of results) {
         if (r.updated) updated += 1;
         if (r.snapshotInserted) snapshots += 1;
     }

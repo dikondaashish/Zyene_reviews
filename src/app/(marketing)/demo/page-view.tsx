@@ -45,6 +45,7 @@ export default function DemoPage() {
                             <iframe
                                 src={calComEmbedUrl}
                                 title="Schedule a Zyene Reviews demo on Cal.com"
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                                 className="w-full min-h-[520px] rounded-xl border border-border"
                             />
                         ) : (
