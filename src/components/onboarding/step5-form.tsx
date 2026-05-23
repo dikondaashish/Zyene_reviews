@@ -1,190 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Loader2, Star, ArrowRight, CheckCircle2, Sparkles, Rocket, Send } from "lucide-react";
-import { completeOnboarding } from "@/app/actions/onboarding";
+import { Step5FormCelebration } from "./step5-form-celebration";
+import { Step5FormCta } from "./step5-form-cta";
+import { useStep5Form } from "./use-step5-form";
 
 interface Step5FormProps {
-  businessId: string;
-  businessName: string;
-  userEmail: string;
-  userName: string;
-  googleConnected: boolean;
-  onNext: () => void;
-  isLoading?: boolean;
+    businessId: string;
+    businessName: string;
+    userEmail: string;
+    userName: string;
+    googleConnected: boolean;
+    onNext: () => void;
+    isLoading?: boolean;
 }
 
 export function Step5Form({
-  businessId,
-  businessName,
-  userEmail,
-  userName,
-  googleConnected,
-  onNext,
-  isLoading = false,
+    businessId,
+    businessName,
+    userName,
+    googleConnected,
+    onNext,
+    isLoading = false,
 }: Step5FormProps) {
-  const [mounted, setMounted] = useState(false);
-  const [isCompleting, setIsCompleting] = useState(false);
-  const firstName = userName.split(" ")[0];
+    const { mounted, isCompleting, handleGoToDashboard } = useStep5Form(businessId, onNext);
+    const firstName = userName.split(" ")[0];
 
-  const fireConfetti = async () => {
-    try {
-      const confettiModule = await import("canvas-confetti");
-      const confetti = confettiModule.default;
-      const root = document.documentElement;
-      const cs = getComputedStyle(root);
-      const themeColors = (["--chart-1", "--chart-2", "--chart-3", "--chart-4"] as const)
-        .map((v) => cs.getPropertyValue(v).trim())
-        .filter(Boolean);
-      const colors =
-        themeColors.length >= 4
-          ? themeColors
-          : [cs.getPropertyValue("--primary").trim(), cs.getPropertyValue("--sync-action").trim()].filter(Boolean);
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: colors.length ? colors : undefined,
-      });
-    } catch {
-      // Optional visual effect failed; onboarding flow can continue.
-    }
-  };
+    if (!mounted) return null;
 
-  useEffect(() => {
-    setMounted(true);
-    fireConfetti();
-  }, []);
-
-  const handleGoToDashboard = async () => {
-    setIsCompleting(true);
-    try {
-      const result = await completeOnboarding(businessId);
-      if (!result.success) {
-        toast.error(result.error || "Could not finish setup. Please try again.");
-        return;
-      }
-      onNext();
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsCompleting(false);
-    }
-  };
-
-  if (!mounted) return null;
-
-  const checkItems = [
-    { label: "Business profile created", delay: 0.1, always: true },
-    { label: "Google Business syncing — reviews appear within ~1 hour", delay: 0.2, always: false, show: googleConnected },
-    { label: "Review templates ready", delay: 0.3, always: true },
-  ];
-
-  return (
-    <div className="text-center space-y-6 py-2">
-      {/* Celebration icon */}
-      <motion.div
-        initial={{ scale: 0, rotate: -20 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
-        className="inline-flex"
-      >
-        <div className="relative">
-          <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping opacity-40" />
-          <div className="relative w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20">
-            <Sparkles className="h-8 w-8 text-primary" />
-          </div>
+    return (
+        <div className="text-center space-y-6 py-2">
+            <Step5FormCelebration firstName={firstName} businessName={businessName} googleConnected={googleConnected} />
+            <Step5FormCta isLoading={isLoading} isCompleting={isCompleting} onGoToDashboard={handleGoToDashboard} />
         </div>
-      </motion.div>
-
-      {/* Heading */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="space-y-2"
-      >
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-          You&apos;re all set, {firstName}!
-        </h2>
-        <p className="text-muted-foreground text-sm max-w-xs mx-auto">
-          Your Zyene Reviews dashboard is ready for <strong className="text-foreground">{businessName}</strong>.
-        </p>
-      </motion.div>
-
-      {/* Checklist */}
-      <div className="grid grid-cols-1 gap-2.5 max-w-sm mx-auto text-left">
-        {checkItems.map((item) => {
-          if (!item.always && !item.show) return null;
-          return (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: item.delay, duration: 0.3 }}
-              className="flex items-center gap-3 p-3.5 bg-chart-2/10 rounded-xl border border-chart-2/25"
-            >
-              <div className="w-7 h-7 rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="h-4 w-4 text-chart-2" />
-              </div>
-              <span className="text-xs font-medium text-foreground">{item.label}</span>
-            </motion.div>
-          );
-        })}
-
-        {/* Next step hint */}
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4, duration: 0.3 }}
-          className="flex items-center gap-3 p-3.5 bg-primary/[0.04] rounded-xl border border-primary/10"
-        >
-          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-            <Star className="h-4 w-4 text-primary" />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            <strong className="text-foreground">Next:</strong> Send your first review request from the dashboard.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* CTA */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="pt-2"
-      >
-        <Button
-          onClick={handleGoToDashboard}
-          disabled={isLoading || isCompleting}
-          className="cta-button w-full h-12 text-sm group cursor-pointer"
-        >
-          {isLoading || isCompleting ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : (
-            <>
-              <Rocket className="mr-2 h-5 w-5" />
-              Go to my Dashboard
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
-            </>
-          )}
-        </Button>
-        <a
-          href="/requests"
-          className="inline-flex items-center justify-center w-full h-12 text-sm font-semibold text-primary hover:text-primary/80 border-2 border-primary/20 hover:border-primary/40 rounded-2xl transition-all group mt-2"
-        >
-          <Send className="mr-2 h-4 w-4" />
-          Send your first review request
-          <ArrowRight className="ml-2 h-4 w-4 opacity-50 group-hover:translate-x-0.5 transition-transform" />
-        </a>
-        <p className="mt-4 text-xs text-muted-foreground/60 font-medium">
-          Ready to grow your online reputation.
-        </p>
-      </motion.div>
-    </div>
-  );
+    );
 }
