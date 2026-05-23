@@ -1,0 +1,506 @@
+"use client";
+
+import { useEffect, useState, use } from "react";
+import { useRouter } from "next/navigation";
+import {
+    ArrowLeft,
+    Send,
+    Plus,
+    Users,
+    Eye,
+    MousePointerClick,
+    CheckCircle,
+    Loader2,
+    Pause,
+    Play,
+    Upload,
+    FileText,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { toast } from "sonner";
+import { CSVImportDialog } from "@/components/campaigns/csv-import-dialog";
+
+interface Campaign {
+    id: string;
+    name: string;
+    status: string;
+    channel: string;
+    trigger_type: string;
+    sms_template: string;
+    email_subject: string;
+    email_template: string;
+    delay_minutes: number;
+    follow_up_enabled: boolean;
+    follow_up_delay_hours: number;
+    total_sent: number;
+    total_opened: number;
+    total_clicked: number;
+    total_completed: number;
+    total_reviews_received: number;
+    created_at: string;
+}
+
+interface ReviewRequest {
+    id: string;
+    customer_name: string | null;
+    customer_phone: string | null;
+    customer_email: string | null;
+    channel: string;
+    status: string;
+    sent_at: string | null;
+    opened_at: string | null;
+    clicked_at: string | null;
+    created_at: string;
+}
+
+const statusColors: Record<string, string> = {
+    sent: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
+    delivered: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
+    opened: "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4",
+    clicked: "bg-primary/10 text-primary",
+    review_left: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
+    completed: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
+    failed: "bg-destructive/15 text-destructive dark:bg-destructive/20 dark:text-destructive",
+    sending: "bg-muted text-muted-foreground",
+    queued: "bg-muted text-muted-foreground",
+};
+
+export default function CampaignDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = use(params);
+    const router = useRouter();
+    const [campaign, setCampaign] = useState<Campaign | null>(null);
+    const [requests, setRequests] = useState<ReviewRequest[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [sending, setSending] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [csvDialogOpen, setCsvDialogOpen] = useState(false);
+
+    // Add contacts form
+    const [contactName, setContactName] = useState("");
+    const [contactPhone, setContactPhone] = useState("");
+    const [contactEmail, setContactEmail] = useState("");
+    const [bulkPhones, setBulkPhones] = useState("");
+    const [addMode, setAddMode] = useState<"single" | "bulk">("single");
+
+    const fetchCampaign = async () => {
+        try {
+            const res = await fetch(`/api/campaigns/${resolvedParams.id}`);
+            if (!res.ok) {
+                router.push("/campaigns");
+                return;
+            }
+            const data = await res.json();
+            setCampaign(data.campaign);
+            setRequests(data.requests || []);
+        } catch {
+            router.push("/campaigns");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        setMounted(true);
+        fetchCampaign();
+    }, [resolvedParams.id]);
+
+    const toggleStatus = async () => {
+        if (!campaign) return;
+        const newStatus = campaign.status === "active" ? "paused" : "active";
+        try {
+            const res = await fetch(`/api/campaigns/${campaign.id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: newStatus }),
+            });
+            if (res.ok) {
+                toast.success(`Campaign ${newStatus === "active" ? "activated" : "paused"}`);
+                fetchCampaign();
+            }
+        } catch {
+            toast.error("Failed to update campaign");
+        }
+    };
+
+    const sendToContacts = async () => {
+        if (!campaign) return;
+
+        let contacts: { name?: string; phone?: string; email?: string }[] = [];
+
+        if (addMode === "single") {
+            if (!contactPhone && !contactEmail) {
+                toast.error("Enter a phone number or email");
+                return;
+            }
+            contacts = [{ name: contactName || undefined, phone: contactPhone || undefined, email: contactEmail || undefined }];
+        } else {
+            // Bulk: one phone per line
+            const lines = bulkPhones.split("\n").filter((l) => l.trim());
+            if (lines.length === 0) {
+                toast.error("Enter at least one phone number");
+                return;
+            }
+            contacts = lines.map((phone) => ({ phone: phone.trim() }));
+        }
+
+        setSending(true);
+        try {
+            const res = await fetch(`/api/campaigns/${campaign.id}/send`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contacts }),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                toast.error(result.error || "Failed to send");
+                return;
+            }
+
+            toast.success(`Sent: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
+            setDialogOpen(false);
+            setContactName("");
+            setContactPhone("");
+            setContactEmail("");
+            setBulkPhones("");
+            fetchCampaign();
+        } catch {
+            toast.error("Failed to send");
+        } finally {
+            setSending(false);
+        }
+    };
+
+    const handleCSVImport = async (contacts: { name?: string; email?: string; phone?: string }[]) => {
+        if (!campaign) return;
+
+        setSending(true);
+        try {
+            const res = await fetch(`/api/campaigns/${campaign.id}/send`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contacts }),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                toast.error(result.error || "Failed to import");
+                return;
+            }
+
+            toast.success(`Imported: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
+            setCsvDialogOpen(false);
+            fetchCampaign();
+        } catch {
+            toast.error("Failed to import");
+        } finally {
+            setSending(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
+
+    if (!campaign) return null;
+
+    const totalCompleted = campaign.total_completed || campaign.total_reviews_received || 0;
+    const funnelStages = [
+        { label: "Sent", value: campaign.total_sent, icon: Send, color: "bg-primary" },
+        { label: "Opened", value: campaign.total_opened, icon: Eye, color: "bg-chart-4" },
+        { label: "Clicked", value: campaign.total_clicked, icon: MousePointerClick, color: "bg-primary" },
+        { label: "Completed", value: totalCompleted, icon: CheckCircle, color: "bg-chart-2/100" },
+    ];
+    const maxFunnel = Math.max(campaign.total_sent, 1);
+
+    return (
+        <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
+            {/* Header */}
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="flex min-w-0 items-start gap-3 sm:gap-4">
+                    <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
+                        <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="break-words text-xl font-bold tracking-tight sm:text-2xl">{campaign.name}</h1>
+                            <Badge
+                                variant={campaign.status === "active" ? "default" : "secondary"}
+                                className={
+                                    campaign.status === "active"
+                                        ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
+                                        : campaign.status === "paused"
+                                            ? "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4"
+                                            : ""
+                                }
+                            >
+                                {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                            </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "—"}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" className="flex-1 sm:flex-initial" onClick={toggleStatus}>
+                        {campaign.status === "active" ? (
+                            <><Pause className="mr-2 h-4 w-4" />Pause</>
+                        ) : (
+                            <><Play className="mr-2 h-4 w-4" />Activate</>
+                        )}
+                    </Button>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Contacts
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Add Contacts</DialogTitle>
+                            </DialogHeader>
+
+                            {/* Mode Toggle */}
+                            <div className="flex gap-2 mb-4">
+                                <Button
+                                    variant={addMode === "single" ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setAddMode("single")}
+                                >
+                                    <Users className="mr-2 h-4 w-4" />
+                                    Single
+                                </Button>
+                                <Button
+                                    variant={addMode === "bulk" ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setAddMode("bulk")}
+                                >
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Bulk
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setDialogOpen(false);
+                                        setCsvDialogOpen(true);
+                                    }}
+                                >
+                                    <FileText className="mr-2 h-4 w-4" />
+                                    CSV
+                                </Button>
+                            </div>
+
+                            {addMode === "single" ? (
+                                <div className="space-y-3">
+                                    <div>
+                                        <Label htmlFor="contact-name">Name (optional)</Label>
+                                        <Input
+                                            id="contact-name"
+                                            value={contactName}
+                                            onChange={(e) => setContactName(e.target.value)}
+                                            placeholder="John Smith"
+                                        />
+                                    </div>
+                                    {(campaign.channel === "sms" || campaign.channel === "both") && (
+                                        <div>
+                                            <Label htmlFor="contact-phone">Phone</Label>
+                                            <Input
+                                                id="contact-phone"
+                                                value={contactPhone}
+                                                onChange={(e) => setContactPhone(e.target.value)}
+                                                placeholder="+1 (555) 123-4567"
+                                            />
+                                        </div>
+                                    )}
+                                    {(campaign.channel === "email" || campaign.channel === "both") && (
+                                        <div>
+                                            <Label htmlFor="contact-email">Email</Label>
+                                            <Input
+                                                id="contact-email"
+                                                type="email"
+                                                value={contactEmail}
+                                                onChange={(e) => setContactEmail(e.target.value)}
+                                                placeholder="john@example.com"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    <div>
+                                        <Label htmlFor="bulk-phones">Phone Numbers (one per line)</Label>
+                                        <Textarea
+                                            id="bulk-phones"
+                                            value={bulkPhones}
+                                            onChange={(e) => setBulkPhones(e.target.value)}
+                                            rows={8}
+                                            placeholder={"+15551234567\n+15559876543\n+15550001111"}
+                                            className="font-mono text-sm"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {bulkPhones.split("\n").filter((l) => l.trim()).length} phone numbers
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="outline">Cancel</Button>
+                                </DialogClose>
+                                <Button onClick={sendToContacts} disabled={sending}>
+                                    {sending ? (
+                                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending...</>
+                                    ) : (
+                                        <><Send className="mr-2 h-4 w-4" />Send Now</>
+                                    )}
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {funnelStages.map((stage) => (
+                    <Card key={stage.label}>
+                        <CardContent className="p-4">
+                            <div className="flex items-center gap-3">
+                                <div className={`rounded-lg p-2 ${stage.color} text-primary-foreground`}>
+                                    <stage.icon className="h-4 w-4" />
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-bold">{stage.value}</p>
+                                    <p className="text-xs text-muted-foreground">{stage.label}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
+            {/* Conversion Funnel */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Conversion Funnel</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-3">
+                        {funnelStages.map((stage) => {
+                            const pct = maxFunnel > 0 ? (stage.value / maxFunnel) * 100 : 0;
+                            return (
+                                <div key={stage.label} className="flex items-center gap-3">
+                                    <span className="text-sm font-medium w-20 text-right">{stage.label}</span>
+                                    <div className="flex-1 h-8 bg-muted rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full ${stage.color} rounded-full transition-all duration-500 flex items-center justify-end pr-3`}
+                                            style={{ width: `${Math.max(pct, 2)}%` }}
+                                        >
+                                            {pct >= 10 && (
+                                                <span className="text-xs font-semibold text-primary-foreground">{stage.value}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <span className="text-sm text-muted-foreground w-12">{Math.round(pct)}%</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Contact List */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base">Contacts ({requests.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {requests.length === 0 ? (
+                        <p className="text-sm text-muted-foreground text-center py-8">
+                            No contacts sent yet. Click &ldquo;Add Contacts&rdquo; to get started.
+                        </p>
+                    ) : (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Contact</TableHead>
+                                    <TableHead>Channel</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Sent</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {requests.map((req) => (
+                                    <TableRow key={req.id}>
+                                        <TableCell className="font-medium">
+                                            {req.customer_name || "—"}
+                                        </TableCell>
+                                        <TableCell className="text-sm">
+                                            {req.customer_phone || req.customer_email || "—"}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className="text-xs capitalize">
+                                                {req.channel}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className={`text-xs ${statusColors[req.status] || ""}`}>
+                                                {req.status.replace("_", " ")}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">
+                                            {req.sent_at && mounted
+                                                ? new Date(req.sent_at).toLocaleString()
+                                                : "—"}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                </CardContent>
+            </Card>
+            <CSVImportDialog
+                open={csvDialogOpen}
+                onOpenChange={setCsvDialogOpen}
+                onImport={handleCSVImport}
+                isImporting={sending}
+            />
+        </div>
+    );
+}

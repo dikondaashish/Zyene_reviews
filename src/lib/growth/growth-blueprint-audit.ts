@@ -27,6 +27,20 @@ export interface BlueprintAuditItem {
 
 const APP_ROOT = path.join(process.cwd(), "src/app/(marketing)");
 
+/** Read page.tsx plus page-view/page-client siblings (Phase 3 slim pages). */
+function readAppPageSource(pagePath: string): string {
+    if (!existsSync(pagePath)) return "";
+    let src = readFileSync(pagePath, "utf8");
+    const dir = path.dirname(pagePath);
+    for (const name of ["page-view.tsx", "page-client.tsx"]) {
+        const sibling = path.join(dir, name);
+        if (existsSync(sibling)) {
+            src += `\n${readFileSync(sibling, "utf8")}`;
+        }
+    }
+    return src;
+}
+
 const REQUIRED_ROUTE_FILES: Record<string, string> = {
     "/help/[category]/[article]": "help/[category]/[article]/page.tsx",
 };
@@ -253,7 +267,7 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
     const matrixTasks = GROWTH_IMPLEMENTATION_MATRIX.flatMap((p) => p.blocks.flatMap((b) => b.tasks));
     const featuresPagePath = path.join(APP_ROOT, "features/page.tsx");
     if (existsSync(featuresPagePath)) {
-        const featuresSrc = readFileSync(featuresPagePath, "utf8");
+        const featuresSrc = readAppPageSource(featuresPagePath);
         if (!featuresSrc.includes("product-foundation")) {
             items.push({
                 id: "foundation-features-wire",
