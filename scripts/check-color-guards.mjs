@@ -9,13 +9,22 @@ const SKIP_SEGMENTS = [
 const SKIP_BASENAMES = new Set([
   "qr-code-card.tsx",
   "report-generator.tsx",
+  "report-generator-pdf.ts",
   "layout.tsx",
   "public-profile-editor.tsx",
   "send-competitor-alert-email.ts",
   "generate-qr.ts",
   "review-page-background.ts",
   "opengraph-image.tsx",
+  "opengraph-image-content.tsx",
   "transactional-email-styles.ts",
+  "qr-code-helpers.ts",
+  "qr-code-branded-download-canvas-utils.ts",
+  "qr-code-branded-download-paint-rest.ts",
+  "qr-code-branded-download-paint-top.ts",
+  "qr-code-branded-print-html.ts",
+  "qr-code-branded-print.ts",
+  "use-public-profile-editor-qr-share.ts",
 ]);
 
 const TAILWIND_PALETTE_RE =
@@ -107,6 +116,6 @@ for (const file of violations) {
 }
 
 console.error(
-  "Use semantic tokens/classes instead. Skipped: resend/templates, qr-code-card.tsx, report-generator.tsx, layout.tsx, public-profile-editor.tsx, send-competitor-alert-email.ts, generate-qr.ts, review-page-background.ts, opengraph-image.tsx, transactional-email-styles.ts."
+  "Use semantic tokens/classes instead. Skipped: resend/templates, OG image modules, QR/canvas/PDF renderers, layout.tsx, and other files that must use literal colors."
 );
 process.exit(1);

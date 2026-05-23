@@ -36,7 +36,7 @@ export function QrCodeCardInfoPanel({
                         <span className="truncate" title={`${domain}/${businessSlug}`}>
                             {domain}/{businessSlug}
                         </span>
-                        {copied ? <Check className="ml-2 text-green-500 size-4" /> : <Copy className="ml-2 size-4" />}
+                        {copied ? <Check className="ml-2 text-chart-2 size-4" /> : <Copy className="ml-2 size-4" />}
                     </div>
                 </div>
             </div>
