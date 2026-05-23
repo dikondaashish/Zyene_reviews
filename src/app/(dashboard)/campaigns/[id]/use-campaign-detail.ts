@@ -2,14 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-    CheckCircle,
-    Eye,
-    MousePointerClick,
-    Send,
-} from "lucide-react";
 import { toast } from "sonner";
-import type { Campaign, FunnelStage, ReviewRequest } from "./campaign-detail-types";
+import { fetchCampaignDetail, patchCampaignStatus } from "./campaign-detail-api";
+import { buildCampaignFunnelStages, campaignMaxFunnel } from "./campaign-detail-funnel-utils";
+import type { Campaign, ReviewRequest } from "./campaign-detail-types";
+import { importCampaignCsvContacts, sendCampaignToContacts } from "./use-campaign-detail-send";
 
 export function useCampaignDetail(campaignId: string) {
     const router = useRouter();
@@ -27,40 +24,33 @@ export function useCampaignDetail(campaignId: string) {
     const [bulkPhones, setBulkPhones] = useState("");
     const [addMode, setAddMode] = useState<"single" | "bulk">("single");
 
-    const fetchCampaign = async () => {
-        try {
-            const res = await fetch(`/api/campaigns/${campaignId}`);
-            if (!res.ok) {
-                router.push("/campaigns");
-                return;
+    const loadCampaign = (initial = false) => {
+        fetchCampaignDetail(
+            campaignId,
+            (c, r) => {
+                setCampaign(c);
+                setRequests(r as ReviewRequest[]);
+                if (initial) setLoading(false);
+            },
+            () => router.push("/campaigns"),
+            () => {
+                if (initial) setLoading(false);
             }
-            const data = await res.json();
-            setCampaign(data.campaign);
-            setRequests(data.requests || []);
-        } catch {
-            router.push("/campaigns");
-        } finally {
-            setLoading(false);
-        }
+        );
     };
 
     useEffect(() => {
         setMounted(true);
-        fetchCampaign();
+        loadCampaign(true);
     }, [campaignId]);
 
     const toggleStatus = async () => {
         if (!campaign) return;
         const newStatus = campaign.status === "active" ? "paused" : "active";
         try {
-            const res = await fetch(`/api/campaigns/${campaign.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }),
-            });
-            if (res.ok) {
+            if (await patchCampaignStatus(campaign.id, newStatus)) {
                 toast.success(`Campaign ${newStatus === "active" ? "activated" : "paused"}`);
-                fetchCampaign();
+                loadCampaign();
             }
         } catch {
             toast.error("Failed to update campaign");
@@ -69,96 +59,40 @@ export function useCampaignDetail(campaignId: string) {
 
     const sendToContacts = async () => {
         if (!campaign) return;
-
-        let contacts: { name?: string; phone?: string; email?: string }[] = [];
-
-        if (addMode === "single") {
-            if (!contactPhone && !contactEmail) {
-                toast.error("Enter a phone number or email");
-                return;
-            }
-            contacts = [{ name: contactName || undefined, phone: contactPhone || undefined, email: contactEmail || undefined }];
-        } else {
-            const lines = bulkPhones.split("\n").filter((l) => l.trim());
-            if (lines.length === 0) {
-                toast.error("Enter at least one phone number");
-                return;
-            }
-            contacts = lines.map((phone) => ({ phone: phone.trim() }));
-        }
-
-        setSending(true);
-        try {
-            const res = await fetch(`/api/campaigns/${campaign.id}/send`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contacts }),
-            });
-
-            const result = await res.json();
-
-            if (!res.ok) {
-                toast.error(result.error || "Failed to send");
-                return;
-            }
-
-            toast.success(`Sent: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
-            setDialogOpen(false);
-            setContactName("");
-            setContactPhone("");
-            setContactEmail("");
-            setBulkPhones("");
-            fetchCampaign();
-        } catch {
-            toast.error("Failed to send");
-        } finally {
-            setSending(false);
-        }
+        await sendCampaignToContacts({
+            campaign,
+            addMode,
+            contactName,
+            contactPhone,
+            contactEmail,
+            bulkPhones,
+            setSending,
+            onSuccess: () => {
+                setDialogOpen(false);
+                setContactName("");
+                setContactPhone("");
+                setContactEmail("");
+                setBulkPhones("");
+                loadCampaign();
+            },
+        });
     };
 
     const handleCSVImport = async (contacts: { name?: string; email?: string; phone?: string }[]) => {
         if (!campaign) return;
-
-        setSending(true);
-        try {
-            const res = await fetch(`/api/campaigns/${campaign.id}/send`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contacts }),
-            });
-
-            const result = await res.json();
-
-            if (!res.ok) {
-                toast.error(result.error || "Failed to import");
-                return;
-            }
-
-            toast.success(`Imported: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
-            setCsvDialogOpen(false);
-            fetchCampaign();
-        } catch {
-            toast.error("Failed to import");
-        } finally {
-            setSending(false);
-        }
+        await importCampaignCsvContacts({
+            campaign,
+            contacts,
+            setSending,
+            onSuccess: () => {
+                setCsvDialogOpen(false);
+                loadCampaign();
+            },
+        });
     };
 
-    const funnelStages: FunnelStage[] = useMemo(() => {
-        if (!campaign) return [];
-        const totalCompleted = campaign.total_completed || campaign.total_reviews_received || 0;
-        return [
-            { label: "Sent", value: campaign.total_sent, icon: Send, color: "bg-primary" },
-            { label: "Opened", value: campaign.total_opened, icon: Eye, color: "bg-chart-4" },
-            { label: "Clicked", value: campaign.total_clicked, icon: MousePointerClick, color: "bg-primary" },
-            { label: "Completed", value: totalCompleted, icon: CheckCircle, color: "bg-chart-2/100" },
-        ];
-    }, [campaign]);
-
-    const maxFunnel = useMemo(
-        () => Math.max(campaign?.total_sent ?? 0, 1),
-        [campaign],
-    );
+    const funnelStages = useMemo(() => buildCampaignFunnelStages(campaign), [campaign]);
+    const maxFunnel = useMemo(() => campaignMaxFunnel(campaign), [campaign]);
 
     return {
         router,

@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import Papa from "papaparse";
 import { FIELD_LABELS, REQUIRED_FIELDS, type RequiredField } from "./import-customers-constants";
+import { parseImportCsvFile } from "./import-customers-csv";
+import { submitCustomerImport } from "./import-customers-submit";
 
 export type ImportStep = "upload" | "map" | "importing" | "success";
 
@@ -22,46 +23,6 @@ export function useImportCustomers() {
     const [step, setStep] = useState<ImportStep>("upload");
     const [importResults, setImportResults] = useState<{ total: number; success: number; failed: number } | null>(null);
 
-    const parseCSV = (selectedFile: File) => {
-        Papa.parse(selectedFile, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                const headers = results.meta.fields || [];
-                setCsvHeaders(headers);
-                setCsvData(results.data as Record<string, string>[]);
-
-                const newMapping: Record<RequiredField, string> = {
-                    first_name: "",
-                    last_name: "",
-                    email: "",
-                    phone: "",
-                };
-
-                headers.forEach((header) => {
-                    const lowerHeader = header.toLowerCase();
-                    if (lowerHeader.includes("first") && lowerHeader.includes("name")) {
-                        newMapping.first_name = header;
-                    } else if (lowerHeader.includes("last") && lowerHeader.includes("name")) {
-                        newMapping.last_name = header;
-                    } else if (lowerHeader.includes("name") && !newMapping.first_name) {
-                        newMapping.first_name = header;
-                    } else if (lowerHeader.includes("email")) {
-                        newMapping.email = header;
-                    } else if (lowerHeader.includes("phone")) {
-                        newMapping.phone = header;
-                    }
-                });
-
-                setMapping(newMapping);
-                setStep("map");
-            },
-            error: (error) => {
-                toast.error(`Error parsing CSV: ${error.message}`);
-            },
-        });
-    };
-
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (!selectedFile) return;
@@ -72,55 +33,22 @@ export function useImportCustomers() {
         }
 
         setFile(selectedFile);
-        parseCSV(selectedFile);
-    };
-
-    const handleImport = async () => {
-        if (!mapping.email && !mapping.phone) {
-            toast.error("You must map at least an Email or Phone number to import customers.");
-            return;
-        }
-
-        setIsUploading(true);
-        setStep("importing");
-
-        try {
-            const payload = csvData
-                .map((row) => ({
-                    first_name: mapping.first_name ? row[mapping.first_name] : null,
-                    last_name: mapping.last_name ? row[mapping.last_name] : null,
-                    email: mapping.email ? row[mapping.email] : null,
-                    phone: mapping.phone ? row[mapping.phone] : null,
-                }))
-                .filter((c) => c.email || c.phone);
-
-            const res = await fetch("/api/customers/import", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ customers: payload }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Failed to import customers");
-            }
-
-            setImportResults({
-                total: payload.length,
-                success: data.successCount,
-                failed: payload.length - data.successCount,
-            });
-            setStep("success");
-            toast.success(`Successfully imported ${data.successCount} customers!`);
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "An unexpected error occurred";
-            toast.error(message);
+        parseImportCsvFile(selectedFile, (headers, data, newMapping) => {
+            setCsvHeaders(headers);
+            setCsvData(data);
+            setMapping(newMapping);
             setStep("map");
-        } finally {
-            setIsUploading(false);
-        }
+        });
     };
+
+    const handleImport = () =>
+        submitCustomerImport({
+            csvData,
+            mapping,
+            setStep,
+            setImportResults,
+            setIsUploading,
+        });
 
     const resetUpload = () => {
         setStep("upload");

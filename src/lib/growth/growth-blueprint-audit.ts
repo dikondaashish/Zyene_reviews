@@ -2,7 +2,7 @@
 // Automated audit — GROWTH_BLUEPRINT §§ 0–8, 14–16 + page architecture table
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { HELP_ARTICLE_MAP, HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/phase4/help-data";
@@ -37,6 +37,20 @@ function readAppPageSource(pagePath: string): string {
         if (existsSync(sibling)) {
             src += `\n${readFileSync(sibling, "utf8")}`;
         }
+    }
+    try {
+        for (const entry of readdirSync(dir)) {
+            if (
+                entry.endsWith("-section.tsx") ||
+                entry.endsWith("-sections.tsx") ||
+                entry.endsWith("-data.ts") ||
+                entry.endsWith("-content.tsx")
+            ) {
+                src += `\n${readFileSync(path.join(dir, entry), "utf8")}`;
+            }
+        }
+    } catch {
+        /* ignore unreadable dirs */
     }
     return src;
 }
@@ -342,7 +356,16 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
 
     const layoutPath = path.join(APP_ROOT, "layout.tsx");
     if (existsSync(layoutPath)) {
-        const layoutSrc = readFileSync(layoutPath, "utf8");
+        let layoutSrc = readFileSync(layoutPath, "utf8");
+        try {
+            for (const entry of readdirSync(APP_ROOT)) {
+                if (entry.startsWith("marketing-layout-") && (entry.endsWith(".tsx") || entry.endsWith(".ts"))) {
+                    layoutSrc += `\n${readFileSync(path.join(APP_ROOT, entry), "utf8")}`;
+                }
+            }
+        } catch {
+            /* ignore */
+        }
         if (!layoutSrc.includes('href="/about"')) {
             items.push({ id: "p0-nav-about", severity: "error", area: "phase0", message: "About not linked in marketing layout (§0.1)" });
         }
