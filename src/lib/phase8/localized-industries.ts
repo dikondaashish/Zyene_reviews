@@ -167,6 +167,10 @@ export function getLocalizedIndustry(
     return byLocalizedSlug[`${locale}/${localizedSlug}`];
 }
 
-export const ES_INDUSTRY_LOCALIZED_SLUGS = LOCALIZED_INDUSTRY_PAGES.filter((p) => p.locale === "es").map(
-    (p) => p.localizedSlug
+export const ES_INDUSTRY_LOCALIZED_SLUGS = LOCALIZED_INDUSTRY_PAGES.reduce<string[]>(
+    (acc, p) => {
+        if (p.locale === "es") acc.push(p.localizedSlug);
+        return acc;
+    },
+    []
 );

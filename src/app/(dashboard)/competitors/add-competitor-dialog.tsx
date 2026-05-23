@@ -162,7 +162,7 @@ export function AddCompetitorDialog({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    <Plus className="mr-2 h-4 w-4" />
+                    <Plus className="mr-2 size-4" />
                     Track Competitor
                 </Button>
             </DialogTrigger>
@@ -178,11 +178,11 @@ export function AddCompetitorDialog({
                     <div className="grid gap-5 px-6 py-4">
                         <div className="space-y-2 relative">
                             <Label htmlFor="name" className="text-sm font-semibold flex items-center gap-2">
-                                <Building2 className="h-4 w-4 text-muted-foreground" />
+                                <Building2 className="text-muted-foreground size-4" />
                                 Competitor name <span className="text-destructive">*</span>
                             </Label>
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none size-4" />
                                 <Input
                                     id="name"
                                     role="combobox"
@@ -211,7 +211,7 @@ export function AddCompetitorDialog({
                                     )}
                                 />
                                 {loadingSearch ? (
-                                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+                                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground size-4" />
                                 ) : null}
                                 {dropdownOpen &&
                                 name.trim().length >= 2 &&
@@ -233,7 +233,7 @@ export function AddCompetitorDialog({
                                                 onMouseDown={(e) => e.preventDefault()}
                                                 onClick={() => handlePick(s)}
                                             >
-                                                <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                                                <MapPin className="text-muted-foreground shrink-0 mt-0.5 size-4" />
                                                 <span className="min-w-0">
                                                     <span className="block font-medium text-sm leading-snug">
                                                         {s.primaryText}
@@ -251,13 +251,13 @@ export function AddCompetitorDialog({
                             </div>
                             {fieldErrors.name ? (
                                 <div className="flex items-center gap-1 text-sm text-destructive">
-                                    <AlertCircle className="h-3 w-3" />
+                                    <AlertCircle className="size-3" />
                                     {fieldErrors.name}
                                 </div>
                             ) : null}
                             {addressLine ? (
                                 <p className="text-xs text-muted-foreground flex items-start gap-1.5">
-                                    <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                                    <MapPin className="shrink-0 mt-0.5 size-3.5" />
                                     <span>{addressLine}</span>
                                 </p>
                             ) : null}
@@ -265,7 +265,7 @@ export function AddCompetitorDialog({
 
                         <div className="space-y-2">
                             <Label htmlFor="url" className="text-sm font-semibold flex items-center gap-2">
-                                <MapPinned className="h-4 w-4 text-muted-foreground" />
+                                <MapPinned className="text-muted-foreground size-4" />
                                 Google Maps URL
                             </Label>
                             <Input
@@ -286,7 +286,7 @@ export function AddCompetitorDialog({
                             />
                             {fieldErrors.googleUrl ? (
                                 <div className="flex items-start gap-1 text-xs text-destructive">
-                                    <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
+                                    <AlertCircle className="mt-0.5 shrink-0 size-3" />
                                     {fieldErrors.googleUrl}
                                 </div>
                             ) : null}
@@ -315,7 +315,7 @@ export function AddCompetitorDialog({
                             Cancel
                         </Button>
                         <Button type="submit" disabled={isSubmitting} className="min-w-[170px]">
-                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {isSubmitting && <Loader2 className="mr-2 animate-spin size-4" />}
                             {isSubmitting ? "Adding..." : "Add Competitor"}
                         </Button>
                     </DialogFooter>

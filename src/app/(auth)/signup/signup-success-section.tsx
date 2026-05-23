@@ -35,7 +35,7 @@ export function SignupSuccessSection({ email }: { email: string }) {
                     },
                 ].map((item) => (
                     <div key={item.step} className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
+                        <span className="flex-shrink-0 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center mt-0.5 size-6">
                             {item.step}
                         </span>
                         <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>

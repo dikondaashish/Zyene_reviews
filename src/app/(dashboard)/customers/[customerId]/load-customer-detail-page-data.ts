@@ -4,6 +4,7 @@ import {
     computeDetailStats,
     filterFeedbackForCustomer,
     filterRequestsForCustomer,
+    type TimelinePlatformReviewItem,
 } from "@/lib/customers/customer-detail-data";
 
 export async function loadCustomerDetailPageData(customerId: string, businessId: string) {
@@ -50,20 +51,22 @@ export async function loadCustomerDetailPageData(customerId: string, businessId:
 
     const platformTimeline =
         displayFull.length > 0
-            ? (reviewRows ?? [])
-                  .filter(
-                      (r) =>
-                          r.author_name &&
-                          r.author_name.trim().toLowerCase() === displayFull
-                  )
-                  .map((r) => ({
-                      type: "platform_review" as const,
-                      id: r.id,
-                      sortAt: r.review_date,
-                      rating: r.rating,
-                      platform: r.platform,
-                      text: r.text,
-                  }))
+            ? (reviewRows ?? []).reduce<TimelinePlatformReviewItem[]>((acc, r) => {
+                  if (
+                      r.author_name &&
+                      r.author_name.trim().toLowerCase() === displayFull
+                  ) {
+                      acc.push({
+                          type: "platform_review",
+                          id: r.id,
+                          sortAt: r.review_date,
+                          rating: r.rating,
+                          platform: r.platform,
+                          text: r.text,
+                      });
+                  }
+                  return acc;
+              }, [])
             : [];
 
     const timeline = [...baseTimeline, ...platformTimeline].sort(

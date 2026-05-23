@@ -20,14 +20,23 @@ export async function submitCustomerImport(params: {
     setStep("importing");
 
     try {
-        const payload = csvData
-            .map((row) => ({
+        const payload = csvData.reduce<
+            Array<{
+                first_name: string | null;
+                last_name: string | null;
+                email: string | null;
+                phone: string | null;
+            }>
+        >((acc, row) => {
+            const customer = {
                 first_name: mapping.first_name ? row[mapping.first_name] : null,
                 last_name: mapping.last_name ? row[mapping.last_name] : null,
                 email: mapping.email ? row[mapping.email] : null,
                 phone: mapping.phone ? row[mapping.phone] : null,
-            }))
-            .filter((c) => c.email || c.phone);
+            };
+            if (customer.email || customer.phone) acc.push(customer);
+            return acc;
+        }, []);
 
         const res = await fetch("/api/customers/import", {
             method: "POST",

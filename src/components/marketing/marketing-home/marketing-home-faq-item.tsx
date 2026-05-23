@@ -14,7 +14,7 @@ export function MarketingHomeFaqItem({ question, answer }: { question: string; a
             >
                 <span className="text-lg font-medium text-foreground">{question}</span>
                 <ChevronDown
-                    className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+                    className={`text-muted-foreground transition-transform ${open ? "rotate-180" : ""} size-5`}
                 />
             </button>
             {open && <p className="pb-5 text-muted-foreground leading-relaxed">{answer}</p>}

@@ -56,7 +56,7 @@ export function AppSidebarSettingsNavItems({
                                         >
                                             <Link href={item.url}>
                                                 <item.icon
-                                                    className={`h-4 w-4 ${isActive ? "text-primary" : ""}`}
+                                                    className={`${isActive ? "text-primary" : ""} size-4`}
                                                 />
                                                 <span className={isActive ? "font-semibold" : ""}>
                                                     {item.title}

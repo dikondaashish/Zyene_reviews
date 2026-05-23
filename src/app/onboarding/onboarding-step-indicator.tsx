@@ -16,16 +16,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                     <div key={step.label} className="flex items-center">
                         <div className="flex flex-col items-center gap-2">
                             <motion.div
-                                className={`
-                    w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default
-                    ${
-                        isCompleted
-                            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                            : isActive
-                              ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm"
-                              : "bg-secondary/60 text-muted-foreground"
-                    }
-                  `}
+                                className={`rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default ${ isCompleted ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : isActive ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm" : "bg-secondary/60 text-muted-foreground" } size-10`}
                                 animate={isActive ? { scale: [1, 1.05, 1] } : {}}
                                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                             >

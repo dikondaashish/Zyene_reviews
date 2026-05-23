@@ -33,8 +33,8 @@ export function AnalyticsPageClientHero({
 }) {
     return (
         <>
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none size-[500px]" />
+            <div className="absolute bottom-0 left-0 bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none size-[500px]" />
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

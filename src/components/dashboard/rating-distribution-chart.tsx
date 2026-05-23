@@ -56,9 +56,7 @@ export function RatingDistributionChart({ data }: { data: RatingData[] }) {
                                 <Star
                                     key={i}
                                     strokeWidth={i < d.rating ? 0 : 1.35}
-                                    className={`h-3.5 w-3.5 ${
-                                        i < d.rating ? "fill-chart-4 text-chart-4" : "fill-none text-muted-foreground/30 stroke-muted-foreground/30"
-                                    }`}
+                                    className={`${ i < d.rating ? "fill-chart-4 text-chart-4" : "fill-none text-muted-foreground/30 stroke-muted-foreground/30" } size-3.5`}
                                 />
                             ))}
                         </div>

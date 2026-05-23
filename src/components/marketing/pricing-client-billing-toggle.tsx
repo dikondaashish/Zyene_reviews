@@ -26,9 +26,7 @@ export function BillingToggle({
                 aria-label="Toggle billing interval"
             >
                 <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
-                        interval === "year" ? "translate-x-8" : "translate-x-1"
-                    }`}
+                    className={`inline-block transform rounded-full bg-white shadow-sm transition-transform ${ interval === "year" ? "translate-x-8" : "translate-x-1" } size-5`}
                 />
             </button>
             <span

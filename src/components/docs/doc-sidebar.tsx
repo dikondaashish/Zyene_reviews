@@ -49,7 +49,7 @@ export function DocSidebar() {
                                     >
                                         {Icon ? (
                                             <Icon
-                                                className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`}
+                                                className={`${active ? "text-primary" : "text-muted-foreground"} size-4`}
                                             />
                                         ) : null}
                                         {item.title}

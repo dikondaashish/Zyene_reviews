@@ -83,9 +83,9 @@ export function YelpIntegrationCardConnectFlow({
                         </div>
                         <Button className="h-8 text-xs w-full" onClick={onSearch} disabled={isSearching}>
                             {isSearching ? (
-                                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                                <Loader2 className="mr-1.5 animate-spin size-3.5" />
                             ) : (
-                                <Search className="w-3.5 h-3.5 mr-1.5" />
+                                <Search className="mr-1.5 size-3.5" />
                             )}
                             Search Yelp
                         </Button>
@@ -109,7 +109,7 @@ export function YelpIntegrationCardConnectFlow({
                                                     {biz.name}
                                                 </p>
                                                 <div className="flex items-center gap-1 mt-0.5 text-[10px] text-muted-foreground">
-                                                    <MapPin className="w-2.5 h-2.5" />
+                                                    <MapPin className="size-2.5" />
                                                     {biz.address}, {biz.city}, {biz.state}
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-1">
@@ -125,9 +125,9 @@ export function YelpIntegrationCardConnectFlow({
                                                 </div>
                                             </div>
                                             {isConfirming === biz.yelpId ? (
-                                                <Loader2 className="w-4 h-4 animate-spin text-destructive" />
+                                                <Loader2 className="animate-spin text-destructive size-4" />
                                             ) : (
-                                                <CheckCircle2 className="w-4 h-4 text-muted-foreground group-hover:text-destructive transition-colors" />
+                                                <CheckCircle2 className="text-muted-foreground group-hover:text-destructive transition-colors size-4" />
                                             )}
                                         </div>
                                     </button>

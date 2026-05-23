@@ -113,7 +113,7 @@ export function YelpIntegrationCardConnected({
                     }}
                     disabled={isSyncing}
                 >
-                    <RefreshCw className={`w-3 h-3 mr-1.5 ${isSyncing ? "animate-spin" : ""}`} />
+                    <RefreshCw className={`mr-1.5 ${isSyncing ? "animate-spin" : ""} size-3`} />
                     Sync Now
                 </Button>
                 <AlertDialog>

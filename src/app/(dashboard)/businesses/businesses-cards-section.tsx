@@ -61,12 +61,10 @@ export function BusinessesCardsSection({
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center gap-3">
                                         <div
-                                            className={`h-10 w-10 rounded-lg flex items-center justify-center ${
-                                                isActive ? "bg-primary/15" : "bg-primary/10"
-                                            }`}
+                                            className={`rounded-lg flex items-center justify-center ${ isActive ? "bg-primary/15" : "bg-primary/10" } size-10`}
                                         >
                                             <Building2
-                                                className={`h-5 w-5 ${isActive ? "text-primary" : "text-primary"}`}
+                                                className={`${isActive ? "text-primary" : "text-primary"} size-5`}
                                             />
                                         </div>
                                         <div>

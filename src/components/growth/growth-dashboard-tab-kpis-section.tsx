@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { KPI_DEFINITIONS, type KpiCategory } from "@/lib/growth/kpi-definitions";
 import type { KpiMetricValue } from "@/lib/growth/kpi-metrics";
 import { GROWTH_DASHBOARD_CATEGORY_LABELS } from "./growth-dashboard-client-types";
@@ -27,9 +28,17 @@ export function GrowthDashboardTabKpisSection({ metricById }: GrowthDashboardTab
                                 </tr>
                             </thead>
                             <tbody>
-                                {KPI_DEFINITIONS.filter((d) => d.category === cat).map((def) => (
-                                    <GrowthDashboardKpiRow key={def.id} def={def} metric={metricById[def.id]} />
-                                ))}
+                                {KPI_DEFINITIONS.reduce<ReactNode[]>((acc, def) => {
+                                    if (def.category !== cat) return acc;
+                                    acc.push(
+                                        <GrowthDashboardKpiRow
+                                            key={def.id}
+                                            def={def}
+                                            metric={metricById[def.id]}
+                                        />
+                                    );
+                                    return acc;
+                                }, [])}
                             </tbody>
                         </table>
                     </div>

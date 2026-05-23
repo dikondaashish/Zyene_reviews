@@ -1,4 +1,5 @@
 import type { CompetitorData } from "@/lib/phase3/competitor-data";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
 
@@ -8,9 +9,10 @@ export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data:
                 <div className="container mx-auto max-w-4xl">
                     <p className="text-sm font-semibold text-muted-foreground text-center mb-6">Other comparisons</p>
                     <div className="flex flex-wrap justify-center gap-3">
-                        {COMPETITOR_SLUGS.filter((s) => s !== slug).map((s) => {
+                        {COMPETITOR_SLUGS.reduce<ReactNode[]>((acc, s) => {
+                            if (s === slug) return acc;
                             const comp = COMPETITOR_MAP[s];
-                            return (
+                            acc.push(
                                 <Link
                                     key={s}
                                     href={`/compare/${s}`}
@@ -19,7 +21,8 @@ export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data:
                                     Zyene vs {comp.name} →
                                 </Link>
                             );
-                        })}
+                            return acc;
+                        }, [])}
                     </div>
                 </div>
             </section>

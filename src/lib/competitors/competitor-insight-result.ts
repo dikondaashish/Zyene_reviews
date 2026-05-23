@@ -53,16 +53,26 @@ export function parseCompetitorInsightPayload(parsed: unknown): CompetitorInsigh
         String(o.why_it_matters ?? "").trim() || "This change can influence local customer decisions.";
     const actions = Array.isArray(o.actions)
         ? o.actions
-              .map((a) => {
+              .reduce<
+                  Array<{
+                      title: string;
+                      impact: string;
+                      effort: string;
+                      priority: string;
+                  }>
+              >((acc, a) => {
                   const row = a as Record<string, unknown>;
-                  return {
-                      title: String(row?.title ?? "").trim(),
-                      impact: String(row?.impact ?? "").trim(),
+                  const title = String(row?.title ?? "").trim();
+                  const impact = String(row?.impact ?? "").trim();
+                  if (!title || !impact) return acc;
+                  acc.push({
+                      title,
+                      impact,
                       effort: String(row?.effort ?? "").trim().toLowerCase() || "medium",
                       priority: String(row?.priority ?? "").trim().toLowerCase() || "medium",
-                  };
-              })
-              .filter((a) => a.title && a.impact)
+                  });
+                  return acc;
+              }, [])
               .slice(0, 3)
         : [];
     return {

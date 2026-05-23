@@ -19,7 +19,7 @@ export function Step4SubscriptionDecorativeShell({ children }: { children: React
             <div
                 aria-hidden="true"
                 className={cn(
-                    "pointer-events-none absolute -top-1/2 left-1/2 h-[min(120vmin,720px)] w-[min(120vmin,720px)] -translate-x-1/2 rounded-full",
+                    "pointer-events-none absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full size-[min(120vmin,720px)]",
                     "bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.12),transparent_55%)]",
                     "blur-[32px]",
                 )}

@@ -38,9 +38,11 @@ export function reviewerAvatarFromGoogle(reviewer: GoogleReview["reviewer"]): st
 }
 
 function cleanStringArray(values: Array<string | null | undefined>): string[] | null {
-    const cleaned = values
-        .map((v) => (typeof v === "string" ? v.trim() : ""))
-        .filter((v) => v.length > 0);
+    const cleaned = values.reduce<string[]>((acc, v) => {
+        const trimmed = typeof v === "string" ? v.trim() : "";
+        if (trimmed.length > 0) acc.push(trimmed);
+        return acc;
+    }, []);
     return cleaned.length > 0 ? Array.from(new Set(cleaned)) : null;
 }
 

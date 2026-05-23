@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
     Card,
     CardContent,
@@ -33,16 +34,14 @@ export function CompetitorsTableInsightsSection({
             </CardHeader>
             <CardContent>
                 <div className="grid gap-3 sm:grid-cols-2">
-                    {competitors
-                        .map((c) => ({ competitor: c, insight: latestInsightByCompetitor.get(c.id) }))
-                        .filter((row) => !!row.insight)
-                        .map(({ competitor, insight }) => {
-                            if (!insight) return null;
-                            return (
+                    {competitors.reduce<ReactNode[]>((acc, c) => {
+                            const insight = latestInsightByCompetitor.get(c.id);
+                            if (!insight) return acc;
+                            acc.push(
                                 <div key={insight.id} className="min-w-0 rounded-lg border bg-card p-4">
                                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                         <p className="break-words text-sm font-semibold">
-                                            {competitor.name}
+                                            {c.name}
                                         </p>
                                         <Badge
                                             variant={priorityBadgeVariant(insight.priority)}
@@ -102,7 +101,8 @@ export function CompetitorsTableInsightsSection({
                                     </p>
                                 </div>
                             );
-                        })}
+                            return acc;
+                        }, [])}
                 </div>
             </CardContent>
         </Card>

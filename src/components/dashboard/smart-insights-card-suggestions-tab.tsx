@@ -40,11 +40,7 @@ export function SmartInsightsCardSuggestionsTab({
                                 <div className="shrink-0 pt-0.5">
                                     <div className="rounded-lg bg-[rgba(218,84,59,0.1)] flex items-center justify-center size-8">
                                         <Sparkles
-                                            className={`w-4 h-4 ${
-                                                (suggestion.urgency || "").toLowerCase().includes("now")
-                                                    ? "text-[rgb(218,84,59)]"
-                                                    : "text-foreground"
-                                            }`}
+                                            className={`${ (suggestion.urgency || "").toLowerCase().includes("now") ? "text-[rgb(218,84,59)]" : "text-foreground" } size-4`}
                                         />
                                     </div>
                                 </div>
@@ -69,9 +65,7 @@ export function SmartInsightsCardSuggestionsTab({
                                     <div className="flex items-center justify-between">
                                         <h4 className="text-[15px] font-bold text-foreground">{suggestion.title}</h4>
                                         <ChevronDown
-                                            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
-                                                isExpanded ? "rotate-180" : ""
-                                            }`}
+                                            className={`text-muted-foreground transition-transform duration-200 ${ isExpanded ? "rotate-180" : "" } size-4`}
                                         />
                                     </div>
                                 </div>

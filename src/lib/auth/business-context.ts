@@ -111,11 +111,14 @@ export async function getActiveBusinessId(options?: {
             `)
             .eq("user_id", user.id);
 
-        businesses =
-            (memberBusinesses ?? [])
-                .map((entry: { businesses?: BusinessContextBusiness | null }) => entry.businesses)
-                .filter((b): b is BusinessContextBusiness => !!b)
-                .filter((business) => business.status !== "archived");
+        businesses = (memberBusinesses ?? []).reduce<BusinessContextBusiness[]>(
+            (acc, entry: { businesses?: BusinessContextBusiness | null }) => {
+                const business = entry.businesses;
+                if (business && business.status !== "archived") acc.push(business);
+                return acc;
+            },
+            []
+        );
 
         const primaryBusinessOrgId =
             businesses.length > 0

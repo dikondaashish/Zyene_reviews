@@ -68,9 +68,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
             <div className="grid grid-cols-1 gap-1.5">
                 {requirements.map((req) => (
                     <div key={req.label} className="flex items-center gap-2">
-                        <div className={`flex-shrink-0 w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors ${
-                            req.met ? "bg-chart-2/15" : "bg-muted"
-                        }`}>
+                        <div className={`flex-shrink-0 rounded-full flex items-center justify-center transition-colors ${ req.met ? "bg-chart-2/15" : "bg-muted" } size-3.5`}>
                             {req.met ? (
                                 <Check className="text-chart-2 size-2" strokeWidth={4} />
                             ) : (

@@ -44,15 +44,25 @@ export function useCompetitorsListMemos({
             reviews: ownBusinessChart.totalReviews != null ? Number(ownBusinessChart.totalReviews) : 0,
             isOwn: true,
         };
-        const compRows = competitors
-            .filter((c) => !competitorsListIsSyncing(c, mounted))
-            .map((c) => ({
+        const compRows = competitors.reduce<
+            Array<{
+                name: string;
+                fullName: string;
+                rating: number;
+                reviews: number;
+                isOwn: false;
+            }>
+        >((acc, c) => {
+            if (competitorsListIsSyncing(c, mounted)) return acc;
+            acc.push({
                 name: truncateLabel(c.name, 18),
                 fullName: c.name,
                 rating: Number(c.average_rating) || 0,
                 reviews: c.total_reviews || 0,
                 isOwn: false,
-            }));
+            });
+            return acc;
+        }, []);
         return [ownRow, ...compRows];
     }, [competitors, ownBusinessChart, mounted]);
 

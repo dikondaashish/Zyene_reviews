@@ -17,7 +17,7 @@ export function OnboardingContent(props: OnboardingContentProps) {
         <div className="relative min-h-screen">
             <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
                 <div
-                    className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%]"
+                    className="absolute top-[-10%] left-[-10%] size-[120%]"
                     style={{
                         background: `
               radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.08) 0%, transparent 60%),

@@ -145,15 +145,21 @@ export async function syncGbpPlaceActionsForPlatform(
         const now = new Date().toISOString();
 
         const rows = await Promise.all(
-            links.filter((link) => link.name).map(async (link, idx) => {
-                let broken = false;
-                let lastCheck: string | null = null;
-                if (checkLinks && link.uri && idx < LINK_CHECK_MAX) {
-                    broken = await checkUriLikelyBroken(link.uri);
-                    lastCheck = now;
-                }
-                return linkToRow(link, platformId, platform.business_id, broken, lastCheck);
-            })
+            links.reduce<Array<Promise<Awaited<ReturnType<typeof linkToRow>>>>>((acc, link, idx) => {
+                if (!link.name) return acc;
+                acc.push(
+                    (async () => {
+                        let broken = false;
+                        let lastCheck: string | null = null;
+                        if (checkLinks && link.uri && idx < LINK_CHECK_MAX) {
+                            broken = await checkUriLikelyBroken(link.uri);
+                            lastCheck = now;
+                        }
+                        return linkToRow(link, platformId, platform.business_id, broken, lastCheck);
+                    })()
+                );
+                return acc;
+            }, [])
         );
 
         if (rows.length === 0) {

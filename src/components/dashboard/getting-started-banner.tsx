@@ -106,10 +106,7 @@ export function GettingStartedBanner({
                 }`}
             >
               <div
-                className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${item.done
-                  ? "border-chart-2 bg-chart-2"
-                  : "border-border bg-background"
-                  }`}
+                className={`shrink-0 rounded-full border-2 flex items-center justify-center transition-all ${item.done ? "border-chart-2 bg-chart-2" : "border-border bg-background" } size-6`}
               >
                 {item.done ? (
                   <Check className="text-primary-foreground size-4" />

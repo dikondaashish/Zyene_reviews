@@ -52,9 +52,10 @@ export function useCustomerManagementBulkAndCampaign(params: {
 
     const onBulkSendCampaign = useCallback(() => {
         if (selectedIds.length === 0) return;
-        const eligibleIds = displayedCustomers
-            .filter((c) => selectedIds.includes(c.id) && !c.is_opted_out)
-            .map((c) => c.id);
+        const eligibleIds = displayedCustomers.reduce<string[]>((acc, c) => {
+            if (selectedIds.includes(c.id) && !c.is_opted_out) acc.push(c.id);
+            return acc;
+        }, []);
         if (eligibleIds.length === 0) {
             toast.error("None of the selected contacts can receive requests (opted out).");
             return;

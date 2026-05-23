@@ -35,7 +35,7 @@ export function MarketingHomeHowAndTestimonials({
               { step: "3", title: "Reply & Grow", body: "One-tap AI replies. Ask customers for reviews via email, SMS, or shareable links, while the Negative Feedback Shield routes low ratings to private resolution." },
             ].map(({ step, title, body }) => (
               <motion.div key={step} variants={fadeInUp} className="flex flex-col items-center text-center px-4">
-                <div className="h-20 w-20 bg-primary text-primary-foreground rounded-md border border-primary flex items-center justify-center mb-8 text-3xl font-bold z-10">
+                <div className="bg-primary text-primary-foreground rounded-md border border-primary flex items-center justify-center mb-8 text-3xl font-bold z-10 size-20">
                   {step}
                 </div>
                 <h3 className="text-2xl font-semibold text-foreground mb-4">{title}</h3>
@@ -77,15 +77,15 @@ export function MarketingHomeHowAndTestimonials({
             ].map(({ quote, name, role, photo }) => (
               <motion.div key={name} variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
                 <div className="flex gap-1 text-chart-4 mb-6">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-5 h-5 fill-current" />)}
+                  {[1,2,3,4,5].map(i => <Star key={i} className="fill-current size-5" />)}
                 </div>
                 <p className="text-lg text-muted-foreground mb-8 font-light leading-relaxed">
                   &quot;{quote}&quot;
                 </p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden">
+                  <div className="rounded-full overflow-hidden size-12">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo} alt={name} className="w-full h-full object-cover" />
+                    <img src={photo} alt={name} className="object-cover size-full" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">{name}</h4>

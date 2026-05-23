@@ -44,7 +44,7 @@ export function NeedsAttentionReviewRowTrigger({
             )}
             aria-expanded={open}
         >
-            <Avatar className="h-[34px] w-[34px] shrink-0 ring-1 ring-border">
+            <Avatar className="shrink-0 ring-1 ring-border size-[34px]">
                 {review.avatarUrl?.trim() ? (
                     <AvatarImage
                         src={review.avatarUrl.trim()}

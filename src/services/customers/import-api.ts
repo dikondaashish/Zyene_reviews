@@ -48,13 +48,25 @@ export async function handleCustomersImport(req: Request) {
         }
         const businessId = resolvedBusinessId;
 
-        const insertPayload = customers.map((c) => ({
-            business_id: businessId,
-            first_name: c.first_name || null,
-            last_name: c.last_name || null,
-            email: c.email || null,
-            phone: c.phone || null,
-        })).filter(c => c.email || c.phone);
+        const insertPayload = customers.reduce<
+            Array<{
+                business_id: string;
+                first_name: string | null;
+                last_name: string | null;
+                email: string | null;
+                phone: string | null;
+            }>
+        >((acc, c) => {
+            if (!c.email && !c.phone) return acc;
+            acc.push({
+                business_id: businessId,
+                first_name: c.first_name || null,
+                last_name: c.last_name || null,
+                email: c.email || null,
+                phone: c.phone || null,
+            });
+            return acc;
+        }, []);
 
         if (insertPayload.length === 0) {
             return NextResponse.json(

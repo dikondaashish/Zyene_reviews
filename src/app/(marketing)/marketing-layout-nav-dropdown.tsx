@@ -31,7 +31,7 @@ export function MarketingLayoutNavDropdown({
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors ${open ? "text-foreground bg-accent" : ""}`}
             >
                 {label}
-                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+                <ChevronDown className={`transition-transform ${open ? "rotate-180" : ""} size-3.5`} />
             </button>
             {open && (
                 <div

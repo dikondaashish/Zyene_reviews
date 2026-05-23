@@ -1,7 +1,7 @@
 export function CustomerPortalCardDecoration() {
     return (
         <svg
-            className="absolute -right-8 -top-8 w-[280px] h-[280px] opacity-[0.03] text-white pointer-events-none"
+            className="absolute -right-8 -top-8 opacity-[0.03] text-white pointer-events-none size-[280px]"
             viewBox="0 0 200 200"
             xmlns="http://www.w3.org/2000/svg"
         >

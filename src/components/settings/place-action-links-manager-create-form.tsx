@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -58,13 +59,15 @@ export function PlaceActionLinksManagerCreateForm({
                             <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                            {types
-                                .filter((t) => t.placeActionType)
-                                .map((t) => (
+                            {types.reduce<ReactNode[]>((acc, t) => {
+                                if (!t.placeActionType) return acc;
+                                acc.push(
                                     <SelectItem key={t.placeActionType} value={t.placeActionType as string}>
                                         {t.displayName || t.placeActionType}
                                     </SelectItem>
-                                ))}
+                                );
+                                return acc;
+                            }, [])}
                         </SelectContent>
                     </Select>
                 )}

@@ -30,13 +30,7 @@ export function SmartInsightsCardThemesTab({
                     >
                         <div className="flex items-center gap-3">
                             <div
-                                className={`w-2 h-2 rounded-full shrink-0 ${
-                                    (theme.sentiment || "").toLowerCase() === "negative"
-                                        ? "bg-[rgb(218,84,59)]"
-                                        : (theme.sentiment || "").toLowerCase() === "neutral"
-                                          ? "bg-[rgb(216,163,108)]"
-                                          : "bg-[rgb(64,86,66)]"
-                                }`}
+                                className={`rounded-full shrink-0 ${ (theme.sentiment || "").toLowerCase() === "negative" ? "bg-[rgb(218,84,59)]" : (theme.sentiment || "").toLowerCase() === "neutral" ? "bg-[rgb(216,163,108)]" : "bg-[rgb(64,86,66)]" } size-2`}
                             />
                             <div>
                                 <p className="text-[13px] font-bold text-foreground leading-none">{theme.name}</p>

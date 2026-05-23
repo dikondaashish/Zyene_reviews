@@ -228,8 +228,13 @@ export async function buildAnalyticsRangePayload(
     });
 
     const themeData = Array.from(themeMap.entries())
-        .map(([theme, data]) => ({ theme, ...data }))
-        .filter((t) => t.count >= 2)
+        .reduce<Array<{ theme: string; count: number; sentimentScore: number }>>(
+            (acc, [theme, data]) => {
+                if (data.count >= 2) acc.push({ theme, ...data });
+                return acc;
+            },
+            []
+        )
         .sort((a, b) => b.count - a.count)
         .slice(0, 10);
 

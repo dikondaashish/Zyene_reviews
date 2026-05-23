@@ -76,14 +76,15 @@ export async function searchPlacesAutocomplete(request: NextRequest) {
         };
 
         const suggestions: PlacesAutocompleteSuggestion[] = (data.suggestions ?? [])
-            .map((s) => s.placePrediction)
-            .filter((p): p is NonNullable<typeof p> => Boolean(p?.placeId))
-            .map((p) => {
+            .reduce<PlacesAutocompleteSuggestion[]>((acc, s) => {
+                const p = s.placePrediction;
+                if (!p?.placeId) return acc;
                 const placeId = String(p.placeId);
                 const primary =
                     p.structuredFormat?.mainText?.text?.trim() ||
                     p.text?.text?.split(",")[0]?.trim() ||
                     "";
+                if (primary.length === 0) return acc;
                 const secondary =
                     p.structuredFormat?.secondaryText?.text?.trim() ||
                     (primary && p.text?.text?.startsWith(primary)
@@ -91,14 +92,14 @@ export async function searchPlacesAutocomplete(request: NextRequest) {
                         : "") ||
                     "";
                 const mapsUrl = `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(placeId)}`;
-                return {
+                acc.push({
                     placeId,
                     primaryText: primary,
                     secondaryText: secondary,
                     mapsUrl,
-                };
-            })
-            .filter((s) => s.primaryText.length > 0)
+                });
+                return acc;
+            }, [])
             .slice(0, 5);
 
         return NextResponse.json({ suggestions });

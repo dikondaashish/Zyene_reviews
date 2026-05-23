@@ -48,7 +48,7 @@ export function CustomerDetailProfileCard({
                     <div
                         className={cn(
                             "relative flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/18 to-primary/5 ring-2 ring-primary/12 ring-offset-2 ring-offset-card",
-                            avatarCompact ? "h-[4.75rem] w-[4.75rem]" : "h-[5.25rem] w-[5.25rem]"
+                            avatarCompact ? "size-[4.75rem]" : "size-[5.25rem]"
                         )}
                     >
                         <span

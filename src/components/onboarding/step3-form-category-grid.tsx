@@ -70,10 +70,7 @@ export function Step3FormCategoryGrid({
                                 )}
 
                                 <div
-                                    className={`
-                      w-10 h-10 rounded-xl flex items-center justify-center transition-colors
-                      ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"}
-                    `}
+                                    className={`rounded-xl flex items-center justify-center transition-colors ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"} size-10`}
                                 >
                                     <Icon className="size-5" />
                                 </div>

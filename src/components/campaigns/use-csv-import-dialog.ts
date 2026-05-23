@@ -79,13 +79,17 @@ export function useCsvImportDialog({
             return;
         }
 
-        const contacts = csvData
-            .map((row) => ({
+        const contacts = csvData.reduce<
+            Array<{ name?: string; email?: string; phone?: string }>
+        >((acc, row) => {
+            const contact = {
                 name: mapping.name ? row[mapping.name] : undefined,
                 email: mapping.email ? row[mapping.email] : undefined,
                 phone: mapping.phone ? row[mapping.phone] : undefined,
-            }))
-            .filter((c) => c.email || c.phone);
+            };
+            if (contact.email || contact.phone) acc.push(contact);
+            return acc;
+        }, []);
 
         if (contacts.length === 0) {
             toast.error("No valid contacts found in CSV");

@@ -32,8 +32,8 @@ export default async function OnboardingLayout({
     return (
         <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-muted">
             {/* Ambient gradient blobs */}
-            <div className="pointer-events-none absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[120px]" />
-            <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-primary/15 blur-[100px]" />
+            <div className="pointer-events-none absolute top-[-20%] left-[-10%] rounded-full bg-primary/20 blur-[120px] size-[50vw]" />
+            <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] rounded-full bg-primary/15 blur-[100px] size-[40vw]" />
 
             {/* Header with logo */}
             <header className="relative z-10 border-b border-primary/20 bg-background/50 backdrop-blur-xl">

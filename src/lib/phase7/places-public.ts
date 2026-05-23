@@ -47,16 +47,21 @@ export async function searchPublicPlaces(query: string): Promise<PublicPlaceSugg
         }>;
     };
 
-    return (data.suggestions ?? [])
-        .map((s) => s.placePrediction)
-        .filter((p): p is NonNullable<typeof p> => Boolean(p?.placeId))
-        .map((p) => ({
+    return (data.suggestions ?? []).reduce<
+        Array<{ placeId: string; primaryText: string; secondaryText: string }>
+    >((acc, s) => {
+        const p = s.placePrediction;
+        if (!p?.placeId) return acc;
+        const primaryText =
+            p.structuredFormat?.mainText?.text?.trim() || p.text?.text?.split(",")[0]?.trim() || "";
+        if (!primaryText) return acc;
+        acc.push({
             placeId: String(p.placeId),
-            primaryText:
-                p.structuredFormat?.mainText?.text?.trim() || p.text?.text?.split(",")[0]?.trim() || "",
+            primaryText,
             secondaryText: p.structuredFormat?.secondaryText?.text?.trim() || "",
-        }))
-        .filter((s) => s.primaryText);
+        });
+        return acc;
+    }, []);
 }
 
 export type PublicPlaceMetrics = {

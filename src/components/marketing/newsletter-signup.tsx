@@ -75,7 +75,7 @@ export function NewsletterSignup({
                     className="h-11 px-6 rounded-lg shrink-0"
                 >
                     {status === "loading" ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="animate-spin size-4" />
                     ) : status === "success" ? (
                         "Subscribed"
                     ) : (

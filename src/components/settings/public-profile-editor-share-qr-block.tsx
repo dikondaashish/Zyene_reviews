@@ -92,14 +92,14 @@ export function PublicProfileEditorShareQrBlock({
                     <div className="flex flex-col items-center gap-5 py-4">
                         <div className="bg-card p-4 rounded-xl border border-border">
                             {qrLoading ? (
-                                <div className="h-[200px] w-[200px] flex items-center justify-center">
+                                <div className="flex items-center justify-center size-[200px]">
                                     <Loader2 className="animate-spin text-muted-foreground size-8" />
                                 </div>
                             ) : qrDataUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={qrDataUrl} alt="QR Code" className="h-[200px] w-[200px] rounded-lg" />
+                                <img src={qrDataUrl} alt="QR Code" className="rounded-lg size-[200px]" />
                             ) : (
-                                <div className="h-[200px] w-[200px] flex items-center justify-center text-sm text-muted-foreground">
+                                <div className="flex items-center justify-center text-sm text-muted-foreground size-[200px]">
                                     Failed to load
                                 </div>
                             )}

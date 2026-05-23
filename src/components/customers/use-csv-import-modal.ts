@@ -68,17 +68,24 @@ export function useCsvImportModal({
 
         setIsLoading(true);
         try {
-            const customersToImport = csvData
-                .filter((row) => row.email || row.name)
-                .map((row) => {
-                    const nameParts = (row.name || "").trim().split(/\s+/);
-                    return {
-                        first_name: nameParts[0] || null,
-                        last_name: nameParts.slice(1).join(" ") || null,
-                        email: row.email || null,
-                        phone: row.phone || null,
-                    };
+            const customersToImport = csvData.reduce<
+                Array<{
+                    first_name: string | null;
+                    last_name: string | null;
+                    email: string | null;
+                    phone: string | null;
+                }>
+            >((acc, row) => {
+                if (!row.email && !row.name) return acc;
+                const nameParts = (row.name || "").trim().split(/\s+/);
+                acc.push({
+                    first_name: nameParts[0] || null,
+                    last_name: nameParts.slice(1).join(" ") || null,
+                    email: row.email || null,
+                    phone: row.phone || null,
                 });
+                return acc;
+            }, []);
 
             if (customersToImport.length === 0) {
                 toast.error("No valid customers found in CSV");

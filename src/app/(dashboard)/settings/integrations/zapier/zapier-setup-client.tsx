@@ -113,7 +113,7 @@ export function ZapierSetupClient({
                     />
 
                     <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-muted/50 p-3 text-xs text-foreground/90">
-                        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sync-action" aria-hidden />
+                        <Sparkles className="mt-0.5 shrink-0 text-sync-action size-3.5" aria-hidden />
                         <p>
                             <span className="font-medium text-foreground">Tip:</span>{" "}
                             Set <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">channel</code> to{" "}
@@ -150,7 +150,7 @@ export function ZapierSetupClient({
                     <CardContent className="space-y-4 pt-5">
                         {!apiKey && (
                             <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
-                                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                                <AlertTriangle className="mt-0.5 shrink-0 size-3.5" aria-hidden />
                                 <div className="space-y-2">
                                     <p>
                                         You need a Developer API key before you can use Zapier ,  the
@@ -158,7 +158,7 @@ export function ZapierSetupClient({
                                     </p>
                                     <Button asChild size="sm" variant="outline" className="h-7 px-2.5 text-xs">
                                         <Link href="/settings/integrations#developer-api" className="inline-flex items-center gap-1.5">
-                                            <KeyRound className="h-3 w-3" />
+                                            <KeyRound className="size-3" />
                                             Generate API key
                                         </Link>
                                     </Button>
@@ -186,9 +186,9 @@ export function ZapierSetupClient({
                                     aria-label="Copy webhook URL"
                                 >
                                     {copiedUrl ? (
-                                        <Check className="h-4 w-4 text-chart-2" />
+                                        <Check className="text-chart-2 size-4" />
                                     ) : (
-                                        <Copy className="h-4 w-4" />
+                                        <Copy className="size-4" />
                                     )}
                                 </Button>
                             </div>
@@ -217,12 +217,12 @@ export function ZapierSetupClient({
                                 >
                                     {copiedPayload ? (
                                         <>
-                                            <Check className="mr-1 h-3 w-3 text-chart-2" />
+                                            <Check className="mr-1 text-chart-2 size-3" />
                                             Copied
                                         </>
                                     ) : (
                                         <>
-                                            <Copy className="mr-1 h-3 w-3" />
+                                            <Copy className="mr-1 size-3" />
                                             Copy
                                         </>
                                     )}
@@ -356,7 +356,7 @@ export function ZapierSetupClient({
                                     href="/docs/cookbook"
                                     className="inline-flex items-center gap-1.5"
                                 >
-                                    <BookOpen className="h-3.5 w-3.5" />
+                                    <BookOpen className="size-3.5" />
                                     Open docs
                                 </Link>
                             </Button>
@@ -367,7 +367,7 @@ export function ZapierSetupClient({
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1.5"
                                 >
-                                    <ExternalLink className="h-3.5 w-3.5" />
+                                    <ExternalLink className="size-3.5" />
                                     Open Zapier
                                 </a>
                             </Button>
@@ -394,7 +394,7 @@ function HowItWorksStep({
 }) {
     return (
         <div className="flex gap-3">
-            <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border">
+            <span className="mt-1 flex shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground ring-1 ring-border size-7">
                 {index}
             </span>
             <div

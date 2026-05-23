@@ -52,7 +52,7 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                                     : "border-border hover:border-primary/50"
                                 }`}
                         >
-                            <ch.icon className={`h-6 w-6 ${form.channel === ch.value ? "text-primary" : "text-muted-foreground"}`} />
+                            <ch.icon className={`${form.channel === ch.value ? "text-primary" : "text-muted-foreground"} size-6`} />
                             <span className="font-medium text-sm">{ch.label}</span>
                             <span className="text-xs text-muted-foreground">{ch.desc}</span>
                         </button>
@@ -80,7 +80,7 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                                         : "border-border hover:border-primary/50"
                                 }`}
                         >
-                            <tr.icon className={`h-5 w-5 shrink-0 ${form.trigger_type === tr.value ? "text-primary" : "text-muted-foreground"}`} />
+                            <tr.icon className={`shrink-0 ${form.trigger_type === tr.value ? "text-primary" : "text-muted-foreground"} size-5`} />
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <span className="font-medium text-sm">{tr.label}</span>

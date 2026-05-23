@@ -65,7 +65,7 @@ export function CustomerPortalCardActionsFooter({
                                 <img
                                     src={qrDataUrl}
                                     alt="QR Code"
-                                    className="w-[240px] h-[240px]"
+                                    className="size-[240px]"
                                     style={{ imageRendering: "pixelated" }}
                                 />
                             ) : (

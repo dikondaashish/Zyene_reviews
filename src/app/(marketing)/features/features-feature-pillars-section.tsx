@@ -72,7 +72,7 @@ export function FeaturesFeaturePillarsSection() {
                                                 {[1, 2, 3, 4, 5].map((s) => (
                                                     <Star
                                                         key={s}
-                                                        className={`h-4 w-4 ${pillar.id === "review-monitoring" || pillar.id === "review-collection" || pillar.id === "analytics" ? "fill-chart-4 text-chart-4" : "text-muted-foreground/20"}`}
+                                                        className={`${pillar.id === "review-monitoring" || pillar.id === "review-collection" || pillar.id === "analytics" ? "fill-chart-4 text-chart-4" : "text-muted-foreground/20"} size-4`}
                                                     />
                                                 ))}
                                             </div>

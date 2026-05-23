@@ -106,7 +106,7 @@ export function SyncButton({
                     disabled={isPosting}
                     className="animate-in fade-in slide-in-from-right-2"
                 >
-                    <RefreshCw className={`h-4 w-4 md:mr-2 ${isPosting ? "animate-spin" : ""}`} />
+                    <RefreshCw className={`md:mr-2 ${isPosting ? "animate-spin" : ""} size-4`} />
                     <span className="md:hidden">Force sync</span>
                     <span className="hidden md:inline">Force Reset & Sync</span>
                 </Button>
@@ -118,7 +118,7 @@ export function SyncButton({
                 disabled={busy}
                 className={className || "border border-[color:var(--sync-action)] bg-[color:var(--sync-action)] text-primary-foreground hover:bg-[color:var(--sync-action-hover)] hover:border-[color:var(--sync-action-hover)]"}
             >
-                <RefreshCw className={`h-4 w-4 shrink-0 md:mr-2 ${busy ? "animate-spin" : ""}`} />
+                <RefreshCw className={`shrink-0 md:mr-2 ${busy ? "animate-spin" : ""} size-4`} />
                 {busy ? (
                     <>
                         <span className="md:hidden">Syncing</span>

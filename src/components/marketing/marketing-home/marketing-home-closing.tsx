@@ -83,8 +83,8 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
           initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
           className="container mx-auto max-w-5xl bg-[color:var(--marketing-footer-bg)] rounded-[2rem] p-12 md:p-20 text-center text-[color:var(--marketing-footer-fg)] relative overflow-hidden border border-border"
         >
-          <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-primary opacity-20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-primary opacity-20 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 -mt-20 -mr-20 bg-primary opacity-20 rounded-full blur-3xl size-64" />
+          <div className="absolute bottom-0 left-0 -mb-20 -ml-20 bg-primary opacity-20 rounded-full blur-3xl size-64" />
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight mb-8 relative z-10 leading-tight">
             Ready to grow your business?
@@ -95,7 +95,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
             <Link href={SIGNUP_URL}>
               <Button size="lg" className="text-[1.1rem] px-10 py-7 rounded-md font-medium transition-all">
-                Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                Start Your Free Trial <ArrowRight className="ml-2 size-5" />
               </Button>
             </Link>
             <a href="mailto:sales@zyenereviews.com?subject=Enterprise%20Inquiry" className="text-[color:var(--marketing-footer-muted)] hover:text-[color:var(--marketing-footer-fg)] text-sm font-medium transition-colors">

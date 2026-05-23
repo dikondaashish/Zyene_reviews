@@ -48,8 +48,8 @@ export function QrCodeCardQrPreviewColumn({
             <Dialog>
                 <DialogTrigger asChild>
                     <div className="group cursor-pointer flex flex-col items-center justify-center">
-                        <div className="mb-6 flex h-[228px] w-[228px] items-center justify-center rounded-[2rem] border-[4px] border-border bg-muted/60 p-6 transition-all duration-300 group-hover:scale-105 group-hover:border-primary/25">
-                            <QrCode className="h-[140px] w-[140px] text-foreground" strokeWidth={1} />
+                        <div className="mb-6 flex items-center justify-center rounded-[2rem] border-[4px] border-border bg-muted/60 p-6 transition-all duration-300 group-hover:scale-105 group-hover:border-primary/25 size-[228px]">
+                            <QrCode className="text-foreground size-[140px]" strokeWidth={1} />
                         </div>
                         <p className="text-[13px] text-foreground font-medium text-center group-hover:text-primary transition-colors">
                             {dictTapIcon}
@@ -79,16 +79,16 @@ export function QrCodeCardQrPreviewColumn({
 
                     <div className="flex justify-center my-6">
                         {loading ? (
-                            <Skeleton className="h-[220px] w-[220px] rounded-xl" />
+                            <Skeleton className="rounded-xl size-[220px]" />
                         ) : error ? (
-                            <div className="h-[220px] w-[220px] flex flex-col items-center justify-center gap-3 bg-muted rounded-xl border border-dashed">
+                            <div className="flex flex-col items-center justify-center gap-3 bg-muted rounded-xl border border-dashed size-[220px]">
                                 <p className="text-sm text-muted-foreground">Couldn't load QR code.</p>
                             </div>
                         ) : (
                             <img
                                 src={qrDataUrl!}
                                 alt={`QR code for ${businessName}`}
-                                className="h-[220px] w-[220px]"
+                                className="size-[220px]"
                                 style={{ imageRendering: "pixelated" }}
                             />
                         )}

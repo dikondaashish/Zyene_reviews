@@ -5,7 +5,7 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const SRC = path.join(ROOT, "src");
 
 function collapseSizesInClassString(str) {
-    if (!/\bw-[\w.]+\b/.test(str) || !/\bh-[\w.]+\b/.test(str)) {
+    if (!/\bw-[\w.[\]%+-]+\b/.test(str) || !/\bh-[\w.[\]%+-]+\b/.test(str)) {
         return str;
     }
 
@@ -42,8 +42,8 @@ function collapseSizesInClassString(str) {
 }
 
 function processFileContent(content) {
-    return content.replace(/(["'`])([^"'`]*)\1/g, (full, quote, inner) => {
-        if (!/\bw-[\w.]+\b/.test(inner) || !/\bh-[\w.]+\b/.test(inner)) {
+    return content.replace(/(["'`])([^\1]*?)\1/g, (full, quote, inner) => {
+        if (!/\bw-[\w.[\]%+-]+\b/.test(inner) || !/\bh-[\w.[\]%+-]+\b/.test(inner)) {
             return full;
         }
         if (inner.length > 2000) return full;
