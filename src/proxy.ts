@@ -9,6 +9,7 @@ import {
     getMarketingSiteOrigin,
     isBusinessSlugPath,
     isPlatformRoute,
+    customersToCaseStudiesRedirect,
 } from "@/lib/routing/platform-routes";
 
 /** True when the browser Origin matches this request's Host (same deployment / custom review domains like collectratings.com). */
@@ -425,6 +426,14 @@ export async function proxy(request: NextRequest) {
 
         // 1. Landing page -> pass
         if (pathname === "/") return supabaseResponse;
+
+        // Legacy blueprint alias: /customers → /case-studies (app subdomain serves CRM at /customers).
+        const caseStudiesRedirect = customersToCaseStudiesRedirect(pathname);
+        if (caseStudiesRedirect) {
+            return createResponse(
+                NextResponse.redirect(new URL(caseStudiesRedirect, request.url), 308)
+            );
+        }
 
         // 2. Platform + marketing routes stay on zyenereviews.com (never → collectratings).
         const isReserved = isPlatformRoute(pathname);

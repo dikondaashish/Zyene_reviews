@@ -86,3 +86,17 @@ export function getMarketingSiteOrigin(rootDomain: string): string {
     const host = rootDomain.split(":")[0]?.replace(/^www\./, "") ?? rootDomain;
     return `${protocol}://www.${host}`;
 }
+
+/** Legacy blueprint alias `/customers` → `/case-studies` (marketing host only). */
+export function customersToCaseStudiesRedirect(pathname: string): string | null {
+    if (pathname === "/customers") {
+        return "/case-studies";
+    }
+    if (pathname.startsWith("/customers/")) {
+        const slug = pathname.slice("/customers/".length).split("/")[0];
+        if (slug) {
+            return `/case-studies/${slug}`;
+        }
+    }
+    return null;
+}

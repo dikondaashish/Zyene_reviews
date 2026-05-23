@@ -28,7 +28,6 @@ export interface BlueprintAuditItem {
 const APP_ROOT = path.join(process.cwd(), "src/app/(marketing)");
 
 const REQUIRED_ROUTE_FILES: Record<string, string> = {
-    "/customers": "customers/page.tsx",
     "/help/[category]/[article]": "help/[category]/[article]/page.tsx",
 };
 
@@ -213,8 +212,18 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
         });
     }
 
-    const customersRedirect = path.join(APP_ROOT, "customers/page.tsx");
-    if (!existsSync(customersRedirect)) {
+    const customersRedirect = path.join(process.cwd(), "src/proxy.ts");
+    if (existsSync(customersRedirect)) {
+        const proxySrc = readFileSync(customersRedirect, "utf8");
+        if (!proxySrc.includes("customersToCaseStudiesRedirect")) {
+            items.push({
+                id: "customers-redirect",
+                severity: "error",
+                area: "pages",
+                message: "/customers → /case-studies redirect not found in proxy",
+            });
+        }
+    } else {
         items.push({
             id: "customers-redirect",
             severity: "error",
