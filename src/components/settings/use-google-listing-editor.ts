@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import type {
-    GoogleListingForm,
-    GoogleListingMeta,
-    GoogleProfileHealthCheck,
-} from "./google-listing-editor-types";
-import { unwrapGoogleListingApiData } from "./google-listing-editor-utils";
+import type { GoogleListingForm, GoogleListingMeta, GoogleProfileHealthCheck } from "./google-listing-editor-types";
+import {
+    parseGoogleListingLoadPayload,
+    parseGoogleListingSavePayload,
+} from "./google-listing-editor-utils";
 
 export function useGoogleListingEditor(businessId: string) {
     const [loading, setLoading] = useState(true);
@@ -42,36 +41,12 @@ export function useGoogleListingEditor(businessId: string) {
                 throw new Error(payload.error || "Failed to load listing");
             }
 
-            const data = unwrapGoogleListingApiData<{
-                listing?: {
-                    title?: string;
-                    websiteUri?: string;
-                    primaryPhone?: string;
-                    description?: string;
-                    primaryCategoryDisplay?: string;
-                    mapsUri?: string;
-                    hasRegularHours?: boolean;
-                };
-                profileHealth?: { score: number; checks: GoogleProfileHealthCheck[] };
-            }>(payload);
-            const L = data?.listing;
-            if (!L) {
-                throw new Error("Google listing payload missing listing details");
-            }
-            const next: GoogleListingForm = {
-                title: L.title || "",
-                websiteUri: L.websiteUri || "",
-                primaryPhone: L.primaryPhone || "",
-                description: L.description || "",
-            };
+            const { form: next, meta: nextMeta, profileHealth: nextHealth } =
+                parseGoogleListingLoadPayload(payload);
             setForm(next);
             initialRef.current = { ...next };
-            setProfileHealth(data.profileHealth ?? null);
-            setMeta({
-                primaryCategoryDisplay: L.primaryCategoryDisplay || "",
-                mapsUri: L.mapsUri || "",
-                hasRegularHours: !!L.hasRegularHours,
-            });
+            setProfileHealth(nextHealth);
+            setMeta(nextMeta);
         } catch (e: unknown) {
             toast.error(e instanceof Error ? e.message : "Failed to load Google listing");
         } finally {
@@ -108,27 +83,12 @@ export function useGoogleListingEditor(businessId: string) {
             });
             const payload = await res.json();
             if (!res.ok) throw new Error(payload.error || "Update failed");
-            const data = unwrapGoogleListingApiData<{
-                listing?: {
-                    title?: string;
-                    websiteUri?: string;
-                    primaryPhone?: string;
-                    description?: string;
-                };
-                profileHealth?: { score: number; checks: GoogleProfileHealthCheck[] };
-            }>(payload);
 
+            const data = parseGoogleListingSavePayload(payload);
             toast.success("Google listing updated");
-            if (data.listing) {
-                const L = data.listing;
-                const next: GoogleListingForm = {
-                    title: L.title || "",
-                    websiteUri: L.websiteUri || "",
-                    primaryPhone: L.primaryPhone || "",
-                    description: L.description || "",
-                };
-                setForm(next);
-                initialRef.current = { ...next };
+            if (data.form) {
+                setForm(data.form);
+                initialRef.current = { ...data.form };
             }
             if (data.profileHealth) {
                 setProfileHealth(data.profileHealth);
