@@ -1,0 +1,25 @@
+---
+description: Push implemented changes to GitHub without waiting for the user to ask
+alwaysApply: true
+---
+
+# Auto-push to GitHub
+
+After completing an implementation task (code changes, fixes, refactors), **commit and push to GitHub automatically** unless the user explicitly says not to push, or there is nothing to commit.
+
+## Workflow
+
+1. Run `git status` — if there are no changes, skip.
+2. Stage relevant files (never commit secrets like `.env`).
+3. Write a concise commit message focused on **why**.
+4. `git push origin` on the current branch (typically `main`).
+
+## Do not push when
+
+- User says "don't push", "local only", or similar.
+- Only exploratory/read-only work with no file changes.
+- Commit would fail hooks — fix and create a **new** commit (do not amend unless user rules allow).
+
+## After push
+
+Briefly note the commit hash and that it was pushed — no need to ask "Want this pushed?"
