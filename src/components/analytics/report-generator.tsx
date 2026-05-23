@@ -89,7 +89,6 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
             try {
                 imgData = canvas.toDataURL("image/png");
             } catch (e) {
-                console.error("Canvas toDataURL failed:", e);
                 throw new Error(
                     "Could not export the page snapshot (often caused by embedded images). Try again after refreshing.",
                 );
@@ -126,7 +125,6 @@ export function ReportGenerator({ businessName = "Business", dateRange = "Last 3
 
             toast.success("Report downloaded successfully!", { id: toastId });
         } catch (error) {
-            console.error("PDF generation failed:", error);
             const message = error instanceof Error ? error.message : "Unknown error";
             toast.error("Failed to generate report. Please try again.", {
                 id: toastId,

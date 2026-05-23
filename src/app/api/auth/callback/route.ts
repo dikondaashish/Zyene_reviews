@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { createClient } from "@/lib/db/supabase/server";
@@ -151,7 +152,7 @@ export async function GET(request: Request) {
                         (valid?.id && valid.id.trim()) ||
                         "";
                 } catch (e) {
-                    console.error("[Auth Callback] Failed to resolve invite fallback by email:", e);
+                    logger.error({ err: e }, "[Auth Callback] Failed to resolve invite fallback by email:");
                 }
             }
 
@@ -262,7 +263,7 @@ export async function GET(request: Request) {
                         }
                     }
                 } catch (hierarchyError) {
-                    console.error("Failed to fetch GBP hierarchy:", hierarchyError);
+                    logger.error({ err: hierarchyError }, "Failed to fetch GBP hierarchy:");
                     Sentry.captureException(hierarchyError, { tags: { route: "auth-callback", step: "fetch_gbp_hierarchy_add_biz" } });
                 }
 
@@ -296,7 +297,7 @@ export async function GET(request: Request) {
                     .single();
 
                 if (newBizError) {
-                    console.error("Failed to create new business:", newBizError);
+                    logger.error({ err: newBizError }, "Failed to create new business:");
                     Sentry.captureException(newBizError, { tags: { route: "auth-callback", step: "create_new_business" } });
                 } else if (newBusiness) {
                     const { data: encAccess } = await admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" });
@@ -333,7 +334,7 @@ export async function GET(request: Request) {
                             data: { businessId: newBusiness.id, trigger: "onboarding" },
                         });
                     } catch (e) {
-                        console.error("[Auth Callback] Failed to queue Google SEO/AEO sync:", e);
+                        logger.error({ err: e }, "[Auth Callback] Failed to queue Google SEO/AEO sync:");
                     }
                 }
 
@@ -362,7 +363,7 @@ export async function GET(request: Request) {
                             if (!verifyError) {
                                 return NextResponse.redirect(`${appUrl}/businesses`);
                             } else {
-                                console.error("Failed to verify magic link:", verifyError);
+                                logger.error({ err: verifyError }, "Failed to verify magic link:");
                                 Sentry.captureException(verifyError, { tags: { route: "auth-callback", step: "verify_magic_link" } });
                             }
                         }
@@ -402,7 +403,7 @@ export async function GET(request: Request) {
                 });
 
                 if (userError) {
-                    console.error("Failed to create user record:", userError);
+                    logger.error({ err: userError }, "Failed to create user record:");
                     Sentry.captureException(userError, { tags: { route: "auth-callback", step: "create_user" } });
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
@@ -442,7 +443,7 @@ export async function GET(request: Request) {
                     .single();
 
                 if (orgError) {
-                    console.error("Failed to create organization:", orgError);
+                    logger.error({ err: orgError }, "Failed to create organization:");
                     Sentry.captureException(orgError, { tags: { route: "auth-callback", step: "create_organization" } });
                     return NextResponse.redirect(`${origin}/login?error=setup_failed`);
                 }
@@ -462,7 +463,7 @@ export async function GET(request: Request) {
                     .single();
 
                 if (newBizError || !newBusiness) {
-                    console.error("Failed to create default business:", newBizError);
+                    logger.error({ err: newBizError }, "Failed to create default business:");
                     Sentry.captureException(newBizError ?? new Error("missing business id"), {
                         tags: { route: "auth-callback", step: "create_business" },
                     });
@@ -497,7 +498,7 @@ export async function GET(request: Request) {
                         { onConflict: "user_id,business_id" }
                     );
                     if (prefErr) {
-                        console.error("Failed to seed notification preferences:", prefErr);
+                        logger.error({ err: prefErr }, "Failed to seed notification preferences:");
                         Sentry.captureException(prefErr, {
                             tags: { route: "auth-callback", step: "seed_notification_preferences" },
                         });
@@ -519,7 +520,7 @@ export async function GET(request: Request) {
                         status: "pending",
                     });
                     if (referralPendingErr && referralPendingErr.code !== "23505") {
-                        console.error("[auth-callback] referral_conversions insert failed:", referralPendingErr);
+                        logger.error({ err: referralPendingErr }, "[auth-callback] referral_conversions insert failed:");
                     }
                 }
 
@@ -550,7 +551,7 @@ export async function GET(request: Request) {
                     html: welcomeEmail({ userName: fullName || "User", loginUrl }),
                     text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
                 }).catch(err => {
-                    console.error("Failed to send welcome email:", err);
+                    logger.error({ err: err }, "Failed to send welcome email:");
                     Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
                 });
 
@@ -563,7 +564,7 @@ export async function GET(request: Request) {
                         organizationId: org.id,
                     });
                 } catch (nurtureErr) {
-                    console.error("Failed to schedule trial nurture:", nurtureErr);
+                    logger.error({ err: nurtureErr }, "Failed to schedule trial nurture:");
                     Sentry.captureException(nurtureErr, { tags: { route: "auth-callback", step: "schedule_trial_nurture" } });
                 }
 
@@ -656,7 +657,7 @@ export async function GET(request: Request) {
                             .single();
 
                         if (insPlatErr) {
-                            console.error("[Auth Callback] review_platforms insert failed:", insPlatErr);
+                            logger.error({ err: insPlatErr }, "[Auth Callback] review_platforms insert failed:");
                         } else if (newPlatform?.id) {
                             await reattachOrphanedGoogleReviews(admin, businessId, newPlatform.id);
                             await refreshGoogleReviewRollupsFromDb(admin, businessId, newPlatform.id);
@@ -666,7 +667,7 @@ export async function GET(request: Request) {
                                     data: { businessId, trigger: "onboarding" },
                                 });
                             } catch (e) {
-                                console.error("[Auth Callback] Failed to queue Google SEO/AEO sync:", e);
+                                logger.error({ err: e }, "[Auth Callback] Failed to queue Google SEO/AEO sync:");
                             }
                         }
                     }
@@ -677,7 +678,7 @@ export async function GET(request: Request) {
                     try {
                         await redis.del(`user_businesses:${data.user.id}`);
                     } catch (e) {
-                        console.error("[Auth Callback] Failed to clear business cache:", e);
+                        logger.error({ err: e }, "[Auth Callback] Failed to clear business cache:");
                     }
                 }
             }

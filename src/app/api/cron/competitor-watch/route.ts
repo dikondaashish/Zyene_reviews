@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
@@ -50,7 +51,7 @@ export async function GET(request: Request) {
             "acquire_competitor_watch_lock"
         );
         if (lockErr) {
-            console.error("[cron/competitor-watch] lock acquire failed:", lockErr);
+            logger.error({ err: lockErr }, "[cron/competitor-watch] lock acquire failed:");
             await pingCompetitorWatchHeartbeat(false);
             return NextResponse.json({ error: "Lock acquisition failed" }, { status: 500 });
         }
@@ -68,7 +69,7 @@ export async function GET(request: Request) {
             .order("created_at", { ascending: false });
 
         if (competitorsErr) {
-            console.error("[cron/competitor-watch] competitors fetch failed:", competitorsErr);
+            logger.error({ err: competitorsErr }, "[cron/competitor-watch] competitors fetch failed:");
             await pingCompetitorWatchHeartbeat(false);
             return NextResponse.json({ error: competitorsErr.message }, { status: 500 });
         }
@@ -131,7 +132,7 @@ export async function GET(request: Request) {
             .order("captured_at", { ascending: false });
 
         if (snapshotsErr) {
-            console.error("[cron/competitor-watch] snapshots fetch failed:", snapshotsErr);
+            logger.error({ err: snapshotsErr }, "[cron/competitor-watch] snapshots fetch failed:");
             await pingCompetitorWatchHeartbeat(false);
             return NextResponse.json({ error: snapshotsErr.message }, { status: 500 });
         }
@@ -219,7 +220,7 @@ export async function GET(request: Request) {
                         })
                         .eq("id", competitor.id);
                     if (updErr) {
-                        console.error("[cron/competitor-watch] competitor metrics update failed:", updErr);
+                        logger.error({ err: updErr }, "[cron/competitor-watch] competitor metrics update failed:");
                     } else {
                         externalUpdates++;
                         businessExternalUpdates.set(
@@ -412,7 +413,7 @@ export async function GET(request: Request) {
                 snapshotsToInsert
             );
             if (insertSnapshotsErr) {
-                console.error("[cron/competitor-watch] snapshots insert failed:", insertSnapshotsErr);
+                logger.error({ err: insertSnapshotsErr }, "[cron/competitor-watch] snapshots insert failed:");
                 await pingCompetitorWatchHeartbeat(false);
                 return NextResponse.json({ error: insertSnapshotsErr.message }, { status: 500 });
             }
@@ -423,7 +424,7 @@ export async function GET(request: Request) {
                 eventsToInsert
             );
             if (insertEventsErr) {
-                console.error("[cron/competitor-watch] events insert failed:", insertEventsErr);
+                logger.error({ err: insertEventsErr }, "[cron/competitor-watch] events insert failed:");
                 await pingCompetitorWatchHeartbeat(false);
                 return NextResponse.json({ error: insertEventsErr.message }, { status: 500 });
             }
@@ -432,7 +433,7 @@ export async function GET(request: Request) {
             try {
                 await sendCompetitorAlertEmail(payload);
             } catch (e) {
-                console.error("[cron/competitor-watch] competitor alert email failed:", e);
+                logger.error({ err: e }, "[cron/competitor-watch] competitor alert email failed:");
             }
         }
         if (appEventsToInsert.length > 0) {
@@ -440,7 +441,7 @@ export async function GET(request: Request) {
                 appEventsToInsert
             );
             if (insertAppEventsErr) {
-                console.error("[cron/competitor-watch] app events insert failed:", insertAppEventsErr);
+                logger.error({ err: insertAppEventsErr }, "[cron/competitor-watch] app events insert failed:");
             }
         }
 
@@ -490,7 +491,7 @@ export async function GET(request: Request) {
                 insightRowsToInsert
             );
             if (insertInsightsErr) {
-                console.error("[cron/competitor-watch] insights insert failed:", insertInsightsErr);
+                logger.error({ err: insertInsightsErr }, "[cron/competitor-watch] insights insert failed:");
             }
         }
 
@@ -533,7 +534,7 @@ export async function GET(request: Request) {
                 runRows
             );
             if (insertRunsErr) {
-                console.error("[cron/competitor-watch] run log insert failed:", insertRunsErr);
+                logger.error({ err: insertRunsErr }, "[cron/competitor-watch] run log insert failed:");
             }
         }
 
@@ -550,7 +551,7 @@ export async function GET(request: Request) {
         });
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Internal server error";
-        console.error("[cron/competitor-watch] unexpected error:", error);
+        logger.error({ err: error }, "[cron/competitor-watch] unexpected error:");
         if (processedBusinessIds.length > 0) {
             const failureRows = processedBusinessIds.map((businessId) => ({
                 run_id: runId,
@@ -569,7 +570,7 @@ export async function GET(request: Request) {
                 failureRows
             );
             if (failInsertErr) {
-                console.error("[cron/competitor-watch] failure run log insert failed:", failInsertErr);
+                logger.error({ err: failInsertErr }, "[cron/competitor-watch] failure run log insert failed:");
             }
         }
         await pingCompetitorWatchHeartbeat(false);
@@ -578,7 +579,7 @@ export async function GET(request: Request) {
         if (lockAcquired) {
             const { error: unlockErr } = await (admin as any).rpc("release_competitor_watch_lock");
             if (unlockErr) {
-                console.error("[cron/competitor-watch] lock release failed:", unlockErr);
+                logger.error({ err: unlockErr }, "[cron/competitor-watch] lock release failed:");
             }
         }
     }

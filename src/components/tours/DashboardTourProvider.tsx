@@ -85,7 +85,6 @@ function useDashboardTourState(): DashboardTourContextValue {
                     }, 500);
                 }
             } catch (error) {
-                console.error("Failed to fetch tour status:", error);
             } finally {
                 if (!cancelled) {
                     setIsLoading(false);
@@ -105,7 +104,6 @@ function useDashboardTourState(): DashboardTourContextValue {
         try {
             await completeTourAction();
         } catch (error) {
-            console.error("Failed to save tour completion:", error);
         }
     }, []);
 
@@ -113,7 +111,6 @@ function useDashboardTourState(): DashboardTourContextValue {
         try {
             await resetTourAction();
         } catch (error) {
-            console.error("Failed to reset tour:", error);
         }
         setCurrentStep(0);
         setRunTour(true);

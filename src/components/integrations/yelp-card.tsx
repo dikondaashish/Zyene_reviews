@@ -232,7 +232,6 @@ export function YelpIntegrationCard({
                                 toast.success("Sync triggered");
                                 router.refresh();
                             } catch (err: unknown) {
-                                console.error("[Yelp Sync] Error:", err);
                                 toast.error("Sync failed");
                             } finally {
                                 setIsSyncing(false);

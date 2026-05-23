@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { NextResponse } from "next/server";
 import twilio from "twilio";
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
             },
         });
     } catch (error) {
-        console.error("Twilio Webhook Error:", error);
+        logger.error({ err: error }, "Twilio Webhook Error:");
         return new NextResponse("Error", { status: 500 });
     }
 }

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -42,7 +43,7 @@ export default async function CustomerDetailPage({
         .limit(8000);
 
     if (reqErr) {
-        console.error("[customer detail] review_requests", reqErr);
+        logger.error({ err: reqErr }, "[customer detail] review_requests");
     }
 
     const { data: pfRows, error: pfErr } = await supabase
@@ -53,7 +54,7 @@ export default async function CustomerDetailPage({
         .limit(5000);
 
     if (pfErr) {
-        console.error("[customer detail] private_feedback", pfErr);
+        logger.error({ err: pfErr }, "[customer detail] private_feedback");
     }
 
     const matchedRequests = filterRequestsForCustomer(customer, reqRows ?? []);

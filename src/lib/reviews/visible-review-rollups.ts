@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
@@ -108,7 +109,7 @@ export async function fetchVisibleReviewRollupsByBusinessIds(
     );
 
     if (pagesError) {
-        console.error("[visible-review-rollups] paginated fetch failed:", pagesError);
+        logger.error({ err: pagesError }, "[visible-review-rollups] paginated fetch failed:");
         return map;
     }
 

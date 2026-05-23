@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 
 export interface GoogleTokenResponse {
     access_token: string;
@@ -82,11 +83,11 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
             if (retries > 0) {
                 // Add jitter: delay = random(0, backoff)
                 const jitter = Math.random() * backoff;
-                console.error(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
+                logger.error(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
                 await new Promise(resolve => setTimeout(resolve, jitter));
                 return fetchWithRetry(url, options, retries - 1, backoff * 2);
             } else {
-                console.error("[Google API] Rate limit exceeded after multiple retries.");
+                logger.error("[Google API] Rate limit exceeded after multiple retries.");
             }
         }
 
@@ -94,7 +95,10 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
     } catch (error) {
         if (retries > 0) {
             const jitter = Math.random() * backoff;
-            console.error(`[Google API] Fetch failed. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`, error);
+            logger.error(
+                { err: error, retriesLeft: retries, delayMs: Math.round(jitter) },
+                "[Google API] Fetch failed, retrying",
+            );
             await new Promise(resolve => setTimeout(resolve, jitter));
             return fetchWithRetry(url, options, retries - 1, backoff * 2);
         }
@@ -128,7 +132,7 @@ export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTo
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Token] Google Refresh Error (${response.status}): ${errorBody}`);
+        logger.error(`[Token] Google Refresh Error (${response.status}): ${errorBody}`);
         throw new Error(`Failed to refresh token: ${response.status} ${response.statusText} - ${errorBody}`);
     }
 
@@ -282,7 +286,7 @@ export async function listReviews(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
+        logger.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
 
         if (response.status === 429) {
             const error = createGoogleApiError("Google API Rate Limit Exceeded", "RATE_LIMIT");

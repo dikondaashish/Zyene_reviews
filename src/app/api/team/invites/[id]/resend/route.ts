@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
@@ -69,7 +70,7 @@ export async function POST(
         .eq("business_id", businessId);
 
     if (renewErr) {
-        console.error("[team/invites/resend] Failed to extend invite expiry:", renewErr);
+        logger.error({ err: renewErr }, "[team/invites/resend] Failed to extend invite expiry:");
         return apiError("Could not update invitation", { status: 500 });
     }
 
@@ -94,7 +95,7 @@ export async function POST(
     };
 
     if (!sendResult.sent) {
-        console.error("[team/invites/resend] Email delivery failed:", sendResult.error);
+        logger.error({ err: sendResult.error }, "[team/invites/resend] Email delivery failed:");
         try {
             if (!orgId) throw new Error("missing organization id");
             await supabase.from("events").insert({
@@ -111,7 +112,7 @@ export async function POST(
                 },
             });
         } catch (e) {
-            console.error("[team/invites/resend] Failed to write event:", e);
+            logger.error({ err: e }, "[team/invites/resend] Failed to write event:");
         }
         return apiOk({
             ...payloadBase,
@@ -136,7 +137,7 @@ export async function POST(
             },
         });
     } catch (e) {
-        console.error("[team/invites/resend] Failed to write event:", e);
+        logger.error({ err: e }, "[team/invites/resend] Failed to write event:");
     }
 
     return apiOk({

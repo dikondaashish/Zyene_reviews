@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
 import { getLodging } from "./lodging";
@@ -67,12 +68,12 @@ export async function syncGoogleLodgingForPlatform(platformId: string): Promise<
                     })
                     .eq("id", platformId);
             } catch (dbErr) {
-                console.error("[Phase4] DB update failed:", dbErr);
+                logger.error({ err: dbErr }, "[Phase4] DB update failed:");
             }
             return { success: true, lodgingAvailable: false };
         }
 
-        console.error("[Phase4] Lodging sync failed:", msg);
+        logger.error({ err: msg }, "[Phase4] Lodging sync failed:");
         Sentry.captureException(e);
         return { success: false, lodgingAvailable: false, error: msg };
     }

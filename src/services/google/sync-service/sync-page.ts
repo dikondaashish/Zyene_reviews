@@ -1,5 +1,6 @@
 /** Google review sync — sync-page */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { computeReviewHash } from "@/utils/review-hash";
 import { inngest } from "@/services/inngest/client";
@@ -49,14 +50,13 @@ export async function syncGoogleReviewsPage(
                 .eq("platform", "google")
                 .eq("is_visible", true);
             if (countErr) {
-                console.error("[Sync] Review gap check (DB count) failed:", countErr);
+                logger.error({ err: countErr }, "[Sync] Review gap check (DB count) failed");
             } else {
                 const n = dbCount ?? 0;
                 /** Small slack for removals / Maps vs API headline drift — large gaps still trigger backfill. */
                 const slack = 25;
                 if (n + slack < apiTotal) {
-                    console.error(
-                        `[Sync] Incomplete Google history: ${n} visible reviews in DB vs Google totalReviewCount=${apiTotal}. ` +
+                    logger.error(`[Sync] Incomplete Google history: ${n} visible reviews in DB vs Google totalReviewCount=${apiTotal}. ` +
                             `Clearing incremental watermark for this run to backfill (platform ${context.platform.id}).`
                     );
                     context.lastReviewUpdateTime = null;
@@ -66,7 +66,7 @@ export async function syncGoogleReviewsPage(
                         .update({ last_review_update_time: null })
                         .eq("id", context.platform.id);
                     if (clearHwErr) {
-                        console.error("[Sync] Failed to clear last_review_update_time for backfill:", clearHwErr);
+                        logger.error({ err: clearHwErr }, "[Sync] Failed to clear last_review_update_time for backfill:");
                     }
                 }
             }

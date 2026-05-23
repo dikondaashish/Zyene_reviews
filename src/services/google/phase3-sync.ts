@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
 import { getGoogleLocation } from "./listing-information";
@@ -47,7 +48,7 @@ export async function syncGoogleListingProfileForPlatform(platformId: string): P
         return { success: true, profileHealthScore: score };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error("[Phase3] Listing / profile health sync failed:", msg);
+        logger.error({ err: msg }, "[Phase3] Listing / profile health sync failed:");
         Sentry.captureException(e);
         return { success: false, error: msg };
     }

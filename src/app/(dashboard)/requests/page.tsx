@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { redirect } from "next/navigation";
@@ -202,7 +203,7 @@ export default async function RequestsPage({
         listRes.error;
 
     if (statsOrListError) {
-        console.error("[Requests page] Fetch failed:", statsOrListError);
+        logger.error({ err: statsOrListError }, "[Requests page] Fetch failed:");
         return (
             <div className="flex flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
                 <DashboardFetchError

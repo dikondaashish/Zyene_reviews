@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { revalidatePath } from "next/cache";
@@ -43,14 +44,14 @@ export async function disconnectGoogle(platformId: string) {
         .eq("platform_id", platformId);
 
     if (hideErr) {
-        console.error("[disconnectGoogle] hide reviews:", hideErr);
+        logger.error({ err: hideErr }, "[disconnectGoogle] hide reviews:");
         throw new Error("Failed to disconnect");
     }
 
     const { error: delErr } = await admin.from("review_platforms").delete().eq("id", platformId);
 
     if (delErr) {
-        console.error("[disconnectGoogle] delete platform:", delErr);
+        logger.error({ err: delErr }, "[disconnectGoogle] delete platform:");
         throw new Error("Failed to disconnect");
     }
 

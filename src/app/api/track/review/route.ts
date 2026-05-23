@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { z } from "zod";
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true });
     } catch (error: unknown) {
-        console.error("Tracking error:", error);
+        logger.error({ err: error }, "Tracking error:");
         return NextResponse.json({ error: "Failed to track review" }, { status: 500 });
     }
 }

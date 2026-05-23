@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +28,7 @@ export async function captureMarketingLead(params: {
     );
 
     if (error) {
-        console.error("[capture-marketing-lead]", error);
+        logger.error({ err: error }, "[capture-marketing-lead]");
         return { ok: false, error: "Could not save your request" };
     }
 

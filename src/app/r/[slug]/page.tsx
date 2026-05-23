@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { notFound } from "next/navigation";
 import { PublicReviewFlow } from "./review-flow";
@@ -121,7 +122,7 @@ export default async function RequestPage({
                 requestId: refParse.data,
             });
             if (!tracked.ok) {
-                console.error("[Review Flow] server open tracking failed", tracked);
+                logger.error({ err: tracked }, "[Review Flow] server open tracking failed");
             }
         }
     }

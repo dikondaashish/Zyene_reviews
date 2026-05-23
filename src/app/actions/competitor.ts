@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -144,7 +145,7 @@ export async function addCompetitor(
             .single();
 
         if (error) {
-            console.error("Database error adding competitor:", error);
+            logger.error({ err: error }, "Database error adding competitor:");
             if (error.code === "23505") {
                 // Unique constraint violation
                 return {
@@ -197,7 +198,7 @@ export async function addCompetitor(
                 metadata: { google_url: googleUrl || null },
             } as never);
         } catch (historyError) {
-            console.error("Failed to write competitor snapshot/event:", historyError);
+            logger.error({ err: historyError }, "Failed to write competitor snapshot/event:");
         }
 
         revalidatePath("/competitors");
@@ -206,7 +207,7 @@ export async function addCompetitor(
             data,
         };
     } catch (error: unknown) {
-        console.error("Unexpected error adding competitor:", error);
+        logger.error({ err: error }, "Unexpected error adding competitor:");
         return {
             success: false,
             error: "An unexpected error occurred. Please try again.",
@@ -271,7 +272,7 @@ export async function deleteCompetitor(
                 });
             }
         } catch (eventError) {
-            console.error("Failed to write competitor removal audit event:", eventError);
+            logger.error({ err: eventError }, "Failed to write competitor removal audit event:");
         }
 
         const { error } = await supabase
@@ -281,7 +282,7 @@ export async function deleteCompetitor(
             .eq("business_id", businessId);
 
         if (error) {
-            console.error("Database error deleting competitor:", error);
+            logger.error({ err: error }, "Database error deleting competitor:");
             return {
                 success: false,
                 error: "Failed to remove competitor. Please try again.",
@@ -291,7 +292,7 @@ export async function deleteCompetitor(
         revalidatePath("/competitors");
         return { success: true };
     } catch (error: unknown) {
-        console.error("Unexpected error deleting competitor:", error);
+        logger.error({ err: error }, "Unexpected error deleting competitor:");
         return {
             success: false,
             error: "An unexpected error occurred. Please try again.",

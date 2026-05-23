@@ -1,5 +1,6 @@
 /** Google review sync — bootstrap */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
   clearGoogleSyncBootstrapHandoff,
@@ -47,7 +48,7 @@ export async function bootstrapGoogleReviewsForPlatform(
             }
             await clearGoogleSyncBootstrapHandoff(admin, platformId);
             void enqueueMissingGoogleReviewAnalysis(context.platform.business_id).catch((e) =>
-                console.error("[Sync] Bootstrap inline analysis enqueue failed:", e)
+                logger.error({ err: e }, "[Sync] Bootstrap inline analysis enqueue failed:")
             );
             return { synced: result.synced, hasMore: false, completedInline: true };
         }

@@ -1,5 +1,6 @@
 /** Google review sync — tokens */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { refreshGoogleToken } from "../business-profile";
 import { TOKEN_EXPIRY_BUFFER_MS } from "../constants";
@@ -19,7 +20,7 @@ export async function getValidGoogleToken(
         .single();
 
     if (platformError || !platform) {
-        console.error(`[Token] Fetch failed for ${platformId}:`, platformError);
+        logger.error({ err: platformError }, `[Token] Fetch failed for ${platformId}:`);
         const msg = platformError?.message ? `, error=${platformError.message}` : "";
         throw new Error(`Platform not found: id=${platformId}${msg}`);
     }
@@ -33,7 +34,7 @@ export async function getValidGoogleToken(
             ciphertext: platform.access_token 
         });
         if (decAccessError) {
-            console.error(`[Token] Access token decryption failed for ${platformId}:`, decAccessError);
+            logger.error({ err: decAccessError }, `[Token] Access token decryption failed for ${platformId}:`);
             throw new Error("Failed to decrypt access token");
         }
         accessToken = decAccess;
@@ -44,7 +45,7 @@ export async function getValidGoogleToken(
             ciphertext: platform.refresh_token 
         });
         if (decRefreshError) {
-            console.error(`[Token] Refresh token decryption failed for ${platformId}:`, decRefreshError);
+            logger.error({ err: decRefreshError }, `[Token] Refresh token decryption failed for ${platformId}:`);
             throw new Error("Failed to decrypt refresh token");
         }
         refreshToken = decRefresh;
@@ -76,7 +77,7 @@ async function refreshPlatformAccessToken(
     platformWithTokens: GooglePlatformWithTokens
 ): Promise<{ accessToken: string; platform: GooglePlatformWithTokens }> {
     if (!refreshToken) {
-        console.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
+        logger.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
         await admin.from("review_platforms").update({ sync_status: "error_no_refresh_token" }).eq("id", platformId);
         throw new Error("No refresh token available - Please reconnect Google Account");
     }
@@ -90,7 +91,7 @@ async function refreshPlatformAccessToken(
         });
 
         if (encError) {
-            console.error("[Token] Encryption failed during refresh:", encError);
+            logger.error({ err: encError }, "[Token] Encryption failed during refresh:");
             throw new Error("Failed to secure new token");
         }
 
@@ -115,7 +116,7 @@ async function refreshPlatformAccessToken(
             },
         };
     } catch (error: unknown) {
-        console.error(`[Token] Refresh failed:`, error);
+        logger.error({ err: error }, `[Token] Refresh failed:`);
 
         const errorMsg = error instanceof Error ? error.message : String(error);
         const isRevoked = errorMsg.includes("invalid_grant");

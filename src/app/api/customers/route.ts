@@ -59,7 +59,7 @@ const patchCustomerSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    const { requestId } = createRequestLogger("POST /api/customers");
+    const { logger, requestId } = createRequestLogger("POST /api/customers");
     try {
         const supabase = await createClient();
 
@@ -107,13 +107,13 @@ export async function POST(request: NextRequest) {
             .single();
 
         if (error) {
-            console.error("Supabase error:", error);
+            logger.error({ err: error }, "Supabase error:");
             return apiError(error.message || "Failed to save customer", { status: 400, details: requestId });
         }
 
         return apiOk(data, { status: 201 });
     } catch (error: unknown) {
-        console.error("Error saving customer:", error);
+        logger.error({ err: error }, "Error saving customer:");
         const message = error instanceof Error ? error.message : "Failed to save customer";
         return apiError(message, { status: 500, details: requestId });
     }

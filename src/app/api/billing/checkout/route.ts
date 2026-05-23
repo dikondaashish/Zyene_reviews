@@ -187,7 +187,7 @@ export async function POST(request: Request) {
             } catch (subError: unknown) {
                 // If subscription retrieval fails (deleted, etc.), fall through to new checkout
                 const message = subError instanceof Error ? subError.message : String(subError);
-                console.error("Could not update existing subscription, creating new checkout:", message);
+                logger.warn({ message }, "Could not update existing subscription, creating new checkout");
             }
         }
 
@@ -243,7 +243,7 @@ export async function POST(request: Request) {
         logger.info({ userId: user.id, organizationId: member.organization_id, source }, "Stripe checkout session created");
         return apiOk({ url: session.url, requestId });
     } catch (error: unknown) {
-        console.error("Checkout Error:", error);
+        logger.error({ err: error }, "Checkout Error");
         Sentry.captureException(error, { tags: { route: "billing-checkout" } });
         return apiError("Failed to create checkout session. Please try again.", { status: 500, details: requestId });
     }

@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redis } from "@/lib/db/redis";
@@ -53,7 +54,7 @@ export async function createOrganization(
       .single();
 
     if (orgError || !organization) {
-      console.error("Error creating organization:", orgError);
+      logger.error({ err: orgError }, "Error creating organization");
       return {
         success: false,
         error: "Failed to create organization. Please try again.",
@@ -62,7 +63,7 @@ export async function createOrganization(
 
     // Invalidate business context cache
     const cacheKey = `user_businesses:${user.id}`;
-    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    await redis.del(cacheKey).catch((e) => logger.error({ err: e }, "Redis del error"));
     revalidatePath("/", "layout");
 
     // Add user as owner of organization
@@ -75,7 +76,7 @@ export async function createOrganization(
       });
 
     if (memberError) {
-      console.error("Error adding organization member:", memberError);
+      logger.error({ err: memberError }, "Error adding organization member");
       return {
         success: false,
         error: "Failed to set up organization access. Please try again.",
@@ -93,7 +94,7 @@ export async function createOrganization(
       },
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in createOrganization:", error);
+    logger.error({ err: error }, "Unexpected error in createOrganization");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -154,18 +155,21 @@ export async function updateOrganizationName(
     }
 
     if (error) {
-      console.error("Error updating organization:", error.message, error.details, error.hint);
+      logger.error(
+        { message: error.message, details: error.details, hint: error.hint },
+        "Error updating organization",
+      );
       return { success: false, error: `Failed to update organization name: ${error.message}` };
     }
     const { error: stepError } = await supabase
       .from("users")
       .update({ onboarding_step: 2 } as never)
       .eq("id", user.id);
-    if (stepError) console.error("Error updating onboarding step:", stepError);
+    if (stepError) logger.error({ err: stepError }, "Error updating onboarding step");
     revalidatePath("/onboarding");
     return { success: true };
   } catch (error: unknown) {
-    console.error("updateOrganizationName:", error);
+    logger.error({ err: error }, "updateOrganizationName");
     return { success: false, error: "An unexpected error occurred." };
   }
 }

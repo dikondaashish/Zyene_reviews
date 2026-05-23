@@ -1,5 +1,6 @@
 /** Google review sync — review-lifecycle */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import type { AdminClient } from "./helpers";
 
@@ -29,7 +30,7 @@ export async function hideGoogleReviewsRemovedFromSource(
         .eq("is_visible", true);
 
     if (error) {
-        console.error("[Sync] Reconciliation select failed:", error);
+        logger.error({ err: error }, "[Sync] Reconciliation select failed:");
         return { hidden: 0 };
     }
 
@@ -47,7 +48,7 @@ export async function hideGoogleReviewsRemovedFromSource(
         const ids = toHide.slice(i, i + BATCH).map((r: { id: string }) => r.id);
         const { error: upErr } = await admin.from("reviews").update({ is_visible: false }).in("id", ids);
         if (upErr) {
-            console.error("[Sync] Soft-hide batch failed:", upErr);
+            logger.error({ err: upErr }, "[Sync] Soft-hide batch failed:");
         } else {
             hidden += ids.length;
         }
@@ -73,7 +74,7 @@ export async function reattachOrphanedGoogleReviews(
         .select("id");
 
     if (error) {
-        console.error("[Google] Reattach orphaned reviews failed:", error);
+        logger.error({ err: error }, "[Google] Reattach orphaned reviews failed:");
         return { reattached: 0 };
     }
     const n = rows?.length ?? 0;
@@ -94,7 +95,7 @@ export async function refreshGoogleReviewRollupsFromDb(
         .eq("is_visible", true);
 
     if (error) {
-        console.error("[Google] Rollup select failed:", error);
+        logger.error({ err: error }, "[Google] Rollup select failed:");
         return;
     }
 
@@ -122,7 +123,7 @@ export async function refreshGoogleReviewRollupsFromDb(
             })
             .eq("id", businessId);
     } catch (e) {
-        console.error("[Google] Business rollup update failed:", e);
+        logger.error({ err: e }, "[Google] Business rollup update failed:");
     }
 }
 

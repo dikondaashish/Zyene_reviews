@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -122,7 +123,10 @@ export async function GET(request: Request) {
             .eq("is_visible", true);
 
         if (visibleCountError) {
-            console.error("[sync/google GET] visible review count failed, using review_platforms.total_reviews:", visibleCountError);
+            logger.warn(
+                { err: visibleCountError },
+                "[sync/google GET] visible review count failed, using review_platforms.total_reviews",
+            );
         }
 
         const totalReviewsDisplay =
@@ -142,7 +146,7 @@ export async function GET(request: Request) {
                 platform.average_rating != null ? Number(platform.average_rating) : null,
         });
     } catch (error: unknown) {
-        console.error("Sync status GET:", error);
+        logger.error({ err: error }, "Sync status GET");
         const mapped = mapGoogleSyncError(error);
         const normalized = toApiError(error);
         return apiError(mapped.message || normalized.message, {
@@ -205,7 +209,7 @@ export async function POST(request: Request) {
         return apiOk({ message: "Sync started in background" });
 
     } catch (error: unknown) {
-        console.error("Sync Error:", error);
+        logger.error({ err: error }, "Sync Error");
         const mapped = mapGoogleSyncError(error);
         const normalized = toApiError(error);
         return apiError(mapped.message || normalized.message, {

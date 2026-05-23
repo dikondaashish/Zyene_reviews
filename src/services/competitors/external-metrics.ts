@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 export type ExternalCompetitorMetrics = {
     averageRating: number;
     totalReviews: number;
@@ -65,7 +67,10 @@ export async function fetchCompetitorPlaceEnrichment(params: {
 
         if (!response.ok) {
             const text = await response.text();
-            console.error("[competitor place details] HTTP error:", response.status, text.slice(0, 200));
+            logger.error(
+                { status: response.status, body: text.slice(0, 200) },
+                "[competitor place details] HTTP error",
+            );
             return null;
         }
 
@@ -92,7 +97,10 @@ export async function fetchCompetitorPlaceEnrichment(params: {
             phone: typeof payload.nationalPhoneNumber === "string" ? payload.nationalPhoneNumber : null,
         };
     } catch (e) {
-        console.error("[competitor place details] fetch failed:", e instanceof Error ? e.message : String(e));
+        logger.error(
+            { err: e instanceof Error ? e.message : String(e) },
+            "[competitor place details] fetch failed",
+        );
         return null;
     }
 }
@@ -214,12 +222,15 @@ export async function fetchCompetitorMetricsFromGoogle(params: {
             };
         } catch (error) {
             if (attempt >= retries) {
-                console.error("[competitor external metrics] fetch failed:", {
-                    name: params.name,
-                    hasGoogleUrl: Boolean(params.googleUrl),
-                    attempt,
-                    error: error instanceof Error ? error.message : String(error),
-                });
+                logger.error(
+                    {
+                        name: params.name,
+                        hasGoogleUrl: Boolean(params.googleUrl),
+                        attempt,
+                        err: error instanceof Error ? error.message : String(error),
+                    },
+                    "[competitor external metrics] fetch failed",
+                );
                 return null;
             }
             await wait(300 * (attempt + 1));

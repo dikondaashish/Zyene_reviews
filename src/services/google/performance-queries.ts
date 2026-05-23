@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /** Local calendar YYYY-MM-DD — matches how GBP daily metrics are bucketed (avoid UTC day shift from toISOString). */
@@ -61,7 +62,7 @@ export async function getGooglePerformanceTotals(
         .lte("metric_date", endStr);
 
     if (error) {
-        console.error("[getGooglePerformanceTotals] Supabase error:", error);
+        logger.error({ err: error }, "[getGooglePerformanceTotals] Supabase error:");
         return null;
     }
     if (!data?.length) {
@@ -122,7 +123,7 @@ export async function getGooglePerformanceDailySeries(
         .lte("metric_date", endStr);
 
     if (error) {
-        console.error("[getGooglePerformanceDailySeries] Supabase error:", error);
+        logger.error({ err: error }, "[getGooglePerformanceDailySeries] Supabase error:");
         return [];
     }
     if (!data?.length) {

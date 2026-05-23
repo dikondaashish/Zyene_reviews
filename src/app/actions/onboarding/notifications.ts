@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { stepNotificationsSchema, type StepNotificationsFormData } from "@/lib/validations/onboarding";
@@ -65,7 +66,7 @@ export async function createNotificationPreferences(
     );
 
     if (preferencesError) {
-      console.error("Error saving notification preferences:", preferencesError);
+      logger.error({ err: preferencesError }, "Error saving notification preferences:");
       return {
         success: false,
         error: "Failed to save notification preferences. Please try again.",
@@ -81,7 +82,7 @@ export async function createNotificationPreferences(
       .eq("id", user.id);
 
     if (updateError) {
-      console.error("Error marking onboarding complete:", updateError);
+      logger.error({ err: updateError }, "Error marking onboarding complete:");
       // Continue anyway - preferences were saved
     }
 
@@ -92,7 +93,7 @@ export async function createNotificationPreferences(
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in createNotificationPreferences:", error);
+    logger.error({ err: error }, "Unexpected error in createNotificationPreferences:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

@@ -144,7 +144,6 @@ export function ReviewsPageClient({
             url.searchParams.set("page", params.page.toString());
             window.history.replaceState(null, "", url.toString());
         } catch (error) {
-            console.error("Failed to fetch reviews:", error);
         } finally {
             setIsFetching(false);
         }

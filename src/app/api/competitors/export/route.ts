@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
@@ -37,7 +38,7 @@ export async function GET(request: Request) {
         .order("created_at", { ascending: false });
 
     if (competitorsError || !competitors) {
-        console.error("[competitors/export]", competitorsError);
+        logger.error({ err: competitorsError }, "[competitors/export]");
         return new NextResponse("Failed to load competitors", { status: 500 });
     }
 
@@ -51,7 +52,7 @@ export async function GET(request: Request) {
         .limit(2000);
 
     if (snapshotsError) {
-        console.error("[competitors/export] snapshots", snapshotsError);
+        logger.error({ err: snapshotsError }, "[competitors/export] snapshots");
         return new NextResponse("Failed to load snapshots", { status: 500 });
     }
 
@@ -63,7 +64,7 @@ export async function GET(request: Request) {
         .limit(5000);
 
     if (eventsError) {
-        console.error("[competitors/export] events", eventsError);
+        logger.error({ err: eventsError }, "[competitors/export] events");
         return new NextResponse("Failed to load events", { status: 500 });
     }
 

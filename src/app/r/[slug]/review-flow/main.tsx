@@ -128,19 +128,12 @@ export function PublicReviewFlow({
 
                 const data = (await res.json().catch(() => ({}))) as { requestId?: string; error?: string };
                 if (!res.ok) {
-                    console.error("[PublicReviewFlow] /api/track/review-open failed", {
-                        status: res.status,
-                        error: data.error,
-                        hadRefProp: !!requestId?.trim(),
-                        hadRefUrl: !!parseReviewRefFromSearch(),
-                    });
                 }
                 if (res.ok && typeof data.requestId === "string" && data.requestId.length > 0) {
                     setActiveRequestId(data.requestId);
                     return data.requestId as string;
                 }
             } catch (error) {
-                console.error("[PublicReviewFlow] Open tracking failed:", error);
             } finally {
                 trackOpenInFlightRef.current = null;
             }
@@ -167,7 +160,6 @@ export function PublicReviewFlow({
                 body: JSON.stringify({ action: "update", requestId: requestIdToUse, trackData }),
             });
         } catch (error) {
-            console.error("Tracking update failed:", error);
         }
     };
 
@@ -279,7 +271,6 @@ export function PublicReviewFlow({
             setReviewText(ensureCompleteReviewText(data.reviewText ?? "", businessName));
             setStep("review");
         } catch (error) {
-            console.error("Generation error:", error);
             const firstTag = selectedTags[0]?.replace(/^[^\s]+\s/, "") || "experience";
             setReviewText(
                 ensureCompleteReviewText(
@@ -325,7 +316,6 @@ export function PublicReviewFlow({
 
             await trackRequestUpdate(trackData);
         } catch (err) {
-            console.error("Tracking error:", err);
         }
 
         setTimeout(() => {
@@ -405,7 +395,6 @@ export function PublicReviewFlow({
                 description: "Your feedback has been received.",
             });
         } catch (error) {
-            console.error("Feedback error:", error);
             toast.error(error instanceof Error ? error.message : "Failed to submit feedback. Please try again.");
         } finally {
             setIsSubmitting(false);

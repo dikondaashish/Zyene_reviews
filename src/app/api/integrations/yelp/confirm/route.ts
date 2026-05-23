@@ -68,7 +68,7 @@ export async function POST(req: Request) {
             .single();
 
         if (error) {
-            console.error("[Yelp Confirm] Upsert error:", error);
+            logger.error({ err: error }, "[Yelp Confirm] Upsert error:");
             Sentry.captureException(error, { tags: { route: "yelp-confirm", step: "upsert_platform" } });
             return apiError("Failed to save Yelp connection", { status: 500, details: requestId });
         }
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
             });
         }
     } catch (error: unknown) {
-        console.error("[Yelp Confirm] Error:", error);
+        logger.error({ err: error }, "[Yelp Confirm] Error:");
         Sentry.captureException(error, { tags: { route: "yelp-confirm" } });
         return apiError("Internal Server Error", { status: 500, details: requestId });
     }

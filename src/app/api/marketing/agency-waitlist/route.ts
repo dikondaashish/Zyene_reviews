@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { captureMarketingLead } from "@/lib/phase8/capture-marketing-lead";
 import { PARTNER_CONTACT_EMAIL } from "@/lib/phase6/partnerships-data";
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
 </ul>`,
         });
     } catch (err) {
-        console.error("[agency-waitlist] notify failed:", err);
+        logger.error({ err: err }, "[agency-waitlist] notify failed:");
     }
 
     return NextResponse.json({ ok: true });

@@ -1,5 +1,6 @@
 /** Google review sync — pagination */
 
+import { logger } from "@/lib/logger";
 import {
   listReviews,
   type GoogleReview,
@@ -43,9 +44,7 @@ export async function fetchGoogleReviewsPaginated(
             if (!sortByUpdateTime || !isOrderByUnsupportedError(error)) {
                 throw error;
             }
-            console.error(
-                `[Sync] Full-sync fallback: orderBy=updateTime desc unsupported for account ${googleAccountId}/location ${googleLocationId}.`
-            );
+            logger.error(`[Sync] Full-sync fallback: orderBy=updateTime desc unsupported for account ${googleAccountId}/location ${googleLocationId}.`);
             sortByUpdateTime = false;
             apiResp = await listReviews(
                 accessToken,

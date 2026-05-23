@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -59,7 +60,7 @@ export default async function BusinessInformationPage() {
             .eq("business_id", business.id)
             .order("place_action_type", { ascending: true });
         if (error) {
-            console.error("[Business information] Place links fetch failed:", error);
+            logger.error({ err: error }, "[Business information] Place links fetch failed:");
             return (
                 <DashboardFetchError
                     message="We could not load Google place action links. Check your connection and try again."

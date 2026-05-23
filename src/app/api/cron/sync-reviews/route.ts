@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 export const dynamic = "force-dynamic";
 
@@ -10,7 +11,7 @@ import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 export async function GET(request: Request) {
     try {
         if (!isAuthorizedCronRequest(request)) {
-            console.error("[Cron] Unauthorized access attempt");
+            logger.error("[Cron] Unauthorized access attempt");
             // Ping fail so we know the cron tried to run but was blocked
             await pingReviewSyncHeartbeat(false);
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
             .in("platform", ["google", "yelp", "facebook"]);
 
         if (error) {
-            console.error("[Cron] Failed to fetch platforms:", error);
+            logger.error({ err: error }, "[Cron] Failed to fetch platforms:");
             Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "fetch_platforms" } });
             await pingReviewSyncHeartbeat(false);
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
                     }))
                 );
             } catch (inngestError) {
-                console.error("[Cron] Inngest dispatch failed:", inngestError);
+                logger.error({ err: inngestError }, "[Cron] Inngest dispatch failed:");
                 Sentry.captureException(inngestError, { tags: { route: "cron-sync-reviews", step: "inngest_dispatch" } });
                 await pingReviewSyncHeartbeat(false);
                 throw inngestError;
@@ -61,7 +62,7 @@ export async function GET(request: Request) {
             message: "Background synchronization fanned out"
         });
     } catch (error: unknown) {
-        console.error("[Cron] Unexpected error in sync-reviews:", error);
+        logger.error({ err: error }, "[Cron] Unexpected error in sync-reviews:");
         Sentry.captureException(error, { tags: { route: "cron-sync-reviews", step: "unexpected" } });
         
         // Final attempt to notify monitoring of failure

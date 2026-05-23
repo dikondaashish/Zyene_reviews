@@ -109,7 +109,6 @@ export function SlugEditor({ businessId, initialSlug, onSlugChange }: SlugEditor
                     form.clearErrors("slug");
                 }
             } catch (error) {
-                console.error(error);
                 setIsAvailable(null);
             } finally {
                 setIsChecking(false);

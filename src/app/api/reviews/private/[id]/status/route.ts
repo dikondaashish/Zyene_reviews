@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
@@ -56,13 +57,13 @@ export async function PATCH(
             .single();
 
         if (updateError) {
-            console.error("Failed to update private feedback status:", updateError);
+            logger.error({ err: updateError }, "Failed to update private feedback status:");
             return apiError("Failed to update status", { status: 500 });
         }
 
         return apiOk(data);
     } catch (error) {
-        console.error("Status Update API Error:", error);
+        logger.error({ err: error }, "Status Update API Error:");
         return apiError("Internal server error", { status: 500 });
     }
 }

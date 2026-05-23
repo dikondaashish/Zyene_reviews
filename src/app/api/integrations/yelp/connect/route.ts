@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
         return apiOk({ businesses: results, requestId });
     } catch (error: unknown) {
-        console.error("[Yelp Connect] Search error:", error);
+        logger.error({ err: error }, "[Yelp Connect] Search error:");
         return apiError("Internal Server Error", { status: 500, details: requestId });
     }
 }

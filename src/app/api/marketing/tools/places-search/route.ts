@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { searchPublicPlaces } from "@/lib/phase7/places-public";
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
         const suggestions = await searchPublicPlaces(q);
         return NextResponse.json({ suggestions });
     } catch (err) {
-        console.error("[tools/places-search]", err);
+        logger.error({ err: err }, "[tools/places-search]");
         return NextResponse.json({ error: "Search unavailable" }, { status: 503 });
     }
 }

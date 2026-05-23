@@ -16,7 +16,6 @@ export default function RootError({
     useEffect(() => {
         // Log the error to Sentry automatically
         Sentry.captureException(error);
-        console.error("Global render error:", error);
     }, [error]);
 
     return (

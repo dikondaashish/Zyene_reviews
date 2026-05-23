@@ -2,6 +2,7 @@
  * Next.js middleware proxy — handles subdomain routing, auth session refresh,
  * API rate limiting, and CORS headers for the multi-tenant app.
  */
+import { logger } from "@/lib/logger";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { globalApiRateLimit } from "@/lib/auth/rate-limit";
@@ -159,7 +160,7 @@ export async function proxy(request: NextRequest) {
                 }
             } catch (e) {
                 // If Redis is down, fail open (don't block legitimate traffic)
-                console.error("Global rate limit check failed:", e);
+                logger.error({ err: e }, "Global rate limit check failed:");
             }
         }
 
@@ -297,7 +298,7 @@ export async function proxy(request: NextRequest) {
             }
         } catch (error) {
             // If check fails, allow the request to proceed
-            console.error("Onboarding status check failed:", error);
+            logger.error({ err: error }, "Onboarding status check failed:");
         }
 
         // `/` rewrites to dashboard content; keep `/dashboard` as a first-class URL (no redirect) so
@@ -384,7 +385,7 @@ export async function proxy(request: NextRequest) {
                         return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
                     }
                 } catch (error) {
-                    console.error("Onboarding status check failed:", error);
+                    logger.error({ err: error }, "Onboarding status check failed:");
                 }
 
                 return supabaseResponse;
@@ -411,7 +412,7 @@ export async function proxy(request: NextRequest) {
                     }
                 } catch (error) {
                     // If check fails, allow the request to proceed
-                    console.error("Onboarding status check failed:", error);
+                    logger.error({ err: error }, "Onboarding status check failed:");
                 }
             }
 

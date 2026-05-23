@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
@@ -22,7 +23,7 @@ async function registerSequenceRun(
         return false;
     }
     if (error) {
-        console.error("[growth] Failed to register sequence run:", error);
+        logger.error({ err: error }, "[growth] Failed to register sequence run:");
         return false;
     }
     return true;

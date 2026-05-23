@@ -1,12 +1,11 @@
+import { logger } from "@/lib/logger";
 import Stripe from "stripe";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeSecretKey && process.env.NODE_ENV === "development") {
-    console.error(
-        "Missing STRIPE_SECRET_KEY environment variable. " +
-            "Check your .env.local file or deployment environment."
-    );
+    logger.error("Missing STRIPE_SECRET_KEY environment variable. " +
+            "Check your .env.local file or deployment environment.");
 }
 
 // Next.js evaluates route handlers during build. Using a dummy key prevents 

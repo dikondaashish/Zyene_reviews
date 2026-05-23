@@ -167,7 +167,6 @@ export function ReviewContentForm({
             form.setValue("footer_logo_url", publicUrl, { shouldDirty: true, shouldTouch: true });
             toast.success("Footer logo uploaded!");
         } catch (error) {
-            console.error("Upload error:", error);
             toast.error("Failed to upload logo");
         } finally {
             setUploadingFooterLogo(false);
@@ -279,7 +278,6 @@ export function ReviewContentForm({
                         rating_style: (data.rating_style as "emoji" | "stars" | "number" | "slider" | "radio") || "emoji",
                     });
             } catch (error) {
-                console.error("Error loading content settings:", error);
                 if (!cancelled) toast.error("Failed to load content settings");
             } finally {
                 if (!cancelled) setIsLoading(false);
@@ -393,7 +391,6 @@ export function ReviewContentForm({
             router.refresh();
             toast.success("Content settings updated successfully");
         } catch (error) {
-            console.error("Error saving content settings:", error);
             toast.error(error instanceof Error ? error.message : "Failed to save content settings");
         } finally {
             setIsSaving(false);

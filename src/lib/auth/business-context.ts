@@ -1,6 +1,7 @@
 "use server";
 /** Resolves the current user's active business from the session cookie. */
 
+import { logger } from "@/lib/logger";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
 import type {
@@ -93,7 +94,7 @@ export async function getActiveBusinessId(options?: {
                 businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
             }
         } catch (e) {
-            console.error("Redis cache error:", e);
+            logger.error({ err: e }, "Redis cache error:");
         }
     }
 
@@ -164,7 +165,7 @@ export async function getActiveBusinessId(options?: {
                 const { redis } = await import("@/lib/db/redis");
                 await redis.set(cacheKey, JSON.stringify({ organization, businesses }), { ex: 300 }); // 5 min TTL
             } catch (e) {
-                console.error("Redis cache set error:", e);
+                logger.error({ err: e }, "Redis cache set error:");
             }
         }
     }

@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redis } from "@/lib/db/redis";
@@ -38,13 +39,13 @@ export async function updateBusinessAndLocation(
       })
       .eq("id", businessId);
     if (error) {
-      console.error("Error updating business:", error);
+      logger.error({ err: error }, "Error updating business:");
       return { success: false, error: "Failed to update business." };
     }
     revalidatePath("/onboarding");
     return { success: true };
   } catch (error: unknown) {
-    console.error("updateBusinessAndLocation:", error);
+    logger.error({ err: error }, "updateBusinessAndLocation:");
     return { success: false, error: "An unexpected error occurred." };
   }
 }
@@ -107,7 +108,7 @@ export async function createBusinessWithLocation(
       .single();
 
     if (businessError || !business) {
-      console.error("Error creating business:", businessError);
+      logger.error({ err: businessError }, "Error creating business:");
       return {
         success: false,
         error: "Failed to create business. Please try again.",
@@ -126,7 +127,7 @@ export async function createBusinessWithLocation(
     );
 
     if (memberError) {
-      console.error("Error creating business membership:", memberError);
+      logger.error({ err: memberError }, "Error creating business membership:");
       return {
         success: false,
         error: "Business created, but failed to assign access. Please contact support.",
@@ -135,7 +136,7 @@ export async function createBusinessWithLocation(
 
     // Invalidate business context cache
     const cacheKey = `user_businesses:${user.id}`;
-    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    await redis.del(cacheKey).catch(e => logger.error({ err: e }, "Redis del error:"));
     revalidatePath("/", "layout");
     revalidatePath("/onboarding");
 
@@ -151,7 +152,7 @@ export async function createBusinessWithLocation(
       },
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in createBusinessWithLocation:", error);
+    logger.error({ err: error }, "Unexpected error in createBusinessWithLocation:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -201,7 +202,7 @@ export async function updateBusinessCategory(
       .eq("id", businessId);
 
     if (updateError) {
-      console.error("Error updating business category:", updateError);
+      logger.error({ err: updateError }, "Error updating business category:");
       return {
         success: false,
         error: "Failed to update category. Please try again.",
@@ -217,12 +218,12 @@ export async function updateBusinessCategory(
       .eq("id", user.id);
 
     if (stepError) {
-      console.error("Error updating onboarding step:", stepError);
+      logger.error({ err: stepError }, "Error updating onboarding step:");
     }
 
     // Invalidate business context cache
     const cacheKey = `user_businesses:${user.id}`;
-    await redis.del(cacheKey).catch(e => console.error("Redis del error:", e));
+    await redis.del(cacheKey).catch(e => logger.error({ err: e }, "Redis del error:"));
     revalidatePath("/", "layout");
     revalidatePath("/businesses");
     revalidatePath("/onboarding");
@@ -231,7 +232,7 @@ export async function updateBusinessCategory(
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in updateBusinessCategory:", error);
+    logger.error({ err: error }, "Unexpected error in updateBusinessCategory:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

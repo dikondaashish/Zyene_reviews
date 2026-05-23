@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { NotificationForm } from "../../../../components/settings/notification-form";
@@ -36,7 +37,7 @@ export default async function NotificationSettingsPage() {
     ]);
 
     if (prefsError || (profileError && profileError.code !== "PGRST116")) {
-        console.error("[Notification settings] Fetch failed:", prefsError || profileError);
+        logger.error({ err: prefsError || profileError }, "[Notification settings] Fetch failed:");
         return (
             <DashboardFetchError
                 message="We could not load notification settings. Check your connection and try again."

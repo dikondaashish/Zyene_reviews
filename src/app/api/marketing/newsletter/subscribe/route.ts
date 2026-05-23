@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
             .eq("id", existing.id);
 
         if (reactivateErr) {
-            console.error("[newsletter] reactivate failed:", reactivateErr);
+            logger.error({ err: reactivateErr }, "[newsletter] reactivate failed:");
             return NextResponse.json({ error: "Could not subscribe" }, { status: 500 });
         }
     } else if (!existing) {
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ ok: true, message: "Already subscribed" });
         }
         if (insertErr) {
-            console.error("[newsletter] insert failed:", insertErr);
+            logger.error({ err: insertErr }, "[newsletter] insert failed:");
             return NextResponse.json({ error: "Could not subscribe" }, { status: 500 });
         }
     }
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
         const { subject, html } = newsletterWelcomeEmail({ email, unsubscribeUrl });
         await sendEmail({ to: email, subject, html });
     } catch (err) {
-        console.error("[newsletter] welcome email failed:", err);
+        logger.error({ err: err }, "[newsletter] welcome email failed:");
     }
 
     return NextResponse.json({ ok: true });

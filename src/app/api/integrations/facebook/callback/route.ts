@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
 import { getAppIntegrationsUrl } from "@/config/env";
@@ -24,7 +25,7 @@ export async function GET(request: Request) {
 
     // Handle OAuth denial
     if (error) {
-        console.error("[Facebook Callback] OAuth error:", error);
+        logger.error({ err: error }, "[Facebook Callback] OAuth error:");
         return integrationsRedirect("?fb_error=denied");
     }
 
@@ -88,7 +89,7 @@ export async function GET(request: Request) {
 
         return response;
     } catch (err: unknown) {
-        console.error("[Facebook Callback] Token exchange failed:", err);
+        logger.error({ err: err }, "[Facebook Callback] Token exchange failed:");
         return integrationsRedirect("?fb_error=token_failed");
     }
 }

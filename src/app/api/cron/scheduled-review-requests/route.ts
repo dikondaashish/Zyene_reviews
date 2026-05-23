@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
         const results = await processDueScheduledReviewRequests({ limit: 40 });
         return NextResponse.json({ success: true, ...results });
     } catch (error: unknown) {
-        console.error("[Cron] scheduled-review-requests:", error);
+        logger.error({ err: error }, "[Cron] scheduled-review-requests:");
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

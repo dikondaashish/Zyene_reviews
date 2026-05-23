@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
@@ -72,8 +73,9 @@ export async function POST() {
           : undefined;
 
       if (stripeErrorCode === "resource_missing") {
-        console.error(
-          `Stale Stripe customer ID ${org.stripe_customer_id} for org ${member.organization_id}, clearing`
+        logger.error(
+          { stripeCustomerId: org.stripe_customer_id, organizationId: member.organization_id },
+          "Stale Stripe customer ID, clearing",
         );
         await admin
           .from("organizations")
@@ -95,7 +97,7 @@ export async function POST() {
 
     return apiOk({ url: session.url });
   } catch (error: unknown) {
-    console.error("Portal Error:", error);
+    logger.error({ err: error }, "Portal Error");
     Sentry.captureException(error, { tags: { route: "billing-portal" } });
     const apiErr = toApiError(error);
     if (error instanceof ApiRouteError) {

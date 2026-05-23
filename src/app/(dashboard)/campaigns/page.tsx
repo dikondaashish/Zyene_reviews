@@ -73,7 +73,6 @@ export default function CampaignsPage() {
             const data = await res.json();
             setCampaigns(data.campaigns || []);
         } catch (err) {
-            console.error("Failed to fetch campaigns:", err);
         } finally {
             setLoading(false);
         }

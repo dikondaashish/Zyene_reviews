@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -60,7 +61,7 @@ export default async function ReviewsPage(props: {
         ]);
 
     if (publicCountErr || privateCountErr) {
-        console.error("[Reviews page] Count queries failed:", publicCountErr || privateCountErr);
+        logger.error({ err: publicCountErr || privateCountErr }, "[Reviews page] Count queries failed:");
         return (
             <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
                 <DashboardFetchError
@@ -90,7 +91,7 @@ export default async function ReviewsPage(props: {
             .range(from, to);
 
         if (listErr) {
-            console.error("[Reviews page] Failed to load private feedback:", listErr);
+            logger.error({ err: listErr }, "[Reviews page] Failed to load private feedback:");
             return (
                 <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
                     <DashboardFetchError
@@ -136,7 +137,7 @@ export default async function ReviewsPage(props: {
 
         const { data, count: totalCount, error } = await query;
         if (error) {
-            console.error("[Reviews page] Failed to load reviews:", error);
+            logger.error({ err: error }, "[Reviews page] Failed to load reviews:");
             return (
                 <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
                     <DashboardFetchError

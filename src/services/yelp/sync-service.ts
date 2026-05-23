@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getBusiness } from "./adapter";
 import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
@@ -69,10 +70,8 @@ export async function syncYelpReviewsForPlatform(
                 .single();
 
             if (upsertError) {
-                console.error(
-                    `[Yelp Sync] Upsert error for review ${review.externalId}:`,
-                    upsertError
-                );
+                logger.error({ err: upsertError
+                 }, `[Yelp Sync] Upsert error for review ${review.externalId}:`);
                 continue;
             }
 
@@ -129,7 +128,7 @@ export async function syncYelpReviewsForPlatform(
             alerts: alertsCount,
         };
     } catch (error: unknown) {
-        console.error(`[Yelp Sync] Error for platform ${platformId}:`, error);
+        logger.error({ err: error }, `[Yelp Sync] Error for platform ${platformId}:`);
         await admin
             .from("review_platforms")
             .update({

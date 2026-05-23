@@ -1,5 +1,6 @@
 /** Google review sync — process-review */
 
+import { logger } from "@/lib/logger";
 import type { GoogleReview } from "../business-profile";
 import { computeReviewHash } from "@/utils/review-hash";
 import {
@@ -93,7 +94,7 @@ export async function processGoogleReview(
     let isNew = false;
 
     if (upsertError) {
-        console.error("Upsert Error:", upsertError);
+        logger.error({ err: upsertError }, "Upsert Error:");
     } else {
         upsertedOk = true;
         // If created_at is very recent (within last 10 seconds of upsert), it's brand new
@@ -113,7 +114,7 @@ export async function processGoogleReview(
             try {
                 await enqueueAutoReplyJob(upserted!.id);
             } catch (e) {
-                console.error("[AutoReply] Failed to enqueue job:", e);
+                logger.error({ err: e }, "[AutoReply] Failed to enqueue job:");
             }
         }
     }

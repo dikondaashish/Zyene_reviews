@@ -290,7 +290,6 @@ export function GoogleIntegrationCard({
             toast.success("Background sync started");
             router.refresh();
         } catch (err: unknown) {
-            console.error("[Google Sync] Error:", err);
             toast.error(err instanceof Error ? err.message : "Failed to start sync");
         } finally {
             setIsPosting(false);
@@ -319,7 +318,6 @@ export function GoogleIntegrationCard({
             if (digest.startsWith("NEXT_REDIRECT")) {
                 return;
             }
-            console.error("[Google] disconnect:", err);
             toast.error(err instanceof Error ? err.message : "Failed to disconnect");
         } finally {
             setIsDisconnecting(false);

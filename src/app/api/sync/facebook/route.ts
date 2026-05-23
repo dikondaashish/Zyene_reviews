@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { NextResponse } from "next/server";
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
         return NextResponse.json(result);
 
     } catch (error: unknown) {
-        console.error("Facebook Sync Error:", error);
+        logger.error({ err: error }, "Facebook Sync Error:");
 
         let status = 500;
         const message = error instanceof Error ? error.message : "Failed to sync reviews";

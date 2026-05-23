@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { revalidatePath } from "next/cache";
 import {
   bootstrapGoogleReviewsForPlatform,
@@ -47,13 +48,13 @@ export interface GoogleBusinessLocation {
  */
 async function runGooglePostConnectSideJobs(platformId: string): Promise<void> {
   syncGooglePerformanceForPlatform(platformId).catch((e) =>
-    console.error("[Onboarding] GBP performance sync:", e)
+    logger.error({ err: e }, "[Onboarding] GBP performance sync:")
   );
-  syncGooglePhase2ForPlatform(platformId).catch((e) => console.error("[Onboarding] GBP phase2:", e));
+  syncGooglePhase2ForPlatform(platformId).catch((e) => logger.error({ err: e }, "[Onboarding] GBP phase2:"));
   syncGoogleListingProfileForPlatform(platformId).catch((e) =>
-    console.error("[Onboarding] GBP listing profile:", e)
+    logger.error({ err: e }, "[Onboarding] GBP listing profile:")
   );
-  syncGoogleLodgingForPlatform(platformId).catch((e) => console.error("[Onboarding] GBP lodging:", e));
+  syncGoogleLodgingForPlatform(platformId).catch((e) => logger.error({ err: e }, "[Onboarding] GBP lodging:"));
 }
 
 export async function enqueueGooglePostConnectSync(
@@ -63,14 +64,14 @@ export async function enqueueGooglePostConnectSync(
   try {
     const bootstrap = await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {
       if (isGoogleSyncConflictError(err)) return null;
-      console.error("[Onboarding] bootstrapGoogleReviewsForPlatform:", err);
+      logger.error({ err: err }, "[Onboarding] bootstrapGoogleReviewsForPlatform:");
       return null;
     });
     completedInline = bootstrap?.completedInline === true;
     revalidatePath("/reviews");
     revalidatePath("/dashboard");
   } catch (bootstrapErr) {
-    console.error("[Onboarding] bootstrapGoogleReviewsForPlatform failed:", bootstrapErr);
+    logger.error({ err: bootstrapErr }, "[Onboarding] bootstrapGoogleReviewsForPlatform failed:");
   }
 
   if (completedInline) {
@@ -85,14 +86,14 @@ export async function enqueueGooglePostConnectSync(
     });
     return { mode: "inngest" };
   } catch (inngestErr) {
-    console.error("[Onboarding] inngest.send(google/sync.reviews) failed:", inngestErr);
+    logger.error({ err: inngestErr }, "[Onboarding] inngest.send(google/sync.reviews) failed");
     try {
       await syncGoogleReviewsForPlatform(platformId);
       await runGooglePostConnectSideJobs(platformId);
       return { mode: "inline" };
     } catch (syncErr) {
       const msg = syncErr instanceof Error ? syncErr.message : String(syncErr);
-      console.error("[Onboarding] Fallback syncGoogleReviewsForPlatform failed:", syncErr);
+      logger.error({ err: syncErr }, "[Onboarding] Fallback syncGoogleReviewsForPlatform failed:");
       return { mode: "failed", error: msg };
     }
   }

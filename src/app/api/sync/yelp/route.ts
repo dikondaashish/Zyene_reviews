@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncRateLimit } from "@/lib/auth/rate-limit";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
         return apiOk(result);
 
     } catch (error: unknown) {
-        console.error("Yelp Sync Error:", error);
+        logger.error({ err: error }, "Yelp Sync Error:");
         const normalized = toApiError(error);
         return apiError(normalized.message || "Failed to sync reviews", {
             status: normalized.status || 500,

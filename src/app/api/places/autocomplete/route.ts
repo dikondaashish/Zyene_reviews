@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     const apiKey =
         process.env.GOOGLE_MAPS_API_KEY?.trim() || process.env.GOOGLE_API_KEY?.trim();
     if (!apiKey) {
-        console.error("[places/autocomplete] Missing GOOGLE_MAPS_API_KEY / GOOGLE_API_KEY");
+        logger.error("[places/autocomplete] Missing GOOGLE_MAPS_API_KEY / GOOGLE_API_KEY");
         return NextResponse.json({ error: "Places search is not configured" }, { status: 503 });
     }
 
@@ -69,7 +70,10 @@ export async function GET(request: NextRequest) {
 
         if (!response.ok) {
             const text = await response.text();
-            console.error("[places/autocomplete] Google error", response.status, text.slice(0, 400));
+            logger.error(
+                { status: response.status, body: text.slice(0, 400) },
+                "[places/autocomplete] Google error",
+            );
             return NextResponse.json({ error: "Search failed" }, { status: 502 });
         }
 
@@ -118,7 +122,7 @@ export async function GET(request: NextRequest) {
         if (err instanceof Error && err.name === "AbortError") {
             return NextResponse.json({ error: "Search timed out" }, { status: 504 });
         }
-        console.error("[places/autocomplete]", err);
+        logger.error({ err }, "[places/autocomplete]");
         return NextResponse.json({ error: "Search failed" }, { status: 500 });
     }
 }

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { fetchPublicPlaceMetrics } from "@/lib/phase7/places-public";
 import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
             html: reviewLinkEmailHtml(metrics.name, metrics.reviewLink),
         });
     } catch (err) {
-        console.error("[tools/review-link] email failed:", err);
+        logger.error({ err: err }, "[tools/review-link] email failed:");
     }
 
     return NextResponse.json({

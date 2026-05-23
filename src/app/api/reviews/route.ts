@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -91,7 +92,7 @@ export async function GET(request: NextRequest) {
 
         const { data, count: totalCount, error } = await query;
         if (error) {
-            console.error("[Reviews API] Failed to load reviews:", error);
+            logger.error({ err: error }, "[Reviews API] Failed to load reviews:");
         }
         reviews = data || [];
         count = totalCount || 0;

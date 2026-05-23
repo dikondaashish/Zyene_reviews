@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { generateQRCodeDataURL } from "@/lib/qr/generate-qr";
 import { NextResponse } from "next/server";
@@ -74,7 +75,7 @@ export async function GET(
             reviewPageBackgroundColor: brandingData?.review_page_background_color ?? null,
         });
     } catch (error) {
-        console.error("QR generation error:", error);
+        logger.error({ err: error }, "QR generation error:");
         return NextResponse.json(
             { error: "Failed to generate QR code" },
             { status: 500 }

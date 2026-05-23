@@ -13,7 +13,6 @@ export default function BillingError({
     reset: () => void;
 }) {
     useEffect(() => {
-        console.error("Billing page error:", error);
         Sentry.captureException(error, {
             tags: { page: "billing" },
         });

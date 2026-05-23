@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { createAdminClient } from "@/lib/db/supabase/admin";
 import { redis } from "@/lib/db/redis";
 
@@ -49,7 +50,7 @@ async function ensureOrganizationMembershipForInvite(
         { onConflict: "organization_id,user_id" }
     );
     if (error) {
-        console.error("[acceptBusinessInvitationAdmin] organization_members upsert failed:", error);
+        logger.error({ err: error }, "[acceptBusinessInvitationAdmin] organization_members upsert failed:");
         throw error;
     }
 }
@@ -138,7 +139,7 @@ export async function acceptBusinessInvitationAdmin(params: {
             try {
                 await redis.del(`user_businesses:${userId}`);
             } catch (e) {
-                console.error("[acceptBusinessInvitationAdmin] Redis cache clear failed:", e);
+                logger.error({ err: e }, "[acceptBusinessInvitationAdmin] Redis cache clear failed:");
             }
             return { accepted: true, businessId: businessIdResolved };
         }
@@ -164,7 +165,7 @@ export async function acceptBusinessInvitationAdmin(params: {
         try {
             await redis.del(`user_businesses:${userId}`);
         } catch (e) {
-            console.error("[acceptBusinessInvitationAdmin] Redis cache clear failed:", e);
+            logger.error({ err: e }, "[acceptBusinessInvitationAdmin] Redis cache clear failed:");
         }
         return { accepted: true, businessId: businessIdResolved };
     }
@@ -218,7 +219,7 @@ export async function acceptBusinessInvitationAdmin(params: {
             },
         });
     } catch (e) {
-        console.error("[acceptBusinessInvitationAdmin] team.member_joined event insert failed:", e);
+        logger.error({ err: e }, "[acceptBusinessInvitationAdmin] team.member_joined event insert failed:");
     }
 
     const { error: userUpdErr } = await admin
@@ -226,13 +227,13 @@ export async function acceptBusinessInvitationAdmin(params: {
         .update({ onboarding_completed: true })
         .eq("id", userId);
     if (userUpdErr) {
-        console.error("[acceptBusinessInvitationAdmin] onboarding_completed update failed:", userUpdErr);
+        logger.error({ err: userUpdErr }, "[acceptBusinessInvitationAdmin] onboarding_completed update failed:");
     }
 
     try {
         await redis.del(`user_businesses:${userId}`);
     } catch (e) {
-        console.error("[acceptBusinessInvitationAdmin] Redis cache clear failed:", e);
+        logger.error({ err: e }, "[acceptBusinessInvitationAdmin] Redis cache clear failed:");
     }
 
     return { accepted: true, businessId };

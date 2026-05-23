@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail, buildFromLine } from "@/services/resend/send-email";
 import {
@@ -103,7 +104,7 @@ export async function sendReviewRequest({
 
         return results;
     } catch (err: unknown) {
-        console.error("Error in sendReviewRequest:", err);
+        logger.error({ err: err }, "Error in sendReviewRequest:");
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
         return { ...results, error: message };
     }

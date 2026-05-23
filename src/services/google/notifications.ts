@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { fetchWithRetry } from "./business-profile";
 
 /**
@@ -56,7 +57,7 @@ export async function registerNotifications(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Google Notifications] Registration Error (${response.status}): ${errorBody}`);
+        logger.error(`[Google Notifications] Registration Error (${response.status}): ${errorBody}`);
         throw new Error(`Failed to register notifications: ${response.status} ${response.statusText}`);
     }
 
@@ -92,7 +93,7 @@ export async function patchLocationNotificationSetting(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Google Notifications] Location Registration Error (${response.status}): ${errorBody}`);
+        logger.error(`[Google Notifications] Location Registration Error (${response.status}): ${errorBody}`);
         throw new Error(`Failed to register location notifications: ${response.status} ${response.statusText}`);
     }
 
@@ -116,7 +117,7 @@ export async function getNotificationSetting(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Google Notifications] Get Error (${response.status}): ${errorBody}`);
+        logger.error(`[Google Notifications] Get Error (${response.status}): ${errorBody}`);
         throw new Error(`Failed to get notification settings: ${response.status} ${response.statusText}`);
     }
 
@@ -146,18 +147,18 @@ export async function registerNotificationsWithRetry(
         await registerNotifications(accessToken, accountName, topic);
         return { ok: true };
     } catch (firstError) {
-        console.error(
-            `${logPrefix} registerNotifications failed (attempt 1/2) platformId=${platformId} googleAccountId=${googleAccountId}:`,
-            firstError
+        logger.error(
+            { err: firstError, platformId, googleAccountId, logPrefix },
+            `${logPrefix} registerNotifications failed (attempt 1/2)`,
         );
         await new Promise((r) => setTimeout(r, REGISTER_NOTIFICATIONS_RETRY_DELAY_MS));
         try {
             await registerNotifications(accessToken, accountName, topic);
             return { ok: true };
         } catch (secondError) {
-            console.error(
-                `${logPrefix} registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect. platformId=${platformId} googleAccountId=${googleAccountId}`,
-                secondError
+            logger.error(
+                { err: secondError, platformId, googleAccountId, logPrefix },
+                `${logPrefix} registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect`,
             );
             return { ok: false };
         }

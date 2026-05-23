@@ -1,5 +1,6 @@
 /** Google review sync — prepare-sync */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
   listAccounts,
@@ -103,7 +104,7 @@ export async function prepareGoogleSync(platformId: string): Promise<GoogleSyncC
                 if (!isGoogleUnauthorizedError(err)) {
                     throw err;
                 }
-                console.error("[Sync] listAccounts 401 — forcing token refresh and retrying");
+                logger.error("[Sync] listAccounts 401 — forcing token refresh and retrying");
                 const refreshed = await forceRefreshGoogleAccessToken(platformId);
                 accessToken = refreshed.accessToken;
                 validPlatform = refreshed.platform;

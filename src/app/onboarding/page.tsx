@@ -228,7 +228,6 @@ export default function OnboardingPage() {
           }
         }
       } catch (err: unknown) {
-        console.error("[Onboarding] Failed to load initial state:", err);
         setLoadError(err instanceof Error ? err.message : "Failed to load onboarding state");
       }
     };

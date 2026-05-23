@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
             message: "Weekly digest background jobs fanned out",
         });
     } catch (error: unknown) {
-        console.error("Weekly Digest CRON Error:", error);
+        logger.error({ err: error }, "Weekly Digest CRON Error:");
         await pingWeeklyDigestHeartbeat(false);
         const message = error instanceof Error ? error.message : "Internal server error";
         return NextResponse.json({ error: message }, { status: 500 });

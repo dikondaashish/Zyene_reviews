@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -139,7 +140,7 @@ export default async function ReviewRequestsPage(props: {
         .order("sent_at", { ascending: false });
 
     if (error) {
-        console.error("Error fetching review requests:", error);
+        logger.error({ err: error }, "Error fetching review requests:");
         return (
             <div className="flex flex-col gap-6 h-full p-4 lg:p-6">
                 <DashboardFetchError

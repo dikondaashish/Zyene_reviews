@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -58,7 +59,7 @@ export async function updateCompetitorWatchSettings(input: z.infer<typeof schema
     );
 
     if (error) {
-        console.error("[updateCompetitorWatchSettings]", error);
+        logger.error({ err: error }, "[updateCompetitorWatchSettings]");
         return { success: false, error: "Could not save settings." };
     }
 

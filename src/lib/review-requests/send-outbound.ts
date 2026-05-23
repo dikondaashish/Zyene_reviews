@@ -12,6 +12,7 @@
  *   - Stores `review_link`, `resend_email_id`, `trigger_source`
  */
 
+import { logger } from "@/lib/logger";
 import { randomUUID } from "crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -272,7 +273,7 @@ export async function sendOutboundReviewRequest(
     });
 
     if (insertError) {
-        console.error("[send-outbound] insert review_request:", insertError);
+        logger.error({ err: insertError }, "[send-outbound] insert review_request:");
         return fail(500, channel, "Failed to create review request.");
     }
 
@@ -427,7 +428,7 @@ export async function sendOutboundReviewRequest(
         .eq("business_id", b.id);
 
     if (updateError) {
-        console.error("[send-outbound] update review_request:", updateError);
+        logger.error({ err: updateError }, "[send-outbound] update review_request:");
     }
 
     // ── Bump customers for the legs that actually went out ─────────────

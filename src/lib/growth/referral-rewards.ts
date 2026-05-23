@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { sendEmail } from "@/services/resend/send-email";
@@ -43,7 +44,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
             return;
         }
         if (insertErr) {
-            console.error("[referral] insert conversion failed:", insertErr);
+            logger.error({ err: insertErr }, "[referral] insert conversion failed:");
             return;
         }
     } else if (existing.status === "pending") {
@@ -80,7 +81,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
                 description: "Referral reward — 1 month credit (Phase 7)",
             });
         } catch (err) {
-            console.error("[referral] Stripe balance credit failed:", err);
+            logger.error({ err: err }, "[referral] Stripe balance credit failed:");
         }
     }
 
@@ -104,7 +105,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
                 html: referralRewardEmailHtml(name),
             });
         } catch (err) {
-            console.error("[referral] reward email failed:", err);
+            logger.error({ err: err }, "[referral] reward email failed:");
         }
     }
 }

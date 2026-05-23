@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { createClient } from "@/lib/db/supabase/server";
 import { CustomerManagement } from "@/components/customers/customer-management";
@@ -30,7 +31,7 @@ export default async function CustomersPage() {
         .limit(5000);
 
     if (error) {
-        console.error("Error fetching initial customers:", error);
+        logger.error({ err: error }, "Error fetching initial customers:");
         return (
             <div className="max-w-[1200px] mx-auto px-4 py-8 sm:px-6">
                 <DashboardFetchError

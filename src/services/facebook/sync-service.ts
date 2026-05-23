@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getPageDetails } from "./adapter";
 import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
@@ -29,7 +30,7 @@ export async function syncFacebookReviewsForPlatform(
         .single();
 
     if (platformError || !platform) {
-        console.error(`[Facebook Sync] Fetch failed for ${platformId}:`, platformError);
+        logger.error({ err: platformError }, `[Facebook Sync] Fetch failed for ${platformId}:`);
         throw new Error(`Facebook platform not found: ${platformId}`);
     }
 
@@ -42,7 +43,7 @@ export async function syncFacebookReviewsForPlatform(
             ciphertext: platform.access_token 
         });
         if (decAccessError) {
-            console.error(`[Facebook Sync] Access token decryption failed for ${platformId}:`, decAccessError);
+            logger.error({ err: decAccessError }, `[Facebook Sync] Access token decryption failed for ${platformId}:`);
             throw new Error("Failed to decrypt access token");
         }
         accessToken = decAccess;
@@ -53,7 +54,7 @@ export async function syncFacebookReviewsForPlatform(
             ciphertext: platform.refresh_token 
         });
         if (decRefreshError) {
-            console.error(`[Facebook Sync] Refresh token decryption failed for ${platformId}:`, decRefreshError);
+            logger.error({ err: decRefreshError }, `[Facebook Sync] Refresh token decryption failed for ${platformId}:`);
             throw new Error("Failed to decrypt refresh token");
         }
         refreshToken = decRefresh;
@@ -101,10 +102,8 @@ export async function syncFacebookReviewsForPlatform(
                 .single();
 
             if (upsertError) {
-                console.error(
-                    `[Facebook Sync] Upsert error for review ${review.externalId}:`,
-                    upsertError
-                );
+                logger.error({ err: upsertError
+                 }, `[Facebook Sync] Upsert error for review ${review.externalId}:`);
                 continue;
             }
 
@@ -160,10 +159,8 @@ export async function syncFacebookReviewsForPlatform(
             alerts: alertsCount,
         };
     } catch (error: unknown) {
-        console.error(
-            `[Facebook Sync] Error for platform ${platformId}:`,
-            error
-        );
+        logger.error({ err: error
+         }, `[Facebook Sync] Error for platform ${platformId}:`);
 
         // Check if it's a token expiry issue
         const errorMessage = error instanceof Error ? error.message : "";

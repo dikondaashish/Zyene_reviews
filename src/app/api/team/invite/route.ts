@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { deliverTeamInviteEmail } from "@/lib/team/deliver-team-invite-email";
@@ -175,7 +176,7 @@ export async function POST(request: Request) {
     };
 
     if (!sendResult.sent) {
-        console.error("[team/invite] Email delivery failed:", sendResult.error);
+        logger.error({ err: sendResult.error }, "[team/invite] Email delivery failed:");
         try {
             await supabase.from("events").insert({
                 organization_id: resolvedOrganizationId,
@@ -192,7 +193,7 @@ export async function POST(request: Request) {
                 },
             });
         } catch (e) {
-            console.error("[team/invite] Failed to write invite event:", e);
+            logger.error({ err: e }, "[team/invite] Failed to write invite event:");
         }
         return apiOk({
             ...payloadBase,
@@ -217,7 +218,7 @@ export async function POST(request: Request) {
             },
         });
     } catch (e) {
-        console.error("[team/invite] Failed to write invite event:", e);
+        logger.error({ err: e }, "[team/invite] Failed to write invite event:");
     }
 
     return apiOk({

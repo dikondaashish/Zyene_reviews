@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import {
     getValidGoogleToken,
@@ -224,7 +225,7 @@ export async function POST(request: Request) {
         try {
             await redis.del(`user_businesses:${user.id}`);
         } catch (e) {
-            console.error("[Location Selector] Failed to clear business cache:", e);
+            logger.error({ err: e }, "[Location Selector] Failed to clear business cache:");
         }
 
         return apiOk({

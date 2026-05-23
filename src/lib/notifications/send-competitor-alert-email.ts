@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
 
@@ -24,7 +25,7 @@ export async function sendCompetitorAlertEmail(payload: CompetitorAlertEmailPayl
         .maybeSingle();
 
     if (!business?.organization_id) {
-        console.error("[competitor-alert-email] Business not found:", payload.businessId);
+        logger.error({ err: payload.businessId }, "[competitor-alert-email] Business not found:");
         return;
     }
 
@@ -42,7 +43,7 @@ export async function sendCompetitorAlertEmail(payload: CompetitorAlertEmailPayl
         .eq("status", "active");
 
     if (membersErr || !members?.length) {
-        console.error("[competitor-alert-email] No members:", membersErr);
+        logger.error({ err: membersErr }, "[competitor-alert-email] No members:");
         return;
     }
 

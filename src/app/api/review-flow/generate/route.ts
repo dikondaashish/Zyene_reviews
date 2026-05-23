@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
                 );
             }
         } catch (e) {
-            console.error("AI Rate limit check failed:", e);
+            logger.error({ err: e }, "AI Rate limit check failed:");
         }
 
         const body = await request.json();
@@ -85,7 +86,7 @@ export async function POST(request: Request) {
                     }
                 }
             } catch (err) {
-                console.error("Failed to fetch context reviews:", err);
+                logger.error({ err: err }, "Failed to fetch context reviews:");
             }
         }
 
@@ -239,9 +240,9 @@ Review Content:`;
             console.info(`[AI SUCCESS] Generated review for ${businessName} using Gemini 3 Flash`);
             return NextResponse.json({ reviewText });
         } catch (aiError) {
-            console.error("AI generation failed for review flow:", aiError);
+            logger.error({ err: aiError }, "AI generation failed for review flow:");
 
-            console.error(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
+            logger.error(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
             const fallbackText = ensureCompleteReviewText(
                 `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Highly recommend ${businessName}.`,
                 businessName
@@ -260,7 +261,7 @@ Review Content:`;
             return NextResponse.json({ reviewText: fallbackText });
         }
     } catch (error) {
-        console.error("Review generation error:", error);
+        logger.error({ err: error }, "Review generation error:");
         return NextResponse.json(
             { error: "Failed to generate review" },
             { status: 500 }

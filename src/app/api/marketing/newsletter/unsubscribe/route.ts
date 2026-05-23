@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
@@ -17,7 +18,7 @@ export async function GET(request: Request) {
         .maybeSingle();
 
     if (error) {
-        console.error("[newsletter/unsubscribe] failed:", error);
+        logger.error({ err: error }, "[newsletter/unsubscribe] failed:");
         return NextResponse.redirect(new URL("/newsletter/unsubscribe?error=server", request.url));
     }
 

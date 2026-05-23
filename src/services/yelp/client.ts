@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 const YELP_BASE_URL = "https://api.yelp.com/v3";
 
 function getApiKey(): string {
@@ -32,7 +33,7 @@ export async function yelpFetch<T>(options: YelpRequestOptions): Promise<T> {
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Yelp API] ${response.status}: ${errorBody}`);
+        logger.error(`[Yelp API] ${response.status}: ${errorBody}`);
         throw new Error(
             `Yelp API error: ${response.status} ${response.statusText}`
         );

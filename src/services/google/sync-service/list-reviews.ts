@@ -1,5 +1,6 @@
 /** Google review sync — list-reviews */
 
+import { logger } from "@/lib/logger";
 import { listReviews } from "../business-profile";
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 import type { GoogleSyncContext } from "./types";
@@ -55,8 +56,7 @@ export async function listReviewsWithOrderByFallback(
             (typeof resp.totalReviewCount === "number" && resp.totalReviewCount > 0) ||
             (typeof resp.averageRating === "number" && resp.averageRating > 0);
         if (noPageToken && emptyList && googleSaysHasReviews) {
-            console.error(
-                `[Sync] First page: 0 reviews but totalReviewCount=${String(resp.totalReviewCount)} avg=${String(resp.averageRating)} with orderBy; retrying without orderBy (platform ${context.platform.id}).`
+            logger.error(`[Sync] First page: 0 reviews but totalReviewCount=${String(resp.totalReviewCount)} avg=${String(resp.averageRating)} with orderBy; retrying without orderBy (platform ${context.platform.id}).`
             );
             context.orderByUpdateTimeEnabled = false;
             context.lastReviewUpdateTime = null;
@@ -74,9 +74,7 @@ export async function listReviewsWithOrderByFallback(
         if (!isOrderByUnsupportedError(error)) {
             throw error;
         }
-        console.error(
-            `[Sync] orderBy=updateTime desc unsupported for platform ${context.platform.id}. Falling back to unsorted review fetch.`
-        );
+        logger.error(`[Sync] orderBy=updateTime desc unsupported for platform ${context.platform.id}. Falling back to unsorted review fetch.`);
         context.orderByUpdateTimeEnabled = false;
         // Disable early-stop optimization if source isn't sorted.
         context.lastReviewUpdateTime = null;

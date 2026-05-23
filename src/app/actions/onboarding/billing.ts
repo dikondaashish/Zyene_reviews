@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { stepPlanSchema, type StepPlanFormData } from "@/lib/validations/onboarding";
@@ -59,7 +60,7 @@ export async function savePlanSelection(
       .eq("id", organizationId);
 
     if (orgError) {
-      console.error("Error saving plan selection:", orgError);
+      logger.error({ err: orgError }, "Error saving plan selection:");
       return {
         success: false,
         error: "Failed to save plan. Please try again.",
@@ -75,7 +76,7 @@ export async function savePlanSelection(
       .eq("id", user.id);
 
     if (updateError) {
-      console.error("Error updating onboarding step:", updateError);
+      logger.error({ err: updateError }, "Error updating onboarding step:");
       return {
         success: false,
         error: "Failed to save progress. Please try again.",
@@ -88,7 +89,7 @@ export async function savePlanSelection(
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in savePlanSelection:", error);
+    logger.error({ err: error }, "Unexpected error in savePlanSelection:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -162,7 +163,7 @@ export async function finalizeOnboardingStripeCheckout(params: {
       .eq("id", user.id);
 
     if (updateError) {
-      console.error("finalizeOnboardingStripeCheckout:", updateError);
+      logger.error({ err: updateError }, "finalizeOnboardingStripeCheckout:");
       return { success: false, error: "Failed to update onboarding progress." };
     }
 
@@ -170,7 +171,7 @@ export async function finalizeOnboardingStripeCheckout(params: {
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("finalizeOnboardingStripeCheckout:", error);
+    logger.error({ err: error }, "finalizeOnboardingStripeCheckout:");
     return { success: false, error: "Could not verify checkout. Please try again." };
   }
 }

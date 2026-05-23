@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { step1FormSchema, type Step1FormData } from "@/lib/validations/onboarding";
@@ -53,7 +54,7 @@ export async function createBusinessAndAdvanceOnboarding(
       .single();
 
     if (businessError || !business) {
-      console.error("Error creating business:", businessError);
+      logger.error({ err: businessError }, "Error creating business:");
       return {
         success: false,
         error: "Failed to create business. Please try again.",
@@ -67,7 +68,7 @@ export async function createBusinessAndAdvanceOnboarding(
       .eq("id", user.id);
 
     if (updateError) {
-      console.error("Error updating onboarding step:", updateError);
+      logger.error({ err: updateError }, "Error updating onboarding step:");
       return {
         success: false,
         error: "Failed to save progress. Please try again.",
@@ -81,7 +82,7 @@ export async function createBusinessAndAdvanceOnboarding(
       business,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in createBusinessAndAdvanceOnboarding:", error);
+    logger.error({ err: error }, "Unexpected error in createBusinessAndAdvanceOnboarding:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

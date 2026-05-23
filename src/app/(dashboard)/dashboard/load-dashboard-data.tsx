@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { redirect } from "next/navigation";
@@ -125,7 +126,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
             const { redis } = await import('@/lib/db/redis');
             cachedStatsRaw = await redis.get(cacheKey);
         } catch (e) {
-            console.error("Redis fetch error:", e);
+            logger.error({ err: e }, "Redis fetch error:");
         }
 
         if (cachedStatsRaw) {
@@ -156,7 +157,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                     .eq("is_visible", true)
                     .eq("response_status", "responded");
                 if (respondedVisibleErr) {
-                    console.error("[Dashboard page] Visible responded count failed:", respondedVisibleErr);
+                    logger.error({ err: respondedVisibleErr }, "[Dashboard page] Visible responded count failed:");
                 } else {
                     responseRate =
                         visibleReviewRollup.totalVisible > 0
@@ -179,7 +180,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                     .limit(1),
             ]);
             if (customerCountCached.error || notificationPrefsCached.error) {
-                console.error("[Dashboard page] Cached branch fetch failed:", customerCountCached.error || notificationPrefsCached.error);
+                logger.error({ err: customerCountCached.error || notificationPrefsCached.error }, "[Dashboard page] Cached branch fetch failed:");
                 return {
                     errorElement: (
                         <DashboardFetchError
@@ -368,7 +369,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                 customerCountResult.error ||
                 notificationPrefsResult.error;
             if (coreFetchError) {
-                console.error("[Dashboard page] Core fetch failed:", coreFetchError);
+                logger.error({ err: coreFetchError }, "[Dashboard page] Core fetch failed:");
                 return {
                     errorElement: (
                         <DashboardFetchError
@@ -474,7 +475,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                 const { redis } = await import('@/lib/db/redis');
                 await redis.set(cacheKey, JSON.stringify(statsToCache), { ex: 300 }); // 5 minutes TTL
             } catch (e) {
-                console.error("Redis set error:", e);
+                logger.error({ err: e }, "Redis set error:");
             }
         } // Close cache miss `else`
     }
@@ -487,7 +488,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                 .eq("business_id", business.id)
                 .eq("is_broken", true);
             if (plRes.error) {
-                console.error("[Dashboard page] Google health fetch failed:", plRes.error);
+                logger.error({ err: plRes.error }, "[Dashboard page] Google health fetch failed:");
                 return {
                     errorElement: (
                         <DashboardFetchError
@@ -513,7 +514,7 @@ export async function loadDashboardPageData(dict: Dictionary): Promise<LoadDashb
                     .eq("is_broken", true),
             ]);
             if (qaRes.error || plRes.error) {
-                console.error("[Dashboard page] Google health fetch failed:", qaRes.error || plRes.error);
+                logger.error({ err: qaRes.error || plRes.error }, "[Dashboard page] Google health fetch failed:");
                 return {
                     errorElement: (
                         <DashboardFetchError

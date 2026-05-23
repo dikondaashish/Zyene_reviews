@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -44,7 +45,7 @@ export default async function AnalyticsPage({
     });
 
     if ("error" in result) {
-        console.error("[Analytics page] Data fetch failed");
+        logger.error("[Analytics page] Data fetch failed");
         return (
             <div className="flex flex-1 flex-col gap-8 p-4 md:p-8">
                 <DashboardFetchError

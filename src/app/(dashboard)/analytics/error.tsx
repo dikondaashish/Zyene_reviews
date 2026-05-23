@@ -12,7 +12,6 @@ export default function AnalyticsError({
     reset: () => void;
 }) {
     useEffect(() => {
-        console.error("Analytics render error:", error);
     }, [error]);
 
     return (

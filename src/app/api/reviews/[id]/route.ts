@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { type NextRequest } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
@@ -56,7 +57,7 @@ export async function PATCH(
 
         return apiOk(data);
     } catch (error: unknown) {
-        console.error("Review PATCH Error:", error);
+        logger.error({ err: error }, "Review PATCH Error:");
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
         return apiError(message, { status: 500 });
     }

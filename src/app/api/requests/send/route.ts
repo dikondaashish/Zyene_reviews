@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -115,7 +116,7 @@ export async function POST(request: Request) {
             .single();
 
         if (businessError || !business) {
-            console.error("Business fetch error:", businessError);
+            logger.error({ err: businessError }, "Business fetch error:");
             if (businessError) Sentry.captureException(businessError, { tags: { route: "requests-send", step: "fetch_business" } });
             return apiError("Business not found or access denied", { status: 403 });
         }
@@ -241,7 +242,7 @@ export async function POST(request: Request) {
                 .single();
 
             if (insertError) {
-                console.error("Insert scheduled request error:", insertError);
+                logger.error({ err: insertError }, "Insert scheduled request error:");
                 Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_scheduled" } });
                 return apiError("Failed to schedule request", { status: 500 });
             }
@@ -274,7 +275,7 @@ export async function POST(request: Request) {
             .single();
 
         if (insertError) {
-            console.error("Insert Request Error:", insertError);
+            logger.error({ err: insertError }, "Insert Request Error:");
             Sentry.captureException(insertError, { tags: { route: "requests-send", step: "insert_request" } });
             return apiError("Failed to create request record", { status: 500 });
         }
@@ -425,7 +426,7 @@ export async function POST(request: Request) {
 
         if (updateError || !finalRequestRecord) {
             if (updateError) {
-                console.error("Update Request Error:", updateError);
+                logger.error({ err: updateError }, "Update Request Error:");
                 Sentry.captureException(updateError, { tags: { route: "requests-send", step: "update_request" } });
             }
             const { data: adminRows, error: adminUpdateError } = await admindClient
@@ -437,7 +438,7 @@ export async function POST(request: Request) {
 
             if (adminUpdateError || !adminRows?.[0]) {
                 if (adminUpdateError) {
-                    console.error("[requests/send] admin fallback update failed:", adminUpdateError);
+                    logger.error({ err: adminUpdateError }, "[requests/send] admin fallback update failed:");
                     Sentry.captureException(adminUpdateError, {
                         tags: { route: "requests-send", step: "update_request_admin" },
                     });
@@ -467,7 +468,7 @@ export async function POST(request: Request) {
 
         return apiOk(finalRequestRecord);
     } catch (error: unknown) {
-        console.error("Request API Error:", error);
+        logger.error({ err: error }, "Request API Error:");
         Sentry.captureException(error, { tags: { route: "requests-send" } });
         return apiError("An unexpected error occurred. Please try again.", { status: 500 });
     }

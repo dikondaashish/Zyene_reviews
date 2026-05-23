@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
 /**
@@ -20,11 +21,11 @@ export async function recordReviewRequestOpenForRef(args: {
         .maybeSingle();
 
     if (lookupError) {
-        console.error("[record-review-open] lookup error", {
+        logger.error({ err: {
             requestId,
             businessId,
             message: lookupError.message,
-        });
+        } }, "[record-review-open] lookup error");
         return { ok: false, reason: "lookup_failed" };
     }
     if (!existing) {
@@ -45,11 +46,11 @@ export async function recordReviewRequestOpenForRef(args: {
         .eq("business_id", businessId);
 
     if (updateError) {
-        console.error("[record-review-open] update failed", {
+        logger.error({ err: {
             requestId,
             businessId,
             message: updateError.message,
-        });
+        } }, "[record-review-open] update failed");
         return { ok: false, reason: "update_failed" };
     }
 

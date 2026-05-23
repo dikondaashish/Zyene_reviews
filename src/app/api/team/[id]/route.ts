@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
@@ -106,7 +107,7 @@ export async function PATCH(
             },
         });
     } catch (e) {
-        console.error("[team/patch] Failed to write event:", e);
+        logger.error({ err: e }, "[team/patch] Failed to write event:");
     }
 
     return apiOk({ updated: true });
@@ -175,7 +176,7 @@ export async function DELETE(
                 },
             });
         } catch (e) {
-            console.error("[team/delete invite] Failed to write event:", e);
+            logger.error({ err: e }, "[team/delete invite] Failed to write event:");
         }
 
     } else {
@@ -226,7 +227,7 @@ export async function DELETE(
                 },
             });
         } catch (e) {
-            console.error("[team/delete member] Failed to write event:", e);
+            logger.error({ err: e }, "[team/delete member] Failed to write event:");
         }
     }
 

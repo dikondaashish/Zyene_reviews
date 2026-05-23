@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { GoogleGenAI, type Schema } from "@google/genai";
 
 const projectId = process.env.GCP_PROJECT_ID || "zyene-reviews";
@@ -87,7 +88,7 @@ export async function generateContentWithFallback(
         return "";
     } catch (error) {
         const latencyMs = Date.now() - startTime;
-        console.error(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=error`, error);
+        logger.error({ err: error }, `[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=error`);
 
         // Model fallback strategy for transient model/permission rollout issues.
         if (fallbackModel !== primaryModel) {
@@ -102,7 +103,7 @@ export async function generateContentWithFallback(
 
                 return backupText;
             } catch (fallbackError) {
-                console.error(`[GEN AI SDK] Fallback failed:`, fallbackError);
+                logger.error({ err: fallbackError }, `[GEN AI SDK] Fallback failed:`);
                 throw fallbackError;
             }
         }
@@ -160,7 +161,7 @@ export function nextResponseForVertexAiError(
     genericUserMessage: string
 ): Response {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("[GEN AI SDK ERROR]", msg);
+    logger.error({ err: msg }, "[GEN AI SDK ERROR]");
 
     // Auth / Permission Errors
     if (msg.includes("API_KEY_SERVICE_BLOCKED")) {

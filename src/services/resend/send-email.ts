@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { resend } from "./client";
 
 interface SendEmailProps {
@@ -65,7 +66,7 @@ export function buildFromLine(input: {
 export async function sendEmail({ to, subject, html, text, from, replyTo, headers }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
-        console.error("Resend API Key missing");
+        logger.error("Resend API Key missing");
         return { sent: false, error: "RESEND_API_KEY is not set on the server" };
     }
 
@@ -90,7 +91,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
         });
 
         if (error) {
-            console.error("Resend Error:", error);
+            logger.error({ err: error }, "Resend Error:");
             return { sent: false, error: error.message };
         }
 
@@ -99,7 +100,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
         }
         return { sent: true, id: data?.id };
     } catch (error: unknown) {
-        console.error("Send Email Exception:", error);
+        logger.error({ err: error }, "Send Email Exception:");
         return { sent: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }

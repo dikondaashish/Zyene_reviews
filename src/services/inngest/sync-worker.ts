@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
@@ -60,14 +61,13 @@ export const syncPlatformWorker = inngest.createFunction(
           return result;
         } catch (error) {
           if (platformType === "google" && isGoogleSyncConflictError(error)) {
-            console.error(
-              `[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}` +
+            logger.error(`[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}` +
                 (attempt < pubsubGoogleLockRetry ? ` — will retry after ${PUBSUB_GOOGLE_LOCK_RETRY_DELAY}` : "")
             );
             await pingReviewSyncHeartbeat(true);
             return { skipped: true, reason: "sync_lock_conflict" as const, attempt };
           }
-          console.error(`[Worker] Sync failed for ${platformType} (${platformId}):`, error);
+          logger.error({ err: error, platformType, platformId }, "[Worker] Sync failed");
           throw error; // Rethrow for Inngest retries
         }
       });
@@ -251,7 +251,7 @@ export const followUpWorker = inngest.createFunction(
             follow_up_sent_at: new Date().toISOString()
           }).eq("id", req.id);
         } catch (e) {
-          console.error(`[Worker] Follow-up failed for request ${req.id}:`, e);
+          logger.error({ err: e }, `[Worker] Follow-up failed for request ${req.id}:`);
         }
       }
     });

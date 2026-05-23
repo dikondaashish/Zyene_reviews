@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
 import { sanitizeSlug } from "@/lib/utils";
@@ -38,7 +39,7 @@ export async function GET(request: Request) {
     const { data, error } = await query.single();
 
     if (error && error.code !== "PGRST116") { // PGRST116 means no rows found (which is good)
-        console.error("Error checking slug:", error);
+        logger.error({ err: error }, "Error checking slug:");
         return NextResponse.json({ error: "Database error" }, { status: 500 });
     }
 

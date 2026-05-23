@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { Json } from "@/lib/db/supabase/database.types";
 import { STALE_RUNNING_SYNC_MINUTES } from "./constants";
 
@@ -90,8 +91,7 @@ export async function reconcileStaleGoogleSyncRun(
         })
         .eq("id", platformId);
 
-    console.error(
-        `[Sync] Cleared stale running sync for platform ${platformId} (no worker within ${STALE_RUNNING_SYNC_MINUTES}m).`
+    logger.error(`[Sync] Cleared stale running sync for platform ${platformId} (no worker within ${STALE_RUNNING_SYNC_MINUTES}m).`
     );
     return true;
 }

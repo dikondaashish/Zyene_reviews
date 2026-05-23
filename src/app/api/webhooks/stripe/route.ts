@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
 import * as Sentry from "@sentry/nextjs";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     if (!webhookSecret) {
-        console.error("STRIPE_WEBHOOK_SECRET is not configured");
+        logger.error("STRIPE_WEBHOOK_SECRET is not configured");
         return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
 
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
         event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
-        console.error("Webhook signature verification failed:", message);
+        logger.error({ err: message }, "Webhook signature verification failed:");
         Sentry.captureException(err, { tags: { route: "stripe-webhook", error_type: "signature_verification" } });
         return NextResponse.json(
             { error: "Invalid webhook signature" },
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
                 const organizationId = session.metadata?.organization_id;
 
                 if (!organizationId) {
-                    console.error("No organization_id in checkout session metadata");
+                    logger.error("No organization_id in checkout session metadata");
                     Sentry.captureMessage("Stripe checkout session missing organization_id metadata", { level: "error", extra: { session_id: session.id } });
                     break;
                 }
@@ -89,7 +90,7 @@ export async function POST(request: Request) {
                 const priceId = subscription.items.data[0]?.price?.id;
 
                 if (!priceId) {
-                    console.error("No price ID found in subscription");
+                    logger.error("No price ID found in subscription");
                     Sentry.captureMessage("Stripe checkout subscription missing price ID", { level: "error", extra: { subscription_id: subscription.id } });
                     break;
                 }
@@ -156,7 +157,7 @@ export async function POST(request: Request) {
                         });
                     }
                 } catch (emailErr) {
-                    console.error("Error sending subscription success email:", emailErr);
+                    logger.error({ err: emailErr }, "Error sending subscription success email:");
                     Sentry.captureException(emailErr, { extra: { organizationId, eventType: "checkout.session.completed" } });
                 }
 
@@ -169,7 +170,7 @@ export async function POST(request: Request) {
                             organizationId,
                         });
                     } catch (nurtureErr) {
-                        console.error("Error scheduling trial nurture:", nurtureErr);
+                        logger.error({ err: nurtureErr }, "Error scheduling trial nurture:");
                     }
                 }
 
@@ -182,13 +183,13 @@ export async function POST(request: Request) {
                             organizationId,
                         });
                     } catch (dripErr) {
-                        console.error("Error scheduling onboarding drip (direct paid):", dripErr);
+                        logger.error({ err: dripErr }, "Error scheduling onboarding drip (direct paid)");
                     }
                     try {
                         const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
                         await processReferralConversionReward(organizationId);
                     } catch (refErr) {
-                        console.error("Error processing referral reward:", refErr);
+                        logger.error({ err: refErr }, "Error processing referral reward:");
                     }
                 }
                 break;
@@ -201,7 +202,7 @@ export async function POST(request: Request) {
                 const customerId =
                     typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
                 if (!customerId) {
-                    console.error("customer.subscription.updated: missing customer id", subscription.id);
+                    logger.error({ err: subscription.id }, "customer.subscription.updated: missing customer id");
                     break;
                 }
 
@@ -233,7 +234,7 @@ export async function POST(request: Request) {
                             }
                         }
                     } catch (dripErr) {
-                        console.error("Error scheduling onboarding drip:", dripErr);
+                        logger.error({ err: dripErr }, "Error scheduling onboarding drip:");
                     }
                 }
                 break;
@@ -292,7 +293,7 @@ export async function POST(request: Request) {
                         });
                     }
                 } catch (emailErr) {
-                    console.error("Error sending cancellation email:", emailErr);
+                    logger.error({ err: emailErr }, "Error sending cancellation email:");
                 }
 
                 try {
@@ -306,7 +307,7 @@ export async function POST(request: Request) {
                         });
                     }
                 } catch (winbackErr) {
-                    console.error("Error scheduling win-back sequence:", winbackErr);
+                    logger.error({ err: winbackErr }, "Error scheduling win-back sequence:");
                 }
                 break;
             }
@@ -316,7 +317,7 @@ export async function POST(request: Request) {
                 const customerId =
                     typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
                 if (!customerId) {
-                    console.error("invoice.payment_failed: missing customer id", invoice.id);
+                    logger.error({ err: invoice.id }, "invoice.payment_failed: missing customer id");
                     break;
                 }
 
@@ -342,7 +343,7 @@ export async function POST(request: Request) {
                         });
                     }
                 } catch (emailErr) {
-                    console.error("Error sending payment failed email:", emailErr);
+                    logger.error({ err: emailErr }, "Error sending payment failed email:");
                 }
                 break;
             }
@@ -369,7 +370,7 @@ export async function POST(request: Request) {
                             });
                         }
                     } catch (emailErr) {
-                        console.error("Error sending payment success email:", emailErr);
+                        logger.error({ err: emailErr }, "Error sending payment success email:");
                     }
                 }
                 break;
@@ -379,7 +380,7 @@ export async function POST(request: Request) {
                 break;
         }
     } catch (error: unknown) {
-        console.error("Webhook processing error:", error);
+        logger.error({ err: error }, "Webhook processing error:");
         if (event) {
             Sentry.captureException(error, {
                 tags: { route: "stripe-webhook", event_type: event.type },

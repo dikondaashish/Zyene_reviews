@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { Schema, Type as SchemaType } from "@google/genai";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import {
@@ -163,13 +164,13 @@ export async function generateMarketPositioningBrief(
     try {
         return await tryOnce(prompt);
     } catch (e) {
-        console.error("[generateMarketPositioningBrief] primary failed:", e);
+        logger.error({ err: e }, "[generateMarketPositioningBrief] primary failed:");
     }
 
     try {
         return await tryOnce(strictPrompt);
     } catch (e) {
-        console.error("[generateMarketPositioningBrief] fallback text path:", e);
+        logger.error({ err: e }, "[generateMarketPositioningBrief] fallback text path:");
         return fallback;
     }
 }

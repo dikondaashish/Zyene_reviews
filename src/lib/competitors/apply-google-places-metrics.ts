@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
     fetchCompetitorMetricsFromGoogle,
@@ -59,7 +60,7 @@ export async function applyGooglePlacesMetricsToCompetitor(
         .eq("id", competitor.id);
 
     if (updErr) {
-        console.error("[applyGooglePlacesMetricsToCompetitor] update failed", updErr);
+        logger.error({ err: updErr }, "[applyGooglePlacesMetricsToCompetitor] update failed");
         return { metrics: live, updated: false, snapshotInserted: false };
     }
 
@@ -108,7 +109,7 @@ export async function applyGooglePlacesMetricsToCompetitor(
     });
 
     if (snapErr) {
-        console.error("[applyGooglePlacesMetricsToCompetitor] snapshot insert failed", snapErr);
+        logger.error({ err: snapErr }, "[applyGooglePlacesMetricsToCompetitor] snapshot insert failed");
         return { metrics: live, updated: true, snapshotInserted: false };
     }
 

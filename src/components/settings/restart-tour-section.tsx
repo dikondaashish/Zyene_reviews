@@ -20,7 +20,6 @@ export function RestartTourSection() {
             await resetTour();
             router.push("/dashboard?tour=true");
         } catch (error) {
-            console.error("Failed to reset tour:", error);
             setIsLoading(false);
         }
     };

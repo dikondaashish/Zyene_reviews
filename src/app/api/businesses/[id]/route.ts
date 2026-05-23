@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
@@ -222,7 +223,7 @@ export async function PATCH(
             const cacheKey = `user_businesses:${user.id}`;
             await redis.del(cacheKey);
         } catch (e) {
-            console.error("Failed to delete business cache:", e);
+            logger.error({ err: e }, "Failed to delete business cache:");
         }
 
         return apiOk(data);
@@ -292,7 +293,7 @@ export async function DELETE(
             const cacheKey = `user_businesses:${user.id}`;
             await redis.del(cacheKey);
         } catch (e) {
-            console.error("Failed to delete business cache:", e);
+            logger.error({ err: e }, "Failed to delete business cache:");
         }
 
         return apiOk({ success: true });

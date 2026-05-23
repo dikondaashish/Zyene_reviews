@@ -63,7 +63,6 @@ export function CustomerPortalCard({
                     setQrDataUrl(data.qrCodeDataUrl);
                 }
             } catch (e) {
-                console.error("Failed to load QR code", e);
             } finally {
                 setLoading(false);
             }

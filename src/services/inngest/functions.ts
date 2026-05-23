@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { inngest } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
@@ -334,7 +335,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
             try {
                 return JSON.parse(content);
             } catch (err) {
-                console.error("[Batch Analysis] Failed to parse AI JSON inside schema step:", content);
+                logger.error({ err: content }, "[Batch Analysis] Failed to parse AI JSON inside schema step:");
                 throw new Error("AI returned invalid JSON array despite schema enforcement");
             }
         });
@@ -342,7 +343,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         // 4. Update reviews in Supabase
         await step.run("update-reviews-batch", async () => {
             if (!Array.isArray(aiResults)) {
-                console.error("[Batch Analysis] AI result is not an array:", typeof aiResults);
+                logger.error({ err: typeof aiResults }, "[Batch Analysis] AI result is not an array:");
                 throw new Error("AI returned non-array batch result");
             }
             for (const result of aiResults as Array<{
@@ -369,7 +370,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                     .eq("id", reviewRowId);
 
                 if (updateError) {
-                    console.error(`[Batch Analysis] Update failed for ${reviewRowId}:`, updateError);
+                    logger.error({ err: updateError }, `[Batch Analysis] Update failed for ${reviewRowId}:`);
                 }
 
                 if (result.urgency !== undefined && result.urgency >= 7) {
@@ -612,10 +613,8 @@ export const syncGoogleReviews = inngest.createFunction(
             await step.run("sync-google-performance", async () => {
                 const r = await syncGooglePerformanceForPlatform(platformId);
                 if (!r.success) {
-                    console.error(
-                        `[Inngest] Google Business Profile performance sync failed for ${platformId}:`,
-                        r.error
-                    );
+                    logger.error({ err: r.error
+                     }, `[Inngest] Google Business Profile performance sync failed for ${platformId}:`);
                 }
                 return r;
             });
@@ -624,7 +623,7 @@ export const syncGoogleReviews = inngest.createFunction(
 
             return { status: "completed", pages: pageCount, synced: totalSynced };
         } catch (error: any) {
-            console.error(`[Inngest] Sync failed for platform ${platformId}:`, error);
+            logger.error({ err: error }, `[Inngest] Sync failed for platform ${platformId}:`);
 
             // Update status to error in DB so it's not stuck as "running"
             await step.run("mark-as-error", async () => {

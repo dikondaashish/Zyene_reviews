@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { recordReviewRequestOpenForRef } from "@/lib/review-requests/record-review-request-open";
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const parsed = openSchema.safeParse(body);
         if (!parsed.success) {
-            console.error("[track/review-open] invalid payload", parsed.error.flatten());
+            logger.warn({ issues: parsed.error.flatten() }, "[track/review-open] invalid payload");
             return NextResponse.json({ error: "Invalid open tracking payload" }, { status: 400 });
         }
 
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
         const nowIso = new Date().toISOString();
         const supabase = createAdminClient();
 
-        console.info("[track/review-open] anonymous public_link (no ref)", { businessId });
+        logger.info({ businessId }, "[track/review-open] anonymous public_link (no ref)");
         const baseInsert = {
             business_id: businessId,
             status: "clicked",
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, requestId: createdRequest.id });
     } catch (error: unknown) {
-        console.error("Open tracking error:", error);
+        logger.error({ err: error }, "Open tracking error");
         return NextResponse.json({ error: "Failed to track open" }, { status: 500 });
     }
 }

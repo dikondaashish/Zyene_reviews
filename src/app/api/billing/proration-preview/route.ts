@@ -169,7 +169,7 @@ export async function POST(request: Request) {
         return apiOk(payload);
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
-        console.error("[proration-preview] Stripe createPreview failed:", message);
+        logger.error({ err: message }, "[proration-preview] Stripe createPreview failed:");
         Sentry.captureException(e, { tags: { route: "billing-proration-preview" } });
         const fallback: ProrationPreviewPayload = { previewAvailable: false };
         return apiOk(fallback);

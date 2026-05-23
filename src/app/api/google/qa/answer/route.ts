@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         return apiOk({ requestId });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error("[QA answer]", msg);
+        logger.error({ err: msg }, "[QA answer]");
         return apiError(msg, { status: 400, details: requestId });
     }
 }

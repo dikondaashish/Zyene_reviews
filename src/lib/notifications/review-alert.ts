@@ -1,4 +1,5 @@
 /** Dispatches real-time review alerts via email, SMS, and in-app channels. */
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail } from "@/services/resend/send-email";
@@ -26,7 +27,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
         .single();
 
     if (!business) {
-        console.error("❌ Business not found for alert:", review.business_id);
+        logger.error({ err: review.business_id }, "❌ Business not found for alert:");
         return;
     }
 
@@ -45,7 +46,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
         .eq("status", "active");
 
     if (membersErr || !members || members.length === 0) {
-        console.error("❌ No active members found for organization:", business.organization_id);
+        logger.error({ err: business.organization_id }, "❌ No active members found for organization:");
         return;
     }
 
@@ -58,7 +59,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
         .in("user_id", userIds)
         .eq("business_id", review.business_id);
 
-    if (prefsErr) console.error("⚠️ Error fetching preferences:", prefsErr);
+    if (prefsErr) logger.error({ err: prefsErr }, "⚠️ Error fetching preferences:");
 
     // 4. Send Alerts
     // We iterate through members to ensure even those without a 'preference' record 

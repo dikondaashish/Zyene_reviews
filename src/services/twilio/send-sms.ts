@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { getTwilioClient, TWILIO_PHONE_NUMBER } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
@@ -28,7 +29,7 @@ export async function sendSMS(to: string, body: string) {
 
         return { sent: true };
     } catch (error: unknown) {
-        console.error("Twilio Send Error:", error);
+        logger.error({ err: error }, "Twilio Send Error:");
         return { sent: false, error: error instanceof Error ? error.message : "Unknown error" };
     }
 }

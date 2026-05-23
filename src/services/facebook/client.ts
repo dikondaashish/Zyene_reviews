@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 const GRAPH_BASE_URL = "https://graph.facebook.com/v19.0";
 
 export function getAppId(): string {
@@ -46,7 +47,7 @@ export async function graphFetch<T>(options: GraphRequestOptions): Promise<T> {
 
     if (!response.ok) {
         const errorBody = await response.text();
-        console.error(`[Facebook Graph API] ${response.status}: ${errorBody}`);
+        logger.error(`[Facebook Graph API] ${response.status}: ${errorBody}`);
         throw new Error(
             `Facebook Graph API error: ${response.status} ${response.statusText}`
         );

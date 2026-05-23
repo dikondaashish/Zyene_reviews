@@ -193,7 +193,6 @@ export function Step2Form({
         toast.error(result.error || "Failed to finalize connection");
       }
     } catch (err) {
-      console.error("Selection error:", err);
       toast.error("Failed to select business");
     } finally {
       setAdvancing(false);

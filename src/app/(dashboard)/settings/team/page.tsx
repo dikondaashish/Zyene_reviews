@@ -1,4 +1,5 @@
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -70,7 +71,7 @@ export default async function TeamSettingsPage() {
         .eq("business_id", businessId)
         .maybeSingle();
     if (currentUserMemberError && currentUserMemberError.code !== "PGRST116") {
-        console.error("[Team settings] Current member fetch failed:", currentUserMemberError);
+        logger.error({ err: currentUserMemberError }, "[Team settings] Current member fetch failed:");
         return (
             <DashboardFetchError
                 message="We could not load team permissions. Check your connection and try again."
@@ -108,7 +109,7 @@ export default async function TeamSettingsPage() {
         .eq("business_id", businessId)
         .is("accepted_at", null);
     if (membersError || invitesError) {
-        console.error("[Team settings] Team data fetch failed:", membersError || invitesError);
+        logger.error({ err: membersError || invitesError }, "[Team settings] Team data fetch failed:");
         return (
             <DashboardFetchError
                 message="We could not load team members. Check your connection and try again."

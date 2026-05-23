@@ -93,7 +93,6 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             const fileName = parts[parts.length - 1];
             await supabase.storage.from("business-logos").remove([fileName]);
         } catch (e) {
-            console.error("Error deleting old logo:", e);
         }
     };
 
@@ -208,7 +207,6 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             setSelectedFile(null);
             toast.success("Logo uploaded successfully!");
         } catch (error: unknown) {
-            console.error(error);
             toast.error("Failed to save logo. Please try again.");
         } finally {
             setUploadingLogo(false);

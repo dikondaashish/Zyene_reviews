@@ -1,5 +1,6 @@
 /** Google review sync — finalize */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { AI_ANALYSIS_BATCH_SIZE } from "../constants";
@@ -24,7 +25,7 @@ export async function finalizeGoogleSync(
         .eq("is_visible", true);
 
     if (rollupErr) {
-        console.error("[Sync] Finalize rollup select failed:", rollupErr);
+        logger.error({ err: rollupErr }, "[Sync] Finalize rollup select failed:");
     }
 
     const list = ratingRows || [];
@@ -49,7 +50,7 @@ export async function finalizeGoogleSync(
             average_rating: avgRounded
         }).eq("id", businessId);
     } catch (e) {
-        console.error("[Sync] Finalize failed for business summary update:", e);
+        logger.error({ err: e }, "[Sync] Finalize failed for business summary update:");
     }
 }
 
@@ -75,7 +76,7 @@ export async function enqueueMissingGoogleReviewAnalysis(
         .limit(limit);
 
     if (error) {
-        console.error("[Sync] Failed to fetch missing AI analysis rows:", error);
+        logger.error({ err: error }, "[Sync] Failed to fetch missing AI analysis rows:");
         return { queued: 0 };
     }
 

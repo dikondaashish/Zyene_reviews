@@ -169,7 +169,6 @@ export function FacebookIntegrationCard({
             toast.success("Facebook reviews synced!");
             router.refresh();
         } catch (err: unknown) {
-            console.error("[Facebook Sync] Error:", err);
             toast.error(err instanceof Error ? err.message : "Sync failed. Please try again.");
         } finally {
             setSyncing(false);

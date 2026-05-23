@@ -86,7 +86,7 @@ export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { requestId } = createRequestLogger("PATCH /api/campaigns/[id]");
+    const { logger, requestId } = createRequestLogger("PATCH /api/campaigns/[id]");
     const supabase = await createClient();
     const { id: campaignId } = await params;
 
@@ -149,7 +149,7 @@ export async function PATCH(
         .single();
 
     if (error) {
-        console.error("Campaign update error:", error);
+        logger.error({ err: error }, "Campaign update error:");
         return apiError("Failed to update campaign", { status: 500, details: requestId });
     }
 
@@ -161,7 +161,7 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { requestId } = createRequestLogger("DELETE /api/campaigns/[id]");
+    const { logger, requestId } = createRequestLogger("DELETE /api/campaigns/[id]");
     const supabase = await createClient();
     const { id: campaignId } = await params;
 
@@ -184,7 +184,7 @@ export async function DELETE(
         .eq("id", campaignId);
 
     if (error) {
-        console.error("Campaign delete error:", error);
+        logger.error({ err: error }, "Campaign delete error:");
         return apiError("Failed to delete campaign", { status: 500, details: requestId });
     }
 

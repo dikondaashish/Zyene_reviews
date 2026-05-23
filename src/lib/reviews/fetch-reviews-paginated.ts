@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 const DEFAULT_PAGE = 1000;
 const SAFETY_MAX_ROWS = 500_000;
 
@@ -24,7 +25,7 @@ export async function fetchAllReviewRowsPaginated<T extends ReviewPageRow = Revi
         if (batch.length < size) break;
         offset += size;
         if (offset > SAFETY_MAX_ROWS) {
-            console.error("[fetchAllReviewRowsPaginated] safety cap reached");
+            logger.error("[fetchAllReviewRowsPaginated] safety cap reached");
             break;
         }
     }

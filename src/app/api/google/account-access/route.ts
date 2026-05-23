@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { listAccounts, listLocations } from "@/services/google/business-profile";
@@ -88,21 +89,27 @@ export async function GET(request: NextRequest) {
             try {
                 admins = await listAccountAdmins(accessToken, `accounts/${linkedAccountId}`);
             } catch (e) {
-                console.error("[google/account-access] account admins fetch failed, falling back to location admins", {
-                    linkedAccountId,
-                    linkedLocId,
-                    error: e instanceof Error ? e.message : String(e),
-                });
+                logger.warn(
+                    {
+                        linkedAccountId,
+                        linkedLocId,
+                        err: e instanceof Error ? e.message : String(e),
+                    },
+                    "[google/account-access] account admins fetch failed, falling back to location admins",
+                );
             }
         }
         if (admins.length === 0) {
             try {
                 admins = await listLocationAdmins(accessToken, `locations/${linkedLocId}`);
             } catch (e) {
-                console.error("[google/account-access] location admins fetch failed", {
-                    linkedLocId,
-                    error: e instanceof Error ? e.message : String(e),
-                });
+                logger.warn(
+                    {
+                        linkedLocId,
+                        err: e instanceof Error ? e.message : String(e),
+                    },
+                    "[google/account-access] location admins fetch failed",
+                );
                 admins = [];
             }
         }

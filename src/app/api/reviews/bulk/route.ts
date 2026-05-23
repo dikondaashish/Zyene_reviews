@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { type NextRequest } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
 
         return apiOk({ success: true, count });
     } catch (error: unknown) {
-        console.error("Bulk Review Update Error:", error);
+        logger.error({ err: error }, "Bulk Review Update Error:");
         const normalized = toApiError(error);
         return apiError(normalized.message, {
             status: normalized.status,

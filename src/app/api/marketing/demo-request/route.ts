@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { captureMarketingLead } from "@/lib/phase8/capture-marketing-lead";
 import { ENTERPRISE_SALES_EMAIL } from "@/lib/phase8/enterprise-data";
@@ -63,7 +64,7 @@ ${emailMutedFooter("Submitted via zyenereviews.com/demo")}`,
 <p>— Zyene Reviews Sales</p>`,
         });
     } catch (err) {
-        console.error("[demo-request] email failed:", err);
+        logger.error({ err: err }, "[demo-request] email failed:");
     }
 
     return NextResponse.json({ ok: true });

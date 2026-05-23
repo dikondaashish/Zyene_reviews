@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
@@ -148,7 +149,7 @@ export async function POST(request: Request) {
             .select()
             .single();
         if (error) {
-            console.error("Failed to insert private feedback:", error);
+            logger.error({ err: error }, "Failed to insert private feedback:");
             throw error;
         }
 
@@ -166,7 +167,7 @@ export async function POST(request: Request) {
             urgency_score: rating <= 2 ? 8 : 4,
             customer_email: customer_email || null,
             customer_phone: customer_phone || null,
-        }).catch((err) => console.error("Failed to send private feedback alert:", err));
+        }).catch((err) => logger.error({ err: err }, "Failed to send private feedback alert:"));
 
         if (customer_email && businessName) {
             sendEmail({
@@ -176,12 +177,12 @@ export async function POST(request: Request) {
                     businessName,
                     customerName: customerName || undefined,
                 }),
-            }).catch((err) => console.error("Failed to send automated recovery email:", err));
+            }).catch((err) => logger.error({ err: err }, "Failed to send automated recovery email:"));
         }
 
         return NextResponse.json({ success: true, feedback });
     } catch (error: unknown) {
-        console.error("Private Feedback API Error:", error);
+        logger.error({ err: error }, "Private Feedback API Error:");
         return NextResponse.json({ error: "Failed to submit feedback" }, { status: 500 });
     }
 }

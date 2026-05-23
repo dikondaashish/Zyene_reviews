@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { requireUser } from "@/app/api/_shared/auth";
@@ -110,7 +111,7 @@ export async function DELETE() {
                 try {
                     await stripe.subscriptions.cancel(subId);
                 } catch (e) {
-                    console.error("[DELETE /api/users/me] Stripe subscription cancel failed:", e);
+                    logger.error({ err: e }, "[DELETE /api/users/me] Stripe subscription cancel failed:");
                 }
             }
 
@@ -136,7 +137,7 @@ export async function DELETE() {
             const { redis } = await import("@/lib/db/redis");
             await redis.del(`user_businesses:${user.id}`);
         } catch (e) {
-            console.error("[DELETE /api/users/me] Redis cache purge failed:", e);
+            logger.error({ err: e }, "[DELETE /api/users/me] Redis cache purge failed:");
         }
 
         return apiOk({ deleted: true });

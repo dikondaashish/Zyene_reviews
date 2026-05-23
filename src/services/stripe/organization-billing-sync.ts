@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type Stripe from "stripe";
 import { stripe } from "@/services/stripe/client";
@@ -121,6 +122,6 @@ export async function reconcileOrganizationBillingFromStripe(
             await clearOrganizationBillingAfterCancellation(admin, org.id);
             return;
         }
-        console.error("[reconcileOrganizationBillingFromStripe]", e);
+        logger.error({ err: e }, "[reconcileOrganizationBillingFromStripe]");
     }
 }

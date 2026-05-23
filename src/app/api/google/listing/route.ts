@@ -12,7 +12,7 @@ import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { z } from "zod";
-import { createRequestLogger } from "@/lib/logger";
+import { createRequestLogger, logger } from "@/lib/logger";
 
 const patchListingSchema = z.object({
     businessId: z.string().uuid(),
@@ -101,11 +101,13 @@ export async function GET(request: NextRequest) {
                 .eq("id", businessId);
         } catch (persistErr) {
             // Non-fatal: log but don't fail the reload
-            console.error("[Google Listing] Failed to persist data to businesses table:", persistErr);
+            logger.error({ err: persistErr }, "[Google Listing] Failed to persist data to businesses table:");
         }
 
         // Also trigger the background listing profile sync to update health score
-        syncGoogleListingProfileForPlatform(platform.id).catch(console.error);
+        syncGoogleListingProfileForPlatform(platform.id).catch((err) =>
+            logger.error({ err }, "[Google Listing] background profile sync failed"),
+        );
 
         return apiOk({
             listing: publicListingPayload(loc),

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
@@ -145,7 +146,7 @@ export async function POST(request: NextRequest) {
                             .single();
 
                         if (insertReqError || !requestRecord) {
-                            console.error("Bulk insert review_request failed:", insertReqError);
+                            logger.error({ err: insertReqError }, "Bulk insert review_request failed:");
                             failCount++;
                             continue;
                         }
@@ -192,7 +193,7 @@ export async function POST(request: NextRequest) {
                             failCount++;
                         }
                     } catch (e) {
-                        console.error("Bulk Request Error for customer", customer.id, e);
+                        logger.error({ err: customer.id, e }, "Bulk Request Error for customer");
                         failCount++;
                     }
                 }
@@ -208,7 +209,7 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
     } catch (error: unknown) {
-        console.error("Bulk API Error:", error);
+        logger.error({ err: error }, "Bulk API Error:");
         Sentry.captureException(error);
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
         return NextResponse.json({ error: message }, { status: 500 });

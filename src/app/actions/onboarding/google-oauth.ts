@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -99,7 +100,10 @@ export async function initializeGoogleAuth(
     });
 
     if (!tokenResponse.ok) {
-      console.error("Failed to exchange auth code:", await tokenResponse.text());
+      logger.error(
+        { body: await tokenResponse.text() },
+        "Failed to exchange auth code",
+      );
       return {
         success: false,
         error: "Failed to authenticate with Google.",
@@ -229,14 +233,14 @@ export async function initializeGoogleAuth(
       };
 
     } catch (apiError) {
-      console.error("Error fetching Google Business Profile data:", apiError);
+      logger.error({ err: apiError }, "Error fetching Google Business Profile data");
       return {
         success: false,
         error: "Failed to fetch your Google Business details. You can continue manually."
       };
     }
   } catch (error: unknown) {
-    console.error("Unexpected error in initializeGoogleAuth:", error);
+    logger.error({ err: error }, "Unexpected error in initializeGoogleAuth");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -316,7 +320,7 @@ export async function finalizeGoogleConnection(
         }
       }
     } catch (reviewErr) {
-      console.error("[Google API] Could not fetch review count:", reviewErr);
+      logger.error({ err: reviewErr }, "[Google API] Could not fetch review count");
     }
 
     // Extract Review URL and Place ID
@@ -393,9 +397,9 @@ export async function finalizeGoogleConnection(
     if (platformData?.id) {
       const syncOutcome = await enqueueGooglePostConnectSync(platformData.id);
       if (syncOutcome.mode === "failed") {
-        console.error(
-          "[Onboarding] Google review sync could not be started after connect:",
-          syncOutcome.error
+        logger.error(
+          { err: syncOutcome.error },
+          "[Onboarding] Google review sync could not be started after connect",
         );
         googleSyncWarning =
           "Google is connected, but starting the review import failed. Use Sync on Integrations or Reviews in a few minutes.";
@@ -435,7 +439,7 @@ export async function finalizeGoogleConnection(
       },
     };
   } catch (err) {
-    console.error("finalizeGoogleConnection error:", err);
+    logger.error({ err }, "finalizeGoogleConnection error");
     return { success: false, error: "Failed to finalize connection" };
   }
 }

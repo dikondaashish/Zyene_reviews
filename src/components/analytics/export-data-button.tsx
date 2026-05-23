@@ -49,7 +49,6 @@ export function ExportDataButton({ businessId, range, platform }: ExportDataButt
 
             toast.success("Data exported successfully!", { id: toastId });
         } catch (error) {
-            console.error("Export failed:", error);
             toast.error("Failed to export data. Please try again.", { id: toastId });
         } finally {
             setIsExporting(false);

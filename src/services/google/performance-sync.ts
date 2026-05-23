@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
 import {
@@ -85,9 +86,9 @@ export async function syncGooglePerformanceForPlatform(
 
         if (flat.length === 0) {
             const preview = JSON.stringify(raw).slice(0, 800);
-            console.error(
-                `[PerformanceSync] No daily metric points for platform ${platformId} (location ${normalizedLoc}). Raw preview:`,
-                preview
+            logger.error(
+                { platformId, normalizedLoc, preview },
+                "[PerformanceSync] No daily metric points",
             );
             Sentry.captureMessage("Google Performance API returned empty daily series", {
                 level: "warning",
@@ -112,7 +113,7 @@ export async function syncGooglePerformanceForPlatform(
                 onConflict: "review_platform_id,metric_date,metric_key,dimension_key",
             });
             if (error) {
-                console.error("[PerformanceSync] daily upsert error:", error);
+                logger.error({ err: error }, "[PerformanceSync] daily upsert error:");
                 Sentry.captureException(error);
                 throw error;
             }
@@ -157,7 +158,7 @@ export async function syncGooglePerformanceForPlatform(
                         onConflict: "review_platform_id,month_start,keyword",
                     });
                     if (kwErr) {
-                        console.error("[PerformanceSync] keyword upsert error:", kwErr);
+                        logger.error({ err: kwErr }, "[PerformanceSync] keyword upsert error:");
                         Sentry.captureException(kwErr);
                         throw kwErr;
                     }
@@ -181,7 +182,7 @@ export async function syncGooglePerformanceForPlatform(
         };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error("[PerformanceSync] failed:", msg);
+        logger.error({ err: msg }, "[PerformanceSync] failed:");
         Sentry.captureException(e);
         return { success: false, dailyRowsUpserted: 0, keywordRowsUpserted: 0, error: msg };
     }

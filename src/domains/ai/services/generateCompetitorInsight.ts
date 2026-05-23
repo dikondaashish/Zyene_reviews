@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { Schema, Type as SchemaType } from "@google/genai";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import {
@@ -142,13 +143,16 @@ export async function generateCompetitorInsight(input: {
     try {
         return await tryGenerate(basePrompt);
     } catch (error) {
-        console.error("[generateCompetitorInsight] primary parse failed, retrying strict:", error);
+        logger.warn({ err: error }, "[generateCompetitorInsight] primary parse failed, retrying strict");
     }
 
     try {
         return await tryGenerate(strictRetryPrompt);
     } catch (retryError) {
-        console.error("[generateCompetitorInsight] strict retry failed, using safe fallback:", retryError);
+        logger.warn(
+            { err: retryError },
+            "[generateCompetitorInsight] strict retry failed, using safe fallback",
+        );
         return fallback;
     }
 }

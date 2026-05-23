@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
         .limit(5);
 
     if (error) {
-        console.error("[webhooks/resend] update failed:", error);
+        logger.error({ err: error }, "[webhooks/resend] update failed:");
         return NextResponse.json({ error: "DB update failed" }, { status: 500 });
     }
 

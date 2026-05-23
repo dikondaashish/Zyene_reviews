@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -55,7 +56,7 @@ export default async function CompetitorAlertsSettingsPage() {
         .maybeSingle();
 
     if (error) {
-        console.error("[competitor-alerts settings]", error);
+        logger.error({ err: error }, "[competitor-alerts settings]");
         return (
             <DashboardFetchError
                 message="Could not load competitor alert settings."

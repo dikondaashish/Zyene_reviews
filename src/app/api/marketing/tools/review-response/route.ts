@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import {
     generatePrimaryReviewResponse,
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
             html: reviewResponseBonusEmailHtml(primary, bonusHtml),
         });
     } catch (err) {
-        console.error("[tools/review-response] email failed:", err);
+        logger.error({ err: err }, "[tools/review-response] email failed:");
     }
 
     return NextResponse.json({ ok: true, response: primary, bonusSent: true });

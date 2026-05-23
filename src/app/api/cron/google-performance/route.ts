@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
             .limit(1);
 
         if (error) {
-            console.error("[Cron google-performance] fetch platforms (direct):", error);
+            logger.error({ err: error }, "[Cron google-performance] fetch platforms (direct)");
             Sentry.captureException(error);
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
@@ -68,7 +69,7 @@ export async function GET(request: Request) {
         });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error("[Cron google-performance] enqueue failed:", msg);
+        logger.error({ err: msg }, "[Cron google-performance] enqueue failed:");
         Sentry.captureException(e);
         return NextResponse.json({ error: "Failed to queue job", details: msg }, { status: 500 });
     }

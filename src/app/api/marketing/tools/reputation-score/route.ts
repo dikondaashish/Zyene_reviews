@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { fetchPublicPlaceMetrics } from "@/lib/phase7/places-public";
 import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
             html: reputationScoreEmailHtml(metrics),
         });
     } catch (err) {
-        console.error("[tools/reputation-score] email failed:", err);
+        logger.error({ err: err }, "[tools/reputation-score] email failed:");
     }
 
     return NextResponse.json({ ok: true, preview, fullReport: true });

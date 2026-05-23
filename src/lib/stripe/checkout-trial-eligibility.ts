@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
 
 /**
@@ -15,7 +16,7 @@ export async function isEligibleForIntroTrial(stripeCustomerId: string | null): 
         });
         return subs.data.length === 0;
     } catch (e) {
-        console.error("[checkout-trial-eligibility] subscriptions.list failed", e);
+        logger.error({ err: e }, "[checkout-trial-eligibility] subscriptions.list failed");
         return true;
     }
 }

@@ -1,22 +1,5 @@
-import { Star } from "lucide-react";
 import type { NeedsAttentionReview } from "@/components/dashboard/needs-attention";
 import type { RawReviewRow } from "./types";
-
-export function Stars({ rating }: { rating: number }) {
-    return (
-        <div className="flex gap-0.5">
-            {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                    key={i}
-                    className={`h-3.5 w-3.5 ${i <= rating
-                        ? "fill-chart-4 text-chart-4"
-                        : "fill-muted text-muted"
-                        }`}
-                />
-            ))}
-        </div>
-    );
-}
 
 /** Compare YTD (Jan 1 → today) vs the same calendar span last year; return % change in review count and avg rating delta. */
 export function computeYtdReviewTrends(
@@ -68,25 +51,7 @@ export function computeYtdReviewTrends(
     };
 }
 
-export function SentimentBadge({ sentiment }: { sentiment: string | null }) {
-    if (!sentiment) return null;
-    const colors: Record<string, string> = {
-        positive: "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2",
-        negative: "bg-destructive/15 text-destructive dark:bg-destructive/20 dark:text-destructive",
-        neutral: "bg-muted text-muted-foreground",
-        mixed: "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4",
-    };
-    return (
-        <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colors[sentiment] || colors.neutral
-                }`}
-        >
-            {sentiment}
-        </span>
-    );
-}
-
-export function attentionReviewIsoDate(value: unknown): string {
+function attentionReviewIsoDate(value: unknown): string {
     if (typeof value === "string" && value.trim()) return value.trim();
     if (value instanceof Date && !Number.isNaN(value.getTime())) {
         return value.toISOString();

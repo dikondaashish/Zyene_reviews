@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -38,7 +39,7 @@ async function patchRequest(
 ) {
     const { error } = await admin.from("review_requests").update(patch).eq("id", requestId).eq("business_id", businessId);
     if (error) {
-        console.error("[scheduled-queue] patch review_requests:", error);
+        logger.error({ err: error }, "[scheduled-queue] patch review_requests:");
         Sentry.captureException(error, { tags: { route: "scheduled-review-queue", step: "patch" } });
     }
 }
@@ -63,7 +64,7 @@ export async function processDueScheduledReviewRequests(options: { limit?: numbe
         .limit(limit);
 
     if (error) {
-        console.error("[scheduled-queue] list due:", error);
+        logger.error({ err: error }, "[scheduled-queue] list due:");
         Sentry.captureException(error, { tags: { route: "scheduled-review-queue", step: "list" } });
         throw error;
     }
@@ -412,7 +413,7 @@ export async function processOneScheduled(admin: SupabaseClient, row: DueRow): P
         return sendStatus;
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Unexpected error";
-        console.error("[scheduled-queue] processOne:", e);
+        logger.error({ err: e }, "[scheduled-queue] processOne:");
         Sentry.captureException(e, { tags: { route: "scheduled-review-queue", step: "processOne" } });
         await patchRequest(admin, businessId, requestId, {
             status: "failed",

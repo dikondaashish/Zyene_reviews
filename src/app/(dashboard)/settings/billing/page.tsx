@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { redirect } from "next/navigation";
@@ -51,7 +52,7 @@ export default async function BillingPage() {
         .eq("user_id", user.id)
         .single();
     if (memberDataError) {
-        console.error("[Billing settings] Member fetch failed:", memberDataError);
+        logger.error({ err: memberDataError }, "[Billing settings] Member fetch failed:");
         return (
             <DashboardFetchError
                 message="We could not load billing membership details. Check your connection and try again."
@@ -87,7 +88,7 @@ export default async function BillingPage() {
         .eq("id", org.id)
         .single();
     if (orgRefreshError) {
-        console.error("[Billing settings] Organization refresh failed:", orgRefreshError);
+        logger.error({ err: orgRefreshError }, "[Billing settings] Organization refresh failed:");
         return (
             <DashboardFetchError
                 message="We could not load current billing details. Check your connection and try again."

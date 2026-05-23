@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { z } from "zod";
@@ -89,7 +90,7 @@ export async function POST(
             .eq("id", campaignId);
 
     } catch (e) {
-        console.error("Failed to enqueue campaign events:", e);
+        logger.error({ err: e }, "Failed to enqueue campaign events:");
         return apiError("Failed to queue campaign", { status: 500 });
     }
 

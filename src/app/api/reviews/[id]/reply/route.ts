@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { deleteReviewReply, replyToReview, listAccounts } from "@/services/google/business-profile";
@@ -44,7 +45,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .single();
 
         if (reviewError || !review) {
-            console.error("Review Fetch Error or Not Found:", reviewError);
+            logger.error({ err: reviewError }, "Review Fetch Error or Not Found:");
             return apiError("Review not found or unauthorized", { status: 404 });
         }
 
@@ -100,7 +101,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         return apiOk({ replied: true });
 
     } catch (error: unknown) {
-        console.error("Reply API Error:", error);
+        logger.error({ err: error }, "Reply API Error:");
         
         const message = error instanceof Error ? error.message : "Internal Server Error";
         
@@ -142,7 +143,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
             .single();
 
         if (reviewError || !review) {
-            console.error("Review Fetch Error or Not Found:", reviewError);
+            logger.error({ err: reviewError }, "Review Fetch Error or Not Found:");
             return apiError("Review not found or unauthorized", { status: 404 });
         }
 
@@ -188,7 +189,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 
         return apiOk({ deleted: true });
     } catch (error: unknown) {
-        console.error("Delete reply API Error:", error);
+        logger.error({ err: error }, "Delete reply API Error:");
         const message = error instanceof Error ? error.message : "Internal Server Error";
 
         if (message.includes("Google connection expired") || message.includes("reconnect") || message.includes("invalid_grant")) {

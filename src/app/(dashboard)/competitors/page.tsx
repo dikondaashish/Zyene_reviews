@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -194,7 +195,7 @@ export default async function CompetitorsPage({
         latestSnapshotsForPlacesMetaRes.error ||
         latestMarketBriefRes.error
     ) {
-        console.error("[Competitors page] Fetch failed:", competitorsError);
+        logger.error({ err: competitorsError }, "[Competitors page] Fetch failed:");
         return (
             <div className="flex-1 space-y-6 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-6">
                 <DashboardFetchError

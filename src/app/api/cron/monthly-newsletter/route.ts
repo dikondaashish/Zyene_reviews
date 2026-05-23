@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
         .is("unsubscribed_at", null);
 
     if (error) {
-        console.error("[cron/monthly-newsletter] fetch failed:", error);
+        logger.error({ err: error }, "[cron/monthly-newsletter] fetch failed:");
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
@@ -57,7 +58,7 @@ export async function GET(request: Request) {
             await sendEmail({ to: sub.email, subject, html });
             sent++;
         } catch (err) {
-            console.error(`[cron/monthly-newsletter] failed for ${sub.email}:`, err);
+            logger.error({ err: err }, `[cron/monthly-newsletter] failed for ${sub.email}:`);
             failed++;
         }
     }

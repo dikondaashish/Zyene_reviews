@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
@@ -62,7 +63,7 @@ export async function generateCompetitorMarketBriefNow(businessId: string): Prom
         .single();
 
     if (insErr || !inserted) {
-        console.error("[generateCompetitorMarketBriefNow] insert failed:", insErr);
+        logger.error({ err: insErr }, "[generateCompetitorMarketBriefNow] insert failed:");
         return { success: false, error: insErr?.message || "Failed to save brief." };
     }
 

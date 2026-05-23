@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
             message: "Follow-up background jobs fanned out"
         });
     } catch (error: unknown) {
-        console.error("[Cron] Follow-up job failed:", error);
+        logger.error({ err: error }, "[Cron] Follow-up job failed:");
         await pingFollowUpHeartbeat(false);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }

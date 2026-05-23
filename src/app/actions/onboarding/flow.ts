@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import {
@@ -38,7 +39,7 @@ export async function updateOnboardingStep(
       .eq("id", user.id);
 
     if (error) {
-      console.error("Error updating onboarding step:", error);
+      logger.error({ err: error }, "Error updating onboarding step:");
       return {
         success: false,
         error: "Failed to save progress. Please try again.",
@@ -51,7 +52,7 @@ export async function updateOnboardingStep(
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in updateOnboardingStep:", error);
+    logger.error({ err: error }, "Unexpected error in updateOnboardingStep:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -113,7 +114,7 @@ export async function saveNotificationPreferences(
       );
 
     if (preferencesError) {
-      console.error("Error saving notification preferences:", preferencesError);
+      logger.error({ err: preferencesError }, "Error saving notification preferences:");
       return {
         success: false,
         error: "Failed to save notification preferences. Please try again.",
@@ -130,7 +131,7 @@ export async function saveNotificationPreferences(
       .eq("id", user.id);
 
     if (updateError) {
-      console.error("Error updating onboarding step:", updateError);
+      logger.error({ err: updateError }, "Error updating onboarding step:");
       return {
         success: false,
         error: "Failed to save progress. Please try again.",
@@ -143,7 +144,7 @@ export async function saveNotificationPreferences(
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in saveNotificationPreferences:", error);
+    logger.error({ err: error }, "Unexpected error in saveNotificationPreferences:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -205,7 +206,7 @@ export async function sendFirstReviewRequest(
       .single();
 
     if (requestError || !reviewRequest) {
-      console.error("Error creating review request:", requestError);
+      logger.error({ err: requestError }, "Error creating review request:");
       return {
         success: false,
         error: "Failed to send review request. Please try again.",
@@ -222,7 +223,7 @@ export async function sendFirstReviewRequest(
       .eq("id", user.id);
 
     if (completionError) {
-      console.error("Error marking onboarding complete:", completionError);
+      logger.error({ err: completionError }, "Error marking onboarding complete:");
       // Continue anyway - request was successful
     }
 
@@ -234,7 +235,7 @@ export async function sendFirstReviewRequest(
       reviewRequestId: reviewRequest.id,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in sendFirstReviewRequest:", error);
+    logger.error({ err: error }, "Unexpected error in sendFirstReviewRequest:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -268,7 +269,7 @@ export async function completeOnboarding(businessId: string) {
       .eq("id", user.id);
 
     if (error) {
-      console.error("Error completing onboarding:", error);
+      logger.error({ err: error }, "Error completing onboarding:");
       return {
         success: false,
         error: "Failed to complete onboarding. Please try again.",
@@ -294,10 +295,8 @@ export async function completeOnboarding(businessId: string) {
       if (notRunning && (neverSynced || stuckError)) {
         const catchUp = await enqueueGooglePostConnectSync(googlePlatform.id);
         if (catchUp.mode === "failed") {
-          console.error(
-            "[completeOnboarding] Catch-up Google sync failed:",
-            catchUp.error
-          );
+          logger.error({ err: catchUp.error
+           }, "[completeOnboarding] Catch-up Google sync failed:");
         }
       }
     }
@@ -309,7 +308,7 @@ export async function completeOnboarding(businessId: string) {
       success: true,
     };
   } catch (error: unknown) {
-    console.error("Unexpected error in completeOnboarding:", error);
+    logger.error({ err: error }, "Unexpected error in completeOnboarding:");
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

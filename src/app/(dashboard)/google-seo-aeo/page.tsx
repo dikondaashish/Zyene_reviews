@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
@@ -155,7 +156,7 @@ export default async function GoogleSeoAeoPage() {
     const replyRate = reviews30dCount > 0 ? responded30dCount / reviews30dCount : 0;
 
     if (google30TotalRes.error || google30RespondedRes.error) {
-        console.error("[Google SEO/AEO] review count fetch failed:", google30TotalRes.error || google30RespondedRes.error);
+        logger.error({ err: google30TotalRes.error || google30RespondedRes.error }, "[Google SEO/AEO] review count fetch failed:");
     }
 
     let listingDescription = "";

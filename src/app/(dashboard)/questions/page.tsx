@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -112,7 +113,7 @@ async function fetchQuestions(
         .order("google_update_time", { ascending: false, nullsFirst: false });
 
     if (error) {
-        console.error("[questions page]", error);
+        logger.error({ err: error }, "[questions page]");
         return { questions: [], failed: true };
     }
     return { questions: data ?? [], failed: false };

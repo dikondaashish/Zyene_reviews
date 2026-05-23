@@ -1,4 +1,5 @@
 "use server";
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { enqueueGooglePostConnectSync } from "./types";
 
@@ -29,7 +30,7 @@ export async function triggerOnboardingSync(businessId: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error triggering onboarding sync:", error);
+    logger.error({ err: error }, "Error triggering onboarding sync:");
     return { success: false, error: "Failed to trigger sync" };
   }
 }

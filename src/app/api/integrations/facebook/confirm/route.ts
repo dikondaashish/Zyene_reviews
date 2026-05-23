@@ -118,7 +118,7 @@ export async function POST(req: Request) {
             .single();
 
         if (error) {
-            console.error("[Facebook Confirm] Upsert error:", error);
+            logger.error({ err: error }, "[Facebook Confirm] Upsert error:");
             Sentry.captureException(error, { tags: { route: "facebook-confirm", step: "upsert_platform" } });
             return apiError("Failed to save Facebook connection", { status: 500, details: requestId });
         }
@@ -144,10 +144,8 @@ export async function POST(req: Request) {
         try {
             await syncFacebookReviewsForPlatform(platform.id);
         } catch (syncError: unknown) {
-            console.error(
-                "[Facebook Confirm] Initial sync error:",
-                syncError
-            );
+            logger.error({ err: syncError
+             }, "[Facebook Confirm] Initial sync error:");
             Sentry.captureException(syncError, { tags: { route: "facebook-confirm", step: "initial_sync" } });
             // Connection saved, sync will retry on next cron
         }
@@ -156,7 +154,7 @@ export async function POST(req: Request) {
 
         return response;
     } catch (error: unknown) {
-        console.error("[Facebook Confirm] Error:", error);
+        logger.error({ err: error }, "[Facebook Confirm] Error:");
         Sentry.captureException(error, { tags: { route: "facebook-confirm" } });
         return apiError("Internal Server Error", { status: 500, details: requestId });
     }

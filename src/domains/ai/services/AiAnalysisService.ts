@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
 import {
     normalizeSentimentForDb,
@@ -93,7 +94,7 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
         return parsed;
 
     } catch (error) {
-        console.error("AI Analysis Failed:", error);
+        logger.error({ err: error }, "AI Analysis Failed:");
         return null;
     }
 }
@@ -112,7 +113,7 @@ export async function categorizePrivateFeedback(content: string | null | undefin
         const parsed = JSON.parse(res);
         return parsed.category || "Other";
     } catch (err) {
-        console.error("AI Categorize Failed:", err);
+        logger.error({ err: err }, "AI Categorize Failed:");
         return "Other";
     }
 }

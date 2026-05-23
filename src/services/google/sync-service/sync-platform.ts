@@ -1,5 +1,6 @@
 /** Google review sync — sync-platform */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import type { AutoReplyBusinessSettings } from "@/services/reviews/auto-reply-eligibility";
@@ -148,13 +149,13 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             alerts: 0
         };
     } catch (error) {
-        console.error("[Sync] Error in compatibility wrapper:", error);
+        logger.error({ err: error }, "[Sync] Error in compatibility wrapper:");
         if (usingIncremental) {
             try {
                 const message = error instanceof Error ? error.message : String(error);
                 await syncStateManagerFromContext(context).failSync(platformId, message);
             } catch (stateErr) {
-                console.error("[Sync] Failed to mark sync_state failure:", stateErr);
+                logger.error({ err: stateErr }, "[Sync] Failed to mark sync_state failure:");
             }
         }
         // Release lock on error

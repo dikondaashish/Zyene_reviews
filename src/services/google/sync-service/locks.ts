@@ -1,5 +1,6 @@
 /** Google review sync — locks */
 
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
   STALE_LOCK_TIMEOUT_MINUTES,
@@ -41,7 +42,7 @@ export async function acquireSyncLockOrThrow(admin: AdminClient, platformId: str
     });
 
     if (lockError || !lockAcquired) {
-        if (lockError) console.error(`[Sync] Lock RPC Error for platform ${platformId}:`, lockError);
+        if (lockError) logger.error({ err: lockError }, `[Sync] Lock RPC Error for platform ${platformId}:`);
         throw createSyncError("Sync already in progress.", "CONFLICT");
     }
 }

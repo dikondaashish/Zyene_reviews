@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -43,7 +44,7 @@ export async function GET() {
         .order("created_at", { ascending: false });
 
     if (error) {
-        console.error("Campaigns fetch error:", error);
+        logger.error({ err: error }, "Campaigns fetch error:");
         return NextResponse.json({ error: "Failed to fetch campaigns" }, { status: 500 });
     }
 
@@ -96,7 +97,7 @@ export async function POST(request: Request) {
         .single();
 
     if (error) {
-        console.error("Campaign create error:", error);
+        logger.error({ err: error }, "Campaign create error:");
         return NextResponse.json({ error: "Failed to create campaign" }, { status: 500 });
     }
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
@@ -93,7 +94,7 @@ export async function syncCompetitorWatchNow(businessId: string): Promise<{
     });
 
     if (runErr) {
-        console.error("[syncCompetitorWatchNow] run log insert failed", runErr);
+        logger.error({ err: runErr }, "[syncCompetitorWatchNow] run log insert failed");
     }
 
     revalidatePath("/competitors");

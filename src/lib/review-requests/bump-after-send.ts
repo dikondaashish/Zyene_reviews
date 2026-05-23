@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 function splitCustomerName(customerName: string | null | undefined): {
@@ -68,7 +69,7 @@ export async function bumpCustomerAfterSend(
                 last_request_sent_at: new Date().toISOString(),
             });
             if (insErr) {
-                console.error("[bump-after-send] customer insert (email):", insErr);
+                logger.error({ err: insErr }, "[bump-after-send] customer insert (email)");
             }
         }
     }

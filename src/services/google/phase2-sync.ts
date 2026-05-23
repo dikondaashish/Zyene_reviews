@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
 import { listAllQuestions, questionToRow } from "./qanda";
@@ -68,7 +69,7 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
                 onConflict: "review_platform_id,google_question_name",
             });
             if (error) {
-                console.error("[Phase2] gbp_questions upsert:", error);
+                logger.error({ err: error }, "[Phase2] gbp_questions upsert:");
                 Sentry.captureException(error);
                 throw error;
             }
@@ -99,12 +100,12 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
                     })
                     .eq("id", platformId);
             } catch (dbErr) {
-                console.error("[Phase2] Failed to persist google_qa_unavailable:", dbErr);
+                logger.error({ err: dbErr }, "[Phase2] Failed to persist google_qa_unavailable:");
             }
             // Q&A API has been sunset by Google; treat as unavailable, not as job failure.
             return { success: true, count: 0 };
         }
-        console.error("[Phase2] Q&A sync failed:", msg);
+        logger.error({ err: msg }, "[Phase2] Q&A sync failed:");
         Sentry.captureException(e);
         return { success: false, count: 0, error: msg };
     }
@@ -163,7 +164,7 @@ export async function syncGbpPlaceActionsForPlatform(
             onConflict: "review_platform_id,google_link_name",
         });
         if (error) {
-            console.error("[Phase2] gbp_place_action_links upsert:", error);
+            logger.error({ err: error }, "[Phase2] gbp_place_action_links upsert:");
             Sentry.captureException(error);
             throw error;
         }
@@ -176,7 +177,7 @@ export async function syncGbpPlaceActionsForPlatform(
         return { success: true, count: rows.length };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error("[Phase2] Place actions sync failed:", msg);
+        logger.error({ err: msg }, "[Phase2] Place actions sync failed:");
         Sentry.captureException(e);
         return { success: false, count: 0, error: msg };
     }

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
 import * as Sentry from "@sentry/nextjs";
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
                 .insert(batch);
 
             if (error) {
-                console.error("[Customers Import] Batch error:", error);
+                logger.error({ err: error }, "[Customers Import] Batch error:");
                 Sentry.captureException(error);
                 // We'll continue the other batches but record failure
             } else {
@@ -104,7 +105,7 @@ export async function POST(req: Request) {
         });
 
     } catch (error: unknown) {
-        console.error("[Customers Import] Unexpected error:", error);
+        logger.error({ err: error }, "[Customers Import] Unexpected error:");
         Sentry.captureException(error);
         return NextResponse.json(
             { error: "An unexpected error occurred during import." },

@@ -147,7 +147,6 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 segmentCounts: d.segmentCounts ?? emptySegmentCounts,
             });
         } catch (e) {
-            console.error(e);
         }
     }, [businessId]);
 
