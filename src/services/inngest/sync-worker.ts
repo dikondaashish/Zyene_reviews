@@ -45,12 +45,6 @@ export const syncPlatformWorker = inngest.createFunction(
       }
 
       lastResult = await step.run(`sync-${platformType}-attempt-${attempt}`, async () => {
-        console.log(
-          `[Worker] Starting sync for ${platformType} platform: ${platformId}` +
-            (googleLocationId ? ` (location ${googleLocationId})` : "") +
-            (attempt > 1 ? ` [attempt ${attempt}/${pubsubGoogleLockRetry}]` : "")
-        );
-
         try {
           let result: unknown;
           if (platformType === "google") {
@@ -66,7 +60,7 @@ export const syncPlatformWorker = inngest.createFunction(
           return result;
         } catch (error) {
           if (platformType === "google" && isGoogleSyncConflictError(error)) {
-            console.warn(
+            console.error(
               `[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}` +
                 (attempt < pubsubGoogleLockRetry ? ` — will retry after ${PUBSUB_GOOGLE_LOCK_RETRY_DELAY}` : "")
             );
@@ -163,7 +157,7 @@ export const weeklyDigestWorker = inngest.createFunction(
         .in("user_id", userIds);
 
       const recipients = prefs?.filter(p => {
-        const pTyped = p as any;
+        const pTyped = p as { digest_enabled?: boolean; users: { email?: string } | null };
         return pTyped.digest_enabled !== false && pTyped.users?.email;
       }) || [];
 
@@ -181,7 +175,7 @@ export const weeklyDigestWorker = inngest.createFunction(
       });
 
       await Promise.all(recipients.map(r => {
-        const rTyped = r as any;
+        const rTyped = r as { users: { email: string } };
         return sendEmail({
           to: rTyped.users.email,
           subject: `Weekly review summary for ${business.name}`,
@@ -394,7 +388,10 @@ export const googleSeoAeoAiVisibilityWorker = inngest.createFunction(
 
     try {
       const run = await step.run("create-ai-visibility-run", async () => {
-      const { data, error } = await (admin.from("google_seo_ai_visibility_runs" as never) as any)
+      const { data, error } = await (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
+        admin.from("google_seo_ai_visibility_runs" as never) as any
+      )
         .insert({
           business_id: businessId,
           query,
@@ -434,11 +431,13 @@ export const googleSeoAeoAiVisibilityWorker = inngest.createFunction(
               ? "Estimated from current business-vs-competitor profile strength (beta)."
               : "No estimated presence in this beta model.",
         }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
         const { error } = await (admin.from("google_seo_ai_visibility_results" as never) as any).insert(rows);
         if (error) throw new Error(error.message);
       });
 
       await step.run("complete-ai-visibility-run", async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
         await (admin.from("google_seo_ai_visibility_runs" as never) as any)
           .update({ status: "success", completed_at: new Date().toISOString(), error_message: null })
           .eq("id", run.id);
@@ -449,6 +448,7 @@ export const googleSeoAeoAiVisibilityWorker = inngest.createFunction(
       const msg = e instanceof Error ? e.message : String(e);
       if (runId) {
         await step.run("fail-ai-visibility-run", async () => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
           await (admin.from("google_seo_ai_visibility_runs" as never) as any)
             .update({ status: "failed", error_message: msg, completed_at: new Date().toISOString() })
             .eq("id", runId as string);
@@ -473,6 +473,7 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
 
     try {
       const run = await step.run("create-heatmap-run", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
       const { data, error } = await (admin.from("google_seo_heatmap_runs" as never) as any)
         .insert({
           business_id: businessId,
@@ -518,11 +519,13 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
             visibility_score: visibility,
           };
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
         const { error } = await (admin.from("google_seo_heatmap_cells" as never) as any).insert(rows);
         if (error) throw new Error(error.message);
       });
 
       await step.run("complete-heatmap-run", async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
         await (admin.from("google_seo_heatmap_runs" as never) as any)
           .update({ status: "success", completed_at: new Date().toISOString(), error_message: null })
           .eq("id", run.id);
@@ -533,6 +536,7 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
       const msg = e instanceof Error ? e.message : String(e);
       if (runId) {
         await step.run("fail-heatmap-run", async () => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
           await (admin.from("google_seo_heatmap_runs" as never) as any)
             .update({ status: "failed", error_message: msg, completed_at: new Date().toISOString() })
             .eq("id", runId as string);

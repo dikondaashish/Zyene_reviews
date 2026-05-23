@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type Schema } from "@google/genai";
 
 const projectId = process.env.GCP_PROJECT_ID || "zyene-reviews";
 const location = process.env.GCP_REGION || "global";
@@ -24,7 +24,7 @@ const vertexClient = new GoogleGenAI({
 
 export interface VertexGenerationOptions {
     requireJson?: boolean;
-    schema?: any;
+    schema?: Schema;
     /** Kept for API compatibility; all tiers use primary (Flash) then fallback (Pro) unless env overrides. */
     isPremium?: boolean;
     enableGrounding?: boolean;
@@ -52,8 +52,7 @@ export async function generateContentWithFallback(
     const primaryModel = modelOverride?.trim() || DEFAULT_PRIMARY_MODEL;
     const fallbackModel = DEFAULT_FALLBACK_MODEL;
 
-    // Config configuration
-    const config: any = {};
+    const config: Record<string, unknown> = {};
 
     if (enableGrounding) {
         config.tools = [{ googleSearch: {} }];
@@ -85,7 +84,6 @@ export async function generateContentWithFallback(
             return returnedText || "";
         }
 
-        console.warn(`[GEN AI SDK] model=${primaryModel} latency=${latencyMs}ms status=empty_response`);
         return "";
     } catch (error) {
         const latencyMs = Date.now() - startTime;
@@ -93,7 +91,6 @@ export async function generateContentWithFallback(
 
         // Model fallback strategy for transient model/permission rollout issues.
         if (fallbackModel !== primaryModel) {
-            console.warn(`[GEN AI SDK] Falling back from ${primaryModel} to ${fallbackModel}`);
             const fallbackStart = Date.now();
 
             try {
@@ -114,7 +111,7 @@ export async function generateContentWithFallback(
     }
 }
 
-function readResponseText(response: any): string {
+function readResponseText(response: { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>; text?: string } | null): string {
     if (!response) return "";
     const parts = response.candidates?.[0]?.content?.parts;
     if (Array.isArray(parts) && parts.length > 0) {
@@ -132,7 +129,7 @@ function isBlockedApiKeyError(error: unknown): boolean {
     return msg.includes("API_KEY_SERVICE_BLOCKED") || msg.includes("generativelanguage.googleapis.com");
 }
 
-async function callModelWithClientFallback(model: string, prompt: string, config: any) {
+async function callModelWithClientFallback(model: string, prompt: string, config: Record<string, unknown>) {
     if (apiKeyClient) {
         try {
             return await apiKeyClient.models.generateContent({
@@ -144,7 +141,7 @@ async function callModelWithClientFallback(model: string, prompt: string, config
             if (!isBlockedApiKeyError(error)) {
                 throw error;
             }
-            console.warn(`[GEN AI SDK] API key path blocked for ${model}; retrying with Vertex auth.`);
+            // API key path blocked; retry with Vertex auth
         }
     }
 

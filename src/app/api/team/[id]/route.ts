@@ -86,10 +86,10 @@ export async function PATCH(
 
     try {
         const requesterName =
-            ((requester as any)?.users?.full_name as string | null) || "Someone";
+            (requester as { users?: { full_name?: string | null } | null })?.users?.full_name || "Someone";
         const targetName =
-            ((targetMember as any)?.users?.full_name as string | null) ||
-            ((targetMember as any)?.users?.email as string | null) ||
+            (targetMember as { users?: { full_name?: string | null; email?: string | null } | null })?.users?.full_name ||
+            (targetMember as { users?: { full_name?: string | null; email?: string | null } | null })?.users?.email ||
             "a member";
         await supabase.from("events").insert({
             organization_id: organization?.id as string,
@@ -161,7 +161,7 @@ export async function DELETE(
 
         try {
             const requesterName =
-                ((requester as any)?.users?.full_name as string | null) || "Someone";
+                (requester as { users?: { full_name?: string | null } | null })?.users?.full_name || "Someone";
             await supabase.from("events").insert({
                 organization_id: organization?.id as string,
                 business_id: businessId,
@@ -207,10 +207,10 @@ export async function DELETE(
 
         try {
             const requesterName =
-                ((requester as any)?.users?.full_name as string | null) || "Someone";
+                (requester as { users?: { full_name?: string | null } | null })?.users?.full_name || "Someone";
             const targetName =
-                ((targetMember as any)?.users?.full_name as string | null) ||
-                ((targetMember as any)?.users?.email as string | null) ||
+                (targetMember as { users?: { full_name?: string | null; email?: string | null } | null })?.users?.full_name ||
+                (targetMember as { users?: { full_name?: string | null; email?: string | null } | null })?.users?.email ||
                 "a member";
             await supabase.from("events").insert({
                 organization_id: organization?.id as string,

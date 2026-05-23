@@ -22,8 +22,6 @@ export async function GET(request: Request) {
     try {
         const admin = createAdminClient();
 
-        console.log("[Cron] Starting automated follow-up sequence check");
-
         // 1. Fetch campaigns that have follow-ups enabled
         const { data: campaigns, error: campaignError } = await admin
             .from("campaigns")
@@ -38,8 +36,6 @@ export async function GET(request: Request) {
             await pingFollowUpHeartbeat(true);
             return NextResponse.json({ success: true, processed: 0, message: "No active follow-up campaigns found" });
         }
-
-        console.log(`[Cron] Dispatching follow-ups for ${campaigns.length} campaigns`);
 
         // 2. Dispatch background jobs via Inngest
         await inngest.send(

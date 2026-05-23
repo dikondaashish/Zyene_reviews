@@ -159,7 +159,6 @@ export async function GET(request: Request) {
                 // Check business limit before proceeding
                 const limitCheck = await checkLimit(addBusinessOrgId, "businesses");
                 if (!limitCheck.allowed) {
-                    console.log(`⚠️ Business limit reached for org ${addBusinessOrgId}. Redirecting to billing.`);
                     return NextResponse.redirect(
                         `${String(appUrl).replace(/\/+$/, "")}${BUSINESS_LIMIT_UPGRADE_BILLING_HREF}`,
                     );
@@ -318,8 +317,6 @@ export async function GET(request: Request) {
                         average_rating: 0,
                     });
 
-                    console.log(`✅ New business "${newBizName}" (${newBusiness.id}) added to org ${addBusinessOrgId}`);
-
                     await admin.from("business_members").upsert(
                         {
                             business_id: newBusiness.id,
@@ -343,7 +340,6 @@ export async function GET(request: Request) {
                 // If the OAuth switched to a DIFFERENT auth user (different Google account),
                 // sign out the OAuth user and restore the ORIGINAL user's session server-side.
                 if (addBusinessUserId && addBusinessUserId !== data.user.id) {
-                    console.log(`Session switched from ${addBusinessUserId} to ${data.user.id}. Auto-restoring original user.`);
                     await supabase.auth.signOut();
 
                     const { data: originalUser } = await admin.auth.admin.getUserById(addBusinessUserId);
@@ -364,8 +360,6 @@ export async function GET(request: Request) {
                             });
 
                             if (!verifyError) {
-                                console.log(`✅ Session restored for ${originalUser.user.email}`);
-                                // Session is now set — redirect to businesses page
                                 return NextResponse.redirect(`${appUrl}/businesses`);
                             } else {
                                 console.error("Failed to verify magic link:", verifyError);

@@ -9,6 +9,20 @@ import { reconcileOrganizationBillingFromStripe } from "@/services/stripe/organi
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
+type BillingOrgRow = {
+    id: string;
+    name: string;
+    plan: string | null;
+    stripe_customer_id: string | null;
+    stripe_subscription_id: string | null;
+    plan_status: string | null;
+};
+
+type BillingMemberRow = {
+    role: string;
+    organizations: BillingOrgRow | null;
+};
+
 export default async function BillingPage() {
     const supabase = await createClient();
 
@@ -46,10 +60,11 @@ export default async function BillingPage() {
         );
     }
 
-    const memberRole = (memberData as { role?: string } | null)?.role ?? "";
+    const memberTyped = memberData as BillingMemberRow | null;
+    const memberRole = memberTyped?.role ?? "";
     const canManageBilling = isOrganizationOwnerRole(memberRole);
 
-    const org = (memberData as any)?.organizations;
+    const org = memberTyped?.organizations ?? null;
 
     if (!org) {
         return (

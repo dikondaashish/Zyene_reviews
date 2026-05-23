@@ -63,8 +63,6 @@ export async function GET(request: Request) {
 
         const businessIds = Array.from(new Set(recentReviews.map(r => r.business_id)));
 
-        console.log(`[Cron] Dispatching weekly digest for ${businessIds.length} businesses`);
-
         if (businessIds.length > 0) {
             await inngest.send(
                 businessIds.map((id) => ({

@@ -1,3 +1,4 @@
+/** Pre-built campaign templates for review requests (SMS, email, drip sequences). */
 import { MessageSquare, Calendar, Zap, Mail, Users } from "lucide-react";
 import type { CampaignTemplate } from "@/types/campaigns";
 export type { CampaignTemplate };

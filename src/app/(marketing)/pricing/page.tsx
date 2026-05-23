@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PLANS } from "@/services/stripe/plans";
 import { PricingPageClient } from "@/components/marketing/pricing-client";
 import { FAQPageJsonLd, ProductJsonLd } from "@/components/seo/json-ld";
+import { SIGNUP_URL } from "@/config/env";
 
 export const metadata: Metadata = {
     title: "Pricing — Zyene Reviews",
@@ -30,11 +31,6 @@ const PRICING_FAQS = [
     { question: "Do you offer annual billing?", answer: "Yes. Annual billing saves approximately 17% compared to monthly billing. You can switch from monthly to annual at any time." },
     { question: "Can I cancel anytime?", answer: "Absolutely. Cancel anytime from your billing settings — no cancellation fees, no contracts, no questions asked." },
 ];
-
-const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-const SIGNUP_URL = ROOT_DOMAIN.includes("localhost")
-    ? "/signup"
-    : `https://auth.${ROOT_DOMAIN}/signup`;
 
 export default function PricingPage() {
     const starterMonthly = PLANS.find((p) => p.id === "starter_monthly")!;

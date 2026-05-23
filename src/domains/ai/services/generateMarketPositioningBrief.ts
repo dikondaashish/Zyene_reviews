@@ -163,7 +163,7 @@ export async function generateMarketPositioningBrief(
     try {
         return await tryOnce(prompt);
     } catch (e) {
-        console.warn("[generateMarketPositioningBrief] primary failed:", e);
+        console.error("[generateMarketPositioningBrief] primary failed:", e);
     }
 
     try {

@@ -45,7 +45,7 @@ export async function POST(request: Request) {
             return apiError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
         }
 
-        const typed = memberData as any;
+        const typed = memberData as { organizations?: { plan?: string | null; plan_status?: string | null; businesses?: Array<{ id: string }> } };
         if (!planAllowsAiReviewFeatures(typed.organizations?.plan ?? null, typed.organizations?.plan_status ?? null)) {
             return apiError(
                 "AI review analysis requires an active Starter, Professional, or Enterprise plan.",

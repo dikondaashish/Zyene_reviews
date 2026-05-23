@@ -234,7 +234,7 @@ export function PublicReviewFlow({
 
                 const data = (await res.json().catch(() => ({}))) as { requestId?: string; error?: string };
                 if (!res.ok) {
-                    console.warn("[PublicReviewFlow] /api/track/review-open failed", {
+                    console.error("[PublicReviewFlow] /api/track/review-open failed", {
                         status: res.status,
                         error: data.error,
                         hadRefProp: !!requestId?.trim(),

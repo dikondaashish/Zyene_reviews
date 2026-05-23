@@ -69,7 +69,10 @@ export function SentimentChart({ data }: { data: SentimentDataPoint[] }) {
                             padding: "8px 12px",
                         }}
                         itemStyle={{ fontSize: '11px', fontWeight: 600 }}
-                        formatter={(value: any) => [`${value} reviews`, 'Count']}
+                        formatter={(value) => {
+                            const count = typeof value === "number" ? value : Number(value) || 0;
+                            return [`${count} reviews`, "Count"];
+                        }}
                     />
                     <Legend
                         verticalAlign="bottom"

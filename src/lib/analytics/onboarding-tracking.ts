@@ -20,8 +20,7 @@ export function startStepTimer() {
  * Tracks when a specific onboarding step is started
  * @param step Number of the step (1-4)
  */
-export function trackOnboardingStepStarted(step: number) {
-  console.log(`[Analytics] Onboarding Step ${step} Started`);
+export function trackOnboardingStepStarted(_step: number) {
   startStepTimer();
   
   // You can integrate with Segment, PostHog, or other tools here
@@ -32,10 +31,7 @@ export function trackOnboardingStepStarted(step: number) {
  * Tracks when a specific onboarding step is successfully completed
  * @param step Number of the step (1-4)
  */
-export function trackOnboardingStepCompleted(step: number) {
-  const duration = stepStartTime ? (Date.now() - stepStartTime) / 1000 : 0;
-  console.log(`[Analytics] Onboarding Step ${step} Completed in ${duration}s`);
-  
+export function trackOnboardingStepCompleted(_step: number) {
   // example: window.analytics?.track('Onboarding Step Completed', { step, duration });
   stepStartTime = null;
 }
@@ -53,8 +49,6 @@ export function trackOnboardingStepError(step: number, error: string, field?: st
 /**
  * Tracks when the entire onboarding flow is completed
  */
-export function trackOnboardingCompleted(data?: OnboardingCompletionData, source?: string, id?: string) {
-  console.log(`[Analytics] Onboarding Flow Fully Completed`, { data, source, id });
-  
+export function trackOnboardingCompleted(_data?: OnboardingCompletionData, _source?: string, _id?: string) {
   // example: window.analytics?.track('Onboarding Completed', { data, source, id });
 }

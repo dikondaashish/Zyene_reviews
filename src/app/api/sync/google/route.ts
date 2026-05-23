@@ -122,7 +122,7 @@ export async function GET(request: Request) {
             .eq("is_visible", true);
 
         if (visibleCountError) {
-            console.warn("[sync/google GET] visible review count failed, using review_platforms.total_reviews:", visibleCountError);
+            console.error("[sync/google GET] visible review count failed, using review_platforms.total_reviews:", visibleCountError);
         }
 
         const totalReviewsDisplay =
@@ -184,7 +184,6 @@ export async function POST(request: Request) {
         }
 
         if (force) {
-            console.log(`[Manual Sync] Force reset requested for platform ${platform.id}`);
             await admin
                 .from("review_platforms")
                 .update({
@@ -198,7 +197,6 @@ export async function POST(request: Request) {
         }
 
         // 2. Trigger Background Sync
-        console.log(`[Manual Sync] Triggering background job for platform ${platform.id}`);
         await inngest.send({
             name: "google/sync.reviews",
             data: { platformId: platform.id }

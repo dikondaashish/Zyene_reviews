@@ -24,7 +24,7 @@ export async function fetchAllReviewRowsPaginated<T extends ReviewPageRow = Revi
         if (batch.length < size) break;
         offset += size;
         if (offset > SAFETY_MAX_ROWS) {
-            console.warn("[fetchAllReviewRowsPaginated] safety cap reached");
+            console.error("[fetchAllReviewRowsPaginated] safety cap reached");
             break;
         }
     }

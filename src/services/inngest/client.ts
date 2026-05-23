@@ -1,6 +1,7 @@
+/** Inngest client with typed event schemas for async job orchestration. */
 import { Inngest, EventSchemas } from "inngest";
 
-// Define the payload for the campaign send event
+
 type CampaignSendEvent = {
     data: {
         campaignId: string;

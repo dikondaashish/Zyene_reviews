@@ -1,4 +1,5 @@
 "use client";
+/** Browser-side Supabase client for client components. */
 
 import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "./database.types";

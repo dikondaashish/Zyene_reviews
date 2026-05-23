@@ -52,7 +52,7 @@ export default async function GeneralSettingsPage() {
                         ({
                             ...organization,
                             name: organization.name || "Your Organization",
-                        } as any)
+                        } as never)
                     :   null
                 }
                 canEditOrganizationName={canEditOrganizationName}

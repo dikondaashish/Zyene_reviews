@@ -77,6 +77,7 @@ export async function syncCompetitorWatchNow(businessId: string): Promise<{
     }
 
     const finishedAt = new Date().toISOString();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
     const { error: runErr } = await (supabase.from("competitor_watch_runs" as never) as any).insert({
         run_id: runId,
         business_id: businessId,

@@ -32,8 +32,6 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
 
-        console.log(`[Cron] Dispatching sync for ${platforms?.length || 0} platforms`);
-
         // 3. Dispatch background jobs via Inngest
         if (platforms && platforms.length > 0) {
             try {

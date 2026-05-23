@@ -62,7 +62,7 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
                 .select("organizations!inner(plan, plan_status)")
                 .eq("id", businessId)
                 .maybeSingle();
-            const org = (biz as any)?.organizations ?? null;
+            const org = (biz as { organizations?: { plan?: string | null; plan_status?: string | null } } | null)?.organizations ?? null;
             if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
                 return null;
             }

@@ -142,7 +142,7 @@ export async function generateCompetitorInsight(input: {
     try {
         return await tryGenerate(basePrompt);
     } catch (error) {
-        console.warn("[generateCompetitorInsight] primary parse failed, retrying strict:", error);
+        console.error("[generateCompetitorInsight] primary parse failed, retrying strict:", error);
     }
 
     try {

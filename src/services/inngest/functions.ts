@@ -355,7 +355,6 @@ export const processReviewAnalysisBatch = inngest.createFunction(
             }>) {
                 const reviewRowId = result.reviewId ?? result.id;
                 if (!reviewRowId) {
-                    console.warn("[Batch Analysis] Skipping row missing reviewId/id:", result);
                     continue;
                 }
 
@@ -516,7 +515,6 @@ export const processAutoReplyReview = inngest.createFunction(
         });
 
         if (!draft || draft.length < 3) {
-            console.warn(`[AutoReply] Empty draft for ${reviewId}`);
             return { status: "skipped", reason: "empty_draft" };
         }
 
@@ -614,7 +612,7 @@ export const syncGoogleReviews = inngest.createFunction(
             await step.run("sync-google-performance", async () => {
                 const r = await syncGooglePerformanceForPlatform(platformId);
                 if (!r.success) {
-                    console.warn(
+                    console.error(
                         `[Inngest] Google Business Profile performance sync failed for ${platformId}:`,
                         r.error
                     );

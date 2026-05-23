@@ -14,6 +14,7 @@ import {
     ArrowRight,
     Loader2,
     LayoutGrid,
+    type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -55,7 +56,7 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
     completed: { label: "Completed", variant: "secondary" },
 };
 
-const channelConfig: Record<string, { label: string; icon: any; color: string }> = {
+const channelConfig: Record<string, { label: string; icon: LucideIcon; color: string }> = {
     sms: { label: "SMS", icon: MessageSquare, color: "bg-chart-1/15 text-chart-1 dark:bg-chart-1/20 dark:text-chart-1" },
     email: { label: "Email", icon: Mail, color: "bg-primary/10 text-primary" },
     both: { label: "SMS + Email", icon: MessageSquare, color: "bg-chart-4/18 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4" },

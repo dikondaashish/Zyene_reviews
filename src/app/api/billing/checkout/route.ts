@@ -187,7 +187,7 @@ export async function POST(request: Request) {
             } catch (subError: unknown) {
                 // If subscription retrieval fails (deleted, etc.), fall through to new checkout
                 const message = subError instanceof Error ? subError.message : String(subError);
-                console.warn("Could not update existing subscription, creating new checkout:", message);
+                console.error("Could not update existing subscription, creating new checkout:", message);
             }
         }
 

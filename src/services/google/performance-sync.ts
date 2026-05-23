@@ -85,7 +85,7 @@ export async function syncGooglePerformanceForPlatform(
 
         if (flat.length === 0) {
             const preview = JSON.stringify(raw).slice(0, 800);
-            console.warn(
+            console.error(
                 `[PerformanceSync] No daily metric points for platform ${platformId} (location ${normalizedLoc}). Raw preview:`,
                 preview
             );

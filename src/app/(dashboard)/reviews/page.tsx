@@ -8,6 +8,8 @@ import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { MessageSquareQuote } from "lucide-react";
+import type { ReviewManagementItem } from "@/types/components";
+import type { PrivateFeedback } from "@/components/reviews/private-feedback-card";
 
 export default async function ReviewsPage(props: {
     searchParams: Promise<{ status?: string; rating?: string; sort?: string; page?: string; type?: string }>;
@@ -24,7 +26,7 @@ export default async function ReviewsPage(props: {
         (organization as { plan_status?: string | null } | null)?.plan_status ?? null
     );
 
-    const isGoogleConnected = !!business?.review_platforms?.find((p: any) => p.platform === "google");
+    const isGoogleConnected = !!business?.review_platforms?.find((p: { platform?: string }) => p.platform === "google");
     const isDemo = !isGoogleConnected;
 
     if (!businessId) {
@@ -69,7 +71,7 @@ export default async function ReviewsPage(props: {
         );
     }
 
-    let reviews: any[] = [];
+    let reviews: ReviewManagementItem[] | PrivateFeedback[] = [];
     let count = 0;
 
     if (type === "private") {

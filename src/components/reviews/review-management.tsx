@@ -73,7 +73,7 @@ export function ReviewManagement({
                 {reviews.map((review) => (
                     <ReviewCard
                         key={review.id}
-                        review={review as any}
+                        review={review as never}
                         googleMapsListingUrl={googleMapsListingUrl}
                         planAllowsAiReplies={planAllowsAiReplies}
                         isSelected={selectedIds.has(review.id)}

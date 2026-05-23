@@ -81,7 +81,6 @@ export async function POST(request: Request) {
                     .single();
 
                 if (existingOrg?.stripe_subscription_id === subscriptionId) {
-                    console.log(`⚡ Skipping duplicate checkout.session.completed for org ${organizationId}`);
                     break;
                 }
 
@@ -134,8 +133,6 @@ export async function POST(request: Request) {
                         max_link_requests_per_month: limits.linkRequestsPerMonth,
                     })
                     .eq("id", organizationId);
-
-                console.log(`✅ Organization ${organizationId} upgraded to ${planId}`);
 
                 // Send Success Email
                 try {
@@ -204,15 +201,13 @@ export async function POST(request: Request) {
                 const customerId =
                     typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
                 if (!customerId) {
-                    console.warn("customer.subscription.updated: missing customer id", subscription.id);
+                    console.error("customer.subscription.updated: missing customer id", subscription.id);
                     break;
                 }
 
                 const updateData = stripeSubscriptionToOrganizationUpdate(subscription);
 
                 await supabase.from("organizations").update(updateData).eq("stripe_customer_id", customerId);
-
-                console.log(`🔄 Subscription updated for customer ${customerId}: ${updateData.plan_status}`);
 
                 if (
                     previousAttributes?.status === "trialing" &&
@@ -278,8 +273,6 @@ export async function POST(request: Request) {
                         .eq("organization_id", canceledOrg.id);
                 }
 
-                console.log(`❌ Subscription canceled for customer ${customerId}`);
-
                 // Send Cancellation Email
                 try {
                     const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
@@ -323,7 +316,7 @@ export async function POST(request: Request) {
                 const customerId =
                     typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
                 if (!customerId) {
-                    console.warn("invoice.payment_failed: missing customer id", invoice.id);
+                    console.error("invoice.payment_failed: missing customer id", invoice.id);
                     break;
                 }
 
@@ -331,8 +324,6 @@ export async function POST(request: Request) {
                     .from("organizations")
                     .update({ plan_status: "past_due" })
                     .eq("stripe_customer_id", customerId);
-
-                console.log(`⚠️ Payment failed for customer ${customerId}`);
 
                 // Send Payment Failed Email
                 try {
@@ -385,7 +376,7 @@ export async function POST(request: Request) {
             }
 
             default:
-                console.log(`Unhandled event type: ${event.type}`);
+                break;
         }
     } catch (error: unknown) {
         console.error("Webhook processing error:", error);

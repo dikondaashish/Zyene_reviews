@@ -28,6 +28,7 @@ import {
   ThirdPartyTrustRow,
 } from "@/components/marketing/social-proof";
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
+import { SIGNUP_URL } from "@/config/env";
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
@@ -108,7 +109,7 @@ export function MarketingHomeClient() {
                 helping owners monitor reviews, respond faster, and build trust in a digital-first world.
               </motion.p>
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 items-center">
-                <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                <Link href={SIGNUP_URL}>
                   <Button size="lg" className="rounded-md px-8 py-7 text-[1.1rem] font-medium transition-all">
                     Start Your 7-Day Free Trial <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -582,7 +583,7 @@ export function MarketingHomeClient() {
                   </li>
                 ))}
               </ul>
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href={SIGNUP_URL}>
                 <Button className="w-full rounded-md py-6 font-medium">
                   Start 7-day free trial
                 </Button>
@@ -618,7 +619,7 @@ export function MarketingHomeClient() {
                   </li>
                 ))}
               </ul>
-              <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+              <Link href={SIGNUP_URL}>
                 <Button className="w-full rounded-md py-6 font-medium">
                   Start 7-day free trial
                 </Button>
@@ -739,7 +740,7 @@ export function MarketingHomeClient() {
             Join local businesses who are managing their reputation and growing their Google ratings every day.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+            <Link href={SIGNUP_URL}>
               <Button size="lg" className="text-[1.1rem] px-10 py-7 rounded-md font-medium transition-all">
                 Start Your Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

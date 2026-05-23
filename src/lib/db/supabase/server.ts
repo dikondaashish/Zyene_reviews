@@ -1,3 +1,4 @@
+/** Server-side Supabase client factory using Next.js cookie-based auth. */
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./database.types";

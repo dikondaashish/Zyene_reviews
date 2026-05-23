@@ -75,10 +75,6 @@ export async function syncFacebookReviewsForPlatform(
     try {
         // 2. Fetch reviews from Facebook
         const fbReviews = await getReviews(pageId, pageAccessToken);
-        console.log(
-            `[Facebook Sync] Fetched ${fbReviews.length} reviews for page ${pageId}`
-        );
-
         let analyzedCount = 0;
         let alertsCount = 0;
 
@@ -114,9 +110,6 @@ export async function syncFacebookReviewsForPlatform(
 
             // 4. AI analysis for new unanalyzed reviews
             if (upserted && !upserted.sentiment && upserted.text) {
-                console.log(
-                    `[Facebook AI] Analyzing review ${upserted.id}...`
-                );
                 analyzedCount++;
                 const analysisResult = await analyzeReview(upserted);
 

@@ -40,10 +40,6 @@ export async function syncYelpReviewsForPlatform(
     try {
         // 2. Fetch reviews from Yelp (max 3)
         const yelpReviews = await getReviews(yelpBusinessId);
-        console.log(
-            `[Yelp Sync] Fetched ${yelpReviews.length} reviews for ${yelpBusinessId}`
-        );
-
         let analyzedCount = 0;
         let alertsCount = 0;
 
@@ -82,7 +78,6 @@ export async function syncYelpReviewsForPlatform(
 
             // 4. AI analysis for new unanalyzed reviews
             if (upserted && !upserted.sentiment && upserted.text) {
-                console.log(`[Yelp AI] Analyzing review ${upserted.id}...`);
                 analyzedCount++;
                 const analysisResult = await analyzeReview(upserted);
 

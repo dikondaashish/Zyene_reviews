@@ -168,9 +168,9 @@ export function AnalyticsPageClient({
                         }
                     >
                         <ZyenePlatformAnalytics
-                            requests={(d.allRequests || []) as any}
-                            previousRequests={(d.previousRequests || []) as any}
-                            privateFeedback={d.privateFeedback as any}
+                            requests={(d.allRequests || []) as never[]}
+                            previousRequests={(d.previousRequests || []) as never[]}
+                            privateFeedback={d.privateFeedback as never}
                             dateRange={d.rangeLabel}
                         />
                     </Suspense>

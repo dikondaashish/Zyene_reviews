@@ -45,7 +45,6 @@ export async function POST(request: Request) {
         if (!platform) throw new Error("Facebook platform not connected");
 
         // 2. Call Sync Service
-        console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
         const result = await syncFacebookReviewsForPlatform(platform.id);
 
         return NextResponse.json(result);

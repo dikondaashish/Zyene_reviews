@@ -6,6 +6,9 @@ import { z } from "zod";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
 import { applyGooglePlacesMetricsToCompetitor } from "@/lib/competitors/apply-google-places-metrics";
 import { isCompetitorOwnBusiness } from "@/lib/competitors/own-business-guard";
+import type { Database } from "@/lib/db/supabase/database.types";
+
+type CompetitorRow = Database["public"]["Tables"]["competitors"]["Row"];
 
 // Validation schema
 const addCompetitorSchema = z.object({
@@ -39,7 +42,7 @@ export async function addCompetitor(
     businessId: string,
     name: string,
     googleUrl?: string
-): Promise<{ success: boolean; data?: any; error?: string; fieldError?: { field: string; message: string } }> {
+): Promise<{ success: boolean; data?: CompetitorRow; error?: string; fieldError?: { field: string; message: string } }> {
     try {
         // Validate input with zod
         const validationResult = await addCompetitorSchema.safeParseAsync({

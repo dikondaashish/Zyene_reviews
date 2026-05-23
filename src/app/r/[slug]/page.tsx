@@ -90,8 +90,6 @@ export default async function RequestPage({
         return notFound();
     }
 
-    console.log(`[Review Flow] Loading for ${business.slug}. Staff Selection: ${business.enable_staff_selection}, Names Count: ${business.staff_names?.length ?? 0}`);
-
     // Access Control 1: Subscription Check (Stripe plan ids like starter_monthly, not display names)
     const org = business.organization as { plan?: string | null; plan_status?: string | null };
 
@@ -123,7 +121,7 @@ export default async function RequestPage({
                 requestId: refParse.data,
             });
             if (!tracked.ok) {
-                console.warn("[Review Flow] server open tracking failed", tracked);
+                console.error("[Review Flow] server open tracking failed", tracked);
             }
         }
     }

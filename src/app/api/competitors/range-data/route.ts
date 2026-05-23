@@ -41,6 +41,7 @@ export async function GET(request: Request) {
     .eq("id", businessId)
     .maybeSingle();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
   const snapshotsPromise = (supabase.from("competitor_snapshots" as never) as any)
     .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source, metadata")
     .eq("business_id", businessId)
@@ -48,6 +49,7 @@ export async function GET(request: Request) {
     .order("captured_at", { ascending: false })
     .limit(1000);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
   const eventsPromise = (supabase.from("competitor_events" as never) as any)
     .select("id, competitor_id, business_id, event_type, title, summary, event_value, event_delta, created_at")
     .eq("business_id", businessId)
@@ -55,6 +57,7 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: false })
     .limit(200);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
   const insightsPromise = (supabase.from("competitor_insights" as never) as any)
     .select("id, competitor_id, business_id, range_key, summary, why_it_matters, owner_suggestion, actions, priority, confidence, recommendations, model, created_at")
     .eq("business_id", businessId)
@@ -72,6 +75,7 @@ export async function GET(request: Request) {
       .range(from, to)
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
   const latestSnapshotsForPlacesMetaPromise = (supabase.from("competitor_snapshots" as never) as any)
     .select("competitor_id, captured_at, metadata")
     .eq("business_id", businessId)

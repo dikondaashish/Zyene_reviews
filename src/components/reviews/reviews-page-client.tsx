@@ -12,6 +12,8 @@ import { SyncButton } from "@/components/dashboard/sync-button";
 import { toast } from "sonner";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
+import type { ReviewManagementItem } from "@/types/components";
+import type { PrivateFeedback } from "./private-feedback-card";
 
 interface ReviewsPageClientProps {
     businessId: string;
@@ -24,7 +26,7 @@ interface ReviewsPageClientProps {
     /** Starter, Professional, or Enterprise — required to enable Auto commenter */
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
-    initialReviews: any[];
+    initialReviews: ReviewManagementItem[] | PrivateFeedback[];
     initialCount: number;
     initialTotalPages: number;
     initialPage: number;
@@ -328,7 +330,7 @@ export function ReviewsPageClient({
                     <div className={loading ? "opacity-60 pointer-events-none transition-opacity" : "transition-opacity"}>
                         {reviews && reviews.length > 0 ? (
                             <ReviewManagement
-                                reviews={reviews}
+                                reviews={reviews as ReviewManagementItem[]}
                                 businessId={businessId}
                                 googleMapsListingUrl={googleMapsListingUrl}
                                 planAllowsAiReplies={autoCommenterPlanOk}
@@ -361,7 +363,7 @@ export function ReviewsPageClient({
             ) : (
                 <div className={`grid gap-4 ${loading ? "opacity-60 pointer-events-none transition-opacity" : "transition-opacity"}`}>
                     {reviews && reviews.length > 0 ? (
-                        reviews.map((feedback: any) => (
+                        (reviews as PrivateFeedback[]).map((feedback) => (
                             <PrivateFeedbackCard key={feedback.id} feedback={feedback} />
                         ))
                     ) : (

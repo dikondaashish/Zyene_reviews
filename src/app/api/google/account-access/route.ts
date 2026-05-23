@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
             try {
                 admins = await listAccountAdmins(accessToken, `accounts/${linkedAccountId}`);
             } catch (e) {
-                console.warn("[google/account-access] account admins fetch failed, falling back to location admins", {
+                console.error("[google/account-access] account admins fetch failed, falling back to location admins", {
                     linkedAccountId,
                     linkedLocId,
                     error: e instanceof Error ? e.message : String(e),
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
             try {
                 admins = await listLocationAdmins(accessToken, `locations/${linkedLocId}`);
             } catch (e) {
-                console.warn("[google/account-access] location admins fetch failed", {
+                console.error("[google/account-access] location admins fetch failed", {
                     linkedLocId,
                     error: e instanceof Error ? e.message : String(e),
                 });

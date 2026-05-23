@@ -17,7 +17,6 @@ export async function sendSMS(to: string, body: string) {
             .single();
 
         if (optOut) {
-            console.log(`[SMS] Skipped sending to ${to} (Opted out)`);
             return { sent: false, error: "Recipient opted out" };
         }
 

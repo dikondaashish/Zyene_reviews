@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CASE_STUDIES } from "@/lib/phase5/case-study-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { CustomerLogoBar } from "@/components/marketing/social-proof";
+import { SIGNUP_URL } from "@/config/env";
 
 export const metadata: Metadata = {
     title: "Customer Case Studies — Real Results for Local Businesses | Zyene Reviews",
@@ -23,11 +24,6 @@ export const metadata: Metadata = {
         description: "Real outcomes: more Google reviews, higher ratings, faster response times.",
     },
 };
-
-const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-const SIGNUP_URL = ROOT_DOMAIN.includes("localhost")
-    ? "/signup"
-    : `https://auth.${ROOT_DOMAIN}/signup`;
 
 export default function CaseStudiesHubPage() {
     return (

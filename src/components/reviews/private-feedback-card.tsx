@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-interface PrivateFeedback {
+export interface PrivateFeedback {
     id: string;
     rating: number;
     content: string;

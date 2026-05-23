@@ -201,7 +201,7 @@ export default function OnboardingPage() {
                 ...biz,
                 city: biz.city ?? null,
               });
-              const hasGoogle = biz.review_platforms?.some((p: any) => p.platform === "google");
+              const hasGoogle = biz.review_platforms?.some((p: { platform?: string }) => p.platform === "google");
               setGoogleConnected(hasGoogle);
 
               // If Google is already connected, trigger a background sync on login
@@ -227,9 +227,9 @@ export default function OnboardingPage() {
             setIsStepResolved(true);
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("[Onboarding] Failed to load initial state:", err);
-        setLoadError(err.message || "Failed to load onboarding state");
+        setLoadError(err instanceof Error ? err.message : "Failed to load onboarding state");
       }
     };
 

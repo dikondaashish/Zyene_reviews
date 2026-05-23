@@ -99,10 +99,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
         return apiOk({ replied: true });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Reply API Error:", error);
         
-        const message = error?.message || "Internal Server Error";
+        const message = error instanceof Error ? error.message : "Internal Server Error";
         
         // Handle specific connection/auth errors gracefully
         if (message.includes("Google connection expired") || message.includes("reconnect") || message.includes("invalid_grant")) {

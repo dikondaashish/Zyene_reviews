@@ -260,8 +260,8 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
             await updateBusiness(data);
             form.reset(data);
             toast.success("Branding updated");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to save changes");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Failed to save changes");
         } finally {
             setIsLoading(false);
         }

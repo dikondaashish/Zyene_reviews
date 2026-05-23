@@ -1,6 +1,7 @@
-// ─────────────────────────────────────────────────────────
-// Plan Types
-// ─────────────────────────────────────────────────────────
+/**
+ * Stripe plan definitions, feature limits, and pricing tiers.
+ * Source of truth for Starter, Professional, and Enterprise plan metadata.
+ */
 
 export interface PlanLimits {
     maxLocations: number;           // -1 = unlimited

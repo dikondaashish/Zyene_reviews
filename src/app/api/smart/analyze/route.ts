@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     if (!review) return apiError("Review not found", { status: 404, details: requestId });
 
-    const org = (review as any)?.businesses?.organizations;
+    const org = (review as { businesses?: { organizations?: { plan?: string | null; plan_status?: string | null } } })?.businesses?.organizations;
     if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
         return apiError("AI review analysis requires an active Starter, Professional, or Enterprise plan.", {
             status: 403,

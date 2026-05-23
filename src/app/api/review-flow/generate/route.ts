@@ -241,7 +241,7 @@ Review Content:`;
         } catch (aiError) {
             console.error("AI generation failed for review flow:", aiError);
 
-            console.warn(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
+            console.error(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
             const fallbackText = ensureCompleteReviewText(
                 `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Highly recommend ${businessName}.`,
                 businessName

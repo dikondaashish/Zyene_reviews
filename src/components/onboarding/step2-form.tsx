@@ -200,7 +200,7 @@ export function Step2Form({
     }
   };
 
-  const updateFormAndParent = (info: OnboardingGoogleLocationInfo, reviews?: any) => {
+  const updateFormAndParent = (info: OnboardingGoogleLocationInfo, reviews?: { reviewCount?: number; averageRating?: number }) => {
     const newBusinessName = info.businessName || form.getValues("businessName");
     const newAddress = info.address || form.getValues("address");
     const newCity = info.city || form.getValues("city");

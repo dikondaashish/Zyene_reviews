@@ -65,7 +65,7 @@ export async function fetchCompetitorPlaceEnrichment(params: {
 
         if (!response.ok) {
             const text = await response.text();
-            console.warn("[competitor place details] HTTP error:", response.status, text.slice(0, 200));
+            console.error("[competitor place details] HTTP error:", response.status, text.slice(0, 200));
             return null;
         }
 
@@ -92,7 +92,7 @@ export async function fetchCompetitorPlaceEnrichment(params: {
             phone: typeof payload.nationalPhoneNumber === "string" ? payload.nationalPhoneNumber : null,
         };
     } catch (e) {
-        console.warn("[competitor place details] fetch failed:", e instanceof Error ? e.message : String(e));
+        console.error("[competitor place details] fetch failed:", e instanceof Error ? e.message : String(e));
         return null;
     }
 }
@@ -214,7 +214,7 @@ export async function fetchCompetitorMetricsFromGoogle(params: {
             };
         } catch (error) {
             if (attempt >= retries) {
-                console.warn("[competitor external metrics] fetch failed:", {
+                console.error("[competitor external metrics] fetch failed:", {
                     name: params.name,
                     hasGoogleUrl: Boolean(params.googleUrl),
                     attempt,

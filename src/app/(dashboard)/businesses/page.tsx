@@ -59,9 +59,9 @@ export default async function BusinessesPage() {
             {/* Business Cards */}
             {businesses.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {businesses.map((business: any) => {
+                    {businesses.map((business) => {
                         const googlePlatform = business.review_platforms?.find(
-                            (p: any) => p.platform === "google"
+                            (p) => p.platform === "google"
                         );
                         const isConnected = !!googlePlatform;
                         const cardStats = visibleReviewStats.get(business.id) ?? emptyVisibleReviewRollup();
@@ -163,7 +163,7 @@ export default async function BusinessesPage() {
                                     </span>
                                     <DeleteBusinessButton
                                         businessId={business.id}
-                                        businessName={business.name}
+                                        businessName={business.name ?? "Business"}
                                         disabled={businesses.length <= 1}
                                     />
                                 </div>

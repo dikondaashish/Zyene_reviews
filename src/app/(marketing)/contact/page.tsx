@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Mail, Clock, MessageSquare, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export const metadata: Metadata = {
     title: "Contact Us",
@@ -114,7 +115,7 @@ export default function ContactPage() {
                             Try Zyene Reviews free for 7 days. Cancel before the trial ends — no charge.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <Link href={process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ? "/signup" : `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/signup`}>
+                            <Link href={SIGNUP_URL}>
                                 <Button className="rounded-md px-8 py-6 font-medium">
                                     Start Free Trial
                                 </Button>

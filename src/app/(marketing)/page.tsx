@@ -58,7 +58,7 @@ const HOME_FAQS = [
 ];
 
 export default function MarketingPage() {
-    return (
+  return (
         <>
             {/* Structured data for rich search results */}
             <SoftwareApplicationJsonLd />
@@ -67,5 +67,5 @@ export default function MarketingPage() {
             {/* The interactive homepage (Framer Motion, animations, pricing accordion) */}
             <MarketingHomeClient />
         </>
-    );
+  );
 }

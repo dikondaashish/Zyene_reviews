@@ -13,7 +13,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const parsed = openSchema.safeParse(body);
         if (!parsed.success) {
-            console.warn("[track/review-open] invalid payload", parsed.error.flatten());
+            console.error("[track/review-open] invalid payload", parsed.error.flatten());
             return NextResponse.json({ error: "Invalid open tracking payload" }, { status: 400 });
         }
 

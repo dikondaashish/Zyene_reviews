@@ -155,8 +155,8 @@ export async function registerNotificationsWithRetry(
             await registerNotifications(accessToken, accountName, topic);
             return { ok: true };
         } catch (secondError) {
-            console.warn(
-                `${logPrefix} WARNING: registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect. platformId=${platformId} googleAccountId=${googleAccountId}`,
+            console.error(
+                `${logPrefix} registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect. platformId=${platformId} googleAccountId=${googleAccountId}`,
                 secondError
             );
             return { ok: false };

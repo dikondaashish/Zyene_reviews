@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { HELP_ARTICLE_MAP, HELP_CATEGORY_SLUGS } from "@/lib/phase4/help-data";
+import { HELP_ARTICLE_MAP, HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
 import { INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
@@ -411,9 +411,9 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
         }
     }
 
-    const expectedHelpCategories = ["getting-started", "reviews", "campaigns", "analytics", "billing", "integrations"];
+    const expectedHelpCategories = ["getting-started", "reviews", "campaigns", "analytics", "billing", "integrations"] as const;
     for (const cat of expectedHelpCategories) {
-        if (!HELP_CATEGORY_SLUGS.includes(cat)) {
+        if (!HELP_CATEGORY_SLUGS.includes(cat as HelpCategory)) {
             items.push({ id: `p4-help-cat-${cat}`, severity: "error", area: "content", message: `Help category "${cat}" missing (§4.3)` });
         }
     }

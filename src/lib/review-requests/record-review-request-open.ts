@@ -28,7 +28,6 @@ export async function recordReviewRequestOpenForRef(args: {
         return { ok: false, reason: "lookup_failed" };
     }
     if (!existing) {
-        console.warn("[record-review-open] no row", { requestId, businessId });
         return { ok: false, reason: "not_found" };
     }
 

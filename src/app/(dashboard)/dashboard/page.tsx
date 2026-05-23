@@ -71,6 +71,64 @@ import {
     type VisibleReviewRollup,
 } from "@/lib/reviews/visible-review-rollups";
 
+interface RawReviewRow {
+    id: string | number;
+    author_name?: string | null;
+    author_avatar_url?: string | null;
+    rating: number | string;
+    urgency_score?: number | null;
+    review_date?: string | null;
+    created_at?: string | null;
+    text?: string | null;
+    themes?: string[] | null;
+    platform?: string | null;
+    response_status?: string | null;
+    sentiment?: string | null;
+}
+
+interface ReviewPlatformRow {
+    platform: string;
+    last_synced_at?: string | null;
+    google_qa_unavailable?: boolean | null;
+    google_lodging_health_score?: number | null;
+    google_lodging_available?: boolean | null;
+    google_performance_synced_at?: string | null;
+    google_profile_health_score?: number | null;
+}
+
+interface BusinessExtended {
+    id: string;
+    name: string;
+    slug: string;
+    status?: string;
+    total_reviews: number;
+    average_rating: number;
+    review_request_frequency_cap_days?: number;
+    category?: string;
+    logo_url?: string | null;
+    brand_color?: string | null;
+    review_page_background_color?: string | null;
+    review_platforms?: ReviewPlatformRow[];
+}
+
+interface DashboardCachedStats {
+    responseRate: number;
+    pendingCount: number;
+    recentReviews: RawReviewRow[];
+    attentionReviews: RawReviewRow[];
+    trendData: Array<{ day: string; count: number }>;
+    ratingData: Array<{ rating: number; count: number }>;
+    totalReviewsTrend: number;
+    averageRatingTrend: number;
+    positivePercent: number;
+    negativePercent: number;
+    hasSentimentData: boolean;
+    engagementRate: number;
+    hasEngagementData: boolean;
+    requestsThisMonth: number;
+    newReviews30d: number;
+}
+
 // Star rendering helper
 function Stars({ rating }: { rating: number }) {
     return (
@@ -165,7 +223,7 @@ function attentionReviewIsoDate(value: unknown): string {
     return new Date().toISOString();
 }
 
-function mapAttentionRows(rows: any[]): NeedsAttentionReview[] {
+function mapAttentionRows(rows: RawReviewRow[]): NeedsAttentionReview[] {
     return (rows || []).map((r) => ({
         id: String(r.id),
         author: r.author_name || "Anonymous",
@@ -223,8 +281,8 @@ export default async function DashboardPage() {
     const businessCount = Math.max(allBusinesses.length, 1);
     const maxRequestsPerMonth = Math.floor(totalOrgLimit / businessCount);
 
-    const googlePlatform = (business as any)?.review_platforms?.find(
-        (p: any) => p.platform === "google"
+    const googlePlatform = (business as BusinessExtended)?.review_platforms?.find(
+        (p: ReviewPlatformRow) => p.platform === "google"
     );
     const isGoogleConnected = !!googlePlatform;
     const lastSynced = googlePlatform?.last_synced_at;
@@ -246,8 +304,8 @@ export default async function DashboardPage() {
 
     let responseRate = 0;
     let pendingCount = 0;
-    let recentReviews: any[] = [];
-    let attentionReviews: any[] = [];
+    let recentReviews: RawReviewRow[] = [];
+    let attentionReviews: RawReviewRow[] = [];
     let trendData: { day: string; count: number }[] = [];
     let ratingData: { rating: number; count: number }[] = [];
 
@@ -281,17 +339,17 @@ export default async function DashboardPage() {
     if (business.id) {
         // ── Redis Caching ──
         const cacheKey = `dashboard:stats:${business.id}`;
-        let cachedStats: any = null;
+        let cachedStatsRaw: unknown = null;
         try {
             const { redis } = await import('@/lib/db/redis');
-            cachedStats = await redis.get(cacheKey);
+            cachedStatsRaw = await redis.get(cacheKey);
         } catch (e) {
             console.error("Redis fetch error:", e);
         }
 
-        if (cachedStats) {
+        if (cachedStatsRaw) {
             // Restore from cache
-            const stats = typeof cachedStats === 'string' ? JSON.parse(cachedStats) : cachedStats;
+            const stats = (typeof cachedStatsRaw === 'string' ? JSON.parse(cachedStatsRaw) : cachedStatsRaw) as DashboardCachedStats;
             responseRate = stats.responseRate || 0;
             pendingCount = stats.pendingCount || 0;
             recentReviews = stats.recentReviews || [];
@@ -696,8 +754,8 @@ export default async function DashboardPage() {
         attentionReviews = [...DASHBOARD_DEMO_DATA.attentionReviews];
 
         // Mock business stats for cards
-        (business as any).total_reviews = DASHBOARD_DEMO_DATA.total_reviews;
-        (business as any).average_rating = DASHBOARD_DEMO_DATA.average_rating;
+        (business as BusinessExtended).total_reviews = DASHBOARD_DEMO_DATA.total_reviews;
+        (business as BusinessExtended).average_rating = DASHBOARD_DEMO_DATA.average_rating;
         googlePerf = {
             profileViews: 3421,
             callClicks: 89,
@@ -864,9 +922,9 @@ export default async function DashboardPage() {
                                 businessId={business.id}
                                 businessSlug={business.slug}
                                 businessName={business.name || "Business"}
-                                businessLogoUrl={(business as any).logo_url ?? null}
-                                brandColor={(business as any).brand_color ?? null}
-                                reviewPageBackgroundColor={(business as any).review_page_background_color ?? null}
+                                businessLogoUrl={(business as BusinessExtended).logo_url ?? null}
+                                brandColor={(business as BusinessExtended).brand_color ?? null}
+                                reviewPageBackgroundColor={(business as BusinessExtended).review_page_background_color ?? null}
                             />
                         </div>
                     ) : (
@@ -1260,15 +1318,18 @@ export default async function DashboardPage() {
                     {recentReviews.length > 0 ? (
                         <div className="flex-1 flex flex-col">
                             <DashboardAnimatedReviewCardsLazy
-                                reviews={recentReviews.slice(0, 15).map((r: any) => ({
-                                    id: r.id,
+                                reviews={recentReviews.slice(0, 15).map((r) => ({
+                                    id: String(r.id),
                                     name: r.author_name || "Anonymous",
                                     avatar: r.author_avatar_url || "",
                                     text: r.text || "No review content provided.",
-                                    rating: r.rating,
-                                    reviewedAt: r.review_date,
-                                    platform: r.platform,
-                                    sentiment: r.sentiment,
+                                    rating:
+                                        typeof r.rating === "number"
+                                            ? r.rating
+                                            : Number(r.rating) || 0,
+                                    reviewedAt: r.review_date ?? new Date().toISOString(),
+                                    platform: r.platform ?? "google",
+                                    sentiment: r.sentiment ?? null,
                                 }))}
                                 labels={{
                                     hint: dict.dashboard.review_spotlight_hint,
@@ -1297,8 +1358,7 @@ export default async function DashboardPage() {
                     <NeedsAttention
                         reviews={mapAttentionRows(
                             attentionReviews.filter(
-                                (r: { response_status?: string }) =>
-                                    (r?.response_status ?? "pending") === "pending",
+                                (r) => (r.response_status ?? "pending") === "pending",
                             ),
                         )}
                         viewAllHref="/reviews?status=needs_response&sort=lowest"

@@ -59,6 +59,11 @@ export const ROOT_DOMAIN = NEXT_PUBLIC_ROOT_DOMAIN;
 export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
 export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
 
+/** Signup URL: local path for dev, auth subdomain for production. */
+export const SIGNUP_URL = ROOT_DOMAIN.includes("localhost")
+    ? "/signup"
+    : `https://auth.${ROOT_DOMAIN}/signup`;
+
 /** Public review-request pages only (business slugs). Not the marketing site. */
 export const REVIEW_CAPTURE_DOMAIN = optional(
     "NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN",

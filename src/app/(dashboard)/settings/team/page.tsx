@@ -12,6 +12,32 @@ import { TeamManagementPanel } from "@/components/settings/team-management-panel
 import { buildTeamInviteSignupLink } from "@/lib/team/deliver-team-invite-email";
 import { teamMemberLimitForPlan } from "@/services/stripe/plans";
 import { Users } from "lucide-react";
+import type { Json } from "@/lib/db/supabase/database.types";
+
+type TeamPanelMember = {
+    id: string;
+    role: string;
+    type: "member" | "invite";
+    userId?: string;
+    user?: { full_name: string; email: string; avatar_url?: string };
+    email?: string;
+    status: "active" | "invited";
+};
+
+function memberUserFromJoin(
+    users: unknown
+): { full_name: string; email: string; avatar_url?: string } | undefined {
+    if (!users || typeof users !== "object") return undefined;
+    const u = users as Record<string, unknown>;
+    const full_name = typeof u.full_name === "string" ? u.full_name : "";
+    const email = typeof u.email === "string" ? u.email : "";
+    if (!full_name && !email) return undefined;
+    return {
+        full_name,
+        email,
+        avatar_url: typeof u.avatar_url === "string" ? u.avatar_url : undefined,
+    };
+}
 
 export default async function TeamSettingsPage() {
     const supabase = await createClient();
@@ -91,16 +117,16 @@ export default async function TeamSettingsPage() {
         );
     }
 
-    const combinedMembers = [
-        ...(members || []).map((m: any) => ({
+    const combinedMembers: TeamPanelMember[] = [
+        ...(members || []).map((m) => ({
             id: m.id,
             role: m.role,
             type: "member" as const,
-            userId: m.user_id as string,
-            user: m.users,
-            status: m.status || "active",
+            userId: m.user_id,
+            user: memberUserFromJoin(m.users),
+            status: (m.status === "invited" ? "invited" : "active") as "active" | "invited",
         })),
-        ...(invites || []).map((i: any) => ({
+        ...(invites || []).map((i) => ({
             id: i.id,
             role: i.role,
             type: "invite" as const,
@@ -117,12 +143,12 @@ export default async function TeamSettingsPage() {
     );
 
     const newestPendingInvite = [...(invites || [])]
-        .sort((a: any, b: any) => {
+        .sort((a, b) => {
             const aa = new Date(a.created_at || 0).getTime();
             const bb = new Date(b.created_at || 0).getTime();
             return bb - aa;
         })
-        .find((i: any) => typeof i.token === "string" && i.token.length > 0);
+        .find((i) => typeof i.token === "string" && i.token.length > 0);
 
     const latestInviteLink =
         newestPendingInvite?.token
@@ -147,8 +173,12 @@ export default async function TeamSettingsPage() {
         .order("created_at", { ascending: false })
         .limit(40);
 
-    const activity = (teamEvents || []).map((event: any) => {
-        const meta = (event.metadata || {}) as Record<string, unknown>;
+    const activity = (teamEvents || []).map((event) => {
+        const rawMeta = event.metadata as Json | null;
+        const meta =
+            rawMeta && typeof rawMeta === "object" && !Array.isArray(rawMeta)
+                ? (rawMeta as Record<string, unknown>)
+                : {};
         const safe = (value: unknown, fallback: string) =>
             typeof value === "string" && value.trim().length > 0 ? value.trim() : fallback;
 

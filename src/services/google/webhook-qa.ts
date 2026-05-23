@@ -58,7 +58,7 @@ export async function processQaWebhookForLocation(googleLocationId: string): Pro
         .maybeSingle();
 
     if (error || !platform) {
-        console.warn("[GBP Webhook] Q&A: no platform for location", googleLocationId);
+        console.error("[GBP Webhook] Q&A: no platform for location", googleLocationId);
         return;
     }
 

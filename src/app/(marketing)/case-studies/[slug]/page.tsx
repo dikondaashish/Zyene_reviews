@@ -5,6 +5,7 @@ import { ArrowRight, ArrowLeft, ChevronRight, Check, Quote } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { SIGNUP_URL } from "@/config/env";
 
 export function generateStaticParams() {
     return CASE_STUDY_SLUGS.map((slug) => ({ slug }));
@@ -34,11 +35,6 @@ export async function generateMetadata(
         },
     };
 }
-
-const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-const SIGNUP_URL = ROOT_DOMAIN.includes("localhost")
-    ? "/signup"
-    : `https://auth.${ROOT_DOMAIN}/signup`;
 
 export default async function CaseStudyPage(
     { params }: { params: Promise<{ slug: string }> }

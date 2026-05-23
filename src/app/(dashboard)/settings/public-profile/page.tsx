@@ -39,7 +39,7 @@ export default async function PublicProfilePage() {
 
             <PublicProfileEditor 
                 key={business.id}
-                business={business as any} 
+                business={business as never} 
                 initialSlug={business.slug || ""} 
             />
         </div>

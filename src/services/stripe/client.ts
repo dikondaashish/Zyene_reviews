@@ -3,8 +3,8 @@ import Stripe from "stripe";
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeSecretKey && process.env.NODE_ENV === "development") {
-    console.warn(
-        "⚠️ Missing STRIPE_SECRET_KEY environment variable. " +
+    console.error(
+        "Missing STRIPE_SECRET_KEY environment variable. " +
             "Check your .env.local file or deployment environment."
     );
 }

@@ -144,6 +144,11 @@ export function AddCompetitorDialog({
                 return;
             }
 
+            if (!result.data) {
+                toast.error("Competitor was added but details could not be loaded. Refresh the page.");
+                return;
+            }
+
             toast.success("Competitor added successfully");
             onSuccess(result.data);
             setOpen(false);

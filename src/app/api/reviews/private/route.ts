@@ -38,7 +38,6 @@ function isValidPhoneDigits(p: string) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        console.log("📩 Received private feedback request:", { ...body, customer_email: body.customer_email ? "[set]" : null });
         const parsed = privateFeedbackSchema.safeParse(body);
         if (!parsed.success) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
@@ -129,9 +128,7 @@ export async function POST(request: Request) {
 
         let category = "Other";
         if (canUseAiFeedbackCategorization) {
-            console.log("🤖 Categorizing private feedback...");
             category = await categorizePrivateFeedback(content);
-            console.log("🏷️ Category assigned:", category);
         }
 
         const { data: feedback, error } = await supabase
@@ -150,8 +147,6 @@ export async function POST(request: Request) {
             })
             .select()
             .single();
-        console.log("💾 Feedback saved to database. ID:", feedback?.id);
-
         if (error) {
             console.error("Failed to insert private feedback:", error);
             throw error;
@@ -162,7 +157,6 @@ export async function POST(request: Request) {
             selected_staff && selected_staff.length > 0 ? ` (Served by: ${selected_staff.join(", ")})` : "";
         const phoneSuffix = customer_phone ? ` Phone: ${customer_phone}` : "";
 
-        console.log("🔔 Triggering review alert notification...");
         sendReviewAlert({
             id: feedback.id,
             business_id: business_id,
@@ -175,7 +169,6 @@ export async function POST(request: Request) {
         }).catch((err) => console.error("Failed to send private feedback alert:", err));
 
         if (customer_email && businessName) {
-            console.log(`✉️ Sending apology email to customer: ${customer_email}`);
             sendEmail({
                 to: customer_email,
                 subject: `We're sorry about your experience at ${businessName}`,

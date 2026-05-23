@@ -308,8 +308,9 @@ zyenereviews.com (marketing)
 │   ├── /blog/[slug]            ← Individual post
 ├── /resources                  ← Guides hub
 │   ├── /resources/google-reviews-guide
-│   ├── /resources/negative-review-response-templates
-│   └── /resources/local-seo-checklist
+│   ├── /resources/negative-review-templates
+│   ├── /resources/local-seo-checklist
+│   └── /resources/review-request-templates
 ├── /help                       ← Help center (real articles)
 │   ├── /help/getting-started
 │   ├── /help/reviews
@@ -354,36 +355,38 @@ collectratings.com
 - Review Monitoring → `/features/review-monitoring`
 - AI-Powered Replies → `/features/ai-replies`
 - Review Collection → `/features/review-collection`
-- Competitor Tracking → `/features/competitor-tracking` (live)
+- Competitor Tracking → `/features/competitor-tracking`
 - Local SEO Dashboard → `/features/local-seo`
+- How It Works → `/how-it-works`
 - Integrations → `/integrations`
+- Pricing → `/pricing`
 
 **Solutions dropdown:**
-- Restaurants → `/industries/restaurants`
-- Dental Practices → `/industries/dental`
-- Auto Repair → `/industries/auto-repair`
-- Salons & Spas → `/industries/salons`
-- Home Services → `/industries/home-services`
-- All Industries → `/industries`
+- By Industry → `/industries`
+- Compare Tools → `/compare`
+- Enterprise → `/enterprise`
+- Agencies → `/agencies`
 
 **Resources dropdown:**
+- Free Tools → `/tools`
 - Blog → `/blog`
-- Guides → `/resources`
+- Free Guides → `/resources`
 - Help Center → `/help`
 - Case Studies → `/case-studies`
-- Compare Alternatives → `/compare`
-- Security → `/security`
+- Partners → `/partners`
 
-**Footer:**
+**Footer (7 columns including Brand):**
 ```
-Product          Solutions       Resources       Company         Legal
-─────────        ──────────      ──────────      ────────        ──────
-Features         Restaurants     Blog            About           Privacy
-Pricing          Dental          Help Center     Contact         Terms
-Integrations     Auto Repair     Case Studies    Careers         Data Retention
-How It Works     Salons          Guides          Status          Security
-API Docs         Home Services   Compare         Demo
-                 Hotels
+Brand            Product         Solutions        Resources        Company         Legal
+──────           ─────────       ──────────       ──────────       ────────        ──────
+Logo + tagline   Features        By Industry      Free Tools       About           Privacy
+Trust strip      Pricing         Restaurants      Blog             Contact         Terms
+Industrias (ES)  How It Works    Dental           Free Guides      Book a demo     Security
+                 Integrations    Auto Repair      Help Center      Enterprise      Data Retention
+                 Docs            Salons & Spas    Case Studies     Partners        Manage cookies
+                 API             Home Services    Partners         Help Center
+                                 Hotels           Agencies         Status
+                                 Compare Tools    Industrias (ES)
 ```
 
 ---

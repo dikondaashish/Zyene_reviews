@@ -1,4 +1,5 @@
 "use server";
+/** Resolves the current user's active business from the session cookie. */
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";

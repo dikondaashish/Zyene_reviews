@@ -50,7 +50,6 @@ export async function POST(request: Request) {
         }
 
         // 2. Call Sync Service
-        console.log(`[Manual Sync] Triggered for platform ${platform.id}`);
         const result = await syncYelpReviewsForPlatform(platform.id);
 
         return apiOk(result);

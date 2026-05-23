@@ -90,7 +90,7 @@ export async function reconcileStaleGoogleSyncRun(
         })
         .eq("id", platformId);
 
-    console.warn(
+    console.error(
         `[Sync] Cleared stale running sync for platform ${platformId} (no worker within ${STALE_RUNNING_SYNC_MINUTES}m).`
     );
     return true;

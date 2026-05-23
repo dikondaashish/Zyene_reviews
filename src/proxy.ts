@@ -1,3 +1,7 @@
+/**
+ * Next.js middleware proxy — handles subdomain routing, auth session refresh,
+ * API rate limiting, and CORS headers for the multi-tenant app.
+ */
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { globalApiRateLimit } from "@/lib/auth/rate-limit";
@@ -434,7 +438,6 @@ export async function proxy(request: NextRequest) {
             return createResponse(NextResponse.redirect(targetUrl, 301));
         }
 
-        console.log(`[Middleware] Passing ${hostname}${pathname} (No rewrite)`);
         return supabaseResponse;
     }
 

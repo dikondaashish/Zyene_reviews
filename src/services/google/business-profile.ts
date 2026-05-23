@@ -82,7 +82,7 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
             if (retries > 0) {
                 // Add jitter: delay = random(0, backoff)
                 const jitter = Math.random() * backoff;
-                console.warn(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
+                console.error(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
                 await new Promise(resolve => setTimeout(resolve, jitter));
                 return fetchWithRetry(url, options, retries - 1, backoff * 2);
             } else {
@@ -94,7 +94,7 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
     } catch (error) {
         if (retries > 0) {
             const jitter = Math.random() * backoff;
-            console.warn(`[Google API] Fetch failed. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`, error);
+            console.error(`[Google API] Fetch failed. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`, error);
             await new Promise(resolve => setTimeout(resolve, jitter));
             return fetchWithRetry(url, options, retries - 1, backoff * 2);
         }

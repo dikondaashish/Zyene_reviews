@@ -121,6 +121,6 @@ export async function reconcileOrganizationBillingFromStripe(
             await clearOrganizationBillingAfterCancellation(admin, org.id);
             return;
         }
-        console.warn("[reconcileOrganizationBillingFromStripe]", e);
+        console.error("[reconcileOrganizationBillingFromStripe]", e);
     }
 }
