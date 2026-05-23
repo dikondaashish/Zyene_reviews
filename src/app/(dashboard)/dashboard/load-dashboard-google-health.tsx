@@ -6,8 +6,8 @@ import type { DashboardAuthContext } from "./load-dashboard-auth";
 export async function loadDashboardGoogleHealth(
     auth: DashboardAuthContext,
 ): Promise<{ unansweredQaCount: number; brokenPlaceLinksCount: number; errorElement?: ReactElement }> {
-    let unansweredQaCount = 0;
-    let brokenPlaceLinksCount = 0;
+    const unansweredQaCount = 0;
+    const brokenPlaceLinksCount = 0;
 
     const { supabase, business, useDemoData, isGoogleConnected, googleQaUnavailable } = auth;
 

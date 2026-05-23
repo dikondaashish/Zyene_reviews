@@ -14,7 +14,7 @@ export function CustomerDetailProfileIdentity({
     setEditingName,
     nameDraft,
     setNameDraft,
-    skipBlurName,
+    skipBlurNameRef,
     saveName,
 }: {
     customer: CustomerRow;
@@ -22,7 +22,7 @@ export function CustomerDetailProfileIdentity({
     setEditingName: (v: boolean) => void;
     nameDraft: string;
     setNameDraft: (v: string) => void;
-    skipBlurName: React.MutableRefObject<boolean>;
+    skipBlurNameRef: React.MutableRefObject<boolean>;
     saveName: () => void | Promise<void>;
 }) {
     const name = displayName(customer);
@@ -41,14 +41,14 @@ export function CustomerDetailProfileIdentity({
                                     }
                                     if (e.key === "Escape") {
                                         e.preventDefault();
-                                        skipBlurName.current = true;
+                                        skipBlurNameRef.current = true;
                                         setEditingName(false);
                                         setNameDraft(displayName(customer) || "");
                                     }
                                 }}
                                 onBlur={() => {
-                                    if (skipBlurName.current) {
-                                        skipBlurName.current = false;
+                                    if (skipBlurNameRef.current) {
+                                        skipBlurNameRef.current = false;
                                         return;
                                     }
                                     void saveName();

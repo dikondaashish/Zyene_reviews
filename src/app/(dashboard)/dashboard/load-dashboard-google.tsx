@@ -8,7 +8,6 @@ import { loadDashboardGoogleHealth } from "./load-dashboard-google-health";
 import type { DashboardGoogleMetrics, LoadDashboardGoogleInput } from "./load-dashboard-google-types";
 
 export type { DashboardGoogleMetrics, LoadDashboardGoogleInput } from "./load-dashboard-google-types";
-export { formatTrend } from "./load-dashboard-google-format";
 export { buildDashboardPageDataResult } from "./load-dashboard-google-build";
 
 export async function loadDashboardGoogle(

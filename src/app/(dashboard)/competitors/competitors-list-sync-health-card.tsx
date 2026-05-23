@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
     Card,
@@ -16,6 +17,15 @@ function runStatusVariant(status: string): "default" | "destructive" | "secondar
     if (s === "failed") return "destructive";
     if (s === "success") return "default";
     return "secondary";
+}
+
+const STALE_MS = 24 * 60 * 60 * 1000;
+
+function SyncStaleHint({ finishedAt }: { finishedAt: string }) {
+    const [stale] = useState(
+        () => Date.now() - new Date(finishedAt).getTime() > STALE_MS,
+    );
+    return stale ? " Data may be stale (>24h)." : "";
 }
 
 type CompetitorsListSyncHealthCardProps = {
@@ -93,9 +103,10 @@ export function CompetitorsListSyncHealthCard({
                             {latestSuccessRun ? (
                                 <p className="text-xs text-muted-foreground">
                                     Data freshness: latest successful sync was <TimeAgo date={latestSuccessRun.finished_at} />.
-                                    {Date.now() - new Date(latestSuccessRun.finished_at).getTime() > 24 * 60 * 60 * 1000
-                                        ? " Data may be stale (>24h)."
-                                        : ""}
+                                    <SyncStaleHint
+                                        key={latestSuccessRun.finished_at}
+                                        finishedAt={latestSuccessRun.finished_at}
+                                    />
                                 </p>
                             ) : null}
                         </div>

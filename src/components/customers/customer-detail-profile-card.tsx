@@ -12,7 +12,7 @@ export function CustomerDetailProfileCard({
     setEditingName,
     nameDraft,
     setNameDraft,
-    skipBlurName,
+    skipBlurNameRef,
     saveName,
     avatarText,
     avatarCompact,
@@ -27,7 +27,7 @@ export function CustomerDetailProfileCard({
     setEditingName: (v: boolean) => void;
     nameDraft: string;
     setNameDraft: (v: string) => void;
-    skipBlurName: React.MutableRefObject<boolean>;
+    skipBlurNameRef: React.MutableRefObject<boolean>;
     saveName: () => void | Promise<void>;
     avatarText: string;
     avatarCompact: boolean;
@@ -67,7 +67,7 @@ export function CustomerDetailProfileCard({
                             setEditingName={setEditingName}
                             nameDraft={nameDraft}
                             setNameDraft={setNameDraft}
-                            skipBlurName={skipBlurName}
+                            skipBlurNameRef={skipBlurNameRef}
                             saveName={saveName}
                         />
                         <CustomerDetailProfileTagsSince

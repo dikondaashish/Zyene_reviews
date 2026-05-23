@@ -33,9 +33,13 @@ export function useGoogleSyncRemoteState({
     const [warmupStart, setWarmupStart] = useState<number | null>(null)
     const [lockedUntil, setLockedUntil] = useState<string | null>(null)
     const [syncStale, setSyncStale] = useState(false)
+    const [lockExpired, setLockExpired] = useState(false)
     const prevRemoteStatusRef = useRef<string | null>(null)
     const onSyncSettledRef = useRef(onSyncSettled)
-    onSyncSettledRef.current = onSyncSettled
+
+    useEffect(() => {
+        onSyncSettledRef.current = onSyncSettled
+    }, [onSyncSettled])
 
     useEffect(() => {
         setRemoteStatus(initialSyncStatus ?? null)
@@ -128,16 +132,23 @@ export function useGoogleSyncRemoteState({
         }
     }, [remoteStatus])
 
+    useEffect(() => {
+        if (remoteStatus !== "running" || lockedUntil == null) {
+            setLockExpired(false)
+            return
+        }
+        const check = () => setLockExpired(new Date(lockedUntil).getTime() < Date.now())
+        check()
+        const id = setInterval(check, 5000)
+        return () => clearInterval(id)
+    }, [remoteStatus, lockedUntil])
+
     const markManualSyncStarted = useCallback(() => {
         setWarmingUp(true)
         setWarmupStart(Date.now())
         void fetchStatus()
     }, [fetchStatus])
 
-    const lockExpired =
-        remoteStatus === "running" &&
-        lockedUntil != null &&
-        new Date(lockedUntil).getTime() < Date.now()
     const isStalled =
         remoteStatus === "running" && (syncStale || lockExpired)
     const isSyncBusy = warmingUp || remoteStatus === "running"

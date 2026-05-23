@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { COMPARISON_ROWS } from "./pricing-client-constants";
 
@@ -79,9 +80,9 @@ export function PricingClientComparisonSection() {
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4">
                     Competitor pricing based on publicly listed rates as of 2026. Actual prices may vary.{" "}
-                    <a href="/compare" className="underline hover:text-foreground">
+                    <Link href="/compare" className="underline hover:text-foreground">
                         See detailed comparisons →
-                    </a>
+                    </Link>
                 </p>
             </div>
         </section>

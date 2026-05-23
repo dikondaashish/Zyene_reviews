@@ -39,7 +39,7 @@ export function CustomerDetailClient({
     const [editingName, setEditingName] = React.useState(false);
     const [nameDraft, setNameDraft] = React.useState(displayName(initial) || "");
     const [tagInput, setTagInput] = React.useState("");
-    const skipBlurName = React.useRef(false);
+    const skipBlurNameRef = React.useRef(false);
 
     React.useEffect(() => {
         setCustomer(initial);
@@ -109,7 +109,7 @@ export function CustomerDetailClient({
                 setEditingName={setEditingName}
                 nameDraft={nameDraft}
                 setNameDraft={setNameDraft}
-                skipBlurName={skipBlurName}
+                skipBlurNameRef={skipBlurNameRef}
                 saveName={saveName}
                 avatarText={avatarText}
                 avatarCompact={avatarCompact}
