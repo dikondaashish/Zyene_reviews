@@ -226,6 +226,9 @@ export function AddCompetitorDialog({
                                                 key={s.placeId}
                                                 type="button"
                                                 role="option"
+                                                aria-selected={
+                                                    googleUrl.length > 0 && googleUrl === s.mapsUrl
+                                                }
                                                 className="w-full text-left px-3 py-2.5 hover:bg-muted/80 border-b last:border-b-0 flex gap-2 items-start transition-colors"
                                                 onMouseDown={(e) => e.preventDefault()}
                                                 onClick={() => handlePick(s)}

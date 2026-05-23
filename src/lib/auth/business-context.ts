@@ -203,6 +203,25 @@ import { revalidatePath } from "next/cache";
  * Called when user switches business via the BusinessSwitcher.
  */
 export async function setActiveBusiness(businessId: string) {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const { data: business, error: businessError } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("id", businessId)
+        .maybeSingle();
+
+    if (businessError || !business) {
+        throw new Error("Business not found or access denied");
+    }
+
     const cookieStore = await cookies();
     cookieStore.set(COOKIE_NAME, businessId, {
         path: "/",

@@ -18,6 +18,7 @@ export function useDashboardTourState(): DashboardTourContextValue {
 
     useEffect(() => {
         let cancelled = false;
+        let tourDelayTimer: ReturnType<typeof setTimeout> | undefined;
 
         const checkTourStatus = async () => {
             try {
@@ -32,7 +33,7 @@ export function useDashboardTourState(): DashboardTourContextValue {
                 const hasCompleted = await getTourStatus();
 
                 if (!cancelled && !hasCompleted) {
-                    setTimeout(() => {
+                    tourDelayTimer = setTimeout(() => {
                         if (!cancelled) {
                             setRunTour(true);
                         }
@@ -49,6 +50,9 @@ export function useDashboardTourState(): DashboardTourContextValue {
         void checkTourStatus();
         return () => {
             cancelled = true;
+            if (tourDelayTimer !== undefined) {
+                clearTimeout(tourDelayTimer);
+            }
         };
     }, [pathname, searchParams]);
 

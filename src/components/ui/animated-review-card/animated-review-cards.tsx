@@ -5,7 +5,12 @@ import type { KeyboardEvent } from "react";
 import { useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import type { AnimatedReviewCardsProps } from "@/components/ui/animated-review-card/animated-review-card-types";
+import type {
+    AnimatedReviewCardsProps,
+    SpotlightReview,
+} from "@/components/ui/animated-review-card/animated-review-card-types";
+
+const EMPTY_SPOTLIGHT_REVIEWS: SpotlightReview[] = [];
 import { starColorVariants } from "@/components/ui/animated-review-card/animated-review-card-variants";
 import { useAnimatedReviewCardsRotation } from "@/components/ui/animated-review-card/use-animated-review-cards-rotation";
 import { AnimatedReviewCardCarousel } from "@/components/ui/animated-review-card/animated-review-card-carousel";
@@ -17,7 +22,7 @@ import {
 } from "@/components/ui/animated-review-card/animated-review-card-deck-extras";
 
 export const AnimatedReviewCards = ({
-    reviews: initialReviewsProp = [],
+    reviews: initialReviewsProp = EMPTY_SPOTLIGHT_REVIEWS,
     interactionType = "drag",
     animationDuration = 0.3,
     scaleStep = 0.05,

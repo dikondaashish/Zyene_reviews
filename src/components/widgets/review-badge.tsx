@@ -42,14 +42,13 @@ export function ReviewBadge({
                 </div>
 
                 <p className="text-center text-[20px] text-foreground">
-                    <a
-                        href="#"
-                        onClick={(e) => e.preventDefault()}
-                        className="underline underline-offset-4 hover:text-primary"
+                    <button
+                        type="button"
+                        className="underline underline-offset-4 hover:text-primary bg-transparent border-0 p-0 font-inherit text-inherit cursor-default"
                         title={businessName}
                     >
                         Read our {totalReviews.toLocaleString()} reviews
-                    </a>
+                    </button>
                 </p>
             </div>
         </div>
