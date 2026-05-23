@@ -424,6 +424,28 @@ export async function proxy(request: NextRequest) {
 
         // Production Root Domain Logic
 
+        // Signed-in users on the marketing home page go straight to the app dashboard.
+        if (pathname === "/" && user) {
+            let targetPath = "/dashboard";
+            try {
+                const { data } = await supabase
+                    .from("users")
+                    .select("onboarding_completed")
+                    .eq("id", user.id)
+                    .single();
+                if (data && !data.onboarding_completed) {
+                    targetPath = "/onboarding";
+                }
+            } catch (error) {
+                console.error("Onboarding status check failed:", error);
+            }
+
+            const appHost = rootDomain.split(":")[0];
+            const appUrl = new URL(targetPath, `https://app.${appHost}`);
+            appUrl.search = request.nextUrl.search;
+            return createResponse(NextResponse.redirect(appUrl));
+        }
+
         // 1. Landing page -> pass
         if (pathname === "/") return supabaseResponse;
 

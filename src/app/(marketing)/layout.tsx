@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award, Handshake, Bot, Globe, TrendingUp } from "lucide-react";
+import { X, ChevronDown, Zap, GitBranch, Sparkles, BarChart3, Building2, Scale, BookOpen, FileText, HelpCircle, ShieldCheck, Award, Handshake, Bot, Globe, TrendingUp } from "lucide-react";
 import { FooterTrustStrip } from "@/components/marketing/social-proof";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import { UtmCapture } from "@/components/marketing/utm-capture";
 import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
+import { MarketingHeaderAuth } from "@/components/marketing/marketing-header-auth";
 
 const PUBLIC_STATUS_URL = "https://status.zyenereviews.com/";
 
@@ -244,14 +245,7 @@ export default function MarketingLayout({
 
                         <div className="mx-2 h-5 w-px bg-border" />
 
-                        <Link href={loginUrl} className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors">
-                            Log In
-                        </Link>
-                        <Link href={signupUrl}>
-                            <Button className="rounded-md px-5 ml-1">
-                                Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
+                        <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />
                     </nav>
 
                     {/* Mobile Menu Button */}
@@ -301,14 +295,12 @@ export default function MarketingLayout({
                         <Link href="/about" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
                         <Link href="/contact" className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
                         <div className="pt-1 border-t border-border/50 mt-1">
-                            <Link href={loginUrl} className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2" onClick={() => setMobileMenuOpen(false)}>
-                                Log In
-                            </Link>
-                            <Link href={signupUrl} className="block mt-2 px-2" onClick={() => setMobileMenuOpen(false)}>
-                                <Button className="w-full rounded-md">
-                                    Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            </Link>
+                            <MarketingHeaderAuth
+                                loginUrl={loginUrl}
+                                signupUrl={signupUrl}
+                                variant="mobile"
+                                onNavigate={() => setMobileMenuOpen(false)}
+                            />
                         </div>
                     </div>
                 )}
