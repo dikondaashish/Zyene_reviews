@@ -3,27 +3,16 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
-    ArrowDown,
-    ArrowUp,
-    Minus,
-    Trash2,
-    ExternalLink,
     Star,
     Loader2,
     Download,
     RefreshCw,
     Hash,
-    Globe,
     Sparkles,
+    ExternalLink,
+    BarChart,
+    PieChart,
 } from "lucide-react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import {
     Card,
     CardContent,
@@ -44,18 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import { AddCompetitorDialog } from "./add-competitor-dialog";
 import { deleteCompetitor } from "@/app/actions/competitor";
 import { toast } from "sonner";
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    Cell,
-} from "recharts";
 import { TimeAgo } from "@/components/ui/time-ago";
-import { Database } from "@/lib/db/supabase/database.types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
@@ -67,59 +45,19 @@ import { generateCompetitorMarketBriefNow } from "@/app/actions/competitor-marke
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
 import { dateRangeKeys, type RangeKey } from "@/lib/query/date-range-keys";
 import { useCompetitorsFullRangeQuery } from "@/hooks/use-range-queries";
+import { CompetitorsTableSection } from "./competitors-table-section";
+import { CompetitorsChartsSection } from "./competitors-charts-section";
+import type {
+    Competitor,
+    CompetitorInsight,
+    CompetitorSnapshot,
+    CompetitorsListProps,
+} from "./competitors-types";
 
-type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
-type CompetitorSnapshot = {
-    id: string;
-    competitor_id: string;
-    business_id: string;
-    captured_at: string;
-    average_rating: number;
-    total_reviews: number;
-    source: string;
-    metadata: Record<string, unknown> | null;
-};
-type CompetitorEvent = {
-    id: string;
-    competitor_id: string;
-    business_id: string;
-    event_type: string;
-    title: string;
-    summary: string | null;
-    event_value: number | null;
-    event_delta: number | null;
-    created_at: string;
-};
-type CompetitorInsight = {
-    id: string;
-    competitor_id: string;
-    business_id: string;
-    range_key: string;
-    summary: string;
-    why_it_matters?: string | null;
-    owner_suggestion?: string | null;
-    actions?: Array<{ title?: string; impact?: string; effort?: string; priority?: string }> | null;
-    priority: string;
-    confidence: number | null;
-    recommendations: string[] | null;
-    model: string | null;
-    created_at: string;
-};
-type CompetitorWatchRun = {
-    id: string;
-    run_id: string;
-    business_id: string;
-    status: string;
-    scanned: number;
-    external_updates: number;
-    snapshots_created: number;
-    events_created: number;
-    insights_created: number;
-    error_message: string | null;
-    started_at: string;
-    finished_at: string;
-    created_at: string;
-};
+export type {
+    CompetitorMarketBriefLatest,
+    CompetitorWatchBenchmarkRange,
+} from "./competitors-types";
 
 async function prefetchCompetitorsRange(range: CompetitorRangeKey) {
     const response = await fetch(`/api/competitors/range-meta?range=${range}`, {
@@ -130,30 +68,6 @@ async function prefetchCompetitorsRange(range: CompetitorRangeKey) {
     }
     return response.json();
 }
-
-export type CompetitorMarketBriefLatest = {
-    id: string;
-    headline: string;
-    overview: string;
-    positioning_bullets: string[];
-    opportunity_actions: Array<{ title: string; detail: string }>;
-    data_limitations: string | null;
-    model: string | null;
-    created_at: string;
-};
-
-export type CompetitorWatchBenchmarkRange = {
-    label: string;
-    marketEndAvgRating: number;
-    marketEndUsedFallback: boolean;
-    marketBenchmarkAvailable: boolean;
-    yourRatingForRank: number;
-    rank: number | null;
-    totalRanked: number;
-    yourAvgVsMarketEnd: number | null;
-    yourReviewsInRange: number;
-    marketAvgReviewGain: number | null;
-};
 
 export function CompetitorsList({
     businessId,
@@ -172,32 +86,7 @@ export function CompetitorsList({
     placesMetaByCompetitorId,
     marketBriefLatest,
     ownBusinessChart,
-}: {
-    businessId: string;
-    initialCompetitors: Competitor[];
-    range: CompetitorRangeKey;
-    snapshotRows: CompetitorSnapshot[];
-    eventRows: CompetitorEvent[];
-    insightRows: CompetitorInsight[];
-    latestRun: CompetitorWatchRun | null;
-    latestSuccessRun: CompetitorWatchRun | null;
-    latestFailedRun: CompetitorWatchRun | null;
-    ownBusinessInRange: {
-        avgRating: number | null;
-        reviewCount: number;
-    };
-    benchmarkRange: CompetitorWatchBenchmarkRange;
-    ownSearchKeywords: Array<{ keyword: string; impressions: number; monthStart: string }>;
-    keywordDiscoverySplit: { discoveryPct: number; directPct: number };
-    placesMetaByCompetitorId: Record<string, CompetitorPlacesRowMeta>;
-    marketBriefLatest: CompetitorMarketBriefLatest | null;
-    /** Stored listing aggregates for the active business (same basis as competitor totals from Places). */
-    ownBusinessChart: {
-        name: string;
-        averageRating: number | null;
-        totalReviews: number | null;
-    };
-}) {
+}: CompetitorsListProps) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -242,12 +131,12 @@ export function CompetitorsList({
     const activeSnapshotRows =
         (fullRangeData?.snapshotRows as CompetitorSnapshot[] | undefined) ?? snapshotRows;
     const activeEventRows =
-        (fullRangeData?.eventRows as CompetitorEvent[] | undefined) ?? eventRows;
+        (fullRangeData?.eventRows as typeof eventRows | undefined) ?? eventRows;
     const activeInsightRows =
         (fullRangeData?.insightRows as CompetitorInsight[] | undefined) ?? insightRows;
     const activeOwnBusinessInRange = fullRangeData?.ownBusinessInRange ?? ownBusinessInRange;
     const activeBenchmarkRange =
-        (fullRangeData?.benchmarkRange as CompetitorWatchBenchmarkRange | undefined) ?? benchmarkRange;
+        (fullRangeData?.benchmarkRange as typeof benchmarkRange | undefined) ?? benchmarkRange;
     const activeOwnSearchKeywords = fullRangeData?.ownSearchKeywords ?? ownSearchKeywords;
     const activeKeywordDiscoverySplit =
         fullRangeData?.keywordDiscoverySplit ?? keywordDiscoverySplit;
@@ -422,13 +311,6 @@ export function CompetitorsList({
         }
         return byCompetitor;
     }, [activeInsightRows]);
-
-    const priorityBadgeVariant = (priority: string): "destructive" | "secondary" | "outline" => {
-        const p = String(priority || "").toLowerCase();
-        if (p === "high") return "destructive";
-        if (p === "medium") return "secondary";
-        return "outline";
-    };
 
     const runStatusVariant = (status: string): "default" | "destructive" | "secondary" => {
         const s = String(status || "").toLowerCase();
@@ -770,7 +652,7 @@ export function CompetitorsList({
                                 Volume Growth
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-primary/10 rounded-lg text-primary"><CartesianGrid className="h-4 w-4" /></div>
+                                <div className="p-2 bg-primary/10 rounded-lg text-primary"><PieChart className="h-4 w-4" /></div>
                                 Market Share
                             </div>
                             <div className="flex flex-col items-center gap-2">
@@ -782,722 +664,26 @@ export function CompetitorsList({
                 </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2">
-                    {/* Data Table */}
-                    <Card className="col-span-1 md:col-span-2">
-                        <CardHeader>
-                            <CardTitle>Market Benchmark ({activeBenchmarkRange.label})</CardTitle>
-                            <CardDescription>
-                                Your average rating uses reviews received in this period. Competitors use the latest
-                                snapshot in this period (or current totals if no snapshot yet).{" "}
-                                {!activeBenchmarkRange.marketBenchmarkAvailable && competitors.length > 0 ? (
-                                    <span className="text-chart-4 dark:text-chart-4">
-                                        Competitor ratings are not loaded yet — run Sync from Google or wait for the
-                                        next sync.
-                                    </span>
-                                ) : activeBenchmarkRange.marketEndUsedFallback ? (
-                                    "Some competitors fell back to live totals where snapshots were missing."
-                                ) : null}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 lg:grid-cols-4">
-                                <div className="min-w-0 rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Your rank (by period rating)</p>
-                                    <p className="text-xl font-semibold">
-                                        {activeBenchmarkRange.rank ? `#${activeBenchmarkRange.rank}` : "—"}
-                                        <span className="text-sm text-muted-foreground">
-                                            {" "}
-                                            / {activeBenchmarkRange.totalRanked || "—"}
-                                        </span>
-                                    </p>
-                                </div>
-                                <div className="min-w-0 rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Your avg rating ({activeBenchmarkRange.label})</p>
-                                    <p className="text-xl font-semibold">
-                                        {activeOwnBusinessInRange.avgRating !== null
-                                            ? activeOwnBusinessInRange.avgRating.toFixed(1)
-                                            : "—"}
-                                    </p>
-                                    <p className="text-[11px] text-muted-foreground mt-1">
-                                        {activeOwnBusinessInRange.reviewCount} reviews in period
-                                    </p>
-                                </div>
-                                <div className="min-w-0 rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">You vs market end (rating)</p>
-                                    <p className="text-xl font-semibold">
-                                        {activeBenchmarkRange.yourAvgVsMarketEnd === null
-                                            ? "—"
-                                            : `${activeBenchmarkRange.yourAvgVsMarketEnd > 0 ? "+" : ""}${activeBenchmarkRange.yourAvgVsMarketEnd.toFixed(1)}`}
-                                    </p>
-                                    <p className="text-[11px] text-muted-foreground mt-1">
-                                        {activeBenchmarkRange.marketBenchmarkAvailable ? (
-                                            <>Market end avg {activeBenchmarkRange.marketEndAvgRating.toFixed(1)}</>
-                                        ) : (
-                                            <>Market average unavailable until competitor data syncs</>
-                                        )}
-                                    </p>
-                                </div>
-                                <div className="min-w-0 rounded-lg border p-3">
-                                    <p className="text-xs text-muted-foreground">Avg competitor review gain</p>
-                                    <p className="text-xl font-semibold">
-                                        {activeBenchmarkRange.marketAvgReviewGain === null
-                                            ? "—"
-                                            : `${activeBenchmarkRange.marketAvgReviewGain > 0 ? "+" : ""}${Math.round(activeBenchmarkRange.marketAvgReviewGain)}`}
-                                    </p>
-                                    <p className="text-[11px] text-muted-foreground mt-1">
-                                        Mean first→last snapshot in {activeBenchmarkRange.label}
-                                    </p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="col-span-1 md:col-span-2">
-                        <CardHeader>
-                            <CardTitle>Tracked Competitors</CardTitle>
-                            <CardDescription>
-                                Ratings and reviews from Google Places. Primary category, website, and short
-                                description come from public listing data after sync — not competitors&apos; private
-                                search-keyword reports.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4 pt-0">
-                            <div className="space-y-3 lg:hidden">
-                                {competitors.map((competitor) => {
-                                    const syncing = isSyncing(competitor);
-                                    const updatedAt = competitor.updated_at ? (
-                                        <TimeAgo date={competitor.updated_at} />
-                                    ) : (
-                                        "—"
-                                    );
-                                    const places = activePlacesMetaByCompetitorId[competitor.id];
-                                    const snap = latestSnapshotByCompetitor.get(competitor.id);
-                                    const meta = snap?.metadata as
-                                        | { provider?: string; seeded_on_create?: boolean }
-                                        | null
-                                        | undefined;
-                                    const sourceLabel = (() => {
-                                        if (meta?.provider) return String(meta.provider);
-                                        if (snap?.source === "google_places") return "google_places";
-                                        if (snap?.source === "manual" && meta?.seeded_on_create) return "Pending sync";
-                                        return snap?.source || "—";
-                                    })();
-
-                                    return (
-                                        <div
-                                            key={`card-${competitor.id}`}
-                                            className="min-w-0 rounded-lg border bg-card p-3 shadow-sm sm:p-4"
-                                        >
-                                            <div className="flex min-w-0 items-start gap-3">
-                                                <div className="min-w-0 flex-1 space-y-2">
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        <p className="font-semibold leading-snug break-words">
-                                                            {competitor.name}
-                                                        </p>
-                                                        {syncing ? (
-                                                            <Badge variant="secondary" className="flex shrink-0 items-center gap-1">
-                                                                <Loader2 className="h-3 w-3 animate-spin" />
-                                                                Syncing…
-                                                            </Badge>
-                                                        ) : null}
-                                                    </div>
-                                                    {places?.summary ? (
-                                                        <p
-                                                            className="text-xs leading-relaxed text-muted-foreground"
-                                                            title={places.summary}
-                                                        >
-                                                            {places.summary}
-                                                        </p>
-                                                    ) : null}
-                                                </div>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    disabled={isDeleting === competitor.id}
-                                                    onClick={() => setDeleteConfirm(competitor.id)}
-                                                    className="mt-0.5 shrink-0 self-start text-destructive hover:bg-destructive/10 hover:text-destructive"
-                                                    aria-label={`Remove ${competitor.name}`}
-                                                >
-                                                    {isDeleting === competitor.id ? (
-                                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                                    ) : (
-                                                        <Trash2 className="h-4 w-4" />
-                                                    )}
-                                                </Button>
-                                            </div>
-                                            <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-3 text-sm">
-                                                <div>
-                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                                        Category
-                                                    </dt>
-                                                    <dd className="mt-0.5 text-muted-foreground">
-                                                        {syncing ? (
-                                                            "—"
-                                                        ) : places?.primaryType ? (
-                                                            <span title={places.typesPreview ?? undefined}>
-                                                                {places.primaryType}
-                                                            </span>
-                                                        ) : (
-                                                            "—"
-                                                        )}
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                                        Avg rating
-                                                    </dt>
-                                                    <dd className="mt-0.5">
-                                                        {syncing ? (
-                                                            <span className="text-muted-foreground">—</span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1">
-                                                                <Star className="h-3.5 w-3.5 shrink-0 fill-chart-4 text-chart-4" />
-                                                                {competitor.average_rating || "—"}
-                                                            </span>
-                                                        )}
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                                        Reviews
-                                                    </dt>
-                                                    <dd className="mt-0.5">
-                                                        {syncing ? (
-                                                            <span className="text-muted-foreground">—</span>
-                                                        ) : (
-                                                            (competitor.total_reviews || 0).toLocaleString()
-                                                        )}
-                                                    </dd>
-                                                </div>
-                                                <div>
-                                                    <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                                                        Updated
-                                                    </dt>
-                                                    <dd className="mt-0.5 text-xs text-muted-foreground">{updatedAt}</dd>
-                                                </div>
-                                            </dl>
-                                            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-3 text-xs">
-                                                {!syncing && places?.websiteUrl ? (
-                                                    <a
-                                                        href={places.websiteUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
-                                                    >
-                                                        <Globe className="h-3.5 w-3.5 shrink-0" />
-                                                        Website
-                                                    </a>
-                                                ) : null}
-                                                {competitor.google_url ? (
-                                                    <a
-                                                        href={competitor.google_url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
-                                                    >
-                                                        Maps
-                                                        <ExternalLink className="h-3 w-3 shrink-0" />
-                                                    </a>
-                                                ) : (
-                                                    <span className="text-muted-foreground">Maps: N/A</span>
-                                                )}
-                                            </div>
-                                            <p className="mt-2 text-[11px] text-muted-foreground">
-                                                Source: {sourceLabel}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            <div className="hidden overflow-x-auto lg:block">
-                                <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="min-w-[140px]">Competitor Name</TableHead>
-                                        <TableHead className="min-w-[120px]">Primary category</TableHead>
-                                        <TableHead>Avg Rating</TableHead>
-                                        <TableHead>Total Reviews</TableHead>
-                                        <TableHead className="min-w-[90px]">Website</TableHead>
-                                        <TableHead className="min-w-[90px]">Maps</TableHead>
-                                        <TableHead className="min-w-[120px]">Last Updated</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {competitors.map((competitor) => {
-                                        const syncing = isSyncing(competitor);
-                                        const updatedAt = competitor.updated_at 
-                                            ? <TimeAgo date={competitor.updated_at} />
-                                            : "—";
-                                        const places = activePlacesMetaByCompetitorId[competitor.id];
-                                        
-                                        return (
-                                            <TableRow key={competitor.id}>
-                                                <TableCell className="font-medium align-top">
-                                                    <div className="flex flex-col gap-1">
-                                                        <div className="flex items-center gap-2">
-                                                            {competitor.name}
-                                                            {syncing && (
-                                                                <Badge variant="secondary" className="flex items-center gap-1">
-                                                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                                                    Syncing...
-                                                                </Badge>
-                                                            )}
-                                                        </div>
-                                                        {places?.summary ? (
-                                                            <p
-                                                                className="text-[11px] font-normal text-muted-foreground line-clamp-2 max-w-[280px]"
-                                                                title={places.summary}
-                                                            >
-                                                                {places.summary}
-                                                            </p>
-                                                        ) : null}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="align-top text-sm text-muted-foreground">
-                                                    {syncing ? (
-                                                        "—"
-                                                    ) : places?.primaryType ? (
-                                                        <span title={places.typesPreview ?? undefined}>
-                                                            {places.primaryType}
-                                                        </span>
-                                                    ) : (
-                                                        "—"
-                                                    )}
-                                                </TableCell>
-                                                <TableCell className="align-top">
-                                                    <div className="flex items-center text-sm">
-                                                        {syncing ? (
-                                                            <span className="text-muted-foreground">—</span>
-                                                        ) : (
-                                                            <>
-                                                                <Star className="h-4 w-4 text-chart-4 fill-chart-4 mr-1" />
-                                                                {competitor.average_rating || "—"}
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="align-top">
-                                                    {syncing ? <span className="text-muted-foreground">—</span> : competitor.total_reviews || 0}
-                                                </TableCell>
-                                                <TableCell className="align-top">
-                                                    {!syncing && places?.websiteUrl ? (
-                                                        <a
-                                                            href={places.websiteUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
-                                                        >
-                                                            <Globe className="h-3.5 w-3.5 shrink-0" />
-                                                            Site
-                                                        </a>
-                                                    ) : (
-                                                        <span className="text-muted-foreground text-xs">—</span>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell className="align-top">
-                                                    {competitor.google_url ? (
-                                                        <a
-                                                            href={competitor.google_url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex items-center text-primary hover:underline text-xs"
-                                                        >
-                                                            View <ExternalLink className="h-3 w-3 ml-1" />
-                                                        </a>
-                                                    ) : (
-                                                        <span className="text-muted-foreground text-xs">N/A</span>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell className="text-sm text-muted-foreground align-top">
-                                                    <div className="space-y-1">
-                                                        <div>{updatedAt}</div>
-                                                        <div className="text-[11px]">
-                                                            Source:{" "}
-                                                            {(() => {
-                                                                const snap = latestSnapshotByCompetitor.get(
-                                                                    competitor.id
-                                                                );
-                                                                const meta = snap?.metadata as
-                                                                    | { provider?: string; seeded_on_create?: boolean }
-                                                                    | null
-                                                                    | undefined;
-                                                                if (meta?.provider) return String(meta.provider);
-                                                                if (snap?.source === "google_places")
-                                                                    return "google_places";
-                                                                if (snap?.source === "manual" && meta?.seeded_on_create) {
-                                                                    return "Pending sync";
-                                                                }
-                                                                return snap?.source || "—";
-                                                            })()}
-                                                        </div>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        disabled={isDeleting === competitor.id}
-                                                        onClick={() => setDeleteConfirm(competitor.id)}
-                                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                    >
-                                                        {isDeleting === competitor.id ? (
-                                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                                        ) : (
-                                                            <Trash2 className="h-4 w-4" />
-                                                        )}
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                                </Table>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="col-span-1 md:col-span-2">
-                        <CardHeader>
-                            <CardTitle>Market Movement ({rangeLabel})</CardTitle>
-                            <CardDescription>
-                                Rating and review-count movement based on recorded competitor snapshots.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 lg:grid-cols-3">
-                                {movementCards.map((m) => {
-                                    const hasData = m.hasBaseline && m.ratingDelta !== null && m.reviewsDelta !== null;
-                                    const ratingUp = (m.ratingDelta ?? 0) > 0;
-                                    const reviewsUp = (m.reviewsDelta ?? 0) > 0;
-                                    return (
-                                        <div key={m.competitorId} className="min-w-0 rounded-lg border bg-card p-3">
-                                            <p className="mb-2 break-words text-sm font-semibold">{m.name}</p>
-                                            {!hasData ? (
-                                                <p className="text-xs text-muted-foreground">
-                                                    Need at least two snapshots in this range to compute movement.
-                                                </p>
-                                            ) : (
-                                                <div className="space-y-2 text-sm">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-muted-foreground">Rating change</span>
-                                                        <span className="inline-flex items-center gap-1 font-medium">
-                                                            {ratingUp ? <ArrowUp className="h-3 w-3 text-chart-2" /> : (m.ratingDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-sync-action" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
-                                                            {(m.ratingDelta ?? 0).toFixed(1)}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-muted-foreground">Review change</span>
-                                                        <span className="inline-flex items-center gap-1 font-medium">
-                                                            {reviewsUp ? <ArrowUp className="h-3 w-3 text-chart-2" /> : (m.reviewsDelta ?? 0) < 0 ? <ArrowDown className="h-3 w-3 text-sync-action" /> : <Minus className="h-3 w-3 text-muted-foreground" />}
-                                                            {(m.reviewsDelta ?? 0) > 0 ? "+" : ""}
-                                                            {m.reviewsDelta ?? 0}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {latestInsightByCompetitor.size > 0 && (
-                    <Card className="col-span-1 md:col-span-2">
-                        <CardHeader>
-                            <CardTitle>AI Competitor Insights</CardTitle>
-                            <CardDescription>
-                                Latest AI-generated insights from recent competitor movement.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                    {competitors
-                                        .map((c) => ({ competitor: c, insight: latestInsightByCompetitor.get(c.id) }))
-                                        .filter((row) => !!row.insight)
-                                        .map(({ competitor, insight }) => {
-                                            if (!insight) return null;
-                                            return (
-                                                <div key={insight.id} className="min-w-0 rounded-lg border bg-card p-4">
-                                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                                        <p className="break-words text-sm font-semibold">{competitor.name}</p>
-                                                        <Badge variant={priorityBadgeVariant(insight.priority)} className="w-fit shrink-0">
-                                                            {String(insight.priority || "low").toUpperCase()}
-                                                        </Badge>
-                                                    </div>
-                                                    <p className="text-sm mt-2">{insight.summary}</p>
-                                                    {insight.why_it_matters ? (
-                                                        <p className="text-xs mt-2 text-muted-foreground">
-                                                            Why it matters: {insight.why_it_matters}
-                                                        </p>
-                                                    ) : null}
-                                                    {insight.owner_suggestion ? (
-                                                        <p className="text-xs mt-1 text-muted-foreground">
-                                                            Suggested owner: {String(insight.owner_suggestion).toUpperCase()}
-                                                        </p>
-                                                    ) : null}
-                                                    {Array.isArray(insight.actions) &&
-                                                    insight.actions.length > 0 ? (
-                                                        <div className="mt-2 space-y-2">
-                                                            {insight.actions.slice(0, 3).map((action, idx: number) => (
-                                                                <div
-                                                                    key={`${insight.id}-action-${idx}`}
-                                                                    className="rounded border p-2 bg-muted/20"
-                                                                >
-                                                                    <p className="text-xs font-medium">{action.title}</p>
-                                                                    <p className="text-[11px] text-muted-foreground mt-1">
-                                                                        Impact: {action.impact}
-                                                                    </p>
-                                                                    <p className="text-[11px] text-muted-foreground">
-                                                                        Effort: {String(action.effort || "").toUpperCase()} • Priority:{" "}
-                                                                        {String(action.priority || "").toUpperCase()}
-                                                                    </p>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    ) : null}
-                                                    {Array.isArray(insight.recommendations) &&
-                                                    insight.recommendations.length > 0 ? (
-                                                        <div className="mt-2 space-y-1">
-                                                            {insight.recommendations.slice(0, 3).map((rec, idx) => (
-                                                                <p key={`${insight.id}-${idx}`} className="text-xs text-muted-foreground">
-                                                                    - {rec}
-                                                                </p>
-                                                            ))}
-                                                        </div>
-                                                    ) : null}
-                                                    <p className="text-[11px] text-muted-foreground mt-3">
-                                                        Confidence {Math.round((insight.confidence ?? 0.5) * 100)}% •{" "}
-                                                        <TimeAgo date={insight.created_at} />
-                                                    </p>
-                                                </div>
-                                            );
-                                        })}
-                                </div>
-                        </CardContent>
-                    </Card>
-                    )}
-
-                    <Card className="col-span-1 md:col-span-2">
-                        <CardHeader>
-                            <CardTitle>Recent Competitor Events ({rangeLabel})</CardTitle>
-                            <CardDescription>
-                                Event timeline generated from competitor monitoring workflows.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {activeEventRows.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">
-                                    No events recorded in this period yet.
-                                </p>
-                            ) : (
-                                <div className="space-y-3">
-                                    {activeEventRows.slice(0, 20).map((event) => {
-                                        const competitorName =
-                                            competitors.find((c) => c.id === event.competitor_id)?.name || "Competitor";
-                                        return (
-                                            <div key={event.id} className="min-w-0 rounded-lg border p-3">
-                                                <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
-                                                    <p className="min-w-0 flex-1 break-words text-sm font-medium leading-snug">
-                                                        {event.title || event.event_type}
-                                                    </p>
-                                                    <span className="shrink-0 text-xs text-muted-foreground">
-                                                        <TimeAgo date={event.created_at} />
-                                                    </span>
-                                                </div>
-                                                <p className="text-xs text-muted-foreground mt-1">
-                                                    {competitorName}
-                                                </p>
-                                                {event.summary ? (
-                                                    <p className="text-sm mt-1">{event.summary}</p>
-                                                ) : null}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    {/* Chart Component */}
+                    <CompetitorsTableSection
+                        competitors={competitors}
+                        activeBenchmarkRange={activeBenchmarkRange}
+                        activeOwnBusinessInRange={activeOwnBusinessInRange}
+                        activePlacesMetaByCompetitorId={activePlacesMetaByCompetitorId}
+                        latestSnapshotByCompetitor={latestSnapshotByCompetitor}
+                        latestInsightByCompetitor={latestInsightByCompetitor}
+                        movementCards={movementCards}
+                        activeEventRows={activeEventRows}
+                        rangeLabel={rangeLabel}
+                        isSyncing={isSyncing}
+                        isDeleting={isDeleting}
+                        onDeleteRequest={setDeleteConfirm}
+                    />
                     {chartData.length > 0 && (
-                        <>
-                            <Card className="col-span-1 md:col-span-2 lg:col-span-1">
-                                <CardHeader>
-                                    <CardTitle>Rating Comparison</CardTitle>
-                                    <CardDescription>
-                                        Your business vs tracked competitors (stored average ratings, typically from
-                                        Google).
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-chart-4/120 align-middle mr-1" />{" "}
-                                        Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
-                                        Competitors
-                                    </p>
-                                    <div className="min-w-0 overflow-x-auto -mx-1 px-1 sm:mx-0 sm:overflow-visible sm:px-0">
-                                        <div className="h-[220px] w-full min-w-[260px] sm:min-w-0">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart
-                                                data={chartData}
-                                                margin={{ top: 12, right: 8, left: -8, bottom: 36 }}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                                                <XAxis
-                                                    dataKey="name"
-                                                    axisLine={false}
-                                                    tickLine={false}
-                                                    interval={0}
-                                                    tick={{ fontSize: 10 }}
-                                                    height={48}
-                                                />
-                                                <YAxis
-                                                    domain={[0, 5]}
-                                                    ticks={[1, 2, 3, 4, 5]}
-                                                    axisLine={false}
-                                                    tickLine={false}
-                                                    width={28}
-                                                    tick={{ fontSize: 10 }}
-                                                />
-                                                <Tooltip
-                                                    cursor={{ fill: "transparent" }}
-                                                    content={({ active, payload }) => {
-                                                        if (!active || !payload?.length) return null;
-                                                        const row = payload[0].payload as {
-                                                            fullName?: string;
-                                                            name: string;
-                                                            rating: number;
-                                                            isOwn?: boolean;
-                                                        };
-                                                        const label = row.fullName || row.name;
-                                                        return (
-                                                            <div className="rounded-lg border bg-background px-3 py-2 text-sm shadow-md">
-                                                                <p className="font-semibold">
-                                                                    {label}
-                                                                    {row.isOwn ? (
-                                                                        <span className="font-normal text-muted-foreground">
-                                                                            {" "}
-                                                                            (your business)
-                                                                        </span>
-                                                                    ) : null}
-                                                                </p>
-                                                                <p className="text-muted-foreground text-xs mt-0.5">
-                                                                    Avg rating: {Number(row.rating).toFixed(1)}
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    }}
-                                                />
-                                                <Bar
-                                                    dataKey="rating"
-                                                    radius={[4, 4, 0, 0]}
-                                                    maxBarSize={52}
-                                                    background={{ fill: "var(--border)", radius: 4 }}
-                                                >
-                                                    {chartData.map((entry, index) => (
-                                                        <Cell
-                                                            key={`rating-${index}`}
-                                                            fill={entry.isOwn ? "var(--primary)" : "var(--muted-foreground)"}
-                                                        />
-                                                    ))}
-                                                </Bar>
-                                            </BarChart>
-                                        </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Review Volume Comparison Chart */}
-                            <Card className="col-span-1 md:col-span-2 lg:col-span-1">
-                                <CardHeader>
-                                    <CardTitle>Review Volume Comparison</CardTitle>
-                                    <CardDescription>
-                                        Your total Google reviews vs competitors (public totals from sync).
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-[11px] text-muted-foreground mb-2">
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-chart-4/120 align-middle mr-1" />{" "}
-                                        Your business ·{" "}
-                                        <span className="inline-block h-2 w-2 rounded-sm bg-muted-foreground align-middle mx-1" />{" "}
-                                        Competitors
-                                    </p>
-                                    <div className="min-w-0 overflow-x-auto -mx-1 px-1 sm:mx-0 sm:overflow-visible sm:px-0">
-                                        <div className="h-[220px] w-full min-w-[260px] sm:min-w-0">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart
-                                                data={chartData}
-                                                margin={{ top: 12, right: 8, left: -8, bottom: 36 }}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                                                <XAxis
-                                                    dataKey="name"
-                                                    axisLine={false}
-                                                    tickLine={false}
-                                                    interval={0}
-                                                    tick={{ fontSize: 10 }}
-                                                    height={48}
-                                                />
-                                                <YAxis axisLine={false} tickLine={false} width={36} tick={{ fontSize: 10 }} />
-                                                <Tooltip
-                                                    cursor={{ fill: "transparent" }}
-                                                    content={({ active, payload }) => {
-                                                        if (!active || !payload?.length) return null;
-                                                        const row = payload[0].payload as {
-                                                            fullName?: string;
-                                                            name: string;
-                                                            reviews: number;
-                                                            isOwn?: boolean;
-                                                        };
-                                                        const label = row.fullName || row.name;
-                                                        return (
-                                                            <div className="rounded-lg border bg-background px-3 py-2 text-sm shadow-md">
-                                                                <p className="font-semibold">
-                                                                    {label}
-                                                                    {row.isOwn ? (
-                                                                        <span className="font-normal text-muted-foreground">
-                                                                            {" "}
-                                                                            (your business)
-                                                                        </span>
-                                                                    ) : null}
-                                                                </p>
-                                                                <p className="text-muted-foreground text-xs mt-0.5">
-                                                                    Total reviews:{" "}
-                                                                    {Number(row.reviews).toLocaleString()}
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    }}
-                                                />
-                                                <Bar
-                                                    dataKey="reviews"
-                                                    radius={[4, 4, 0, 0]}
-                                                    maxBarSize={52}
-                                                    background={{ fill: "var(--border)", radius: 4 }}
-                                                >
-                                                    {chartData.map((entry, index) => (
-                                                        <Cell
-                                                            key={`reviews-${index}`}
-                                                            fill={entry.isOwn ? "var(--primary)" : "var(--muted-foreground)"}
-                                                        />
-                                                    ))}
-                                                </Bar>
-                                            </BarChart>
-                                        </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </>
+                        <CompetitorsChartsSection chartData={chartData} />
                     )}
                 </div>
             )}
 
-            {/* Delete Confirmation Dialog */}
             <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

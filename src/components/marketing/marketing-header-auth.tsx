@@ -46,7 +46,7 @@ export function MarketingHeaderAuth({
                 <Link href={dashboardUrl} className="block mt-2 px-2" onClick={onNavigate}>
                     <Button className="w-full rounded-md gap-2">
                         <LayoutDashboard className="h-4 w-4" />
-                        Go to Dashboard
+                        Dashboard
                     </Button>
                 </Link>
             );
@@ -56,7 +56,7 @@ export function MarketingHeaderAuth({
             <Link href={dashboardUrl}>
                 <Button className="rounded-md px-5 ml-1 gap-2">
                     <LayoutDashboard className="h-4 w-4" />
-                    Go to Dashboard
+                    Dashboard
                 </Button>
             </Link>
         );

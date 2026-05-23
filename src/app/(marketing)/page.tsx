@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { MarketingHomeClient } from "@/components/marketing/marketing-home-client";
 import { SoftwareApplicationJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
-import { createClient } from "@/lib/db/supabase/server";
-import { getAppBaseUrl, getAppDashboardUrl } from "@/config/env";
 
 export const metadata: Metadata = {
     title: "Zyene Reviews — Review Management for Local Businesses",
@@ -61,25 +58,6 @@ const HOME_FAQS = [
 ];
 
 export default async function MarketingPage() {
-    const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-        const { data: profile } = await supabase
-            .from("users")
-            .select("onboarding_completed")
-            .eq("id", user.id)
-            .maybeSingle();
-
-        redirect(
-            profile?.onboarding_completed
-                ? getAppDashboardUrl()
-                : `${getAppBaseUrl()}/onboarding`
-        );
-    }
-
   return (
         <>
             {/* Structured data for rich search results */}

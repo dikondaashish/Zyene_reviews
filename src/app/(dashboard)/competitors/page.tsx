@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { CompetitorsList, type CompetitorWatchBenchmarkRange } from "./competitors-list";
+import { CompetitorsList } from "./competitors-list";
+import type { CompetitorWatchBenchmarkRange } from "./competitors-types";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { TrendingUp } from "lucide-react";

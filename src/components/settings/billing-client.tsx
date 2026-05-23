@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { PastDueBillingAlert } from "@/components/billing/past-due-billing-alert";
 import { BILLING_PLAN_PROFESSIONAL_ANCHOR_ID } from "@/lib/billing/business-limit-upgrade-href";
+import { ReferralCard } from "@/components/settings/referral-card";
 
 // ─────────────────────────────────────────────────────────
 // Types
@@ -827,6 +828,8 @@ export function BillingClient({
                     </div>
                 </div>
             </div>
+
+            <ReferralCard />
 
             <AlertDialog
                 open={confirmPlanChange !== null}

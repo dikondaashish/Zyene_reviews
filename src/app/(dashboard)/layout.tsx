@@ -101,7 +101,7 @@ export default async function DashboardLayout({
     return (
         <SidebarProvider>
             <AppSidebar hideGoogleQaNav={hideGoogleQaNav} />
-            <SidebarInset>
+            <SidebarInset className="bg-canvas">
                 <VerificationBanner user={user} />
                 <TrialBanner organization={organization} />
                 <PastDuePaymentBanner

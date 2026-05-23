@@ -72,6 +72,7 @@ export function DashboardLayoutClient({
 
     return (
         <DashboardTourProvider>
+            <div className="flex min-h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col bg-canvas">
             <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-3 max-lg:gap-1.5 lg:px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
@@ -93,29 +94,30 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden bg-canvas p-3 sm:p-4 min-h-[calc(100vh-4rem)] max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:gap-4 lg:p-6 lg:overflow-x-visible lg:pb-6">
+            <main className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden p-3 sm:p-4 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:gap-4 lg:p-6 lg:overflow-x-visible lg:pb-6">
                 {children}
             </main>
-            <footer className="mt-4 flex flex-col gap-3 border-t border-[rgb(229,231,235)] bg-[rgb(247,245,239)] px-3 py-4 text-[11.5px] text-[rgb(138,143,134)] dark:border-white/10 dark:bg-[rgb(32,21,21)] dark:text-[rgb(197,192,177)] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
+            <footer className="mt-auto shrink-0 flex flex-col gap-3 border-t border-border bg-canvas px-3 py-4 text-[11.5px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
                 <div className="shrink-0 text-center sm:text-left">
                     © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-end">
-                    <Link href="/terms" className="transition-colors hover:text-foreground dark:text-[rgb(197,192,177)] dark:hover:text-[rgb(226,232,240)]">
+                    <Link href="/terms" className="transition-colors hover:text-foreground">
                         Legal
                     </Link>
-                    <Link href="/privacy" className="transition-colors hover:text-foreground dark:text-[rgb(197,192,177)] dark:hover:text-[rgb(226,232,240)]">
+                    <Link href="/privacy" className="transition-colors hover:text-foreground">
                         Privacy
                     </Link>
                     <button
                         type="button"
                         onClick={handleManageCookies}
-                        className="transition-colors hover:text-foreground dark:text-[rgb(197,192,177)] dark:hover:text-[rgb(226,232,240)]"
+                        className="transition-colors hover:text-foreground"
                     >
                         Manage cookies
                     </button>
                 </div>
             </footer>
+            </div>
         </DashboardTourProvider>
     );
 }

@@ -25,7 +25,7 @@ Review management powered by <a href="${href}" style="color:${EMAIL_COLORS.muted
 export function referralRewardEmailHtml(name: string): string {
     return `<p style="font-size:16px;color:${EMAIL_COLORS.body};">Hi ${name},</p>
 <p style="font-size:16px;color:${EMAIL_COLORS.body};">Someone you referred just became a paying Zyene Reviews customer. We've applied a <strong>1-month account credit</strong> to your Stripe balance (or will reflect on your next invoice).</p>
-<p style="font-size:16px;color:${EMAIL_COLORS.body};">Keep sharing your referral link from Settings → Refer a friend.</p>
+<p style="font-size:16px;color:${EMAIL_COLORS.body};">Keep sharing your referral link from Settings → Billing.</p>
 <p style="font-size:13px;color:${EMAIL_COLORS.subtle};">— The Zyene Reviews Team</p>`;
 }
 
