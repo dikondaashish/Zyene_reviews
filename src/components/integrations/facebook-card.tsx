@@ -1,469 +1,53 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    CheckCircle2,
-    XCircle,
-    ExternalLink,
-    RefreshCw,
-    Star,
-    MessageSquare,
-    Clock,
-    AlertTriangle,
-    Loader2,
-} from "lucide-react";
-import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
-import { toast } from "sonner";
-import type {
-    FacebookPageOption,
-    IntegrationPlatformSummary,
-} from "@/types/components";
+import { useFacebookIntegrationCard } from "@/components/integrations/use-facebook-integration-card";
+import type { FacebookCardProps } from "@/components/integrations/facebook-card-types";
+import { FacebookIntegrationCardConnected } from "@/components/integrations/facebook-integration-card-connected";
+import { FacebookIntegrationCardError } from "@/components/integrations/facebook-integration-card-error";
+import { FacebookIntegrationCardDisconnected } from "@/components/integrations/facebook-integration-card-disconnected";
+import { FacebookCardPageSelectDialog } from "@/components/integrations/facebook-card-page-select-dialog";
 
-interface FacebookCardProps {
-    platform: IntegrationPlatformSummary | null;
-    businessId: string;
-    businessName: string;
-    /** All Facebook rows in `reviews` for this business. */
-    dbFacebookSyncedRowCount?: number;
-    /** Live `reviews` aggregates (`is_visible = true`, platform facebook). */
-    dbVisibleFacebookReviewCount?: number;
-    dbVisibleFacebookAverageRating?: number | null;
-}
+export function FacebookIntegrationCard(props: FacebookCardProps) {
+    const s = useFacebookIntegrationCard(props);
 
-export function FacebookIntegrationCard({
-    platform,
-    businessId,
-    businessName,
-    dbFacebookSyncedRowCount,
-    dbVisibleFacebookReviewCount,
-    dbVisibleFacebookAverageRating,
-}: FacebookCardProps) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const [connecting, setConnecting] = useState(false);
-    const [syncing, setSyncing] = useState(false);
-    const [showDisconnect, setShowDisconnect] = useState(false);
-    const [showPageSelect, setShowPageSelect] = useState(false);
-    const [pages, setPages] = useState<FacebookPageOption[]>([]);
-    const [confirmingPage, setConfirmingPage] = useState<string | null>(null);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const isConnected = platform?.sync_status === "active";
-    const fbVisibleCount = dbVisibleFacebookReviewCount ?? 0;
-    /** Shown as “Reviews”: visible rows in Zyene; falls back to all stored rows only if visible count not supplied. */
-    const fbSyncedCount =
-        typeof dbVisibleFacebookReviewCount === "number"
-            ? dbVisibleFacebookReviewCount
-            : dbFacebookSyncedRowCount !== undefined
-              ? dbFacebookSyncedRowCount
-              : fbVisibleCount;
-    const fbRatingDisplay =
-        fbVisibleCount > 0 && dbVisibleFacebookAverageRating != null && !Number.isNaN(dbVisibleFacebookAverageRating)
-            ? dbVisibleFacebookAverageRating.toFixed(1)
-            : "—";
-    const isError =
-        platform?.sync_status?.startsWith("error") ||
-        platform?.sync_status === "error_token_expired";
-
-    // Check for page selection redirect from Facebook OAuth
-    useEffect(() => {
-        if (searchParams.get("fb_select_page") === "true") {
-            fetchPagesFromCookie();
-        }
-        const fbError = searchParams.get("fb_error");
-        if (fbError) {
-            const messages: Record<string, string> = {
-                denied: "Facebook login was denied",
-                no_pages: "No Facebook pages found on your account",
-                token_failed: "Failed to connect to Facebook. Please try again.",
-                missing_params: "Connection failed. Please try again.",
-                invalid_state: "Invalid connection state. Please try again.",
-            };
-            toast.error(messages[fbError] || "Facebook connection error");
-        }
-    }, [searchParams]);
-
-    async function fetchPagesFromCookie() {
-        try {
-            const res = await fetch("/api/integrations/facebook/pages");
-            if (!res.ok) throw new Error("Failed to fetch pages");
-            const data = await res.json();
-            setPages(data.pages || []);
-            setShowPageSelect(true);
-        } catch {
-            // Cookie method: read directly from route that returns cookie data
-            // Fallback: show a message
-            toast.error(
-                "Session expired. Please connect Facebook again."
-            );
-        }
-    }
-
-    function handleConnect() {
-        setConnecting(true);
-        // Redirect to Facebook OAuth
-        window.location.href = `/api/integrations/facebook/connect?businessId=${businessId}`;
-    }
-
-    async function handleSelectPage(pageId: string) {
-        setConfirmingPage(pageId);
-        try {
-            const res = await fetch("/api/integrations/facebook/confirm", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ pageId }),
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || "Failed to connect page");
-            }
-
-            toast.success("Facebook page connected successfully!");
-            setShowPageSelect(false);
-            router.refresh();
-        } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "An unexpected error occurred";
-            toast.error(message);
-        } finally {
-            setConfirmingPage(null);
-        }
-    }
-
-    async function handleSync() {
-        setSyncing(true);
-        try {
-            const res = await fetch("/api/cron/sync-reviews", {
-                headers: { host: "localhost" },
-            });
-            const data = await res.json().catch(() => ({}));
-            
-            if (!res.ok) {
-                const msg = data.error || "Sync failed";
-                const details = data.details;
-                toast.error(msg, { description: details });
-                return;
-            }
-            
-            toast.success("Facebook reviews synced!");
-            router.refresh();
-        } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : "Sync failed. Please try again.");
-        } finally {
-            setSyncing(false);
-        }
-    }
-
-    async function handleDisconnect() {
-        try {
-            const res = await fetch(
-                `/api/businesses/${businessId}`,
-                {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        disconnectPlatform: "facebook",
-                    }),
-                }
-            );
-            if (!res.ok) throw new Error("Disconnect failed");
-            toast.success("Facebook disconnected");
-            setShowDisconnect(false);
-            router.refresh();
-        } catch {
-            toast.error("Failed to disconnect. Please try again.");
-        }
-    }
-
-
-    // ── Connected state ──
-    if (isConnected) {
+    if (s.isConnected && s.platform) {
         return (
-            <>
-                <Card className="border-primary/20 bg-primary/10 dark:border-primary/30 dark:bg-primary/15">
-                    <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
-                                <CardTitle className="text-base">
-                                    Facebook
-                                </CardTitle>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs font-medium text-chart-2">
-                                <CheckCircle2 className="h-3.5 w-3.5" />
-                                Connected
-                            </div>
-                        </div>
-                        <CardDescription>
-                            Facebook page reviews &amp; recommendations
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {/* Stats grid */}
-                        <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
-                            <div className="rounded-lg bg-card p-2 border border-border">
-                                <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                    <Star className="h-3.5 w-3.5 text-chart-4" />
-                                    {fbRatingDisplay}
-                                </div>
-                                <div className="text-[10px] text-muted-foreground">
-                                    Rating
-                                </div>
-                            </div>
-                            <div className="rounded-lg bg-card p-2 border border-border">
-                                <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                    <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                                    {fbSyncedCount}
-                                </div>
-                                <div className="text-[10px] text-muted-foreground">
-                                    Reviews
-                                </div>
-                            </div>
-                            <div className="rounded-lg bg-card p-2 border border-border">
-                                <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                                    {!mounted ? "..." : (platform?.last_synced_at
-                                        ? new Date(
-                                            platform.last_synced_at as string
-                                        ).toLocaleDateString()
-                                        : "Never")}
-                                </div>
-                                <div className="text-[10px] text-muted-foreground">
-                                    Last Sync
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-2">
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                className="flex-1"
-                                onClick={handleSync}
-                                disabled={syncing}
-                            >
-                                {syncing ? (
-                                    <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
-                                ) : (
-                                    <RefreshCw className="h-3.5 w-3.5 mr-1" />
-                                )}
-                                Sync Now
-                            </Button>
-                            {platform.external_url && (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    asChild
-                                >
-                                    <a
-                                        href={platform.external_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <ExternalLink className="h-3.5 w-3.5" />
-                                    </a>
-                                </Button>
-                            )}
-                        </div>
-
-                        <Button
-                            size="sm"
-                            variant="ghost"
-                            className="w-full text-xs text-muted-foreground"
-                            onClick={() => setShowDisconnect(true)}
-                        >
-                            Disconnect
-                        </Button>
-                    </CardContent>
-                </Card>
-
-                {/* Disconnect dialog */}
-                <Dialog
-                    open={showDisconnect}
-                    onOpenChange={setShowDisconnect}
-                >
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Disconnect Facebook?</DialogTitle>
-                            <DialogDescription>
-                                This will stop syncing Facebook reviews. Your
-                                existing reviews will remain. You can reconnect
-                                anytime.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button
-                                variant="outline"
-                                onClick={() => setShowDisconnect(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                onClick={handleDisconnect}
-                            >
-                                Disconnect
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </>
+            <FacebookIntegrationCardConnected
+                platform={s.platform}
+                mounted={s.mounted}
+                fbRatingDisplay={s.fbRatingDisplay}
+                fbSyncedCount={s.fbSyncedCount}
+                syncing={s.syncing}
+                showDisconnect={s.showDisconnect}
+                setShowDisconnect={s.setShowDisconnect}
+                handleSync={s.handleSync}
+                handleDisconnect={s.handleDisconnect}
+            />
         );
     }
 
-    // ── Error state ──
-    if (isError) {
+    if (s.isError) {
         return (
-            <Card className="border-destructive/30 dark:border-destructive/30">
-                <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                                    <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
-                            <CardTitle className="text-base">
-                                Facebook
-                            </CardTitle>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-destructive">
-                            <XCircle className="h-3.5 w-3.5" />
-                            Error
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-start gap-2 rounded-lg bg-destructive/10 dark:bg-destructive/20 p-3 text-sm">
-                        <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
-                        <div>
-                            <p className="font-medium text-destructive dark:text-destructive">
-                                {platform?.sync_status ===
-                                    "error_token_expired"
-                                    ? "Access token expired"
-                                    : "Sync error"}
-                            </p>
-                            <p className="text-xs text-destructive/80 dark:text-destructive/70 mt-0.5">
-                                Reconnect your Facebook page to resume syncing.
-                            </p>
-                        </div>
-                    </div>
-                    <Button
-                        size="sm"
-                        className="w-full mt-3"
-                        onClick={handleConnect}
-                        disabled={connecting}
-                    >
-                        {connecting ? (
-                            <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
-                        ) : null}
-                        Reconnect Facebook
-                    </Button>
-                </CardContent>
-            </Card>
+            <FacebookIntegrationCardError
+                platform={s.platform}
+                connecting={s.connecting}
+                handleConnect={s.handleConnect}
+            />
         );
     }
 
-    // ── Not connected state ──
     return (
         <>
-            <Card>
-                <CardHeader className="pb-3">
-                    <div className="flex items-center gap-2">
-                        <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
-                        <CardTitle className="text-base">Facebook</CardTitle>
-                    </div>
-                    <CardDescription>
-                        Track Facebook and Instagram page reviews &amp;
-                        recommendations
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    <div className="rounded-lg bg-primary/10 dark:bg-primary/15 p-3 text-xs text-primary">
-                        <p className="font-medium mb-1">Facebook uses Recommendations</p>
-                        <p>
-                            Facebook pages use a thumbs up/down recommendation
-                            system instead of star ratings. We map positive →
-                            5★, negative → 1★.
-                        </p>
-                    </div>
-                    <Button
-                        className="w-full"
-                        onClick={handleConnect}
-                        disabled={connecting}
-                    >
-                        {connecting ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                            <FacebookBrandIcon className="h-4 w-4 mr-2 shrink-0" aria-hidden />
-                        )}
-                        Connect Facebook Page
-                    </Button>
-                    <p className="text-[10px] text-muted-foreground text-center">
-                        Requires Facebook App Review for production use
-                    </p>
-                </CardContent>
-            </Card>
-
-            {/* Page selection dialog */}
-            <Dialog open={showPageSelect} onOpenChange={setShowPageSelect}>
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Select a Facebook Page</DialogTitle>
-                        <DialogDescription>
-                            Choose the page you'd like to connect for review
-                            monitoring.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {pages.map((page) => (
-                            <button
-                                key={page.pageId}
-                                className="w-full flex items-center gap-3 p-3 rounded-lg border hover:bg-accent text-left transition-colors"
-                                onClick={() => handleSelectPage(page.pageId)}
-                                disabled={confirmingPage === page.pageId}
-                            >
-                                <div className="h-10 w-10 rounded-full bg-primary/15 dark:bg-primary/20 flex items-center justify-center shrink-0">
-                                    <FacebookBrandIcon className="h-5 w-5 shrink-0" aria-hidden />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-sm truncate">
-                                        {page.pageName}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        {page.category}
-                                    </p>
-                                </div>
-                                {confirmingPage === page.pageId ? (
-                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                                ) : (
-                                    <span className="text-xs text-primary font-medium">
-                                        Select
-                                    </span>
-                                )}
-                            </button>
-                        ))}
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <FacebookIntegrationCardDisconnected connecting={s.connecting} handleConnect={s.handleConnect} />
+            <FacebookCardPageSelectDialog
+                open={s.showPageSelect}
+                onOpenChange={s.setShowPageSelect}
+                pages={s.pages}
+                confirmingPage={s.confirmingPage}
+                onSelectPage={s.handleSelectPage}
+            />
         </>
     );
 }
+
+export type { FacebookCardProps } from "@/components/integrations/facebook-card-types";
