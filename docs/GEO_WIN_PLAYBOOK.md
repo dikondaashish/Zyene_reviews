@@ -252,6 +252,17 @@ dateModified?: string; // ISO date for Article JSON-LD
 - [ ] Each asset has unique title/description + JSON-LD where applicable
 - [ ] At least 2 assets linked from `/compare` and `/industries/*`
 
+### Phase 3 kickoff (asset 1 of 6)
+
+| Asset | Status | Notes |
+|-------|--------|-------|
+| **Birdeye pricing breakdown 2026** | **Expanded** | `/blog/birdeye-pricing-breakdown-2026` — TCO table (published list prices only), quote checklist, renewal workflow; linked from `/compare/birdeye` hero |
+| Case study expansion (verified data) | Blocked | No verified customer metrics — keep composite labeling |
+| Shield deep-dive | Backlog | — |
+| Comparison matrix on hub | Partial | Hub table exists; matrix expansion TBD |
+
+**FAQ schema policy:** Use `FAQPage` JSON-LD for structure, AI parsing, and on-page clarity. **Do not** position FAQ markup as a Google rich-result growth lever — Google has heavily limited FAQ rich results in search.
+
 ---
 
 <a id="geo-phase-4"></a>
@@ -604,6 +615,29 @@ Phase 8 (ongoing measure + refresh)
 ```
 
 **Parallel allowed:** Phase 3 content writing can start during Phase 2 refresh. Phase 6 repurposing starts as soon as Phase 2 publishes first refreshed post.
+
+---
+
+## Production verification (post-deploy)
+
+Run after each marketing deploy:
+
+```bash
+node scripts/validate-geo-faq-production.mjs
+# Optional staging: GEO_VALIDATE_BASE=https://your-preview.vercel.app node scripts/validate-geo-faq-production.mjs
+pnpm build && node scripts/validate-geo-faq-build.mjs
+```
+
+**Spot-check URLs (May 2026 — `zyenereviews.com`):**
+
+| URL | FAQPage | Article | Visible FAQ = schema | Other |
+|-----|---------|---------|----------------------|-------|
+| `/compare/birdeye` | 1 | 0 (WebPage only) | 5/5 match | Deep-dive link to pricing article |
+| `/compare` | 1 | 0 | 5/5 match | — |
+| `/blog/how-to-get-50-google-reviews-in-30-days` | 1 | 1 | 5/5 match | — |
+| `/case-studies/sunrise-dental-austin` | 0 | 0 | — | “Representative example” + “Illustrative results” above fold |
+
+**Rendered output note:** JSON-LD is emitted via `JsonLdScript` (`lazyOnload`) and appears in the Next.js RSC/flight payload in the initial HTML response. Confirm in Google Search Console **URL Inspection → View tested page** (rendered HTML), not only “View source.” Manual [Rich Results Test](https://search.google.com/test/rich-results) is optional for Article/WebPage; do not expect FAQ rich-result eligibility.
 
 ---
 

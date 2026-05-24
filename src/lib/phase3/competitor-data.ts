@@ -32,6 +32,8 @@ export interface CompetitorData {
     accentColor: string;
     /** 50–70 word GEO summary: who should pick Zyene Reviews vs this competitor. */
     openingSummary?: string;
+    /** Optional deep-dive article (uncopyable asset) linked from compare hero. */
+    deepDiveLink?: { label: string; href: string };
     faqs?: FaqItem[];
 }
 
@@ -108,6 +110,10 @@ export const COMPETITORS: CompetitorData[] = [
         ],
         openingSummary:
             "Pick Zyene Reviews if you run one to a few locations and want review monitoring, AI replies, Negative Feedback Shield, and API access without a $299/mo annual contract. Birdeye fits better when you need enterprise CX—webchat, ticketing, surveys, and deep Salesforce-style integrations across many locations. Figures below use published list positioning; your Birdeye quote may vary by location count.",
+        deepDiveLink: {
+            label: "Birdeye pricing breakdown 2026 — line items, hidden costs, quote checklist",
+            href: "/blog/birdeye-pricing-breakdown-2026",
+        },
         faqs: [
             {
                 question: "Is Zyene Reviews really cheaper than Birdeye?",

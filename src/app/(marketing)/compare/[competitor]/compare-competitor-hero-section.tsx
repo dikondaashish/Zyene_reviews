@@ -25,8 +25,19 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     </h1>
                     <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">{data.heroSub}</p>
                     {data.openingSummary ? (
-                        <div className="max-w-2xl mx-auto mb-8 text-left">
+                        <div className="max-w-2xl mx-auto mb-8 text-left space-y-4">
                             <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>
+                            {data.deepDiveLink ? (
+                                <p className="text-sm text-center">
+                                    <Link
+                                        href={data.deepDiveLink.href}
+                                        className="font-medium text-primary hover:underline inline-flex items-center gap-1"
+                                    >
+                                        {data.deepDiveLink.label}
+                                        <ArrowRight className="size-3.5" aria-hidden />
+                                    </Link>
+                                </p>
+                            ) : null}
                         </div>
                     ) : null}
 
