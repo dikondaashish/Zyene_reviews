@@ -216,6 +216,7 @@ dateModified?: string; // ISO date for Article JSON-LD
 - [x] All 4 compare pages + hub: opening summaries + 5 FAQs + FAQPage JSON-LD
 - [x] 5/5 case studies: illustrative summaries + composite/representative labeling
 - [x] FAQ schema validated via `node scripts/validate-geo-faq-build.mjs` (post-build RSC + HTML)
+- [x] **Production technical/schema validation complete** — `node scripts/validate-geo-faq-production.mjs` on `https://zyenereviews.com` (5/5 URLs, May 2026): single FAQPage per FAQ page, visible Q&A matches JSON-LD, compare pages have no Article duplication, case studies have no FAQPage + composite labels present
 - [ ] 4/4 resource guides have FAQ schema
 - [ ] 4/4 compare pages have comparison table + opening summary
 - [ ] Re-run on-page SEO audit — zero critical issues on priority URLs
@@ -628,14 +629,15 @@ node scripts/validate-geo-faq-production.mjs
 pnpm build && node scripts/validate-geo-faq-build.mjs
 ```
 
-**Spot-check URLs (May 2026 — `zyenereviews.com`):**
+**Latest production run (automated):** `node scripts/validate-geo-faq-production.mjs` → **5/5 PASS** on `https://zyenereviews.com`.
 
 | URL | FAQPage | Article | Visible FAQ = schema | Other |
 |-----|---------|---------|----------------------|-------|
-| `/compare/birdeye` | 1 | 0 (WebPage only) | 5/5 match | Deep-dive link to pricing article |
+| `/compare/birdeye` | 1 | 0 (WebPage only) | 5/5 match | — |
 | `/compare` | 1 | 0 | 5/5 match | — |
 | `/blog/how-to-get-50-google-reviews-in-30-days` | 1 | 1 | 5/5 match | — |
-| `/case-studies/sunrise-dental-austin` | 0 | 0 | — | “Representative example” + “Illustrative results” above fold |
+| `/blog/birdeye-pricing-breakdown-2026` | 1 | 1 | 5/5 match | Phase 3 content: confirm deploy in Vercel if title still pre-Phase-3 |
+| `/case-studies/sunrise-dental-austin` | 0 | 0 | — | “Representative example” + “Illustrative results” visible |
 
 **Rendered output note:** JSON-LD is emitted via `JsonLdScript` (`lazyOnload`) and appears in the Next.js RSC/flight payload in the initial HTML response. Confirm in Google Search Console **URL Inspection → View tested page** (rendered HTML), not only “View source.” Manual [Rich Results Test](https://search.google.com/test/rich-results) is optional for Article/WebPage; do not expect FAQ rich-result eligibility.
 
