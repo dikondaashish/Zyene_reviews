@@ -1,3 +1,4 @@
+import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JSON_LD_BASE_URL } from "./json-ld-constants";
 import { JsonLdScript } from "./json-ld-script";
 
@@ -8,9 +9,7 @@ export function WebSiteJsonLd() {
         "@id": `${JSON_LD_BASE_URL}/#website`,
         name: "Zyene Reviews",
         url: JSON_LD_BASE_URL,
-        publisher: {
-            "@id": `${JSON_LD_BASE_URL}/#organization`,
-        },
+        publisher: buildOrganizationSchema(),
         potentialAction: {
             "@type": "SearchAction",
             target: {

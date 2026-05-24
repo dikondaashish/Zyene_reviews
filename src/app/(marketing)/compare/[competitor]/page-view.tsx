@@ -1,4 +1,4 @@
-import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { BreadcrumbJsonLd, WebPageJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { COMPETITOR_MAP } from "@/lib/phase3/competitor-data";
 import { CompareCompetitorHeroSection } from "./compare-competitor-hero-section";
@@ -16,8 +16,15 @@ export default async function CompetitorPage(
     const data = COMPETITOR_MAP[slug];
     if (!data) notFound();
 
+    const pageUrl = `https://zyenereviews.com/compare/${slug}`;
+
     return (
         <>
+            <WebPageJsonLd
+                name={data.metaTitle}
+                description={data.metaDescription}
+                url={pageUrl}
+            />
             <BreadcrumbJsonLd
                             items={[
                                 { name: "Home", url: "https://zyenereviews.com/" },

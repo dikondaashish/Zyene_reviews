@@ -15,3 +15,7 @@ export { SoftwareApplicationJsonLd } from "./json-ld-software-application";
 export { FAQPageJsonLd } from "./json-ld-faq-page";
 export { BreadcrumbJsonLd } from "./json-ld-breadcrumb";
 export { ProductJsonLd } from "./json-ld-product";
+export { ArticleJsonLd } from "./json-ld-article";
+export { WebPageJsonLd } from "./json-ld-web-page";
+export { IndustryLocalBusinessJsonLd } from "./json-ld-industry-local-business";
+export { PricingPlansJsonLd } from "./json-ld-pricing-plans";

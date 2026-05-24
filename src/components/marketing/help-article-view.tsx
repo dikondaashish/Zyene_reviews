@@ -8,7 +8,8 @@ import {
     type HelpArticle,
 } from "@/lib/phase4/help-data";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
-import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
+import { extractFaqItemsFromHelpBody } from "@/lib/seo/help-faq-from-body";
 
 export function HelpArticleView({
     article,
@@ -25,9 +26,11 @@ export function HelpArticleView({
         .slice(0, 4);
 
     const canonicalUrl = `https://zyenereviews.com${canonicalPath}`;
+    const faqItems = extractFaqItemsFromHelpBody(article.body);
 
     return (
         <>
+            {faqItems.length > 0 ? <FAQPageJsonLd faqs={faqItems} /> : null}
             <BreadcrumbJsonLd
                 items={[
                     { name: "Home", url: "https://zyenereviews.com/" },

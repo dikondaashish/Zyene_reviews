@@ -1,4 +1,4 @@
-import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { BreadcrumbJsonLd, IndustryLocalBusinessJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { INDUSTRY_MAP } from "@/lib/phase3/industry-data";
 import { IndustriesIndustryHeroSection } from "./industries-industry-hero-section";
@@ -17,6 +17,7 @@ export default async function IndustryPage(
 
     return (
         <>
+            <IndustryLocalBusinessJsonLd data={data} slug={slug} />
             <BreadcrumbJsonLd
                             items={[
                                 { name: "Home", url: "https://zyenereviews.com/" },

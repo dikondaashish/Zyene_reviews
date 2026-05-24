@@ -1,4 +1,4 @@
-import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { BlogSlugArticleHeaderSection } from "./blog-slug-article-header-section";
@@ -18,6 +18,7 @@ export default async function BlogPostPage(
 
     return (
         <>
+            <ArticleJsonLd post={post} />
             <BreadcrumbJsonLd
                 items={[
                     { name: "Home", url: "https://zyenereviews.com/" },

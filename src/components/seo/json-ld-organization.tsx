@@ -1,23 +1,10 @@
-import { ZYENE_REVIEWS_LOGO_SRC } from "@/lib/brand/logo";
-import { JSON_LD_BASE_URL } from "./json-ld-constants";
+import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JsonLdScript } from "./json-ld-script";
 
 export function OrganizationJsonLd() {
     const schema = {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "@id": `${JSON_LD_BASE_URL}/#organization`,
-        name: "Zyene Reviews",
-        alternateName: "Zyene",
-        url: JSON_LD_BASE_URL,
-        logo: {
-            "@type": "ImageObject",
-            url: `${JSON_LD_BASE_URL}${ZYENE_REVIEWS_LOGO_SRC}`,
-            width: 512,
-            height: 512,
-        },
-        description:
-            "Zyene Reviews is a review management and local SEO platform for local businesses. Monitor Google, Facebook, and Yelp reviews, respond with AI, collect reviews via SMS and email, and track competitors, starting at $29.99/mo.",
+        ...buildOrganizationSchema(),
         contactPoint: [
             {
                 "@type": "ContactPoint",
@@ -49,7 +36,6 @@ export function OrganizationJsonLd() {
             name: "Zyene, Inc.",
             url: "https://zyene.com",
         },
-        sameAs: ["https://zyene.com"],
         areaServed: "Worldwide",
         knowsAbout: [
             "Review Management",
