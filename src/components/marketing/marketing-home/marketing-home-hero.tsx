@@ -15,7 +15,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
     return (
         <>
       {/* 1. HERO SECTION */}
-      <section className="w-full pt-16 pb-24 md:pt-24 md:pb-32 px-4 md:px-8">
+      <section className="w-full pt-10 pb-24 md:pt-16 md:pb-32 px-4 md:px-8">
         <div className="container mx-auto max-w-[1400px]">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
             {/* Left Content */}
