@@ -36,7 +36,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     <div className="space-y-3">
                         <h2 className="text-2xl font-bold text-foreground">What you get</h2>
                         <p className="text-muted-foreground leading-relaxed">
-                            {pillar.title} is included on Zyene paid plans so local businesses can manage reputation
+                            {pillar.title} is included on Zyene Reviews paid plans so local businesses can manage reputation
                             without enterprise pricing or annual contracts. Everything below is designed for
                             owner-operators who need results in minutes, not hours.
                         </p>
@@ -68,9 +68,9 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     ) : null}
 
                     <div className="space-y-3 pt-2">
-                        <h2 className="text-2xl font-bold text-foreground">Why local businesses choose Zyene</h2>
+                        <h2 className="text-2xl font-bold text-foreground">Why local businesses choose Zyene Reviews</h2>
                         <p className="text-muted-foreground leading-relaxed">
-                            Strong Google reviews influence who calls, books, and walks in. Zyene combines monitoring,
+                            Strong Google reviews influence who calls, books, and walks in. Zyene Reviews combines monitoring,
                             replies, collection, and reporting in one dashboard starting at $29.99/mo with a 7-day free
                             trial — so you are not juggling separate tools for inbox, requests, and competitive insights.
                         </p>

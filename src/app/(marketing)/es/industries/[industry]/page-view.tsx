@@ -73,10 +73,10 @@ export default async function EsIndustryPage({
             <section className="py-16 px-4 bg-muted/30 border-t border-border">
                 <div className="container mx-auto max-w-4xl space-y-10">
                     <div>
-                        <h2 className="text-2xl font-bold text-foreground mb-3">Cómo ayuda Zyene</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-3">Cómo ayuda Zyene Reviews</h2>
                         <p className="text-muted-foreground leading-relaxed">
                             Las reseñas de Google influyen en quién te encuentra en Maps y quién confía en tu negocio
-                            antes de llamar. Zyene centraliza solicitudes de reseñas, alertas en tiempo real y
+                            antes de llamar. Zyene Reviews centraliza solicitudes de reseñas, alertas en tiempo real y
                             respuestas con IA para que respondas más rápido y protejas tu puntuación.
                         </p>
                     </div>

@@ -72,7 +72,7 @@ export function ReputationScoreCheckerClient() {
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                         Improving your score usually means collecting more recent reviews and responding consistently.
-                        Zyene automates both with alerts, AI replies, and review request campaigns from $29.99/mo.
+                        Zyene Reviews automates both with alerts, AI replies, and review request campaigns from $29.99/mo.
                     </p>
                 </div>
             </section>

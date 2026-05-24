@@ -91,7 +91,7 @@ export default function FreeToolsHubPage() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-2xl font-bold mb-3">Want automation behind these tools?</h2>
                     <p className="text-muted-foreground mb-6">
-                        Zyene sends review requests, drafts AI replies, and tracks competitors—from $29.99/mo with a 7-day free trial.
+                        Zyene Reviews sends review requests, drafts AI replies, and tracks competitors—from $29.99/mo with a 7-day free trial.
                     </p>
                     <Button asChild size="lg" className="rounded-full">
                         <Link href="/signup">Start free trial</Link>

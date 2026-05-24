@@ -8,14 +8,14 @@ export const metadata: Metadata = {
     openGraph: {
         title: "See How Zyene Reviews Compares, 2026",
         description:
-            "Honest comparisons: Zyene vs Birdeye, Podium, NiceJob, GatherUp. AI replies, Negative Feedback Shield, and competitor tracking at $29.99/mo vs $299–$399/mo.",
+            "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp. AI replies, Shield, and competitor tracking at $29.99/mo vs $299–$399/mo.",
         url: "https://zyenereviews.com/compare",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "See How Zyene Reviews Compares, 2026",
-        description: "Honest comparisons: Zyene vs Birdeye, Podium, NiceJob, GatherUp.",
+        description: "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp.",
     },
 };
 

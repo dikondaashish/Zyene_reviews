@@ -61,7 +61,7 @@ export function ReviewLinkGeneratorClient() {
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                         Use this free generator to find your listing and receive the link by email. For automated SMS
-                        and email campaigns after every visit, see Zyene&apos;s review collection tools.
+                        and email campaigns after every visit, see Zyene Reviews review collection tools.
                     </p>
                 </div>
             </section>

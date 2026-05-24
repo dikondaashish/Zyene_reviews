@@ -91,7 +91,7 @@ export function ReviewResponseGeneratorClient() {
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                         For one-click AI replies on every new review, tone control, and optional auto-commenter, use
-                        Zyene&apos;s AI reply feature on all paid plans with a 7-day free trial.
+                        Zyene Reviews AI reply feature on all paid plans with a 7-day free trial.
                     </p>
                 </div>
             </section>

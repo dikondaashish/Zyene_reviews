@@ -41,7 +41,7 @@ export const PRODUCT_LINKS: MarketingNavLink[] = [
 
 export const SOLUTIONS_LINKS: MarketingNavLink[] = [
     { href: "/industries", label: "By Industry", icon: Building2, desc: "Restaurants, dental, auto repair, and more" },
-    { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene vs Birdeye, Podium, NiceJob, GatherUp" },
+    { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp" },
     { href: "/enterprise", label: "Enterprise", icon: Building2, desc: "Multi-location brands, SLA, SSO, white-label" },
     { href: "/agencies", label: "Agencies", icon: Handshake, desc: "White-label review management for agencies" },
 ];

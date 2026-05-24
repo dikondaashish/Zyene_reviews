@@ -114,7 +114,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Understand what's working and share results",
         metaTitle: "Analytics & Reporting",
         metaDescription:
-            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports — analytics for local business teams on Zyene plans from $29.99/mo.",
+            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports — analytics for local teams on Zyene Reviews from $29.99/mo.",
         bullets: [
             "Dashboard overview: ratings, volume, response rate, trends",
             "Review growth charts over time (weekly/monthly)",

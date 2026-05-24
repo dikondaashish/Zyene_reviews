@@ -42,7 +42,7 @@ export const COMPETITORS: CompetitorData[] = [
         heroSub: "See why local businesses are switching from Birdeye to Zyene — and paying $270 less per month to do it.",
         metaTitle: "Zyene Reviews vs Birdeye — Full Comparison 2026",
         metaDescription:
-            "Compare Zyene vs Birdeye: AI replies, Negative Feedback Shield, and pricing from $29.99/mo with no annual contract versus Birdeye at $299/mo.",
+            "Compare Zyene Reviews vs Birdeye: AI replies, Negative Feedback Shield, and pricing from $29.99/mo with no contract versus Birdeye at $299/mo.",
         targetKeywords: ["zyene vs birdeye", "birdeye alternative", "cheaper than birdeye", "birdeye pricing", "birdeye review management alternative"],
         winsForCompetitor: [
             "Better for large enterprise accounts with 50+ locations",
@@ -115,7 +115,7 @@ export const COMPETITORS: CompetitorData[] = [
         heroSub: "Podium is a messaging and payments platform. Zyene is a review management platform. See the full difference — and why Zyene costs 13× less.",
         metaTitle: "Zyene Reviews vs Podium — Full Comparison 2026",
         metaDescription:
-            "Zyene vs Podium: review management, AI replies, and Shield at $29.99/mo with no contract compared to Podium at $399/mo and annual commitment.",
+            "Zyene Reviews vs Podium: review management, AI replies, and Shield at $29.99/mo with no contract compared to Podium at $399/mo.",
         targetKeywords: ["zyene vs podium", "podium alternative", "cheaper than podium", "podium pricing", "podium review management alternative"],
         winsForCompetitor: [
             "Full messaging platform: SMS inbox, webchat, and two-way customer messaging",
@@ -186,7 +186,7 @@ export const COMPETITORS: CompetitorData[] = [
         heroSub: "NiceJob focuses on automated review collection. Zyene adds AI replies, competitor tracking, GBP SEO, and the Negative Feedback Shield — at a similar price.",
         metaTitle: "Zyene Reviews vs NiceJob — Full Comparison 2026",
         metaDescription:
-            "Zyene vs NiceJob: AI replies, competitor tracking, GBP keywords, and Negative Feedback Shield that NiceJob lacks — compare features at $29.99/mo.",
+            "Zyene Reviews vs NiceJob: AI replies, competitor tracking, GBP keywords, and Negative Feedback Shield — compare at $29.99/mo.",
         targetKeywords: ["zyene vs nicejob", "nicejob alternative", "nicejob competitor", "nicejob pricing comparison", "better than nicejob"],
         winsForCompetitor: [
             "Simpler, more visual interface — easier for non-technical owners",
@@ -257,7 +257,7 @@ export const COMPETITORS: CompetitorData[] = [
         heroSub: "GatherUp focuses on review collection and customer surveys. Zyene adds AI replies, competitor tracking, and GBP SEO — at a lower starting price.",
         metaTitle: "Zyene Reviews vs GatherUp — Full Comparison 2026",
         metaDescription:
-            "Zyene vs GatherUp: feature and pricing comparison. AI replies, competitor tracking, and Shield at $29.99/mo versus GatherUp at $99/mo.",
+            "Zyene Reviews vs GatherUp: feature and pricing comparison. AI replies, competitor tracking, and Shield at $29.99/mo vs GatherUp at $99/mo.",
         targetKeywords: ["zyene vs gatherup", "gatherup alternative", "gatherup competitor", "gatherup pricing comparison", "better than gatherup"],
         winsForCompetitor: [
             "Strong customer survey and NPS tools beyond just reviews",

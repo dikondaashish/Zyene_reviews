@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Security & Trust",
     description:
-        "Zyene protects your data with multi-tenant RLS, 256-bit encryption, GDPR compliance, ethical review collection, and Google OAuth Limited Use.",
+        "Zyene Reviews protects your data with multi-tenant RLS, 256-bit encryption, GDPR compliance, ethical review collection, and Google OAuth Limited Use.",
     alternates: { canonical: "https://zyenereviews.com/security" },
     openGraph: {
         title: "Security & Trust",
