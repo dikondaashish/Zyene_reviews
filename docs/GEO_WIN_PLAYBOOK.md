@@ -62,8 +62,8 @@
 | Help center (23 articles) | Shipped | `src/lib/phase4/help-data.ts`, `/help/*` |
 | Article + FAQ JSON-LD | Partial | Home + pricing + help; **blog posts lack FAQ schema** |
 | Newsletter signup | Shipped | `NewsletterSignup`, `/api/marketing/newsletter/subscribe` |
-| Inverted pyramid summaries | **Pilot live** | `summary` type in `blog-types.ts`; post `how-to-get-50-google-reviews-in-30-days` |
-| Blog FAQ + FAQPage JSON-LD | **Pilot live** | `BlogFaq` on posts; `FAQPageJsonLd` on `/blog/[slug]` |
+| Inverted pyramid summaries | **Complete (12/12 posts)** | `summary` blocks after every major `h2` in `blog-posts-month*.ts` |
+| Blog FAQ + FAQPage JSON-LD | **Complete (12/12 posts)** | `faqs[]` on every post; `FAQPageJsonLd` on `/blog/[slug]` |
 | Lead magnets (gated PDF) | **Not yet** | — |
 | Repurpose packs | **Not yet** | — |
 | `/research` benchmark reports | **Not yet** | — |
@@ -212,7 +212,7 @@ dateModified?: string; // ISO date for Article JSON-LD
 
 ### Exit criteria
 
-- [ ] 12/12 blog posts have ≥3 summary blocks + FAQs
+- [x] 12/12 blog posts have summary blocks after major `h2` + 4–5 FAQs each
 - [ ] 4/4 resource guides have FAQ schema
 - [ ] 4/4 compare pages have comparison table + opening summary
 - [ ] Re-run on-page SEO audit — zero critical issues on priority URLs
