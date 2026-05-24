@@ -37,7 +37,7 @@ export function readAppPageSource(pagePath: string): string {
 }
 
 export const REQUIRED_ROUTE_FILES: Record<string, string> = {
-    "/help/[category]/[article]": "help/[category]/[article]/page.tsx",
+    "/help/[slug]/[article]": "help/[slug]/[article]/page.tsx",
 };
 
 /** Blueprint § Page Architecture — required live marketing URLs */

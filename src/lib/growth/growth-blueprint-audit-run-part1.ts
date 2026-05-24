@@ -65,12 +65,12 @@ for (const cat of HELP_CATEGORY_SLUGS) {
 }
 
 const nestedArticleCount = Object.keys(HELP_ARTICLE_MAP).length;
-if (!existsSync(path.join(APP_ROOT, "help/[category]/[article]/page.tsx"))) {
+if (!existsSync(path.join(APP_ROOT, "help/[slug]/[article]/page.tsx"))) {
     items.push({
         id: "help-nested-route",
         severity: "error",
         area: "pages",
-        message: "Nested help articles /help/[category]/[article] not implemented",
+        message: "Nested help articles /help/[slug]/[article] not implemented",
     });
 } else if (nestedArticleCount < 20) {
     items.push({

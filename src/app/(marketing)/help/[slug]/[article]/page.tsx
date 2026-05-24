@@ -12,19 +12,19 @@ import {
 import { HelpArticleView } from "@/components/marketing/help-article-view";
 
 export function generateStaticParams() {
-    const params: { category: string; article: string }[] = [];
+    const params: { slug: string; article: string }[] = [];
     for (const category of HELP_CATEGORY_SLUGS) {
         for (const a of HELP_BY_CATEGORY[category]) {
-            params.push({ category, article: a.slug });
+            params.push({ slug: category, article: a.slug });
         }
     }
     return params;
 }
 
 export async function generateMetadata(
-    { params }: { params: Promise<{ category: string; article: string }> }
+    { params }: { params: Promise<{ slug: string; article: string }> }
 ): Promise<Metadata> {
-    const { category, article: articleSlug } = await params;
+    const { slug: category, article: articleSlug } = await params;
     if (!isHelpCategory(category)) return {};
     const article = HELP_ARTICLE_MAP[articleSlug];
     if (!article || article.category !== category) return {};
@@ -52,9 +52,9 @@ export async function generateMetadata(
 export default async function HelpNestedArticlePage({
     params,
 }: {
-    params: Promise<{ category: string; article: string }>;
+    params: Promise<{ slug: string; article: string }>;
 }) {
-    const { category, article: articleSlug } = await params;
+    const { slug: category, article: articleSlug } = await params;
     if (!isHelpCategory(category)) notFound();
     const article: HelpArticle | undefined = HELP_ARTICLE_MAP[articleSlug];
     if (!article || article.category !== category) notFound();
