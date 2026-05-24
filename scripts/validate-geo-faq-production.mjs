@@ -30,6 +30,13 @@ const CHECKS = [
         expectComposite: false,
     },
     {
+        label: "/blog/birdeye-pricing-breakdown-2026",
+        path: "/blog/birdeye-pricing-breakdown-2026",
+        expectFaq: 5,
+        expectArticle: 1,
+        expectComposite: false,
+    },
+    {
         label: "/case-studies/sunrise-dental-austin",
         path: "/case-studies/sunrise-dental-austin",
         expectFaq: 0,

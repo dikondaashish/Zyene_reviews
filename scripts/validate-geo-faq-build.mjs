@@ -45,6 +45,12 @@ const CHECKS = [
         expectFaq: 5,
     },
     {
+        label: "/blog/birdeye-pricing-breakdown-2026",
+        rsc: ".next/server/app/blog/birdeye-pricing-breakdown-2026.rsc",
+        html: ".next/server/app/blog/birdeye-pricing-breakdown-2026.html",
+        expectFaq: 5,
+    },
+    {
         label: "/case-studies/sunrise-dental-austin",
         rsc: ".next/server/app/case-studies/sunrise-dental-austin.rsc",
         html: ".next/server/app/case-studies/sunrise-dental-austin.html",

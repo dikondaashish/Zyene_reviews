@@ -256,7 +256,7 @@ dateModified?: string; // ISO date for Article JSON-LD
 
 | Asset | Status | Notes |
 |-------|--------|-------|
-| **Birdeye pricing breakdown 2026** | **Expanded** | `/blog/birdeye-pricing-breakdown-2026` — TCO table (published list prices only), quote checklist, renewal workflow; linked from `/compare/birdeye` hero |
+| **Birdeye pricing breakdown 2026** | **Shipped (Phase 3)** | `/blog/birdeye-pricing-breakdown-2026` — buyer-intent vs comparison, 4 tables, where-each-wins, Shield workflow + product visuals, 5 FAQs; linked from `/compare/birdeye` |
 | Case study expansion (verified data) | Blocked | No verified customer metrics — keep composite labeling |
 | Shield deep-dive | Backlog | — |
 | Comparison matrix on hub | Partial | Hub table exists; matrix expansion TBD |

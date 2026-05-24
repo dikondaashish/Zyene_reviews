@@ -7,18 +7,7 @@ export const marketingImages = {
       height: 600,
     },
     featureMonitor: { src: "/marketing/home/storefront.png", alt: "Modern local business storefront managed by Zyene Reviews", width: 600, height: 300 },
-    featureAutomation: {
-      name: "Amanda Brooks",
-      src: "/marketing/home/customer-avatar.png",
-      alt: "Amanda Brooks left a 5-star Google review",
-      width: 100,
-      height: 100,
-    },
-    widgetPreviewReviews: [
-      { name: "Elena Morrison", text: "Best experience we've had. Professional and fast.", stars: 5 },
-      { name: "Thomas Wright", text: "They went above and beyond. Highly recommend.", stars: 5 },
-      { name: "Nina Patel", text: "Great service—will definitely come back.", stars: 5 },
-    ] as const,
+    featureAutomation: { src: "/marketing/home/customer-avatar.png", alt: "Happy customer leaving a review via Zyene Reviews", width: 100, height: 100 },
     heroReviewAlerts: {
       fiveStar: {
         name: "Emily Carter",
@@ -46,5 +35,25 @@ export const marketingImages = {
   },
   about: {
     hero: { src: "/marketing/about/team-collaboration.png", alt: "Zyene Reviews team collaborating on reputation management software", width: 900, height: 400 }
-  }
+  },
+  birdeyeCompare: {
+    reviewAlertPositive: {
+      src: "/marketing/home/alert-emily-carter.png",
+      alt: "Illustrative Zyene Reviews in-app alert for a new 5-star Google review",
+      width: 320,
+      height: 120,
+    },
+    reviewAlertNegative: {
+      src: "/marketing/home/alert-robert-hayes.png",
+      alt: "Illustrative Zyene Reviews in-app alert flagging a 1-star review for follow-up",
+      width: 320,
+      height: 120,
+    },
+    localOwnerWorkflow: {
+      src: "/marketing/home/hero-local-owner.png",
+      alt: "Local business owner checking review notifications on a phone with Zyene Reviews",
+      width: 800,
+      height: 600,
+    },
+  },
 } as const;

@@ -22,7 +22,16 @@ export type SectionType =
     | "warning"
     | "cta"
     | "quote"
-    | "table";
+    | "table"
+    | "image";
+
+export interface ContentImage {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption?: string;
+}
 
 /** FAQ entries for blog posts (visible Q&A + FAQPage JSON-LD). */
 export interface BlogFaq {
@@ -40,6 +49,7 @@ export interface ContentSection {
     text?: string;
     items?: string[];
     table?: TableData;
+    image?: ContentImage;
     ctaLabel?: string;
     ctaHref?: string;
 }

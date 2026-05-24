@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Lightbulb, AlertTriangle, ArrowRight } from "lucide-react";
 import type { ContentSection } from "@/lib/phase4/blog-data";
@@ -93,6 +94,23 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                                 </Link>
                             </div>
                         );
+                    case "image":
+                        return section.image ? (
+                            <figure key={i} className="rounded-xl border border-border overflow-hidden bg-muted/30">
+                                <Image
+                                    src={section.image.src}
+                                    alt={section.image.alt}
+                                    width={section.image.width}
+                                    height={section.image.height}
+                                    className="w-full h-auto object-cover"
+                                />
+                                {section.image.caption ? (
+                                    <figcaption className="px-4 py-3 text-xs text-muted-foreground leading-relaxed border-t border-border">
+                                        {section.image.caption}
+                                    </figcaption>
+                                ) : null}
+                            </figure>
+                        ) : null;
                     case "table":
                         return (
                             <div key={i} className="overflow-x-auto rounded-xl border border-border">
