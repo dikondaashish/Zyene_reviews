@@ -47,3 +47,4 @@ test-results/
 
 # local AI/codex config
 .codex/
+**/__pycache__/
