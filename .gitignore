@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# local email/HTML exports (not project docs)
+email-list-*.html
+
 # debug
 npm-debug.log*
 yarn-debug.log*
