@@ -17,6 +17,7 @@
     "email:test": "npx tsx --env-file=.env.local scripts/mail-tester.ts",
     "cron:monthly-newsletter": "node scripts/ensure-cron-job-monthly-newsletter.mjs",
     "cron:daily-digest": "node scripts/ensure-cron-job-daily-digest.mjs",
+    "cursorrules:install": "node scripts/install-awesome-cursorrules.mjs",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },
   "dependencies": {
