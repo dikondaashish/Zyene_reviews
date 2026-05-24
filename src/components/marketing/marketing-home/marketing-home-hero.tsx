@@ -93,24 +93,38 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                 </div>
 
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between bg-muted p-2 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-full bg-border size-8"></div>
-                      <span className="text-sm font-medium text-muted-foreground">John Doe</span>
+                  {(
+                    [
+                      {
+                        ...marketingImages.home.heroReviewAlerts.fiveStar,
+                        badge: "5-Star Left",
+                        icon: CheckCircle2,
+                      },
+                      {
+                        ...marketingImages.home.heroReviewAlerts.oneStar,
+                        badge: "1-Star Alert",
+                        icon: AlertCircle,
+                      },
+                    ] as const
+                  ).map(({ name, src, alt, width, height, badge, icon: Icon }) => (
+                    <div key={name} className="flex items-center justify-between bg-muted p-2 rounded-md">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative rounded-full overflow-hidden size-8 shrink-0 border border-border">
+                          <Image
+                            src={src}
+                            alt={alt}
+                            width={width}
+                            height={height}
+                            className="object-cover size-full"
+                          />
+                        </div>
+                        <span className="text-sm font-medium text-foreground truncate">{name}</span>
+                      </div>
+                      <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20 shrink-0 ml-2">
+                        <Icon className="size-3" /> {badge}
+                      </span>
                     </div>
-                    <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20">
-                      <CheckCircle2 className="size-3" /> 5-Star Left
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between bg-muted p-2 rounded-md">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-full bg-border size-8"></div>
-                      <span className="text-sm font-medium text-muted-foreground">Sarah Smith</span>
-                    </div>
-                    <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20">
-                      <AlertCircle className="size-3" /> 1-Star Alert
-                    </span>
-                  </div>
+                  ))}
                 </div>
               </motion.div>
             </motion.div>
