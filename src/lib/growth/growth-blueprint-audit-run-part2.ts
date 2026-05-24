@@ -4,7 +4,7 @@ import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
 import { HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/phase4/help-data";
 import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import type { BlueprintAuditItem } from "./growth-blueprint-audit-types";
-import { APP_ROOT } from "./growth-blueprint-audit-read";
+import { APP_ROOT, readAppPageSource } from "./growth-blueprint-audit-read";
 
 export function appendGrowthBlueprintAuditPart2(
     items: BlueprintAuditItem[],
@@ -47,15 +47,13 @@ if (existsSync(rootLayoutPath)) {
 }
 
 // ── Phase 1 checks ──────────────────────────────────────────────────
-if (existsSync(rootLayoutPath)) {
-    const rootSrc = readFileSync(rootLayoutPath, "utf8");
-    if (!rootSrc.includes("OrganizationJsonLd")) {
-        items.push({ id: "p1-org-jsonld", severity: "error", area: "phase1", message: "OrganizationJsonLd missing from root layout (§1.1)" });
-    }
+const homeSrc = existsSync(homeMetaPath) ? readAppPageSource(homeMetaPath) : "";
+const rootSrc = existsSync(rootLayoutPath) ? readFileSync(rootLayoutPath, "utf8") : "";
+if (!homeSrc.includes("OrganizationJsonLd") && !rootSrc.includes("OrganizationJsonLd")) {
+    items.push({ id: "p1-org-jsonld", severity: "error", area: "phase1", message: "OrganizationJsonLd missing from homepage (§1.1)" });
 }
 
 if (existsSync(homeMetaPath)) {
-    const homeSrc = readFileSync(homeMetaPath, "utf8");
     if (!homeSrc.includes("SoftwareApplicationJsonLd")) {
         items.push({ id: "p1-app-jsonld", severity: "error", area: "phase1", message: "SoftwareApplicationJsonLd missing from homepage (§1.1)" });
     }
@@ -65,11 +63,9 @@ if (existsSync(homeMetaPath)) {
 }
 
 const pricingPath = path.join(APP_ROOT, "pricing/page.tsx");
-if (existsSync(pricingPath)) {
-    const pricingSrc = readFileSync(pricingPath, "utf8");
-    if (!pricingSrc.includes("ProductJsonLd")) {
-        items.push({ id: "p1-product-jsonld", severity: "error", area: "phase1", message: "ProductJsonLd missing from pricing page (§1.1)" });
-    }
+const pricingSrc = existsSync(pricingPath) ? readAppPageSource(pricingPath) : "";
+if (pricingSrc && !pricingSrc.includes("ProductJsonLd") && !pricingSrc.includes("PricingPlansJsonLd")) {
+    items.push({ id: "p1-product-jsonld", severity: "error", area: "phase1", message: "Product/Pricing structured data missing from pricing page (§1.1)" });
 }
 
 // ── Phase 2 checks ──────────────────────────────────────────────────
@@ -80,11 +76,8 @@ for (const route of phase2Routes) {
     }
 }
 
-if (existsSync(pricingPath)) {
-    const pricingSrc = readFileSync(pricingPath, "utf8");
-    if (!pricingSrc.includes("FAQPageJsonLd")) {
-        items.push({ id: "p2-pricing-faq", severity: "error", area: "phase2", message: "Pricing page missing FAQPageJsonLd (§2.1)" });
-    }
+if (pricingSrc && !pricingSrc.includes("FAQPageJsonLd")) {
+    items.push({ id: "p2-pricing-faq", severity: "error", area: "phase2", message: "Pricing page missing FAQPageJsonLd (§2.1)" });
 }
 
 // ── Phase 3 checks ──────────────────────────────────────────────────
