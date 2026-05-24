@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
@@ -60,21 +62,24 @@ export function MarketingHomeHowAndTestimonials({
                 quote: "We were stuck at 4.1 stars for nearly two years. Since switching to Zyene, we've jumped to 4.8 stars and our incoming calls have literally doubled. The AI replies save me 3 hours a week.",
                 name: "Michael T.",
                 role: "Owner, Riverfront Dining",
-                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80",
+                photo: marketingImages.home.testimonials.one.src,
+                alt: marketingImages.home.testimonials.one.alt,
               },
               {
                 quote: "I was paying $300/mo for Birdeye. Zyene does exactly the same thing but the interface is actually modern and the AI response generator is much better. No brainer switch.",
                 name: "Sarah Jenkins",
                 role: "Director, Apex Dental Care",
-                photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&q=80",
+                photo: marketingImages.home.testimonials.two.src,
+                alt: marketingImages.home.testimonials.two.alt,
               },
               {
                 quote: "The feedback collection feature alone is worth it. We heard from a concerned customer directly, resolved their issue quickly, and they updated their review to 5 stars. Incredible.",
                 name: "David Chen",
                 role: "Manager, Chen Auto Repair",
-                photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&q=80",
+                photo: marketingImages.home.testimonials.three.src,
+                alt: marketingImages.home.testimonials.three.alt,
               },
-            ].map(({ quote, name, role, photo }) => (
+            ].map(({ quote, name, role, photo, alt }) => (
               <motion.div key={name} variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
                 <div className="flex gap-1 text-chart-4 mb-6">
                   {[1,2,3,4,5].map(i => <Star key={i} className="fill-current size-5" />)}
@@ -83,9 +88,8 @@ export function MarketingHomeHowAndTestimonials({
                   &quot;{quote}&quot;
                 </p>
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full overflow-hidden size-12">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo} alt={name} className="object-cover size-full" />
+                  <div className="rounded-full overflow-hidden size-12 relative">
+                    <Image src={photo} alt={alt} fill className="object-cover size-full" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">{name}</h3>

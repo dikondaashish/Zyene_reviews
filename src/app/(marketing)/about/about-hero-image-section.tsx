@@ -1,13 +1,15 @@
 import Image from "next/image";
 
+import { marketingImages } from "@/lib/marketing/marketing-images";
+
 export function AboutHeroImageSection() {
     return (
         <div className="w-full h-56 md:h-72 rounded-lg overflow-hidden mb-8 border border-border">
             <Image
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&h=400&fit=crop&q=80"
-                alt="Team collaborating on review management software"
-                width={900}
-                height={400}
+                src={marketingImages.about.hero.src}
+                alt={marketingImages.about.hero.alt}
+                width={marketingImages.about.hero.width}
+                height={marketingImages.about.hero.height}
                 priority
                 className="object-cover size-full"
             />

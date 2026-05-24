@@ -6,6 +6,8 @@ import { ArrowRight, CheckCircle2, Star, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { PlatformStatsBadge } from "@/components/marketing/social-proof";
 import { SIGNUP_URL } from "@/config/env";
+import Image from "next/image";
+import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
@@ -62,11 +64,13 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
             >
               {/* Petal Container */}
               <div className="relative aspect-[4/3] w-full rounded-tl-[4rem] rounded-bl-[4rem] rounded-br-[4rem] rounded-tr-lg overflow-hidden border border-border">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80"
-                  alt="Business owner reviewing customer feedback on tablet"
+                <Image
+                  src={marketingImages.home.hero.src}
+                  alt={marketingImages.home.hero.alt}
+                  width={marketingImages.home.hero.width}
+                  height={marketingImages.home.hero.height}
                   className="absolute inset-0 object-cover size-full"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
               </div>

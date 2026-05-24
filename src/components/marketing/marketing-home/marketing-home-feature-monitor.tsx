@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, LayoutDashboard, MessageSquare, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
@@ -66,10 +68,11 @@ export function MarketingHomeFeatureMonitor({
             <div className="w-full md:w-1/2 bg-muted p-8 md:p-16 flex items-center justify-center min-h-[500px]">
               <div className="bg-card p-6 rounded-lg w-full max-w-md border border-border">
                 <div className="w-full h-48 rounded-lg mb-6 relative overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=300&fit=crop&q=80"
-                    alt="Local business storefront"
+                  <Image
+                    src={marketingImages.home.featureMonitor.src}
+                    alt={marketingImages.home.featureMonitor.alt}
+                    width={marketingImages.home.featureMonitor.width}
+                    height={marketingImages.home.featureMonitor.height}
                     className="object-cover rounded-lg size-full"
                   />
                   <div className="absolute bottom-3 left-3 bg-card px-4 py-2 rounded-full border border-border text-sm font-semibold flex items-center gap-2 text-muted-foreground">

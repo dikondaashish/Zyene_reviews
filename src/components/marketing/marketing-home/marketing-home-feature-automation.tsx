@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Smartphone, Star, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
@@ -68,8 +70,13 @@ export function MarketingHomeFeatureAutomation({
                 {/* Fake AI Reply UI */}
                 <div className="flex gap-4 mb-6 pb-6 border-b border-border">
                   <div className="rounded-full shrink-0 overflow-hidden size-12">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&q=80" alt="Customer" className="object-cover size-full" />
+                    <Image 
+                      src={marketingImages.home.featureAutomation.src} 
+                      alt={marketingImages.home.featureAutomation.alt} 
+                      width={marketingImages.home.featureAutomation.width}
+                      height={marketingImages.home.featureAutomation.height}
+                      className="object-cover size-full" 
+                    />
                   </div>
                   <div>
                     <div className="h-4 w-24 bg-border rounded-full mb-2"></div>
