@@ -1,40 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+export function ThemeToggle({ sound = true }: { sound?: boolean }) {
+    const { resolvedTheme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
 
-export function ThemeToggle() {
-    const { setTheme } = useTheme()
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return <div className="size-9 shrink-0" aria-hidden />;
+    }
+
+    const isDark = resolvedTheme === "dark";
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-9">
-                    <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 size-[1.2rem]" />
-                    <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 size-[1.2rem]" />
-                    <span className="sr-only">Toggle theme</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                    System
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+        <AnimatedThemeToggler
+            sound={sound}
+            isDark={isDark}
+            onToggle={() => setTheme(isDark ? "light" : "dark")}
+        />
+    );
 }
