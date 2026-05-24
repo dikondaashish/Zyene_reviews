@@ -7,6 +7,10 @@ import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
+function testimonialPortraitAlt(name: string, role: string): string {
+  return `Portrait of ${name}, ${role}`;
+}
+
 export function MarketingHomeHowAndTestimonials({
     fadeInUp,
     staggerContainer,
@@ -63,23 +67,20 @@ export function MarketingHomeHowAndTestimonials({
                 name: "Michael T.",
                 role: "Owner, Riverfront Dining",
                 photo: marketingImages.home.testimonials.one.src,
-                alt: marketingImages.home.testimonials.one.alt,
               },
               {
                 quote: "I was paying $300/mo for Birdeye. Zyene does exactly the same thing but the interface is actually modern and the AI response generator is much better. No brainer switch.",
                 name: "Sarah Jenkins",
                 role: "Director, Apex Dental Care",
                 photo: marketingImages.home.testimonials.two.src,
-                alt: marketingImages.home.testimonials.two.alt,
               },
               {
                 quote: "The feedback collection feature alone is worth it. We heard from a concerned customer directly, resolved their issue quickly, and they updated their review to 5 stars. Incredible.",
                 name: "David Chen",
                 role: "Manager, Chen Auto Repair",
                 photo: marketingImages.home.testimonials.three.src,
-                alt: marketingImages.home.testimonials.three.alt,
               },
-            ].map(({ quote, name, role, photo, alt }) => (
+            ].map(({ quote, name, role, photo }) => (
               <motion.div key={name} variants={fadeInUp} className="bg-muted border border-border p-8 rounded-lg relative">
                 <div className="flex gap-1 text-chart-4 mb-6">
                   {[1,2,3,4,5].map(i => <Star key={i} className="fill-current size-5" />)}
@@ -89,7 +90,7 @@ export function MarketingHomeHowAndTestimonials({
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="rounded-full overflow-hidden size-12 relative">
-                    <Image src={photo} alt={alt} fill className="object-cover size-full" />
+                    <Image src={photo} alt={testimonialPortraitAlt(name, role)} fill className="object-cover size-full" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">{name}</h3>
