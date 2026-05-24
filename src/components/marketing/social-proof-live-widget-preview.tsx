@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
-import { marketingImages } from "@/lib/marketing/marketing-images";
 
-const STATIC_REVIEWS = marketingImages.home.widgetPreviewReviews;
+const STATIC_REVIEWS = [
+    { name: "Sarah M.", text: "Best experience we've had. Professional and fast.", stars: 5 },
+    { name: "James T.", text: "They went above and beyond. Highly recommend.", stars: 5 },
+    { name: "Lisa K.", text: "Great service—will definitely come back.", stars: 5 },
+];
 
 export function LiveWidgetPreview() {
     const slug = process.env.NEXT_PUBLIC_DEMO_WIDGET_SLUG;
