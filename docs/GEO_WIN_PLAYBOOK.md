@@ -213,6 +213,8 @@ dateModified?: string; // ISO date for Article JSON-LD
 ### Exit criteria
 
 - [x] 12/12 blog posts have summary blocks after major `h2` + 4–5 FAQs each
+- [x] Compare hub + Birdeye + Podium: opening summaries + FAQs + FAQPage JSON-LD
+- [x] 5/5 case studies: “Results in brief” opening summaries (metrics from page data)
 - [ ] 4/4 resource guides have FAQ schema
 - [ ] 4/4 compare pages have comparison table + opening summary
 - [ ] Re-run on-page SEO audit — zero critical issues on priority URLs

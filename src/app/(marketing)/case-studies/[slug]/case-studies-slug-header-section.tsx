@@ -1,3 +1,4 @@
+import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, ChevronRight, Check, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,10 @@ export function CaseStudiesSlugHeaderSection({ study, slug, related }: { study: 
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5 leading-[1.1]">
                         {study.headline}
                     </h1>
-                    <p className="text-lg text-muted-foreground leading-relaxed">{study.excerpt}</p>
+                    <p className="text-lg text-muted-foreground leading-relaxed mb-5">{study.excerpt}</p>
+                    <MarketingGeoSummary label="Results in brief">
+                        {study.resultsSummary}
+                    </MarketingGeoSummary>
                     <p className="mt-4 text-xs text-muted-foreground">{study.timeline}</p>
                 </div>
             </header>

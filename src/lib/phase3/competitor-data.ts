@@ -3,6 +3,8 @@
 // Single source of truth for all 4 comparison landing pages.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { FaqItem } from "@/components/seo/json-ld";
+
 export interface FeatureRow {
     feature: string;
     zyene: string | boolean;
@@ -28,6 +30,9 @@ export interface CompetitorData {
     whoShouldUseCompetitor: string[];
     whoShouldUseZyene: string[];
     accentColor: string;
+    /** 50–70 word GEO summary: who should pick Zyene vs this competitor. */
+    openingSummary?: string;
+    faqs?: FaqItem[];
 }
 
 export const COMPETITORS: CompetitorData[] = [
@@ -101,6 +106,35 @@ export const COMPETITORS: CompetitorData[] = [
             "Anyone who wants the Negative Feedback Shield to protect their Google rating",
             "Developers who need API access without enterprise pricing",
         ],
+        openingSummary:
+            "Pick Zyene if you run one to a few locations and want review monitoring, AI replies, Negative Feedback Shield, and API access without a $299/mo annual contract. Birdeye fits better when you need enterprise CX—webchat, ticketing, surveys, and deep Salesforce-style integrations across many locations. Figures below use published list positioning; your Birdeye quote may vary by location count.",
+        faqs: [
+            {
+                question: "Is Zyene really cheaper than Birdeye?",
+                answer:
+                    "On published starting prices, yes: Zyene Starter is $29.99/mo month-to-month versus Birdeye’s commonly cited $299/mo entry with annual billing. Your actual Birdeye invoice depends on locations and tier—always confirm with Birdeye sales.",
+            },
+            {
+                question: "Does Birdeye include Negative Feedback Shield?",
+                answer:
+                    "Birdeye does not offer Zyene’s Negative Feedback Shield—a private routing step before unhappy customers post publicly. Birdeye focuses on collection, monitoring, and broader CX workflows instead.",
+            },
+            {
+                question: "Who should stay on Birdeye instead of switching?",
+                answer:
+                    "Multi-location enterprises that need webchat, ticketing, customer surveys, dedicated success managers, and deep CRM integrations in one platform. If reviews are one piece of a larger CX stack, Birdeye may still be the better fit.",
+            },
+            {
+                question: "Can I get API access on Zyene without enterprise pricing?",
+                answer:
+                    "Yes. Zyene includes REST API access on all paid plans. Birdeye typically limits full API access to enterprise tiers—check your contract if integrations are non-negotiable.",
+            },
+            {
+                question: "Do both tools monitor Google, Facebook, and Yelp reviews?",
+                answer:
+                    "Both monitor major review sites in real time on their respective plans. Zyene adds auto-commenter, competitor tracking, and GBP keyword dashboards on standard paid plans—features Birdeye often reserves for higher tiers or add-ons.",
+            },
+        ],
         accentColor: "blue",
     },
 
@@ -171,6 +205,35 @@ export const COMPETITORS: CompetitorData[] = [
             "Owner-operators who want a purpose-built review tool without paying for messaging/payments they won't use",
             "Single or multi-location businesses that need the Negative Feedback Shield",
             "Anyone who can't commit to a $399/mo annual contract",
+        ],
+        openingSummary:
+            "Choose Zyene when Google review growth, AI replies, competitor tracking, and Negative Feedback Shield are the core job—not a unified SMS inbox and payments platform. Podium wins for shops that live in two-way texting, webchat, and pay-by-text workflows. Published entry pricing is roughly $29.99/mo month-to-month for Zyene versus about $399/mo with annual billing for Podium—confirm quotes for your location count.",
+        faqs: [
+            {
+                question: "Is Podium primarily a review management tool?",
+                answer:
+                    "Podium is a customer communications platform—SMS inbox, webchat, payments, and phones—with review features attached. Zyene is purpose-built for monitoring, replying to, and growing Google reviews without paying for messaging you may not use.",
+            },
+            {
+                question: "Does Podium offer competitor tracking or a GBP keyword dashboard?",
+                answer:
+                    "Podium does not include Zyene’s competitor tracking or GBP keyword performance dashboard on standard positioning. If local SEO benchmarking matters, compare feature lists side by side before signing an annual Podium contract.",
+            },
+            {
+                question: "When is Podium the better choice?",
+                answer:
+                    "Choose Podium if two-way SMS, webchat, and text-to-pay are daily workflows—common in auto, home services, and high-volume inbound text businesses. You need staff to run that communications hub.",
+            },
+            {
+                question: "Can Zyene replace Podium’s messaging inbox?",
+                answer:
+                    "No. Zyene sends SMS and email review requests but does not replace a full two-way messaging inbox or payments product. Many owners use Zyene alongside their existing texting stack—or switch from Podium when reviews, not payments, drove the spend.",
+            },
+            {
+                question: "How do free trials compare?",
+                answer:
+                    "Zyene offers a 7-day free trial with full paid-plan access during the trial window. Podium is typically sold via demo and annual contract—verify current trial terms with Podium before you commit.",
+            },
         ],
         accentColor: "purple",
     },

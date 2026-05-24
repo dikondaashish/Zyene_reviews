@@ -1,4 +1,5 @@
-import { BreadcrumbJsonLd, WebPageJsonLd } from "@/components/seo/json-ld";
+import { MarketingFaqSection } from "@/components/marketing/marketing-faq-section";
+import { BreadcrumbJsonLd, FAQPageJsonLd, WebPageJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { COMPETITOR_MAP } from "@/lib/phase3/competitor-data";
 import { CompareCompetitorHeroSection } from "./compare-competitor-hero-section";
@@ -25,6 +26,7 @@ export default async function CompetitorPage(
                 description={data.metaDescription}
                 url={pageUrl}
             />
+            {data.faqs && data.faqs.length > 0 ? <FAQPageJsonLd faqs={data.faqs} /> : null}
             <BreadcrumbJsonLd
                             items={[
                                 { name: "Home", url: "https://zyenereviews.com/" },
@@ -38,6 +40,9 @@ export default async function CompetitorPage(
             <CompareCompetitorFullFeatureBreakdownSection data={data} />
             <CompareCompetitorWhoShouldUseWhichSection data={data} />
             <CompareCompetitorOtherComparisonsSection data={data} slug={slug} />
+            {data.faqs && data.faqs.length > 0 ? (
+                <MarketingFaqSection faqs={data.faqs} headingId={`compare-${slug}-faq-heading`} />
+            ) : null}
             <CompareCompetitorFinalCtaSection data={data} />
         </>
     );

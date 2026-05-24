@@ -1,3 +1,4 @@
+import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import type { CompetitorData } from "@/lib/phase3/competitor-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,12 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                         Zyene Reviews<br />
                         <span className="text-primary">vs {data.name}</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">{data.heroSub}</p>
+                    <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">{data.heroSub}</p>
+                    {data.openingSummary ? (
+                        <div className="max-w-2xl mx-auto mb-8 text-left">
+                            <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>
+                        </div>
+                    ) : null}
 
                     {/* Quick price callout */}
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-10">

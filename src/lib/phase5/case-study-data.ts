@@ -21,6 +21,8 @@ export interface CaseStudy {
     emoji: string;
     headline: string;
     excerpt: string;
+    /** ~60-word GEO summary of outcomes (uses metrics already stated on the page). */
+    resultsSummary: string;
     challenge: string;
     solutionFeatures: string[];
     metrics: CaseStudyMetric[];
@@ -44,6 +46,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         emoji: "🦷",
         headline: "From 23 to 89 Google reviews in 90 days — without hiring marketing staff",
         excerpt: "A two-location dental practice used Zyene's Negative Feedback Shield and automated review requests to grow their Google rating from 4.1 to 4.7 stars.",
+        resultsSummary:
+            "Results in brief: Over 90 days on Zyene Starter, Sunrise Dental grew from 23 to 89 Google reviews and raised average rating from 4.1 to 4.7 stars. The team reached full review response coverage and cut typical reply time from about six days to four hours—using SMS requests, Negative Feedback Shield, and HIPAA-aware AI replies at two Austin locations.",
         challenge:
             "Sunrise Dental had strong chair-side satisfaction but only 23 Google reviews after five years in business. Negative billing complaints occasionally went public because the front desk had no system to intercept unhappy patients before they posted. The office manager spent 45 minutes per week trying to respond to reviews manually.",
         solutionFeatures: [
@@ -78,6 +82,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         emoji: "🍽️",
         headline: "A Charlotte BBQ joint added 64 five-star reviews in 60 days",
         excerpt: "Wolfpack BBQ turned inconsistent review collection into a post-checkout SMS habit — and protected their 4.6-star rating with the Negative Feedback Shield.",
+        resultsSummary:
+            "Results in brief: In 60 days on Zyene Professional, Wolfpack BBQ grew from 41 to 105 Google reviews and logged 64 new five-star reviews in that window. Negative Feedback Shield helped intercept unhappy guests before public posts. Local map pack rank moved from #7 to #2 for their BBQ category alongside post-checkout SMS requests.",
         challenge:
             "Weekend rushes meant managers forgot to ask for reviews. A few cold-food complaints became public 2-star reviews before the team could make it right. Competitors on the same block had 200+ reviews; Wolfpack had 41.",
         solutionFeatures: [
@@ -112,6 +118,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         emoji: "🔧",
         headline: "Home services company cut public 1-stars by 70% in the first quarter",
         excerpt: "Apex HVAC used private feedback routing and Zapier-triggered review requests after job completion to grow trust before the first phone call.",
+        resultsSummary:
+            "Results in brief: In their first 90 days on Zyene Starter, Apex HVAC grew Google reviews from 34 to 112 and average rating from 4.0 to 4.8 stars. Public one-star reviews fell from about eight per quarter to two. Zapier-triggered post-job SMS requests and Shield routing handled billing disputes before they hit Google.",
         challenge:
             "Technicians finished great work but never asked for reviews. Billing disputes and no-show confusion occasionally became 1-star Google reviews. The owner responded to reviews once a month, if at all.",
         solutionFeatures: [
@@ -146,6 +154,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         emoji: "💇",
         headline: "Salon doubled review velocity and hit 4.9 stars in 45 days",
         excerpt: "Bella's Salon automated post-appointment review requests and used AI replies to thank every client — without spending evenings on Google.",
+        resultsSummary:
+            "Results in brief: In 45 days on Zyene Starter, Bella's Salon grew from 56 to 118 Google reviews and lifted average rating from 4.4 to 4.9 stars. New reviews moved from about two or three per month to 14–18, while owner time on Google dropped from roughly three hours per week to about twenty minutes.",
         challenge:
             "Stylists relied on walk-ins from Instagram but Google was an afterthought. A single viral bad review about wait times sat unanswered for three weeks. Review count stalled at 56 after two years.",
         solutionFeatures: [
@@ -180,6 +190,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         emoji: "🔩",
         headline: "Auto shop went from invisible on Google to top-3 in local search",
         excerpt: "Precision Auto Works combined review requests at vehicle pickup with competitor benchmarks to close the gap with chain shops.",
+        resultsSummary:
+            "Results in brief: Over 120 days on Zyene Starter, Precision Auto Works grew from 19 to 94 Google reviews and average rating from 3.9 to 4.6 stars. They reached top-three local map visibility and raised review response rate from about 5% to 98%—using pickup SMS requests, competitor tracking, and Shield for warranty disputes.",
         challenge:
             "Chain competitors dominated Google Maps with 300+ reviews. Precision had 19 reviews and a 3.9 average after a run of unresponded warranty complaints. The service manager had no marketing background.",
         solutionFeatures: [
