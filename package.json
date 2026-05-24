@@ -19,6 +19,7 @@
     "cron:daily-digest": "node scripts/ensure-cron-job-daily-digest.mjs",
     "cursorrules:install": "node scripts/install-awesome-cursorrules.mjs",
     "skills:vercel": "node scripts/install-vercel-agent-skills.mjs",
+    "skills:sync": "node scripts/sync-agent-skills.mjs",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },
   "dependencies": {

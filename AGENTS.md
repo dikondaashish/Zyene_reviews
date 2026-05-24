@@ -1,8 +1,20 @@
 # AGENTS.md — Zyene Reviews
 
-**Read this file first.** It is the single source of truth for every AI agent (Cursor, Claude Code, Copilot, etc.) and for engineers onboarding to this repository.
+**Read this file first.** It is the single source of truth for every AI agent (Cursor, Claude Code, Copilot, Windsurf, Antigravity, etc.) and for engineers onboarding to this repository.
 
-For human onboarding detail, see [README.md](./README.md). For Next.js version-specific docs, see [.agent/docs/AGENTS.md](./.agent/docs/AGENTS.md). For always-on Cursor rules, see [.cursor/rules/](.cursor/rules/).
+For human onboarding detail, see [README.md](./README.md). For Next.js version-specific docs, see [.agent/docs/AGENTS.md](./.agent/docs/AGENTS.md).
+
+### Where each IDE reads configuration
+
+| IDE | Rules / instructions | Skills |
+|-----|----------------------|--------|
+| **Cursor** | [AGENTS.md](./AGENTS.md), [.cursor/rules/](.cursor/rules/) | [.agents/skills/](./.agents/skills/), [.cursor/skills/](.cursor/skills/) |
+| **GitHub Copilot** | [.github/copilot-instructions.md](./.github/copilot-instructions.md) | [.agents/skills/](./.agents/skills/) |
+| **Windsurf** | [.windsurf/rules/project.md](./.windsurf/rules/project.md) | [.windsurf/skills/](./.windsurf/skills/) (synced) |
+| **Antigravity** | [.antigravity/rules.md](./.antigravity/rules.md) (imports this file) | [.agents/skills/](./.agents/skills/) |
+| **Claude Code** | [CLAUDE.md](./CLAUDE.md), [.claude/rules/](./.claude/rules/) | [.claude/skills/](./.claude/skills/) (synced) |
+
+After adding or updating skills under `.agents/skills/`, run **`pnpm run skills:sync`** to refresh Claude and Windsurf symlinks.
 
 ---
 
@@ -227,6 +239,7 @@ pnpm build            # production build
 pnpm lint             # ESLint
 pnpm cursorrules:install   # refresh .cursor/rules from awesome-cursorrules
 pnpm skills:vercel         # refresh Vercel agent skills
+pnpm skills:sync           # symlink skills to .claude/skills & .windsurf/skills
 ```
 
 **Production:** Vercel project `zyene-reviews` · **DB:** Supabase · **Docs:** `docs/` and `README.md`

@@ -1,5 +1,7 @@
 # Awesome Cursor Rules (curated for Zyene Reviews)
 
+**Master AI guide:** [AGENTS.md](../../AGENTS.md) · **All IDEs:** see [README § AI-assisted development](../../README.md#ai-assisted-development-all-ides).
+
 Rules sourced from [PatrickJS/awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules) (CC0-1.0). Re-run `node scripts/install-awesome-cursorrules.mjs` to refresh from upstream.
 
 | Local file | Purpose |

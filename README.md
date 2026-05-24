@@ -5,6 +5,24 @@ Connect review platforms, sync and respond to reviews, run SMS/email campaigns, 
 
 This README is the **onboarding entry point** for engineers joining the team. It explains how we build, where code lives, and the rules we follow so changes stay safe at production scale. For deeper references, use the [documentation index](#documentation-index) below.
 
+**AI agents:** [AGENTS.md](./AGENTS.md) is the master guide (code standards, SEO, skills, pre-flight checks). It is mirrored for each IDE below.
+
+---
+
+## AI-assisted development (all IDEs)
+
+| IDE | Reads rules from | Reads skills from |
+|-----|------------------|-------------------|
+| **Cursor** | [AGENTS.md](./AGENTS.md), [.cursor/rules/](./.cursor/rules/) | [.agents/skills/](./.agents/skills/) |
+| **GitHub Copilot** | [.github/copilot-instructions.md](./.github/copilot-instructions.md) | `.agents/skills/` |
+| **Windsurf** | [.windsurf/rules/project.md](./.windsurf/rules/project.md) | [.windsurf/skills/](./.windsurf/skills/) |
+| **Antigravity** | [.antigravity/rules.md](./.antigravity/rules.md) | `.agents/skills/` |
+| **Claude Code** | [CLAUDE.md](./CLAUDE.md), [.claude/rules/](./.claude/rules/) | [.claude/skills/](./.claude/skills/) |
+
+- **Canonical skills:** `.agents/skills/<name>/SKILL.md` — run `pnpm run skills:sync` after adding skills to update Claude/Windsurf symlinks.
+- **Refresh Vercel skills:** `pnpm run skills:vercel`
+- **Refresh Cursor rules (awesome-cursorrules):** `pnpm run cursorrules:install`
+
 ---
 
 ## Table of contents
