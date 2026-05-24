@@ -79,7 +79,9 @@ export function MarketingHomeFeatureAutomation({
                     />
                   </div>
                   <div>
-                    <div className="h-4 w-24 bg-border rounded-full mb-2"></div>
+                    <p className="text-sm font-semibold text-foreground mb-1">
+                      {marketingImages.home.featureAutomation.name}
+                    </p>
                     <div className="flex gap-1 text-chart-4 mb-2">
                       {[1,2,3,4,5].map(i => <Star key={i} className="fill-current size-4" />)}
                     </div>

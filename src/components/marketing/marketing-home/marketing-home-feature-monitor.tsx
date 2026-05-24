@@ -95,7 +95,7 @@ export function MarketingHomeFeatureMonitor({
                       <span className="font-bold text-muted-foreground">2</span>
                     </div>
                     <div>
-                      <h5 className="font-bold text-sm text-foreground">Competitor A</h5>
+                      <h5 className="font-bold text-sm text-foreground">Harbor Cafe</h5>
                       <div className="flex text-muted-foreground text-xs mt-1">★★★★☆ 3.8</div>
                     </div>
                   </div>
