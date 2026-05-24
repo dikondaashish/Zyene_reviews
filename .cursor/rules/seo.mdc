@@ -1,0 +1,64 @@
+---
+description: SEO rules for marketing pages, metadata, structured data, images, performance, and crawlability
+globs:
+  - "src/app/**/*.tsx"
+  - "src/app/**/*.ts"
+  - "src/components/**/*.tsx"
+alwaysApply: true
+---
+
+# SEO (Zyene Reviews)
+
+Follow these rules whenever writing or editing any page, layout, or marketing component.
+
+## METADATA
+
+- Every page must have a **unique** `title` (max 60 characters; count only the segment before the root template suffix — do not duplicate the brand in the page title string).
+- Every page must have a **unique** `description` (max 160 characters).
+- Use Next.js `generateMetadata()` for dynamic routes (async `params` in Next.js 15).
+- The root layout sets `title.template: "%s | Zyene Reviews"` — **never** append `| Zyene Reviews` manually in page metadata.
+- Every **marketing** page must set `openGraph.title`, `openGraph.description`, and `openGraph.images` (reuse `/og/og-default.png` or a page-specific OG image).
+- Every **marketing** page must set `twitter.card` (prefer `summary_large_image`) plus matching `twitter.title` and `twitter.description`.
+
+## STRUCTURED DATA
+
+Add JSON-LD on key pages using `next/script` with `strategy="lazyOnload"` (or existing helpers in `@/components/seo/json-ld` that render valid `application/ld+json`):
+
+| Page type | Schema |
+|-----------|--------|
+| Homepage | `Organization` (root layout / homepage) |
+| Blog posts | `Article` with `author` and `datePublished` |
+| Pricing | `Product` / `Offer` (`ProductJsonLd`) |
+| Public review / collection pages | `LocalBusiness` where applicable |
+
+Prefer shared components under `src/components/seo/` over one-off inline schemas.
+
+## IMAGES
+
+- Always use Next.js `<Image>`, never raw `<img>`.
+- Every image must have descriptive `alt` text (empty `alt=""` only for decorative images).
+- Always set `width` and `height` (or `fill` with a sized parent).
+- Use `priority={true}` only for above-the-fold LCP images.
+
+## PERFORMANCE (Core Web Vitals)
+
+- Default to React Server Components; no `"use client"` unless the component needs browser APIs or interactivity.
+- Lazy-load below-the-fold UI with `next/dynamic` and `{ ssr: false }` only when necessary.
+- Do not ship heavy client-side JS on initial page load for marketing pages.
+
+## LINKS & NAVIGATION
+
+- Internal routes: Next.js `<Link>` from `next/link`, not `<a href="/...">`.
+- External links: `rel="noopener noreferrer"` (and `target="_blank"` when opening a new tab).
+- Do not introduce broken internal links; verify new paths exist in the app router.
+
+## CONTENT
+
+- Each marketing page has exactly one `<h1>`.
+- Heading hierarchy: `h1` → `h2` → `h3` (do not skip levels).
+- Use semantic HTML: `<main>`, `<article>`, `<section>`, `<nav>`, `<header>`, `<footer>`.
+
+## SITEMAP & ROBOTS
+
+- New **marketing** URLs must be added to `src/app/sitemap.ts`.
+- New public marketing pages must **not** be disallowed in `src/app/robots.ts` unless they are internal, auth, or app-only routes.

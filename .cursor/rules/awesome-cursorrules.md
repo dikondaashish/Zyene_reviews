@@ -16,6 +16,7 @@ Rules sourced from [PatrickJS/awesome-cursorrules](https://github.com/PatrickJS/
 Project-specific rules (not from awesome-cursorrules):
 
 - `auto-push-github.mdc` — commit and push after implementation tasks
+- `seo.mdc` — metadata, JSON-LD, images, Core Web Vitals, sitemap/robots (always apply on app/pages)
 
 ## Cursor skills
 
@@ -37,6 +38,11 @@ Project-specific rules (not from awesome-cursorrules):
 | `deploy-to-vercel` | Claimable preview deploy from the agent |
 | `vercel-cli-with-tokens` | Vercel CLI with scoped tokens |
 
-Also in `.agents/skills/`: `react-doctor` (local quality checks).
+Also in `.agents/skills/`:
+
+| Skill | Use when |
+|-------|----------|
+| `seo` | SEO audit before commit; metadata, JSON-LD, sitemap checks |
+| `react-doctor` | React lint, a11y, bundle diagnostics |
 
 Browse 150+ more **rules** in the awesome-cursorrules upstream README.
