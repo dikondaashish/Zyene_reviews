@@ -4,6 +4,10 @@
 // Replace with permissioned customer stories as they become available.
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Shown on index + detail pages — not verified individual customers. */
+export const CASE_STUDY_COMPOSITE_DISCLAIMER =
+    "This story illustrates typical outcomes local businesses see with Zyene. Names, locations, quotes, and metrics are composite for education—not a verified testimonial from a named customer unless we publish an updated, permissioned story.";
+
 export interface CaseStudyMetric {
     label: string;
     before: string;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Building2, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CASE_STUDIES } from "@/lib/phase5/case-study-data";
+import { CASE_STUDY_COMPOSITE_DISCLAIMER } from "@/lib/phase5/case-study-data";
 import { CustomerLogoBar } from "@/components/marketing/social-proof";
 import { SIGNUP_URL } from "@/config/env";
 
@@ -15,9 +15,11 @@ export function CaseStudiesHeroSection() {
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
                         Results local businesses achieve with Zyene
                     </h1>
-                    <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                        Representative outcomes from restaurants, dental practices, home services, salons, and auto repair, 
-                        built from typical customer journeys. Permissioned customer stories will replace these as they become available.
+                    <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed mb-4">
+                        Explore illustrative scenarios for restaurants, dental practices, home services, salons, and auto repair—built from typical workflows on Zyene, not verified named-customer engagements.
+                    </p>
+                    <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed border-l-2 border-primary/30 pl-4">
+                        {CASE_STUDY_COMPOSITE_DISCLAIMER}
                     </p>
                 </div>
             </section>

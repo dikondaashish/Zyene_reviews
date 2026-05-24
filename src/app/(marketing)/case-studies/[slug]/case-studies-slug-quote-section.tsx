@@ -12,6 +12,7 @@ export function CaseStudiesSlugQuoteSection({ study, slug, related }: { study: (
                             &ldquo;{study.quote}&rdquo;
                         </blockquote>
                         <footer className="pl-10 border-t border-border pt-4">
+                            <p className="text-xs text-muted-foreground mb-2">Illustrative quote — composite persona, not a verified customer statement.</p>
                             <p className="font-semibold text-foreground">{study.quoteAuthor}</p>
                             <p className="text-sm text-muted-foreground">{study.quoteRole}</p>
                         </footer>

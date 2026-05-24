@@ -2,7 +2,7 @@ import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summar
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, ChevronRight, Check, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { CASE_STUDY_COMPOSITE_DISCLAIMER, CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { SIGNUP_URL } from "@/config/env";
 
 export function CaseStudiesSlugHeaderSection({ study, slug, related }: { study: (typeof CASE_STUDY_MAP)[string]; slug: string; related: (typeof CASE_STUDY_MAP)[string][] }) {
@@ -15,11 +15,19 @@ export function CaseStudiesSlugHeaderSection({ study, slug, related }: { study: 
                         <span className="text-foreground font-medium truncate">{study.company}</span>
                     </nav>
 
+                    <p
+                        className="mb-5 rounded-lg border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground leading-relaxed"
+                        role="note"
+                    >
+                        <span className="font-semibold text-foreground">Representative example — </span>
+                        {CASE_STUDY_COMPOSITE_DISCLAIMER}
+                    </p>
+
                     <div className="flex items-center gap-3 mb-5">
                         <span className="text-4xl" aria-hidden>{study.emoji}</span>
                         <div>
                             <p className="text-xs font-bold uppercase tracking-wider text-primary">
-                                {study.industry} · {study.location}
+                                {study.industry} · illustrative scenario
                             </p>
                             <p className="text-sm text-muted-foreground">{study.size}</p>
                         </div>
@@ -29,7 +37,7 @@ export function CaseStudiesSlugHeaderSection({ study, slug, related }: { study: 
                         {study.headline}
                     </h1>
                     <p className="text-lg text-muted-foreground leading-relaxed mb-5">{study.excerpt}</p>
-                    <MarketingGeoSummary label="Results in brief">
+                    <MarketingGeoSummary label="Illustrative results in brief">
                         {study.resultsSummary}
                     </MarketingGeoSummary>
                     <p className="mt-4 text-xs text-muted-foreground">{study.timeline}</p>

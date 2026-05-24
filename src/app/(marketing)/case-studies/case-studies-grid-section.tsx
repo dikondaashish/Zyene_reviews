@@ -15,11 +15,14 @@ export function CaseStudiesGridSection() {
                                 key={study.slug}
                                 className="bg-card border border-border rounded-2xl p-8 flex flex-col hover:border-primary/30 transition-colors"
                             >
+                                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                                    Representative example
+                                </p>
                                 <div className="flex items-start gap-4 mb-4">
                                     <span className="text-4xl" aria-hidden>{study.emoji}</span>
                                     <div>
                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                            {study.industry} · {study.location}
+                                            {study.industry} · illustrative scenario
                                         </p>
                                         <h2 className="text-xl font-bold text-foreground mt-1">{study.company}</h2>
                                         <p className="text-xs text-muted-foreground mt-0.5">{study.size}</p>

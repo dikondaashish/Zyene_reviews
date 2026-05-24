@@ -306,6 +306,35 @@ export const COMPETITORS: CompetitorData[] = [
             "Developers who need API access on standard plans",
             "Businesses on a tight budget: $29.99/mo vs $75/mo",
         ],
+        openingSummary:
+            "Choose Zyene when you need AI replies, auto-commenter, competitor tracking, and GBP keyword insights—not just automated review asks. NiceJob wins on simplicity, video testimonials, and an optional website on the Convert plan. Published entry pricing is about $29.99/mo for Zyene Starter versus roughly $75/mo for NiceJob Grow—confirm both quotes for your location count.",
+        faqs: [
+            {
+                question: "Does NiceJob include AI review replies?",
+                answer:
+                    "NiceJob does not offer Zyene-style AI reply suggestions or auto-commenter on its standard positioning. Zyene includes unlimited AI replies and optional hands-free replies on paid plans—important if you respond to dozens of reviews monthly.",
+            },
+            {
+                question: "When is NiceJob the better fit?",
+                answer:
+                    "Pick NiceJob if you want a very simple review-collection UI, video testimonials, or a bundled website on the Convert plan. Trades and home-services teams often like NiceJob’s visual workflow for basic campaigns.",
+            },
+            {
+                question: "Can Zyene track competitors on Google?",
+                answer:
+                    "Yes—Zyene includes competitor tracking on all plans (up to 10 competitors per location). NiceJob does not include competitor benchmarking in its standard feature set.",
+            },
+            {
+                question: "How do trials compare?",
+                answer:
+                    "Zyene offers a 7-day free trial with paid-plan access during the window. NiceJob commonly advertises a 14-day trial—verify current terms on NiceJob’s site before you switch.",
+            },
+            {
+                question: "Is Zyene cheaper than NiceJob?",
+                answer:
+                    "On published starting prices, Zyene Starter is $29.99/mo versus NiceJob Grow at about $75/mo for one location. NiceJob’s Convert plan with a website costs more. Your invoice may differ with promotions or multi-location pricing.",
+            },
+        ],
         accentColor: "green",
     },
 
@@ -377,6 +406,35 @@ export const COMPETITORS: CompetitorData[] = [
             "Businesses that need competitor tracking to stay ahead locally",
             "GBP-focused businesses wanting keyword performance data",
             "Anyone looking for a lower per-location starting price",
+        ],
+        openingSummary:
+            "Choose Zyene when Google review replies, Shield routing, competitor tracking, and GBP keywords matter more than NPS surveys and agency white-label. GatherUp wins for customer surveys, employee recognition, Healthgrades-style listings, and franchise programs. Published entry pricing is about $29.99/mo for Zyene versus roughly $99/mo per location for GatherUp—confirm quotes before you switch.",
+        faqs: [
+            {
+                question: "Does GatherUp replace Zyene for Google review replies?",
+                answer:
+                    "GatherUp focuses on collection, surveys, and multi-site reputation workflows. Zyene is review-first with unlimited AI reply suggestions, auto-commenter, and Negative Feedback Shield on all plans—compare AI depth if replies are daily work.",
+            },
+            {
+                question: "When should I stay on GatherUp?",
+                answer:
+                    "Stay on GatherUp if NPS surveys, employee recognition, healthcare listing coverage, or agency white-label are core requirements. Zyene does not ship full survey suites or white-label agency mode on standard plans.",
+            },
+            {
+                question: "Does Zyene include customer NPS surveys?",
+                answer:
+                    "No. Zyene does not include a full NPS or customer survey product—GatherUp’s survey tooling is a major strength there. Zyene focuses on review requests, monitoring, replies, Shield, and local SEO dashboards.",
+            },
+            {
+                question: "How does pricing compare on one location?",
+                answer:
+                    "Published positioning shows Zyene Starter at $29.99/mo month-to-month and GatherUp at about $99/mo per location as a common entry point. Multi-location and feature bundles change both bills—get written quotes.",
+            },
+            {
+                question: "Which tool has competitor tracking?",
+                answer:
+                    "Zyene includes competitor tracking on all plans. GatherUp does not position competitor benchmarking as a standard feature—if you watch nearby rivals weekly, factor that into your decision.",
+            },
         ],
         accentColor: "orange",
     },
