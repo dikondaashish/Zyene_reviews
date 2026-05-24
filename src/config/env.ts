@@ -59,10 +59,26 @@ export const ROOT_DOMAIN = NEXT_PUBLIC_ROOT_DOMAIN;
 export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
 export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
 
-/** Signup URL: local path for dev, auth subdomain for production. */
-export const SIGNUP_URL = ROOT_DOMAIN.includes("localhost")
-    ? "/signup"
-    : `https://auth.${ROOT_DOMAIN}/signup`;
+/** True when marketing auth links should use same-origin /login and /signup. */
+function useLocalMarketingAuthPaths(): boolean {
+    return (
+        process.env.NODE_ENV === "development" ||
+        ROOT_DOMAIN.includes("localhost") ||
+        ROOT_DOMAIN.includes("127.0.0.1")
+    );
+}
+
+/** Marketing-site login/signup href (SSR + client must agree to avoid hydration mismatch). */
+export function getMarketingAuthUrl(path: "login" | "signup"): string {
+    if (useLocalMarketingAuthPaths()) return `/${path}`;
+    const domain = ROOT_DOMAIN.replace(/^https?:\/\//, "")
+        .replace(/^app\./, "")
+        .replace(/\/$/, "");
+    return `https://auth.${domain}/${path}`;
+}
+
+export const LOGIN_URL = getMarketingAuthUrl("login");
+export const SIGNUP_URL = getMarketingAuthUrl("signup");
 
 /** Public review-request pages only (business slugs). Not the marketing site. */
 export const REVIEW_CAPTURE_DOMAIN = optional(

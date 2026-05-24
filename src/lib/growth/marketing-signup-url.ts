@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { getMarketingAuthUrl } from "@/config/env";
 import { appendUtmToUrl, deserializeUtm, UTM_COOKIE_NAME, type UtmParams } from "@/lib/growth/utm";
 
 function readUtmCookie(): UtmParams | null {
@@ -23,9 +24,8 @@ export function useMarketingSignupUrl(basePath = "/signup"): string {
             if (v) (fromUrl as Record<string, string>)[key] = v;
         });
         const utm = Object.keys(fromUrl).length > 0 ? fromUrl : readUtmCookie();
-        const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-        const isLocal = rootDomain.includes("localhost");
-        const fullBase = isLocal ? basePath : `https://auth.${rootDomain}${basePath}`;
+        const fullBase =
+            basePath === "/login" ? getMarketingAuthUrl("login") : getMarketingAuthUrl("signup");
         return appendUtmToUrl(fullBase, utm);
     }, [searchParams, basePath]);
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { LOGIN_URL, SIGNUP_URL } from "@/config/env";
 import { MARKETING_PREFETCH_HREFS } from "./marketing-layout-nav-data";
 import type { MarketingNavMenu } from "./marketing-layout-nav-types";
 import { MarketingLayoutHeaderBrand } from "./marketing-layout-header-brand";
@@ -30,11 +31,6 @@ export function MarketingLayoutHeader() {
         return () => document.removeEventListener("mousedown", handleClick);
     }, []);
 
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-    const isLocal = rootDomain.includes("localhost");
-    const loginUrl = isLocal ? "/login" : `https://auth.${rootDomain}/login`;
-    const signupUrl = isLocal ? "/signup" : `https://auth.${rootDomain}/signup`;
-
     const closeMobile = () => setMobileMenuOpen(false);
 
     const openOnly = (menu: MarketingNavMenu) => setOpenMenu(menu);
@@ -49,8 +45,8 @@ export function MarketingLayoutHeader() {
                 <MarketingLayoutHeaderBrand />
                 <MarketingLayoutDesktopNav
                     ref={desktopNavRef}
-                    loginUrl={loginUrl}
-                    signupUrl={signupUrl}
+                    loginUrl={LOGIN_URL}
+                    signupUrl={SIGNUP_URL}
                     openMenu={openMenu}
                     onOpenMenu={openOnly}
                     onToggleMenu={toggleMenu}
@@ -87,8 +83,8 @@ export function MarketingLayoutHeader() {
             </div>
             {mobileMenuOpen ? (
                 <MarketingLayoutMobileNav
-                    loginUrl={loginUrl}
-                    signupUrl={signupUrl}
+                    loginUrl={LOGIN_URL}
+                    signupUrl={SIGNUP_URL}
                     onNavigate={closeMobile}
                 />
             ) : null}
