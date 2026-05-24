@@ -19,6 +19,24 @@ Project-specific rules (not from awesome-cursorrules):
 
 ## Cursor skills
 
-- `.cursor/skills/ui-ux-pro-max/` — UI/UX Pro Max (design system search, stack guides, UX patterns). Installed via `uipro init --ai cursor`.
+| Location | Source | Refresh |
+|----------|--------|---------|
+| `.cursor/skills/ui-ux-pro-max/` | [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | `uipro init --ai cursor` |
+| `.agents/skills/*` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | `pnpm run skills:vercel` |
 
-Browse 150+ more rules in the upstream repo README.
+**Vercel agent skills** (MIT, locked in `skills-lock.json`):
+
+| Skill | Use when |
+|-------|----------|
+| `vercel-optimize` | Cost/performance audit of a deployed Vercel project |
+| `vercel-react-best-practices` | React/Next.js performance (40+ rules) |
+| `web-design-guidelines` | UI/accessibility/UX review (100+ rules) |
+| `vercel-composition-patterns` | Compound components, fewer boolean props |
+| `vercel-react-view-transitions` | View Transition API, Next.js route animations |
+| `vercel-react-native-skills` | React Native / Expo |
+| `deploy-to-vercel` | Claimable preview deploy from the agent |
+| `vercel-cli-with-tokens` | Vercel CLI with scoped tokens |
+
+Also in `.agents/skills/`: `react-doctor` (local quality checks).
+
+Browse 150+ more **rules** in the awesome-cursorrules upstream README.
