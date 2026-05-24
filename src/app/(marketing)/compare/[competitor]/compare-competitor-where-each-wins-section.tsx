@@ -25,13 +25,13 @@ export function CompareCompetitorWhereEachWinsSection({ data }: { data: Competit
                             </ul>
                         </div>
 
-                        {/* Zyene wins */}
+                        {/* Zyene Reviews wins */}
                         <div className="bg-card border-2 border-primary/30 rounded-2xl p-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="bg-primary/10 rounded-xl flex items-center justify-center shrink-0 size-10">
                                     <ShieldCheck className="text-primary size-5" />
                                 </div>
-                                <h3 className="text-xl font-bold text-foreground">Where Zyene wins</h3>
+                                <h3 className="text-xl font-bold text-foreground">Where Zyene Reviews wins</h3>
                             </div>
                             <ul className="space-y-3">
                                 {data.winsForZyene.map((item, i) => (

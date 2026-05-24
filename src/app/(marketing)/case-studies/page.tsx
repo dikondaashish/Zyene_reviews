@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     alternates: { canonical: "https://zyenereviews.com/case-studies" },
     openGraph: {
         title: "Customer Case Studies",
-        description: "Before/after metrics from local businesses using Zyene for review management and reputation growth.",
+        description: "Before/after metrics from local businesses using Zyene Reviews for review management and reputation growth.",
         url: "https://zyenereviews.com/case-studies",
         type: "website",
     },

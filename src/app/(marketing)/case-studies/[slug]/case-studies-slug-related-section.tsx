@@ -23,7 +23,7 @@ export function CaseStudiesSlugRelatedSection({ study, slug, related }: { study:
                                 href={`/industries/${study.industrySlug}`}
                                 className="text-sm text-primary font-medium hover:brightness-90"
                             >
-                                See Zyene for {study.industry} →
+                                See Zyene Reviews for {study.industry} →
                             </Link>
                         </p>
                     </section>

@@ -20,7 +20,7 @@ export function CompareTableSection() {
                                 <tr className="bg-muted">
                                     <th className="px-5 py-4 font-semibold text-muted-foreground border-b border-r border-border text-left w-[28%]">Feature</th>
                                     <th className="px-4 py-4 font-bold text-primary border-b border-r border-border bg-primary/10 text-center w-[14%]">
-                                        Zyene<br /><span className="text-xs font-normal text-muted-foreground">$29.99/mo</span>
+                                        Zyene Reviews<br /><span className="text-xs font-normal text-muted-foreground">$29.99/mo</span>
                                     </th>
                                     <th className="px-4 py-4 font-semibold text-muted-foreground border-b border-r border-border text-center w-[14%]">
                                         Birdeye<br /><span className="text-xs font-normal">$299/mo</span>

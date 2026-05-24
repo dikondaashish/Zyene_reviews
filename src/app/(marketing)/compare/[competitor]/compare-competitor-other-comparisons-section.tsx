@@ -18,7 +18,7 @@ export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data:
                                     href={`/compare/${s}`}
                                     className="text-sm font-medium text-muted-foreground hover:text-primary border border-border rounded-lg px-4 py-2 hover:border-primary/50 transition-all bg-card"
                                 >
-                                    Zyene vs {comp.name} →
+                                    Zyene Reviews vs {comp.name} →
                                 </Link>
                             );
                             return acc;

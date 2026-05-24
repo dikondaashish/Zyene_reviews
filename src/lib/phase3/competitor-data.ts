@@ -30,7 +30,7 @@ export interface CompetitorData {
     whoShouldUseCompetitor: string[];
     whoShouldUseZyene: string[];
     accentColor: string;
-    /** 50–70 word GEO summary: who should pick Zyene vs this competitor. */
+    /** 50–70 word GEO summary: who should pick Zyene Reviews vs this competitor. */
     openingSummary?: string;
     faqs?: FaqItem[];
 }
@@ -44,7 +44,7 @@ export const COMPETITORS: CompetitorData[] = [
         priceNote: "Starting price per month, billed annually. Actual pricing varies by location count and contract tier.",
         contractRequired: true,
         keyAngle: "10× cheaper, no annual contract, same AI features",
-        heroSub: "See why local businesses are switching from Birdeye to Zyene — and paying $270 less per month to do it.",
+        heroSub: "See why local businesses are switching from Birdeye to Zyene Reviews — and paying $270 less per month to do it.",
         metaTitle: "Zyene Reviews vs Birdeye — Full Comparison 2026",
         metaDescription:
             "Compare Zyene Reviews vs Birdeye: AI replies, Negative Feedback Shield, and pricing from $29.99/mo with no contract versus Birdeye at $299/mo.",
@@ -107,17 +107,17 @@ export const COMPETITORS: CompetitorData[] = [
             "Developers who need API access without enterprise pricing",
         ],
         openingSummary:
-            "Pick Zyene if you run one to a few locations and want review monitoring, AI replies, Negative Feedback Shield, and API access without a $299/mo annual contract. Birdeye fits better when you need enterprise CX—webchat, ticketing, surveys, and deep Salesforce-style integrations across many locations. Figures below use published list positioning; your Birdeye quote may vary by location count.",
+            "Pick Zyene Reviews if you run one to a few locations and want review monitoring, AI replies, Negative Feedback Shield, and API access without a $299/mo annual contract. Birdeye fits better when you need enterprise CX—webchat, ticketing, surveys, and deep Salesforce-style integrations across many locations. Figures below use published list positioning; your Birdeye quote may vary by location count.",
         faqs: [
             {
-                question: "Is Zyene really cheaper than Birdeye?",
+                question: "Is Zyene Reviews really cheaper than Birdeye?",
                 answer:
-                    "On published starting prices, yes: Zyene Starter is $29.99/mo month-to-month versus Birdeye’s commonly cited $299/mo entry with annual billing. Your actual Birdeye invoice depends on locations and tier—always confirm with Birdeye sales.",
+                    "On published starting prices, yes: Starter on Zyene Reviews is $29.99/mo month-to-month versus Birdeye’s commonly cited $299/mo entry with annual billing. Your actual Birdeye invoice depends on locations and tier—always confirm with Birdeye sales.",
             },
             {
                 question: "Does Birdeye include Negative Feedback Shield?",
                 answer:
-                    "Birdeye does not offer Zyene’s Negative Feedback Shield—a private routing step before unhappy customers post publicly. Birdeye focuses on collection, monitoring, and broader CX workflows instead.",
+                    "Birdeye does not offer Zyene Reviews' Negative Feedback Shield—a private routing step before unhappy customers post publicly. Birdeye focuses on collection, monitoring, and broader CX workflows instead.",
             },
             {
                 question: "Who should stay on Birdeye instead of switching?",
@@ -125,14 +125,14 @@ export const COMPETITORS: CompetitorData[] = [
                     "Multi-location enterprises that need webchat, ticketing, customer surveys, dedicated success managers, and deep CRM integrations in one platform. If reviews are one piece of a larger CX stack, Birdeye may still be the better fit.",
             },
             {
-                question: "Can I get API access on Zyene without enterprise pricing?",
+                question: "Can I get API access on Zyene Reviews without enterprise pricing?",
                 answer:
-                    "Yes. Zyene includes REST API access on all paid plans. Birdeye typically limits full API access to enterprise tiers—check your contract if integrations are non-negotiable.",
+                    "Yes. Zyene Reviews includes REST API access on all paid plans. Birdeye typically limits full API access to enterprise tiers—check your contract if integrations are non-negotiable.",
             },
             {
                 question: "Do both tools monitor Google, Facebook, and Yelp reviews?",
                 answer:
-                    "Both monitor major review sites in real time on their respective plans. Zyene adds auto-commenter, competitor tracking, and GBP keyword dashboards on standard paid plans—features Birdeye often reserves for higher tiers or add-ons.",
+                    "Both monitor major review sites in real time on their respective plans. Zyene Reviews adds auto-commenter, competitor tracking, and GBP keyword dashboards on standard paid plans—features Birdeye often reserves for higher tiers or add-ons.",
             },
         ],
         accentColor: "blue",
@@ -146,7 +146,7 @@ export const COMPETITORS: CompetitorData[] = [
         priceNote: "Starting price per month, billed annually. Pricing varies by location and features selected.",
         contractRequired: true,
         keyAngle: "Reviews-focused vs messaging platform — and 13× cheaper",
-        heroSub: "Podium is a messaging and payments platform. Zyene is a review management platform. See the full difference — and why Zyene costs 13× less.",
+        heroSub: "Podium is a messaging and payments platform. Zyene Reviews is a review management platform. See the full difference — and why Zyene Reviews costs 13× less.",
         metaTitle: "Zyene Reviews vs Podium — Full Comparison 2026",
         metaDescription:
             "Zyene Reviews vs Podium: review management, AI replies, and Shield at $29.99/mo with no contract compared to Podium at $399/mo.",
@@ -207,17 +207,17 @@ export const COMPETITORS: CompetitorData[] = [
             "Anyone who can't commit to a $399/mo annual contract",
         ],
         openingSummary:
-            "Choose Zyene when Google review growth, AI replies, competitor tracking, and Negative Feedback Shield are the core job—not a unified SMS inbox and payments platform. Podium wins for shops that live in two-way texting, webchat, and pay-by-text workflows. Published entry pricing is roughly $29.99/mo month-to-month for Zyene versus about $399/mo with annual billing for Podium—confirm quotes for your location count.",
+            "Choose Zyene Reviews when Google review growth, AI replies, competitor tracking, and Negative Feedback Shield are the core job—not a unified SMS inbox and payments platform. Podium wins for shops that live in two-way texting, webchat, and pay-by-text workflows. Published entry pricing is roughly $29.99/mo month-to-month for Zyene Reviews versus about $399/mo with annual billing for Podium—confirm quotes for your location count.",
         faqs: [
             {
                 question: "Is Podium primarily a review management tool?",
                 answer:
-                    "Podium is a customer communications platform—SMS inbox, webchat, payments, and phones—with review features attached. Zyene is purpose-built for monitoring, replying to, and growing Google reviews without paying for messaging you may not use.",
+                    "Podium is a customer communications platform—SMS inbox, webchat, payments, and phones—with review features attached. Zyene Reviews is purpose-built for monitoring, replying to, and growing Google reviews without paying for messaging you may not use.",
             },
             {
                 question: "Does Podium offer competitor tracking or a GBP keyword dashboard?",
                 answer:
-                    "Podium does not include Zyene’s competitor tracking or GBP keyword performance dashboard on standard positioning. If local SEO benchmarking matters, compare feature lists side by side before signing an annual Podium contract.",
+                    "Podium does not include Zyene Reviews' competitor tracking or GBP keyword performance dashboard on standard positioning. If local SEO benchmarking matters, compare feature lists side by side before signing an annual Podium contract.",
             },
             {
                 question: "When is Podium the better choice?",
@@ -225,14 +225,14 @@ export const COMPETITORS: CompetitorData[] = [
                     "Choose Podium if two-way SMS, webchat, and text-to-pay are daily workflows—common in auto, home services, and high-volume inbound text businesses. You need staff to run that communications hub.",
             },
             {
-                question: "Can Zyene replace Podium’s messaging inbox?",
+                question: "Can Zyene Reviews replace Podium’s messaging inbox?",
                 answer:
-                    "No. Zyene sends SMS and email review requests but does not replace a full two-way messaging inbox or payments product. Many owners use Zyene alongside their existing texting stack—or switch from Podium when reviews, not payments, drove the spend.",
+                    "No. Zyene Reviews sends SMS and email review requests but does not replace a full two-way messaging inbox or payments product. Many owners use Zyene Reviews alongside their existing texting stack—or switch from Podium when reviews, not payments, drove the spend.",
             },
             {
                 question: "How do free trials compare?",
                 answer:
-                    "Zyene offers a 7-day free trial with full paid-plan access during the trial window. Podium is typically sold via demo and annual contract—verify current trial terms with Podium before you commit.",
+                    "Zyene Reviews offers a 7-day free trial with full paid-plan access during the trial window. Podium is typically sold via demo and annual contract—verify current trial terms with Podium before you commit.",
             },
         ],
         accentColor: "purple",
@@ -246,7 +246,7 @@ export const COMPETITORS: CompetitorData[] = [
         priceNote: "Starting price per month on the Grow plan (1 location). The Convert plan (with website) adds ~$100/mo.",
         contractRequired: false,
         keyAngle: "More features, better AI, at a comparable or lower price",
-        heroSub: "NiceJob focuses on automated review collection. Zyene adds AI replies, competitor tracking, GBP SEO, and the Negative Feedback Shield — at a similar price.",
+        heroSub: "NiceJob focuses on automated review collection. Zyene Reviews adds AI replies, competitor tracking, GBP SEO, and the Negative Feedback Shield — at a similar price.",
         metaTitle: "Zyene Reviews vs NiceJob — Full Comparison 2026",
         metaDescription:
             "Zyene Reviews vs NiceJob: AI replies, competitor tracking, GBP keywords, and Negative Feedback Shield — compare at $29.99/mo.",
@@ -307,12 +307,12 @@ export const COMPETITORS: CompetitorData[] = [
             "Businesses on a tight budget: $29.99/mo vs $75/mo",
         ],
         openingSummary:
-            "Choose Zyene when you need AI replies, auto-commenter, competitor tracking, and GBP keyword insights—not just automated review asks. NiceJob wins on simplicity, video testimonials, and an optional website on the Convert plan. Published entry pricing is about $29.99/mo for Zyene Starter versus roughly $75/mo for NiceJob Grow—confirm both quotes for your location count.",
+            "Choose Zyene Reviews when you need AI replies, auto-commenter, competitor tracking, and GBP keyword insights—not just automated review asks. NiceJob wins on simplicity, video testimonials, and an optional website on the Convert plan. Published entry pricing is about $29.99/mo for Starter on Zyene Reviews versus roughly $75/mo for NiceJob Grow—confirm both quotes for your location count.",
         faqs: [
             {
                 question: "Does NiceJob include AI review replies?",
                 answer:
-                    "NiceJob does not offer Zyene-style AI reply suggestions or auto-commenter on its standard positioning. Zyene includes unlimited AI replies and optional hands-free replies on paid plans—important if you respond to dozens of reviews monthly.",
+                    "NiceJob does not offer Zyene Reviews–style AI reply suggestions or auto-commenter on its standard positioning. Zyene Reviews includes unlimited AI replies and optional hands-free replies on paid plans—important if you respond to dozens of reviews monthly.",
             },
             {
                 question: "When is NiceJob the better fit?",
@@ -320,19 +320,19 @@ export const COMPETITORS: CompetitorData[] = [
                     "Pick NiceJob if you want a very simple review-collection UI, video testimonials, or a bundled website on the Convert plan. Trades and home-services teams often like NiceJob’s visual workflow for basic campaigns.",
             },
             {
-                question: "Can Zyene track competitors on Google?",
+                question: "Can Zyene Reviews track competitors on Google?",
                 answer:
-                    "Yes—Zyene includes competitor tracking on all plans (up to 10 competitors per location). NiceJob does not include competitor benchmarking in its standard feature set.",
+                    "Yes—Zyene Reviews includes competitor tracking on all plans (up to 10 competitors per location). NiceJob does not include competitor benchmarking in its standard feature set.",
             },
             {
                 question: "How do trials compare?",
                 answer:
-                    "Zyene offers a 7-day free trial with paid-plan access during the window. NiceJob commonly advertises a 14-day trial—verify current terms on NiceJob’s site before you switch.",
+                    "Zyene Reviews offers a 7-day free trial with paid-plan access during the window. NiceJob commonly advertises a 14-day trial—verify current terms on NiceJob’s site before you switch.",
             },
             {
-                question: "Is Zyene cheaper than NiceJob?",
+                question: "Is Zyene Reviews cheaper than NiceJob?",
                 answer:
-                    "On published starting prices, Zyene Starter is $29.99/mo versus NiceJob Grow at about $75/mo for one location. NiceJob’s Convert plan with a website costs more. Your invoice may differ with promotions or multi-location pricing.",
+                    "On published starting prices, Starter on Zyene Reviews is $29.99/mo versus NiceJob Grow at about $75/mo for one location. NiceJob’s Convert plan with a website costs more. Your invoice may differ with promotions or multi-location pricing.",
             },
         ],
         accentColor: "green",
@@ -346,7 +346,7 @@ export const COMPETITORS: CompetitorData[] = [
         priceNote: "Starting price per month for 1 location. Pricing scales with location count.",
         contractRequired: false,
         keyAngle: "AI replies, competitor tracking, and GBP SEO at a lower price",
-        heroSub: "GatherUp focuses on review collection and customer surveys. Zyene adds AI replies, competitor tracking, and GBP SEO — at a lower starting price.",
+        heroSub: "GatherUp focuses on review collection and customer surveys. Zyene Reviews adds AI replies, competitor tracking, and GBP SEO — at a lower starting price.",
         metaTitle: "Zyene Reviews vs GatherUp — Full Comparison 2026",
         metaDescription:
             "Zyene Reviews vs GatherUp: feature and pricing comparison. AI replies, competitor tracking, and Shield at $29.99/mo vs GatherUp at $99/mo.",
@@ -408,32 +408,32 @@ export const COMPETITORS: CompetitorData[] = [
             "Anyone looking for a lower per-location starting price",
         ],
         openingSummary:
-            "Choose Zyene when Google review replies, Shield routing, competitor tracking, and GBP keywords matter more than NPS surveys and agency white-label. GatherUp wins for customer surveys, employee recognition, Healthgrades-style listings, and franchise programs. Published entry pricing is about $29.99/mo for Zyene versus roughly $99/mo per location for GatherUp—confirm quotes before you switch.",
+            "Choose Zyene Reviews when Google review replies, Shield routing, competitor tracking, and GBP keywords matter more than NPS surveys and agency white-label. GatherUp wins for customer surveys, employee recognition, Healthgrades-style listings, and franchise programs. Published entry pricing is about $29.99/mo for Zyene Reviews versus roughly $99/mo per location for GatherUp—confirm quotes before you switch.",
         faqs: [
             {
-                question: "Does GatherUp replace Zyene for Google review replies?",
+                question: "Does GatherUp replace Zyene Reviews for Google review replies?",
                 answer:
-                    "GatherUp focuses on collection, surveys, and multi-site reputation workflows. Zyene is review-first with unlimited AI reply suggestions, auto-commenter, and Negative Feedback Shield on all plans—compare AI depth if replies are daily work.",
+                    "GatherUp focuses on collection, surveys, and multi-site reputation workflows. Zyene Reviews is review-first with unlimited AI reply suggestions, auto-commenter, and Negative Feedback Shield on all plans—compare AI depth if replies are daily work.",
             },
             {
                 question: "When should I stay on GatherUp?",
                 answer:
-                    "Stay on GatherUp if NPS surveys, employee recognition, healthcare listing coverage, or agency white-label are core requirements. Zyene does not ship full survey suites or white-label agency mode on standard plans.",
+                    "Stay on GatherUp if NPS surveys, employee recognition, healthcare listing coverage, or agency white-label are core requirements. Zyene Reviews does not ship full survey suites or white-label agency mode on standard plans.",
             },
             {
-                question: "Does Zyene include customer NPS surveys?",
+                question: "Does Zyene Reviews include customer NPS surveys?",
                 answer:
-                    "No. Zyene does not include a full NPS or customer survey product—GatherUp’s survey tooling is a major strength there. Zyene focuses on review requests, monitoring, replies, Shield, and local SEO dashboards.",
+                    "No. Zyene Reviews does not include a full NPS or customer survey product—GatherUp’s survey tooling is a major strength there. Zyene Reviews focuses on review requests, monitoring, replies, Shield, and local SEO dashboards.",
             },
             {
                 question: "How does pricing compare on one location?",
                 answer:
-                    "Published positioning shows Zyene Starter at $29.99/mo month-to-month and GatherUp at about $99/mo per location as a common entry point. Multi-location and feature bundles change both bills—get written quotes.",
+                    "Published positioning shows Starter on Zyene Reviews at $29.99/mo month-to-month and GatherUp at about $99/mo per location as a common entry point. Multi-location and feature bundles change both bills—get written quotes.",
             },
             {
                 question: "Which tool has competitor tracking?",
                 answer:
-                    "Zyene includes competitor tracking on all plans. GatherUp does not position competitor benchmarking as a standard feature—if you watch nearby rivals weekly, factor that into your decision.",
+                    "Zyene Reviews includes competitor tracking on all plans. GatherUp does not position competitor benchmarking as a standard feature—if you watch nearby rivals weekly, factor that into your decision.",
             },
         ],
         accentColor: "orange",

@@ -20,7 +20,7 @@ export const post9: BlogPost = {
     keywords: ["restaurant google reviews", "restaurant review management", "how to get more restaurant reviews", "restaurant reputation management 2026"],
     relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review"],
     internalLinks: [
-        { label: "Zyene for Restaurants", href: "/industries/restaurants" },
+        { label: "Zyene Reviews for Restaurants", href: "/industries/restaurants" },
         { label: "Start your free trial", href: "/signup" },
     ],
     faqs: [
@@ -38,10 +38,10 @@ export const post9: BlogPost = {
         },
         {
             question: "How does Negative Feedback Shield help restaurants?",
-            answer: "Zyene routes low ratings on your branded collectratings.com page to private feedback first, so you can fix cold food or service issues before they become public one-stars on Google.",
+            answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so you can fix cold food or service issues before they become public one-stars on Google.",
         },
         {
-            question: "Can Zyene manage reviews for multiple restaurant locations?",
+            question: "Can Zyene Reviews manage reviews for multiple restaurant locations?",
             answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average.",
         },
     ],
@@ -58,7 +58,7 @@ export const post9: BlogPost = {
         { type: "h2", text: "The 5 Moments to Ask for a Review" },
         {
             type: "summary",
-            text: "Payment QR codes, table tents, post-meal SMS, catering thank-you emails, and loyalty nudges cover most restaurant journeys. Zyene can automate SMS and email once you connect your guest list or POS via Zapier.",
+            text: "Payment QR codes, table tents, post-meal SMS, catering thank-you emails, and loyalty nudges cover most restaurant journeys. Zyene Reviews can automate SMS and email once you connect your guest list or POS via Zapier.",
         },
         { type: "ol", items: [
             "At payment: A QR code on the receipt or payment terminal that goes directly to your Google review page. Keep it simple: 'Enjoyed your meal? Leave us a quick Google review →'",
@@ -101,11 +101,11 @@ export const post9: BlogPost = {
         { type: "h2", text: "Protecting Your Rating with the Negative Feedback Shield" },
         {
             type: "summary",
-            text: "Shield catches unhappy guests on your Zyene review page before they vent on Google—giving you a private chance to remake the dish or comp the meal. It is built into Zyene paid plans for restaurants using collectratings.com links.",
+            text: "Shield catches unhappy guests on your Zyene Reviews review page before they vent on Google—giving you a private chance to remake the dish or comp the meal. It is built into Zyene Reviews paid plans for restaurants using collectratings.com links.",
         },
         { type: "p", text: "The hardest reviews to deal with are the ones that come from fixable problems — a cold dish, a wrong order, a long wait — where the customer didn't mention it to the server. By the time you see the review, it's too late." },
         { type: "p", text: "The Negative Feedback Shield changes this dynamic by routing unhappy customers to a private feedback form before they post publicly. When a customer taps 'Not satisfied', they're asked to describe their experience privately rather than going straight to Google. This gives you the chance to fix the issue, potentially converting a 1-star review into a return visit." },
-        { type: "cta", ctaLabel: "See how Zyene works for restaurants →", ctaHref: "/industries/restaurants" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews works for restaurants →", ctaHref: "/industries/restaurants" },
     ],
 };
 
@@ -118,14 +118,14 @@ export const post10: BlogPost = {
     publishedAt: "2026-05-12",
     dateModified: "2026-05-24",
     readMinutes: 8,
-    author: { name: "Zyene Team", role: "Editorial" },
+    author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "Dental Practice Reputation Management Guide 2026",
     metaDescription:
         "2026 reputation guide for dental practices: HIPAA-aware review responses, more patient reviews, and protecting your practice from negative feedback.",
     keywords: ["dental practice reputation management", "dentist google reviews", "dental reviews management 2026", "dentist reputation management strategy"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "how-to-get-50-google-reviews-in-30-days"],
     internalLinks: [
-        { label: "Zyene for Dental Practices", href: "/industries/dental" },
+        { label: "Zyene Reviews for Dental Practices", href: "/industries/dental" },
         { label: "Start your free trial", href: "/signup" },
     ],
     faqs: [
@@ -142,12 +142,12 @@ export const post10: BlogPost = {
             answer: "Wait times, billing surprises, and front-desk experience dominate—often operational issues, not clinical skill. Fixing scheduling communication usually moves the needle faster than marketing alone.",
         },
         {
-            question: "Does Zyene work for dental practices?",
-            answer: "Zyene monitors Google, Facebook, and Yelp, sends HIPAA-aware reply drafts you still edit, and runs SMS or email review campaigns. See /industries/dental for workflow examples.",
+            question: "Does Zyene Reviews work for dental practices?",
+            answer: "Zyene Reviews monitors Google, Facebook, and Yelp, sends HIPAA-aware reply drafts you still edit, and runs SMS or email review campaigns. See /industries/dental for workflow examples.",
         },
         {
             question: "Should dentists monitor Healthgrades and Google?",
-            answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. A single inbox in Zyene reduces the chance a platform review sits unanswered.",
+            answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. A single inbox in Zyene Reviews reduces the chance a platform review sits unanswered.",
         },
     ],
     body: [
@@ -171,7 +171,7 @@ export const post10: BlogPost = {
         { type: "h2", text: "Where Most Dental Negative Reviews Come From" },
         {
             type: "summary",
-            text: "Wait times, billing confusion, and front-desk tone drive most one- and two-star dental reviews—patterns echoed in industry reputation research, not Zyene proprietary patient data.",
+            text: "Wait times, billing confusion, and front-desk tone drive most one- and two-star dental reviews—patterns echoed in industry reputation research, not Zyene Reviews proprietary patient data.",
         },
         { type: "p", text: "Across dental practices, the top sources of negative reviews are consistent:" },
         { type: "ul", items: [
@@ -184,7 +184,7 @@ export const post10: BlogPost = {
         { type: "h2", text: "How to Get More Patient Reviews" },
         {
             type: "summary",
-            text: "Text a few hours after appointments, email patients without mobiles, weave asks into recall outreach, and funnel satisfied new patients after visit two. Zyene automates those sends once your PMS or list is connected.",
+            text: "Text a few hours after appointments, email patients without mobiles, weave asks into recall outreach, and funnel satisfied new patients after visit two. Zyene Reviews automates those sends once your PMS or list is connected.",
         },
         { type: "ol", items: [
             "Post-checkout text: Send a review request 2–3 hours after checkout when satisfaction is highest. Keep it simple and direct.",
@@ -195,11 +195,11 @@ export const post10: BlogPost = {
         { type: "h2", text: "Managing Reviews Across Multiple Platforms" },
         {
             type: "summary",
-            text: "Google remains the priority for local discovery, but Healthgrades and Facebook still surface for some patients. Zyene centralizes monitoring so nothing sits unreplied while you chairside.",
+            text: "Google remains the priority for local discovery, but Healthgrades and Facebook still surface for some patients. Zyene Reviews centralizes monitoring so nothing sits unreplied while you chairside.",
         },
         { type: "p", text: "Dental patients leave reviews across Google, Healthgrades, and Facebook — not just Google. While Google is the most important for local search ranking, the others matter for specific patient segments." },
         { type: "p", text: "Managing all platforms from a single dashboard — rather than logging into each separately — saves significant time and ensures no review goes unresponded to." },
-        { type: "cta", ctaLabel: "See how Zyene works for dental practices →", ctaHref: "/industries/dental" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews works for dental practices →", ctaHref: "/industries/dental" },
     ],
 };
 
@@ -218,13 +218,13 @@ export const post11: BlogPost = {
     keywords: ["cost of bad online reputation", "online reputation cost", "reputation management roi", "negative reviews revenue impact", "bad reviews cost business"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-to-respond-to-a-1-star-review"],
     internalLinks: [
-        { label: "See how Zyene protects your reputation", href: "/features" },
-        { label: "Try Zyene free for 7 days", href: "/signup" },
+        { label: "See how Zyene Reviews protects your reputation", href: "/features" },
+        { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
         {
             question: "How much does a bad online reputation cost a local business?",
-            answer: "It varies by traffic and ticket size, but the article walks through lost acquisition, lost repeat visits, higher ad reliance, and compounding damage from unanswered negatives—using published third-party stats, not Zyene customer benchmarks.",
+            answer: "It varies by traffic and ticket size, but the article walks through lost acquisition, lost repeat visits, higher ad reliance, and compounding damage from unanswered negatives—using published third-party stats, not Zyene Reviews customer benchmarks.",
         },
         {
             question: "Does a half-star rating gap really change revenue?",
@@ -236,11 +236,11 @@ export const post11: BlogPost = {
         },
         {
             question: "How does Negative Feedback Shield reduce reputation cost?",
-            answer: "Shield routes low ratings to private feedback on your Zyene review page so you can save the relationship before Google sees a one-star. Fewer public disasters mean less compounding damage.",
+            answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so you can save the relationship before Google sees a one-star. Fewer public disasters mean less compounding damage.",
         },
         {
             question: "Is reputation management software worth $30 per month?",
-            answer: "If preventing one lost customer per month exceeds Zyene Starter at $29.99, the math works. The article compares annual tool cost to illustrative revenue lines you fill in—not guaranteed ROI figures.",
+            answer: "If preventing one lost customer per month exceeds Starter on Zyene Reviews at $29.99, the math works. The article compares annual tool cost to illustrative revenue lines you fill in—not guaranteed ROI figures.",
         },
     ],
     body: [
@@ -293,11 +293,11 @@ export const post11: BlogPost = {
         { type: "h2", text: "The Investment vs. Cost Calculation" },
         {
             type: "summary",
-            text: "Compare annual reputation risk you calculated to Zyene Starter at $29.99 per month—about $360 per year. The question is active risk today, not whether software sounds nice.",
+            text: "Compare annual reputation risk you calculated to Starter on Zyene Reviews at $29.99 per month—about $360 per year. The question is active risk today, not whether software sounds nice.",
         },
-        { type: "p", text: "Most reputation management tools pay for themselves in the first recovered customer. If losing a 1-star review prevents even one $50 customer per month, that's $600/year in preserved revenue. Zyene's Starter plan at $29.99/month is $359.88/year — and it protects against dozens of potential negative reviews per year, not just one." },
+        { type: "p", text: "Most reputation management tools pay for themselves in the first recovered customer. If losing a 1-star review prevents even one $50 customer per month, that's $600/year in preserved revenue. Zyene Reviews' Starter plan at $29.99/month is $359.88/year — and it protects against dozens of potential negative reviews per year, not just one." },
         { type: "p", text: "The better question isn't 'can we afford reputation management?' — it's 'what is our active reputation risk today, and what's it costing us?'" },
-        { type: "cta", ctaLabel: "Protect your revenue with Zyene's Negative Feedback Shield →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "Protect your revenue with Zyene Reviews' Negative Feedback Shield →", ctaHref: "/features" },
     ],
 };
 
@@ -310,15 +310,15 @@ export const post12: BlogPost = {
     publishedAt: "2026-05-26",
     dateModified: "2026-05-24",
     readMinutes: 7,
-    author: { name: "Zyene Team", role: "Editorial" },
+    author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "How to Handle Fake Google Reviews: Step-by-Step Guide",
     metaDescription:
         "How to handle fake Google reviews: identify, flag, report, and respond to suspicious reviews while protecting your rating during Google's review.",
     keywords: ["fake google reviews", "how to report fake google reviews", "remove fake google reviews", "fake review google business profile", "suspicious google reviews"],
     relatedSlugs: ["true-cost-of-bad-online-reputation", "how-to-respond-to-a-1-star-review"],
     internalLinks: [
-        { label: "Zyene review monitoring", href: "/features" },
-        { label: "Start monitoring reviews with Zyene", href: "/signup" },
+        { label: "Zyene Reviews review monitoring", href: "/features" },
+        { label: "Start monitoring reviews with Zyene Reviews", href: "/signup" },
     ],
     faqs: [
         {
@@ -338,8 +338,8 @@ export const post12: BlogPost = {
             answer: "Keep the professional response, accelerate legitimate review collection, and consult counsel if you suspect a coordinated competitor attack. Never post fake reviews in retaliation.",
         },
         {
-            question: "Can Zyene alert me when suspicious reviews appear?",
-            answer: "Zyene sends real-time alerts when new Google, Facebook, or Yelp reviews arrive so you can flag and respond within hours instead of discovering fakes weeks later.",
+            question: "Can Zyene Reviews alert me when suspicious reviews appear?",
+            answer: "Zyene Reviews sends real-time alerts when new Google, Facebook, or Yelp reviews arrive so you can flag and respond within hours instead of discovering fakes weeks later.",
         },
     ],
     body: [
@@ -417,9 +417,9 @@ export const post12: BlogPost = {
         { type: "h2", text: "The Best Defense: Review Monitoring" },
         {
             type: "summary",
-            text: "Real-time alerts let you flag within hours. Zyene monitors new Google, Facebook, and Yelp reviews and notifies your team so fakes do not sit visible for weeks unnoticed.",
+            text: "Real-time alerts let you flag within hours. Zyene Reviews monitors new Google, Facebook, and Yelp reviews and notifies your team so fakes do not sit visible for weeks unnoticed.",
         },
         { type: "p", text: "The fastest way to catch fake reviews is real-time monitoring — an alert the moment a new review is posted so you can respond and flag within hours rather than days. Many business owners don't discover fake reviews until they've been visible for weeks." },
-        { type: "cta", ctaLabel: "Get real-time review alerts with Zyene →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "Get real-time review alerts with Zyene Reviews →", ctaHref: "/features" },
     ],
 };

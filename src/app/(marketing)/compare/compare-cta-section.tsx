@@ -12,7 +12,7 @@ export function CompareCtaSection() {
                         Ready to switch—or start fresh?
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
-                        Try Zyene free for 7 days. Full access, no credit card lock-in.<br />
+                        Try Zyene Reviews free for 7 days. Full access, no credit card lock-in.<br />
                         Cancel before day 7 and pay nothing.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

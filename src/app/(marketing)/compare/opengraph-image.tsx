@@ -13,7 +13,7 @@ export default function OgImage() {
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 80px", position: "relative", zIndex: 10 }}>
                     <div style={{ fontSize: "15px", fontWeight: "700", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>ZYENE REVIEWS · HONEST COMPARISONS</div>
                     <div style={{ fontSize: "58px", fontWeight: "800", color: "#ffffff", lineHeight: "1.05", marginBottom: "24px" }}>
-                        See how Zyene<br /><span style={{ color: "#4ade80" }}>compares to the rest</span>
+                        See how Zyene Reviews<br /><span style={{ color: "#4ade80" }}>compares to the rest</span>
                     </div>
                     <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
                         {["vs Birdeye $299/mo", "vs Podium $399/mo", "vs NiceJob $75/mo", "vs GatherUp $99/mo"].map((c) => (
@@ -21,7 +21,7 @@ export default function OgImage() {
                         ))}
                     </div>
                     <div style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: "12px", padding: "10px 24px", color: "#4ade80", fontSize: "17px", fontWeight: "700" }}>
-                        Zyene starts at $29.99/mo—no annual contract
+                        Zyene Reviews starts at $29.99/mo—no annual contract
                     </div>
                 </div>
             </div>

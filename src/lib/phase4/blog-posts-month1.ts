@@ -20,8 +20,8 @@ export const post1: BlogPost = {
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking"],
     internalLinks: [
-        { label: "See how Zyene automates review requests", href: "/features" },
-        { label: "Try Zyene free for 7 days", href: "/signup" },
+        { label: "See how Zyene Reviews automates review requests", href: "/features" },
+        { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
         {
@@ -115,11 +115,11 @@ export const post1: BlogPost = {
         { type: "h2", text: "Automate It So You Never Miss an Ask" },
         {
             type: "summary",
-            text: "Manual texting fails when staff get busy; automation sends review requests at the right moment every time. Tools like Zyene connect via Zapier, POS, or API so each completed job or checkout triggers SMS or email without someone remembering to ask.",
+            text: "Manual texting fails when staff get busy; automation sends review requests at the right moment every time. Tools like Zyene Reviews connect via Zapier, POS, or API so each completed job or checkout triggers SMS or email without someone remembering to ask.",
         },
         { type: "p", text: "The businesses that consistently grow their review count are the ones who have automated the ask. Manually texting every customer doesn't scale, and you'll stop doing it when things get busy." },
-        { type: "p", text: "Tools like Zyene connect to your workflow (via Zapier, Square, or direct API) and send review requests automatically at the right moment — without any manual effort. You set it up once and it works every day, for every customer." },
-        { type: "cta", ctaLabel: "See how Zyene automates review requests →", ctaHref: "/features" },
+        { type: "p", text: "Tools like Zyene Reviews connect to your workflow (via Zapier, Square, or direct API) and send review requests automatically at the right moment — without any manual effort. You set it up once and it works every day, for every customer." },
+        { type: "cta", ctaLabel: "See how Zyene Reviews automates review requests →", ctaHref: "/features" },
         { type: "h2", text: "What to Expect" },
         {
             type: "summary",
@@ -139,13 +139,13 @@ export const post2: BlogPost = {
     publishedAt: "2026-03-17",
     dateModified: "2026-05-24",
     readMinutes: 7,
-    author: { name: "Zyene Team", role: "Editorial" },
+    author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "Why Google Reviews Matter More Than Ever in 2026",
     metaDescription: "Google Reviews in 2026: how they impact local search rankings, AI Overviews, consumer trust, and revenue. A data-driven guide for local business owners.",
     keywords: ["why google reviews matter", "google reviews 2026", "google reviews local seo", "google reviews importance"],
     relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-reviews-impact-local-map-pack-ranking"],
     internalLinks: [
-        { label: "Learn about Zyene's review monitoring", href: "/features" },
+        { label: "Learn about Zyene Reviews' review monitoring", href: "/features" },
         { label: "See industry-specific strategies", href: "/industries" },
     ],
     faqs: [
@@ -167,7 +167,7 @@ export const post2: BlogPost = {
         },
         {
             question: "Can Zyene Reviews help manage all of this in one place?",
-            answer: "Zyene centralizes monitoring for Google, Facebook, and Yelp, sends SMS and email review requests, drafts AI replies you can edit before posting, and includes Negative Feedback Shield on paid plans to route low ratings to private feedback before they hit Google.",
+            answer: "Zyene Reviews centralizes monitoring for Google, Facebook, and Yelp, sends SMS and email review requests, drafts AI replies you can edit before posting, and includes Negative Feedback Shield on paid plans to route low ratings to private feedback before they hit Google.",
         },
     ],
     body: [
@@ -191,7 +191,7 @@ export const post2: BlogPost = {
         { type: "h2", text: "Consumer Psychology: The Numbers Behind Reviews" },
         {
             type: "summary",
-            text: "Third-party surveys consistently show most consumers read reviews before visiting a local business and trust them nearly as much as personal recommendations. The table below cites published industry research—not Zyene customer data.",
+            text: "Third-party surveys consistently show most consumers read reviews before visiting a local business and trust them nearly as much as personal recommendations. The table below cites published industry research—not Zyene Reviews customer data.",
         },
         { type: "table", table: {
             headers: ["Stat", "Source / Context"],
@@ -229,11 +229,11 @@ export const post2: BlogPost = {
         { type: "h2", text: "What This Means for Your Business Today" },
         {
             type: "summary",
-            text: "Ignoring reviews means losing customers to competitors who monitor, ask, and reply. With the right workflow—Zyene's inbox, alerts, and AI drafts included—most owners spend twenty to thirty minutes a week, not a full-time role.",
+            text: "Ignoring reviews means losing customers to competitors who monitor, ask, and reply. With the right workflow—Zyene Reviews' inbox, alerts, and AI drafts included—most owners spend twenty to thirty minutes a week, not a full-time role.",
         },
         { type: "p", text: "If you're not actively collecting reviews, responding to all of them, and monitoring your rating across platforms, you are losing customers every day to competitors who are. This isn't a marketing nice-to-have — it's table stakes for local business survival in 2026." },
         { type: "p", text: "The good news: with the right tools and a consistent process, building and maintaining a strong review profile is a 20–30 minute per week activity, not a full-time job." },
-        { type: "cta", ctaLabel: "See how Zyene manages your entire review profile →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews manages your entire review profile →", ctaHref: "/features" },
     ],
 };
 
@@ -252,8 +252,8 @@ export const post3: BlogPost = {
     keywords: ["birdeye pricing", "birdeye cost", "birdeye pricing 2026", "how much does birdeye cost", "birdeye review"],
     relatedSlugs: ["birdeye-alternatives-for-local-businesses"],
     internalLinks: [
-        { label: "Compare Zyene vs Birdeye", href: "/compare/birdeye" },
-        { label: "See Zyene pricing", href: "/pricing" },
+        { label: "Compare Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
+        { label: "See Zyene Reviews pricing", href: "/pricing" },
     ],
     faqs: [
         {
@@ -266,14 +266,14 @@ export const post3: BlogPost = {
         },
         {
             question: "What is a cheaper alternative to Birdeye for one location?",
-            answer: "Owner-operators who mainly need monitoring, requests, AI-assisted replies, and shielding negative feedback often compare Zyene Starter at $29.99 per month with no annual contract, NiceJob, or GatherUp depending on survey needs.",
+            answer: "Owner-operators who mainly need monitoring, requests, AI-assisted replies, and shielding negative feedback often compare Starter on Zyene Reviews at $29.99 per month with no annual contract, NiceJob, or GatherUp depending on survey needs.",
         },
         {
             question: "Is Birdeye worth it for a single-location restaurant or dental practice?",
             answer: "Birdeye can make sense for large multi-location CX teams that use messaging, tickets, and surveys daily. For a single location focused on Google reviews and GBP performance, you may be paying for enterprise modules you never open.",
         },
         {
-            question: "Where can I compare Birdeye and Zyene feature by feature?",
+            question: "Where can I compare Birdeye and Zyene Reviews feature by feature?",
             answer: "See the side-by-side page at /compare/birdeye for pricing, contracts, Negative Feedback Shield, competitor tracking, and API access. This article focuses on Birdeye's cost structure, not a full feature scorecard.",
         },
     ],
@@ -328,10 +328,10 @@ export const post3: BlogPost = {
         { type: "h2", text: "The Value Question: What Are You Actually Getting?" },
         {
             type: "summary",
-            text: "Most SMB buyers want monitoring, automated requests, and AI-assisted replies. Zyene Starter at $29.99 per month includes those pillars plus Negative Feedback Shield and competitor tracking—compare on /compare/birdeye before renewing Birdeye.",
+            text: "Most SMB buyers want monitoring, automated requests, and AI-assisted replies. Starter on Zyene Reviews at $29.99 per month includes those pillars plus Negative Feedback Shield and competitor tracking—compare on /compare/birdeye before renewing Birdeye.",
         },
         { type: "p", text: "The core use case for most local businesses in Birdeye is review monitoring, review request automation, and AI reply suggestions. These three features are the reason 80%+ of local business customers sign up." },
-        { type: "p", text: "Those exact three features — plus the Negative Feedback Shield, competitor tracking, and GBP keyword performance — are available in Zyene's Starter plan at $29.99/month. No annual contract." },
+        { type: "p", text: "Those exact three features — plus the Negative Feedback Shield, competitor tracking, and GBP keyword performance — are available in Zyene Reviews' Starter plan at $29.99/month. No annual contract." },
         { type: "h2", text: "The Bottom Line" },
         {
             type: "summary",
@@ -339,7 +339,7 @@ export const post3: BlogPost = {
         },
         { type: "p", text: "Birdeye is a credible, capable platform — for the right customer. If you're a franchise with 50+ locations, need an enterprise CX suite, and have a team to manage it, Birdeye is worth evaluating seriously." },
         { type: "p", text: "If you're a local business owner managing 1–5 locations who primarily needs to grow your Google reviews, respond with AI, and protect your reputation, you're likely paying 10× more than you need to. The core features you use are available at a fraction of the price elsewhere." },
-        { type: "cta", ctaLabel: "See the full Zyene vs Birdeye comparison →", ctaHref: "/compare/birdeye" },
+        { type: "cta", ctaLabel: "See the full Zyene Reviews vs Birdeye comparison →", ctaHref: "/compare/birdeye" },
     ],
 };
 
@@ -358,29 +358,29 @@ export const post4: BlogPost = {
     keywords: ["birdeye alternatives", "cheaper than birdeye", "birdeye alternative 2026", "best review management software", "birdeye competitors"],
     relatedSlugs: ["birdeye-pricing-breakdown-2026"],
     internalLinks: [
-        { label: "Compare Zyene vs Birdeye in detail", href: "/compare/birdeye" },
-        { label: "Start Zyene free for 7 days", href: "/signup" },
+        { label: "Compare Zyene Reviews vs Birdeye in detail", href: "/compare/birdeye" },
+        { label: "Start Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
         {
             question: "What is the best Birdeye alternative for a local business in 2026?",
-            answer: "It depends on your stack: Zyene targets owner-operators who want reviews, AI replies, Shield, and competitor tracking without annual contracts. NiceJob suits simple collection; GatherUp adds surveys; Podium is messaging-first.",
+            answer: "It depends on your stack: Zyene Reviews targets owner-operators who want reviews, AI replies, Shield, and competitor tracking without annual contracts. NiceJob suits simple collection; GatherUp adds surveys; Podium is messaging-first.",
         },
         {
-            question: "How much cheaper is Zyene than Birdeye?",
-            answer: "Zyene Starter lists at $29.99 per month with month-to-month billing. Birdeye commonly starts around $299 per month on annual contracts—roughly ten times higher before multi-location fees.",
+            question: "How much cheaper is Zyene Reviews than Birdeye?",
+            answer: "Starter on Zyene Reviews lists at $29.99 per month with month-to-month billing. Birdeye commonly starts around $299 per month on annual contracts—roughly ten times higher before multi-location fees.",
         },
         {
             question: "Does any Birdeye alternative include Negative Feedback Shield?",
-            answer: "Zyene routes one- to three-star ratings on branded collectratings.com pages to private feedback while sending four- and five-star customers to Google. Verify competitor pages yourself—most list tools do not mirror that flow.",
+            answer: "Zyene Reviews routes one- to three-star ratings on branded collectratings.com pages to private feedback while sending four- and five-star customers to Google. Verify competitor pages yourself—most list tools do not mirror that flow.",
         },
         {
             question: "Which alternative has unlimited AI review replies?",
-            answer: "Zyene includes AI reply suggestions on paid plans without gating them to enterprise tiers the way Birdeye often does. Always confirm current plan limits on /pricing before you switch.",
+            answer: "Zyene Reviews includes AI reply suggestions on paid plans without gating them to enterprise tiers the way Birdeye often does. Always confirm current plan limits on /pricing before you switch.",
         },
         {
-            question: "Can I try Zyene before canceling Birdeye?",
-            answer: "Yes—Zyene offers a seven-day trial with full access on Starter and Professional. Run both tools in parallel during the trial if your contract allows, then migrate review workflows when you're comfortable.",
+            question: "Can I try Zyene Reviews before canceling Birdeye?",
+            answer: "Yes—Zyene Reviews offers a seven-day trial with full access on Starter and Professional. Run both tools in parallel during the trial if your contract allows, then migrate review workflows when you're comfortable.",
         },
     ],
     body: [
@@ -389,9 +389,9 @@ export const post4: BlogPost = {
         { type: "h2", text: "1. Zyene Reviews — Best Overall for Local Businesses" },
         {
             type: "summary",
-            text: "Zyene is built for one- to five-location operators who want Birdeye-class review workflows without enterprise pricing: monitoring, SMS/email campaigns, AI drafts, Shield, competitor tracking, and API access on paid plans from $29.99 per month.",
+            text: "Zyene Reviews is built for one- to five-location operators who want Birdeye-class review workflows without enterprise pricing: monitoring, SMS/email campaigns, AI drafts, Shield, competitor tracking, and API access on paid plans from $29.99 per month.",
         },
-        { type: "p", text: "Zyene is purpose-built for local business owners who need the core review management features without enterprise pricing or annual contracts. It covers every major feature local businesses use Birdeye for — and adds capabilities Birdeye doesn't have." },
+        { type: "p", text: "Zyene Reviews is purpose-built for local business owners who need the core review management features without enterprise pricing or annual contracts. It covers every major feature local businesses use Birdeye for — and adds capabilities Birdeye doesn't have." },
         { type: "ul", items: [
             "Price: $29.99/mo (Starter, 1 location) — 10× cheaper than Birdeye's starting price",
             "Review monitoring: Google, Facebook, Yelp — real-time alerts",
@@ -404,7 +404,7 @@ export const post4: BlogPost = {
             "No annual contract — cancel anytime",
             "7-day free trial with full access",
         ]},
-        { type: "tip", text: "Zyene's Negative Feedback Shield is a unique feature not found in Birdeye. It intercepts unhappy customers before they post publicly and routes them to a private resolution — protecting your Google rating from avoidable 1-star reviews." },
+        { type: "tip", text: "Zyene Reviews' Negative Feedback Shield is a unique feature not found in Birdeye. It intercepts unhappy customers before they post publicly and routes them to a private resolution — protecting your Google rating from avoidable 1-star reviews." },
         { type: "h2", text: "2. NiceJob — Best for Simplicity" },
         {
             type: "summary",
@@ -423,7 +423,7 @@ export const post4: BlogPost = {
         { type: "h2", text: "3. GatherUp — Best for Survey-Focused Businesses" },
         {
             type: "summary",
-            text: "GatherUp shines when NPS and structured surveys matter as much as public reviews—common in healthcare franchises. Budget about $99 per location monthly and expect lighter AI reply tooling than Zyene or Birdeye upper tiers.",
+            text: "GatherUp shines when NPS and structured surveys matter as much as public reviews—common in healthcare franchises. Budget about $99 per location monthly and expect lighter AI reply tooling than Zyene Reviews or Birdeye upper tiers.",
         },
         { type: "p", text: "GatherUp has strong survey and NPS capabilities alongside review collection. It's a good fit for businesses that need customer satisfaction measurement beyond just reviews — healthcare practices, service franchises, and multi-location chains." },
         { type: "ul", items: [
@@ -453,13 +453,13 @@ export const post4: BlogPost = {
         { type: "h2", text: "5. Reputation.com — Best for Large Enterprises Wanting to Leave Birdeye" },
         {
             type: "summary",
-            text: "Reputation.com trades in the same enterprise league as Birdeye—broad CX suites, not $30-per-month simplicity. Local owner-operators comparing cost should look at Zyene, NiceJob, or GatherUp instead.",
+            text: "Reputation.com trades in the same enterprise league as Birdeye—broad CX suites, not $30-per-month simplicity. Local owner-operators comparing cost should look at Zyene Reviews, NiceJob, or GatherUp instead.",
         },
         { type: "p", text: "Reputation.com (now Reputation) is an enterprise-grade platform comparable to Birdeye in scope and target market. If you're on Birdeye and outgrowing it — managing 50+ locations with complex enterprise needs — Reputation.com is a credible alternative at the same tier. For local businesses, it's not appropriate." },
         { type: "h2", text: "The Comparison Table" },
         {
             type: "summary",
-            text: "Use this matrix for at-a-glance pricing and contract flexibility. List prices change—confirm on each vendor's site. Zyene is the only row here with Shield, unlimited AI replies on paid tiers, and month-to-month billing called out together.",
+            text: "Use this matrix for at-a-glance pricing and contract flexibility. List prices change—confirm on each vendor's site. Zyene Reviews is the only row here with Shield, unlimited AI replies on paid tiers, and month-to-month billing called out together.",
         },
         { type: "table", table: {
             headers: ["Platform", "Starting Price", "AI Replies", "Competitor Tracking", "No Contract", "Best For"],
@@ -474,10 +474,10 @@ export const post4: BlogPost = {
         { type: "h2", text: "The Verdict" },
         {
             type: "summary",
-            text: "If you mainly live in Google reviews, reallocating $2,400 or more per year from Birdeye to operations—or to Zyene at $29.99 per month—is rational math for most single-location operators, not a reckless downgrade.",
+            text: "If you mainly live in Google reviews, reallocating $2,400 or more per year from Birdeye to operations—or to Zyene Reviews at $29.99 per month—is rational math for most single-location operators, not a reckless downgrade.",
         },
         { type: "p", text: "For local business owners — restaurants, dental practices, auto repair shops, salons, home services — the majority of Birdeye's pricing is spent on enterprise infrastructure you'll never use. The core features that matter for local businesses: review monitoring, AI replies, automated requests, and a shield against bad reviews — are available for $30–$100/month." },
         { type: "p", text: "If you're currently paying $299+/month for Birdeye and primarily using it for reviews, you have a real opportunity to reinvest that $2,400+/year into your business." },
-        { type: "cta", ctaLabel: "Try Zyene free for 7 days — no credit card lock-in →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days — no credit card lock-in →", ctaHref: "/signup" },
     ],
 };

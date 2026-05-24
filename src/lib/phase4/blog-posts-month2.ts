@@ -20,7 +20,7 @@ export const post5: BlogPost = {
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],
     relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "See how Zyene's AI replies work", href: "/features" },
+        { label: "See how Zyene Reviews' AI replies work", href: "/features" },
         { label: "Check out our negative review response template library", href: "/resources/negative-review-templates" },
     ],
     faqs: [
@@ -37,12 +37,12 @@ export const post5: BlogPost = {
             answer: "Three to five sentences is enough: acknowledge, apologize for their experience, take responsibility where fair, offer a private resolution path, and close professionally. Long essays read as defensive.",
         },
         {
-            question: "Can Zyene help draft one-star responses?",
-            answer: "Zyene's AI suggest-reply flow gives you a structured starting point per review. Always personalize with details from their comment—never post a generic draft unchanged.",
+            question: "Can Zyene Reviews help draft one-star responses?",
+            answer: "Zyene Reviews' AI suggest-reply flow gives you a structured starting point per review. Always personalize with details from their comment—never post a generic draft unchanged.",
         },
         {
             question: "What if the one-star review is unfair or fake?",
-            answer: "Still respond professionally while you flag it through Google. See our fake-review guide for documentation steps. Zyene alerts you quickly so you can reply and report within hours, not weeks.",
+            answer: "Still respond professionally while you flag it through Google. See our fake-review guide for documentation steps. Zyene Reviews alerts you quickly so you can reply and report within hours, not weeks.",
         },
     ],
     body: [
@@ -109,7 +109,7 @@ export const post5: BlogPost = {
             "Don't wait: Respond within 24–48 hours. The longer you wait, the more people see an unanswered negative review.",
             "Don't write a novel: Keep responses to 3–5 sentences. Overly long responses look defensive.",
         ]},
-        { type: "tip", text: "Using AI tools like Zyene's reply suggestions can give you a well-structured starting point for each response that you then personalize. The key word is personalize — always edit the AI draft to include specific details from the review." },
+        { type: "tip", text: "Using AI tools like Zyene Reviews' reply suggestions can give you a well-structured starting point for each response that you then personalize. The key word is personalize — always edit the AI draft to include specific details from the review." },
         { type: "cta", ctaLabel: "Get 20+ response templates in our free template library →", ctaHref: "/resources/negative-review-templates" },
     ],
 };
@@ -123,13 +123,13 @@ export const post6: BlogPost = {
     publishedAt: "2026-04-14",
     dateModified: "2026-05-24",
     readMinutes: 6,
-    author: { name: "Zyene Team", role: "Editorial" },
+    author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "5 AI Reply Mistakes to Avoid for Google Reviews",
     metaDescription: "Using AI to respond to reviews? Avoid these 5 common mistakes that make AI replies backfire. Learn how to use AI reply tools correctly for Google reviews.",
     keywords: ["ai reply mistakes", "ai review responses", "ai google review reply", "how to respond to reviews with ai", "review response ai tips"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "Try Zyene's AI reply feature", href: "/features" },
+        { label: "Try Zyene Reviews' AI reply feature", href: "/features" },
     ],
     faqs: [
         {
@@ -145,8 +145,8 @@ export const post6: BlogPost = {
             answer: "AI can outline a calm framework, but you must remove defensive phrasing and add a private contact path. Read the final reply as a skeptical customer before you publish.",
         },
         {
-            question: "How does Zyene's AI reply feature work?",
-            answer: "Zyene suggests professional, friendly, or concise drafts from the review text in your inbox. You edit and post—Zyene does not auto-publish without your approval on standard workflows.",
+            question: "How does Zyene Reviews' AI reply feature work?",
+            answer: "Zyene Reviews suggests professional, friendly, or concise drafts from the review text in your inbox. You edit and post—Zyene Reviews does not auto-publish without your approval on standard workflows.",
         },
         {
             question: "Do AI replies help local SEO?",
@@ -200,7 +200,7 @@ export const post6: BlogPost = {
         { type: "h2", text: "How to Use AI Replies Correctly" },
         {
             type: "summary",
-            text: "Draft with AI, re-read the review, personalize, vary openings, and sanity-check negatives before publish. Zyene fits this workflow: suggest, edit, post from one inbox.",
+            text: "Draft with AI, re-read the review, personalize, vary openings, and sanity-check negatives before publish. Zyene Reviews fits this workflow: suggest, edit, post from one inbox.",
         },
         { type: "ol", items: [
             "Use AI to generate a structured first draft that handles tone, format, and the framework of the response.",
@@ -209,7 +209,7 @@ export const post6: BlogPost = {
             "Vary your opening phrase. Never use the same opener twice in a row.",
             "For negative reviews: read the final response out loud as if you're a skeptical potential customer before publishing.",
         ]},
-        { type: "cta", ctaLabel: "See how Zyene's AI reply suggestions work →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews' AI reply suggestions work →", ctaHref: "/features" },
     ],
 };
 
@@ -229,8 +229,8 @@ export const post7: BlogPost = {
     keywords: ["google business profile optimization", "gbp optimization checklist", "google my business optimization 2026", "how to optimize google business profile"],
     relatedSlugs: ["how-reviews-impact-local-map-pack-ranking", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "See Zyene's GBP keyword tracking feature", href: "/features" },
-        { label: "Try Zyene free", href: "/signup" },
+        { label: "See Zyene Reviews' GBP keyword tracking feature", href: "/features" },
+        { label: "Try Zyene Reviews free", href: "/signup" },
     ],
     faqs: [
         {
@@ -246,12 +246,12 @@ export const post7: BlogPost = {
             answer: "Thirty-plus photos is a solid baseline; Google has cited much higher counts correlating with more direction requests. Add fresh interior, team, and product shots monthly.",
         },
         {
-            question: "Can Zyene track GBP search keywords?",
-            answer: "Yes—Zyene's local SEO features include GBP keyword performance so you see which queries drive impressions and clicks, then prioritize checklist items that match real search demand.",
+            question: "Can Zyene Reviews track GBP search keywords?",
+            answer: "Yes—Zyene Reviews' local SEO features include GBP keyword performance so you see which queries drive impressions and clicks, then prioritize checklist items that match real search demand.",
         },
         {
             question: "Do reviews belong in a GBP optimization checklist?",
-            answer: "Absolutely. Target fifty-plus reviews, reply to all of them, keep five to ten new reviews per month, and use Negative Feedback Shield on Zyene to reduce avoidable public one-stars while you grow.",
+            answer: "Absolutely. Target fifty-plus reviews, reply to all of them, keep five to ten new reviews per month, and use Negative Feedback Shield on Zyene Reviews to reduce avoidable public one-stars while you grow.",
         },
     ],
     body: [
@@ -313,7 +313,7 @@ export const post7: BlogPost = {
         { type: "h2", text: "Section 5: Reviews (Most Important Long-Term Signal)" },
         {
             type: "summary",
-            text: "Reviews drive Prominence: aim for fifty-plus totals, reply to every review, and keep new ones flowing monthly. Pair collection with Zyene campaigns and Shield so public ratings reflect fixable issues you already resolved.",
+            text: "Reviews drive Prominence: aim for fifty-plus totals, reply to every review, and keep new ones flowing monthly. Pair collection with Zyene Reviews campaigns and Shield so public ratings reflect fixable issues you already resolved.",
         },
         { type: "ul", items: [
             "Total review count: Target 50+ reviews to enter the competitive range for local 3-pack placement.",
@@ -353,8 +353,8 @@ export const post7: BlogPost = {
             "Booking button: If you use an online booking system (Acuity, OpenTable, etc.), add the booking URL to your profile.",
             "Response commitment: Only enable messaging if you'll actually respond. Unanswered messages hurt your profile score.",
         ]},
-        { type: "tip", text: "Use Zyene's GBP keyword performance dashboard to see which search queries are driving impressions and clicks to your Google Business Profile. This data shows you where to focus your optimization effort." },
-        { type: "cta", ctaLabel: "Track your GBP keyword performance with Zyene →", ctaHref: "/features" },
+        { type: "tip", text: "Use Zyene Reviews' GBP keyword performance dashboard to see which search queries are driving impressions and clicks to your Google Business Profile. This data shows you where to focus your optimization effort." },
+        { type: "cta", ctaLabel: "Track your GBP keyword performance with Zyene Reviews →", ctaHref: "/features" },
     ],
 };
 
@@ -367,13 +367,13 @@ export const post8: BlogPost = {
     publishedAt: "2026-04-28",
     dateModified: "2026-05-24",
     readMinutes: 7,
-    author: { name: "Zyene Team", role: "Editorial" },
+    author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "How Google Reviews Impact Local Map Pack Ranking",
     metaDescription: "Understand exactly how Google reviews affect your local map pack (3-pack) ranking. Review quantity, recency, response rate, and keyword mentions all matter.",
     keywords: ["local map pack ranking", "google reviews ranking factor", "how reviews affect local seo", "google 3 pack ranking", "reviews local search ranking"],
     relatedSlugs: ["google-business-profile-optimization-checklist", "how-to-get-50-google-reviews-in-30-days"],
     internalLinks: [
-        { label: "Zyene GBP keyword tracking", href: "/features" },
+        { label: "Zyene Reviews GBP keyword tracking", href: "/features" },
         { label: "How to get more reviews fast", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
     ],
     faqs: [
@@ -387,7 +387,7 @@ export const post8: BlogPost = {
         },
         {
             question: "How recent should my Google reviews be?",
-            answer: "Google weights the last ninety days heavily. A steady trickle of new reviews beats a one-time surge followed by silence—automate asks with Zyene campaigns so freshness does not depend on memory.",
+            answer: "Google weights the last ninety days heavily. A steady trickle of new reviews beats a one-time surge followed by silence—automate asks with Zyene Reviews campaigns so freshness does not depend on memory.",
         },
         {
             question: "Does replying to reviews help Map Pack placement?",
@@ -395,7 +395,7 @@ export const post8: BlogPost = {
         },
         {
             question: "Can competitor review velocity pass me in the Map Pack?",
-            answer: "Yes—review growth compounds. A rival collecting fifteen reviews a month can overtake a static profile in six to twelve months. Zyene competitor tracking surfaces when their rating or volume jumps.",
+            answer: "Yes—review growth compounds. A rival collecting fifteen reviews a month can overtake a static profile in six to twelve months. Zyene Reviews competitor tracking surfaces when their rating or volume jumps.",
         },
     ],
     body: [
@@ -451,6 +451,6 @@ export const post8: BlogPost = {
         },
         { type: "p", text: "Here's what makes review management so powerful: the effects compound. More reviews → higher ranking → more visibility → more customers → more reviews. Every new review you collect makes the next one slightly easier to earn because more people are finding you." },
         { type: "p", text: "Conversely, falling behind on review velocity allows competitors to compound past you. A competitor who consistently gets 15 reviews/month while you get 2 will overtake your ranking position within 6–12 months, even if you started ahead." },
-        { type: "cta", ctaLabel: "Start automating your review collection with Zyene →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Start automating your review collection with Zyene Reviews →", ctaHref: "/signup" },
     ],
 };

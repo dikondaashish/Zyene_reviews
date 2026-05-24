@@ -31,7 +31,7 @@ export default async function CompetitorPage(
                             items={[
                                 { name: "Home", url: "https://zyenereviews.com/" },
                                 { name: "Compare", url: "https://zyenereviews.com/compare" },
-                                { name: `Zyene vs ${data.name}`, url: `https://zyenereviews.com/compare/${slug}` },
+                                { name: `Zyene Reviews vs ${data.name}`, url: `https://zyenereviews.com/compare/${slug}` },
                             ]}
                         />
             <CompareCompetitorHeroSection data={data} />

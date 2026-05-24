@@ -16,11 +16,11 @@ export function CompareHeroSection() {
                         Honest Comparisons
                     </div>
                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
-                        See how Zyene<br />
+                        See how Zyene Reviews<br />
                         <span className="text-primary">compares to the rest</span>
                     </h1>
                     <p className="text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
-                        We believe in honest comparisons. Here&apos;s where Zyene wins, where competitors win, and how to decide what&apos;s right for your business.
+                        We believe in honest comparisons. Here&apos;s where Zyene Reviews wins, where competitors win, and how to decide what&apos;s right for your business.
                     </p>
                     <p className="text-sm text-muted-foreground mb-6 max-w-xl mx-auto">
                         {POSITIONING.oneLiner}
@@ -30,7 +30,7 @@ export function CompareHeroSection() {
                     </div>
                     <Link href="/signup">
                         <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                            Try Zyene Free for 7 Days <ArrowRight className="ml-2 size-4" />
+                            Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
                         </Button>
                     </Link>
                 </div>

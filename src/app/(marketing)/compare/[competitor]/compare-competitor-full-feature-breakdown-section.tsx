@@ -13,7 +13,7 @@ export function CompareCompetitorFullFeatureBreakdownSection({ data }: { data: C
                             <thead>
                                 <tr className="bg-muted">
                                     <th className="px-6 py-4 font-semibold text-muted-foreground border-b border-r border-border text-left">Feature</th>
-                                    <th className="px-6 py-4 font-bold text-primary border-b border-r border-border bg-primary/10 text-center">Zyene</th>
+                                    <th className="px-6 py-4 font-bold text-primary border-b border-r border-border bg-primary/10 text-center">Zyene Reviews</th>
                                     <th className="px-6 py-4 font-semibold text-muted-foreground border-b border-border text-center">{data.name}</th>
                                 </tr>
                             </thead>
@@ -36,7 +36,7 @@ export function CompareCompetitorFullFeatureBreakdownSection({ data }: { data: C
                         </table>
                     </div>
                     <p className="text-center text-xs text-muted-foreground mt-4">
-                        {data.priceNote} Zyene pricing as of 2026. See <Link href="/pricing" className="underline hover:text-foreground">our pricing page</Link> for current rates.
+                        {data.priceNote} Zyene Reviews pricing as of 2026. See <Link href="/pricing" className="underline hover:text-foreground">our pricing page</Link> for current rates.
                     </p>
                 </div>
             </section>

@@ -19,7 +19,7 @@ export function CompareCompetitorWhoShouldUseWhichSection({ data }: { data: Comp
                             </ul>
                         </div>
                         <div className="bg-primary/5 border-2 border-primary/30 rounded-2xl p-8">
-                            <h3 className="text-xl font-bold text-foreground mb-6">Choose Zyene if you need:</h3>
+                            <h3 className="text-xl font-bold text-foreground mb-6">Choose Zyene Reviews if you need:</h3>
                             <ul className="space-y-3">
                                 {data.whoShouldUseZyene.map((item, i) => (
                                     <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">

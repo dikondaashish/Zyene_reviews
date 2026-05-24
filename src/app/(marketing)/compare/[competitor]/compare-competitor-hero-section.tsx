@@ -12,7 +12,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     <nav className="flex items-center justify-center gap-2 text-xs text-muted-foreground mb-6">
                         <Link href="/compare" className="hover:text-primary transition-colors">Compare</Link>
                         <ChevronRight className="size-3.5" />
-                        <span className="text-foreground font-medium">Zyene vs {data.name}</span>
+                        <span className="text-foreground font-medium">Zyene Reviews vs {data.name}</span>
                     </nav>
 
                     <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
@@ -34,7 +34,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-10">
                         <div className="text-center">
                             <div className="text-5xl font-black text-primary">$29.99</div>
-                            <div className="text-sm text-muted-foreground mt-1">Zyene / month</div>
+                            <div className="text-sm text-muted-foreground mt-1">Zyene Reviews / month</div>
                             <div className="text-xs text-muted-foreground">No annual contract</div>
                         </div>
                         <div className="text-3xl font-bold text-muted-foreground/30">vs</div>
@@ -48,7 +48,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/signup">
                             <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                                Try Zyene Free for 7 Days <ArrowRight className="ml-2 size-4" />
+                                Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
                             </Button>
                         </Link>
                         <Link href="/pricing">
