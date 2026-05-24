@@ -52,6 +52,7 @@ export function MarketingLayoutDesktopNav({
             <MarketingLayoutNavDropdown
                 label="Product"
                 links={PRODUCT_LINKS}
+                columns={2}
                 open={productOpen}
                 onToggle={onProductToggle}
                 onOpen={onProductOpen}
