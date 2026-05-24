@@ -11,6 +11,12 @@ Central index for project documentation and where each file belongs.
 - `docs/CODEBASE_STRUCTURE.md` - repo structure and placement rules.
 - `docs/PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
 
+## Growth & GEO Docs (KEEP in `docs/`)
+
+- `docs/GROWTH_BLUEPRINT.md` - phased product growth plan (Phases 0–8).
+- `docs/GROWTH_OPERATIONS.md` - weekly KPI rhythm and `/growth` dashboard ops.
+- `docs/GEO_WIN_PLAYBOOK.md` - GEO + omni-channel win plan (Phases 0–8, stacks on growth blueprint).
+
 ## Operations & Verification Docs (KEEP in `docs/`)
 
 - `docs/CRITICAL_FLOW_VERIFICATION.md` - critical flow verification and release gate.
