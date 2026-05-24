@@ -34,14 +34,17 @@ export async function pingIndexNow(urls: string[]): Promise<boolean> {
 
         if (!response.ok) {
             const errorText = await response.text();
-            logger.error(`IndexNow ping failed: ${response.status} ${response.statusText}`, { error: errorText });
+            logger.error(
+                { status: response.status, statusText: response.statusText, errorText },
+                "IndexNow ping failed"
+            );
             return false;
         }
 
         logger.info(`IndexNow ping successful for ${urls.length} URLs`);
         return true;
     } catch (error) {
-        logger.error("Exception during IndexNow ping", { error });
+        logger.error({ err: error }, "Exception during IndexNow ping");
         return false;
     }
 }

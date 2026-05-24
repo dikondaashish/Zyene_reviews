@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true, count: parsed.data.urls.length });
     } catch (error) {
-        logger.error("Error in IndexNow API route", { error });
+        logger.error({ err: error }, "Error in IndexNow API route");
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
