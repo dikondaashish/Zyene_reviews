@@ -29,7 +29,8 @@ const guide1: ResourceGuide = {
     lastUpdated: "2026-05-01",
     readMinutes: 18,
     metaTitle: "The Complete Guide to Google Reviews for Local Businesses (2026)",
-    metaDescription: "The definitive Google Reviews guide for local businesses. Collection strategy, response best practices, ranking impact, and reputation protection — everything in one place.",
+    metaDescription:
+        "The Google Reviews guide for local businesses: collection strategy, response best practices, ranking impact, and reputation protection in one place.",
     keywords: ["google reviews guide", "google reviews for businesses", "how google reviews work", "complete guide to google reviews", "google reviews local business"],
     tableOfContents: [
         { anchor: "what-are-google-reviews", label: "What Are Google Reviews?" },
@@ -355,7 +356,8 @@ const guide4: ResourceGuide = {
     lastUpdated: "2026-05-01",
     readMinutes: 12,
     metaTitle: "15+ Review Request Templates (SMS & Email)",
-    metaDescription: "Ready-to-use SMS and email templates for requesting Google reviews. 15+ templates for restaurants, healthcare, home services, and more with proven conversion copy.",
+    metaDescription:
+        "SMS and email templates for requesting Google reviews: 15+ examples for restaurants, healthcare, home services, and more with proven conversion copy.",
     keywords: ["review request templates", "review request email template", "review request sms", "google review request template", "how to ask for google reviews"],
     tableOfContents: [
         { anchor: "best-practices", label: "Best Practices Before You Send" },

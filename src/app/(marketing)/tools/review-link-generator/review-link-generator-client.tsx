@@ -51,6 +51,20 @@ export function ReviewLinkGeneratorClient() {
                     </p>
                 </div>
             </section>
+            <section className="py-10 px-4 bg-muted/20 border-b border-border">
+                <div className="container mx-auto max-w-2xl space-y-4">
+                    <h2 className="text-xl font-bold text-foreground">Why a direct review link matters</h2>
+                    <p className="text-muted-foreground leading-relaxed">
+                        The easier it is for happy customers to leave a Google review, the more 5-star ratings you
+                        collect. A direct &quot;Write a review&quot; link removes friction — customers tap once instead
+                        of searching for your business on Maps.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                        Use this free generator to find your listing and receive the link by email. For automated SMS
+                        and email campaigns after every visit, see Zyene&apos;s review collection tools.
+                    </p>
+                </div>
+            </section>
             <section className="py-12 px-4">
                 <div className="container mx-auto max-w-2xl">
                     <form onSubmit={submit} className="space-y-6 bg-card border border-border rounded-2xl p-6 md:p-8">

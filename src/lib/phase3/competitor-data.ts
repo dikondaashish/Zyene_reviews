@@ -41,7 +41,8 @@ export const COMPETITORS: CompetitorData[] = [
         keyAngle: "10× cheaper, no annual contract, same AI features",
         heroSub: "See why local businesses are switching from Birdeye to Zyene — and paying $270 less per month to do it.",
         metaTitle: "Zyene Reviews vs Birdeye — Full Comparison 2026",
-        metaDescription: "Zyene Reviews vs Birdeye: detailed feature-by-feature comparison. Zyene starts at $29.99/mo with no annual contract. Birdeye starts at $299/mo with annual commitment. See which is right for your business.",
+        metaDescription:
+            "Compare Zyene vs Birdeye: AI replies, Negative Feedback Shield, and pricing from $29.99/mo with no annual contract versus Birdeye at $299/mo.",
         targetKeywords: ["zyene vs birdeye", "birdeye alternative", "cheaper than birdeye", "birdeye pricing", "birdeye review management alternative"],
         winsForCompetitor: [
             "Better for large enterprise accounts with 50+ locations",
@@ -113,7 +114,8 @@ export const COMPETITORS: CompetitorData[] = [
         keyAngle: "Reviews-focused vs messaging platform — and 13× cheaper",
         heroSub: "Podium is a messaging and payments platform. Zyene is a review management platform. See the full difference — and why Zyene costs 13× less.",
         metaTitle: "Zyene Reviews vs Podium — Full Comparison 2026",
-        metaDescription: "Zyene Reviews vs Podium: side-by-side comparison. Zyene starts at $29.99/mo with no contract. Podium starts at $399/mo with annual commitment. Compare features, pricing, and fit.",
+        metaDescription:
+            "Zyene vs Podium: review management, AI replies, and Shield at $29.99/mo with no contract compared to Podium at $399/mo and annual commitment.",
         targetKeywords: ["zyene vs podium", "podium alternative", "cheaper than podium", "podium pricing", "podium review management alternative"],
         winsForCompetitor: [
             "Full messaging platform: SMS inbox, webchat, and two-way customer messaging",
@@ -183,7 +185,8 @@ export const COMPETITORS: CompetitorData[] = [
         keyAngle: "More features, better AI, at a comparable or lower price",
         heroSub: "NiceJob focuses on automated review collection. Zyene adds AI replies, competitor tracking, GBP SEO, and the Negative Feedback Shield — at a similar price.",
         metaTitle: "Zyene Reviews vs NiceJob — Full Comparison 2026",
-        metaDescription: "Zyene Reviews vs NiceJob: feature comparison. Zyene adds AI replies, competitor tracking, GBP keyword tracking, and the Negative Feedback Shield that NiceJob lacks. Compare at $29.99/mo.",
+        metaDescription:
+            "Zyene vs NiceJob: AI replies, competitor tracking, GBP keywords, and Negative Feedback Shield that NiceJob lacks — compare features at $29.99/mo.",
         targetKeywords: ["zyene vs nicejob", "nicejob alternative", "nicejob competitor", "nicejob pricing comparison", "better than nicejob"],
         winsForCompetitor: [
             "Simpler, more visual interface — easier for non-technical owners",
@@ -253,7 +256,8 @@ export const COMPETITORS: CompetitorData[] = [
         keyAngle: "AI replies, competitor tracking, and GBP SEO at a lower price",
         heroSub: "GatherUp focuses on review collection and customer surveys. Zyene adds AI replies, competitor tracking, and GBP SEO — at a lower starting price.",
         metaTitle: "Zyene Reviews vs GatherUp — Full Comparison 2026",
-        metaDescription: "Zyene Reviews vs GatherUp: full feature comparison. Zyene adds AI replies, competitor tracking, GBP keyword tracking, and the Negative Feedback Shield at $29.99/mo vs GatherUp's $99/mo.",
+        metaDescription:
+            "Zyene vs GatherUp: feature and pricing comparison. AI replies, competitor tracking, and Shield at $29.99/mo versus GatherUp at $99/mo.",
         targetKeywords: ["zyene vs gatherup", "gatherup alternative", "gatherup competitor", "gatherup pricing comparison", "better than gatherup"],
         winsForCompetitor: [
             "Strong customer survey and NPS tools beyond just reviews",

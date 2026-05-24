@@ -71,7 +71,8 @@ export const an3: HelpArticle = {
     slug: "generating-pdf-reports",
     category: "analytics",
     title: "Generating PDF Reports",
-    excerpt: "How to generate and download PDF performance reports to share with stakeholders, clients, or your team.",
+    excerpt:
+        "Generate and download PDF performance reports from Zyene to share review growth, response rates, and trends with your team.",
     readMinutes: 2,
     body: [
         { type: "p", text: "Zyene can generate PDF performance reports summarizing your review performance, campaign results, and competitor comparison for any date range." },

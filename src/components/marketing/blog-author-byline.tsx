@@ -22,7 +22,7 @@ export function BlogAuthorByline({
             {resolved.avatarUrl ? (
                 <Image
                     src={resolved.avatarUrl}
-                    alt=""
+                    alt={resolved.name}
                     width={avatarSize}
                     height={avatarSize}
                     className="rounded-full object-cover ring-1 ring-border shrink-0"

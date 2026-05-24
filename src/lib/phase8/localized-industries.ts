@@ -42,7 +42,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Clínicas dentales",
         metaTitle: "Software de reseñas para clínicas dentales",
         metaDescription:
-            "Cumple normativas de privacidad, pide reseñas de forma ética y mejora tu presencia local en Google Maps.",
+            "Clínicas dentales: reseñas de Google, respuestas con IA y escudo de feedback negativo con enfoque en privacidad. Desde $29.99/mes.",
         heroTitle: "Reputación online para clínicas dentales",
         heroSubtitle:
             "Flujos compatibles con HIPAA en tono, solicitudes post-cita y respuestas profesionales sin pasar horas en Google.",
@@ -59,7 +59,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Servicios del hogar",
         metaTitle: "Reseñas para servicios del hogar",
         metaDescription:
-            "Fontanería, HVAC, electricidad y más: convierte trabajos terminados en reseñas de Google automáticamente.",
+            "Fontanería, HVAC y electricidad: convierte trabajos terminados en reseñas de Google con solicitudes SMS y respuestas con IA.",
         heroTitle: "Más trabajos gracias a mejores reseñas",
         heroSubtitle:
             "Tus técnicos terminan el trabajo; Zyene envía el enlace de reseña por SMS. Tú respondes desde el panel.",
@@ -76,7 +76,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Salones y spas",
         metaTitle: "Gestión de reseñas para salones",
         metaDescription:
-            "Pide reseñas después de cada cita, responde rápido y muestra tus mejores comentarios en tu web.",
+            "Salones y spas: pide reseñas tras cada cita, responde con IA y muestra tus mejores comentarios en tu sitio web.",
         heroTitle: "Llena tu agenda con reseñas reales",
         heroSubtitle:
             "Las clientas felices dejan reseñas en segundos; las insatisfechas hablan contigo en privado primero.",
@@ -110,7 +110,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Consultorios médicos",
         metaTitle: "Reseñas para consultorios y clínicas",
         metaDescription:
-            "Gestión de reputación para prácticas médicas locales con enfoque en privacidad y tono profesional.",
+            "Consultorios médicos: gestión de reputación con privacidad, solicitudes éticas de reseñas y respuestas con tono clínico.",
         heroTitle: "Reputación médica sin comprometer la privacidad",
         heroSubtitle:
             "Solicitudes éticas, respuestas alineadas con normativa y visibilidad en búsquedas locales.",
@@ -127,7 +127,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Hoteles y hospedaje",
         metaTitle: "Reseñas para hoteles y hospedaje",
         metaDescription:
-            "Mejora tu puntuación en Google y TripAdvisor con solicitudes post-estancia y respuestas centralizadas.",
+            "Hoteles: mejora tu puntuación en Google con solicitudes post-estancia, respuestas con IA y panel multi-propiedad.",
         heroTitle: "Mejor rating para tu propiedad",
         heroSubtitle:
             "Automatiza solicitudes después del checkout y responde reseñas desde un solo panel por ubicación.",
@@ -144,7 +144,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         name: "Gimnasios y fitness",
         metaTitle: "Reseñas para gimnasios y estudios fitness",
         metaDescription:
-            "Pide reseñas a nuevos miembros, responde con IA y compite con cadenas grandes en tu zona.",
+            "Gimnasios y estudios fitness: pide reseñas a nuevos miembros, responde con IA y compite con grandes cadenas locales.",
         heroTitle: "Destaca frente a las grandes cadenas",
         heroSubtitle:
             "Cada nuevo miembro recibe un SMS para dejar reseña; tú mantienes 4.8+ estrellas en Google.",
@@ -165,6 +165,14 @@ export function getLocalizedIndustry(
     localizedSlug: string
 ): LocalizedIndustryPage | undefined {
     return byLocalizedSlug[`${locale}/${localizedSlug}`];
+}
+
+/** Spanish industry path for an English industry slug, if a localized page exists. */
+export function getEsIndustryPathForEnglishSlug(industrySlug: string): string | null {
+    const page = LOCALIZED_INDUSTRY_PAGES.find(
+        (p) => p.locale === "es" && p.industrySlug === industrySlug
+    );
+    return page ? `/es/industries/${page.localizedSlug}` : null;
 }
 
 export const ES_INDUSTRY_LOCALIZED_SLUGS = LOCALIZED_INDUSTRY_PAGES.reduce<string[]>(

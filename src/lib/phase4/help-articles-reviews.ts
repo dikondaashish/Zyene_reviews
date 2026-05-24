@@ -92,7 +92,8 @@ export const rev4: HelpArticle = {
     slug: "exporting-reviews",
     category: "reviews",
     title: "Exporting Your Reviews",
-    excerpt: "How to export your reviews to CSV — for reporting, analysis, or importing into other tools.",
+    excerpt:
+        "Export your Zyene reviews to CSV for reporting, analysis, or importing into spreadsheets and other business tools.",
     readMinutes: 2,
     body: [
         { type: "p", text: "You can export your review data from Zyene at any time for reporting, analysis, or importing into spreadsheets or other tools." },

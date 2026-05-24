@@ -8,7 +8,8 @@ export const bill1: HelpArticle = {
     slug: "plans-and-pricing",
     category: "billing",
     title: "Plans and Pricing",
-    excerpt: "Overview of Zyene's subscription plans — what's included in each, pricing, and which plan is right for your business.",
+    excerpt:
+        "Overview of Zyene subscription plans: what each tier includes, pricing, limits, and how to choose the right plan for your business.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Zyene offers three subscription tiers designed for different business sizes. All plans include the core features: review monitoring, AI replies, review requests, the Negative Feedback Shield, competitor tracking, and GBP keyword performance." },
@@ -39,7 +40,8 @@ export const bill2: HelpArticle = {
     slug: "upgrading-your-plan",
     category: "billing",
     title: "Upgrading or Changing Your Plan",
-    excerpt: "How to upgrade from your current plan to a higher tier, or switch between monthly and annual billing.",
+    excerpt:
+        "Upgrade from your current Zyene plan to a higher tier or switch between monthly and annual billing without losing your data.",
     readMinutes: 2,
     body: [
         { type: "p", text: "You can upgrade or change your plan at any time from your account settings." },

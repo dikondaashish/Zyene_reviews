@@ -62,6 +62,20 @@ export function ReputationScoreCheckerClient() {
                     </p>
                 </div>
             </section>
+            <section className="py-10 px-4 bg-muted/20 border-b border-border">
+                <div className="container mx-auto max-w-2xl space-y-4">
+                    <h2 className="text-xl font-bold text-foreground">What your reputation score shows</h2>
+                    <p className="text-muted-foreground leading-relaxed">
+                        Your Google rating and review count are often the first signals new customers see in local
+                        search. This checker gives you a quick snapshot of your public profile plus an estimated response
+                        rate so you know where you stand today.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                        Improving your score usually means collecting more recent reviews and responding consistently.
+                        Zyene automates both with alerts, AI replies, and review request campaigns from $29.99/mo.
+                    </p>
+                </div>
+            </section>
             <section className="py-12 px-4">
                 <div className="container mx-auto max-w-2xl space-y-6">
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">

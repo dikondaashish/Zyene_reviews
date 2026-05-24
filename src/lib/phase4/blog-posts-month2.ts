@@ -121,7 +121,8 @@ export const post7: BlogPost = {
     readMinutes: 10,
     author: { name: "David Kim", role: "Customer Success" },
     metaTitle: "Google Business Profile Optimization Checklist 2026",
-    metaDescription: "The complete Google Business Profile optimization checklist for 2026. 30+ actionable steps to rank higher in Google Maps and get more calls, clicks, and customers.",
+    metaDescription:
+        "Google Business Profile optimization checklist for 2026: 30+ steps to rank higher in Google Maps and get more calls, clicks, and customers.",
     keywords: ["google business profile optimization", "gbp optimization checklist", "google my business optimization 2026", "how to optimize google business profile"],
     relatedSlugs: ["how-reviews-impact-local-map-pack-ranking", "why-google-reviews-matter-in-2026"],
     internalLinks: [

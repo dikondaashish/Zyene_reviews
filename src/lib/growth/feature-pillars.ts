@@ -49,7 +49,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Professional responses in seconds, in your voice",
         metaTitle: "AI-Powered Review Replies",
         metaDescription:
-            "One-click AI reply drafts, auto-commenter, and tone control. Save hours every week on Google review responses.",
+            "One-click AI reply drafts, tone control, and optional auto-commenter for Google reviews. Save hours weekly while keeping your brand voice.",
         bullets: [
             "One-click AI reply suggestions for every review",
             "Tone customization: formal, friendly, apologetic",
@@ -82,7 +82,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Know exactly where you stand in your market",
         metaTitle: "Competitor Tracking",
         metaDescription:
-            "Track competitor ratings, review volume, and trends. AI market briefs and alerts included on all paid plans.",
+            "Track competitor ratings, review volume, and trends with AI market briefs and alerts on every paid plan. See where you rank locally.",
         bullets: [
             "Track up to 10 competitors per location",
             "Compare review volume, average rating, and response rate",
@@ -114,7 +114,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Understand what's working and share results",
         metaTitle: "Analytics & Reporting",
         metaDescription:
-            "Review trends, engagement funnel, sentiment breakdown, PDF reports, and CSV exports for local business teams.",
+            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports — analytics for local business teams on Zyene plans from $29.99/mo.",
         bullets: [
             "Dashboard overview: ratings, volume, response rate, trends",
             "Review growth charts over time (weekly/monthly)",

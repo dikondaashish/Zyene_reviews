@@ -81,6 +81,20 @@ export function ReviewResponseGeneratorClient() {
                     </p>
                 </div>
             </section>
+            <section className="py-10 px-4 bg-muted/20 border-b border-border">
+                <div className="container mx-auto max-w-2xl space-y-4">
+                    <h2 className="text-xl font-bold text-foreground">Respond professionally to every review</h2>
+                    <p className="text-muted-foreground leading-relaxed">
+                        Replying to Google reviews shows future customers you care — and Google factors response rate
+                        into local visibility. This generator drafts a professional reply based on the rating and review
+                        text you provide.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                        For one-click AI replies on every new review, tone control, and optional auto-commenter, use
+                        Zyene&apos;s AI reply feature on all paid plans with a 7-day free trial.
+                    </p>
+                </div>
+            </section>
             <section className="py-12 px-4">
                 <div className="container mx-auto max-w-2xl space-y-6">
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">

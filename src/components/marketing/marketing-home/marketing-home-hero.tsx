@@ -85,7 +85,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                   <div className="rounded-full bg-primary/10 text-primary flex items-center justify-center border border-primary/20 size-8">
                     <Star className="fill-current size-4" />
                   </div>
-                  <h3 className="font-semibold text-foreground">Real-time Review Alerts</h3>
+                  <p className="font-semibold text-foreground">Real-time Review Alerts</p>
                 </div>
 
                 <div className="space-y-3">

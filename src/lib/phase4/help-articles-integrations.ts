@@ -100,7 +100,8 @@ export const int4: HelpArticle = {
     slug: "embedding-review-widgets",
     category: "integrations",
     title: "Embedding Review Widgets on Your Website",
-    excerpt: "How to add a review carousel or star rating badge to your website using Zyene's embeddable widgets.",
+    excerpt:
+        "Add a review carousel or star rating badge to your website with Zyene embeddable widgets — setup, styling, and placement tips.",
     readMinutes: 4,
     body: [
         { type: "p", text: "Zyene's review widgets let you display your Google reviews directly on your website — in a carousel format or as a star rating badge — to build trust with website visitors." },

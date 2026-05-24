@@ -77,6 +77,16 @@ export function MarketingLayoutFooterSolutionsColumn() {
                 </Link>
             </li>
             <li>
+                <Link href="/industries/medical" className="hover:text-primary transition-colors">
+                    Medical
+                </Link>
+            </li>
+            <li>
+                <Link href="/industries/fitness" className="hover:text-primary transition-colors">
+                    Fitness & Gyms
+                </Link>
+            </li>
+            <li>
                 <Link href="/compare" className="hover:text-primary transition-colors">
                     Compare Tools
                 </Link>

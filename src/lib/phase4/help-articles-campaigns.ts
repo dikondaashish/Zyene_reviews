@@ -69,7 +69,8 @@ export const camp3: HelpArticle = {
     slug: "campaign-templates",
     category: "campaigns",
     title: "Campaign Message Templates",
-    excerpt: "How to use, customize, and create your own review request message templates in Zyene.",
+    excerpt:
+        "Use, customize, and create review request message templates in Zyene for SMS and email — tone, timing, and branding tips included.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Zyene includes pre-built message templates for different industries and scenarios. You can use them as-is, customize them, or create your own from scratch." },
@@ -105,7 +106,8 @@ export const camp4: HelpArticle = {
     slug: "follow-up-messages",
     category: "campaigns",
     title: "Setting Up Follow-Up Messages",
-    excerpt: "How to configure automatic follow-up review request messages for customers who didn't respond to the initial request.",
+    excerpt:
+        "Configure automatic follow-up review request messages for customers who did not respond to your first SMS or email request.",
     readMinutes: 3,
     body: [
         { type: "p", text: "A single follow-up message sent 5–7 days after the initial review request typically increases your campaign conversion rate by 30–50%. Zyene can send this automatically." },

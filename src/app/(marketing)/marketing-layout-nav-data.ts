@@ -33,6 +33,7 @@ export const PRODUCT_LINKS: MarketingNavLink[] = [
     { href: "/features/review-collection", label: "Review Collection", icon: ShieldCheck, desc: "Negative Feedback Shield included" },
     { href: "/features/competitor-tracking", label: "Competitor Tracking", icon: TrendingUp, desc: "Ratings, trends, and AI briefs" },
     { href: "/features/local-seo", label: "Local SEO Dashboard", icon: Globe, desc: "GBP keywords and performance" },
+    { href: "/features/analytics", label: "Analytics & Reporting", icon: BarChart3, desc: "Trends, funnels, PDF and CSV exports" },
     { href: "/how-it-works", label: "How It Works", icon: GitBranch, desc: "4 steps to more 5-star reviews" },
     { href: "/integrations", label: "Integrations", icon: Zap, desc: "Google, Zapier, Square, and more" },
     { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo — no contracts" },

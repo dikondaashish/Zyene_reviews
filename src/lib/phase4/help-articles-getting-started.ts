@@ -8,7 +8,8 @@ export const gs1: HelpArticle = {
     slug: "creating-your-account",
     category: "getting-started",
     title: "Creating Your Account",
-    excerpt: "How to sign up for Zyene Reviews, choose your plan, and get started in under 5 minutes.",
+    excerpt:
+        "How to sign up for Zyene Reviews, choose your plan, connect your business, and get started in under five minutes.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Signing up for Zyene Reviews takes under 5 minutes. Here's exactly how to do it." },
@@ -38,7 +39,8 @@ export const gs2: HelpArticle = {
     slug: "connecting-google-business-profile",
     category: "getting-started",
     title: "Connecting Your Google Business Profile",
-    excerpt: "How to connect your Google Business Profile to Zyene so reviews are monitored and responses can be published in one click.",
+    excerpt:
+        "Connect your Google Business Profile to Zyene so new reviews sync to your inbox and you can publish responses in one click.",
     readMinutes: 4,
     body: [
         { type: "p", text: "Connecting your Google Business Profile (GBP) is the most important setup step — it's what allows Zyene to monitor your Google Reviews in real time and let you publish responses directly from your dashboard." },
@@ -77,7 +79,8 @@ export const gs3: HelpArticle = {
     slug: "sending-your-first-review-request",
     category: "getting-started",
     title: "Sending Your First Review Request",
-    excerpt: "How to create and send your first review request to a customer — manually or via an automated campaign.",
+    excerpt:
+        "Create and send your first review request manually or with an automated SMS or email campaign — step-by-step setup guide.",
     readMinutes: 4,
     body: [
         { type: "p", text: "Your first review request can be sent within 2 minutes of completing setup. Here's how." },

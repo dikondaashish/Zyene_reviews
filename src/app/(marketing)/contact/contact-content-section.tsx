@@ -10,9 +10,22 @@ export function ContactContentSection() {
             <div className="container mx-auto px-4 sm:px-8 max-w-4xl">
                 <div className="bg-card p-8 md:p-16 rounded-lg border border-border">
                     <h1 className="text-4xl font-bold text-foreground mb-4">Contact Us</h1>
-                    <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
+                    <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
                         Have a question, need help, or want to learn more about Zyene Reviews?
                         We&apos;re here for you.
+                    </p>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">
+                        Whether you run a single location or manage reviews for multiple businesses, our team can
+                        help with onboarding, Google Business Profile connection, billing, and product questions.
+                        We typically respond within one business day, Monday through Friday.
+                    </p>
+                    <p className="text-muted-foreground mb-10 leading-relaxed">
+                        For enterprise, agency, or multi-location needs, mention your use case in the form below and
+                        we will route you to the right person. You can also browse our{" "}
+                        <Link href="/help" className="text-primary hover:underline font-medium">
+                            Help Center
+                        </Link>{" "}
+                        for step-by-step guides on reviews, campaigns, and integrations.
                     </p>
 
                     <div className="mb-12 rounded-lg border border-border bg-muted/30 p-6 md:p-8">

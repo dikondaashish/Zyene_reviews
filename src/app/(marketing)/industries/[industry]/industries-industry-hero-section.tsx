@@ -1,7 +1,7 @@
 import { IndustryTrustBadge } from "@/components/marketing/social-proof";
 import { getIndustryTrustLabel } from "@/lib/phase5/social-proof-data";
 import type { IndustryData } from "@/lib/phase3/industry-data";
-import type { Metadata } from "next";
+import { getEsIndustryPathForEnglishSlug } from "@/lib/phase8/localized-industries";
 import Link from "next/link";
 import {
     ArrowRight, Star, Check, ShieldCheck, Bot, TrendingUp,
@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryData; slug: string }) {
+    const esIndustryPath = getEsIndustryPathForEnglishSlug(slug);
+
     return (
         <section className="pt-24 pb-20 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl">
@@ -60,6 +62,13 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
                             <p className="mt-4 text-xs text-muted-foreground">
                                 7-day free trial · No credit card lock-in · Starting at $29.99/mo
                             </p>
+                            {esIndustryPath ? (
+                                <p className="mt-2 text-sm text-muted-foreground">
+                                    <Link href={esIndustryPath} className="text-primary hover:underline font-medium">
+                                        Ver en español
+                                    </Link>
+                                </p>
+                            ) : null}
                         </div>
 
                         {/* Hero visual */}

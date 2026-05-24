@@ -50,6 +50,20 @@ export default function FreeToolsHubPage() {
                     </p>
                 </div>
             </section>
+            <section className="py-12 px-4 border-b border-border bg-muted/20">
+                <div className="container mx-auto max-w-3xl space-y-4">
+                    <h2 className="text-2xl font-bold text-foreground">Free review tools for local businesses</h2>
+                    <p className="text-muted-foreground leading-relaxed">
+                        These tools help you take the first step toward a stronger Google reputation: a direct review
+                        link customers can click, a quick snapshot of your public rating, and draft replies you can
+                        customize before posting.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                        When you are ready to automate requests, monitor every platform in one inbox, and use AI replies
+                        at scale, Zyene Reviews includes everything in plans from $29.99/mo with a 7-day free trial.
+                    </p>
+                </div>
+            </section>
             <section className="py-20 px-4">
                 <div className="container mx-auto max-w-5xl grid md:grid-cols-3 gap-8">
                     {FREE_TOOLS.map((tool) => {

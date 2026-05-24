@@ -72,7 +72,8 @@ export const post10: BlogPost = {
     readMinutes: 8,
     author: { name: "Zyene Team", role: "Editorial" },
     metaTitle: "Dental Practice Reputation Management Guide 2026",
-    metaDescription: "The 2026 reputation management guide for dental practices. HIPAA-aware review responses, how to get more patient reviews, and protecting your practice from negative reviews.",
+    metaDescription:
+        "2026 reputation guide for dental practices: HIPAA-aware review responses, more patient reviews, and protecting your practice from negative feedback.",
     keywords: ["dental practice reputation management", "dentist google reviews", "dental reviews management 2026", "dentist reputation management strategy"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "how-to-get-50-google-reviews-in-30-days"],
     internalLinks: [
@@ -173,7 +174,8 @@ export const post12: BlogPost = {
     readMinutes: 7,
     author: { name: "Zyene Team", role: "Editorial" },
     metaTitle: "How to Handle Fake Google Reviews: Step-by-Step Guide",
-    metaDescription: "Step-by-step guide for handling fake Google reviews. How to identify, flag, report, and respond to suspicious reviews — and protect your rating while Google investigates.",
+    metaDescription:
+        "How to handle fake Google reviews: identify, flag, report, and respond to suspicious reviews while protecting your rating during Google's review.",
     keywords: ["fake google reviews", "how to report fake google reviews", "remove fake google reviews", "fake review google business profile", "suspicious google reviews"],
     relatedSlugs: ["true-cost-of-bad-online-reputation", "how-to-respond-to-a-1-star-review"],
     internalLinks: [

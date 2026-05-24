@@ -88,7 +88,7 @@ export function MarketingHomeHowAndTestimonials({
                     <img src={photo} alt={name} className="object-cover size-full" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">{name}</h4>
+                    <h3 className="font-semibold text-foreground">{name}</h3>
                     <p className="text-sm text-muted-foreground">{role}</p>
                   </div>
                 </div>
