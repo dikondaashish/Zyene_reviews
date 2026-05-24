@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import type { RefObject } from "react";
 import type { MarketingNavLink } from "./marketing-layout-nav-data";
+import type { MarketingNavMenu } from "./marketing-layout-nav-types";
 
 function NavDropdownLink({
     item,
@@ -32,49 +32,55 @@ function NavDropdownLink({
 
 export function MarketingLayoutNavDropdown({
     label,
+    menu,
     links,
     columns = 1,
     open,
-    onToggle,
     onOpen,
+    onToggle,
     onClose,
-    containerRef,
 }: {
     label: string;
+    menu: MarketingNavMenu;
     links: MarketingNavLink[];
-    /** 2 = side-by-side columns (e.g. Product menu with 9 items). */
     columns?: 1 | 2;
     open: boolean;
-    onToggle: () => void;
     onOpen: () => void;
+    onToggle: () => void;
     onClose: () => void;
-    containerRef: RefObject<HTMLDivElement | null>;
 }) {
     return (
-        <div ref={containerRef} className="relative">
+        <div className="relative" onMouseLeave={onClose} data-nav-menu={menu}>
             <button
                 type="button"
                 onClick={onToggle}
                 onMouseEnter={onOpen}
+                aria-expanded={open}
+                aria-haspopup="true"
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors ${open ? "text-foreground bg-accent" : ""}`}
             >
                 {label}
                 <ChevronDown className={`transition-transform ${open ? "rotate-180" : ""} size-3.5`} />
             </button>
-            {open && (
-                <div
-                    onMouseLeave={onClose}
-                    className={`absolute left-0 top-full mt-1 rounded-xl border border-border bg-card shadow-xl z-50 p-1.5 ${
-                        columns === 2 ? "w-[min(42rem,calc(100vw-2rem))]" : "w-72"
-                    }`}
-                >
-                    <div className={columns === 2 ? "grid grid-cols-2 gap-0.5" : "flex flex-col gap-0.5"}>
-                        {links.map((item) => (
-                            <NavDropdownLink key={item.href} item={item} onClose={onClose} />
-                        ))}
+            {open ? (
+                <div className="absolute left-0 top-full z-50 pt-1">
+                    <div
+                        className={`rounded-xl border border-border bg-card shadow-xl p-1.5 ${
+                            columns === 2 ? "w-[min(42rem,calc(100vw-2rem))]" : "w-72"
+                        }`}
+                    >
+                        <div
+                            className={
+                                columns === 2 ? "grid grid-cols-2 gap-0.5" : "flex flex-col gap-0.5"
+                            }
+                        >
+                            {links.map((item) => (
+                                <NavDropdownLink key={item.href} item={item} onClose={onClose} />
+                            ))}
+                        </div>
                     </div>
                 </div>
-            )}
+            ) : null}
         </div>
     );
 }
