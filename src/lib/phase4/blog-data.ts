@@ -3,7 +3,15 @@
  * Re-exports types, aggregates all 12 posts, and exposes lookup maps.
  */
 
-export type { ContentPillar, SectionType, TableData, ContentSection, BlogPost, BlogAuthor } from "./blog-types";
+export type {
+    ContentPillar,
+    SectionType,
+    TableData,
+    ContentSection,
+    BlogPost,
+    BlogAuthor,
+    BlogFaq,
+} from "./blog-types";
 export { DEFAULT_BLOG_AUTHOR, resolveBlogAuthor, blogAuthorInitials } from "./blog-authors";
 import type { ContentPillar, BlogPost } from "./blog-types";
 

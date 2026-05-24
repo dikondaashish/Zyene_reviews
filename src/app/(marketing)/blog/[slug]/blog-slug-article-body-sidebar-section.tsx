@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BlogSlugFaqSection } from "@/components/marketing/blog-slug-faq-section";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
@@ -23,6 +24,8 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                         {/* Article content */}
                         <article>
                             <ContentRenderer sections={post.body} />
+
+                            {post.faqs && post.faqs.length > 0 ? <BlogSlugFaqSection faqs={post.faqs} /> : null}
 
                             {/* Internal links */}
                             {post.internalLinks.length > 0 && (

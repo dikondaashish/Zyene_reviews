@@ -12,7 +12,23 @@ export type ContentPillar =
     | "competitor-analysis";
 
 export type SectionType =
-    | "h2" | "h3" | "p" | "ul" | "ol" | "tip" | "warning" | "cta" | "quote" | "table";
+    | "h2"
+    | "h3"
+    | "p"
+    | "summary"
+    | "ul"
+    | "ol"
+    | "tip"
+    | "warning"
+    | "cta"
+    | "quote"
+    | "table";
+
+/** FAQ entries for blog posts (visible Q&A + FAQPage JSON-LD). */
+export interface BlogFaq {
+    question: string;
+    answer: string;
+}
 
 export interface TableData {
     headers: string[];
@@ -49,4 +65,8 @@ export interface BlogPost {
     relatedSlugs: string[];
     internalLinks: Array<{ label: string; href: string }>;
     body: ContentSection[];
+    /** Optional FAQs for on-page Q&A and FAQPage schema. */
+    faqs?: BlogFaq[];
+    /** ISO date when content was last substantively updated (Article dateModified). */
+    dateModified?: string;
 }

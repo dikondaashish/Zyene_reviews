@@ -14,7 +14,7 @@ export function ArticleJsonLd({ post }: { post: BlogPost }) {
         description: post.metaDescription,
         image: [JSON_LD_DEFAULT_OG_IMAGE],
         datePublished: post.publishedAt,
-        dateModified: post.publishedAt,
+        dateModified: post.dateModified ?? post.publishedAt,
         author: {
             "@type": "Person",
             name: post.author.name,

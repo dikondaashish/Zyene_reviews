@@ -12,6 +12,7 @@ export const post1: BlogPost = {
     pillar: "google-reviews",
     pillarLabel: "Google Reviews",
     publishedAt: "2026-03-10",
+    dateModified: "2026-05-24",
     readMinutes: 8,
     author: { name: "Marcus Webb", role: "Local SEO Strategist" },
     metaTitle: "How to Get 50 Google Reviews in 30 Days",
@@ -22,17 +23,51 @@ export const post1: BlogPost = {
         { label: "See how Zyene automates review requests", href: "/features" },
         { label: "Try Zyene free for 7 days", href: "/signup" },
     ],
+    faqs: [
+        {
+            question: "How many Google reviews do local businesses need to rank well?",
+            answer: "There is no fixed number, but many local businesses see stronger Google Maps visibility once they pass roughly 50 reviews with steady recency and owner responses. Below that, competitors with more volume often win Prominence even with similar star ratings.",
+        },
+        {
+            question: "What is a realistic conversion rate for review request SMS?",
+            answer: "SMS review requests typically convert around 15–25% when sent within a few hours of a positive visit. Email alone is often 5–10%. Combining SMS with one polite follow-up email can push combined conversion toward 20–30% for service businesses.",
+        },
+        {
+            question: "Is it against Google policy to ask customers for reviews?",
+            answer: "Asking for honest reviews is allowed. Google prohibits incentivized reviews, review gating that hides negative feedback from Google, and fake reviews. A simple, timely ask after good service is compliant when you do not offer rewards tied to star rating.",
+        },
+        {
+            question: "How fast can a business get 50 Google reviews?",
+            answer: "With daily volume and systematic asks, 30 days is achievable for businesses serving roughly 10 customers per day. Smaller volumes should backfill the last 90–180 days of happy customers first, then ask every new transaction going forward.",
+        },
+        {
+            question: "Should I use SMS or email for review requests?",
+            answer: "Use SMS when you have mobile numbers and short, high-intent touchpoints—restaurants, retail, home services. Use email for healthcare, B2B, or longer sales cycles. Many businesses send SMS first and one email follow-up five to seven days later.",
+        },
+    ],
     body: [
         { type: "p", text: "Most local businesses accumulate reviews the same way — by accident. A happy customer happens to leave one. You get 1 or 2 a month if you're lucky. At that pace, reaching 50 reviews takes 2–4 years." },
         { type: "p", text: "But 50 reviews isn't just a vanity milestone. It's the threshold where Google's local ranking algorithm starts giving your business significantly more prominence in map searches. Below it, you're competing with one hand tied behind your back." },
         { type: "p", text: "Here is a proven, 30-day playbook to get from wherever you are today to 50 reviews — without gaming the system, without fake reviews, and without annoying your customers." },
         { type: "h2", text: "Why 50 Reviews Is a Threshold, Not Just a Number" },
+        {
+            type: "summary",
+            text: "Google Maps Prominence—driven by review count, ratings, recency, and owner replies—often improves once a profile reaches about 50 reviews. Consumer trust also jumps in that range, so the milestone affects both rankings and click-through from local search and AI summaries.",
+        },
         { type: "p", text: "Google uses three primary factors to rank local businesses in Maps: Relevance, Proximity, and Prominence. Reviews — their quantity, recency, and the presence of owner responses — directly feed into Prominence. Businesses with 50+ reviews typically appear in local 3-pack results at a significantly higher rate than businesses with fewer than 20." },
         { type: "p", text: "Beyond ranking, consumer behavior shifts dramatically around review count. Studies show that trust peaks at around 40–50 reviews and plateaus after 100. A business with 50 fresh reviews is perceived as credible by the large majority of consumers — similar to one with 500 reviews." },
         { type: "h2", text: "The Real Reason You Don't Have 50 Reviews Yet" },
+        {
+            type: "summary",
+            text: "Low review counts usually mean inconsistent asking, not unhappy customers. Most satisfied buyers will review if asked within one to three hours of a positive visit. The gap is process—scripts, timing, and asking at every transaction—not product quality alone.",
+        },
         { type: "p", text: "It's not that your customers are unhappy. It's that you're not asking. Research consistently shows that 70–80% of customers who have a positive experience will leave a review if asked — but fewer than 1 in 3 businesses have a systematic process for asking." },
         { type: "tip", text: "The best time to ask for a review is within 1–3 hours of a positive interaction — when the experience is fresh, the customer's satisfaction is highest, and they haven't mentally moved on to the next thing." },
         { type: "h2", text: "The 30-Day Playbook" },
+        {
+            type: "summary",
+            text: "Week one builds links, scripts, and ask moments; weeks two through four execute asks on every customer plus a one-time backfill from the last 90 days. Follow up once after five to seven days, respond to every new review, and never skip the daily habit when you get busy.",
+        },
         { type: "h3", text: "Week 1: Build Your Ask Infrastructure" },
         { type: "ol", items: [
             "Generate your Google review link: Go to your Google Business Profile, click 'Share review form', and copy the direct link. This is the URL you'll use in all your requests.",
@@ -48,11 +83,19 @@ export const post1: BlogPost = {
             "Respond to every review you receive: This signals to Google that you're active and encourages more reviews. It also shows new visitors that you care.",
         ]},
         { type: "h2", text: "Exact Request Scripts" },
+        {
+            type: "summary",
+            text: "Keep SMS under 160 characters with a direct Google review link and the customer's name. Email can be slightly longer with one clear CTA. Both should sound grateful, not pushy, and go out while the visit is still fresh in the customer's mind.",
+        },
         { type: "h3", text: "SMS Script (157 characters)" },
         { type: "quote", text: "Hi [Name], thanks for visiting [Business Name] today! We'd love a quick Google review — it really helps us grow: [your-review-link] Thank you! 🙏" },
         { type: "h3", text: "Email Script" },
         { type: "quote", text: "Subject: Quick favor from [Business Name]\n\nHi [Name],\n\nThank you for your visit — it was great to see you. If you have 60 seconds, a Google review would mean the world to us and help other [customers/patients/clients] find us.\n\n→ Leave a review here: [your-review-link]\n\nThank you!\n[Your Name]" },
         { type: "h2", text: "SMS vs. Email: Response Rate Benchmarks" },
+        {
+            type: "summary",
+            text: "SMS opens near 98% and converts roughly 15–25% to reviews for many local businesses; email opens around 22–28% and converts about 5–10%. Pairing SMS with one email follow-up is the highest-yield mix when you have both contact methods.",
+        },
         { type: "table", table: {
             headers: ["Channel", "Open Rate", "Review Conversion Rate", "Best For"],
             rows: [
@@ -62,14 +105,26 @@ export const post1: BlogPost = {
             ],
         }},
         { type: "h2", text: "How to Hit 50 in 30 Days Mathematically" },
+        {
+            type: "summary",
+            text: "At ten customers per day, asking 80% with a 20% conversion yields about 48 reviews in a month before backfill. Lower daily volume needs a longer historical backfill—often six months of past happy customers—to reach fifty reviews inside thirty days.",
+        },
         { type: "p", text: "If you serve 10 customers per day (300/month) and send 80% of them a review request, that's 240 requests. At a 20% conversion rate, that's 48 new reviews. Add your 90-day backfill batch, and you're past 50." },
         { type: "p", text: "Businesses with fewer daily customers need to be more aggressive with the backfill. If you serve 3 customers/day, go back 6 months for your initial batch to build the critical mass." },
         { type: "tip", text: "Never offer discounts or rewards in exchange for reviews. Google's policies prohibit review gating and incentivized reviews. The good news: you don't need to. Simply asking — professionally and at the right time — is enough." },
         { type: "h2", text: "Automate It So You Never Miss an Ask" },
+        {
+            type: "summary",
+            text: "Manual texting fails when staff get busy; automation sends review requests at the right moment every time. Tools like Zyene connect via Zapier, POS, or API so each completed job or checkout triggers SMS or email without someone remembering to ask.",
+        },
         { type: "p", text: "The businesses that consistently grow their review count are the ones who have automated the ask. Manually texting every customer doesn't scale, and you'll stop doing it when things get busy." },
         { type: "p", text: "Tools like Zyene connect to your workflow (via Zapier, Square, or direct API) and send review requests automatically at the right moment — without any manual effort. You set it up once and it works every day, for every customer." },
         { type: "cta", ctaLabel: "See how Zyene automates review requests →", ctaHref: "/features" },
         { type: "h2", text: "What to Expect" },
+        {
+            type: "summary",
+            text: "Most businesses triple to quintuple monthly review volume in the first thirty days of systematic asking. After fifty total reviews, plan for five to ten new reviews per month so Google sees freshness—not just a one-time spike from a backfill campaign.",
+        },
         { type: "p", text: "In the first 30 days with a systematic ask process, most businesses see 3–5× their previous monthly review rate. The exact number depends on your daily customer volume and how consistently you execute the ask." },
         { type: "p", text: "Once you cross 50 reviews, maintain momentum. Aim for at least 5–10 new reviews per month to keep your profile fresh — Google's algorithm weighs recency, not just total count." },
     ],

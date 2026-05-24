@@ -15,6 +15,17 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                                 {section.text}
                             </h2>
                         );
+                    case "summary":
+                        return (
+                            <p
+                                key={i}
+                                className="text-sm text-foreground leading-relaxed rounded-xl border border-primary/20 bg-primary/5 px-5 py-4"
+                                data-geo-summary=""
+                            >
+                                <span className="sr-only">Key takeaway: </span>
+                                {section.text}
+                            </p>
+                        );
                     case "h3":
                         return (
                             <h3 key={i} className="text-lg font-bold text-foreground mt-7 mb-2">

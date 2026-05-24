@@ -80,7 +80,7 @@ export function MarketingHomeFeatureAutomation({
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground mb-1">
-                      {marketingImages.home.featureAutomation.name}
+                      Sarah M.
                     </p>
                     <div className="flex gap-1 text-chart-4 mb-2">
                       {[1,2,3,4,5].map(i => <Star key={i} className="fill-current size-4" />)}

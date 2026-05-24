@@ -62,7 +62,8 @@
 | Help center (23 articles) | Shipped | `src/lib/phase4/help-data.ts`, `/help/*` |
 | Article + FAQ JSON-LD | Partial | Home + pricing + help; **blog posts lack FAQ schema** |
 | Newsletter signup | Shipped | `NewsletterSignup`, `/api/marketing/newsletter/subscribe` |
-| Inverted pyramid summaries | **Not yet** | No `summary` section type in `blog-types.ts` |
+| Inverted pyramid summaries | **Pilot live** | `summary` type in `blog-types.ts`; post `how-to-get-50-google-reviews-in-30-days` |
+| Blog FAQ + FAQPage JSON-LD | **Pilot live** | `BlogFaq` on posts; `FAQPageJsonLd` on `/blog/[slug]` |
 | Lead magnets (gated PDF) | **Not yet** | — |
 | Repurpose packs | **Not yet** | — |
 | `/research` benchmark reports | **Not yet** | — |
@@ -179,9 +180,9 @@ dateModified?: string; // ISO date for Article JSON-LD
 
 ### Exit criteria
 
-- [ ] `summary` type renders on one pilot post
-- [ ] One blog post ships with `FAQPageJsonLd`
-- [ ] `pnpm typecheck && pnpm test && pnpm build` pass
+- [x] `summary` type renders on one pilot post (`how-to-get-50-google-reviews-in-30-days`)
+- [x] One blog post ships with `FAQPageJsonLd`
+- [ ] `pnpm typecheck && pnpm test && pnpm build` pass (run each release)
 - [ ] **react-doctor** on changed UI files
 
 ---
