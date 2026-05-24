@@ -26,7 +26,7 @@ export function AboutMissionSection() {
                                 <Building2 className="size-6" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground mb-1">Our Mission</h3>
+                                <h2 className="font-semibold text-foreground mb-1">Our Mission</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     To make online reputation management accessible and simple for every local business,
                                     regardless of size or technical ability.
@@ -39,7 +39,7 @@ export function AboutMissionSection() {
                                 <Users className="size-6" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground mb-1">Who We Serve</h3>
+                                <h2 className="font-semibold text-foreground mb-1">Who We Serve</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     Restaurants, dental offices, auto shops, salons, and thousands of other local businesses
                                     that rely on customer reviews to grow.
@@ -52,7 +52,7 @@ export function AboutMissionSection() {
                                 <Shield className="size-6" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground mb-1">Our Values</h3>
+                                <h2 className="font-semibold text-foreground mb-1">Our Values</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     We believe in ethical review practices. We never engage in review gating, incentivized reviews,
                                     or any practice that violates platform policies.
@@ -65,7 +65,7 @@ export function AboutMissionSection() {
                                 <Mail className="size-6" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground mb-1">Get in Touch</h3>
+                                <h2 className="font-semibold text-foreground mb-1">Get in Touch</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     Questions? Feedback? We&apos;d love to hear from you.<br />
                                     Email us at{" "}

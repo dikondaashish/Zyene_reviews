@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "About Us",
     description:
-        "Learn about Zyene Reviews, a reputation management platform built for local businesses. Our mission is to make online reputation management accessible and ethical for every local business owner.",
+        "Zyene Reviews helps local businesses monitor reviews, reply with AI, and grow reputation ethically. Built by Zyene, Inc. for affordable review management.",
     alternates: { canonical: "https://zyenereviews.com/about" },
     openGraph: {
         title: "About Zyene Reviews",

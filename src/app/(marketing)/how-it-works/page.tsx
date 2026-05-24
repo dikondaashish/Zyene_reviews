@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "How It Works",
     description:
-        "See how Zyene Reviews works in 4 simple steps: connect your Google Business Profile, monitor reviews, collect new reviews with the Negative Feedback Shield, and grow your local ranking.",
+        "Connect Google Business Profile, monitor reviews, collect more 5-stars with Negative Feedback Shield, and improve local rankings in four simple steps.",
     alternates: { canonical: "https://zyenereviews.com/how-it-works" },
     openGraph: {
         title: "How It Works",

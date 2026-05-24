@@ -3,7 +3,8 @@ import { ReviewLinkGeneratorClient } from "./review-link-generator-client";
 
 export const metadata: Metadata = {
     title: "Free Google Review Link Generator",
-    description: "Generate a direct Google review link for your business. Free tool for local business owners.",
+    description:
+        "Create a direct Google review link for your business in seconds. Free tool for local owners — find your listing, enter email, get a write-review URL.",
     alternates: { canonical: "https://zyenereviews.com/tools/review-link-generator" },
     openGraph: {
         title: "Free Google Review Link Generator",

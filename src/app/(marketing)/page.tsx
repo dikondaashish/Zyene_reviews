@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Review Management for Local Businesses",
     description:
-        "Monitor, respond to, and grow your Google reviews with AI. The only review management platform with a Negative Feedback Shield, routing bad reviews to private resolution before they hit Google. Starting at $29.99/mo, no annual contract.",
+        "Monitor, respond to, and grow Google reviews with AI. Negative Feedback Shield routes unhappy customers privately before public posts. From $29.99/mo.",
     alternates: {
         canonical: "https://zyenereviews.com/",
     },

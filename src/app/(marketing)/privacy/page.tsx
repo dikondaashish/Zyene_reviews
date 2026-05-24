@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Privacy Policy",
     description:
-        "Learn how Zyene Reviews collects, uses, and protects your personal data. We are committed to GDPR compliance, Google API Limited Use requirements, and transparent data practices.",
+        "How Zyene Reviews collects, uses, and protects your data: GDPR compliance, Google API Limited Use, secure OAuth, and transparent privacy practices.",
     alternates: { canonical: "https://zyenereviews.com/privacy" },
     openGraph: {
         title: "Privacy Policy",

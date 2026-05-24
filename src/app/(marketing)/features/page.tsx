@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Features",
     description:
-        "Everything you need to own your online reputation: AI-powered review replies, review collection with Negative Feedback Shield, competitor tracking, local SEO dashboard, and more.",
+        "AI review replies, review collection with Negative Feedback Shield, competitor tracking, and local SEO — own your online reputation in one platform.",
     alternates: { canonical: "https://zyenereviews.com/features" },
     openGraph: {
         title: "Features",

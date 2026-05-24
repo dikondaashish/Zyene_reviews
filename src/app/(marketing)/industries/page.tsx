@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Industries",
     description:
-        "Zyene Reviews is built for local businesses across every industry. Explore how review management, AI replies, and the Negative Feedback Shield work for your specific business type.",
+        "See how Zyene helps restaurants, dental, auto, salons, and more get more Google reviews with AI replies and the Negative Feedback Shield.",
     alternates: {
         canonical: "https://zyenereviews.com/industries",
         languages: {

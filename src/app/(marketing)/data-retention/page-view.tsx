@@ -32,12 +32,12 @@ export default function DataRetentionPage() {
                         <div className="grid sm:grid-cols-2 gap-6 my-10 not-prose">
                             <div className="p-6 border rounded-lg bg-muted border-border">
                                 <Clock className="text-primary mb-4 size-8" />
-                                <h3 className="text-lg font-bold mb-2 text-foreground">Aggressive Retention Limits</h3>
+                                <h2 className="text-lg font-bold mb-2 text-foreground">Aggressive Retention Limits</h2>
                                 <p className="text-sm text-muted-foreground">We do not store review data indefinitely. Cached reviews are purged after 2 years unless actively synced.</p>
                             </div>
                             <div className="p-6 border rounded-lg bg-muted border-border">
                                 <Shield className="text-primary mb-4 size-8" />
-                                <h3 className="text-lg font-bold mb-2 text-foreground">Anonymization</h3>
+                                <h2 className="text-lg font-bold mb-2 text-foreground">Anonymization</h2>
                                 <p className="text-sm text-muted-foreground">Customer PII (email, phone) attached to review requests are anonymized 90 days after the campaign completes.</p>
                             </div>
                         </div>

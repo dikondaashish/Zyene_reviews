@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Enterprise, Custom Pricing, SLA, SSO & White-Label",
     description:
-        "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, white-label widgets, and custom integrations.",
+        "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, and white-label widgets.",
     alternates: { canonical: "https://zyenereviews.com/enterprise" },
     openGraph: {
         title: "Zyene Reviews Enterprise",
