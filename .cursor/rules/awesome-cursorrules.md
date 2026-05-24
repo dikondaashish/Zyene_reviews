@@ -17,4 +17,8 @@ Project-specific rules (not from awesome-cursorrules):
 
 - `auto-push-github.mdc` — commit and push after implementation tasks
 
+## Cursor skills
+
+- `.cursor/skills/ui-ux-pro-max/` — UI/UX Pro Max (design system search, stack guides, UX patterns). Installed via `uipro init --ai cursor`.
+
 Browse 150+ more rules in the upstream repo README.
