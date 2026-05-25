@@ -6,6 +6,7 @@ import type { KpiMetricValue } from "@/lib/growth/kpi-metrics";
 import { GROWTH_DASHBOARD_CATEGORY_LABELS } from "./growth-dashboard-client-types";
 import { GrowthDashboardKpiRow } from "./growth-dashboard-kpi-row";
 import { GrowthDashboardMarketingSessionsHint } from "./growth-dashboard-marketing-sessions-hint";
+import { GrowthDashboardTableShell } from "./growth-dashboard-ui";
 
 interface GrowthDashboardTabKpisSectionProps {
     metricById: Record<string, KpiMetricValue | undefined>;
@@ -18,19 +19,25 @@ export function GrowthDashboardTabKpisSection({
 }: GrowthDashboardTabKpisSectionProps) {
     return (
         <section className="space-y-8">
-            {!marketingSessionsConfigured ? <GrowthDashboardMarketingSessionsHint /> : null}
             {(["acquisition", "conversion", "retention", "plg"] as KpiCategory[]).map((cat) => (
-                <div key={cat}>
-                    <h2 className="text-lg font-semibold mb-3">{GROWTH_DASHBOARD_CATEGORY_LABELS[cat]}</h2>
-                    <div className="overflow-x-auto rounded-lg border border-border">
-                        <table className="w-full text-left min-w-[720px]">
+                <div key={cat} className="space-y-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <h2 className="text-base font-semibold tracking-tight">
+                            {GROWTH_DASHBOARD_CATEGORY_LABELS[cat]}
+                        </h2>
+                        {cat === "acquisition" && !marketingSessionsConfigured ? (
+                            <GrowthDashboardMarketingSessionsHint />
+                        ) : null}
+                    </div>
+                    <GrowthDashboardTableShell>
+                        <table className="w-full text-left min-w-[680px]">
                             <thead>
-                                <tr className="border-b border-border bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground">
-                                    <th className="py-2 px-3 font-medium">Metric</th>
-                                    <th className="py-2 px-2 font-medium">Source</th>
-                                    <th className="py-2 px-2 font-medium">Target</th>
-                                    <th className="py-2 px-2 font-medium">Current</th>
-                                    <th className="py-2 px-3 font-medium">Status</th>
+                                <tr className="border-b border-border bg-muted/40 text-[10px] uppercase tracking-wide text-muted-foreground">
+                                    <th className="py-2.5 px-3 font-medium w-[40%]">Metric</th>
+                                    <th className="py-2.5 px-2 font-medium">Source</th>
+                                    <th className="py-2.5 px-2 font-medium">Target</th>
+                                    <th className="py-2.5 px-2 font-medium">Current</th>
+                                    <th className="py-2.5 px-3 font-medium">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,13 +48,13 @@ export function GrowthDashboardTabKpisSection({
                                             key={def.id}
                                             def={def}
                                             metric={metricById[def.id]}
-                                        />
+                                        />,
                                     );
                                     return acc;
                                 }, [])}
                             </tbody>
                         </table>
-                    </div>
+                    </GrowthDashboardTableShell>
                 </div>
             ))}
         </section>

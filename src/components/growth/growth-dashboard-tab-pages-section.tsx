@@ -37,7 +37,7 @@ export function GrowthDashboardTabPagesSection({
                     </button>
                 ))}
             </div>
-            <div className="overflow-x-auto rounded-lg border border-border max-h-[70vh]">
+            <div className="overflow-x-auto rounded-xl border border-border/80 shadow-sm max-h-[70vh]">
                 <table className="w-full text-left text-sm min-w-[800px]">
                     <thead className="sticky top-0 bg-muted/90 backdrop-blur z-10">
                         <tr className="text-xs uppercase text-muted-foreground">

@@ -1,7 +1,7 @@
 "use client";
 
 import type { GrowthKpiSnapshot } from "@/lib/growth/kpi-metrics";
-import { GrowthDashboardStatCard, GrowthDashboardLeadCard } from "./growth-dashboard-stat-lead-cards";
+import { GrowthDashboardStatCard } from "./growth-dashboard-ui";
 
 interface GrowthDashboardClientHeaderSummaryProps {
     snapshot: GrowthKpiSnapshot;
@@ -13,34 +13,79 @@ export function GrowthDashboardClientHeaderSummary({
     pageSummary,
 }: GrowthDashboardClientHeaderSummaryProps) {
     return (
-        <>
-            <header className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Internal · Growth blueprint
-                </p>
-                <h1 className="text-3xl font-bold tracking-tight">Growth operations center</h1>
-                <p className="text-muted-foreground text-sm max-w-2xl">
-                    Live product metrics ({snapshot.periodLabel}), full URL inventory, and phased implementation
-                    status. Source of truth:{" "}
-                    <code className="text-xs bg-muted px-1 rounded">docs/GROWTH_BLUEPRINT.md</code>
-                    {" · "}
-                    runbook: <code className="text-xs bg-muted px-1 rounded">docs/GROWTH_OPERATIONS.md</code>
-                </p>
-            </header>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <GrowthDashboardStatCard label="Signups (period)" value={String(snapshot.counts.signupsInPeriod)} />
-                <GrowthDashboardStatCard label="Paid orgs" value={String(snapshot.counts.activePaidOrgs)} />
-                <GrowthDashboardStatCard label="Trialing" value={String(snapshot.counts.trialingOrgs)} />
-                <GrowthDashboardStatCard label="Live URLs" value={String(pageSummary.live)} />
+        <header className="space-y-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="space-y-2 min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        Internal · Growth blueprint
+                    </p>
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Growth operations center</h1>
+                    <p className="text-sm text-muted-foreground max-w-xl">
+                        Product KPIs, lead magnets, and implementation status for the marketing site.
+                    </p>
+                </div>
+                <span className="inline-flex w-fit shrink-0 items-center rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
+                    Last 30 days
+                </span>
             </div>
 
-            <div className="grid sm:grid-cols-4 gap-3 text-sm">
-                <GrowthDashboardLeadCard label="Newsletter leads" value={snapshot.leads.newsletterSubscribers} />
-                <GrowthDashboardLeadCard label="Demo requests" value={snapshot.leads.demoRequests} />
-                <GrowthDashboardLeadCard label="Free-tool leads" value={snapshot.leads.freeToolLeads} />
-                <GrowthDashboardLeadCard label="Partner / agency" value={snapshot.leads.partnerLeads} />
+            <p className="text-xs text-muted-foreground">
+                Docs:{" "}
+                <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                    docs/GROWTH_BLUEPRINT.md
+                </span>
+                <span className="mx-2 text-border">·</span>
+                Runbook:{" "}
+                <span className="font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                    docs/GROWTH_OPERATIONS.md
+                </span>
+            </p>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <GrowthDashboardStatCard
+                    label="Signups"
+                    value={String(snapshot.counts.signupsInPeriod)}
+                    hint="New accounts in period"
+                />
+                <GrowthDashboardStatCard
+                    label="Paid orgs"
+                    value={String(snapshot.counts.activePaidOrgs)}
+                    hint="Active paid subscriptions"
+                />
+                <GrowthDashboardStatCard
+                    label="Trialing"
+                    value={String(snapshot.counts.trialingOrgs)}
+                    hint="Orgs on trial"
+                />
+                <GrowthDashboardStatCard
+                    label="Live URLs"
+                    value={String(pageSummary.live)}
+                    hint={`${pageSummary.inSitemap} in sitemap`}
+                />
             </div>
-        </>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <GrowthDashboardStatCard
+                    label="Newsletter leads"
+                    value={String(snapshot.leads.newsletterSubscribers)}
+                    hint="Marketing subscribers"
+                />
+                <GrowthDashboardStatCard
+                    label="Demo requests"
+                    value={String(snapshot.leads.demoRequests)}
+                    hint="Contact / demo forms"
+                />
+                <GrowthDashboardStatCard
+                    label="Free-tool leads"
+                    value={String(snapshot.leads.freeToolLeads)}
+                    hint="Tool usage captures"
+                />
+                <GrowthDashboardStatCard
+                    label="Partner / agency"
+                    value={String(snapshot.leads.partnerLeads)}
+                    hint="Partner waitlist"
+                />
+            </div>
+        </header>
     );
 }
