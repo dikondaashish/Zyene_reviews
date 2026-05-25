@@ -1,175 +1,161 @@
 /**
- * Validates FAQPage JSON-LD in post-build RSC payloads (rendered server output).
- * Run after `pnpm build`: node scripts/validate-geo-faq-build.mjs
+ * Validates FAQPage JSON-LD after `pnpm build`.
+ *
+ * Next.js 16 / Turbopack often does not emit flat `.next/server/app/<route>.rsc`
+ * files. This script:
+ * 1. Discovers any static RSC/HTML/segment artifacts (legacy + route groups).
+ * 2. Falls back to HTTP against a local `next start` server when static output
+ *    does not contain FAQ payloads (same checks as production validator).
+ *
+ * Usage: node scripts/validate-geo-faq-build.mjs
+ * Env:
+ *   GEO_VALIDATE_BUILD_BASE — use an already-running server (skip spawn)
+ *   GEO_VALIDATE_BUILD_PORT — port for spawned server (default 3099)
+ *   GEO_VALIDATE_BUILD_SKIP_SERVER=1 — static-only (fails if no static FAQ data)
  */
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import {
+    CHECKS,
+    ROOT,
+    extractFaqQuestionNames,
+    fetchPageHtml,
+    resolveBuildArtifacts,
+    staticPayloadSufficient,
+    validateCheckPayload,
+} from "./lib/validate-geo-faq-core.mjs";
 
-const ROOT = path.resolve(import.meta.dirname, "..");
+const BUILD_ID_PATH = path.join(ROOT, ".next/BUILD_ID");
+const DEFAULT_PORT = Number(process.env.GEO_VALIDATE_BUILD_PORT ?? "3099");
+const SKIP_SERVER = process.env.GEO_VALIDATE_BUILD_SKIP_SERVER === "1";
 
-const CHECKS = [
-    {
-        label: "/compare",
-        rsc: ".next/server/app/compare.rsc",
-        html: ".next/server/app/compare.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/resources/review-request-templates",
-        rsc: ".next/server/app/resources/review-request-templates.rsc",
-        html: ".next/server/app/resources/review-request-templates.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/compare/birdeye",
-        rsc: ".next/server/app/compare/birdeye.rsc",
-        html: ".next/server/app/compare/birdeye.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/compare/podium",
-        rsc: ".next/server/app/compare/podium.rsc",
-        html: ".next/server/app/compare/podium.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/compare/nicejob",
-        rsc: ".next/server/app/compare/nicejob.rsc",
-        html: ".next/server/app/compare/nicejob.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/compare/gatherup",
-        rsc: ".next/server/app/compare/gatherup.rsc",
-        html: ".next/server/app/compare/gatherup.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/blog/how-to-get-50-google-reviews-in-30-days",
-        rsc: ".next/server/app/blog/how-to-get-50-google-reviews-in-30-days.rsc",
-        html: ".next/server/app/blog/how-to-get-50-google-reviews-in-30-days.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/blog/birdeye-pricing-breakdown-2026",
-        rsc: ".next/server/app/blog/birdeye-pricing-breakdown-2026.rsc",
-        html: ".next/server/app/blog/birdeye-pricing-breakdown-2026.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/blog/negative-feedback-shield",
-        rsc: ".next/server/app/blog/negative-feedback-shield.rsc",
-        html: ".next/server/app/blog/negative-feedback-shield.html",
-        expectFaq: 5,
-    },
-    {
-        label: "/case-studies/sunrise-dental-austin",
-        rsc: ".next/server/app/case-studies/sunrise-dental-austin.rsc",
-        html: ".next/server/app/case-studies/sunrise-dental-austin.html",
-        expectFaq: 0,
-    },
-];
-
-function countType(text, type) {
-    return (text.match(new RegExp(`"@type":"${type}"`, "g")) ?? []).length;
+function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
 }
 
-function extractFaqQuestionNames(text) {
-    const blobRe =
-        /\{"@context":"https:\/\/schema\.org","@type":"FAQPage","mainEntity":\[([\s\S]*?)\]\}/g;
-    const names = [];
-    let m;
-    while ((m = blobRe.exec(text)) !== null) {
+async function waitForServer(base, attempts = 90) {
+    for (let i = 0; i < attempts; i++) {
         try {
-            const parsed = JSON.parse(m[0]);
-            for (const q of parsed.mainEntity) {
-                if (q["@type"] === "Question" && q.name) names.push(q.name);
-                if (!q.acceptedAnswer?.text) throw new Error("missing answer text");
-            }
-        } catch (e) {
-            throw new Error(`FAQPage JSON parse failed: ${e.message}`);
+            const res = await fetch(`${base}/`, {
+                headers: { "User-Agent": "Zyene-GEO-Validator/1.0" },
+                redirect: "follow",
+                signal: AbortSignal.timeout(8_000),
+            });
+            if (res.ok) return;
+        } catch {
+            // retry until next start is ready
         }
+        await sleep(1_000);
     }
-    return names;
+    throw new Error(`server not ready at ${base}`);
 }
 
-function extractVisibleFaqQuestions(html) {
-    const visible = [];
-    const re = /font-medium text-foreground[^>]*>([^<]+\?)</g;
-    let m;
-    while ((m = re.exec(html)) !== null) {
-        const q = m[1]
-            .replace(/\\u2019/g, "'")
-            .replace(/&#39;/g, "'")
-            .replace(/&apos;/g, "'");
-        if (q.length > 12) visible.push(q);
-    }
-    return [...new Set(visible)];
-}
-
-function validateFaqSchema(names) {
-    const issues = [];
-    if (names.length === 0) issues.push("no questions parsed");
-    for (const n of names) {
-        if (!n.endsWith("?")) issues.push(`question may be malformed: ${n.slice(0, 40)}`);
-    }
-    return issues;
+function startNextServer(port) {
+    const child = spawn("pnpm", ["exec", "next", "start", "-H", "127.0.0.1", "-p", String(port)], {
+        cwd: ROOT,
+        env: { ...process.env, NODE_ENV: "production", PORT: String(port) },
+        stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.stderr?.on("data", (chunk) => {
+        const line = String(chunk);
+        if (line.includes("Ready") || line.includes("Error") || line.includes("EADDRINUSE")) {
+            process.stderr.write(line);
+        }
+    });
+    return child;
 }
 
 let failed = 0;
 
-console.log("GEO FAQ build validation (RSC payloads)\n");
+if (!fs.existsSync(BUILD_ID_PATH)) {
+    console.error("Missing .next/BUILD_ID — run `pnpm build` first.");
+    process.exit(1);
+}
 
-for (const { label, rsc, html, expectFaq } of CHECKS) {
-    const rscText = fs.readFileSync(path.join(ROOT, rsc), "utf8");
-    const htmlText = fs.existsSync(path.join(ROOT, html))
-        ? fs.readFileSync(path.join(ROOT, html), "utf8")
-        : "";
-    const payload = rscText + htmlText;
-    const faqPageCount = countType(payload, "FAQPage");
-    const issues = [];
+console.log("GEO FAQ build validation\n");
 
-    if (expectFaq > 0) {
-        if (faqPageCount !== 1) issues.push(`expected 1 FAQPage, found ${faqPageCount}`);
-        let names = [];
+const needsHttp = [];
+const staticResults = new Map();
+
+for (const check of CHECKS) {
+    const artifacts = resolveBuildArtifacts(check.path);
+    if (staticPayloadSufficient(check, artifacts.combined)) {
+        staticResults.set(check.path, {
+            html: artifacts.combined,
+            source: `static (${artifacts.files.length} file(s))`,
+        });
+    } else {
+        needsHttp.push(check);
+    }
+}
+
+let base = process.env.GEO_VALIDATE_BUILD_BASE?.replace(/\/$/, "");
+let serverChild = null;
+
+if (needsHttp.length > 0 && !SKIP_SERVER) {
+    if (!base) {
+        base = `http://127.0.0.1:${DEFAULT_PORT}`;
+        serverChild = startNextServer(DEFAULT_PORT);
         try {
-            names = extractFaqQuestionNames(rscText);
+            await waitForServer(base);
+            console.log(`Local server ready at ${base} (next start)\n`);
         } catch (e) {
-            issues.push(e.message);
-        }
-        issues.push(...validateFaqSchema(names));
-        if (names.length !== expectFaq) {
-            issues.push(`schema questions ${names.length}, expected ${expectFaq}`);
-        }
-        const visible = extractVisibleFaqQuestions(htmlText);
-        if (visible.length !== expectFaq) {
-            issues.push(`visible questions ${visible.length}, expected ${expectFaq}`);
-        }
-        for (const n of names) {
-            if (!visible.includes(n)) issues.push(`schema not visible: ${n}`);
-        }
-        for (const v of visible) {
-            if (!names.includes(v)) issues.push(`visible not in schema: ${v}`);
-        }
-        const article = countType(rscText, "Article");
-        const webPage = countType(rscText, "WebPage");
-        if (label.startsWith("/compare") && article > 0) {
-            issues.push(`unexpected Article schema on compare (${article})`);
+            serverChild.kill("SIGTERM");
+            console.error(e.message);
+            process.exit(1);
         }
     } else {
-        if (faqPageCount > 0) issues.push(`unexpected FAQPage (${faqPageCount})`);
-        if (!payload.includes("Representative example")) issues.push("missing composite disclaimer");
-        if (!payload.includes("Illustrative results")) issues.push("missing illustrative results label");
-        if (faqPageCount > 0) issues.push("case study should not have FAQPage");
+        console.log(`Using GEO_VALIDATE_BUILD_BASE=${base}\n`);
+        await waitForServer(base);
     }
+} else if (needsHttp.length > 0) {
+    console.error(
+        "Static build artifacts lack FAQ payloads and GEO_VALIDATE_BUILD_SKIP_SERVER=1 — cannot validate."
+    );
+    process.exit(1);
+}
 
-    const pass = issues.length === 0;
-    if (!pass) failed++;
-    console.log(`${pass ? "PASS" : "FAIL"} ${label}`);
-    for (const i of issues) console.log(`  - ${i}`);
-    if (pass && expectFaq > 0) {
-        const names = extractFaqQuestionNames(rscText);
-        console.log(`  - FAQPage: 1 block, ${names.length} Q&A, matches visible UI`);
+try {
+    for (const check of CHECKS) {
+        let html = "";
+        let source = "unknown";
+        const cached = staticResults.get(check.path);
+        if (cached) {
+            html = cached.html;
+            source = cached.source;
+        } else if (base) {
+            try {
+                ({ html } = await fetchPageHtml(base, check.path));
+                source = `http (${base})`;
+            } catch (e) {
+                failed++;
+                console.log(`FAIL ${check.label}`);
+                console.log(`  - fetch failed: ${e.message}`);
+                continue;
+            }
+        } else {
+            failed++;
+            console.log(`FAIL ${check.label}`);
+            console.log("  - no static payload and no server base");
+            continue;
+        }
+
+        const { pass, issues, meta } = validateCheckPayload({ html, source, check });
+        if (!pass) failed++;
+        console.log(`${pass ? "PASS" : "FAIL"} ${check.label}`);
+        console.log(
+            `  - source: ${meta.source}, bytes: ${meta.bytes}, ld+json tags: ${meta.ldJson ? "yes" : "no (RSC payload only)"}`
+        );
+        for (const i of issues) console.log(`  - ${i}`);
+        if (pass && check.expectFaq > 0) {
+            const names = extractFaqQuestionNames(html);
+            console.log(`  - FAQPage: 1 block, ${names.length} Q&A, matches visible UI`);
+        }
+    }
+} finally {
+    if (serverChild) {
+        serverChild.kill("SIGTERM");
     }
 }
 
