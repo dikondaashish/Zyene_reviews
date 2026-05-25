@@ -15,7 +15,7 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 
 const ROOT = join(import.meta.dirname, "..");
-const DEFAULT_BASE = "https://zyenereviews.com";
+const DEFAULT_BASE = "https://www.zyenereviews.com";
 const API_URL = `${DEFAULT_BASE}/api/indexnow`;
 
 function loadEnvLocal() {
@@ -80,6 +80,8 @@ const response = await fetch(API_URL, {
     headers: {
         Authorization: `Bearer ${cronSecret}`,
         "Content-Type": "application/json",
+        // Required: middleware CSRF blocks POST without Origin (same as browser).
+        Origin: values.base.replace(/\/$/, ""),
     },
     body: JSON.stringify({ urls }),
 });
