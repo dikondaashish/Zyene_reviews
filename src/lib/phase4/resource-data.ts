@@ -4,6 +4,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ContentSection } from "./blog-data";
+import type { FaqItem } from "@/components/seo/json-ld";
+import { reviewRequestTemplatesGuide } from "./resource-review-request-templates";
 
 export interface ResourceGuide {
     slug: string;
@@ -18,6 +20,12 @@ export interface ResourceGuide {
     keywords: string[];
     tableOfContents: Array<{ anchor: string; label: string }>;
     body: ContentSection[];
+    /** 50–70 word GEO summary (template pack, etc.). */
+    openingSummary?: string;
+    /** Badge in header, e.g. Free Template Pack */
+    resourceLabel?: string;
+    faqs?: FaqItem[];
+    internalLinks?: { label: string; href: string }[];
 }
 
 const guide1: ResourceGuide = {
@@ -347,88 +355,7 @@ const guide3: ResourceGuide = {
     ],
 };
 
-const guide4: ResourceGuide = {
-    slug: "review-request-templates",
-    title: "Review Request SMS & Email Templates (15+ Ready-to-Use)",
-    subtitle: "Copy-paste review request templates for every business type, channel, and scenario. Including tested scripts, subject lines, and timing guidance.",
-    excerpt: "15+ ready-to-use SMS and email templates for requesting Google reviews. Includes templates by industry, channel, and scenario with proven conversion copy.",
-    purpose: "Rank for 'review request email' and 'review request templates' cluster",
-    lastUpdated: "2026-05-01",
-    readMinutes: 12,
-    metaTitle: "15+ Review Request Templates (SMS & Email)",
-    metaDescription:
-        "SMS and email templates for requesting Google reviews: 15+ examples for restaurants, healthcare, home services, and more with proven conversion copy.",
-    keywords: ["review request templates", "review request email template", "review request sms", "google review request template", "how to ask for google reviews"],
-    tableOfContents: [
-        { anchor: "best-practices", label: "Best Practices Before You Send" },
-        { anchor: "sms-templates", label: "SMS Templates" },
-        { anchor: "email-templates", label: "Email Templates" },
-        { anchor: "industry-specific", label: "Industry-Specific Templates" },
-        { anchor: "follow-up", label: "Follow-Up Templates" },
-        { anchor: "what-to-avoid", label: "What to Avoid" },
-        { anchor: "automation", label: "Automating Your Requests" },
-    ],
-    body: [
-        { type: "h2", text: "Best Practices Before You Send" },
-        { type: "ul", items: [
-            "Timing: Send within 1–3 hours of the interaction for maximum conversion. SMS sent the next day sees 40–60% lower response rates.",
-            "Personalization: Include the customer's first name. Personalized messages convert 20–30% better than generic ones.",
-            "One clear link: Your Google review link should be the only link in the message. Multiple links reduce conversion.",
-            "Mobile-optimized: Test your review link on mobile before sending — if it opens cleanly in the Google Maps app, you're good.",
-            "One ask at a time: Don't request a review and ask them to follow you on Instagram in the same message.",
-            "Never incentivize: No discounts, free items, or rewards in exchange for reviews — this violates Google's policies.",
-        ]},
-        { type: "h2", text: "SMS Templates" },
-        { type: "h3", text: "Template SMS-1: Short and Direct (Best Performer)" },
-        { type: "quote", text: "Hi [Name], thanks for visiting [Business Name]! If you enjoyed your experience, we'd love a Google review — it takes 60 seconds: [link] 🙏" },
-        { type: "h3", text: "Template SMS-2: Personal from Owner" },
-        { type: "quote", text: "Hi [Name], [Owner Name] here from [Business Name]. Thank you for your business today! If you have a moment, a Google review would mean the world to us: [link]" },
-        { type: "h3", text: "Template SMS-3: After a Service Completion" },
-        { type: "quote", text: "Hi [Name], thanks for choosing [Business Name] today! The job is complete. If you're happy with the work, a quick Google review helps us grow: [link] Thank you!" },
-        { type: "h3", text: "Template SMS-4: After a Professional Appointment" },
-        { type: "quote", text: "Hi [Name], thank you for your appointment today! We hope your experience was excellent. If so, we'd really appreciate a quick Google review: [link]" },
-        { type: "h3", text: "Template SMS-5: Loyalty Member Request" },
-        { type: "quote", text: "Hi [Name], as a valued [Business Name] customer, your opinion matters to us. Would you mind leaving us a Google review? [link] — it really helps our small business. Thank you!" },
-        { type: "h2", text: "Email Templates" },
-        { type: "h3", text: "Template E-1: Simple Follow-Up (High Conversion)" },
-        { type: "quote", text: "Subject: Quick favor from [Business Name]\n\nHi [Name],\n\nThank you for your visit on [date]. It was great to have you.\n\nIf you have 60 seconds, we'd really appreciate a Google review. It helps other customers find us and helps our small team keep doing what we love.\n\n→ Leave a review: [link]\n\nThank you!\n[Your Name]\n[Business Name]" },
-        { type: "h3", text: "Template E-2: Personal from Owner" },
-        { type: "quote", text: "Subject: A personal note from [Owner Name]\n\nHi [Name],\n\nI wanted to personally thank you for choosing [Business Name]. As a small business owner, every customer matters — and customers like you are why we keep doing this.\n\nIf your experience was positive, a Google review would mean a lot to me and my team. It only takes a minute: [link]\n\nThank you from the bottom of my heart.\n\n[Owner Name]\nOwner, [Business Name]" },
-        { type: "h3", text: "Template E-3: After a Service or Project Completion" },
-        { type: "quote", text: "Subject: Your [project type] is complete — a quick request\n\nHi [Name],\n\nYour [project/service description] is complete! We hope everything looks/works exactly as expected.\n\nIf you're happy with the work, we'd be grateful if you'd share your experience on Google. Reviews from satisfied customers help us continue growing and doing great work.\n\n→ Share your experience: [link]\n\nThank you!\n[Name]\n[Business Name]" },
-        { type: "h2", text: "Industry-Specific Templates" },
-        { type: "h3", text: "Restaurant (Post-Reservation)" },
-        { type: "quote", text: "Hi [Name], thank you for dining with us at [Restaurant Name] last night! We hope you enjoyed the [dish type / evening]. If you did, a Google review would make the whole team's day: [link] 🍽️" },
-        { type: "h3", text: "Dental Practice" },
-        { type: "quote", text: "Hi [Name], thank you for visiting [Practice Name] today. We hope your appointment was comfortable and met your expectations. If you'd be willing to share your experience on Google, it would help other patients find us: [link]" },
-        { type: "h3", text: "Auto Repair" },
-        { type: "quote", text: "Hi [Name], your [vehicle] is ready! Thanks for trusting [Shop Name] with your vehicle. If you're satisfied with the service, a quick Google review really helps our shop: [link] Thanks and safe driving!" },
-        { type: "h3", text: "Home Services (After Job Completion)" },
-        { type: "quote", text: "Hi [Name], the [job type] at your home is complete. Thank you for choosing [Company Name] — it was a pleasure working with you. If you're happy with the results, a Google review helps homeowners like you find us: [link]" },
-        { type: "h3", text: "Salon / Spa" },
-        { type: "quote", text: "Hi [Name], thank you for visiting [Salon Name] today! We hope you're loving your [service]. If your experience was great, we'd love a quick Google review — it means the world to our team: [link] 💕" },
-        { type: "h2", text: "Follow-Up Templates (For Non-Responders)" },
-        { type: "h3", text: "Follow-Up SMS (Send 5–7 days after initial request)" },
-        { type: "quote", text: "Hi [Name], just a gentle reminder — if you have a moment, we'd really appreciate a Google review for [Business Name]: [link] Thank you!" },
-        { type: "h3", text: "Follow-Up Email" },
-        { type: "quote", text: "Subject: One last reminder from [Business Name]\n\nHi [Name],\n\nWe sent a note a few days ago asking if you'd be willing to share your experience on Google. We know your time is valuable, so this will be our last reminder!\n\nIf you do have 60 seconds: [link]\n\nThank you regardless — it was great to have you as a customer.\n\n[Name]\n[Business Name]" },
-        { type: "warning", text: "Only send one follow-up. Sending more than 2 total review requests (1 initial + 1 follow-up) for the same transaction will feel like harassment to most customers and will increase opt-out rates. The goal is a relationship, not a conversion." },
-        { type: "h2", text: "What to Avoid" },
-        { type: "ul", items: [
-            "Never send review requests to customers from your business WiFi network (Google policy violation).",
-            "Never offer incentives for reviews — this violates Google's policies.",
-            "Never ask for 'only positive' reviews — this is review gating, which violates Google's policies.",
-            "Avoid review request kiosks in your business (asking for reviews on the premises) — same policy issue.",
-            "Don't send review requests to customers who you know had a bad experience — use the Negative Feedback Shield to route them to private resolution instead.",
-        ]},
-        { type: "h2", text: "Automating Your Review Requests" },
-        { type: "p", text: "Manually copying and pasting these templates for every customer is unsustainable at scale. Review management platforms like Zyene connect to your existing workflow (via Zapier, Square, or direct API) and send these requests automatically — triggered by the right moment, with the right timing, to every customer." },
-        { type: "p", text: "Once set up, automated review requests run in the background without any manual effort. Most businesses see a 3–5× increase in monthly review volume within the first 30 days of automation." },
-        { type: "cta", ctaLabel: "Automate your review requests with Zyene — free trial →", ctaHref: "/signup" },
-    ],
-};
-
-export const RESOURCE_GUIDES: ResourceGuide[] = [guide1, guide2, guide3, guide4];
+export const RESOURCE_GUIDES: ResourceGuide[] = [guide1, guide2, guide3, reviewRequestTemplatesGuide];
 
 export const RESOURCE_MAP: Record<string, ResourceGuide> = Object.fromEntries(
     RESOURCE_GUIDES.map((g) => [g.slug, g])

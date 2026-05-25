@@ -1,7 +1,8 @@
 import { ContentRenderer } from "@/components/marketing/content-renderer";
+import { MarketingFaqSection } from "@/components/marketing/marketing-faq-section";
 import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, List, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Clock, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: { resource: (typeof RESOURCE_MAP)[string]; otherGuides: typeof RESOURCE_GUIDES }) {
@@ -31,6 +32,36 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             )}
 
                             <ContentRenderer sections={resource.body} />
+
+                            {resource.internalLinks && resource.internalLinks.length > 0 ? (
+                                <nav
+                                    className="mt-10 rounded-2xl border border-border bg-muted/40 p-6"
+                                    aria-label="Related links"
+                                >
+                                    <p className="text-sm font-bold text-foreground mb-3">Related</p>
+                                    <ul className="flex flex-wrap gap-2">
+                                        {resource.internalLinks.map((link) => (
+                                            <li key={link.href}>
+                                                <Link
+                                                    href={link.href}
+                                                    className="inline-flex rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                                                >
+                                                    {link.label}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+                            ) : null}
+
+                            {resource.faqs && resource.faqs.length > 0 ? (
+                                <div className="mt-12">
+                                    <MarketingFaqSection
+                                        faqs={resource.faqs}
+                                        headingId="resource-guide-faq-heading"
+                                    />
+                                </div>
+                            ) : null}
 
                             {/* Guide footer CTA */}
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">

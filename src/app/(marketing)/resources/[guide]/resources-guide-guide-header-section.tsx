@@ -1,7 +1,7 @@
+import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Clock, ChevronRight } from "lucide-react";
 
 export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (typeof RESOURCE_MAP)[string] }) {
     return (
@@ -15,14 +15,19 @@ export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (type
                     </nav>
 
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-5">
-                        Free Guide
+                        {resource.resourceLabel ?? "Free Guide"}
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4 leading-[1.1]">
                         {resource.title}
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-7 leading-relaxed">
+                    <p className="text-xl text-muted-foreground mb-5 leading-relaxed">
                         {resource.subtitle}
                     </p>
+                    {resource.openingSummary ? (
+                        <div className="mb-7 max-w-3xl">
+                            <MarketingGeoSummary>{resource.openingSummary}</MarketingGeoSummary>
+                        </div>
+                    ) : null}
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border pt-5">
                         <div className="flex items-center gap-1.5">
                             <Clock className="size-3.5" />

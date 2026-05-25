@@ -15,6 +15,12 @@ const CHECKS = [
         expectFaq: 5,
     },
     {
+        label: "/resources/review-request-templates",
+        rsc: ".next/server/app/resources/review-request-templates.rsc",
+        html: ".next/server/app/resources/review-request-templates.html",
+        expectFaq: 5,
+    },
+    {
         label: "/compare/birdeye",
         rsc: ".next/server/app/compare/birdeye.rsc",
         html: ".next/server/app/compare/birdeye.html",

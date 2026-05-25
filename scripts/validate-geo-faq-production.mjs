@@ -23,6 +23,13 @@ const CHECKS = [
         expectComposite: false,
     },
     {
+        label: "/resources/review-request-templates",
+        path: "/resources/review-request-templates",
+        expectFaq: 5,
+        expectArticle: 0,
+        expectComposite: false,
+    },
+    {
         label: "/blog/how-to-get-50-google-reviews-in-30-days",
         path: "/blog/how-to-get-50-google-reviews-in-30-days",
         expectFaq: 5,
