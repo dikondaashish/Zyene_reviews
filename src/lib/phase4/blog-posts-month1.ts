@@ -18,9 +18,10 @@ export const post1: BlogPost = {
     metaTitle: "How to Get 50 Google Reviews in 30 Days",
     metaDescription: "A step-by-step playbook for getting 50 Google reviews in 30 days. Includes exact request scripts, timing strategy, SMS vs email benchmarks, and automation tips.",
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],
-    relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking"],
+    relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "See how Zyene Reviews automates review requests", href: "/features" },
+        { label: "Compare review software pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
@@ -143,9 +144,10 @@ export const post2: BlogPost = {
     metaTitle: "Why Google Reviews Matter More Than Ever in 2026",
     metaDescription: "Google Reviews in 2026: how they impact local search rankings, AI Overviews, consumer trust, and revenue. A data-driven guide for local business owners.",
     keywords: ["why google reviews matter", "google reviews 2026", "google reviews local seo", "google reviews importance"],
-    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-reviews-impact-local-map-pack-ranking"],
+    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "Learn about Zyene Reviews' review monitoring", href: "/features" },
+        { label: "Compare review tool pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "See industry-specific strategies", href: "/industries" },
     ],
     faqs: [
@@ -250,11 +252,19 @@ export const post3: BlogPost = {
     metaTitle: "Birdeye vs Zyene Reviews Pricing 2026",
     metaDescription: "Honest Birdeye vs Zyene Reviews comparison: published pricing, contracts, strengths, and tables for local businesses. Birdeye pricing may vary—confirm with vendor.",
     keywords: ["birdeye pricing", "birdeye vs zyene reviews", "birdeye cost", "birdeye pricing 2026", "birdeye alternative"],
-    relatedSlugs: ["birdeye-alternatives-for-local-businesses"],
+    relatedSlugs: [
+        "birdeye-alternatives-for-local-businesses",
+        "how-to-get-50-google-reviews-in-30-days",
+        "why-google-reviews-matter-in-2026",
+        "true-cost-of-bad-online-reputation",
+    ],
     internalLinks: [
         { label: "Full comparison: Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
+        { label: "Compare all review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing (public plans)", href: "/pricing" },
-        { label: "Features: reviews, Shield, AI replies", href: "/features" },
+        { label: "Review collection & Negative Feedback Shield", href: "/features/review-collection" },
+        { label: "All product features", href: "/features" },
+        { label: "5 cheaper Birdeye alternatives", href: "/blog/birdeye-alternatives-for-local-businesses" },
         { label: "Start a 7-day free trial", href: "/signup" },
     ],
     faqs: [
@@ -280,6 +290,10 @@ export const post3: BlogPost = {
         },
     ],
     body: [
+        {
+            type: "summary",
+            text: "Short answer: Birdeye commonly starts around $299/mo on annual contracts with enterprise CX bundled in; Zyene Reviews lists from $29.99/mo month-to-month for review monitoring, AI replies, Negative Feedback Shield, and competitor tracking. Birdeye is stronger for large multi-location CX programs; Zyene Reviews is stronger for owner-operators who mainly need Google reviews—pricing may vary by package; confirm both vendors before you sign.",
+        },
         { type: "p", text: "Birdeye is one of the best-known names in reputation management. Zyene Reviews is a focused alternative for local businesses that live in Google reviews, review requests, and fast replies—not a full enterprise CX suite." },
         { type: "p", text: "This page is for buyers comparing Birdeye and Zyene Reviews on price, contract flexibility, and day-to-day workflow. We cite published list positioning where available; we do not have access to your Birdeye order form." },
         { type: "warning", text: "Birdeye pricing may vary by package, location count, and contract; confirm with the vendor. Zyene Reviews pricing is listed publicly at /pricing and may change—always verify before purchase." },
@@ -461,6 +475,18 @@ export const post3: BlogPost = {
         },
         { type: "p", text: "Birdeye is a credible, capable platform — for the right customer. If you're a franchise with 50+ locations, need an enterprise CX suite, and have a team to manage it, Birdeye is worth evaluating seriously." },
         { type: "p", text: "If you're a local business owner managing 1–5 locations who primarily needs to grow your Google reviews, respond with AI, and protect your reputation, you're likely paying 10× more than you need to. The core features you use are available at a fraction of the price elsewhere." },
+        { type: "h2", text: "Next Steps for Buyers" },
+        {
+            type: "summary",
+            text: "Use this path when you are evaluating Birdeye renewal, a new quote, or a switch to a review-first stack—no invented ROI figures, just a practical sequence.",
+        },
+        { type: "ol", items: [
+            "Read the feature scorecard on /compare/birdeye and match it to the three workflows you use weekly (monitor, request, reply).",
+            "Pull your last Birdeye invoice and mark unused modules (surveys, webchat, API you never called).",
+            "Compare plan limits on /pricing and Shield workflow on /features/review-collection.",
+            "Run a parallel 7-day trial at /signup before your Birdeye notice window closes.",
+            "If you want more alternatives, read /blog/birdeye-alternatives-for-local-businesses after you finish the tables above.",
+        ]},
         { type: "cta", ctaLabel: "See the full Zyene Reviews vs Birdeye comparison →", ctaHref: "/compare/birdeye" },
         { type: "cta", ctaLabel: "Start your 7-day free trial →", ctaHref: "/signup" },
     ],
@@ -479,9 +505,11 @@ export const post4: BlogPost = {
     metaTitle: "5 Cheaper Birdeye Alternatives for Local Businesses (2026)",
     metaDescription: "The 5 best Birdeye alternatives for local businesses in 2026. Compare pricing, features, and fit for owner-operators looking for affordable review management.",
     keywords: ["birdeye alternatives", "cheaper than birdeye", "birdeye alternative 2026", "best review management software", "birdeye competitors"],
-    relatedSlugs: ["birdeye-pricing-breakdown-2026"],
+    relatedSlugs: ["birdeye-pricing-breakdown-2026", "why-google-reviews-matter-in-2026"],
     internalLinks: [
+        { label: "Birdeye pricing breakdown (line items & quote checklist)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Compare Zyene Reviews vs Birdeye in detail", href: "/compare/birdeye" },
+        { label: "Zyene Reviews public pricing", href: "/pricing" },
         { label: "Start Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
@@ -508,6 +536,7 @@ export const post4: BlogPost = {
     ],
     body: [
         { type: "p", text: "Birdeye dominates the reputation management space in brand recognition, but it's priced for enterprise clients — starting at $299/month with an annual contract. For the vast majority of local business owners, that pricing is simply not justified by the features they'll actually use." },
+        { type: "p", text: "For a line-item view of Birdeye tiers, hidden costs, and renewal checklists, start with our Birdeye pricing breakdown article, then return here for the full alternatives list." },
         { type: "p", text: "These are the 5 best alternatives to Birdeye in 2026, evaluated across three criteria: price, core feature coverage, and fit for owner-operators." },
         { type: "h2", text: "1. Zyene Reviews — Best Overall for Local Businesses" },
         {

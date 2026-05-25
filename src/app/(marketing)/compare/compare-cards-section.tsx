@@ -14,24 +14,36 @@ export function CompareCardsSection() {
                     </p>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {COMPETITORS.map((comp) => (
-                            <Link
+                            <div
                                 key={comp.slug}
-                                href={`/compare/${comp.slug}`}
                                 className="group bg-card border border-border rounded-2xl p-7 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
                             >
-                                <div className="flex items-center justify-between mb-3">
-                                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                                        vs {comp.name}
-                                    </h3>
-                                    <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all size-4" />
-                                </div>
-                                <div className="text-3xl font-black text-destructive mb-1">{comp.price}<span className="text-base font-normal text-muted-foreground">/mo</span></div>
-                                <p className="text-xs text-muted-foreground mb-4">{comp.name} starting price</p>
-                                <p className="text-sm text-muted-foreground leading-relaxed flex-1">{comp.keyAngle}</p>
-                                <div className="mt-4 pt-4 border-t border-border">
-                                    <span className="text-xs font-semibold text-primary">Read full comparison →</span>
-                                </div>
-                            </Link>
+                                <Link href={`/compare/${comp.slug}`} className="flex flex-col flex-1">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                                            vs {comp.name}
+                                        </h3>
+                                        <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all size-4" />
+                                    </div>
+                                    <div className="text-3xl font-black text-destructive mb-1">
+                                        {comp.price}
+                                        <span className="text-base font-normal text-muted-foreground">/mo</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mb-4">{comp.name} starting price</p>
+                                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">{comp.keyAngle}</p>
+                                    <div className="mt-4 pt-4 border-t border-border">
+                                        <span className="text-xs font-semibold text-primary">Read full comparison →</span>
+                                    </div>
+                                </Link>
+                                {comp.slug === "birdeye" ? (
+                                    <Link
+                                        href="/blog/birdeye-pricing-breakdown-2026"
+                                        className="mt-3 text-xs font-medium text-primary hover:underline"
+                                    >
+                                        Birdeye pricing deep dive (2026) →
+                                    </Link>
+                                ) : null}
+                            </div>
                         ))}
                     </div>
                 </div>

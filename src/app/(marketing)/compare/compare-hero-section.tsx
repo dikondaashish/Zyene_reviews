@@ -25,8 +25,19 @@ export function CompareHeroSection() {
                     <p className="text-sm text-muted-foreground mb-6 max-w-xl mx-auto">
                         {POSITIONING.oneLiner}
                     </p>
-                    <div className="max-w-2xl mx-auto mb-10 text-left">
+                    <div className="max-w-2xl mx-auto mb-10 text-left space-y-4">
                         <MarketingGeoSummary>{COMPARE_HUB_OPENING_SUMMARY}</MarketingGeoSummary>
+                        <p className="text-sm text-center text-muted-foreground">
+                            Evaluating Birdeye renewal?{" "}
+                            <Link href="/blog/birdeye-pricing-breakdown-2026" className="font-medium text-primary hover:underline">
+                                Read the 2026 Birdeye pricing breakdown
+                            </Link>{" "}
+                            (hidden costs, quote checklist) then open{" "}
+                            <Link href="/compare/birdeye" className="font-medium text-primary hover:underline">
+                                Zyene Reviews vs Birdeye
+                            </Link>
+                            .
+                        </p>
                     </div>
                     <Link href="/signup">
                         <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">

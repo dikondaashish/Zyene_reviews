@@ -118,7 +118,7 @@ export const COMPETITORS: CompetitorData[] = [
             {
                 question: "Is Zyene Reviews really cheaper than Birdeye?",
                 answer:
-                    "On published starting prices, yes: Starter on Zyene Reviews is $29.99/mo month-to-month versus Birdeye’s commonly cited $299/mo entry with annual billing. Your actual Birdeye invoice depends on locations and tier—always confirm with Birdeye sales.",
+                    "On published starting prices, yes: Starter on Zyene Reviews is $29.99/mo month-to-month versus Birdeye’s commonly cited $299/mo entry with annual billing. Your actual Birdeye invoice depends on locations and tier—always confirm with Birdeye sales. For tier tables, hidden costs, and a renewal checklist, see /blog/birdeye-pricing-breakdown-2026.",
             },
             {
                 question: "Does Birdeye include Negative Feedback Shield?",

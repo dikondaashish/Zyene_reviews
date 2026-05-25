@@ -79,9 +79,18 @@ export function PricingClientComparisonSection() {
                     </table>
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4">
-                    Competitor pricing based on publicly listed rates as of 2026. Actual prices may vary.{" "}
+                    Competitor pricing based on publicly listed rates as of 2026. Birdeye pricing may vary by package and
+                    contract—confirm with the vendor.{" "}
+                    <Link href="/compare/birdeye" className="underline hover:text-foreground">
+                        Zyene Reviews vs Birdeye
+                    </Link>
+                    {" · "}
+                    <Link href="/blog/birdeye-pricing-breakdown-2026" className="underline hover:text-foreground">
+                        Birdeye pricing breakdown
+                    </Link>
+                    {" · "}
                     <Link href="/compare" className="underline hover:text-foreground">
-                        See detailed comparisons →
+                        All comparisons
                     </Link>
                 </p>
             </div>

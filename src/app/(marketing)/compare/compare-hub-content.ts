@@ -8,7 +8,7 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
     {
         question: "Which competitor should I compare first?",
         answer:
-            "If you are evaluating enterprise CX platforms, start with Birdeye. If you need texting, webchat, and payments in one inbox, start with Podium. NiceJob and GatherUp pages focus on review collection tools at mid-market price points.",
+            "If you are evaluating enterprise CX platforms, start with Birdeye (/compare/birdeye) and the Birdeye pricing breakdown on our blog for line items and renewal checklists. If you need texting, webchat, and payments in one inbox, start with Podium. NiceJob and GatherUp pages focus on review collection tools at mid-market price points.",
     },
     {
         question: "What does Zyene Reviews do better than most alternatives?",

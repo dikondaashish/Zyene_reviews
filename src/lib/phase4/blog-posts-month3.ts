@@ -18,9 +18,10 @@ export const post9: BlogPost = {
     metaTitle: "Restaurant Owner's Guide to Google Reviews 2026",
     metaDescription: "The complete Google review guide for restaurant owners. How to get more reviews, respond to complaints, protect your rating, and track competitors in 2026.",
     keywords: ["restaurant google reviews", "restaurant review management", "how to get more restaurant reviews", "restaurant reputation management 2026"],
-    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review"],
+    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "Zyene Reviews for Restaurants", href: "/industries/restaurants" },
+        { label: "Review tool pricing comparison (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Start your free trial", href: "/signup" },
     ],
     faqs: [
@@ -123,9 +124,10 @@ export const post10: BlogPost = {
     metaDescription:
         "2026 reputation guide for dental practices: HIPAA-aware review responses, more patient reviews, and protecting your practice from negative feedback.",
     keywords: ["dental practice reputation management", "dentist google reviews", "dental reviews management 2026", "dentist reputation management strategy"],
-    relatedSlugs: ["how-to-respond-to-a-1-star-review", "how-to-get-50-google-reviews-in-30-days"],
+    relatedSlugs: ["how-to-respond-to-a-1-star-review", "how-to-get-50-google-reviews-in-30-days", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "Zyene Reviews for Dental Practices", href: "/industries/dental" },
+        { label: "Compare enterprise review tool pricing", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Start your free trial", href: "/signup" },
     ],
     faqs: [
@@ -216,9 +218,11 @@ export const post11: BlogPost = {
     metaTitle: "The True Cost of a Bad Online Reputation for Local Businesses",
     metaDescription: "Calculate the real revenue cost of a bad online reputation. Lost customers, higher ad costs, and compounding effects explained for local business owners.",
     keywords: ["cost of bad online reputation", "online reputation cost", "reputation management roi", "negative reviews revenue impact", "bad reviews cost business"],
-    relatedSlugs: ["why-google-reviews-matter-in-2026", "how-to-respond-to-a-1-star-review"],
+    relatedSlugs: ["why-google-reviews-matter-in-2026", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "See how Zyene Reviews protects your reputation", href: "/features" },
+        { label: "Negative Feedback Shield workflow", href: "/features/review-collection" },
+        { label: "Enterprise review tool pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
     ],
     faqs: [
@@ -296,6 +300,7 @@ export const post11: BlogPost = {
             text: "Compare annual reputation risk you calculated to Starter on Zyene Reviews at $29.99 per month—about $360 per year. The question is active risk today, not whether software sounds nice.",
         },
         { type: "p", text: "Most reputation management tools pay for themselves in the first recovered customer. If losing a 1-star review prevents even one $50 customer per month, that's $600/year in preserved revenue. Zyene Reviews' Starter plan at $29.99/month is $359.88/year — and it protects against dozens of potential negative reviews per year, not just one." },
+        { type: "p", text: "If you are on an enterprise stack billed at $299+/mo annually, compare that spend to review-first alternatives in our Birdeye pricing breakdown before you renew—vendor pricing may vary; use your actual invoice, not list prices alone." },
         { type: "p", text: "The better question isn't 'can we afford reputation management?' — it's 'what is our active reputation risk today, and what's it costing us?'" },
         { type: "cta", ctaLabel: "Protect your revenue with Zyene Reviews' Negative Feedback Shield →", ctaHref: "/features" },
     ],
