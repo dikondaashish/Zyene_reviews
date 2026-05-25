@@ -88,7 +88,7 @@ WHERE page_path = '/resources/review-request-templates'
 
 ## HTTP report (production / staging)
 
-**Auth:** `Authorization: Bearer <secret>` where the secret is `GROWTH_DASHBOARD_SECRET` on Vercel, or `CRON_SECRET` if the dedicated variable is unset (`getGrowthDashboardSecret()` in `src/lib/growth/growth-dashboard-auth.ts`).
+**Auth:** `Authorization: Bearer <secret>` where the secret is production `GROWTH_DASHBOARD_SECRET` only (`getGrowthDashboardSecret()` in `src/lib/growth/growth-dashboard-auth.ts`). `CRON_SECRET` is not accepted for this endpoint.
 
 ```bash
 # Prefer GROWTH_DASHBOARD_SECRET when set in Vercel production

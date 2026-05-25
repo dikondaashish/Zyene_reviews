@@ -24,7 +24,7 @@ async function isAuthorizedViaCookie(): Promise<boolean> {
 /**
  * GET /api/internal/growth-metrics
  * Returns live KPI snapshot (Supabase + optional Stripe).
- * Auth: Bearer GROWTH_DASHBOARD_SECRET (or CRON_SECRET) or growth_dashboard cookie.
+ * Auth: Bearer GROWTH_DASHBOARD_SECRET or growth_dashboard cookie.
  */
 export async function GET(request: Request) {
     const cookieOk = await isAuthorizedViaCookie();

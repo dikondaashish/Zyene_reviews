@@ -1,9 +1,7 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import {
     createGrowthDashboardToken,
-    getGrowthDashboardAuthDiagnostics,
     getGrowthDashboardSecret,
-    growthDashboardSecretSource,
     isAuthorizedGrowthDashboardRequest,
     isAuthorizedGrowthDashboardPassword,
     verifyGrowthDashboardToken,
@@ -31,12 +29,16 @@ describe("growth dashboard auth", () => {
         expect(verifyGrowthDashboardToken("wrong")).toBe(false);
     });
 
-    it("prefers GROWTH_DASHBOARD_SECRET over CRON_SECRET", () => {
-        expect(growthDashboardSecretSource()).toBe("GROWTH_DASHBOARD_SECRET");
+    it("uses only GROWTH_DASHBOARD_SECRET", () => {
         expect(getGrowthDashboardSecret()).toBe("test-growth-secret");
     });
 
-    it("authorizes Bearer with exact secret (case-insensitive scheme)", () => {
+    it("returns null when GROWTH_DASHBOARD_SECRET is unset", () => {
+        delete process.env.GROWTH_DASHBOARD_SECRET;
+        expect(getGrowthDashboardSecret()).toBeNull();
+    });
+
+    it("authorizes Bearer with GROWTH secret (case-insensitive scheme)", () => {
         const req = new Request("https://example.com", {
             headers: { Authorization: "bearer test-growth-secret" },
         });
@@ -50,12 +52,19 @@ describe("growth dashboard auth", () => {
         expect(isAuthorizedGrowthDashboardRequest(req)).toBe(true);
     });
 
-    it("authorizes Bearer with CRON secret when GROWTH is unset", () => {
+    it("rejects Bearer with CRON_SECRET when GROWTH is set", () => {
+        const req = new Request("https://example.com", {
+            headers: { Authorization: "Bearer test-cron-secret" },
+        });
+        expect(isAuthorizedGrowthDashboardRequest(req)).toBe(false);
+    });
+
+    it("rejects Bearer when GROWTH is unset even if CRON is set", () => {
         delete process.env.GROWTH_DASHBOARD_SECRET;
         const req = new Request("https://example.com", {
             headers: { Authorization: "Bearer test-cron-secret" },
         });
-        expect(isAuthorizedGrowthDashboardRequest(req)).toBe(true);
+        expect(isAuthorizedGrowthDashboardRequest(req)).toBe(false);
     });
 
     it("authorizes Bearer with dashboard cookie token", () => {
@@ -79,23 +88,5 @@ describe("growth dashboard auth", () => {
     it("validates password with trim", () => {
         expect(isAuthorizedGrowthDashboardPassword("  test-growth-secret  ")).toBe(true);
         expect(isAuthorizedGrowthDashboardPassword("wrong")).toBe(false);
-    });
-
-    it("exposes safe auth diagnostics without secrets", () => {
-        const req = new Request("https://example.com", {
-            headers: { Authorization: "Bearer test-growth-secret" },
-        });
-        const d = getGrowthDashboardAuthDiagnostics(req);
-        expect(d).toEqual({
-            hasGrowthEnv: true,
-            hasCronEnv: true,
-            activeKey: "GROWTH_DASHBOARD_SECRET",
-            authHeaderPresent: true,
-            bearerPresent: true,
-            bearerLength: 18,
-            secretLength: 18,
-            lengthMatch: true,
-            tokenMatch: true,
-        });
     });
 });

@@ -92,7 +92,7 @@ From `docs/GROWTH_BLUEPRINT.md` § KPI Dashboard:
 
 ## Production checklist
 
-1. Set `GROWTH_DASHBOARD_SECRET` (dedicated; falls back to `CRON_SECRET` if unset).
+1. Set `GROWTH_DASHBOARD_SECRET` (strong random value, ≥32 characters; required for `/growth` and internal report APIs).
 2. Visit `https://www.zyenereviews.com/growth` and sign in.
 3. Confirm `GET /api/internal/growth-metrics` returns 200 with Bearer token.
 4. Do not link `/growth` from public marketing nav or sitemap.

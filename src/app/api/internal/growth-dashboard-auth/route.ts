@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 /**
  * POST /api/internal/growth-dashboard-auth
  * Body: { "password": string }
- * Sets HttpOnly cookie when password matches GROWTH_DASHBOARD_SECRET (or CRON_SECRET).
+ * Sets HttpOnly cookie when password matches GROWTH_DASHBOARD_SECRET.
  */
 export async function POST(request: Request) {
     const secret = getGrowthDashboardSecret();
