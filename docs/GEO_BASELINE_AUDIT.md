@@ -25,7 +25,7 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 |---------|--------|-------|----------------|
 | GSC top queries/pages | Auto export available — see [GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) | | |
 | Top 10 traffic pages | Not started | | |
-| AI citation queries (5) | Not started | | |
+| AI citation queries (7 × 5 platforms) | Not started | | |
 | SEO / on-page audit | See [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) | | |
 | CORE / EEAT content audit | Not started | | |
 | Priority URL index | Listed below (static) | | |
@@ -69,19 +69,75 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 
 ## 4. AI citation baseline queries
 
-**Instructions:** Run each query in a **fresh** session (or incognito). Record whether **Zyene Reviews** or **zyenereviews.com** is mentioned. Save screenshots to a shared folder and link in Notes.
+**Instructions:** Run each query in a **fresh** session (or incognito) on every platform below. Save screenshots to a shared folder (e.g. `reports/ai-citations/`) and link in **Screenshot / file**.
 
-**Do not** claim baseline is complete until all five rows are tested on all four surfaces.
+**Do not** claim baseline is complete until every row below has a real **date checked** and mention result (not `Pending`).
 
-| Query | ChatGPT | Perplexity | Gemini | Google AI Overview | Notes / screenshot |
-|-------|---------|------------|--------|-------------------|-------------------|
-| best Birdeye alternative for restaurants | Pending | Pending | Pending | Pending | |
-| Birdeye pricing alternatives | Pending | Pending | Pending | Pending | |
-| best review management software for small businesses | Pending | Pending | Pending | Pending | |
-| how to get more Google reviews | Pending | Pending | Pending | Pending | |
-| Google review request templates | Pending | Pending | Pending | Pending | |
+**Platforms:** ChatGPT · Perplexity · Gemini · Google AI Overview · Google Search (normal blue-link results, not only AI Overview)
+
+**Queries (7):**
+
+1. best Birdeye alternative for restaurants  
+2. Birdeye pricing alternatives  
+3. best review management software for small businesses  
+4. how to get more Google reviews  
+5. Google review request templates  
+6. negative feedback shield review management  
+7. AI visibility audit for local businesses  
 
 **Mention values:** `Yes` · `No` · `Partial` (brand named but not linked) · `Pending`
+
+### 4a. Citation log (fill one row per query × platform)
+
+| Date checked | Platform | Query | Zyene mentioned (Y/N/Partial) | URL cited | Competitor mentioned | Screenshot / file link | Notes |
+|--------------|----------|-------|-------------------------------|-----------|---------------------|------------------------|-------|
+| Pending | ChatGPT | best Birdeye alternative for restaurants | Pending | | | | |
+| Pending | Perplexity | best Birdeye alternative for restaurants | Pending | | | | |
+| Pending | Gemini | best Birdeye alternative for restaurants | Pending | | | | |
+| Pending | Google AI Overview | best Birdeye alternative for restaurants | Pending | | | | |
+| Pending | Google Search | best Birdeye alternative for restaurants | Pending | | | | |
+| Pending | ChatGPT | Birdeye pricing alternatives | Pending | | | | |
+| Pending | Perplexity | Birdeye pricing alternatives | Pending | | | | |
+| Pending | Gemini | Birdeye pricing alternatives | Pending | | | | |
+| Pending | Google AI Overview | Birdeye pricing alternatives | Pending | | | | |
+| Pending | Google Search | Birdeye pricing alternatives | Pending | | | | |
+| Pending | ChatGPT | best review management software for small businesses | Pending | | | | |
+| Pending | Perplexity | best review management software for small businesses | Pending | | | | |
+| Pending | Gemini | best review management software for small businesses | Pending | | | | |
+| Pending | Google AI Overview | best review management software for small businesses | Pending | | | | |
+| Pending | Google Search | best review management software for small businesses | Pending | | | | |
+| Pending | ChatGPT | how to get more Google reviews | Pending | | | | |
+| Pending | Perplexity | how to get more Google reviews | Pending | | | | |
+| Pending | Gemini | how to get more Google reviews | Pending | | | | |
+| Pending | Google AI Overview | how to get more Google reviews | Pending | | | | |
+| Pending | Google Search | how to get more Google reviews | Pending | | | | |
+| Pending | ChatGPT | Google review request templates | Pending | | | | |
+| Pending | Perplexity | Google review request templates | Pending | | | | |
+| Pending | Gemini | Google review request templates | Pending | | | | |
+| Pending | Google AI Overview | Google review request templates | Pending | | | | |
+| Pending | Google Search | Google review request templates | Pending | | | | |
+| Pending | ChatGPT | negative feedback shield review management | Pending | | | | |
+| Pending | Perplexity | negative feedback shield review management | Pending | | | | |
+| Pending | Gemini | negative feedback shield review management | Pending | | | | |
+| Pending | Google AI Overview | negative feedback shield review management | Pending | | | | |
+| Pending | Google Search | negative feedback shield review management | Pending | | | | |
+| Pending | ChatGPT | AI visibility audit for local businesses | Pending | | | | |
+| Pending | Perplexity | AI visibility audit for local businesses | Pending | | | | |
+| Pending | Gemini | AI visibility audit for local businesses | Pending | | | | |
+| Pending | Google AI Overview | AI visibility audit for local businesses | Pending | | | | |
+| Pending | Google Search | AI visibility audit for local businesses | Pending | | | | |
+
+### 4b. Quick summary (optional — fill after 4a)
+
+| Query | Any platform Yes? | Best platform for citation | Notes |
+|-------|-------------------|----------------------------|-------|
+| best Birdeye alternative for restaurants | Pending | | |
+| Birdeye pricing alternatives | Pending | | |
+| best review management software for small businesses | Pending | | |
+| how to get more Google reviews | Pending | | |
+| Google review request templates | Pending | | |
+| negative feedback shield review management | Pending | | |
+| AI visibility audit for local businesses | Pending | | |
 
 ---
 

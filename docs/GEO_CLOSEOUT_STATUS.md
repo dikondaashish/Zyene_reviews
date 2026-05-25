@@ -20,9 +20,11 @@ This document is the handoff summary after the nine-priority GEO implementation.
 | On-page SEO fixes | Pillar metadata, trimmed titles/descriptions | [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) |
 | Local SEO lead capture | Generalized lead magnet on checklist resource | `/resources/local-seo-checklist` |
 | Marketing nurture | 3-email welcome sequence via Inngest | [WELCOME_SEQUENCE.md](./WELCOME_SEQUENCE.md) |
-| Growth dashboard | Template pack section + KPI snapshot | `/growth` (auth required) |
+| Growth dashboard | Template pack + local SEO checklist sections + KPI snapshot | `/growth` (auth required) |
+| Local SEO tracking | Events + report API + page analytics | [LOCAL_SEO_CHECKLIST_LEAD_MAGNET.md](./LOCAL_SEO_CHECKLIST_LEAD_MAGNET.md) |
+| GSC baseline script | OAuth + service account export to `reports/gsc/` | `pnpm geo:gsc-baseline` |
 | IndexNow | API route + CLI ping script (`pnpm indexnow:ping`) | `scripts/ping-indexnow.mjs` |
-| GEO docs | Baseline, on-page audit, weekly template | `docs/GEO_*.md` |
+| GEO docs | Baseline, on-page, weekly, distribution tracker, proof roadmap, entity checklist, refresh queue | `docs/GEO_*.md` |
 | Production validation | FAQ validator 7/7; 9 URL smoke (200, schema, CTAs) | `scripts/validate-geo-faq-production.mjs` |
 | Visitor → signup helper | Optional env documented; neutral UI when unset | [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) § `GROWTH_MARKETING_SESSIONS_30D` |
 
@@ -36,7 +38,11 @@ Do **not** mark these complete until the owner has done the work and updated the
 
 | Task | Owner action | Doc / tool |
 |------|--------------|------------|
-| GEO baseline data | Fill GSC queries/pages, traffic pages, AI citation query results | [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) |
+| GEO baseline data | Run `pnpm geo:gsc-baseline` (OAuth); fill AI citation log (35 rows) | [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) · [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) |
+| Distribution posts | Post Week 1 + weekly schedule; fill post URLs | [GEO_DISTRIBUTION_EXECUTION_TRACKER.md](./GEO_DISTRIBUTION_EXECUTION_TRACKER.md) |
+| Entity / directories | G2, Capterra, LinkedIn, `sameAs` | [GEO_ENTITY_BRAND_CHECKLIST.md](./GEO_ENTITY_BRAND_CHECKLIST.md) |
+| Product proof assets | Case studies, benchmark report (blocked until data) | [GEO_PRODUCT_PROOF_ROADMAP.md](./GEO_PRODUCT_PROOF_ROADMAP.md) |
+| First weekly GEO report | Copy weekly template with real numbers | [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md) |
 | CORE / EEAT audit | Run content-quality pass on priority URLs | `content-quality-auditor` skill / baseline checklist |
 | Growth dashboard auth | Set `GROWTH_DASHBOARD_SECRET` in Vercel + local; log into `/growth` | [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) |
 | Template pack report QA | Run `scripts/verify-template-pack-report-production.mjs` with bearer token | [TEMPLATE_PACK_LEAD_MAGNET.md](./TEMPLATE_PACK_LEAD_MAGNET.md) |
@@ -76,6 +82,7 @@ Track status in **`/growth` → Matrix** tab and [GEO_WIN_PLAYBOOK.md](./GEO_WIN
 | Signups, PLG, referrals, product KPIs | `/growth` KPI tab · `GET /api/internal/growth-metrics` |
 | Visitor → signup % | `/growth` (requires `GROWTH_MARKETING_SESSIONS_30D`) |
 | Template pack leads | `/growth` template pack section · template-pack report API |
+| Local SEO checklist leads | `/growth` local SEO section · local-seo-checklist report API |
 | Blueprint progress | `/growth` Matrix tab · [GROWTH_BLUEPRINT.md](./GROWTH_BLUEPRINT.md) |
 | Organic queries / impressions | GSC → [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) + weekly template |
 | AI citations | Manual queries in baseline doc + weekly template |
@@ -97,5 +104,16 @@ Track status in **`/growth` → Matrix** tab and [GEO_WIN_PLAYBOOK.md](./GEO_WIN
 ## Sign-off
 
 - **Technical GEO package:** Ready for operations handoff; production QA passed on cited URLs.
-- **Baseline “complete” in playbook:** **No** — until [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) tables contain real data.
+- **Baseline “complete” in playbook:** **No** — until GSC export has real data and AI citation log is filled.
+- **All GEO phases “complete”:** **No** — engineering foundation for Phases 0, 5, 6, 7, 8 is in place; manual execution and measurement pending.
+
+**Phase status (engineering vs ops):**
+
+| Phase | Engineering | Ops / owner |
+|-------|-------------|-------------|
+| 0 Baseline | Script + doc templates shipped | GSC OAuth run + AI log fill **pending** |
+| 5 Own traffic | Nurture + both lead magnets tracked | QA nurture test + live sends **pending** |
+| 6 Distribution | Execution tracker doc | Posts + metrics **pending** |
+| 7 Product proof | Roadmap + entity checklist docs | Case studies, listings **pending** |
+| 8 Measure | Weekly template + refresh queue + `/growth` funnels | First real weekly report **pending** |
 - **External ops:** **No** — until each external row is verified outside the repo.

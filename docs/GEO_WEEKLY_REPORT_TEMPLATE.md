@@ -1,8 +1,8 @@
 # GEO weekly report template
 
-Copy this file each week (or duplicate into Notion/Sheets). Fill **manual** fields from GSC, AI tools, and `/growth`.
+Copy this file each week (or duplicate into Notion/Sheets). Fill **manual** fields from GSC, AI tools, and `/growth`. **Do not invent metrics.**
 
-**Related:** [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) · [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [TEMPLATE_PACK_LEAD_MAGNET.md](./TEMPLATE_PACK_LEAD_MAGNET.md)
+**Related:** [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) · [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_DISTRIBUTION_EXECUTION_TRACKER.md](./GEO_DISTRIBUTION_EXECUTION_TRACKER.md) · [GEO_CONTENT_REFRESH_QUEUE.md](./GEO_CONTENT_REFRESH_QUEUE.md)
 
 ---
 
@@ -11,7 +11,7 @@ Copy this file each week (or duplicate into Notion/Sheets). Fill **manual** fiel
 | Field | Value |
 |-------|-------|
 | Week number | |
-| Date range | |
+| **Week date range** (Mon–Sun) | |
 | Report owner | |
 | Production deploy URL / commit | |
 
@@ -25,15 +25,25 @@ Copy this file each week (or duplicate into Notion/Sheets). Fill **manual** fiel
 
 ---
 
-## 2. Changed URLs (content refresh)
+## 2. URLs refreshed
 
 | URL | What changed | dateModified updated? | IndexNow pinged? |
 |-----|--------------|----------------------|------------------|
 | | | | |
 
+See also [GEO_CONTENT_REFRESH_QUEUE.md](./GEO_CONTENT_REFRESH_QUEUE.md).
+
 ---
 
-## 3. Schema validation
+## 3. IndexNow URLs pinged
+
+| Date | URLs (list or count) | Method (`pnpm indexnow:ping` / API) | OK? |
+|------|----------------------|-------------------------------------|-----|
+| | | | |
+
+---
+
+## 4. Schema validation
 
 | Check | Result | Notes |
 |-------|--------|-------|
@@ -43,45 +53,51 @@ Copy this file each week (or duplicate into Notion/Sheets). Fill **manual** fiel
 
 ---
 
-## 4. Google Search Console (manual)
+## 5. Google Search Console
+
+**Source:** GSC UI or `reports/gsc/GSC_BASELINE_SUMMARY.md` from `pnpm geo:gsc-baseline`.
 
 | Metric | This week | Prior week | Δ |
 |--------|-----------|------------|---|
 | Impressions | | | |
 | Clicks | | | |
 | Average position (top query) | | | |
-| Top gaining page | | | |
-| Top losing page | | | |
 
-**Top 5 queries this week**
+### GSC top query changes (top 5)
 
-| Query | Clicks | Impressions |
-|-------|--------|-------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| Query | Clicks | Impressions | Δ vs prior week | Notes |
+|-------|--------|-------------|-----------------|-------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
 
----
+### GSC top page changes (top 5)
 
-## 5. AI citation check (5 baseline queries)
-
-From [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md). Record **Yes / No / Partial** per surface.
-
-| Query | ChatGPT | Perplexity | Gemini | AI Overview | Notes |
-|-------|---------|------------|--------|-------------|-------|
-| best Birdeye alternative for restaurants | | | | | |
-| Birdeye pricing alternatives | | | | | |
-| best review management software for small businesses | | | | | |
-| how to get more Google reviews | | | | | |
-| Google review request templates | | | | | |
+| Page URL | Clicks | Impressions | Δ vs prior week | Notes |
+|----------|--------|-------------|-----------------|-------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
 
 ---
 
-## 6. Template pack funnel (`/growth` or API)
+## 6. AI citation checks
 
-Source: `/growth` dashboard → Template pack section, or `GET /api/internal/marketing/template-pack-report?days=7` (GROWTH auth).
+Spot-check from [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) § 4 (or full re-run monthly).
+
+| Query | ChatGPT | Perplexity | Gemini | AI Overview | Google Search | Notes |
+|-------|---------|------------|--------|-------------|---------------|-------|
+| (pick 2–3 priority queries this week) | | | | | | |
+
+---
+
+## 7. Template pack funnel
+
+**Source:** `/growth` → Template pack section, or `GET /api/internal/marketing/template-pack-report?days=7`.
 
 | Metric | Value |
 |--------|-------|
@@ -91,49 +107,81 @@ Source: `/growth` dashboard → Template pack section, or `GET /api/internal/mar
 | Conversion rate % | |
 | Signup clicks | |
 | Pricing clicks | |
-| New leads (count) | |
-
-**Notes on latest submissions:** (no PII in shared docs—reference count only)
 
 ---
 
-## 7. Subscriber count
+## 8. Local SEO checklist funnel
+
+**Source:** `/growth` → Local SEO section, or `GET /api/internal/marketing/local-seo-checklist-report?days=7`.
+
+| Metric | Value |
+|--------|-------|
+| Page views | |
+| Form submits | |
+| Subscribe successes | |
+| Conversion rate % | |
+| Signup clicks | |
+| Pricing clicks |
+
+If no traffic yet, write `—` (not zero unless report shows zero).
+
+---
+
+## 9. Newsletter subscribers
 
 | Metric | Value |
 |--------|-------|
 | New marketing subscribers (week) | |
-| Total active subscribers | |
+| New by source (template pack / checklist / other) | |
 | Unsubscribes | |
 
 ---
 
-## 8. Signup & pricing clicks
+## 10. Signup & pricing clicks
 
 | Source / page | Signup clicks | Pricing clicks |
 |---------------|---------------|----------------|
 | Template pack | | |
+| Local SEO checklist | | |
 | Blog CTAs | | |
 | Compare pages | | |
 | Other | | |
 
 ---
 
-## 9. IndexNow pings sent
+## 11. Trial signups & product KPIs
 
-| Date | URLs pinged | Method (CLI / API) | Response OK? |
-|------|-------------|-------------------|--------------|
-| | | | |
+**Source:** `/growth` KPI tab · `GET /api/internal/growth-metrics`.
 
-Command reference:
-
-```bash
-pnpm indexnow:ping
-# or POST /api/indexnow with CRON_SECRET
-```
+| Metric | Value |
+|--------|-------|
+| Trial signups (week) | |
+| Visitor → signup % (if `GROWTH_MARKETING_SESSIONS_30D` set) | |
+| MRR / MoM (if configured) | |
 
 ---
 
-## 10. Next week actions
+## 12. Content / technical issues found
+
+| Issue | URL | Severity | Owner | Status |
+|-------|-----|----------|-------|--------|
+| | | | | |
+
+---
+
+## 13. Distribution (manual)
+
+From [GEO_DISTRIBUTION_EXECUTION_TRACKER.md](./GEO_DISTRIBUTION_EXECUTION_TRACKER.md):
+
+| Channel | Posted? | Post URL | Clicks (UTM) | Notes |
+|---------|---------|----------|--------------|-------|
+| LinkedIn | | | | |
+| Email | | | | |
+| X / Threads | | | | |
+
+---
+
+## 14. Next week actions
 
 - [ ] 
 - [ ] 
@@ -141,9 +189,9 @@ pnpm indexnow:ping
 
 ---
 
-## Instructions for manual fields
+## Instructions
 
-- **GSC:** Search Console → Performance → last 7 days vs previous period.
-- **AI citations:** Fresh session per tool; screenshot evidence optional.
-- **Template pack:** Requires `GROWTH_DASHBOARD_SECRET` or cookie auth on `/growth`.
-- **Do not** mark baseline complete in the playbook until [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) tables contain real data.
+- **GSC:** `pnpm geo:gsc-baseline` after OAuth setup ([GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md)).
+- **AI citations:** Fresh session per tool; link screenshots in baseline doc.
+- **Funnels:** Requires `GROWTH_DASHBOARD_SECRET` on `/growth`.
+- **Baseline “complete”:** **No** until [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) has real GSC export + filled citation log.

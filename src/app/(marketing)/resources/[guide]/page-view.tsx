@@ -5,6 +5,7 @@ import { ResourcesGuideGuideHeaderSection } from "./resources-guide-guide-header
 import { ResourcesGuideContentSidebarSection } from "./resources-guide-content-sidebar-section";
 import { ResourcesGuideOtherGuidesSection } from "./resources-guide-other-guides-section";
 import { ResourcesGuideTemplatePackLeadSection } from "./resources-guide-template-pack-lead-section";
+import { LocalSeoChecklistPageAnalytics } from "@/components/marketing/local-seo-checklist-page-analytics";
 import { TemplatePackPageAnalytics } from "@/components/marketing/template-pack-page-analytics";
 
 export default async function ResourceGuidePage(
@@ -38,6 +39,7 @@ export default async function ResourceGuidePage(
             />
             <ResourcesGuideGuideHeaderSection resource={resource} />
             {slug === "review-request-templates" ? <TemplatePackPageAnalytics /> : null}
+            {slug === "local-seo-checklist" ? <LocalSeoChecklistPageAnalytics /> : null}
             {resource.resourceLabel ? (
                 <ResourcesGuideTemplatePackLeadSection resource={resource} />
             ) : null}

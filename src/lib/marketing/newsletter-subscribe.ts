@@ -4,6 +4,10 @@ import { sendEmail } from "@/services/resend/send-email";
 import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-emails";
 import { reviewRequestTemplatePackEmail } from "@/services/resend/templates/review-request-templates-pack-email";
 import { recordMarketingEvent } from "@/lib/marketing/record-marketing-event";
+import {
+    LOCAL_SEO_CHECKLIST_PAGE_PATH,
+    LOCAL_SEO_CHECKLIST_SOURCE,
+} from "@/lib/marketing/local-seo-checklist-events";
 import { TEMPLATE_PACK_PAGE_PATH, TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
 import { isTemplatePackQaSubscriber } from "@/lib/marketing/template-pack-qa-filters";
 import { scheduleMarketingNurture } from "@/lib/growth/schedule-growth-emails";
@@ -36,6 +40,20 @@ async function trackTemplatePack(
     });
 }
 
+async function trackLocalSeoChecklist(
+    body: NewsletterSubscribeInput,
+    eventName: "local_seo_checklist_submit" | "local_seo_checklist_subscribe_success"
+) {
+    await recordMarketingEvent({
+        eventName,
+        pagePath: LOCAL_SEO_CHECKLIST_PAGE_PATH,
+        source: LOCAL_SEO_CHECKLIST_SOURCE,
+        utmSource: body.utm_source ?? null,
+        utmMedium: body.utm_medium ?? null,
+        utmCampaign: body.utm_campaign ?? null,
+    });
+}
+
 export async function processNewsletterSubscribe(
     body: NewsletterSubscribeInput
 ): Promise<NewsletterSubscribeResult> {
@@ -46,6 +64,7 @@ export async function processNewsletterSubscribe(
 
     const source = body.source ?? "newsletter";
     const isTemplatePack = source === TEMPLATE_PACK_SOURCE;
+    const isLocalSeoChecklist = source === LOCAL_SEO_CHECKLIST_SOURCE;
     let newLead = false;
     const admin = createAdminClient();
 
@@ -84,6 +103,7 @@ export async function processNewsletterSubscribe(
 
         if (insertErr?.code === "23505") {
             if (isTemplatePack) await trackTemplatePack(body, "template_pack_submit");
+            if (isLocalSeoChecklist) await trackLocalSeoChecklist(body, "local_seo_checklist_submit");
             return { ok: true, newLead: false, message: "Already subscribed" };
         }
         if (insertErr) {
@@ -96,6 +116,11 @@ export async function processNewsletterSubscribe(
     if (isTemplatePack) {
         await trackTemplatePack(body, "template_pack_submit");
         if (newLead) await trackTemplatePack(body, "template_pack_subscribe_success");
+    }
+
+    if (isLocalSeoChecklist) {
+        await trackLocalSeoChecklist(body, "local_seo_checklist_submit");
+        if (newLead) await trackLocalSeoChecklist(body, "local_seo_checklist_subscribe_success");
     }
 
     if (newLead) {

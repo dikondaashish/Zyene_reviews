@@ -56,6 +56,36 @@ Templates: `marketingNurtureEmail()` in `src/services/resend/templates/growth-em
 
 ---
 
+## Lead source matrix
+
+| `source` | Immediate email | Marketing nurture (3-email) |
+|----------|-----------------|------------------------------|
+| `review_request_templates` | Template pack email | **Skipped** |
+| `local_seo_checklist` | Newsletter welcome | **Yes** (new leads only) |
+| `newsletter` / other | Newsletter welcome | **Yes** (new leads only) |
+| QA UTM/email patterns | Per source above | **Skipped** |
+
+Template pack and checklist are **not** duplicate sequences: pack skips nurture; checklist uses welcome + nurture.
+
+---
+
+## QA test plan (one subscriber — do not use production list)
+
+**Goal:** Verify one new lead gets welcome + nurture scheduling without emailing real customers.
+
+| Step | Action | Expected |
+|------|--------|----------|
+| 1 | Use **staging/local** with Inngest dev + Resend test mode (or mail catcher) | No mail to real users |
+| 2 | Subscribe with test email e.g. `you+marketing-qa@yourdomain.com` and UTM `utm_medium=qa` (see `template-pack-qa-filters`) | `newLead: true`, **no** `growth/marketing-nurture.start` |
+| 3 | Subscribe with `you+marketing-nurture-qa@yourdomain.com`, source `newsletter`, **no** QA UTM | Welcome sent; Inngest shows `growth-marketing-nurture` scheduled |
+| 4 | Repeat with source `local_seo_checklist` on `/resources/local-seo-checklist` | Welcome only (not pack email); nurture scheduled; events `local_seo_checklist_submit` + `local_seo_checklist_subscribe_success` in DB |
+| 5 | Re-submit same email | `newLead: false`; no second nurture registration (`growth_email_runs` unique) |
+| 6 | Submit template pack source | Pack email; **no** nurture worker |
+
+**Do not** invent open/click metrics. Record pass/fail in ops notes only.
+
+---
+
 ## Future automation
 
 - Branch day-0 CTA by `source` (checklist vs generic newsletter).

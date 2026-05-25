@@ -2,7 +2,9 @@
 
 import type { GrowthKpiSnapshot } from "@/lib/growth/kpi-metrics";
 import type { BlueprintAuditItem } from "@/lib/growth/growth-blueprint-audit";
+import type { LocalSeoChecklistLeadReport } from "@/lib/marketing/local-seo-checklist-lead-report";
 import type { TemplatePackLeadReport } from "@/lib/marketing/template-pack-lead-report";
+import { GrowthDashboardLocalSeoSection } from "./growth-dashboard-local-seo-section";
 import { GrowthDashboardTemplatePackSection } from "./growth-dashboard-template-pack-section";
 import { useGrowthDashboardClientState } from "./use-growth-dashboard-client-state";
 import { GrowthDashboardClientHeaderSummary } from "./growth-dashboard-client-header-summary";
@@ -17,11 +19,13 @@ export function GrowthDashboardClient({
     auditItems,
     auditSummary,
     templatePackReport,
+    localSeoChecklistReport,
 }: {
     snapshot: GrowthKpiSnapshot;
     auditItems: BlueprintAuditItem[];
     auditSummary: { errors: number; warnings: number; info: number; passed: boolean };
     templatePackReport: TemplatePackLeadReport;
+    localSeoChecklistReport: LocalSeoChecklistLeadReport;
 }) {
     const s = useGrowthDashboardClientState(snapshot);
 
@@ -33,6 +37,7 @@ export function GrowthDashboardClient({
             {s.tab === "kpis" ? (
                 <div className="space-y-10">
                     <GrowthDashboardTemplatePackSection report={templatePackReport} />
+                    <GrowthDashboardLocalSeoSection report={localSeoChecklistReport} />
                     <GrowthDashboardTabKpisSection
                         metricById={s.metricById}
                         marketingSessionsConfigured={snapshot.marketingSessionsConfigured}

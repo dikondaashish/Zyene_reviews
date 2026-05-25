@@ -20,6 +20,11 @@ Central index for project documentation and where each file belongs.
 - `docs/GEO_ON_PAGE_AUDIT.md` - Priority URL on-page SEO audit table.
 - `docs/GEO_WEEKLY_REPORT_TEMPLATE.md` - Weekly GEO tracking template.
 - `docs/GEO_CLOSEOUT_STATUS.md` - GEO implementation closeout: done vs manual vs external ops.
+- `docs/GEO_DISTRIBUTION_EXECUTION_TRACKER.md` - Manual social/email distribution checklist (owner-filled).
+- `docs/GEO_PRODUCT_PROOF_ROADMAP.md` - Proof assets, data requirements, compliance rules.
+- `docs/GEO_ENTITY_BRAND_CHECKLIST.md` - Entity/NAP/social/schema consistency (owner tasks).
+- `docs/GEO_CONTENT_REFRESH_QUEUE.md` - Priority URL refresh schedule.
+- `docs/LOCAL_SEO_CHECKLIST_LEAD_MAGNET.md` - Local SEO checklist funnel events and reporting.
 - `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
 - `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
 - `docs/WELCOME_SEQUENCE.md` - Marketing nurture email sequence (Inngest).
