@@ -3,6 +3,7 @@ import {
     createGrowthDashboardToken,
     getGrowthDashboardSecret,
     growthDashboardCookieName,
+    isAuthorizedGrowthDashboardPassword,
 } from "@/lib/growth/growth-dashboard-auth";
 
 export const dynamic = "force-dynamic";
@@ -28,8 +29,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    const password = body.password?.trim();
-    if (!password || password !== secret) {
+    if (!isAuthorizedGrowthDashboardPassword(body.password)) {
         return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 

@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
+    getGrowthDashboardAuthDiagnostics,
     growthDashboardCookieName,
     isAuthorizedGrowthDashboardRequest,
     verifyGrowthDashboardToken,
@@ -16,14 +17,25 @@ export const dynamic = "force-dynamic";
  * Auth: GROWTH_DASHBOARD_SECRET Bearer or growth_dashboard cookie.
  */
 export async function GET(request: Request) {
+    const url = new URL(request.url);
     const cookieStore = await cookies();
     const token = cookieStore.get(growthDashboardCookieName())?.value;
     const cookieOk = verifyGrowthDashboardToken(token);
-    if (!cookieOk && !isAuthorizedGrowthDashboardRequest(request)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const bearerOk = isAuthorizedGrowthDashboardRequest(request);
+
+    if (!cookieOk && !bearerOk) {
+        const diagnostics = getGrowthDashboardAuthDiagnostics(request);
+        logger.info({ auth: diagnostics }, "[template-pack-report] unauthorized");
+
+        const payload: { error: string; authDebug?: typeof diagnostics } = {
+            error: "Unauthorized",
+        };
+        if (url.searchParams.get("auth_debug") === "1") {
+            payload.authDebug = diagnostics;
+        }
+        return NextResponse.json(payload, { status: 401 });
     }
 
-    const url = new URL(request.url);
     const days = Math.min(90, Math.max(1, Number(url.searchParams.get("days") ?? "30") || 30));
 
     try {
