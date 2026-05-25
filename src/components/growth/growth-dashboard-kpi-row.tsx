@@ -35,6 +35,9 @@ export function GrowthDashboardKpiRow({ def, metric }: { def: KpiDefinition; met
                         Open source →
                     </a>
                 ) : null}
+                {metric?.note ? (
+                    <p className="text-xs text-muted-foreground mt-1 max-w-xs">{metric.note}</p>
+                ) : null}
             </td>
         </tr>
     );

@@ -30,6 +30,8 @@ export interface GrowthKpiSnapshot {
         trialingOrgs: number;
         totalOrganizations: number;
     };
+    /** True when `GROWTH_MARKETING_SESSIONS_30D` is set — visitor → signup % can compute. */
+    marketingSessionsConfigured: boolean;
 }
 
 const DEFAULT_PERIOD_DAYS = 30;
@@ -319,7 +321,7 @@ export async function fetchGrowthKpiSnapshot(
             note:
                 value === null
                     ? id === "visitor_signup_rate"
-                        ? "Set GROWTH_MARKETING_SESSIONS_30D or track sessions in Vercel/GA."
+                        ? "Set GROWTH_MARKETING_SESSIONS_30D to calculate visitor → signup conversion."
                         : id === "mrr_growth_mom"
                           ? "Set GROWTH_MRR_PREVIOUS_MONTH_CENTS or use Stripe MRR chart."
                           : "Insufficient data in period — connect Stripe or wait for more signups."
@@ -338,5 +340,6 @@ export async function fetchGrowthKpiSnapshot(
             trialingOrgs,
             totalOrganizations: orgs.length,
         },
+        marketingSessionsConfigured: sessions !== null && sessions > 0,
     };
 }

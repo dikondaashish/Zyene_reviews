@@ -5,14 +5,20 @@ import { KPI_DEFINITIONS, type KpiCategory } from "@/lib/growth/kpi-definitions"
 import type { KpiMetricValue } from "@/lib/growth/kpi-metrics";
 import { GROWTH_DASHBOARD_CATEGORY_LABELS } from "./growth-dashboard-client-types";
 import { GrowthDashboardKpiRow } from "./growth-dashboard-kpi-row";
+import { GrowthDashboardMarketingSessionsHint } from "./growth-dashboard-marketing-sessions-hint";
 
 interface GrowthDashboardTabKpisSectionProps {
     metricById: Record<string, KpiMetricValue | undefined>;
+    marketingSessionsConfigured: boolean;
 }
 
-export function GrowthDashboardTabKpisSection({ metricById }: GrowthDashboardTabKpisSectionProps) {
+export function GrowthDashboardTabKpisSection({
+    metricById,
+    marketingSessionsConfigured,
+}: GrowthDashboardTabKpisSectionProps) {
     return (
         <section className="space-y-8">
+            {!marketingSessionsConfigured ? <GrowthDashboardMarketingSessionsHint /> : null}
             {(["acquisition", "conversion", "retention", "plg"] as KpiCategory[]).map((cat) => (
                 <div key={cat}>
                     <h2 className="text-lg font-semibold mb-3">{GROWTH_DASHBOARD_CATEGORY_LABELS[cat]}</h2>

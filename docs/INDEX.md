@@ -19,6 +19,7 @@ Central index for project documentation and where each file belongs.
 - `docs/GEO_BASELINE_AUDIT.md` - GEO/SEO baseline placeholders (GSC, AI citations, IndexNow).
 - `docs/GEO_ON_PAGE_AUDIT.md` - Priority URL on-page SEO audit table.
 - `docs/GEO_WEEKLY_REPORT_TEMPLATE.md` - Weekly GEO tracking template.
+- `docs/GEO_CLOSEOUT_STATUS.md` - GEO implementation closeout: done vs manual vs external ops.
 - `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
 - `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
 - `docs/WELCOME_SEQUENCE.md` - Marketing nurture email sequence (Inngest).

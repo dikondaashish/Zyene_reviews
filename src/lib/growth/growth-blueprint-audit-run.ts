@@ -86,8 +86,8 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
             id: "kpi-sessions-env",
             severity: "info",
             area: "kpi",
-            message: "Visitor → signup rate needs GROWTH_MARKETING_SESSIONS_30D or Vercel/GA sessions",
-            remediation: "Set GROWTH_MARKETING_SESSIONS_30D in env for automatic % on /growth",
+            message: "Set GROWTH_MARKETING_SESSIONS_30D to calculate visitor → signup conversion.",
+            remediation: "Optional env var — see docs/GROWTH_OPERATIONS.md (Vercel + manual GA/Vercel session updates)",
         });
     }
 

@@ -49,6 +49,49 @@ Template pack report: `GET /api/internal/marketing/template-pack-report?days=30`
 
 ---
 
+## Optional: `GROWTH_MARKETING_SESSIONS_30D`
+
+This variable is **optional**. It affects **only** the **Visitor → signup rate** row on `/growth` (and the same field in `GET /api/internal/growth-metrics`). All other KPIs, lead counts, blueprint matrix, and template-pack funnel metrics work without it.
+
+### What it does
+
+- **Formula:** `user.signed_up` events in the dashboard period ÷ `GROWTH_MARKETING_SESSIONS_30D`.
+- **Example:** 30 signups and `GROWTH_MARKETING_SESSIONS_30D=1000` → **3.0%** visitor → signup for the last 30 days.
+- **Not wired to Vercel Analytics or GA4 automatically** — you paste an approximate session count from your analytics tool.
+
+### Where to set it (Vercel)
+
+1. Vercel → project **zyene-reviews** → **Settings** → **Environment Variables**.
+2. Add **`GROWTH_MARKETING_SESSIONS_30D`** (Production; Preview optional if you use `/growth` on previews).
+3. Value: positive integer — total **marketing-site sessions** for the **same window** as the dashboard (default **30 days**), e.g. `4200`.
+4. **Redeploy** production (or wait for the next deploy) so `/growth` picks up the new value.
+
+Local: add to `.env.local` (see `.env.example`). Never commit real values.
+
+### How often to update manually
+
+| Cadence | Action |
+|---------|--------|
+| **Weekly** (recommended) | After Monday `/growth` review, copy last-30-day sessions from Vercel Analytics or GA4 (marketing host only: `www.zyenereviews.com`, exclude `app.` / `auth.` if your report allows). Update the env var if the number changed materially. |
+| **Monthly** (minimum) | If traffic is flat, updating once per month is enough for directional tracking. |
+| **When running campaigns** | Update after a major paid or launch spike so the conversion % denominator matches reality. |
+
+**Session sources:**
+
+- [Vercel Analytics](https://vercel.com/analytics) → filter marketing domain, last 28–30 days.
+- **GA4** → sessions where hostname is `www.zyenereviews.com` (or your marketing property), same date range.
+
+If the variable is unset, `/growth` shows **—** for Visitor → signup and a neutral helper (not an error): set `GROWTH_MARKETING_SESSIONS_30D` to calculate visitor → signup conversion.
+
+### Related optional env vars
+
+| Variable | Affects |
+|----------|---------|
+| `GROWTH_MRR_PREVIOUS_MONTH_CENTS` | MRR month-over-month % only |
+| `GROWTH_MARKETING_SESSIONS_30D` | Visitor → signup % only |
+
+---
+
 ## Page architecture
 
 - **Canonical inventory:** `src/lib/growth/page-inventory.ts` (used by `/growth` Page tab).

@@ -33,7 +33,10 @@ export function GrowthDashboardClient({
             {s.tab === "kpis" ? (
                 <div className="space-y-10">
                     <GrowthDashboardTemplatePackSection report={templatePackReport} />
-                    <GrowthDashboardTabKpisSection metricById={s.metricById} />
+                    <GrowthDashboardTabKpisSection
+                        metricById={s.metricById}
+                        marketingSessionsConfigured={snapshot.marketingSessionsConfigured}
+                    />
                 </div>
             ) : null}
             {s.tab === "pages" ? (
