@@ -22,9 +22,19 @@ function readUtmCookie() {
 export function NewsletterSignup({
     source = "newsletter",
     className = "",
+    submitLabel = "Subscribe",
+    subscribedLabel = "Subscribed",
+    successMessage = "You're subscribed. Check your inbox for a confirmation.",
+    idleFooter = "No spam. Unsubscribe anytime.",
+    placeholder = "your@email.com",
 }: {
     source?: string;
     className?: string;
+    submitLabel?: string;
+    subscribedLabel?: string;
+    successMessage?: string;
+    idleFooter?: string;
+    placeholder?: string;
 }) {
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -49,7 +59,7 @@ export function NewsletterSignup({
                 return;
             }
             setStatus("success");
-            setMessage("You're subscribed. Check your inbox for a confirmation.");
+            setMessage(successMessage);
             setEmail("");
         } catch {
             setStatus("error");
@@ -65,7 +75,7 @@ export function NewsletterSignup({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
+                    placeholder={placeholder}
                     disabled={status === "loading" || status === "success"}
                     className="flex-1 h-11 rounded-lg border border-border bg-background px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
                 />
@@ -77,9 +87,9 @@ export function NewsletterSignup({
                     {status === "loading" ? (
                         <Loader2 className="animate-spin size-4" />
                     ) : status === "success" ? (
-                        "Subscribed"
+                        subscribedLabel
                     ) : (
-                        "Subscribe"
+                        submitLabel
                     )}
                 </Button>
             </form>
@@ -90,9 +100,9 @@ export function NewsletterSignup({
                     {message}
                 </p>
             )}
-            {status !== "success" && (
-                <p className="text-xs text-muted-foreground mt-3 text-center">No spam. Unsubscribe anytime.</p>
-            )}
+            {status !== "success" && idleFooter ? (
+                <p className="text-xs text-muted-foreground mt-3 text-center">{idleFooter}</p>
+            ) : null}
         </div>
     );
 }

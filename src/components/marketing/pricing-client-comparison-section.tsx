@@ -92,6 +92,10 @@ export function PricingClientComparisonSection() {
                     <Link href="/compare" className="underline hover:text-foreground">
                         All comparisons
                     </Link>
+                    {" · "}
+                    <Link href="/resources/review-request-templates" className="underline hover:text-foreground">
+                        Free review request templates
+                    </Link>
                 </p>
             </div>
         </section>

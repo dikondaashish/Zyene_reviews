@@ -31,6 +31,16 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 </div>
                             )}
 
+                            {resource.slug === "review-request-templates" ? (
+                                <p className="mb-8 text-sm text-muted-foreground">
+                                    Want the full pack in your inbox?{" "}
+                                    <a href="#template-pack-capture" className="font-medium text-primary hover:underline">
+                                        Get the 20 templates by email
+                                    </a>
+                                    —preview scripts below stay visible for SEO.
+                                </p>
+                            ) : null}
+
                             <ContentRenderer sections={resource.body} />
 
                             {resource.internalLinks && resource.internalLinks.length > 0 ? (
@@ -77,6 +87,19 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
 
                         {/* Sidebar */}
                         <aside className="hidden lg:block space-y-6 sticky top-24">
+                            {resource.slug === "review-request-templates" ? (
+                                <div className="bg-primary/5 border border-primary/25 rounded-2xl p-6">
+                                    <p className="text-sm font-bold text-foreground mb-2">Full swipe file</p>
+                                    <p className="text-xs text-muted-foreground mb-4">
+                                        Email the complete pack—fair outreach only, no review gating.
+                                    </p>
+                                    <a href="#template-pack-capture">
+                                        <Button size="sm" variant="outline" className="w-full">
+                                            Get the 20 templates
+                                        </Button>
+                                    </a>
+                                </div>
+                            ) : null}
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">Everything in this guide, automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>

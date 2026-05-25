@@ -51,20 +51,37 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     </ul>
 
                     {pillar.slug === "review-collection" ? (
-                        <div className="rounded-2xl border border-primary/25 bg-primary/5 p-6">
-                            <div className="flex items-center gap-2 text-primary font-semibold mb-3">
-                                <Sparkles className="size-4" />
-                                {NEGATIVE_FEEDBACK_SHIELD.headline}
+                        <>
+                            <div className="rounded-2xl border border-primary/25 bg-primary/5 p-6">
+                                <div className="flex items-center gap-2 text-primary font-semibold mb-3">
+                                    <Sparkles className="size-4" />
+                                    {NEGATIVE_FEEDBACK_SHIELD.headline}
+                                </div>
+                                <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+                                    {NEGATIVE_FEEDBACK_SHIELD.steps.map((s) => (
+                                        <li key={s}>{s}</li>
+                                    ))}
+                                </ol>
+                                <p className="text-sm font-medium text-foreground mt-4">
+                                    {NEGATIVE_FEEDBACK_SHIELD.result}
+                                </p>
                             </div>
-                            <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                                {NEGATIVE_FEEDBACK_SHIELD.steps.map((s) => (
-                                    <li key={s}>{s}</li>
-                                ))}
-                            </ol>
-                            <p className="text-sm font-medium text-foreground mt-4">
-                                {NEGATIVE_FEEDBACK_SHIELD.result}
-                            </p>
-                        </div>
+                            <div className="rounded-2xl border border-border bg-muted/40 p-6">
+                                <p className="text-sm font-bold text-foreground mb-2">
+                                    Free review request template pack
+                                </p>
+                                <p className="text-sm text-muted-foreground mb-4">
+                                    20+ fair SMS and email scripts you can copy on the page—or get the full swipe file
+                                    by email.
+                                </p>
+                                <Link
+                                    href="/resources/review-request-templates"
+                                    className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                                >
+                                    Get the template pack <ArrowRight className="size-3.5" />
+                                </Link>
+                            </div>
+                        </>
                     ) : null}
 
                     <div className="space-y-3 pt-2">

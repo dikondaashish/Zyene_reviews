@@ -260,6 +260,7 @@ export const post3: BlogPost = {
         "negative-feedback-shield",
     ],
     internalLinks: [
+        { label: "Free review request template pack (SMS + email)", href: "/resources/review-request-templates" },
         { label: "Full comparison: Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
         { label: "Compare all review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing (public plans)", href: "/pricing" },

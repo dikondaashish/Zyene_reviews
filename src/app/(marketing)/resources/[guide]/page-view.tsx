@@ -4,6 +4,7 @@ import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import { ResourcesGuideGuideHeaderSection } from "./resources-guide-guide-header-section";
 import { ResourcesGuideContentSidebarSection } from "./resources-guide-content-sidebar-section";
 import { ResourcesGuideOtherGuidesSection } from "./resources-guide-other-guides-section";
+import { ResourcesGuideTemplatePackLeadSection } from "./resources-guide-template-pack-lead-section";
 
 export default async function ResourceGuidePage(
     { params }: { params: Promise<{ guide: string }> }
@@ -27,6 +28,7 @@ export default async function ResourceGuidePage(
                 ]}
             />
             <ResourcesGuideGuideHeaderSection resource={resource} />
+            {slug === "review-request-templates" ? <ResourcesGuideTemplatePackLeadSection /> : null}
             <ResourcesGuideContentSidebarSection resource={resource} otherGuides={otherGuides} />
             <ResourcesGuideOtherGuidesSection otherGuides={otherGuides} />
         </>

@@ -32,6 +32,7 @@ export const post13: BlogPost = {
         "how-to-get-50-google-reviews-in-30-days",
     ],
     internalLinks: [
+        { label: "Free review request template pack (20+ scripts)", href: "/resources/review-request-templates" },
         { label: "Review collection & Shield (product page)", href: "/features/review-collection" },
         { label: "Compare vs Birdeye (Shield included)", href: "/compare/birdeye" },
         { label: "Birdeye pricing vs Zyene Reviews", href: "/blog/birdeye-pricing-breakdown-2026" },
