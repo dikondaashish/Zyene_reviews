@@ -6,10 +6,13 @@ import {
     TEMPLATE_PACK_SOURCE,
     type TemplatePackEventName,
 } from "./template-pack-events";
+import { isTemplatePackQaSubscriber } from "./template-pack-qa-filters";
 
 export type TemplatePackLeadReport = {
     periodDays: number;
     since: string;
+    /** Production metrics exclude internal QA UTM/email patterns. */
+    excludesQaTraffic: boolean;
     counts: Record<TemplatePackEventName, number>;
     pageViews: number;
     submissions: number;
@@ -26,6 +29,10 @@ export type TemplatePackLeadReport = {
         subscribed_at: string;
     }>;
 };
+
+function isQaEventRow(row: { utm_source: string | null; utm_medium: string | null }): boolean {
+    return isTemplatePackQaSubscriber("", row.utm_source, row.utm_medium);
+}
 
 function countByName(rows: Array<{ event_name: string }>): Record<TemplatePackEventName, number> {
     const counts = Object.fromEntries(
@@ -47,7 +54,7 @@ export async function fetchTemplatePackLeadReport(periodDays = 30): Promise<Temp
     const [eventsRes, subscribersRes] = await Promise.all([
         admin
             .from("marketing_events")
-            .select("event_name")
+            .select("event_name, utm_source, utm_medium")
             .eq("page_path", TEMPLATE_PACK_PAGE_PATH)
             .gte("created_at", since),
         admin
@@ -56,10 +63,14 @@ export async function fetchTemplatePackLeadReport(periodDays = 30): Promise<Temp
             .eq("source", TEMPLATE_PACK_SOURCE)
             .gte("subscribed_at", since)
             .order("subscribed_at", { ascending: false })
-            .limit(20),
+            .limit(50),
     ]);
 
-    const eventRows = eventsRes.data ?? [];
+    const eventRows = (eventsRes.data ?? []).filter((row) => !isQaEventRow(row));
+    const latestSubmissions = (subscribersRes.data ?? [])
+        .filter((row) => !isTemplatePackQaSubscriber(row.email, row.utm_source, row.utm_medium))
+        .slice(0, 20);
+
     const counts = countByName(eventRows);
     const pageViews = counts.template_pack_view;
     const subscribeSuccesses = counts.template_pack_subscribe_success;
@@ -67,6 +78,7 @@ export async function fetchTemplatePackLeadReport(periodDays = 30): Promise<Temp
     return {
         periodDays: days,
         since,
+        excludesQaTraffic: true,
         counts,
         pageViews,
         submissions: counts.template_pack_submit,
@@ -75,6 +87,6 @@ export async function fetchTemplatePackLeadReport(periodDays = 30): Promise<Temp
             pageViews > 0 ? Math.round((subscribeSuccesses / pageViews) * 1000) / 10 : null,
         signupClicks: counts.template_pack_signup_click,
         pricingClicks: counts.template_pack_pricing_click,
-        latestSubmissions: subscribersRes.data ?? [],
+        latestSubmissions,
     };
 }

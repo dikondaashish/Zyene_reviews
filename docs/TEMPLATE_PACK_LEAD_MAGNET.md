@@ -86,14 +86,71 @@ WHERE page_path = '/resources/review-request-templates'
   AND created_at >= NOW() - INTERVAL '30 days';
 ```
 
-## Dev report (JSON)
+## HTTP report (production / staging)
+
+**Auth:** `Authorization: Bearer <secret>` where the secret is `GROWTH_DASHBOARD_SECRET` on Vercel, or `CRON_SECRET` if the dedicated variable is unset (`getGrowthDashboardSecret()` in `src/lib/growth/growth-dashboard-auth.ts`).
 
 ```bash
+# Prefer GROWTH_DASHBOARD_SECRET when set in Vercel production
 curl -s -H "Authorization: Bearer $GROWTH_DASHBOARD_SECRET" \
   "https://zyenereviews.com/api/internal/marketing/template-pack-report?days=30" | jq
 ```
 
+**Response fields (top-level):**
+
+| Field | Meaning |
+|-------|---------|
+| `pageViews` | `template_pack_view` count (QA excluded) |
+| `submissions` | `template_pack_submit` count |
+| `subscribeSuccesses` | `template_pack_subscribe_success` count |
+| `conversionRatePercent` | `subscribeSuccesses / pageViews × 100`, or `null` if no views |
+| `signupClicks` | `template_pack_signup_click` |
+| `pricingClicks` | `template_pack_pricing_click` |
+| `latestSubmissions` | Up to 20 recent `marketing_subscribers` rows for this source |
+| `excludesQaTraffic` | Always `true` — metrics omit internal QA patterns |
+
+Without a valid Bearer token the API returns **401**.
+
 Or open `/growth` (password-protected) and call the same API from the browser when logged in.
+
+## QA / test traffic (do not count as real performance)
+
+Internal activation runs use UTM `utm_source=qa`, `utm_medium=funnel_test`, and emails like `template-pack-prod-qa-*@zyenereviews.com`. The report API **excludes** these automatically (`src/lib/marketing/template-pack-qa-filters.ts`).
+
+**SQL (production metrics — exclude QA):**
+
+```sql
+SELECT event_name, COUNT(*) AS n
+FROM marketing_events
+WHERE page_path = '/resources/review-request-templates'
+  AND created_at >= NOW() - INTERVAL '30 days'
+  AND COALESCE(utm_source, '') NOT IN ('qa', 'test', 'internal')
+  AND COALESCE(utm_medium, '') NOT IN ('funnel_test', 'qa_test')
+GROUP BY event_name;
+```
+
+After a QA run, delete test rows if you want a clean table (optional; report already ignores them):
+
+```sql
+DELETE FROM marketing_events
+WHERE page_path = '/resources/review-request-templates'
+  AND (utm_source IN ('qa', 'test', 'internal') OR utm_medium IN ('funnel_test', 'qa_test'));
+
+DELETE FROM marketing_subscribers
+WHERE email LIKE 'template-pack-prod-qa-%@zyenereviews.com';
+```
+
+## What counts as a real lead
+
+A **real lead** for this funnel is:
+
+1. A row in `marketing_subscribers` with `source = review_request_templates`, **and**
+2. Not matching QA filters (email prefix / QA UTMs above), **and**
+3. Preferably backed by a `template_pack_subscribe_success` event with non-QA UTMs in the same period.
+
+**Duplicate active subscribers:** API returns `{ "ok": true, "newLead": false }` — no second welcome email and no second `template_pack_subscribe_success` event.
+
+**Dedicated email subject:** `Your Review Request Template Pack` (only when `newLead` is true).
 
 ## Code map
 
@@ -104,6 +161,7 @@ Or open `/growth` (password-protected) and call the same API from the browser wh
 | `src/lib/marketing/track-marketing-event-client.ts` | Browser `fetch` helper |
 | `src/components/marketing/template-pack-page-analytics.tsx` | View / form view / CTA clicks |
 | `src/lib/marketing/newsletter-subscribe.ts` | Subscribe + funnel events |
+| `src/lib/marketing/template-pack-qa-filters.ts` | QA UTM/email exclusion for reports |
 | `src/lib/marketing/template-pack-lead-report.ts` | Report aggregation |
 
 ## PDF delivery
