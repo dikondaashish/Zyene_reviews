@@ -41,8 +41,11 @@ Internal guide for measuring and operating the growth blueprint after Phases 0â€
 | Trial â†’ paid | New orgs with `plan_status = active` (non-free) |
 | Churn / MRR / ARPU | Stripe API (when `STRIPE_SECRET_KEY` set) |
 | Leads | `marketing_subscribers` by `source` |
+| Template pack funnel | `marketing_events` + `docs/TEMPLATE_PACK_LEAD_MAGNET.md` |
 
 API (automation): `GET /api/internal/growth-metrics` with `Authorization: Bearer <GROWTH_DASHBOARD_SECRET>`.
+
+Template pack report: `GET /api/internal/marketing/template-pack-report?days=30` (same auth).
 
 ---
 

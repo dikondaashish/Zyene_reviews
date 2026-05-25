@@ -27,6 +27,7 @@ export function NewsletterSignup({
     successMessage = "You're subscribed. Check your inbox for a confirmation.",
     idleFooter = "No spam. Unsubscribe anytime.",
     placeholder = "your@email.com",
+    onSubscribeResult,
 }: {
     source?: string;
     className?: string;
@@ -35,6 +36,8 @@ export function NewsletterSignup({
     successMessage?: string;
     idleFooter?: string;
     placeholder?: string;
+    /** Fired after a successful subscribe API response (e.g. template pack dedupe). */
+    onSubscribeResult?: (result: { newLead: boolean }) => void;
 }) {
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -61,6 +64,7 @@ export function NewsletterSignup({
             setStatus("success");
             setMessage(successMessage);
             setEmail("");
+            onSubscribeResult?.({ newLead: Boolean(data.newLead) });
         } catch {
             setStatus("error");
             setMessage("Network error. Please try again.");
