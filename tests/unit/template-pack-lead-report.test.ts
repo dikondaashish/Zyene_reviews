@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TEMPLATE_PACK_EVENT_NAMES } from "./template-pack-events";
+import { TEMPLATE_PACK_EVENT_NAMES } from "@/lib/marketing/template-pack-events";
 
 describe("template pack conversion", () => {
     it("computes conversion from view and success counts", () => {
