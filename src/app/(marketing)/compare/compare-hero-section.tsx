@@ -16,8 +16,8 @@ export function CompareHeroSection() {
                         Honest Comparisons
                     </div>
                     <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
-                        See how Zyene Reviews<br />
-                        <span className="text-primary">compares to the rest</span>
+                        Zyene Reviews vs Birdeye,<br />
+                        <span className="text-primary">Podium, NiceJob &amp; GatherUp</span>
                     </h1>
                     <p className="text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
                         We believe in honest comparisons. Here&apos;s where Zyene Reviews wins, where competitors win, and how to decide what&apos;s right for your business.
@@ -28,15 +28,17 @@ export function CompareHeroSection() {
                     <div className="max-w-2xl mx-auto mb-10 text-left space-y-4">
                         <MarketingGeoSummary>{COMPARE_HUB_OPENING_SUMMARY}</MarketingGeoSummary>
                         <p className="text-sm text-center text-muted-foreground">
-                            Evaluating Birdeye renewal?{" "}
                             <Link href="/blog/birdeye-pricing-breakdown-2026" className="font-medium text-primary hover:underline">
-                                Read the 2026 Birdeye pricing breakdown
-                            </Link>{" "}
-                            (hidden costs, quote checklist) then open{" "}
-                            <Link href="/compare/birdeye" className="font-medium text-primary hover:underline">
-                                Zyene Reviews vs Birdeye
+                                Birdeye pricing breakdown (2026)
                             </Link>
-                            .
+                            {" · "}
+                            <Link href="/blog/negative-feedback-shield" className="font-medium text-primary hover:underline">
+                                Negative Feedback Shield guide
+                            </Link>
+                            {" · "}
+                            <Link href="/compare/birdeye" className="font-medium text-primary hover:underline">
+                                Full Birdeye comparison
+                            </Link>
                         </p>
                     </div>
                     <Link href="/signup">

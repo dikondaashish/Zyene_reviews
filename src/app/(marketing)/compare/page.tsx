@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Compare Zyene Reviews vs Competitors, 2026",
     description:
-        "See how Zyene Reviews compares to Birdeye, Podium, NiceJob, and GatherUp. Full feature-by-feature breakdowns, pricing comparisons, and honest analysis.",
+        "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, and GatherUp in one matrix: review alerts, AI replies, Shield, messaging depth, and honest strengths by buyer type.",
     alternates: { canonical: "https://zyenereviews.com/compare" },
     openGraph: {
         title: "See How Zyene Reviews Compares, 2026",
         description:
-            "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp. AI replies, Shield, and competitor tracking at $29.99/mo vs $299–$399/mo.",
+            "Honest comparison matrix: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp. Review-first vs CX, messaging, and survey platforms.",
         url: "https://zyenereviews.com/compare",
         type: "website",
     },
