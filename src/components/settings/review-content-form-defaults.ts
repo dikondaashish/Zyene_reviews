@@ -1,4 +1,10 @@
 import type { ContentFormValues } from "@/components/settings/review-content-schema";
+import {
+    DEFAULT_REVIEW_FOOTER_COMPANY_NAME,
+    DEFAULT_REVIEW_FOOTER_LINK,
+    DEFAULT_REVIEW_FOOTER_LOGO_URL,
+    DEFAULT_REVIEW_FOOTER_TEXT,
+} from "@/lib/brand/review-flow-footer-branding";
 
 export const reviewContentFormDefaults: ContentFormValues = {
     min_stars_for_google: 4,
@@ -20,10 +26,10 @@ export const reviewContentFormDefaults: ContentFormValues = {
     private_feedback_offer_message: "",
     thank_you_heading: "",
     thank_you_message: "",
-    footer_text: "",
-    footer_company_name: "Zyene",
-    footer_link: "https://zyene.com",
-    footer_logo_url: "/zyene-footer.png",
+    footer_text: DEFAULT_REVIEW_FOOTER_TEXT,
+    footer_company_name: DEFAULT_REVIEW_FOOTER_COMPANY_NAME,
+    footer_link: DEFAULT_REVIEW_FOOTER_LINK,
+    footer_logo_url: DEFAULT_REVIEW_FOOTER_LOGO_URL,
     hide_branding: false,
     welcome_message: "",
     apology_message: "",

@@ -5,7 +5,7 @@ import {
     reviewPageBackdropGradient,
     reviewPageOrbRgba,
 } from "@/lib/utils/review-page-background";
-import { ZyeneReviewsPlgLink } from "./plg-link";
+import { ReviewFlowPoweredBy } from "./review-flow-powered-by";
 
 export interface ReviewFlowShellProps {
     children: React.ReactNode;
@@ -89,34 +89,11 @@ export function ReviewFlowShell({
                             footerClassName
                         )}
                     >
-                        <div className="text-xs text-muted-foreground font-medium tracking-wide flex flex-col items-center justify-center gap-1">
-                            <div className="flex items-center justify-center gap-1.5">
-                                <span>Powered by</span>
-                                {footerLink ? (
-                                    <a
-                                        href={footerLink.startsWith("http") ? footerLink : `https://${footerLink}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 no-underline"
-                                    >
-                                        {footerLogoUrl && (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img
-                                                src={footerLogoUrl}
-                                                alt="Footer Logo"
-                                                className="object-contain size-4"
-                                            />
-                                        )}
-                                        <span className="text-foreground font-bold tracking-tight hover:text-foreground/80 transition-colors">
-                                            {footerCompanyName || "Zyene"}
-                                        </span>
-                                    </a>
-                                ) : (
-                                    <ZyeneReviewsPlgLink />
-                                )}
-                            </div>
-                            {footerLink ? <ZyeneReviewsPlgLink className="text-[10px]" /> : null}
-                        </div>
+                        <ReviewFlowPoweredBy
+                            footerLink={footerLink}
+                            footerLogoUrl={footerLogoUrl}
+                            footerCompanyName={footerCompanyName}
+                        />
                     </div>
                 )}
             </div>

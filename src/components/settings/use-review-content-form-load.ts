@@ -6,6 +6,12 @@ import type { UseFormReturn } from "react-hook-form";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { parseTagsToItems, type ReviewTagItem } from "@/lib/review-flow/tag-display";
 import type { ContentFormValues } from "@/components/settings/review-content-schema";
+import {
+    DEFAULT_REVIEW_FOOTER_COMPANY_NAME,
+    DEFAULT_REVIEW_FOOTER_LINK,
+    DEFAULT_REVIEW_FOOTER_LOGO_URL,
+    DEFAULT_REVIEW_FOOTER_TEXT,
+} from "@/lib/brand/review-flow-footer-branding";
 
 export function useReviewContentFormLoad(
     businessId: string,
@@ -76,10 +82,10 @@ export function useReviewContentFormLoad(
                     thank_you_message:
                         data.thank_you_message ||
                         "Your feedback means the world to us.\nWe appreciate you taking the time.",
-                    footer_text: data.footer_text || "Powered by Zyene",
-                    footer_company_name: data.footer_company_name || "Zyene",
-                    footer_link: data.footer_link || "",
-                    footer_logo_url: data.footer_logo_url || "",
+                    footer_text: data.footer_text || DEFAULT_REVIEW_FOOTER_TEXT,
+                    footer_company_name: data.footer_company_name || DEFAULT_REVIEW_FOOTER_COMPANY_NAME,
+                    footer_link: data.footer_link || DEFAULT_REVIEW_FOOTER_LINK,
+                    footer_logo_url: data.footer_logo_url || DEFAULT_REVIEW_FOOTER_LOGO_URL,
                     hide_branding: data.hide_branding || false,
                     welcome_message: data.welcome_message || "How was your experience?",
                     apology_message: data.apology_message || "Sorry about that",
