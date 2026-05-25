@@ -43,19 +43,27 @@ export function GrowthDashboardClientHeaderSummary({
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <GrowthDashboardStatCard
-                    label="Signups"
+                    label="New signups"
                     value={String(snapshot.counts.signupsInPeriod)}
-                    hint="New accounts in period"
+                    hint="Unique orgs with signup in period"
                 />
                 <GrowthDashboardStatCard
-                    label="Paid orgs"
+                    label="Paid"
                     value={String(snapshot.counts.activePaidOrgs)}
-                    hint="Active paid subscriptions"
+                    hint={
+                        snapshot.counts.billingSource === "stripe"
+                            ? "Active Stripe subscriptions"
+                            : "Orgs with paid plan + Stripe sub ID"
+                    }
                 />
                 <GrowthDashboardStatCard
                     label="Trialing"
                     value={String(snapshot.counts.trialingOrgs)}
-                    hint="Orgs on trial"
+                    hint={
+                        snapshot.counts.billingSource === "stripe"
+                            ? "Trialing Stripe subscriptions"
+                            : "Orgs trialing with Stripe sub ID"
+                    }
                 />
                 <GrowthDashboardStatCard
                     label="Live URLs"

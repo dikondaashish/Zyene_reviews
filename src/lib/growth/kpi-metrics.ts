@@ -25,10 +25,13 @@ export interface GrowthKpiSnapshot {
         partnerLeads: number;
     };
     counts: {
+        /** Unique organizations with a signup event in the period. */
         signupsInPeriod: number;
         activePaidOrgs: number;
         trialingOrgs: number;
         totalOrganizations: number;
+        /** Where paid/trial subscription counts were sourced. */
+        billingSource: "stripe" | "database";
     };
     /** True when `GROWTH_MARKETING_SESSIONS_30D` is set — visitor → signup % can compute. */
     marketingSessionsConfigured: boolean;
@@ -89,19 +92,55 @@ function isPlgSignup(metadata: Json | null): boolean {
     return false;
 }
 
+type OrganizationBillingRow = {
+    id: string;
+    created_at: string;
+    plan_status: string | null;
+    plan: string | null;
+    stripe_subscription_id: string | null;
+};
+
+function isPaidOrganization(o: OrganizationBillingRow): boolean {
+    return (
+        o.plan_status === "active" &&
+        o.plan !== "free" &&
+        o.plan != null &&
+        o.stripe_subscription_id != null
+    );
+}
+
+function isTrialingOrganization(o: OrganizationBillingRow): boolean {
+    const status = o.plan_status?.toLowerCase() ?? "";
+    return (
+        (status === "trialing" || status === "trial") &&
+        o.plan !== "free" &&
+        o.plan != null &&
+        o.stripe_subscription_id != null
+    );
+}
+
 async function fetchStripeRevenueHints(): Promise<{
     mrrCents: number | null;
-    activeSubscriptions: number;
+    activePaidSubscriptions: number;
+    trialingSubscriptions: number;
     canceledLast30d: number;
+    stripeConfigured: boolean;
 }> {
     if (!process.env.STRIPE_SECRET_KEY?.startsWith("sk_")) {
-        return { mrrCents: null, activeSubscriptions: 0, canceledLast30d: 0 };
+        return {
+            mrrCents: null,
+            activePaidSubscriptions: 0,
+            trialingSubscriptions: 0,
+            canceledLast30d: 0,
+            stripeConfigured: false,
+        };
     }
     try {
         const { stripe } = await import("@/services/stripe/client");
         const since = Math.floor(Date.now() / 1000) - DEFAULT_PERIOD_DAYS * 86400;
-        const [active, canceled] = await Promise.all([
+        const [active, trialing, canceled] = await Promise.all([
             stripe.subscriptions.list({ status: "active", limit: 100 }),
+            stripe.subscriptions.list({ status: "trialing", limit: 100 }),
             stripe.subscriptions.list({ status: "canceled", limit: 100, created: { gte: since } }),
         ]);
         let mrrCents = 0;
@@ -116,11 +155,19 @@ async function fetchStripeRevenueHints(): Promise<{
         }
         return {
             mrrCents,
-            activeSubscriptions: active.data.length,
+            activePaidSubscriptions: active.data.length,
+            trialingSubscriptions: trialing.data.length,
             canceledLast30d: canceled.data.length,
+            stripeConfigured: true,
         };
     } catch {
-        return { mrrCents: null, activeSubscriptions: 0, canceledLast30d: 0 };
+        return {
+            mrrCents: null,
+            activePaidSubscriptions: 0,
+            trialingSubscriptions: 0,
+            canceledLast30d: 0,
+            stripeConfigured: false,
+        };
     }
 }
 
@@ -164,24 +211,31 @@ export async function fetchGrowthKpiSnapshot(
     ]);
 
     const signupEvents = signupsRes.data ?? [];
-    const signupsInPeriod = signupEvents.length;
-    const plgSignups = signupEvents.filter((e) => isPlgSignup(e.metadata)).length;
-    const referralCount = referralRes.data?.length ?? 0;
-
-    const orgs = orgsRes.data ?? [];
-    const activePaidOrgs = orgs.filter(
-        (o) => o.plan_status === "active" && o.plan !== "free"
-    ).length;
-    const trialingOrgs = orgs.filter(
-        (o) => o.plan_status === "trialing" || o.plan_status === "trial"
-    ).length;
-
     const signupOrgIds = new Set(
         signupEvents.reduce<string[]>((acc, e) => {
             if (e.organization_id) acc.push(e.organization_id);
             return acc;
         }, [])
     );
+    const signupsInPeriod = signupOrgIds.size;
+    const plgSignups = new Set(
+        signupEvents.reduce<string[]>((acc, e) => {
+            if (e.organization_id && isPlgSignup(e.metadata)) acc.push(e.organization_id);
+            return acc;
+        }, [])
+    ).size;
+    const referralCount = referralRes.data?.length ?? 0;
+
+    const orgs = (orgsRes.data ?? []) as OrganizationBillingRow[];
+    const paidFromDb = orgs.filter(isPaidOrganization).length;
+    const trialingFromDb = orgs.filter(isTrialingOrganization).length;
+    const billingSource: "stripe" | "database" = stripeHints.stripeConfigured ? "stripe" : "database";
+    const activePaidOrgs = stripeHints.stripeConfigured
+        ? stripeHints.activePaidSubscriptions
+        : paidFromDb;
+    const trialingOrgs = stripeHints.stripeConfigured
+        ? stripeHints.trialingSubscriptions
+        : trialingFromDb;
     const businessToOrg = new Map<string, string>();
     if (signupOrgIds.size > 0) {
         const { data: businesses } = await admin
@@ -208,10 +262,7 @@ export async function fetchGrowthKpiSnapshot(
             : null;
 
     const paidFromTrial = orgs.filter(
-        (o) =>
-            o.plan_status === "active" &&
-            o.plan !== "free" &&
-            new Date(o.created_at) >= new Date(since)
+        (o) => isPaidOrganization(o) && new Date(o.created_at) >= new Date(since)
     ).length;
     const newOrgsInPeriod = orgs.filter((o) => new Date(o.created_at) >= new Date(since)).length;
     const trialConversionRate =
@@ -251,8 +302,8 @@ export async function fetchGrowthKpiSnapshot(
     const referralShare = signupsInPeriod > 0 ? (referralCount / signupsInPeriod) * 100 : null;
 
     const churnRate =
-        stripeHints.activeSubscriptions > 0
-            ? (stripeHints.canceledLast30d / stripeHints.activeSubscriptions) * 100
+        stripeHints.activePaidSubscriptions > 0
+            ? (stripeHints.canceledLast30d / stripeHints.activePaidSubscriptions) * 100
             : null;
 
     const arpu =
@@ -339,6 +390,7 @@ export async function fetchGrowthKpiSnapshot(
             activePaidOrgs,
             trialingOrgs,
             totalOrganizations: orgs.length,
+            billingSource,
         },
         marketingSessionsConfigured: sessions !== null && sessions > 0,
     };
