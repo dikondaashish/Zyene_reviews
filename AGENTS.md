@@ -204,6 +204,7 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 | Skill | When to use |
 |-------|-------------|
 | **impeccable** | Shape, critique, audit, polish, harden, animate UI — 23 sub-commands (`craft`, `audit`, `critique`, etc.); run `impeccable teach` once if `PRODUCT.md` / `DESIGN.md` are missing |
+| **emil-design-eng** | UI polish, component design, animation choices — Emil Kowalski’s design-engineering philosophy ([emilkowal.ski](https://emilkowal.ski)) |
 | **design-taste-frontend** | Marketing landings, portfolios, UI redesigns — anti-slop layout, typography, motion (Taste Skill v2) |
 | **web-design-guidelines** | UI/a11y/UX review against Web Interface Guidelines |
 
