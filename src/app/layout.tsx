@@ -7,7 +7,8 @@ import { LanguageProvider } from "@/lib/language-context";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { WebSiteJsonLd } from "@/components/seo/json-ld";
+import { ConditionalWebSiteJsonLd } from "@/components/seo/conditional-website-json-ld";
+import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 import Script from "next/script";
 import "./globals.css";
 
@@ -34,7 +35,7 @@ const syneDisplay = Syne({
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zyenereviews.com"),
+  metadataBase: new URL(MARKETING_SITE_ORIGIN),
   alternates: {
     canonical: "/",
   },
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://zyenereviews.com",
+    url: MARKETING_SITE_ORIGIN,
     siteName: "Zyene Reviews",
     title: "Zyene Reviews, Review Management for Local Businesses",
     description:
@@ -143,7 +144,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <QueryProvider>
-              <WebSiteJsonLd />
+              <ConditionalWebSiteJsonLd />
               {children}
               <Toaster />
               <CookieBanner />

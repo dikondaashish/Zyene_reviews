@@ -118,6 +118,11 @@ export async function proxy(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
+    const addAuthNoIndex = (response: NextResponse) => {
+        response.headers.set("X-Robots-Tag", "noindex, nofollow");
+        return response;
+    };
+
     // Helper to add CORS headers to cross-subdomain responses
     const addCorsHeaders = (response: NextResponse) => {
         const origin = request.headers.get("origin") || "";
@@ -226,7 +231,7 @@ export async function proxy(request: NextRequest) {
                 supabaseResponse.cookies.getAll().forEach((cookie) => {
                     res.cookies.set(cookie);
                 });
-                return res;
+                return addAuthNoIndex(res);
             }
 
             // Non-RSC navigations are allowed to redirect, but we must still attach
@@ -235,16 +240,16 @@ export async function proxy(request: NextRequest) {
                 NextResponse.redirect(new URL(targetUrl, request.url))
             );
             addCorsHeaders(redirectRes);
-            return redirectRes;
+            return addAuthNoIndex(redirectRes);
         }
         // Rewrite root to /login
         if (pathname === "/") {
-            return createResponse(
-                NextResponse.rewrite(new URL("/login", request.url))
+            return addAuthNoIndex(
+                createResponse(NextResponse.rewrite(new URL("/login", request.url))),
             );
         }
         // Pass other paths (e.g. /signup, /forgot-password)
-        return addCorsHeaders(supabaseResponse);
+        return addAuthNoIndex(addCorsHeaders(supabaseResponse));
     }
 
     // --- APP SUBDOMAIN (app.domain) ---
@@ -252,7 +257,9 @@ export async function proxy(request: NextRequest) {
         // Docs should live on apex domain, not app subdomain.
         if (pathname.startsWith("/docs")) {
             return createResponse(
-                NextResponse.redirect(new URL(`https://${rootDomain}${pathname}`, request.url))
+                NextResponse.redirect(
+                    new URL(`${getMarketingSiteOrigin(rootDomain)}${pathname}`, request.url),
+                ),
             );
         }
 
@@ -368,7 +375,18 @@ export async function proxy(request: NextRequest) {
     }
 
     // --- ROOT DOMAIN (domain) ---
-    if (hostname === rootDomain || hostname === `www.${rootDomain}`) {
+    const apexHost = rootDomain.split(":")[0]?.replace(/^www\./, "") ?? rootDomain;
+    const wwwHost = `www.${apexHost}`;
+
+    if (hostname === rootDomain || hostname === wwwHost) {
+        // Permanent canonical host: apex → www (production only)
+        if (hostname === apexHost && !rootDomain.includes("localhost")) {
+            const canonical = request.nextUrl.clone();
+            canonical.protocol = "https:";
+            canonical.hostname = wwwHost;
+            return createResponse(NextResponse.redirect(canonical, 308));
+        }
+
         // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
         if (rootDomain.includes("localhost")) {
             // Allow public review requests route

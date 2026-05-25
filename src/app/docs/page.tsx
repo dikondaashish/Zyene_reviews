@@ -5,8 +5,8 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 export const metadata: Metadata = {
     title: "Developer Documentation",
     description: "Complete documentation for Zyene Reviews. Connect Google Business Profile, manage reviews, send review requests via API, and embed widgets.",
-    alternates: { canonical: "https://zyenereviews.com/docs" },
-    openGraph: { title: "Developer Docs, Zyene Reviews", description: "Full API reference, integration guides, plugin setup, and quickstart for Zyene Reviews.", url: "https://zyenereviews.com/docs" },
+    alternates: { canonical: "https://www.zyenereviews.com/docs" },
+    openGraph: { title: "Developer Docs, Zyene Reviews", description: "Full API reference, integration guides, plugin setup, and quickstart for Zyene Reviews.", url: "https://www.zyenereviews.com/docs" },
     twitter: { card: "summary_large_image", title: "Developer Docs, Zyene Reviews", description: "API reference, integration guides, quickstart, and plugin setup." },
 };
 

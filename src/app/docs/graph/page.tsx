@@ -5,8 +5,8 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 export const metadata: Metadata = {
     title: "Review Graph",
     description: "Learn about the Zyene Reviews review graph model, how reviews, ratings, sources, and sentiment connect across Google, Yelp, and Facebook.",
-    alternates: { canonical: "https://zyenereviews.com/docs/graph" },
-    openGraph: { title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in the Zyene graph model.", url: "https://zyenereviews.com/docs/graph" },
+    alternates: { canonical: "https://www.zyenereviews.com/docs/graph" },
+    openGraph: { title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in the Zyene graph model.", url: "https://www.zyenereviews.com/docs/graph" },
     twitter: { card: "summary_large_image", title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in Zyene." },
 };
 

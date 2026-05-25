@@ -4,12 +4,12 @@ export const metadata: Metadata = {
     title: "How It Works",
     description:
         "Connect Google Business Profile, monitor reviews, collect more 5-stars with Negative Feedback Shield, and improve local rankings in four simple steps.",
-    alternates: { canonical: "https://zyenereviews.com/how-it-works" },
+    alternates: { canonical: "https://www.zyenereviews.com/how-it-works" },
     openGraph: {
         title: "How It Works",
         description:
             "Connect, monitor, collect, and grow, four steps to more 5-star reviews and a stronger local ranking.",
-        url: "https://zyenereviews.com/how-it-works",
+        url: "https://www.zyenereviews.com/how-it-works",
         type: "website",
     },
     twitter: {

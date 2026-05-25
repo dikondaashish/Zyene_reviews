@@ -4,11 +4,11 @@ export const metadata: Metadata = {
     title: "Agencies, White-Label Review Management",
     description:
         "Manage client reputations under your brand. Agency pricing tiers, white-label widgets, referral commissions, and multi-client dashboard roadmap.",
-    alternates: { canonical: "https://zyenereviews.com/agencies" },
+    alternates: { canonical: "https://www.zyenereviews.com/agencies" },
     openGraph: {
         title: "Agencies",
         description: "White-label review management for marketing and web agencies.",
-        url: "https://zyenereviews.com/agencies",
+        url: "https://www.zyenereviews.com/agencies",
     },
     twitter: {
         card: "summary_large_image",

@@ -4,12 +4,12 @@ export const metadata: Metadata = {
     title: "Security & Trust",
     description:
         "Zyene Reviews protects your data with multi-tenant RLS, 256-bit encryption, GDPR compliance, ethical review collection, and Google OAuth Limited Use.",
-    alternates: { canonical: "https://zyenereviews.com/security" },
+    alternates: { canonical: "https://www.zyenereviews.com/security" },
     openGraph: {
         title: "Security & Trust",
         description:
             "Multi-tenant RLS, encryption in transit and at rest, GDPR compliance, ethical review collection, and secure Google OAuth.",
-        url: "https://zyenereviews.com/security",
+        url: "https://www.zyenereviews.com/security",
         type: "website",
     },
     twitter: {

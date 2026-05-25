@@ -12,9 +12,9 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Features", url: "https://zyenereviews.com/features" },
-                    { name: pillar.title, url: `https://zyenereviews.com${path}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Features", url: "https://www.zyenereviews.com/features" },
+                    { name: pillar.title, url: `https://www.zyenereviews.com${path}` },
                 ]}
             />
 

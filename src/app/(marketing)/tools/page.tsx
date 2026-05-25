@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     title: "Free Tools, Review Links, Reputation Score & Response Templates",
     description:
         "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
-    alternates: { canonical: "https://zyenereviews.com/tools" },
+    alternates: { canonical: "https://www.zyenereviews.com/tools" },
     openGraph: {
         title: "Free Review Tools",
         description: "Generate a Google review link, check your reputation score, and draft review responses, free, no signup required.",
-        url: "https://zyenereviews.com/tools",
+        url: "https://www.zyenereviews.com/tools",
     },
     twitter: {
         card: "summary_large_image",
@@ -33,8 +33,8 @@ export default function FreeToolsHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Free Tools", url: "https://zyenereviews.com/tools" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Free Tools", url: "https://www.zyenereviews.com/tools" },
                 ]}
             />
             <section className="pt-20 pb-16 px-4 bg-background border-b border-border">

@@ -14,8 +14,8 @@ export default function ComparePage() {
             <FAQPageJsonLd faqs={COMPARE_HUB_FAQS} />
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Compare", url: "https://zyenereviews.com/compare" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Compare", url: "https://www.zyenereviews.com/compare" },
                             ]}
                         />
             <CompareHeroSection />

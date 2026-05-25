@@ -31,7 +31,7 @@ export async function generateMetadata(
     const catInfo = HELP_CATEGORIES[category];
     const path = helpArticleNestedPath(article);
     const pageTitle = `${article.title} — ${catInfo.label}`;
-    const canonicalUrl = `https://zyenereviews.com${path}`;
+    const canonicalUrl = `https://www.zyenereviews.com${path}`;
     return {
         title: pageTitle,
         description: article.excerpt,

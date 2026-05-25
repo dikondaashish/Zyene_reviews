@@ -9,8 +9,8 @@ export default function HowItWorksPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "How It Works", url: "https://zyenereviews.com/how-it-works" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "How It Works", url: "https://www.zyenereviews.com/how-it-works" },
                             ]}
                         />
             <HowItWorksHeroSection />

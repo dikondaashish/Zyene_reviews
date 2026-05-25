@@ -4,11 +4,11 @@ export const metadata: Metadata = {
     title: "Partners, Agencies, POS, Zapier & More",
     description:
         "Partner with Zyene Reviews: agency referral program, POS marketplace integrations, Zapier automation, and local business association co-marketing.",
-    alternates: { canonical: "https://zyenereviews.com/partners" },
+    alternates: { canonical: "https://www.zyenereviews.com/partners" },
     openGraph: {
         title: "Partners",
         description: "Agency partners, POS integrations, Zapier, and growth partnerships for local business software.",
-        url: "https://zyenereviews.com/partners",
+        url: "https://www.zyenereviews.com/partners",
         type: "website",
     },
     twitter: {

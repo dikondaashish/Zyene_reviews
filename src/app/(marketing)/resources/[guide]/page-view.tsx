@@ -32,9 +32,9 @@ export default async function ResourceGuidePage(
             ) : null}
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Resources", url: "https://zyenereviews.com/resources" },
-                    { name: resource.title, url: `https://zyenereviews.com/resources/${slug}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Resources", url: "https://www.zyenereviews.com/resources" },
+                    { name: resource.title, url: `https://www.zyenereviews.com/resources/${slug}` },
                 ]}
             />
             <ResourcesGuideGuideHeaderSection resource={resource} />

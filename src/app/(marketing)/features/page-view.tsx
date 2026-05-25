@@ -10,8 +10,8 @@ export default function FeaturesPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Features", url: "https://zyenereviews.com/features" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Features", url: "https://www.zyenereviews.com/features" },
                             ]}
                         />
             <FeaturesHeroSection />

@@ -14,8 +14,8 @@ export default function BlogHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Blog", url: "https://zyenereviews.com/blog" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Blog", url: "https://www.zyenereviews.com/blog" },
                 ]}
             />
             <BlogHeroSection />

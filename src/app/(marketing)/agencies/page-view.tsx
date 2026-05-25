@@ -10,8 +10,8 @@ export default function AgenciesPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Agencies", url: "https://zyenereviews.com/agencies" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Agencies", url: "https://www.zyenereviews.com/agencies" },
                             ]}
                         />
             <AgenciesHeroSection />

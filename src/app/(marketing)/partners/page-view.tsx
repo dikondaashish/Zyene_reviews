@@ -10,8 +10,8 @@ export default function PartnersPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Partners", url: "https://zyenereviews.com/partners" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Partners", url: "https://www.zyenereviews.com/partners" },
                             ]}
                         />
             <PartnersHeroSection />

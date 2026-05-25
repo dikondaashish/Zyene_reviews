@@ -14,12 +14,12 @@ export async function generateMetadata(
     return {
         title: data.metaTitle,
         description: data.metaDescription,
-        alternates: { canonical: `https://zyenereviews.com/compare/${slug}` },
+        alternates: { canonical: `https://www.zyenereviews.com/compare/${slug}` },
         keywords: data.targetKeywords,
         openGraph: {
             title: data.metaTitle,
             description: data.metaDescription,
-            url: `https://zyenereviews.com/compare/${slug}`,
+            url: `https://www.zyenereviews.com/compare/${slug}`,
             type: "website",
         },
         twitter: {

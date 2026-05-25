@@ -16,14 +16,14 @@ export async function generateMetadata({
     const { industry } = await params;
     const data = getLocalizedIndustry("es", industry);
     if (!data) return {};
-    const canonicalUrl = `https://zyenereviews.com/es/industries/${industry}`;
+    const canonicalUrl = `https://www.zyenereviews.com/es/industries/${industry}`;
     return {
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: {
             canonical: canonicalUrl,
             languages: {
-                en: `https://zyenereviews.com/industries/${data.industrySlug}`,
+                en: `https://www.zyenereviews.com/industries/${data.industrySlug}`,
                 es: canonicalUrl,
             },
         },

@@ -10,8 +10,9 @@ import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
 import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
+import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
-const BASE_URL = "https://zyenereviews.com";
+const BASE_URL = MARKETING_SITE_ORIGIN;
 
 /**
  * Next.js dynamic sitemap.

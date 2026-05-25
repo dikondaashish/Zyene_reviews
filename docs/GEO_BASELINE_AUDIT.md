@@ -1,12 +1,36 @@
 # GEO baseline audit
 
-**Status:** Baseline is **not complete** until every section below has real data entered (not placeholders).
+**Status:** GSC export **complete** (2026-05-25). AI citation log and traffic tables still **pending** until filled.
 
 Use this document as the repeatable starting point for measuring GEO and SEO improvement. Update after major content ships and monthly thereafter.
 
 **Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) · [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md) · [GEO_OWNER_FINAL_ACTIONS.md](./GEO_OWNER_FINAL_ACTIONS.md) · [GEO_OWNER_FINAL_CHECKLIST.md](./GEO_OWNER_FINAL_CHECKLIST.md)
 
-**Latest automated GSC export:** [reports/gsc/GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) (regenerate with `pnpm geo:gsc-baseline` — OAuth steps in [GEO_OWNER_FINAL_ACTIONS.md](./GEO_OWNER_FINAL_ACTIONS.md) §1)
+**Latest automated GSC export:** [reports/gsc/GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) · Property `sc-domain:zyenereviews.com` · Range **2026-04-27 → 2026-05-24** (28 complete days, excluding today)
+
+### GSC export summary (owner run)
+
+| Metric | Value |
+|--------|-------|
+| Property | `sc-domain:zyenereviews.com` |
+| Date range | 2026-04-27 → 2026-05-24 |
+| Query rows exported | 21 |
+| Page rows exported | 5 |
+| Query×page rows exported | 24 |
+
+**Indexed / visible pages observed in GSC:**
+
+| URL | Notes |
+|-----|-------|
+| `https://www.zyenereviews.com/` | Canonical marketing home |
+| `https://zyenereviews.com/` | Apex duplicate — **fixed** (308 → www) |
+| `https://auth.zyenereviews.com/login` | Auth login — **fixed** (`noindex`, auth `robots.txt` disallow) |
+| `/about` | In sitemap |
+| `/privacy` | In sitemap |
+
+**SEO fixes from baseline (2026-05-25):** www canonical redirect, sitemap/robots host on `www`, auth noindex, GEO priority URLs confirmed in sitemap.
+
+**Next GSC review:** Re-export in **2–4 weeks** (`pnpm geo:gsc-baseline`) and compare query/page movement.
 
 ---
 
@@ -23,7 +47,7 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 
 | Section | Status | Owner | Date completed |
 |---------|--------|-------|----------------|
-| GSC top queries/pages | Auto export available — see [GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) | | |
+| GSC top queries/pages | **Complete** — `sc-domain:zyenereviews.com`, 2026-04-27 → 2026-05-24 | Owner | 2026-05-25 |
 | Top 10 traffic pages | Not started | | |
 | AI citation queries (7 × 5 platforms) | Not started | | |
 | SEO / on-page audit | See [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) | | |

@@ -1,18 +1,32 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
+import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
-const BASE_URL = "https://zyenereviews.com";
+const AUTH_DISALLOW = ["/", "/login", "/signup", "/forgot-password", "/reset-password"];
 
 /**
  * Next.js robots.txt generation.
- * Automatically served at /robots.txt.
+ * Automatically served at /robots.txt per host.
  *
- * Rules:
- * - All marketing / docs / legal content is fully crawlable
- * - Internal API routes, admin paths, and Next.js internals are blocked
- * - The app subdomain (app.zyenereviews.com) has its own robots.txt on that host
- * - collectratings.com (review collection domain) has its own rules
+ * - Marketing (www): crawlable public content; auth paths on apex/www disallowed
+ * - auth.*: block all crawlers (login should not be indexed)
+ * - app.*: separate host — disallow dashboard (marketing robots not used for app UX)
  */
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+    const host = (await headers()).get("host")?.toLowerCase() ?? "";
+
+    if (host.startsWith("auth.")) {
+        return {
+            rules: [{ userAgent: "*", disallow: AUTH_DISALLOW }],
+        };
+    }
+
+    if (host.startsWith("app.")) {
+        return {
+            rules: [{ userAgent: "*", disallow: ["/"] }],
+        };
+    }
+
     return {
         rules: [
             {
@@ -27,17 +41,14 @@ export default function robots(): MetadataRoute.Robots {
                     "/privacy",
                     "/terms",
                     "/data-retention",
-                    // Phase 2 pages — pre-listed so Googlebot allows immediately on deploy
                     "/pricing",
                     "/features",
                     "/how-it-works",
                     "/integrations",
-                    // Phase 3 pages
                     "/industries",
                     "/industries/",
                     "/compare",
                     "/compare/",
-                    // Phase 4+ content
                     "/blog",
                     "/blog/",
                     "/resources",
@@ -45,7 +56,6 @@ export default function robots(): MetadataRoute.Robots {
                     "/customers",
                     "/customers/",
                     "/security",
-                    // Phase 5 — trust & social proof
                     "/case-studies",
                     "/case-studies/",
                     "/partners",
@@ -74,16 +84,18 @@ export default function robots(): MetadataRoute.Robots {
                     "/google-seo-aeo",
                     "/settings/integrations",
                     "/settings/integrations/zapier",
+                    "/login",
+                    "/signup",
+                    "/forgot-password",
+                    "/reset-password",
                     "/_next/",
                     "/favicon_io/",
                 ],
             },
-            // Block GPTBot / AI crawlers from indexing private content
-            // while still allowing marketing pages to be read for brand presence
             {
                 userAgent: "GPTBot",
                 allow: ["/", "/about", "/docs", "/privacy", "/terms"],
-                disallow: ["/api/", "/onboarding", "/dashboard"],
+                disallow: ["/api/", "/onboarding", "/dashboard", "/login", "/signup"],
             },
             {
                 userAgent: "CCBot",
@@ -92,10 +104,10 @@ export default function robots(): MetadataRoute.Robots {
             {
                 userAgent: "anthropic-ai",
                 allow: ["/", "/about", "/docs", "/privacy", "/terms"],
-                disallow: ["/api/", "/onboarding", "/dashboard"],
+                disallow: ["/api/", "/onboarding", "/dashboard", "/login", "/signup"],
             },
         ],
-        sitemap: `${BASE_URL}/sitemap.xml`,
-        host: BASE_URL,
+        sitemap: `${MARKETING_SITE_ORIGIN}/sitemap.xml`,
+        host: MARKETING_SITE_ORIGIN,
     };
 }

@@ -41,8 +41,16 @@ if (existsSync(layoutPath)) {
 const rootLayoutPath = path.join(process.cwd(), "src/app/layout.tsx");
 if (existsSync(rootLayoutPath)) {
     const rootSrc = readFileSync(rootLayoutPath, "utf8");
-    if (!rootSrc.includes("zyenereviews.com")) {
-        items.push({ id: "p0-domain", severity: "error", area: "phase0", message: "metadataBase not set to zyenereviews.com (§0.3)" });
+    if (
+        !rootSrc.includes("www.zyenereviews.com") &&
+        !rootSrc.includes("MARKETING_SITE_ORIGIN")
+    ) {
+        items.push({
+            id: "p0-domain",
+            severity: "error",
+            area: "phase0",
+            message: "metadataBase not set to canonical www marketing host (§0.3)",
+        });
     }
 }
 

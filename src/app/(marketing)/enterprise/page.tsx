@@ -4,11 +4,11 @@ export const metadata: Metadata = {
     title: "Enterprise, Custom Pricing, SLA, SSO & White-Label",
     description:
         "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, and white-label widgets.",
-    alternates: { canonical: "https://zyenereviews.com/enterprise" },
+    alternates: { canonical: "https://www.zyenereviews.com/enterprise" },
     openGraph: {
         title: "Zyene Reviews Enterprise",
         description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
-        url: "https://zyenereviews.com/enterprise",
+        url: "https://www.zyenereviews.com/enterprise",
     },
     twitter: {
         card: "summary_large_image",

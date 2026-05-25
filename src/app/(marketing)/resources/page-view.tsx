@@ -13,8 +13,8 @@ export default function ResourcesHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Resources", url: "https://zyenereviews.com/resources" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Resources", url: "https://www.zyenereviews.com/resources" },
                 ]}
             />
 

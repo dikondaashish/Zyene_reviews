@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     description:
         "Páginas en español para restaurantes, clínicas, talleres, salones y más. Automatiza reseñas de Google con Zyene Reviews.",
     alternates: {
-        canonical: "https://zyenereviews.com/es/industries",
-        languages: { en: "https://zyenereviews.com/industries", es: "https://zyenereviews.com/es/industries" },
+        canonical: "https://www.zyenereviews.com/es/industries",
+        languages: { en: "https://www.zyenereviews.com/industries", es: "https://www.zyenereviews.com/es/industries" },
     },
     openGraph: {
         title: "Industrias",
         description: "Gestión de reseñas para restaurantes, clínicas, talleres y más, en español.",
-        url: "https://zyenereviews.com/es/industries",
+        url: "https://www.zyenereviews.com/es/industries",
     },
     twitter: {
         card: "summary_large_image",
@@ -31,8 +31,8 @@ export default function EsIndustriesHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Industrias (ES)", url: "https://zyenereviews.com/es/industries" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Industrias (ES)", url: "https://www.zyenereviews.com/es/industries" },
                 ]}
             />
             <section className="pt-24 pb-16 px-4">

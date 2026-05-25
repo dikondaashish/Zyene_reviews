@@ -16,9 +16,9 @@ export function HelpCategoryView({ categoryKey }: { categoryKey: HelpCategory })
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Help Center", url: "https://zyenereviews.com/help" },
-                    { name: catInfo.label, url: `https://zyenereviews.com/help/${categoryKey}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Help Center", url: "https://www.zyenereviews.com/help" },
+                    { name: catInfo.label, url: `https://www.zyenereviews.com/help/${categoryKey}` },
                 ]}
             />
 

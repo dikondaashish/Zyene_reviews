@@ -14,8 +14,8 @@ export default function EnterprisePage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Enterprise", url: "https://zyenereviews.com/enterprise" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Enterprise", url: "https://www.zyenereviews.com/enterprise" },
                 ]}
             />
             <EnterpriseHeroSection />

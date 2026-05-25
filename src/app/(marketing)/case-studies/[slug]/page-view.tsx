@@ -24,9 +24,9 @@ export default async function CaseStudyPage(
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Case Studies", url: "https://zyenereviews.com/case-studies" },
-                                { name: study.company, url: `https://zyenereviews.com/case-studies/${slug}` },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Case Studies", url: "https://www.zyenereviews.com/case-studies" },
+                                { name: study.company, url: `https://www.zyenereviews.com/case-studies/${slug}` },
                             ]}
                         />
             <CaseStudiesSlugHeaderSection study={study} slug={slug} related={related} />

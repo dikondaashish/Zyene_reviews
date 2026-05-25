@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "zyenereviews.com" }],
+      "destination": "https://www.zyenereviews.com/:path*",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/daily-digest",

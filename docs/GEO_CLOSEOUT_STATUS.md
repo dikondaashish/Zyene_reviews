@@ -16,7 +16,7 @@
 | **2** | Schema, FAQs, internal links | **Complete** | — |
 | **3** | Distribution copy & UTMs (repo) | **Complete** | Posts + URLs **pending** |
 | **4** | Lead magnets, nurture, `/growth` | **Complete** | QA execution **pending** |
-| **0** | GSC export + AI citation baseline | Script + docs **ready** | OAuth run + AI log **pending** |
+| **0** | GSC export + AI citation baseline | GSC export **done** (2026-05-25); www/auth SEO cleanup **done** | AI citation log **pending** |
 | **5** | Lead/nurture QA + subscriber tracking | Tracking + runbook **ready** | Resend/Inngest/Supabase verify **pending** |
 | **6** | Distribution posting | Posting plan + tracker **ready** | Real posts **pending** |
 | **7** | Proof + external profiles | Runbooks **ready** | Case studies, listings **pending** |
@@ -40,12 +40,23 @@
 | `/growth` | Template pack + local SEO checklist sections; report APIs (auth required) |
 | Docs | Owner actions, checklist, distribution plan, proof runbook, external profiles |
 | Validation | `validate-geo-faq-build.mjs`, `validate-geo-faq-production.mjs` |
+| SEO cleanup (GSC) | Auth `noindex`, apex→www 308, sitemap/robots on `www` | 2026-05-25 |
+
+---
+
+## GSC baseline (2026-05-25)
+
+- Property: `sc-domain:zyenereviews.com`
+- Range: 2026-04-27 → 2026-05-24
+- Export: 21 queries, 5 pages, 24 query-page pairs → `reports/gsc/`
+- Issues addressed: auth login in index, apex/www duplicate
+- **Next review:** 2–4 weeks — re-run `pnpm geo:gsc-baseline`
 
 ---
 
 ## Owner next actions (ordered)
 
-1. **GSC OAuth** — `pnpm geo:gsc-baseline` ([GEO_OWNER_FINAL_ACTIONS.md](./GEO_OWNER_FINAL_ACTIONS.md) §1).
+1. ~~**GSC OAuth**~~ — **Done** 2026-05-25. Next export in 2–4 weeks.
 2. **AI citation baseline** — fill §4a in [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) (7 queries × 5 platforms).
 3. **Lead/nurture QA** — [LEAD_NURTURE_QA_RUNBOOK.md](./LEAD_NURTURE_QA_RUNBOOK.md) + `node scripts/qa-lead-magnet-flow.mjs`.
 4. **Week 1 distribution** — [GEO_DISTRIBUTION_OWNER_POSTING_PLAN.md](./GEO_DISTRIBUTION_OWNER_POSTING_PLAN.md); paste URLs in [GEO_DISTRIBUTION_EXECUTION_TRACKER.md](./GEO_DISTRIBUTION_EXECUTION_TRACKER.md).

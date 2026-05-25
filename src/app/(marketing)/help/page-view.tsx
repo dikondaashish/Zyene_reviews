@@ -8,8 +8,8 @@ export default function HelpCenterPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Help Center", url: "https://zyenereviews.com/help" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Help Center", url: "https://www.zyenereviews.com/help" },
                             ]}
                         />
             <HelpHeroSection />

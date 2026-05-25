@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Resources, Free Guides for Local Business Owners",
     description: "Free, in-depth guides on Google reviews, local SEO, review request templates, and reputation management. Everything a local business owner needs in one place.",
-    alternates: { canonical: "https://zyenereviews.com/resources" },
+    alternates: { canonical: "https://www.zyenereviews.com/resources" },
     openGraph: {
         title: "Resources, Free Guides for Local Business Owners",
         description: "Free in-depth guides on Google reviews, local SEO, negative review templates, and review request templates for local businesses.",
-        url: "https://zyenereviews.com/resources",
+        url: "https://www.zyenereviews.com/resources",
         type: "website",
     },
     twitter: {

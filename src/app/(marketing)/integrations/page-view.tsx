@@ -10,8 +10,8 @@ export default function IntegrationsPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Integrations", url: "https://zyenereviews.com/integrations" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Integrations", url: "https://www.zyenereviews.com/integrations" },
                 ]}
             />
             <IntegrationsHeroSection />

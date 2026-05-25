@@ -14,8 +14,8 @@ export default function DemoPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Book a demo", url: "https://zyenereviews.com/demo" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Book a demo", url: "https://www.zyenereviews.com/demo" },
                 ]}
             />
 

@@ -28,11 +28,11 @@ export async function generateMetadata(
         return {
             title: catTitle,
             description: cat.description,
-            alternates: { canonical: `https://zyenereviews.com/help/${slug}` },
+            alternates: { canonical: `https://www.zyenereviews.com/help/${slug}` },
             openGraph: {
                 title: catTitle,
                 description: cat.description,
-                url: `https://zyenereviews.com/help/${slug}`,
+                url: `https://www.zyenereviews.com/help/${slug}`,
             },
             twitter: {
                 card: "summary_large_image",

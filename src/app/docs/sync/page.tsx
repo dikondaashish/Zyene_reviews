@@ -5,8 +5,8 @@ import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 export const metadata: Metadata = {
     title: "Sync Networks",
     description: "How Zyene Reviews syncs reviews from Google Business Profile, Yelp, and Facebook. Sync frequency, OAuth scopes, and troubleshooting.",
-    alternates: { canonical: "https://zyenereviews.com/docs/sync" },
-    openGraph: { title: "Sync Networks, Zyene Reviews Docs", description: "How Zyene syncs reviews from Google, Yelp, and Facebook, frequency, OAuth, and troubleshooting.", url: "https://zyenereviews.com/docs/sync" },
+    alternates: { canonical: "https://www.zyenereviews.com/docs/sync" },
+    openGraph: { title: "Sync Networks, Zyene Reviews Docs", description: "How Zyene syncs reviews from Google, Yelp, and Facebook, frequency, OAuth, and troubleshooting.", url: "https://www.zyenereviews.com/docs/sync" },
     twitter: { card: "summary_large_image", title: "Sync Networks, Zyene Reviews Docs", description: "Review sync from Google, Yelp, and Facebook, frequency, OAuth, troubleshooting." },
 };
 

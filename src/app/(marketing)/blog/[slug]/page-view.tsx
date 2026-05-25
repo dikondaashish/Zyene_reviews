@@ -22,9 +22,9 @@ export default async function BlogPostPage(
             {post.faqs && post.faqs.length > 0 ? <FAQPageJsonLd faqs={post.faqs} /> : null}
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Blog", url: "https://zyenereviews.com/blog" },
-                    { name: post.title, url: `https://zyenereviews.com/blog/${slug}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Blog", url: "https://www.zyenereviews.com/blog" },
+                    { name: post.title, url: `https://www.zyenereviews.com/blog/${slug}` },
                 ]}
             />
             <BlogSlugArticleHeaderSection post={post} />
