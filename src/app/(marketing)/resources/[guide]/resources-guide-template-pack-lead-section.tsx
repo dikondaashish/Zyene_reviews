@@ -1,5 +1,5 @@
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
-import { Download, Mail } from "lucide-react";
+import { Download } from "lucide-react";
 
 const COMPLIANCE_ITEMS = [
     "No discounts, gifts, or incentives for positive reviews.",
@@ -22,20 +22,16 @@ export function ResourcesGuideTemplatePackLeadSection() {
                 <h2 id="template-pack-capture-heading" className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
                     Get the full template pack
                 </h2>
-                <p className="text-muted-foreground text-sm sm:text-base mb-1">
-                    Send me the 20 templates — we&apos;ll email the review request swipe file (PDF delivery coming in a
-                    later update).
-                </p>
-                <p className="text-xs text-muted-foreground mb-6 flex items-center justify-center gap-1.5">
-                    <Mail className="size-3.5 shrink-0" aria-hidden />
-                    Download the review request swipe file to your inbox
+                <p className="text-muted-foreground text-sm sm:text-base mb-6">
+                    Send me the 20 templates — we&apos;ll email a link to the full web swipe file (22 SMS and email
+                    scripts). No PDF yet; everything is ready on the page below.
                 </p>
 
                 <NewsletterSignup
                     source="review_request_templates"
                     submitLabel="Send me the 20 templates"
                     subscribedLabel="On the list"
-                    successMessage="You're on the list. Check your inbox for a welcome note—we'll send the full swipe file soon (PDF download is a Phase 5 follow-up)."
+                    successMessage="Check your email for the template pack link. The full web version is also available on this page."
                     idleFooter=""
                     className="mx-auto"
                 />

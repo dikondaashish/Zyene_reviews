@@ -170,7 +170,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     },
     {
         type: "tip",
-        text: "Email the full swipe file from the form at the top of this page (source: review_request_templates). PDF attachment delivery is a Phase 5 follow-up—you still get a welcome email now. Copy any preview template below without logging in.",
+        text: "Request the pack at the top of this page—we email a link to this URL (source: review_request_templates). No PDF attachment yet; the web version is ready now. Copy any preview template below without logging in.",
     },
     { type: "cta", ctaLabel: "Automate review requests with Zyene Reviews →", ctaHref: "/signup" },
     { type: "cta", ctaLabel: "See review collection features →", ctaHref: "/features/review-collection" },

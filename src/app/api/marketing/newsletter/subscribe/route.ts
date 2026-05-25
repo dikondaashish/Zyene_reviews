@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
 import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-emails";
+import { reviewRequestTemplatePackEmail } from "@/services/resend/templates/review-request-templates-pack-email";
+
+const TEMPLATE_PACK_SOURCE = "review_request_templates";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -72,7 +75,11 @@ export async function POST(request: Request) {
         const unsubscribeUrl = subscriber?.id
             ? `https://zyenereviews.com/newsletter/unsubscribe?id=${subscriber.id}`
             : "https://zyenereviews.com/newsletter/unsubscribe";
-        const { subject, html } = newsletterWelcomeEmail({ email, unsubscribeUrl });
+        const source = body.source ?? "newsletter";
+        const { subject, html } =
+            source === TEMPLATE_PACK_SOURCE
+                ? reviewRequestTemplatePackEmail({ unsubscribeUrl })
+                : newsletterWelcomeEmail({ email, unsubscribeUrl });
         await sendEmail({ to: email, subject, html });
     } catch (err) {
         logger.error({ err: err }, "[newsletter] welcome email failed:");

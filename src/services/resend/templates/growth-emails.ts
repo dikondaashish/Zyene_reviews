@@ -9,7 +9,7 @@ interface GrowthEmailLayoutProps {
     ctaUrl?: string;
 }
 
-function growthEmailLayout({ userName, bodyHtml, ctaLabel, ctaUrl }: GrowthEmailLayoutProps): string {
+export function growthEmailLayout({ userName, bodyHtml, ctaLabel, ctaUrl }: GrowthEmailLayoutProps): string {
     const ctaBlock =
         ctaLabel && ctaUrl
             ? `<a href="${ctaUrl}" style="display:inline-block;background-color:#18181b;color:#ffffff;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;font-size:15px;margin-top:24px;">${ctaLabel}</a>`

@@ -37,7 +37,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         {
             question: "Can I copy these review request templates for free?",
             answer:
-                "Yes. Preview templates on this page are ungated—copy any script and replace [Name], [Business Name], and [link]. Optional email capture sends the full swipe file (PDF attachment delivery is a Phase 5 follow-up).",
+                "Yes. Preview templates on this page are ungated—copy any script and replace [Name], [Business Name], and [link]. Optional email capture sends a dedicated message with a link back to this page (no PDF attachment yet).",
         },
         {
             question: "Is it okay to only send review requests to happy customers?",
