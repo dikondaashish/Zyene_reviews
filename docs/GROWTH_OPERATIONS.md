@@ -16,12 +16,33 @@ Internal guide for measuring and operating the growth blueprint after Phases 0�
 
 ---
 
+## GSC baseline export (automated)
+
+Regenerate Search Console top queries/pages for [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md):
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/zyene-gsc-service-account.json"
+pnpm geo:gsc-baseline
+```
+
+Outputs under `reports/gsc/` (JSON + CSV + `GSC_BASELINE_SUMMARY.md`). Credentials stay **outside the repo**; never commit service account JSON.
+
+**One-time setup:**
+
+1. Enable **Google Search Console API** in GCP project `zyene-reviews`.
+2. Search Console → **Settings → Users** → add service account email (e.g. `zyene-gsc-reporter@zyene-reviews.iam.gserviceaccount.com`) with at least **Restricted** access on property `https://www.zyenereviews.com/`.
+3. Property URL must match `GSC_SITE_URL` (default trailing-slash URL prefix).
+
+Auth alternatives: `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` (Vercel/CI only — do not log).
+
+---
+
 ## KPI sources (external)
 
 | Metric | Where to measure | Cadence |
 |--------|------------------|---------|
 | Organic sessions | [Vercel Analytics](https://vercel.com/analytics) or GA4 | Weekly |
-| Keywords top 20 | [Google Search Console](https://search.google.com/search-console) → Performance | Bi-weekly |
+| Keywords top 20 | [Google Search Console](https://search.google.com/search-console) → Performance, or `pnpm geo:gsc-baseline` | Bi-weekly |
 | Compare / industry visits | GA4 path report: `/compare/*`, `/industries/*` | Weekly |
 | Widget embed views | Vercel path filter `/w/` | Monthly |
 | NPS | PostHog survey (when launched) | Quarterly |

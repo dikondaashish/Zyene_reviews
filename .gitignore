@@ -37,6 +37,16 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Google / GSC credentials (never commit)
+*.service-account.json
+*service-account*.json
+google-credentials.json
+*.credentials.json
+
+# GSC export artifacts (regenerate locally; summary may be committed separately)
+reports/gsc/*.json
+reports/gsc/*.csv
+
 # vercel
 .vercel
 

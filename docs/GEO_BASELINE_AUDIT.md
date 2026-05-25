@@ -6,11 +6,13 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 
 **Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) · [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md)
 
+**Latest automated GSC export:** [reports/gsc/GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) (regenerate with `pnpm geo:gsc-baseline` — see [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) or script header in `scripts/export-gsc-baseline.mjs`)
+
 ---
 
 ## How to use this doc
 
-1. Export data from **Google Search Console** (last 28 days) and your analytics tool.
+1. Export data from **Google Search Console** (last 28 days) — prefer `pnpm geo:gsc-baseline` for queries/pages, or paste manually below.
 2. Run the **AI citation queries** manually in ChatGPT, Perplexity, Gemini, and Google (check for AI Overviews).
 3. Record results in the tables below — use `—` or `Pending` until filled.
 4. Do **not** mark the baseline complete in the playbook until this file shows real entries.
@@ -21,7 +23,7 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 
 | Section | Status | Owner | Date completed |
 |---------|--------|-------|----------------|
-| GSC top queries/pages | Not started | | |
+| GSC top queries/pages | Auto export available — see [GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) | | |
 | Top 10 traffic pages | Not started | | |
 | AI citation queries (5) | Not started | | |
 | SEO / on-page audit | See [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) | | |

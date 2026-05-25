@@ -21,6 +21,7 @@
     "skills:vercel": "node scripts/install-vercel-agent-skills.mjs",
     "skills:sync": "node scripts/sync-agent-skills.mjs",
     "indexnow:ping": "node scripts/ping-indexnow.mjs",
+    "geo:gsc-baseline": "node scripts/export-gsc-baseline.mjs",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },
   "dependencies": {
@@ -87,6 +88,7 @@
     "dotenv": "^17.4.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.7",
+    "googleapis": "^172.0.0",
     "postcss": "^8.5.15",
     "prettier": "^3.8.1",
     "shadcn": "^3.8.5",
