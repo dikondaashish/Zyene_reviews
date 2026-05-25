@@ -47,6 +47,10 @@ google-credentials.json
 reports/gsc/*.json
 reports/gsc/*.csv
 
+# GSC OAuth token cache (local only)
+.cache/
+.cache/google-gsc-token.json
+
 # vercel
 .vercel
 

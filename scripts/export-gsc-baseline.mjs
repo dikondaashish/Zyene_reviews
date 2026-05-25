@@ -2,19 +2,27 @@
 /**
  * Export Google Search Console baseline (last 28 complete days, excluding today).
  *
- * Auth: GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
+ * Auth (in order):
+ * 1. Service account — GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
+ * 2. OAuth user (Desktop app) — GOOGLE_OAUTH_CLIENT_ID + GOOGLE_OAUTH_CLIENT_SECRET
+ *    or GOOGLE_OAUTH_CLIENT_JSON path to Desktop client JSON from Google Cloud
+ *
  * Property: GSC_SITE_URL (default https://www.zyenereviews.com/)
  *
  * Usage: pnpm geo:gsc-baseline
  */
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, writeFileSync, existsSync, readFileSync, chmodSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { createInterface } from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 import { google } from "googleapis";
 
 const ROOT = join(import.meta.dirname, "..");
 const OUT_DIR = join(ROOT, "reports", "gsc");
 const SITE_URL = (process.env.GSC_SITE_URL ?? "https://www.zyenereviews.com/").trim();
 const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
+const DEFAULT_REDIRECT_URI = "http://localhost";
+const DEFAULT_TOKEN_PATH = join(ROOT, ".cache", "google-gsc-token.json");
 
 function loadEnvLocal() {
     const path = join(ROOT, ".env.local");
@@ -49,7 +57,13 @@ function last28CompleteDays() {
     return { startDate: ymd(start), endDate: ymd(end) };
 }
 
-function resolveCredentials() {
+function hasServiceAccountEnv() {
+    if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64?.trim()) return true;
+    const path = process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim();
+    return Boolean(path);
+}
+
+function resolveServiceAccountCredentials() {
     const b64 = process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64?.trim();
     if (b64) {
         try {
@@ -60,14 +74,117 @@ function resolveCredentials() {
     }
     const path = process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim();
     if (!path) {
-        throw new Error(
-            "Missing credentials: set GOOGLE_APPLICATION_CREDENTIALS to a service account JSON path, or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64",
-        );
+        throw new Error("GOOGLE_APPLICATION_CREDENTIALS is not set");
     }
     if (!existsSync(path)) {
-        throw new Error(`Credential file not found: ${path}`);
+        throw new Error(`Service account file not found: ${path}`);
     }
     return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function resolveOAuthClientConfig() {
+    const jsonPath = process.env.GOOGLE_OAUTH_CLIENT_JSON?.trim();
+    if (jsonPath) {
+        if (!existsSync(jsonPath)) {
+            throw new Error(`GOOGLE_OAUTH_CLIENT_JSON file not found: ${jsonPath}`);
+        }
+        const raw = JSON.parse(readFileSync(jsonPath, "utf8"));
+        const block = raw.installed ?? raw.web;
+        if (!block?.client_id || !block?.client_secret) {
+            throw new Error("GOOGLE_OAUTH_CLIENT_JSON must contain installed or web client_id and client_secret");
+        }
+        return {
+            clientId: block.client_id,
+            clientSecret: block.client_secret,
+            redirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI?.trim() || block.redirect_uris?.[0] || DEFAULT_REDIRECT_URI,
+        };
+    }
+    const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID?.trim();
+    const clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET?.trim();
+    if (!clientId || !clientSecret) {
+        throw new Error(
+            "OAuth not configured: set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET, or GOOGLE_OAUTH_CLIENT_JSON (Desktop app JSON from Google Cloud)",
+        );
+    }
+    return {
+        clientId,
+        clientSecret,
+        redirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI?.trim() || DEFAULT_REDIRECT_URI,
+    };
+}
+
+function tokenCachePath() {
+    return process.env.GOOGLE_OAUTH_TOKEN_PATH?.trim() || DEFAULT_TOKEN_PATH;
+}
+
+function saveTokenCache(tokens) {
+    const path = tokenCachePath();
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, JSON.stringify(tokens, null, 2) + "\n");
+    chmodSync(path, 0o600);
+}
+
+async function promptAuthorizationCode() {
+    const rl = createInterface({ input, output });
+    try {
+        const code = await rl.question("Paste the authorization code (from the redirect URL ?code=...): ");
+        return code.trim();
+    } finally {
+        rl.close();
+    }
+}
+
+async function authorizeOAuthUser() {
+    const { clientId, clientSecret, redirectUri } = resolveOAuthClientConfig();
+    const oauth2 = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+    const cachePath = tokenCachePath();
+
+    if (existsSync(cachePath)) {
+        oauth2.setCredentials(JSON.parse(readFileSync(cachePath, "utf8")));
+        try {
+            const { credentials } = await oauth2.refreshAccessToken();
+            oauth2.setCredentials(credentials);
+            saveTokenCache(oauth2.credentials);
+            console.log(`Auth: OAuth user (cached token: ${cachePath})`);
+            return oauth2;
+        } catch {
+            console.warn("Cached OAuth token expired or invalid — re-authorizing.");
+        }
+    }
+
+    const authUrl = oauth2.generateAuthUrl({
+        access_type: "offline",
+        scope: [SCOPE],
+        prompt: "consent",
+    });
+
+    console.log("Auth: OAuth user (no valid cached token)");
+    console.log("\n1. Open this URL in your browser and sign in with the Google account that owns Search Console:\n");
+    console.log(authUrl);
+    console.log(
+        `\n2. After approving, your browser redirects to ${redirectUri} (may show "can't connect" — that is OK).`,
+    );
+    console.log("3. Copy the `code` query parameter from the address bar and paste it below.\n");
+
+    const code = await promptAuthorizationCode();
+    if (!code) {
+        throw new Error("No authorization code provided");
+    }
+
+    const { tokens } = await oauth2.getToken(code);
+    oauth2.setCredentials(tokens);
+    saveTokenCache(tokens);
+    console.log(`Token saved to ${cachePath} (not committed — see .gitignore)\n`);
+    return oauth2;
+}
+
+async function createAuth() {
+    if (hasServiceAccountEnv()) {
+        const credentials = resolveServiceAccountCredentials();
+        console.log("Auth: service account");
+        return new google.auth.GoogleAuth({ credentials, scopes: [SCOPE] });
+    }
+    return authorizeOAuthUser();
 }
 
 function mapRow(row, dimensions) {
@@ -110,35 +227,48 @@ function toCsv(rows, columns) {
     return [header, ...lines].join("\n") + "\n";
 }
 
-function explainApiError(err) {
+function explainApiError(err, authMode) {
     const status = err?.response?.status ?? err?.code;
     const msg = err?.response?.data?.error?.message ?? err?.message ?? String(err);
     const reasons = (err?.response?.data?.error?.errors ?? [])
         .map((e) => e.reason)
         .filter(Boolean)
         .join(", ");
-    const parts = [`HTTP/status: ${status ?? "unknown"}`, `message: ${msg}`];
+    const parts = [
+        `HTTP/status: ${status ?? "unknown"}`,
+        `message: ${msg}`,
+        `GSC_SITE_URL: ${SITE_URL}`,
+        `auth: ${authMode}`,
+    ];
     if (reasons) parts.push(`reasons: ${reasons}`);
     if (status === 403 || /permission|forbidden/i.test(msg)) {
-        parts.push(
-            "hint: Add the service account email as a user on this Search Console property (Settings → Users and permissions).",
-        );
+        if (authMode === "service_account") {
+            parts.push(
+                "hint: Service accounts often cannot be added in Search Console. Unset GOOGLE_APPLICATION_CREDENTIALS and use OAuth (see docs/GROWTH_OPERATIONS.md).",
+            );
+        } else {
+            parts.push(
+                "hint: Sign in with the Google account that has access to this Search Console property.",
+            );
+        }
+        parts.push('hint: Try another property: GSC_SITE_URL="sc-domain:zyenereviews.com" pnpm geo:gsc-baseline');
     }
     if (/has not been used|disabled|API has not been enabled/i.test(msg)) {
         parts.push("hint: Enable the Google Search Console API in Google Cloud Console for project zyene-reviews.");
     }
     if (/not found|invalid.*site/i.test(msg)) {
-        parts.push(`hint: Confirm property URL in Search Console matches GSC_SITE_URL (${SITE_URL}).`);
+        parts.push("hint: Confirm the property exists in Search Console and matches GSC_SITE_URL exactly.");
     }
     return parts.join("\n");
 }
 
-function writeSummary({ startDate, endDate, queries, pages, queryPages, exportedAt }) {
+function writeSummary({ startDate, endDate, queries, pages, queryPages, exportedAt, authMode }) {
     const lines = [
         "# GSC baseline summary",
         "",
         `**Exported:** ${exportedAt}`,
         `**Property:** \`${SITE_URL}\``,
+        `**Auth:** ${authMode}`,
         `**Date range:** ${startDate} → ${endDate} (28 complete days, excluding today)`,
         "",
         "| Export | Rows |",
@@ -172,16 +302,21 @@ async function main() {
     loadEnvLocal();
     const { startDate, endDate } = last28CompleteDays();
     const exportedAt = new Date().toISOString();
+    const authMode = hasServiceAccountEnv() ? "service_account" : "oauth_user";
 
-    let credentials;
+    let auth;
     try {
-        credentials = resolveCredentials();
+        auth = await createAuth();
     } catch (e) {
         console.error("GSC export failed (credentials):", e.message);
+        if (!hasServiceAccountEnv()) {
+            console.error(
+                "\nTo use OAuth: unset GOOGLE_APPLICATION_CREDENTIALS, set GOOGLE_OAUTH_CLIENT_ID/SECRET or GOOGLE_OAUTH_CLIENT_JSON, then re-run.",
+            );
+        }
         process.exit(1);
     }
 
-    const auth = new google.auth.GoogleAuth({ credentials, scopes: [SCOPE] });
     const searchconsole = google.searchconsole({ version: "v1", auth });
 
     console.log(`GSC baseline export for ${SITE_URL}`);
@@ -213,7 +348,7 @@ async function main() {
         ]);
     } catch (err) {
         console.error("GSC export failed (API):");
-        console.error(explainApiError(err));
+        console.error(explainApiError(err, authMode));
         process.exit(1);
     }
 
@@ -228,6 +363,7 @@ async function main() {
     const payload = {
         exportedAt,
         siteUrl: SITE_URL,
+        authMode,
         startDate,
         endDate,
         queries,
@@ -250,7 +386,7 @@ async function main() {
     );
     writeFileSync(
         join(OUT_DIR, "GSC_BASELINE_SUMMARY.md"),
-        writeSummary({ startDate, endDate, queries, pages, queryPages, exportedAt }),
+        writeSummary({ startDate, endDate, queries, pages, queryPages, exportedAt, authMode }),
     );
 
     console.log("GSC API connected.");

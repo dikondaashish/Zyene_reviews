@@ -21,19 +21,70 @@ Internal guide for measuring and operating the growth blueprint after Phases 0�
 Regenerate Search Console top queries/pages for [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md):
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/zyene-gsc-service-account.json"
 pnpm geo:gsc-baseline
 ```
 
-Outputs under `reports/gsc/` (JSON + CSV + `GSC_BASELINE_SUMMARY.md`). Credentials stay **outside the repo**; never commit service account JSON.
+Outputs under `reports/gsc/` (JSON + CSV + `GSC_BASELINE_SUMMARY.md`). Never commit credentials, OAuth client secrets, or cached tokens.
 
-**One-time setup:**
+### Auth order (script)
 
-1. Enable **Google Search Console API** in GCP project `zyene-reviews`.
-2. Search Console → **Settings → Users** → add service account email (e.g. `zyene-gsc-reporter@zyene-reviews.iam.gserviceaccount.com`) with at least **Restricted** access on property `https://www.zyenereviews.com/`.
-3. Property URL must match `GSC_SITE_URL` (default trailing-slash URL prefix).
+1. **Service account** — if `GOOGLE_APPLICATION_CREDENTIALS` or `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` is set.
+2. **OAuth user (recommended)** — otherwise Desktop-app OAuth with your personal Google account that already has Search Console access.
 
-Auth alternatives: `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` (Vercel/CI only — do not log).
+Service accounts often fail in Search Console with **“email not found”** when adding users. Prefer OAuth for local baseline exports.
+
+### OAuth setup (recommended)
+
+1. [Google Cloud Console](https://console.cloud.google.com/) → project **zyene-reviews** → **APIs & Services** → enable **Google Search Console API**.
+2. **Credentials** → **Create credentials** → **OAuth client ID** → application type **Desktop app** → create.
+3. Download the client JSON (or copy Client ID + Client secret). Keep it **outside the repo**.
+4. Add to `.env.local` (do not commit):
+
+```bash
+# Option A: path to downloaded Desktop client JSON
+GOOGLE_OAUTH_CLIENT_JSON="/path/to/client_secret_XXXXX.json"
+
+# Option B: explicit ID/secret
+# GOOGLE_OAUTH_CLIENT_ID="....apps.googleusercontent.com"
+# GOOGLE_OAUTH_CLIENT_SECRET="...."
+
+# Optional (default http://localhost — must match Desktop client redirect in GCP)
+# GOOGLE_OAUTH_REDIRECT_URI="http://localhost"
+
+# Optional token cache (default .cache/google-gsc-token.json)
+# GOOGLE_OAUTH_TOKEN_PATH=".cache/google-gsc-token.json"
+```
+
+5. **Unset** `GOOGLE_APPLICATION_CREDENTIALS` in `.env.local` if you want OAuth instead of service account.
+6. Run `pnpm geo:gsc-baseline`:
+   - Script prints a Google authorization URL.
+   - Open it, sign in with the Google account that owns the Search Console property.
+   - After approve, copy the `code` from the redirect URL (`http://localhost/?code=...&scope=...`).
+   - Paste the code into the terminal when prompted.
+   - Token is cached in `.cache/google-gsc-token.json` (gitignored); later runs reuse it.
+
+Do **not** commit `.cache/google-gsc-token.json`, client secrets, or service account JSON.
+
+### Service account (optional / CI)
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+pnpm geo:gsc-baseline
+```
+
+Or `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` for Vercel/CI only — do not log.
+
+### Property URL
+
+Default: `https://www.zyenereviews.com/`
+
+If you get **403**, try the domain property:
+
+```bash
+GSC_SITE_URL="sc-domain:zyenereviews.com" pnpm geo:gsc-baseline
+```
+
+The signed-in Google account (OAuth) or service account must have permission on that exact property in Search Console.
 
 ---
 
