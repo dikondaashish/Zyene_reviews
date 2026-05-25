@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Star, AlertCircle } from "lucide-react";
+import { Star, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { PlatformStatsBadge } from "@/components/marketing/social-proof";
 import { SIGNUP_URL } from "@/config/env";
@@ -13,124 +13,112 @@ import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-
 
 export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMotion }: MarketingHomeMotionProps) {
     return (
-        <>
-      {/* 1. HERO SECTION */}
-      <section className="w-full pt-4 pb-24 md:pt-8 md:pb-32 px-4 md:px-8">
-        <div className="container mx-auto max-w-[1400px]">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
-            {/* Left Content */}
+        <section className="w-full pt-24 pb-32 px-4">
             <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerContainer}
-              className="w-full lg:w-[45%] pr-0 lg:pr-8"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="mx-auto max-w-[1200px] flex flex-col items-center text-center"
             >
-              <motion.h1
-                variants={fadeInUp}
-                className="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-medium tracking-tight text-foreground mb-8 leading-[0.9]"
-              >
-                Know about every review in 15 minutes
-              </motion.h1>
-              <motion.p
-                variants={fadeInUp}
-                className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed font-light"
-              >
-                The review management platform built for{" "}
-                <span className="font-bold text-foreground">local businesses</span>, helping owners monitor
-                reviews, respond faster, and build trust in a digital-first world.
-              </motion.p>
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 items-center">
-                <Link href={SIGNUP_URL}>
-                  <Button size="lg" className="rounded-md px-8 py-7 text-[1.1rem] font-medium transition-all">
-                    Start Your 7-Day Free Trial <ArrowRight className="ml-2 size-5" />
-                  </Button>
-                </Link>
-                <Link href="/#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-                  View pricing →
-                </Link>
-              </motion.div>
-              <motion.div variants={fadeInUp} className="mt-8">
-                <PlatformStatsBadge />
-              </motion.div>
-            </motion.div>
+                <motion.span
+                    variants={fadeInUp}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground mb-8"
+                >
+                    <span className="size-2 rounded-full bg-green-500 animate-pulse" />
+                    Trusted by 500+ local businesses
+                </motion.span>
 
-            {/* Right Visual */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
-              animate={prefersReducedMotion ? false : { opacity: 1, x: 0 }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, ease: "easeOut" }}
-              className="w-full lg:w-[50%] relative"
-            >
-              {/* Petal Container */}
-              <div className="relative aspect-[4/3] w-full rounded-tl-[4rem] rounded-bl-[4rem] rounded-br-[4rem] rounded-tr-lg overflow-hidden border border-border">
-                <Image
-                  src={marketingImages.home.hero.src}
-                  alt={marketingImages.home.hero.alt}
-                  width={marketingImages.home.hero.width}
-                  height={marketingImages.home.hero.height}
-                  className="absolute inset-0 object-cover size-full"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
-              </div>
+                <motion.h1
+                    variants={fadeInUp}
+                    className="font-display text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.92] text-foreground max-w-4xl"
+                >
+                    <em className="not-italic text-primary">Review management</em>{" "}
+                    that pays for itself
+                </motion.h1>
 
-              {/* Floating Review Alert Card */}
-              <motion.div
-                animate={prefersReducedMotion ? false : { y: [0, -10, 0] }}
-                transition={
-                  prefersReducedMotion
-                    ? undefined
-                    : { repeat: Infinity, duration: 4, ease: "easeInOut" }
-                }
-                className="absolute -bottom-8 -left-8 md:bottom-12 md:-left-16 bg-card p-6 rounded-lg border border-border max-w-[320px] w-[90%]"
-              >
-                <div className="flex items-center gap-3 border-b border-border pb-4 mb-4">
-                  <div className="rounded-full bg-primary/10 text-primary flex items-center justify-center border border-primary/20 size-8">
-                    <Star className="fill-current size-4" />
-                  </div>
-                  <p className="font-semibold text-foreground">Real-time Review Alerts</p>
-                </div>
+                <motion.p
+                    variants={fadeInUp}
+                    className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
+                >
+                    The review management platform built for local businesses, helping owners
+                    monitor reviews, respond faster, and build trust.
+                </motion.p>
 
-                <div className="space-y-3">
-                  {(
-                    [
-                      {
-                        ...marketingImages.home.heroReviewAlerts.fiveStar,
-                        badge: "5-Star Left",
-                        icon: CheckCircle2,
-                      },
-                      {
-                        ...marketingImages.home.heroReviewAlerts.oneStar,
-                        badge: "1-Star Alert",
-                        icon: AlertCircle,
-                      },
-                    ] as const
-                  ).map(({ name, src, alt, width, height, badge, icon: Icon }) => (
-                    <div key={name} className="flex items-center justify-between bg-muted p-2 rounded-md">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="relative rounded-full overflow-hidden size-8 shrink-0 border border-border">
-                          <Image
-                            src={src}
-                            alt={alt}
-                            width={width}
-                            height={height}
-                            className="object-cover size-full"
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-foreground truncate">{name}</span>
-                      </div>
-                      <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1 border border-primary/20 shrink-0 ml-2">
-                        <Icon className="size-3" /> {badge}
-                      </span>
+                <motion.div variants={fadeInUp} className="mt-8 flex items-center justify-center gap-4 flex-wrap">
+                    <Link href={SIGNUP_URL}>
+                        <Button size="lg" className="rounded-md px-6 py-3 font-medium transition-colors">
+                            Start 7-Day Free Trial
+                        </Button>
+                    </Link>
+                    <Link
+                        href="/features"
+                        className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        Watch 2-min demo →
+                    </Link>
+                </motion.div>
+
+                <motion.p variants={fadeInUp} className="mt-3 text-xs text-muted-foreground">
+                    No credit card required · Cancel anytime
+                </motion.p>
+
+                <motion.div variants={fadeInUp} className="mt-6">
+                    <PlatformStatsBadge />
+                </motion.div>
+
+                <motion.div
+                    variants={fadeInUp}
+                    className="relative mt-16 w-full max-w-5xl"
+                >
+                    <div className="rounded-2xl overflow-hidden border border-border shadow-2xl relative">
+                        <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-background to-transparent z-10" />
+                        <Image
+                            src={marketingImages.home.hero.src}
+                            alt={marketingImages.home.hero.alt}
+                            width={marketingImages.home.hero.width}
+                            height={marketingImages.home.hero.height}
+                            className="w-full h-auto"
+                            priority
+                        />
                     </div>
-                  ))}
-                </div>
-              </motion.div>
+
+                    <motion.div
+                        animate={prefersReducedMotion ? false : { y: [0, -8, 0] }}
+                        transition={
+                            prefersReducedMotion
+                                ? undefined
+                                : { repeat: Infinity, duration: 5, ease: "easeInOut" }
+                        }
+                        className="absolute -bottom-5 right-8 md:right-16 bg-card p-5 rounded-xl border border-border shadow-xl max-w-[280px]"
+                    >
+                        <div className="flex items-center gap-2.5 mb-3">
+                            <div className="rounded-full bg-primary/10 text-primary flex items-center justify-center size-7">
+                                <Star className="fill-current size-3.5" />
+                            </div>
+                            <p className="font-semibold text-sm text-foreground">Real-time Review Alerts</p>
+                        </div>
+                        <div className="space-y-2">
+                            {([
+                                { ...marketingImages.home.heroReviewAlerts.fiveStar, badge: "5-Star", icon: CheckCircle2 },
+                                { ...marketingImages.home.heroReviewAlerts.oneStar, badge: "1-Star Alert", icon: AlertCircle },
+                            ] as const).map(({ name, src, alt, width, height, badge, icon: Icon }) => (
+                                <div key={name} className="flex items-center justify-between bg-muted/60 p-2 rounded-lg">
+                                    <div className="flex items-center gap-2.5 min-w-0">
+                                        <div className="relative rounded-full overflow-hidden size-7 shrink-0 border border-border">
+                                            <Image src={src} alt={alt} width={width} height={height} className="object-cover size-full" />
+                                        </div>
+                                        <span className="text-xs font-medium text-foreground truncate">{name}</span>
+                                    </div>
+                                    <span className="text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ml-2">
+                                        <Icon className="size-2.5" /> {badge}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </motion.div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-        </>
+        </section>
     );
 }

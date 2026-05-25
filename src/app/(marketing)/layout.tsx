@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import { UtmCapture } from "@/components/marketing/utm-capture";
 import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
+import { MarketingLayoutAnnouncementBar } from "./marketing-layout-announcement-bar";
 import { MarketingLayoutHeader } from "./marketing-layout-header";
 import { MarketingLayoutFooter } from "./marketing-layout-footer";
 
@@ -22,6 +23,7 @@ export default function MarketingLayout({
 
     return (
         <div className="flex min-h-screen min-w-0 flex-col overflow-x-clip bg-background text-foreground">
+            {growthDashboard ? null : <MarketingLayoutAnnouncementBar />}
             <MarketingLayoutHeader />
             <Suspense fallback={null}>
                 <UtmCapture />

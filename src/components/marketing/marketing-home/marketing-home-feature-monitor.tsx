@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock, LayoutDashboard, MessageSquare, Zap } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { marketingImages } from "@/lib/marketing/marketing-images";
@@ -11,100 +10,63 @@ import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-
 
 export function MarketingHomeFeatureMonitor({
     fadeInUp,
-    staggerContainer: _staggerContainer,
+    staggerContainer,
     prefersReducedMotion: _prefersReducedMotion,
 }: MarketingHomeMotionProps) {
-    void _staggerContainer;
     void _prefersReducedMotion;
     return (
-        <>
-      {/* 3. FEATURE 1: Monitor */}
-      <section id="features" className="w-full px-4 mb-24">
-        <div className="container mx-auto max-w-[1400px]">
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
-            className="bg-card rounded-[2rem] border border-border overflow-hidden flex flex-col md:flex-row"
-          >
-            {/* Left Side */}
-            <div className="w-full md:w-1/2 p-12 md:p-16 lg:p-20">
-              <div className="flex items-center gap-2 text-primary font-semibold mb-8">
-                <Zap className="size-5" /> Effortless Monitoring
-              </div>
+        <section id="features" className="w-full py-24 md:py-32 px-4">
+            <div className="mx-auto max-w-[1200px]">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={staggerContainer}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center"
+                >
+                    <motion.div variants={fadeInUp} className="order-2 md:order-1">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wide mb-6">
+                            Monitor
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight text-foreground mb-6">
+                            Never get blindsided by a bad review again
+                        </h2>
+                        <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                            Get instant SMS alerts the moment someone leaves a review. Catch issues while the customer is still nearby.
+                        </p>
+                        <ul className="space-y-4 mb-8">
+                            {[
+                                "Instant SMS and email alerts for every new review",
+                                "Centralized dashboard for Google, Yelp, and Facebook",
+                                "Sentiment analysis flags urgent reviews first",
+                            ].map((item) => (
+                                <li key={item} className="flex items-start gap-3">
+                                    <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
+                                    <span className="text-foreground">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        <Link
+                            href="/features"
+                            className="text-primary text-sm font-medium hover:underline underline-offset-4 inline-flex items-center gap-1"
+                        >
+                            Learn more about monitoring →
+                        </Link>
+                    </motion.div>
 
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-foreground mb-12 leading-tight">
-                Never get blindsided by a <br /> bad review again
-              </h3>
-
-              <div className="space-y-8">
-                <div className="flex max-w-md">
-                  <div className="mr-4 mt-1">
-                    <MessageSquare className="text-primary size-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-foreground mb-1">Instant SMS Alerts</h4>
-                    <p className="text-muted-foreground font-light leading-relaxed">Get a text message the moment someone leaves a review. Catch 1-star issues while the customer is still in the building.</p>
-                  </div>
-                </div>
-
-                <div className="flex max-w-md">
-                  <div className="mr-4 mt-1">
-                    <LayoutDashboard className="text-primary size-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-foreground mb-1">Centralized Dashboard</h4>
-                    <p className="text-muted-foreground font-light leading-relaxed">Manage Google, Yelp, and Facebook from one single place instead of constantly checking three different apps.</p>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/#pricing">
-                <Button variant="outline" className="mt-12 text-foreground bg-muted hover:bg-accent rounded-md px-6 py-6 font-medium">
-                  See Pricing <ArrowRight className="ml-2 size-4" />
-                </Button>
-              </Link>
+                    <motion.div variants={fadeInUp} className="order-1 md:order-2">
+                        <div className="rounded-2xl border border-border overflow-hidden">
+                            <Image
+                                src={marketingImages.home.featureMonitor.src}
+                                alt={marketingImages.home.featureMonitor.alt}
+                                width={marketingImages.home.featureMonitor.width}
+                                height={marketingImages.home.featureMonitor.height}
+                                className="w-full h-auto"
+                            />
+                        </div>
+                    </motion.div>
+                </motion.div>
             </div>
-
-            {/* Right Side—Mockup */}
-            <div className="w-full md:w-1/2 bg-muted p-8 md:p-16 flex items-center justify-center min-h-[500px]">
-              <div className="bg-card p-6 rounded-lg w-full max-w-md border border-border">
-                <div className="w-full h-48 rounded-lg mb-6 relative overflow-hidden">
-                  <Image
-                    src={marketingImages.home.featureMonitor.src}
-                    alt={marketingImages.home.featureMonitor.alt}
-                    width={marketingImages.home.featureMonitor.width}
-                    height={marketingImages.home.featureMonitor.height}
-                    className="object-cover rounded-lg size-full"
-                  />
-                  <div className="absolute bottom-3 left-3 bg-card px-4 py-2 rounded-full border border-border text-sm font-semibold flex items-center gap-2 text-muted-foreground">
-                    <Clock className="text-primary size-4" /> Ping: 12:45 PM
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="p-4 border border-primary/20 rounded-lg bg-primary/10 flex gap-4 items-center">
-                    <div className="bg-primary/20 rounded-md flex items-center justify-center shrink-0 size-10">
-                      <span className="font-bold text-primary">1</span>
-                    </div>
-                    <div>
-                      <h5 className="font-bold text-sm text-foreground">Your Business</h5>
-                      <div className="flex text-primary text-xs mt-1">★★★★★ 4.8</div>
-                    </div>
-                  </div>
-                  <div className="p-4 border border-border rounded-lg bg-muted flex gap-4 items-center opacity-60">
-                    <div className="bg-border rounded-md flex items-center justify-center shrink-0 size-10">
-                      <span className="font-bold text-muted-foreground">2</span>
-                    </div>
-                    <div>
-                      <h5 className="font-bold text-sm text-foreground">Harbor Cafe</h5>
-                      <div className="flex text-muted-foreground text-xs mt-1">★★★★☆ 3.8</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-        </>
+        </section>
     );
 }
