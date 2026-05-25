@@ -6,7 +6,7 @@ Launch and repurpose copy for Phase 3 marketing assets. Use alongside [GEO_WIN_P
 
 | Asset | Canonical URL | Repurpose file |
 |-------|---------------|----------------|
-| Review request template pack | `/resources/review-request-templates` | [content/repurpose/review-request-templates.md](../content/repurpose/review-request-templates.md) |
+| Review request template pack | `/resources/review-request-templates` | [Week 1 launch (publish-ready)](../content/repurpose/review-request-templates-week1-launch.md) · [All copy](../content/repurpose/review-request-templates.md) |
 | Negative Feedback Shield | `/blog/negative-feedback-shield` | [content/repurpose/negative-feedback-shield.md](../content/repurpose/negative-feedback-shield.md) |
 | Birdeye pricing breakdown | `/blog/birdeye-pricing-breakdown-2026` | [content/repurpose/birdeye-pricing-breakdown-2026.md](../content/repurpose/birdeye-pricing-breakdown-2026.md) |
 | Compare hub | `/compare` | [content/repurpose/compare.md](../content/repurpose/compare.md) |
@@ -122,7 +122,7 @@ ORDER BY leads DESC;
 
 ## Launch sequence (suggested)
 
-1. **Day 1–3:** Template pack — LinkedIn posts 1–3, Threads posts 1–3, founder note, newsletter send.
+1. **Week 1:** Template pack — follow [review-request-templates-week1-launch.md](../content/repurpose/review-request-templates-week1-launch.md) (Day 1 founder → Day 7 Threads reminder).
 2. **Week 2:** Shield blog — LinkedIn + Threads from [negative-feedback-shield.md](../content/repurpose/negative-feedback-shield.md).
 3. **Week 3:** Birdeye pricing — buyer-intent audiences on LinkedIn.
 4. **Week 4:** Compare hub — “choosing a review tool” post + link to `/compare/birdeye` in comments when relevant.

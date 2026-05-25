@@ -30,7 +30,7 @@ Copy what you need on the page. No PDF—just the live template pack.
 
 **Compliance note:** No incentives for reviews. Ask every customer the same way—don’t route only happy customers to Google.
 
-👉 Open the template pack: {LinkedIn URL}
+👉 Open the template pack: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 #LocalBusiness #GoogleReviews #ReputationManagement
 
@@ -51,7 +51,7 @@ It’s a **web swipe file** on Zyene Reviews—preview and copy on the page. Opt
 
 Same rules we recommend to customers: **no review incentives**, and **no happy-customer-only** review routing.
 
-Link: {LinkedIn URL}
+Link: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
 
@@ -63,7 +63,7 @@ Start with our **free template pack** (web swipe file) to standardize outreach t
 
 When copy-paste doesn’t scale, Zyene Reviews runs SMS/email campaigns, tracks opens, and keeps requests fair—with Negative Feedback Shield for private issues before they hit Google.
 
-Grab the scripts: {LinkedIn URL}  
+Grab the scripts: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch  
 Explore product: https://www.zyenereviews.com/features/review-collection?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
@@ -76,7 +76,7 @@ No PDF—live page you can copy from.
 
 No incentives. Same ask for every customer.
 
-{Threads URL}
+https://www.zyenereviews.com/resources/review-request-templates?utm_source=threads&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
 
@@ -88,7 +88,7 @@ No incentives. Same ask for every customer.
 → Email bodies  
 → Thank-you + reminder lines  
 
-Template pack (web): {Threads URL}
+Template pack (web): https://www.zyenereviews.com/resources/review-request-templates?utm_source=threads&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
 
@@ -96,7 +96,7 @@ Template pack (web): {Threads URL}
 
 Stop rewriting the same review text in your inbox.
 
-Copy-paste scripts: {Threads URL}
+Copy-paste scripts: https://www.zyenereviews.com/resources/review-request-templates?utm_source=threads&utm_medium=social&utm_campaign=template-pack-launch
 
 When you outgrow manual sends → Zyene Reviews campaigns + Shield for private feedback (not review gating).
 
@@ -133,7 +133,7 @@ We put together a **free web swipe file** on Zyene Reviews:
 - **No incentives** for leaving a review  
 - **No happy-customer-only** routing—ask customers the same way; handle issues in private feedback, not by hiding them from Google  
 
-**Open the template pack →** {Email URL}
+**Open the template pack →** https://www.zyenereviews.com/resources/review-request-templates?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch
 
 When manual copy-paste stops scaling, Zyene Reviews can run the same outreach as campaigns—with alerts, AI-assisted replies, and Shield for early private feedback.
 
@@ -154,12 +154,12 @@ We built it because owners kept asking for exact wording—not another platform 
 
 **Compliance matters to us:** no review incentives, and don’t only ask happy customers for public reviews.
 
-Take the scripts: {LinkedIn URL}
+Take the scripts: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
 
 ## Standard blurb (reuse anywhere)
 
-**Newsletter blurb:** Free **web swipe file**—20+ review request templates (SMS, email, industry variants). Copy on the page; optional email for a link back. No PDF. [Open pack]({Email URL})
+**Newsletter blurb:** Free **web swipe file**—20+ review request templates (SMS, email, industry variants). Copy on the page; optional email for a link back. No PDF. [Open pack](https://www.zyenereviews.com/resources/review-request-templates?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch)
 
 **Suggested CTA:** Open the template pack | Copy your first SMS script | See compliance notes on the page
