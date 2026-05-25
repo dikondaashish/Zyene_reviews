@@ -257,12 +257,14 @@ export const post3: BlogPost = {
         "how-to-get-50-google-reviews-in-30-days",
         "why-google-reviews-matter-in-2026",
         "true-cost-of-bad-online-reputation",
+        "negative-feedback-shield",
     ],
     internalLinks: [
         { label: "Full comparison: Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
         { label: "Compare all review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing (public plans)", href: "/pricing" },
         { label: "Review collection & Negative Feedback Shield", href: "/features/review-collection" },
+        { label: "Negative Feedback Shield deep-dive", href: "/blog/negative-feedback-shield" },
         { label: "All product features", href: "/features" },
         { label: "5 cheaper Birdeye alternatives", href: "/blog/birdeye-alternatives-for-local-businesses" },
         { label: "Start a 7-day free trial", href: "/signup" },
@@ -365,7 +367,7 @@ export const post3: BlogPost = {
             height: 240,
             caption: "Illustrative marketing visual: low-rating alert UI. Pair with Negative Feedback Shield in review request flows—see /features.",
         }},
-        { type: "quote", text: "Negative Feedback Shield (conceptual flow)\n\n1. Customer completes review request\n2. Indicates they were not fully satisfied\n3. Routed to private feedback form (not straight to Google)\n4. Owner resolves issue; optional follow-up review request later\n\nBirdeye does not ship this exact Shield workflow—compare CX modules on /compare/birdeye." },
+        { type: "quote", text: "Negative Feedback Shield (conceptual flow)\n\n1. Customer completes review request\n2. Indicates they were not fully satisfied\n3. Routed to private feedback form (not straight to Google)\n4. Owner resolves issue; optional follow-up review request later\n\nFull product workflow: /blog/negative-feedback-shield. Birdeye does not ship this exact Shield workflow—compare on /compare/birdeye." },
         { type: "image", image: {
             src: "/marketing/home/hero-local-owner.png",
             alt: "Local business owner checking review notifications on a phone",

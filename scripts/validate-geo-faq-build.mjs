@@ -51,6 +51,12 @@ const CHECKS = [
         expectFaq: 5,
     },
     {
+        label: "/blog/negative-feedback-shield",
+        rsc: ".next/server/app/blog/negative-feedback-shield.rsc",
+        html: ".next/server/app/blog/negative-feedback-shield.html",
+        expectFaq: 5,
+    },
+    {
         label: "/case-studies/sunrise-dental-austin",
         rsc: ".next/server/app/case-studies/sunrise-dental-austin.rsc",
         html: ".next/server/app/case-studies/sunrise-dental-austin.html",

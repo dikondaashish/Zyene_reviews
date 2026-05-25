@@ -18,6 +18,7 @@ import type { ContentPillar, BlogPost } from "./blog-types";
 import { post1, post2, post3, post4 } from "./blog-posts-month1";
 import { post5, post6, post7, post8 } from "./blog-posts-month2";
 import { post9, post10, post11, post12 } from "./blog-posts-month3";
+import { post13 } from "./blog-posts-shield";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Export
@@ -27,6 +28,7 @@ export const BLOG_POSTS: BlogPost[] = [
     post1, post2, post3, post4,
     post5, post6, post7, post8,
     post9, post10, post11, post12,
+    post13,
 ];
 
 export const BLOG_POST_MAP: Record<string, BlogPost> = Object.fromEntries(

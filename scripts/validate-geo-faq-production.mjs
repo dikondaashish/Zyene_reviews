@@ -37,6 +37,13 @@ const CHECKS = [
         expectComposite: false,
     },
     {
+        label: "/blog/negative-feedback-shield",
+        path: "/blog/negative-feedback-shield",
+        expectFaq: 5,
+        expectArticle: 1,
+        expectComposite: false,
+    },
+    {
         label: "/case-studies/sunrise-dental-austin",
         path: "/case-studies/sunrise-dental-austin",
         expectFaq: 0,
