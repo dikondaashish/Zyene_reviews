@@ -16,6 +16,8 @@ Central index for project documentation and where each file belongs.
 - `docs/GROWTH_BLUEPRINT.md` - phased product growth plan (Phases 0–8).
 - `docs/GROWTH_OPERATIONS.md` - weekly KPI rhythm and `/growth` dashboard ops.
 - `docs/GEO_WIN_PLAYBOOK.md` - GEO + omni-channel win plan (Phases 0–8, stacks on growth blueprint).
+- `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
+- `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
 
 ## Operations & Verification Docs (KEEP in `docs/`)
 

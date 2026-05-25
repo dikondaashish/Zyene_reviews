@@ -2,6 +2,8 @@
 
 Internal reference for `/resources/review-request-templates` funnel tracking.
 
+**Launch copy & UTMs:** [PHASE3_DISTRIBUTION_PACKAGE.md](./PHASE3_DISTRIBUTION_PACKAGE.md) and [content/repurpose/review-request-templates.md](../content/repurpose/review-request-templates.md).
+
 ## Storage
 
 | Store | Purpose |
