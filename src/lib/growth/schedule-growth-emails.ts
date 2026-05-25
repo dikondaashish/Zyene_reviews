@@ -2,7 +2,7 @@ import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
-export type GrowthSequenceKey = "trial_nurture" | "onboarding_drip" | "winback";
+export type GrowthSequenceKey = "trial_nurture" | "onboarding_drip" | "winback" | "marketing_nurture";
 
 async function registerSequenceRun(
     sequenceKey: GrowthSequenceKey,
@@ -69,6 +69,16 @@ export async function scheduleOnboardingDrip(params: {
             dashboardUrl: `${appUrl}/dashboard`,
             billingUrl: `${appUrl}/settings/billing`,
         },
+    });
+}
+
+export async function scheduleMarketingNurture(params: { email: string }): Promise<void> {
+    const ok = await registerSequenceRun("marketing_nurture", params.email);
+    if (!ok) return;
+
+    await inngest.send({
+        name: "growth/marketing-nurture.start",
+        data: { email: params.email },
     });
 }
 

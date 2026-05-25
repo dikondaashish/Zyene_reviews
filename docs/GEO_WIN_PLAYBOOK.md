@@ -4,7 +4,7 @@
 >
 > **Source framework:** Chiraayuu GEO + omni-channel survival guide (Seema Choudhary).
 >
-> **Companion docs:** [GROWTH_BLUEPRINT.md](./GROWTH_BLUEPRINT.md) (product growth Phases 0–8), [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) (weekly KPI rhythm).
+> **Companion docs:** [GROWTH_BLUEPRINT.md](./GROWTH_BLUEPRINT.md) (product growth Phases 0–8), [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) (weekly KPI rhythm), [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md), [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md), [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md), [WELCOME_SEQUENCE.md](./WELCOME_SEQUENCE.md).
 >
 > **Last updated:** May 2026
 

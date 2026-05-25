@@ -19,3 +19,5 @@ export { ArticleJsonLd } from "./json-ld-article";
 export { WebPageJsonLd } from "./json-ld-web-page";
 export { IndustryLocalBusinessJsonLd } from "./json-ld-industry-local-business";
 export { PricingPlansJsonLd } from "./json-ld-pricing-plans";
+export { HowToJsonLd } from "./json-ld-howto";
+export type { HowToStep } from "./json-ld-howto";

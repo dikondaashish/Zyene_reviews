@@ -124,6 +124,12 @@ type WinbackStartEvent = {
     };
 };
 
+type MarketingNurtureStartEvent = {
+    data: {
+        email: string;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -140,6 +146,7 @@ type Events = {
     "growth/trial-nurture.start": TrialNurtureStartEvent;
     "growth/onboarding-drip.start": OnboardingDripStartEvent;
     "growth/winback.start": WinbackStartEvent;
+    "growth/marketing-nurture.start": MarketingNurtureStartEvent;
 };
 
 // Create a client to send and receive events

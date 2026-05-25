@@ -5,6 +5,8 @@ import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-email
 import { reviewRequestTemplatePackEmail } from "@/services/resend/templates/review-request-templates-pack-email";
 import { recordMarketingEvent } from "@/lib/marketing/record-marketing-event";
 import { TEMPLATE_PACK_PAGE_PATH, TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
+import { isTemplatePackQaSubscriber } from "@/lib/marketing/template-pack-qa-filters";
+import { scheduleMarketingNurture } from "@/lib/growth/schedule-growth-emails";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -114,6 +116,19 @@ export async function processNewsletterSubscribe(
             await sendEmail({ to: email, subject: mail.subject, html: mail.html });
         } catch (err) {
             logger.error({ err }, "[newsletter] welcome email failed:");
+        }
+
+        const isQa = isTemplatePackQaSubscriber(
+            email,
+            body.utm_source ?? null,
+            body.utm_medium ?? null
+        );
+        if (!isTemplatePack && !isQa) {
+            try {
+                await scheduleMarketingNurture({ email });
+            } catch (err) {
+                logger.error({ err }, "[newsletter] marketing nurture schedule failed:");
+            }
         }
     }
 

@@ -70,6 +70,28 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         { anchor: "manual-vs-spreadsheet-vs-zyene-reviews", label: "Manual vs Zyene" },
     ],
     body: REVIEW_REQUEST_TEMPLATES_BODY,
+    howToSteps: [
+        {
+            name: "Copy a template and personalize placeholders",
+            text: "Choose an SMS or email script from this page, replace [Name], [Business Name], and your review link, and adjust tone for your brand.",
+        },
+        {
+            name: "Send within a few hours of a positive visit",
+            text: "Deliver the first request soon after service while the experience is fresh. One polite reminder is enough—avoid repeated pressure.",
+        },
+        {
+            name: "Follow compliance rules on every send",
+            text: "Do not offer discounts for reviews, do not dictate review text, and do not ask only satisfied customers. Keep outreach fair and honest.",
+        },
+        {
+            name: "Respond to reviews and route unhappy customers privately",
+            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to resolve low scores before issues escalate—not to suppress public reviews.",
+        },
+        {
+            name: "Automate at scale when manual copy-paste stops working",
+            text: "Configure SMS, email, or QR campaigns in review software so every customer gets a consistent, trackable request workflow.",
+        },
+    ],
 };
 
 export const REVIEW_REQUEST_TEMPLATES_FAQS: FaqItem[] = reviewRequestTemplatesGuide.faqs ?? [];

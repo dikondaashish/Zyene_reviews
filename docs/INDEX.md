@@ -16,8 +16,12 @@ Central index for project documentation and where each file belongs.
 - `docs/GROWTH_BLUEPRINT.md` - phased product growth plan (Phases 0–8).
 - `docs/GROWTH_OPERATIONS.md` - weekly KPI rhythm and `/growth` dashboard ops.
 - `docs/GEO_WIN_PLAYBOOK.md` - GEO + omni-channel win plan (Phases 0–8, stacks on growth blueprint).
+- `docs/GEO_BASELINE_AUDIT.md` - GEO/SEO baseline placeholders (GSC, AI citations, IndexNow).
+- `docs/GEO_ON_PAGE_AUDIT.md` - Priority URL on-page SEO audit table.
+- `docs/GEO_WEEKLY_REPORT_TEMPLATE.md` - Weekly GEO tracking template.
 - `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
 - `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
+- `docs/WELCOME_SEQUENCE.md` - Marketing nurture email sequence (Inngest).
 
 ## Operations & Verification Docs (KEEP in `docs/`)
 

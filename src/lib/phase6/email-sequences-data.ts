@@ -92,6 +92,34 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
     },
 ];
 
+/**
+ * Marketing nurture for newsletter / checklist leads (not trial users).
+ * Day 0 ≈ guide link, day 2 Shield, day 5 trial CTA. Only scheduled for new leads.
+ */
+export const MARKETING_NURTURE_STEPS: GrowthEmailStep[] = [
+    {
+        key: "marketing_nurture_day0_guide",
+        dayOffset: 0,
+        delayHours: 4,
+        subject: "Start here: our best guide for more Google reviews",
+        preview: "Free resources on review requests, local SEO, and fair outreach.",
+    },
+    {
+        key: "marketing_nurture_day2_shield",
+        dayOffset: 2,
+        delayHours: 48,
+        subject: "Resolve complaints privately before they hit Google",
+        preview: "How Negative Feedback Shield fits compliant review workflows.",
+    },
+    {
+        key: "marketing_nurture_day5_trial",
+        dayOffset: 5,
+        delayHours: 120,
+        subject: "Automate review requests in one inbox",
+        preview: "7-day free trial — plans from $29.99/mo, no annual contract.",
+    },
+];
+
 /** Win-back sequence (supplements immediate cancel email) */
 export const WINBACK_STEPS: GrowthEmailStep[] = [
     {

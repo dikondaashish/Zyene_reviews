@@ -26,6 +26,8 @@ export interface ResourceGuide {
     resourceLabel?: string;
     faqs?: FaqItem[];
     internalLinks?: { label: string; href: string }[];
+    /** Visible step-by-step content for HowTo JSON-LD (Priority 6). */
+    howToSteps?: { name: string; text: string; url?: string }[];
 }
 
 const guide1: ResourceGuide = {
@@ -34,12 +36,49 @@ const guide1: ResourceGuide = {
     subtitle: "Everything local business owners need to know about Google Reviews in 2026 — collection, responses, ranking, and reputation protection.",
     excerpt: "The definitive guide to Google Reviews for local businesses. Covers collection strategy, response best practices, ranking impact, and protecting your rating.",
     purpose: "Rank for 'google reviews' cluster keywords",
-    lastUpdated: "2026-05-01",
+    lastUpdated: "2026-05-25",
     readMinutes: 18,
     metaTitle: "The Complete Guide to Google Reviews for Local Businesses (2026)",
     metaDescription:
         "The Google Reviews guide for local businesses: collection strategy, response best practices, ranking impact, and reputation protection in one place.",
     keywords: ["google reviews guide", "google reviews for businesses", "how google reviews work", "complete guide to google reviews", "google reviews local business"],
+    openingSummary:
+        "This guide covers how Google Reviews work for local businesses: why they matter for Maps visibility, when and how to ask customers fairly, how to respond to positive and negative feedback, and how to protect your rating without policy violations. Use it as your reference before automating outreach with review software.",
+    internalLinks: [
+        { label: "Review collection features", href: "/features/review-collection" },
+        { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
+        { label: "Free review request templates", href: "/resources/review-request-templates" },
+        { label: "Compare review platforms", href: "/compare" },
+        { label: "Zyene Reviews pricing", href: "/pricing" },
+        { label: "Start free trial", href: "/signup" },
+    ],
+    faqs: [
+        {
+            question: "Can I remove a negative Google review?",
+            answer:
+                "You cannot remove a genuine review yourself. Flag reviews that violate Google policies (spam, fake, offensive content) via the ⋮ menu on the review. If Google removes it, great; if not, respond professionally and keep collecting recent honest reviews to balance your profile.",
+        },
+        {
+            question: "How long does it take for a review to appear?",
+            answer:
+                "Most reviews show within minutes to a few hours. Google's filters occasionally hold reviews for one to three days. If a customer says they left one but you do not see it, ask them to confirm it appears on their own Google profile.",
+        },
+        {
+            question: "Do Google Reviews affect my website's SEO?",
+            answer:
+                "Reviews primarily influence local search (Google Maps and the Local 3-Pack), not classic organic rankings for your website. Review schema on your site can still earn star rich snippets in organic results, which may improve click-through.",
+        },
+        {
+            question: "Can I respond to reviews from a mobile device?",
+            answer:
+                "Yes—via the Google Maps app, Google Business Profile app, or business.google.com. A review management tool like Zyene Reviews lets you monitor Google, Facebook, and Yelp and reply from one inbox.",
+        },
+        {
+            question: "Is it okay to ask customers for Google reviews?",
+            answer:
+                "Yes, when you ask for honest feedback without incentives, without dictating review text, and without sending links only to happy customers. Ask soon after a positive visit and follow Google's outreach rules.",
+        },
+    ],
     tableOfContents: [
         { anchor: "what-are-google-reviews", label: "What Are Google Reviews?" },
         { anchor: "why-google-reviews-matter", label: "Why Google Reviews Matter" },
@@ -157,11 +196,48 @@ const guide2: ResourceGuide = {
     subtitle: "Copy-paste response templates for every type of negative Google review — organized by complaint category and industry.",
     excerpt: "20+ ready-to-use templates for responding to negative Google reviews. Organized by complaint type: service quality, wait time, billing, staff attitude, and more.",
     purpose: "Rank for 'how to respond to bad reviews' cluster",
-    lastUpdated: "2026-05-01",
+    lastUpdated: "2026-05-25",
     readMinutes: 14,
     metaTitle: "20+ Negative Review Response Templates (Google Reviews)",
     metaDescription: "Ready-to-use templates for responding to any negative Google review. 20+ templates organized by complaint type with customization instructions.",
     keywords: ["negative review response templates", "how to respond to bad reviews", "google review response templates", "1 star review response", "bad review templates"],
+    openingSummary:
+        "Use these 20+ negative review response templates when a Google review needs a calm, professional reply. Each script follows a short framework—acknowledge, apologize where appropriate, invite private resolution—and stays under 150 words. Personalize every response; templates are starting points, not copy-paste spam.",
+    internalLinks: [
+        { label: "Review collection & Shield", href: "/features/review-collection" },
+        { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
+        { label: "Complete Google Reviews guide", href: "/resources/google-reviews-guide" },
+        { label: "Compare review platforms", href: "/compare" },
+        { label: "Zyene Reviews pricing", href: "/pricing" },
+        { label: "Start free trial", href: "/signup" },
+    ],
+    faqs: [
+        {
+            question: "How long should a negative review response be?",
+            answer:
+                "Aim for under 150 words. Long replies can read as defensive. Include the customer's name, one specific detail from their review, and a direct way to continue the conversation privately (email or phone).",
+        },
+        {
+            question: "Should I respond to every negative Google review?",
+            answer:
+                "Yes, when the review is visible and genuine. A thoughtful public response shows future customers you are accountable. For suspected fake reviews, use a neutral template and flag the review to Google.",
+        },
+        {
+            question: "Can I use the same template twice in a row?",
+            answer:
+                "Avoid repeating identical openers or full scripts on consecutive reviews—readers notice patterns. Swap opening phrases and reference different details from each review even when the complaint category is the same.",
+        },
+        {
+            question: "What if the review seems fake or from someone who never visited?",
+            answer:
+                "Flag it to Google, respond briefly without arguing, and note that you could not verify the visit in your records. Continue collecting legitimate reviews so one suspicious post has less relative impact.",
+        },
+        {
+            question: "Should I offer a refund or discount in the public reply?",
+            answer:
+                "Keep specific offers in private follow-up when possible. Public replies should focus on empathy and a direct contact path. Do not tie any incentive to changing or removing a review—that violates platform policies.",
+        },
+    ],
     tableOfContents: [
         { anchor: "before-you-respond", label: "Before You Respond: 5 Rules" },
         { anchor: "service-quality", label: "Service Quality Complaints" },
@@ -238,11 +314,72 @@ const guide3: ResourceGuide = {
     subtitle: "The complete local SEO checklist for local business owners — Google Business Profile, citations, reviews, on-page optimization, and more.",
     excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building — all for local businesses.",
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
-    lastUpdated: "2026-05-01",
+    lastUpdated: "2026-05-25",
     readMinutes: 16,
     metaTitle: "Local SEO Checklist for 2026 (40+ Action Items)",
-    metaDescription: "The definitive local SEO checklist for 2026. 40+ action items across GBP optimization, citations, reviews, on-page SEO, and link building for local businesses.",
+    metaDescription:
+        "Local SEO checklist for 2026: 40+ action items for Google Business Profile, citations, reviews, on-page SEO, and links—built for local business owners.",
     keywords: ["local seo checklist", "local seo checklist 2026", "local business seo checklist", "google local seo", "local seo guide 2026"],
+    resourceLabel: "Free Checklist",
+    openingSummary:
+        "Work through this local SEO checklist section by section: Google Business Profile, citations and NAP, reviews, on-page website basics, local links, mobile speed, schema, and tracking. Check items off as you go; pair review velocity with fair outreach and compliant review requests.",
+    internalLinks: [
+        { label: "Review collection features", href: "/features/review-collection" },
+        { label: "Google Reviews guide", href: "/resources/google-reviews-guide" },
+        { label: "Review request templates", href: "/resources/review-request-templates" },
+        { label: "Compare review platforms", href: "/compare" },
+        { label: "Zyene Reviews pricing", href: "/pricing" },
+        { label: "Start free trial", href: "/signup" },
+    ],
+    faqs: [
+        {
+            question: "What is local SEO for a small business?",
+            answer:
+                "Local SEO is optimizing your online presence so you show up when nearby customers search on Google Maps and local results. It combines your Google Business Profile, consistent business listings, reviews, location-focused website pages, and local trust signals.",
+        },
+        {
+            question: "How often should I update my Google Business Profile?",
+            answer:
+                "Review hours, photos, and services at least monthly. Post weekly Google updates when possible, respond to new reviews within 48 hours, and refresh photos seasonally so your profile looks active.",
+        },
+        {
+            question: "How many Google reviews do I need for local SEO?",
+            answer:
+                "There is no fixed number—competitive categories often need dozens to hundreds of reviews with steady recency. Focus on consistent monthly collection and owner responses rather than a one-time push.",
+        },
+        {
+            question: "Does NAP consistency still matter in 2026?",
+            answer:
+                "Yes. Your name, address, and phone should match across your website, Google Business Profile, Yelp, Facebook, and major directories. Inconsistent listings confuse search engines and customers.",
+        },
+        {
+            question: "What is the fastest local SEO win on this checklist?",
+            answer:
+                "Completing and verifying your Google Business Profile—categories, services, photos, hours, and Q&A—often delivers the quickest visibility lift before you tackle citations and link building.",
+        },
+    ],
+    howToSteps: [
+        {
+            name: "Complete your Google Business Profile",
+            text: "Verify ownership, choose accurate primary and secondary categories, add services, photos, hours, and a keyword-aware business description without stuffing or links.",
+        },
+        {
+            name: "Fix NAP and core citations",
+            text: "Align name, address, and phone on your website, GBP, Yelp, Facebook, Apple Maps, and Bing Places; correct outdated listings.",
+        },
+        {
+            name: "Set up review collection and responses",
+            text: "Ask customers fairly after visits, respond to every review within 48 hours, and use private feedback channels to resolve issues—not to block honest public reviews.",
+        },
+        {
+            name: "Optimize location pages on your website",
+            text: "Add city and service keywords to title tags, H1s, and on-page copy; include NAP in text, embed a map, and build dedicated service pages.",
+        },
+        {
+            name: "Track results weekly",
+            text: "Monitor GBP Insights, Search Console local queries, and rank checks for your top keywords; adjust based on what drives calls and direction requests.",
+        },
+    ],
     tableOfContents: [
         { anchor: "google-business-profile", label: "Google Business Profile" },
         { anchor: "nap-citations", label: "NAP Consistency & Citations" },
@@ -290,6 +427,10 @@ const guide3: ResourceGuide = {
             "☐ Old citations with wrong address/phone: Identified and corrected",
         ]},
         { type: "h2", text: "Section 3: Reviews" },
+        {
+            type: "warning",
+            text: "Review outreach compliance: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not send review links only to happy customers (review gating), and do not pressure people with repeated messages. Use private feedback to resolve issues—not to block legitimate public criticism.",
+        },
         { type: "ul", items: [
             "☐ Google review count: 50+ (competitive minimum), 100+ (preferred)",
             "☐ Review velocity: 5–10 new reviews per month minimum",

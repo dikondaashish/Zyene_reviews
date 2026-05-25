@@ -1,4 +1,4 @@
-import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
+import { BreadcrumbJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import { ResourcesGuideGuideHeaderSection } from "./resources-guide-guide-header-section";
@@ -17,10 +17,18 @@ export default async function ResourceGuidePage(
     const otherGuides = RESOURCE_GUIDES.filter((g) => g.slug !== slug).slice(0, 3);
 
     const faqs = resource.faqs ?? [];
+    const howToSteps = resource.howToSteps ?? [];
 
     return (
         <>
             {faqs.length > 0 ? <FAQPageJsonLd faqs={faqs} /> : null}
+            {howToSteps.length > 0 ? (
+                <HowToJsonLd
+                    name={resource.title}
+                    description={resource.excerpt}
+                    steps={howToSteps}
+                />
+            ) : null}
             <BreadcrumbJsonLd
                 items={[
                     { name: "Home", url: "https://zyenereviews.com/" },
@@ -29,11 +37,9 @@ export default async function ResourceGuidePage(
                 ]}
             />
             <ResourcesGuideGuideHeaderSection resource={resource} />
-            {slug === "review-request-templates" ? (
-                <>
-                    <TemplatePackPageAnalytics />
-                    <ResourcesGuideTemplatePackLeadSection />
-                </>
+            {slug === "review-request-templates" ? <TemplatePackPageAnalytics /> : null}
+            {resource.resourceLabel ? (
+                <ResourcesGuideTemplatePackLeadSection resource={resource} />
             ) : null}
             <ResourcesGuideContentSidebarSection resource={resource} otherGuides={otherGuides} />
             <ResourcesGuideOtherGuidesSection otherGuides={otherGuides} />

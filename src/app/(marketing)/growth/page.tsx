@@ -9,6 +9,7 @@ import {
 } from "@/lib/growth/growth-dashboard-auth";
 import { fetchGrowthKpiSnapshot } from "@/lib/growth/kpi-metrics";
 import { runGrowthBlueprintAudit, summarizeBlueprintAudit } from "@/lib/growth/growth-blueprint-audit";
+import { fetchTemplatePackLeadReport } from "@/lib/marketing/template-pack-lead-report";
 
 export const metadata: Metadata = {
     title: "Growth operations",
@@ -35,9 +36,10 @@ export default async function GrowthOperationsPage() {
         return <GrowthDashboardGate />;
     }
 
-    const [snapshot, auditItems] = await Promise.all([
+    const [snapshot, auditItems, templatePackReport] = await Promise.all([
         fetchGrowthKpiSnapshot(30),
         Promise.resolve(runGrowthBlueprintAudit()),
+        fetchTemplatePackLeadReport(30),
     ]);
     const auditSummary = summarizeBlueprintAudit(auditItems);
     return (
@@ -45,6 +47,7 @@ export default async function GrowthOperationsPage() {
             snapshot={snapshot}
             auditItems={auditItems}
             auditSummary={auditSummary}
+            templatePackReport={templatePackReport}
         />
     );
 }

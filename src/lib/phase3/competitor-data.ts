@@ -47,7 +47,7 @@ export const COMPETITORS: CompetitorData[] = [
         contractRequired: true,
         keyAngle: "10× cheaper, no annual contract, same AI features",
         heroSub: "See why local businesses are switching from Birdeye to Zyene Reviews — and paying $270 less per month to do it.",
-        metaTitle: "Zyene Reviews vs Birdeye — Full Comparison 2026",
+        metaTitle: "vs Birdeye — Full Comparison 2026",
         metaDescription:
             "Compare Zyene Reviews vs Birdeye: AI replies, Negative Feedback Shield, and pricing from $29.99/mo with no contract versus Birdeye at $299/mo.",
         targetKeywords: ["zyene vs birdeye", "birdeye alternative", "cheaper than birdeye", "birdeye pricing", "birdeye review management alternative"],

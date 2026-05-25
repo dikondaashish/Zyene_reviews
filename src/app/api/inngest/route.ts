@@ -20,6 +20,7 @@ import {
     trialNurtureWorker,
     onboardingDripWorker,
     winbackWorker,
+    marketingNurtureWorker,
 } from "@/services/inngest/growth-functions";
 
 /**
@@ -59,6 +60,7 @@ export const { GET, POST, PUT } = serve({
         trialNurtureWorker,
         onboardingDripWorker,
         winbackWorker,
+        marketingNurtureWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

@@ -215,7 +215,7 @@ export const post11: BlogPost = {
     dateModified: "2026-05-24",
     readMinutes: 8,
     author: { name: "Chris Alvarez", role: "Industry Research" },
-    metaTitle: "The True Cost of a Bad Online Reputation for Local Businesses",
+    metaTitle: "True Cost of Bad Online Reputation (Local Business)",
     metaDescription: "Calculate the real revenue cost of a bad online reputation. Lost customers, higher ad costs, and compounding effects explained for local business owners.",
     keywords: ["cost of bad online reputation", "online reputation cost", "reputation management roi", "negative reviews revenue impact", "bad reviews cost business"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],

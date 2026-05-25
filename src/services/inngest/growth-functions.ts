@@ -4,11 +4,13 @@ import {
     trialNurtureEmail,
     onboardingDripEmail,
     winbackFollowUpEmail,
+    marketingNurtureEmail,
 } from "@/services/resend/templates/growth-emails";
 import {
     TRIAL_NURTURE_STEPS,
     ONBOARDING_DRIP_STEPS,
     WINBACK_STEPS,
+    MARKETING_NURTURE_STEPS,
 } from "@/lib/phase6/email-sequences-data";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
@@ -91,6 +93,39 @@ export const onboardingDripWorker = inngest.createFunction(
 
         await step.run("complete-sequence", async () => {
             await markSequenceCompleted("onboarding_drip", email, organizationId);
+        });
+    }
+);
+
+/** Newsletter / checklist leads — 3-email nurture (excludes template pack immediate pack email) */
+export const marketingNurtureWorker = inngest.createFunction(
+    { id: "growth-marketing-nurture", name: "Growth Marketing Nurture" },
+    { event: "growth/marketing-nurture.start" },
+    async ({ event, step }) => {
+        const { email } = event.data;
+
+        for (let i = 0; i < MARKETING_NURTURE_STEPS.length; i++) {
+            const nurtureStep = MARKETING_NURTURE_STEPS[i];
+            const waitHours =
+                i === 0
+                    ? nurtureStep.delayHours
+                    : nurtureStep.delayHours - MARKETING_NURTURE_STEPS[i - 1].delayHours;
+
+            if (waitHours > 0) {
+                await step.sleep(`wait-${nurtureStep.key}`, `${waitHours}h`);
+            }
+
+            await step.run(`send-${nurtureStep.key}`, async () => {
+                const { subject, html } = marketingNurtureEmail({
+                    email,
+                    stepKey: nurtureStep.key,
+                });
+                await sendEmail({ to: email, subject, html });
+            });
+        }
+
+        await step.run("complete-sequence", async () => {
+            await markSequenceCompleted("marketing_nurture", email);
         });
     }
 );

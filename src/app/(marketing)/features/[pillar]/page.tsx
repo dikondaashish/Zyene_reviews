@@ -34,6 +34,11 @@ export async function generateMetadata({
             description: data.metaDescription,
             url: `https://zyenereviews.com${path}`,
         },
+        twitter: {
+            card: "summary_large_image",
+            title: data.metaTitle,
+            description: data.metaDescription,
+        },
     };
 }
 
