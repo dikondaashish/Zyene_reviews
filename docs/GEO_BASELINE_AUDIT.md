@@ -4,9 +4,9 @@
 
 Use this document as the repeatable starting point for measuring GEO and SEO improvement. Update after major content ships and monthly thereafter.
 
-**Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) · [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md)
+**Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_ON_PAGE_AUDIT.md](./GEO_ON_PAGE_AUDIT.md) · [GEO_WEEKLY_REPORT_TEMPLATE.md](./GEO_WEEKLY_REPORT_TEMPLATE.md) · [GEO_OWNER_FINAL_ACTIONS.md](./GEO_OWNER_FINAL_ACTIONS.md) · [GEO_OWNER_FINAL_CHECKLIST.md](./GEO_OWNER_FINAL_CHECKLIST.md)
 
-**Latest automated GSC export:** [reports/gsc/GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) (regenerate with `pnpm geo:gsc-baseline` — see [GROWTH_OPERATIONS.md](./GROWTH_OPERATIONS.md) or script header in `scripts/export-gsc-baseline.mjs`)
+**Latest automated GSC export:** [reports/gsc/GSC_BASELINE_SUMMARY.md](../reports/gsc/GSC_BASELINE_SUMMARY.md) (regenerate with `pnpm geo:gsc-baseline` — OAuth steps in [GEO_OWNER_FINAL_ACTIONS.md](./GEO_OWNER_FINAL_ACTIONS.md) §1)
 
 ---
 

@@ -22,6 +22,7 @@
     "skills:sync": "node scripts/sync-agent-skills.mjs",
     "indexnow:ping": "node scripts/ping-indexnow.mjs",
     "geo:gsc-baseline": "node scripts/export-gsc-baseline.mjs",
+    "geo:weekly-report": "node scripts/generate-geo-weekly-report.mjs",
     "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
   },
   "dependencies": {

@@ -20,7 +20,13 @@ Central index for project documentation and where each file belongs.
 - `docs/GEO_ON_PAGE_AUDIT.md` - Priority URL on-page SEO audit table.
 - `docs/GEO_WEEKLY_REPORT_TEMPLATE.md` - Weekly GEO tracking template.
 - `docs/GEO_CLOSEOUT_STATUS.md` - GEO implementation closeout: done vs manual vs external ops.
+- `docs/GEO_OWNER_FINAL_CHECKLIST.md` - Single owner checklist for GEO closeout (Phases 0, 5–8).
+- `docs/GEO_OWNER_FINAL_ACTIONS.md` - GSC OAuth, AI citation workflow, weekly commands.
+- `docs/LEAD_NURTURE_QA_RUNBOOK.md` - Safe QA for template pack + local SEO funnels.
+- `docs/GEO_DISTRIBUTION_OWNER_POSTING_PLAN.md` - Week 1 posting sequence (manual only).
 - `docs/GEO_DISTRIBUTION_EXECUTION_TRACKER.md` - Manual social/email distribution checklist (owner-filled).
+- `docs/GEO_PROOF_COLLECTION_RUNBOOK.md` - Real proof collection rules (no fake metrics).
+- `docs/GEO_EXTERNAL_PROFILE_CHECKLIST.md` - G2, Capterra, LinkedIn, consistency (owner).
 - `docs/GEO_PRODUCT_PROOF_ROADMAP.md` - Proof assets, data requirements, compliance rules.
 - `docs/GEO_ENTITY_BRAND_CHECKLIST.md` - Entity/NAP/social/schema consistency (owner tasks).
 - `docs/GEO_CONTENT_REFRESH_QUEUE.md` - Priority URL refresh schedule.

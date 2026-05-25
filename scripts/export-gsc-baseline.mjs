@@ -3,9 +3,9 @@
  * Export Google Search Console baseline (last 28 complete days, excluding today).
  *
  * Auth (in order):
- * 1. Service account — GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
- * 2. OAuth user (Desktop app) — GOOGLE_OAUTH_CLIENT_ID + GOOGLE_OAUTH_CLIENT_SECRET
- *    or GOOGLE_OAUTH_CLIENT_JSON path to Desktop client JSON from Google Cloud
+ * 1. OAuth user (primary) — GOOGLE_OAUTH_CLIENT_ID + GOOGLE_OAUTH_CLIENT_SECRET
+ *    or GOOGLE_OAUTH_CLIENT_JSON (Desktop app JSON from Google Cloud)
+ * 2. Service account (fallback only) — GOOGLE_APPLICATION_CREDENTIALS or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
  *
  * Property: GSC_SITE_URL (default https://www.zyenereviews.com/)
  *
@@ -57,10 +57,46 @@ function last28CompleteDays() {
     return { startDate: ymd(start), endDate: ymd(end) };
 }
 
+function isOAuthConfigured() {
+    if (process.env.GOOGLE_OAUTH_CLIENT_JSON?.trim()) return true;
+    const id = process.env.GOOGLE_OAUTH_CLIENT_ID?.trim();
+    const secret = process.env.GOOGLE_OAUTH_CLIENT_SECRET?.trim();
+    return Boolean(id && secret);
+}
+
 function hasServiceAccountEnv() {
     if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64?.trim()) return true;
     const path = process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim();
     return Boolean(path);
+}
+
+function printOAuthSetupSteps() {
+    console.error(`
+=== Google Search Console export — OAuth setup required ===
+
+Search Console usually cannot add service account users. Use OAuth with a Google account
+that already has access to the property.
+
+1. Google Cloud Console → APIs & Services → Library → enable "Google Search Console API"
+2. Credentials → Create credentials → OAuth client ID → Application type: Desktop app
+3. Add to .env.local (do not commit):
+
+   GOOGLE_OAUTH_CLIENT_ID=your_client_id
+   GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
+   # optional: GOOGLE_OAUTH_CLIENT_JSON=/absolute/path/to/client_secret_....json
+
+4. Unset GOOGLE_APPLICATION_CREDENTIALS if you want OAuth (not service account).
+
+5. Run:  pnpm geo:gsc-baseline
+
+6. If URL-prefix property fails, try domain property:
+   GSC_SITE_URL="sc-domain:zyenereviews.com" pnpm geo:gsc-baseline
+
+Token cache: .cache/google-gsc-token.json (gitignored)
+Outputs:   reports/gsc/
+
+Full steps: docs/GEO_OWNER_FINAL_ACTIONS.md · docs/GROWTH_OPERATIONS.md
+`);
 }
 
 function resolveServiceAccountCredentials() {
@@ -179,12 +215,19 @@ async function authorizeOAuthUser() {
 }
 
 async function createAuth() {
+    if (isOAuthConfigured()) {
+        return authorizeOAuthUser();
+    }
     if (hasServiceAccountEnv()) {
+        console.warn(
+            "Warning: OAuth is not configured — using service account fallback. Search Console often rejects service accounts; prefer OAuth (see docs/GEO_OWNER_FINAL_ACTIONS.md).",
+        );
         const credentials = resolveServiceAccountCredentials();
-        console.log("Auth: service account");
+        console.log("Auth: service account (fallback)");
         return new google.auth.GoogleAuth({ credentials, scopes: [SCOPE] });
     }
-    return authorizeOAuthUser();
+    printOAuthSetupSteps();
+    throw new Error("No GSC credentials configured (OAuth or service account)");
 }
 
 function mapRow(row, dimensions) {
@@ -309,10 +352,13 @@ async function main() {
         auth = await createAuth();
     } catch (e) {
         console.error("GSC export failed (credentials):", e.message);
-        if (!hasServiceAccountEnv()) {
+        if (!isOAuthConfigured() && !hasServiceAccountEnv()) {
+            printOAuthSetupSteps();
+        } else if (!isOAuthConfigured()) {
             console.error(
-                "\nTo use OAuth: unset GOOGLE_APPLICATION_CREDENTIALS, set GOOGLE_OAUTH_CLIENT_ID/SECRET or GOOGLE_OAUTH_CLIENT_JSON, then re-run.",
+                "\nTip: Unset GOOGLE_APPLICATION_CREDENTIALS and configure OAuth (primary path).",
             );
+            printOAuthSetupSteps();
         }
         process.exit(1);
     }

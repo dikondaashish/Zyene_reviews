@@ -2,7 +2,9 @@
 
 **Status:** Planning doc — no customer metrics are invented here. Ship new proof assets only when verified data exists.
 
-**Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) · [GEO_ENTITY_BRAND_CHECKLIST.md](./GEO_ENTITY_BRAND_CHECKLIST.md)
+**Benchmark blocker:** The route `/research/2026-local-reviews-benchmark` must **not** ship until real aggregated product/customer data and methodology exist. Do not publish invented percentages or charts. See [GEO_PROOF_COLLECTION_RUNBOOK.md](./GEO_PROOF_COLLECTION_RUNBOOK.md).
+
+**Related:** [GEO_WIN_PLAYBOOK.md](./GEO_WIN_PLAYBOOK.md) · [GEO_BASELINE_AUDIT.md](./GEO_BASELINE_AUDIT.md) · [GEO_ENTITY_BRAND_CHECKLIST.md](./GEO_ENTITY_BRAND_CHECKLIST.md) · [GEO_EXTERNAL_PROFILE_CHECKLIST.md](./GEO_EXTERNAL_PROFILE_CHECKLIST.md)
 
 ---
 
