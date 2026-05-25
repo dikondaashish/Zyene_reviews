@@ -203,8 +203,11 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 
 | Skill | When to use |
 |-------|-------------|
+| **impeccable** | Shape, critique, audit, polish, harden, animate UI — 23 sub-commands (`craft`, `audit`, `critique`, etc.); run `impeccable teach` once if `PRODUCT.md` / `DESIGN.md` are missing |
 | **design-taste-frontend** | Marketing landings, portfolios, UI redesigns — anti-slop layout, typography, motion (Taste Skill v2) |
 | **web-design-guidelines** | UI/a11y/UX review against Web Interface Guidelines |
+
+Optional CLI: `npx impeccable detect src/` for deterministic anti-pattern scans (no API key).
 
 Install more Taste Skill variants: `npx skills add Leonxlnx/taste-skill --skill <install-name>` (see [taste-skill README](https://github.com/Leonxlnx/taste-skill)).
 

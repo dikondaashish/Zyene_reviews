@@ -13,6 +13,12 @@
       "skillPath": "skills/taste-skill/SKILL.md",
       "computedHash": "57dc99e66100bc27df0a40e5bf56bb22b621a302adcab305890fbf187ec0debf"
     },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": "skill/SKILL.md",
+      "computedHash": "34e59a34b9705187e87039faa5d9585aebe0056ef657f761b905afef276a3362"
+    },
     "vercel-cli-with-tokens": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
