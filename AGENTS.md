@@ -196,9 +196,17 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 | **vercel-composition-patterns** | Compound components, fewer boolean props |
 | **vercel-react-view-transitions** | Page/route view transitions |
 | **vercel-optimize** | Production cost & performance on Vercel |
-| **web-design-guidelines** | UI/a11y/UX best practices |
 | **deploy-to-vercel** | Claimable preview deploy |
 | **vercel-cli-with-tokens** | CLI with scoped tokens |
+
+### Frontend & design
+
+| Skill | When to use |
+|-------|-------------|
+| **design-taste-frontend** | Marketing landings, portfolios, UI redesigns — anti-slop layout, typography, motion (Taste Skill v2) |
+| **web-design-guidelines** | UI/a11y/UX review against Web Interface Guidelines |
+
+Install more Taste Skill variants: `npx skills add Leonxlnx/taste-skill --skill <install-name>` (see [taste-skill README](https://github.com/Leonxlnx/taste-skill)).
 
 ### Other
 
