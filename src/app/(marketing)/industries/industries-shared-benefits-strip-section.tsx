@@ -30,7 +30,7 @@ export function IndustriesSharedBenefitsStripSection() {
                 <p className="text-center text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-10">
                     Every industry gets the same core platform
                 </p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
                     {BENEFITS.map((item) => (
                         <div key={item.title} className="bg-card border border-border rounded-2xl p-6">
                             <div className="flex justify-center text-primary mb-3">

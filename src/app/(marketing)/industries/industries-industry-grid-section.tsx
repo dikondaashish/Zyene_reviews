@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { INDUSTRIES } from "@/lib/phase3/industry-data";
@@ -11,24 +12,36 @@ export function IndustriesIndustryGridSection() {
                 <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">
                     See exactly how Zyene solves reputation challenges specific to your type of business.
                 </p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {INDUSTRIES.map((industry) => (
                         <Link
                             key={industry.slug}
                             href={`/industries/${industry.slug}`}
-                            className="group bg-card border border-border rounded-2xl p-7 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
+                            className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
                         >
-                            <div className="text-primary mb-3">
-                                <IndustryIcon slug={industry.slug} />
+                            <div className="relative w-full h-48">
+                                <Image
+                                    src={industry.imagePath}
+                                    alt={industry.name}
+                                    fill
+                                    className="object-cover transition-transform group-hover:scale-105"
+                                />
                             </div>
-                            <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                                {industry.name}
-                            </h3>
+                            <div className="p-7 flex flex-col flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="text-primary">
+                                    <IndustryIcon slug={industry.slug} />
+                                </div>
+                                <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                                    {industry.name}
+                                </h3>
+                            </div>
                             <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-5">
                                 {industry.heroSub.split(".")[0]}.
                             </p>
                             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
                                 Learn more <ArrowRight className="group-hover:translate-x-1 transition-transform size-3.5" />
+                            </div>
                             </div>
                         </Link>
                     ))}
