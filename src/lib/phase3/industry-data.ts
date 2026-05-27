@@ -38,6 +38,7 @@ export interface IndustryData {
     solutions: Solution[];
     useCase: UseCase;
     ctaJoinCopy: string;
+    imagePath: string;
 }
 
 export const INDUSTRIES: IndustryData[] = [
@@ -86,6 +87,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "Within 60 days, all 3 locations were above 4.6 stars. Review volume tripled. His team now spends 20 minutes a week on reputation management instead of 3 hours — and 8 unhappy customers were privately resolved before they could write public reviews.",
         },
         ctaJoinCopy: "Join other restaurant owners on Zyene",
+        imagePath: "/images/industries/restaurants.png",
     },
 
     // ── 2. Dental ────────────────────────────────────────────────────────────
@@ -133,6 +135,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 90 days, both locations had 80+ new reviews. Dr. Priya's main location moved from the 4th result to the 2nd result for 'dentist near me' in her neighborhood. Three billing complaints were privately resolved through the Shield before going public.",
         },
         ctaJoinCopy: "Join other dental practices on Zyene",
+        imagePath: "/images/industries/dental.png",
     },
 
     // ── 3. Auto Repair ───────────────────────────────────────────────────────
@@ -180,6 +183,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 4 months, his review count grew from 45 to 180 with a 4.8-star average. He outranked the chain for 'auto repair near me' in his zip code. Two estimate-dispute complaints were privately resolved through the Shield.",
         },
         ctaJoinCopy: "Join other auto repair shops on Zyene",
+        imagePath: "/images/industries/auto-repair.png",
     },
 
     // ── 4. Salons & Spas ─────────────────────────────────────────────────────
@@ -227,6 +231,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 6 weeks, Jasmine's review count jumped from 28 to 94. Her rating climbed to 4.8 stars. Bookings from Google increased by 40%. Two clients who were disappointed with their color were privately resolved and both rebooked.",
         },
         ctaJoinCopy: "Join other salon and spa owners on Zyene",
+        imagePath: "/images/industries/salons.png",
     },
 
     // ── 5. Home Services ─────────────────────────────────────────────────────
@@ -274,6 +279,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 90 days, his review count grew from 52 to 210 with a 4.8-star rating. He ranked in the top 3 on Google Maps for 'HVAC near me' in his area for the first time. Two pricing disputes were resolved privately through the Shield.",
         },
         ctaJoinCopy: "Join other home services professionals on Zyene",
+        imagePath: "/images/industries/home-services.png",
     },
 
     // ── 6. Medical / Healthcare ──────────────────────────────────────────────
@@ -321,6 +327,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 4 months, both locations climbed above 4.5 stars. New patient appointments increased by 22%. Six wait-time complaints were privately resolved through the Shield before going public.",
         },
         ctaJoinCopy: "Join other medical practices on Zyene",
+        imagePath: "/images/industries/medical.png",
     },
 
     // ── 7. Hotels & Hospitality ──────────────────────────────────────────────
@@ -368,6 +375,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 45 days, response rate went from 20% to 98%. The hotel's rating climbed to 4.6 stars and monthly review volume tripled. Direct bookings from Google increased by 18%. Five room complaints were privately resolved before being posted publicly.",
         },
         ctaJoinCopy: "Join other hotels and hospitality businesses on Zyene",
+        imagePath: "/images/industries/hotels.png",
     },
 
     // ── 8. Fitness ───────────────────────────────────────────────────────────
@@ -415,6 +423,7 @@ export const INDUSTRIES: IndustryData[] = [
             resultAfter: "In 5 months, Tyler's review count grew from 41 to 210 with a 4.9-star average. His gym outranked the franchise for 'CrossFit near me' in his neighborhood. Five cancellation complaints were privately resolved through the Shield, and 3 of those members stayed.",
         },
         ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
+        imagePath: "/images/industries/fitness.png",
     },
 ];
 
