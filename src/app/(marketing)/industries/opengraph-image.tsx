@@ -16,7 +16,7 @@ export default function OgImage() {
                         Review management built<br /><span style={{ color: "#4ade80" }}>for your industry</span>
                     </div>
                     <div style={{ display: "flex", gap: "12px", marginBottom: "24px", flexWrap: "wrap", justifyContent: "center" }}>
-                        {["🍽️ Restaurants", "🦷 Dental", "🔧 Auto Repair", "💅 Salons", "🏠 Home Services", "🏥 Medical", "🏨 Hotels", "💪 Fitness"].map((item) => (
+                        {["Restaurants", "Dental", "Auto Repair", "Salons", "Home Services", "Medical", "Hotels", "Fitness"].map((item) => (
                             <div key={item} style={{ background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: "10px", padding: "8px 14px", color: "rgba(255,255,255,0.8)", fontSize: "13px", fontWeight: "600" }}>{item}</div>
                         ))}
                     </div>
