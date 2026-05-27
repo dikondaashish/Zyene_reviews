@@ -10,16 +10,17 @@ import Image from "next/image";
 import { marketingImages } from "@/lib/marketing/marketing-images";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
+import { HeroGridBg } from "@/components/marketing/marketing-home/hero-grid-bg";
 
 export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMotion }: MarketingHomeMotionProps) {
     return (
-        <section className="w-full pt-24 pb-32 px-4">
+        <section className="relative w-full pt-24 pb-32 px-4">
+            <HeroGridBg />
             <motion.div
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+                animate="visible"
                 variants={staggerContainer}
-                className="mx-auto max-w-[1200px] flex flex-col items-center text-center"
+                className="relative z-10 mx-auto max-w-[1200px] flex flex-col items-center text-center"
             >
                 <motion.span
                     variants={fadeInUp}
