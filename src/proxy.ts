@@ -115,8 +115,20 @@ export async function proxy(request: NextRequest) {
     );
 
     const {
-        data: { user },
+        data: { user: authUser },
+        error: authError,
     } = await supabase.auth.getUser();
+
+    // Stale or revoked session cookies (common after env/project changes) — clear and continue as guest.
+    if (
+        authError &&
+        (authError.code === "refresh_token_not_found" ||
+            authError.message?.includes("Refresh Token Not Found"))
+    ) {
+        await supabase.auth.signOut();
+    }
+
+    const user = authError ? null : authUser;
 
     const addAuthNoIndex = (response: NextResponse) => {
         response.headers.set("X-Robots-Tag", "noindex, nofollow");
