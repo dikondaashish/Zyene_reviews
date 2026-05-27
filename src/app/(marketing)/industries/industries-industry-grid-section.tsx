@@ -19,7 +19,7 @@ export function IndustriesIndustryGridSection() {
                             href={`/industries/${industry.slug}`}
                             className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
                         >
-                            <div className="relative w-full h-48">
+                            <div className="relative w-full h-56 sm:h-60">
                                 <Image
                                     src={industry.imagePath}
                                     alt={industry.name}
