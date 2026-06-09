@@ -14,6 +14,8 @@ import { TrialBanner } from "@/components/dashboard/trial-banner";
 import { PastDuePaymentBanner } from "@/components/dashboard/past-due-payment-banner";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
+import { getGoogleConnectionStatus } from "@/lib/google/is-google-connected";
+import { GoogleConnectBanner } from "@/components/dashboard/google-connect-banner";
 
 export default async function DashboardLayout({
     children,
@@ -58,6 +60,10 @@ export default async function DashboardLayout({
         organization && typeof organization.stripe_customer_id === "string"
             ? organization.stripe_customer_id
             : null;
+
+    const googleConnectionStatus = activeBusiness?.id
+        ? getGoogleConnectionStatus(activeBusiness.review_platforms)
+        : "connected";
 
     const headerContent = (
         <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
@@ -108,6 +114,10 @@ export default async function DashboardLayout({
                     planStatus={organization?.plan_status}
                     stripeCustomerId={stripeCustomerId}
                     canManageBilling={canManageBilling}
+                />
+                <GoogleConnectBanner
+                    status={googleConnectionStatus}
+                    businessName={activeBusiness?.name}
                 />
                 <DashboardLayoutClient header={headerContent}>
                     <ErrorBoundary>{children}</ErrorBoundary>
