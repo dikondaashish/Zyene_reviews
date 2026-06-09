@@ -50,7 +50,7 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link href="/signup">
-                                <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl bg-white text-zinc-900 hover:bg-white/90">
+                                <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl bg-white text-foreground hover:bg-white/90">
                                     Start Free Trial <ArrowRight className="ml-2 size-4" />
                                 </Button>
                             </Link>

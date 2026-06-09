@@ -13,7 +13,7 @@ export function IndustryTrustBadge({ label, variant = "default" }: IndustryTrust
 
     return (
         <div className={className}>
-            <Building2 className={variant === "onDark" ? "text-emerald-300 size-3.5" : "text-primary size-3.5"} />
+            <Building2 className="text-primary size-3.5" />
             {label}
         </div>
     );

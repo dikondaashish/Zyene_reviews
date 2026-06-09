@@ -26,7 +26,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                     variants={fadeInUp}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground mb-8"
                 >
-                    <span className="size-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="size-2 rounded-full bg-primary animate-pulse" />
                     Trusted by 500+ local businesses
                 </motion.span>
 
