@@ -2,6 +2,7 @@
  * Next.js middleware proxy — handles subdomain routing, auth session refresh,
  * API rate limiting, and CORS headers for the multi-tenant app.
  */
+import { isStaleRefreshTokenError, signOutStaleSession } from "@/lib/auth/stale-session";
 import { logger } from "@/lib/logger";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
@@ -119,13 +120,8 @@ export async function proxy(request: NextRequest) {
         error: authError,
     } = await supabase.auth.getUser();
 
-    // Stale or revoked session cookies (common after env/project changes) — clear and continue as guest.
-    if (
-        authError &&
-        (authError.code === "refresh_token_not_found" ||
-            authError.message?.includes("Refresh Token Not Found"))
-    ) {
-        await supabase.auth.signOut();
+    if (isStaleRefreshTokenError(authError)) {
+        await signOutStaleSession(supabase);
     }
 
     const user = authError ? null : authUser;

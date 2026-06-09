@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getBrowserUser } from "@/lib/auth/stale-session";
 import { createClient } from "@/lib/db/supabase/client";
 import { getAppDashboardUrl } from "@/config/env";
 
@@ -27,7 +28,7 @@ export function MarketingHeaderAuth({
         const supabase = createClient();
 
         const sync = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            const user = await getBrowserUser(supabase);
             setDashboardUrl(user ? getAppDashboardUrl() : null);
         };
 
