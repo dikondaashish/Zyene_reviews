@@ -37,6 +37,8 @@ export interface IndustryData {
     painPoints: PainPoint[];
     solutions: Solution[];
     useCase: UseCase;
+    useCaseQuote: string;
+    useCaseHighlights: string[];
     ctaJoinCopy: string;
     imagePath: string;
 }
@@ -86,6 +88,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "Marco connected all 3 locations to Zyene in under 10 minutes. He turned on the Negative Feedback Shield for all locations and set up AI auto-reply for 4-star and 5-star reviews. He started sending review requests via QR codes at the table.",
             resultAfter: "Within 60 days, all 3 locations were above 4.6 stars. Review volume tripled. His team now spends 20 minutes a week on reputation management instead of 3 hours — and 8 unhappy customers were privately resolved before they could write public reviews.",
         },
+        useCaseQuote: "Within 60 days, all 3 locations went from below 4.3 to above 4.6 stars. We now spend 20 minutes a week on reputation instead of 3 hours.",
+        useCaseHighlights: ["4.3 → 4.6 stars", "3× review volume", "8 bad reviews prevented"],
         ctaJoinCopy: "Join other restaurant owners on Zyene",
         imagePath: "/images/industries/restaurants.png",
     },
@@ -134,6 +138,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "She connected both locations to Zyene and set up automated SMS review requests to send 3 hours after each checkout. She activated the Negative Feedback Shield and enabled AI auto-reply for all 4 and 5-star reviews.",
             resultAfter: "In 90 days, both locations had 80+ new reviews. Dr. Priya's main location moved from the 4th result to the 2nd result for 'dentist near me' in her neighborhood. Three billing complaints were privately resolved through the Shield before going public.",
         },
+        useCaseQuote: "In 90 days, both locations had 80+ new reviews. We moved from the 4th to the 2nd result for 'dentist near me' in our neighborhood.",
+        useCaseHighlights: ["31 → 160+ reviews", "#4 → #2 on Google Maps", "3 billing disputes resolved privately"],
         ctaJoinCopy: "Join other dental practices on Zyene",
         imagePath: "/images/industries/dental.png",
     },
@@ -182,6 +188,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "Carlos started sending SMS review requests after every completed repair using Zyene. He activated the Negative Feedback Shield and competitor tracking for the chain and two other nearby shops.",
             resultAfter: "In 4 months, his review count grew from 45 to 180 with a 4.8-star average. He outranked the chain for 'auto repair near me' in his zip code. Two estimate-dispute complaints were privately resolved through the Shield.",
         },
+        useCaseQuote: "In 4 months, my review count grew from 45 to 180 with a 4.8-star average. I outranked the chain for 'auto repair near me' in my zip code.",
+        useCaseHighlights: ["45 → 180 reviews", "4.8-star average", "2 disputes resolved privately"],
         ctaJoinCopy: "Join other auto repair shops on Zyene",
         imagePath: "/images/industries/auto-repair.png",
     },
@@ -230,6 +238,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "She connected her salon to Zyene and set up automated SMS review requests to send 2 hours after each appointment. She activated the Negative Feedback Shield and turned on AI auto-reply for 5-star reviews.",
             resultAfter: "In 6 weeks, Jasmine's review count jumped from 28 to 94. Her rating climbed to 4.8 stars. Bookings from Google increased by 40%. Two clients who were disappointed with their color were privately resolved and both rebooked.",
         },
+        useCaseQuote: "In 6 weeks, my review count jumped from 28 to 94. My rating climbed to 4.8 stars and bookings from Google increased by 40%.",
+        useCaseHighlights: ["28 → 94 reviews", "4.8-star rating", "+40% Google bookings"],
         ctaJoinCopy: "Join other salon and spa owners on Zyene",
         imagePath: "/images/industries/salons.png",
     },
@@ -278,6 +288,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "Dave integrated Zyene with his field service software via Zapier, triggering a review request 1 hour after each job was closed out. He activated the Negative Feedback Shield and competitor tracking.",
             resultAfter: "In 90 days, his review count grew from 52 to 210 with a 4.8-star rating. He ranked in the top 3 on Google Maps for 'HVAC near me' in his area for the first time. Two pricing disputes were resolved privately through the Shield.",
         },
+        useCaseQuote: "In 90 days, my review count grew from 52 to 210 with a 4.8-star rating. I ranked in the top 3 on Google Maps for the first time.",
+        useCaseHighlights: ["52 → 210 reviews", "Top 3 on Google Maps", "2 pricing disputes resolved"],
         ctaJoinCopy: "Join other home services professionals on Zyene",
         imagePath: "/images/industries/home-services.png",
     },
@@ -326,6 +338,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "He connected both practices to Zyene and set up post-visit SMS review requests. The Negative Feedback Shield was activated. His front desk team now gets alerts and uses AI reply suggestions to respond within 24 hours.",
             resultAfter: "In 4 months, both locations climbed above 4.5 stars. New patient appointments increased by 22%. Six wait-time complaints were privately resolved through the Shield before going public.",
         },
+        useCaseQuote: "In 4 months, both locations climbed above 4.5 stars. New patient appointments increased by 22%. Six complaints were resolved before going public.",
+        useCaseHighlights: ["3.9 → 4.5+ stars", "+22% new patients", "6 complaints resolved privately"],
         ctaJoinCopy: "Join other medical practices on Zyene",
         imagePath: "/images/industries/medical.png",
     },
@@ -374,6 +388,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "Sarah connected the hotel to Zyene and turned on AI auto-reply for all 4-star and 5-star reviews. She set up automated post-checkout email review requests. The Negative Feedback Shield was activated for room complaints.",
             resultAfter: "In 45 days, response rate went from 20% to 98%. The hotel's rating climbed to 4.6 stars and monthly review volume tripled. Direct bookings from Google increased by 18%. Five room complaints were privately resolved before being posted publicly.",
         },
+        useCaseQuote: "In 45 days, our response rate went from 20% to 98%. Our rating climbed to 4.6 stars and direct bookings from Google increased by 18%.",
+        useCaseHighlights: ["20% → 98% response rate", "4.6-star rating", "+18% direct bookings"],
         ctaJoinCopy: "Join other hotels and hospitality businesses on Zyene",
         imagePath: "/images/industries/hotels.png",
     },
@@ -422,6 +438,8 @@ export const INDUSTRIES: IndustryData[] = [
             actionTaken: "Tyler set up Zyene to send automated review requests 24 hours after every new member's first class. He activated the Negative Feedback Shield for cancellation requests and competitor tracking for the franchise gym.",
             resultAfter: "In 5 months, Tyler's review count grew from 41 to 210 with a 4.9-star average. His gym outranked the franchise for 'CrossFit near me' in his neighborhood. Five cancellation complaints were privately resolved through the Shield, and 3 of those members stayed.",
         },
+        useCaseQuote: "In 5 months, my review count grew from 41 to 210 with a 4.9-star average. I outranked the franchise for 'CrossFit near me' in my neighborhood.",
+        useCaseHighlights: ["41 → 210 reviews", "4.9-star average", "5 cancellations resolved, 3 stayed"],
         ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
         imagePath: "/images/industries/fitness.png",
     },
