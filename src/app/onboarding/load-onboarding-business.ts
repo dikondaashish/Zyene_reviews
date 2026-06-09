@@ -22,11 +22,21 @@ export async function loadOnboardingBusiness(
         ...biz,
         city: biz.city ?? null,
     };
-    const hasGoogle = biz.review_platforms?.some(
+    const googlePlatform = biz.review_platforms?.find(
         (p: { platform?: string }) => p.platform === "google"
-    );
+    ) as
+        | {
+              platform?: string;
+              google_location_id?: string | null;
+              sync_status?: string | null;
+          }
+        | undefined;
 
-    if (hasGoogle) {
+    const hasGoogle = Boolean(googlePlatform?.google_location_id);
+    const syncStatus = String(googlePlatform?.sync_status ?? "").toLowerCase();
+    const canCatchUpSync = hasGoogle && !syncStatus.startsWith("error_");
+
+    if (canCatchUpSync) {
         triggerOnboardingSync(biz.id).catch(() => {});
     }
 

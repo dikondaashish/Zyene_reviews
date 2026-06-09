@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { revalidatePath } from "next/cache";
 import {
   bootstrapGoogleReviewsForPlatform,
@@ -57,9 +58,30 @@ async function runGooglePostConnectSideJobs(platformId: string): Promise<void> {
   syncGoogleLodgingForPlatform(platformId).catch((e) => logger.error({ err: e }, "[Onboarding] GBP lodging:"));
 }
 
+async function googlePlatformReadyForSync(platformId: string): Promise<boolean> {
+  const admin = createAdminClient();
+  const { data } = await admin
+    .from("review_platforms")
+    .select("refresh_token, google_location_id")
+    .eq("id", platformId)
+    .maybeSingle();
+  return Boolean(data?.google_location_id && data?.refresh_token);
+}
+
 export async function enqueueGooglePostConnectSync(
   platformId: string
 ): Promise<OnboardingGoogleSyncResult> {
+  if (!(await googlePlatformReadyForSync(platformId))) {
+    logger.warn(
+      { platformId },
+      "[Onboarding] Skipping google/sync.reviews — missing refresh token or GBP location",
+    );
+    return {
+      mode: "failed",
+      error: "Google connection is incomplete. Reconnect Google Business, then sync again.",
+    };
+  }
+
   let completedInline = false;
   try {
     const bootstrap = await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {

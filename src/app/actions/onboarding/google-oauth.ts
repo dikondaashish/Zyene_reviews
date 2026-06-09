@@ -2,6 +2,8 @@
 import { logger } from "@/lib/logger";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { revalidatePath } from "next/cache";
 import { registerNotificationsWithRetry } from "@/services/google/notifications";
 import { parseGoogleLocationResourceIds } from "@/services/google/business-profile";
@@ -112,12 +114,20 @@ export async function initializeGoogleAuth(
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+    const refreshTokenFromGoogle = tokenData.refresh_token as string | undefined;
 
     if (!accessToken) {
       return {
         success: false,
         error: "Failed to obtain access token.",
       };
+    }
+
+    if (!refreshTokenFromGoogle) {
+      logger.warn(
+        { businessId, redirectUri },
+        "[Onboarding] Google token exchange returned no refresh_token (sync will fail until reconnect)",
+      );
     }
 
     // Fetch Google Business Profile data and optionally update business with first location.
@@ -208,7 +218,7 @@ export async function initializeGoogleAuth(
               locations: mappedLocations,
               tokens: {
                 accessToken,
-                refreshToken: tokenData.refresh_token,
+                refreshToken: refreshTokenFromGoogle,
                 expiresIn: tokenData.expires_in
               }
             };
@@ -221,7 +231,7 @@ export async function initializeGoogleAuth(
               allLocations[0], 
               { 
                 accessToken, 
-                refreshToken: tokenData.refresh_token, 
+                refreshToken: refreshTokenFromGoogle, 
                 expiresIn: tokenData.expires_in 
               }
             );
@@ -262,6 +272,11 @@ export async function finalizeGoogleConnection(
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: "Not authenticated" };
+
+    const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+    if (!allowed) {
+      return { success: false, error: "You do not have access to this business." };
+    }
 
     const { accessToken, refreshToken, expiresIn } = tokens;
 
@@ -362,32 +377,79 @@ export async function finalizeGoogleConnection(
     const { googleAccountId, googleLocationId } = parseGoogleLocationResourceIds(
       typeof loc.name === "string" ? loc.name : null
     );
-    const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: accessToken || "" });
-    const { data: encRefresh } = await supabase.rpc("encrypt_token", { plaintext: refreshToken || "" });
+    const admin = createAdminClient();
 
-    await supabase
+    const { data: existingPlatform } = await admin
       .from("review_platforms")
-      .upsert(
-        {
-          business_id: businessId,
-          platform: "google",
-          access_token: encAccess,
-          refresh_token: encRefresh || null,
-          token_expires_at: new Date(Date.now() + expiresIn * 1000).toISOString(),
-          google_account_id: googleAccountId,
-          google_location_id: googleLocationId,
-          external_id: googleLocationId,
-          external_url: googleReviewUrl,
-          total_reviews: reviewData.reviewCount,
-          average_rating: reviewData.averageRating,
-          sync_status: "active",
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "business_id,platform" }
-      );
+      .select("refresh_token")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .maybeSingle();
+
+    const { data: encAccess, error: encAccessError } = await admin.rpc("encrypt_token", {
+      plaintext: accessToken || "",
+    });
+    if (encAccessError || !encAccess) {
+      logger.error({ err: encAccessError }, "[Onboarding] encrypt_token failed for access token");
+      return {
+        success: false,
+        error: "Could not secure Google credentials. Please try connecting again.",
+      };
+    }
+
+    let encRefresh: string | null = null;
+    if (refreshToken) {
+      const { data: encrypted, error: encRefreshError } = await admin.rpc("encrypt_token", {
+        plaintext: refreshToken,
+      });
+      if (encRefreshError || !encrypted) {
+        logger.error({ err: encRefreshError }, "[Onboarding] encrypt_token failed for refresh token");
+        return {
+          success: false,
+          error: "Could not secure Google credentials. Please try connecting again.",
+        };
+      }
+      encRefresh = encrypted;
+    }
+
+    const refreshTokenToStore = encRefresh ?? existingPlatform?.refresh_token ?? null;
+    if (!refreshTokenToStore) {
+      return {
+        success: false,
+        error:
+          "Google did not provide a refresh token. Disconnect Google in Integrations (if shown), then connect again from this step.",
+      };
+    }
+
+    const expiresInSeconds =
+      typeof expiresIn === "number" && Number.isFinite(expiresIn) && expiresIn > 0 ? expiresIn : 3600;
+
+    const { error: platformUpsertError } = await admin.from("review_platforms").upsert(
+      {
+        business_id: businessId,
+        platform: "google",
+        access_token: encAccess,
+        refresh_token: refreshTokenToStore,
+        token_expires_at: new Date(Date.now() + expiresInSeconds * 1000).toISOString(),
+        google_account_id: googleAccountId,
+        google_location_id: googleLocationId,
+        external_id: googleLocationId,
+        external_url: googleReviewUrl,
+        total_reviews: reviewData.reviewCount,
+        average_rating: reviewData.averageRating,
+        sync_status: "active",
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "business_id,platform" }
+    );
+
+    if (platformUpsertError) {
+      logger.error({ err: platformUpsertError }, "[Onboarding] review_platforms upsert failed");
+      return { success: false, error: "Failed to save Google connection. Please try again." };
+    }
 
     // Trigger syncs (immediately)
-    const { data: platformData } = await supabase
+    const { data: platformData } = await admin
       .from("review_platforms")
       .select("id")
       .eq("business_id", businessId)

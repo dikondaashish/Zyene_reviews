@@ -23,6 +23,15 @@ export async function triggerOnboardingSync(businessId: string) {
 
     if (!platform) return { success: false, error: "Google not connected" };
 
+    if (!platform.google_location_id) {
+      return { success: false, error: "Google location not selected yet" };
+    }
+
+    const status = String(platform.sync_status ?? "").toLowerCase();
+    if (status.startsWith("error_")) {
+      return { success: false, error: "Google connection needs to be fixed before syncing" };
+    }
+
     const outcome = await enqueueGooglePostConnectSync(platform.id);
     if (outcome.mode === "failed") {
       return { success: false, error: outcome.error || "Failed to trigger sync" };
