@@ -27,10 +27,10 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
             <div className="relative z-10 w-full px-4 py-20 md:py-28">
                 <div className="container mx-auto max-w-5xl">
                     {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 text-xs text-white/70 mb-6">
-                        <Link href="/industries" className="hover:text-white transition-colors">Industries</Link>
+                    <nav className="flex items-center gap-2 text-xs text-primary-foreground/70 mb-6">
+                        <Link href="/industries" className="hover:text-primary-foreground transition-colors">Industries</Link>
                         <ChevronRight className="size-3.5" />
-                        <span className="text-white font-medium">{data.name}</span>
+                        <span className="text-primary-foreground font-medium">{data.name}</span>
                     </nav>
 
                     <div className="max-w-2xl">
@@ -41,33 +41,37 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
                             />
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-5 leading-[1.08]">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-primary-foreground mb-5 leading-[1.08]">
                             {data.heroHeadline}
                         </h1>
-                        <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-xl">
+                        <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 leading-relaxed max-w-xl">
                             {data.heroSub}
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link href="/signup">
-                                <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl bg-white text-foreground hover:bg-white/90">
+                                <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                                     Start Free Trial <ArrowRight className="ml-2 size-4" />
                                 </Button>
                             </Link>
                             <Link href="/pricing">
-                                <Button size="lg" variant="outline" className="px-8 py-6 text-base font-semibold rounded-xl border-white/30 text-white hover:bg-white/10">
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="px-8 py-6 text-base font-semibold rounded-xl border-primary-foreground/35 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                                >
                                     See Pricing
                                 </Button>
                             </Link>
                         </div>
 
-                        <p className="mt-4 text-xs text-white/60">
+                        <p className="mt-4 text-xs text-primary-foreground/60">
                             7-day free trial · No credit card lock-in · Starting at $29.99/mo
                         </p>
 
                         {esIndustryPath ? (
-                            <p className="mt-2 text-sm text-white/70">
-                                <Link href={esIndustryPath} className="text-white hover:underline font-medium">
+                            <p className="mt-2 text-sm text-primary-foreground/70">
+                                <Link href={esIndustryPath} className="text-primary-foreground hover:underline font-medium">
                                     Ver en español
                                 </Link>
                             </p>

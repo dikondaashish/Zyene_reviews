@@ -8,7 +8,7 @@ type IndustryTrustBadgeProps = {
 export function IndustryTrustBadge({ label, variant = "default" }: IndustryTrustBadgeProps) {
     const className =
         variant === "onDark"
-            ? "inline-flex items-center gap-2 text-xs font-semibold text-white/90 bg-white/10 border border-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm"
+            ? "inline-flex items-center gap-2 text-xs font-semibold text-primary-foreground/90 bg-primary-foreground/10 border border-primary-foreground/20 px-3 py-1.5 rounded-full backdrop-blur-sm"
             : "inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground bg-muted border border-border px-3 py-1.5 rounded-full";
 
     return (
