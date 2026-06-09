@@ -1,5 +1,7 @@
 import { logger } from "@/lib/logger";
+import { NonRetriableError } from "inngest";
 import { inngest } from "../client";
+import { isPermanentGoogleAuthError } from "@/services/google/sync-service/permanent-auth-errors";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
@@ -123,26 +125,35 @@ export const syncGoogleReviews = inngest.createFunction(
             await pingReviewSyncHeartbeat(true);
 
             return { status: "completed", pages: pageCount, synced: totalSynced };
-        } catch (error: any) {
+        } catch (error: unknown) {
             logger.error({ err: error }, `[Inngest] Sync failed for platform ${platformId}:`);
 
-            // Update status to error in DB so it's not stuck as "running"
+            const message = error instanceof Error ? error.message : String(error);
+            const permanentAuthFailure = isPermanentGoogleAuthError(message);
+
             await step.run("mark-as-error", async () => {
                 const { clearGoogleSyncBootstrapHandoff } = await import(
                     "@/services/google/sync-run-state"
                 );
-                await supabase
-                    .from("review_platforms")
-                    .update({
-                        sync_status: "error",
-                        locked_until: null,
-                        updated_at: new Date().toISOString(),
-                    })
-                    .eq("id", platformId);
+                const updates: {
+                    locked_until: null;
+                    updated_at: string;
+                    sync_status?: string;
+                } = {
+                    locked_until: null,
+                    updated_at: new Date().toISOString(),
+                };
+                if (!permanentAuthFailure) {
+                    updates.sync_status = "error";
+                }
+                await supabase.from("review_platforms").update(updates).eq("id", platformId);
                 await clearGoogleSyncBootstrapHandoff(supabase, platformId);
             });
 
-            throw error; // Rethrow for Inngest retries if needed
+            if (permanentAuthFailure) {
+                throw new NonRetriableError(message);
+            }
+            throw error;
         }
     }
 );

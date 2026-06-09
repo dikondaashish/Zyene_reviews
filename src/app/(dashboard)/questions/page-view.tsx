@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { QuestionsPageClient } from "@/components/questions/questions-page-client";
 import { Button } from "@/components/ui/button";
@@ -47,9 +48,7 @@ export default async function QuestionsPage() {
         );
     }
 
-    const isGoogleConnected = !!business?.review_platforms?.find(
-        (p: { platform?: string }) => p.platform === "google"
-    );
+    const isGoogleConnected = isGoogleBusinessConnected(business?.review_platforms);
     const isDemo = !isGoogleConnected;
 
     let questions: Awaited<ReturnType<typeof fetchQuestionsPageData>>["questions"] = [];

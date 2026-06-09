@@ -5,13 +5,15 @@ import { BusinessesEmptyState } from "./businesses-empty-state";
 import { setActiveBusiness } from "@/lib/auth/business-context";
 import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
 import { emptyVisibleReviewRollup, type VisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
+import type { BusinessContextReviewPlatform } from "@/types/business-context";
 
 type BusinessCard = {
     id: string;
     name?: string | null;
     category?: string | null;
     status?: string | null;
-    review_platforms?: Array<{ platform?: string }>;
+    review_platforms?: BusinessContextReviewPlatform[];
 };
 
 export function BusinessesCardsSection({
@@ -30,8 +32,7 @@ export function BusinessesCardsSection({
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {businesses.map((business) => {
-                const googlePlatform = business.review_platforms?.find((p) => p.platform === "google");
-                const isConnected = !!googlePlatform;
+                const isConnected = isGoogleBusinessConnected(business.review_platforms);
                 const cardStats = visibleReviewStats.get(business.id) ?? emptyVisibleReviewRollup();
                 const rating = cardStats.totalVisible > 0 ? cardStats.averageRatingVisible : null;
                 const totalReviews = cardStats.totalVisible;

@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import type { ReviewManagementItem } from "@/types/components";
@@ -57,9 +58,7 @@ export async function loadReviewsPageData(
 
     if (!businessId) return { kind: "no-business" };
 
-    const isGoogleConnected = !!business?.review_platforms?.find(
-        (p: { platform?: string }) => p.platform === "google"
-    );
+    const isGoogleConnected = isGoogleBusinessConnected(business?.review_platforms);
     const isDemo = !isGoogleConnected;
 
     const page = parseInt(searchParams.page || "1");

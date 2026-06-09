@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
 
 export type PlaceLinkRow = {
     id: string;
@@ -28,9 +29,7 @@ export async function loadBusinessInformationPageData(): Promise<BusinessInforma
         return { kind: "no-business" };
     }
 
-    const isGoogleConnected = !!business.review_platforms?.find(
-        (p: { platform?: string }) => p.platform === "google"
-    );
+    const isGoogleConnected = isGoogleBusinessConnected(business.review_platforms);
     const isLodgingBusiness = business.category === "hotel";
 
     let placeLinks: PlaceLinkRow[] = [];

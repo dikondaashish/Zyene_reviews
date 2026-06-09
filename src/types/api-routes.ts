@@ -30,7 +30,7 @@ export interface AuthMemberOrgContext {
 }
 
 export interface GooglePlatformUpdatePayload {
-    access_token: string | null;
+    access_token?: string | null;
     sync_status: "active";
     updated_at: string;
     refresh_token?: string | null;

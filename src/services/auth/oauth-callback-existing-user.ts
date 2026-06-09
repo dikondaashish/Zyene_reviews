@@ -72,20 +72,43 @@ export async function runOAuthExistingUserLogin(params: {
             .eq("platform", "google")
             .single();
 
-        const { data: encAccess } = await admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" });
-        const { data: encRefresh } = await admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" });
+        if (!finalRefreshToken) {
+            logger.warn(
+                { businessId },
+                "[Auth Callback] Google OAuth omitted refresh_token — existing refresh preserved on update"
+            );
+        }
+
+        const { data: encAccess, error: encAccessError } = await admin.rpc("encrypt_token", {
+            plaintext: finalAccessToken || "",
+        });
+        if (encAccessError) {
+            logger.error({ err: encAccessError }, "[Auth Callback] access token encryption failed:");
+        }
+
+        let encRefresh: string | null = null;
+        if (finalRefreshToken) {
+            const { data, error: encRefreshError } = await admin.rpc("encrypt_token", {
+                plaintext: finalRefreshToken,
+            });
+            if (encRefreshError) {
+                logger.error({ err: encRefreshError }, "[Auth Callback] refresh token encryption failed:");
+            } else {
+                encRefresh = data;
+            }
+        }
 
         if (platformData) {
             const updatePayload: GooglePlatformUpdatePayload = {
-                access_token: encAccess,
                 sync_status: "active",
                 updated_at: new Date().toISOString(),
             };
-            // Only update tokens here. Location is selected later.
-            if (finalRefreshToken) updatePayload.refresh_token = encRefresh;
+            if (encAccess) updatePayload.access_token = encAccess;
+            // Only update refresh when Google returns one. Location is selected later.
+            if (finalRefreshToken && encRefresh) updatePayload.refresh_token = encRefresh;
 
             await admin.from("review_platforms").update(updatePayload).eq("id", platformData.id);
-        } else {
+        } else if (encAccess) {
             const { data: newPlatform, error: insPlatErr } = await admin
                 .from("review_platforms")
                 .insert({

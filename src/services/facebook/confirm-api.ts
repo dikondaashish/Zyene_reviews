@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getPageDetails } from "@/services/facebook/adapter";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { cookies } from "next/headers";
@@ -75,9 +76,20 @@ export async function handleFacebookConfirm(req: Request) {
             Date.now() + (fbData.tokenExpiresIn || 5184000) * 1000
         );
 
-        const { data: encAccess } = await supabase.rpc("encrypt_token", { plaintext: selectedPage.pageAccessToken });
+        const admin = createAdminClient();
+        const { data: encAccess, error: encError } = await admin.rpc("encrypt_token", {
+            plaintext: selectedPage.pageAccessToken,
+        });
 
-        const { data: platform, error } = await supabase
+        if (encError || !encAccess) {
+            logger.error({ err: encError }, "[Facebook Confirm] Token encryption failed:");
+            Sentry.captureException(encError ?? new Error("encrypt_token returned empty"), {
+                tags: { route: "facebook-confirm", step: "encrypt_token" },
+            });
+            return apiError("Failed to secure Facebook connection", { status: 500, details: requestId });
+        }
+
+        const { data: platform, error } = await admin
             .from("review_platforms")
             .upsert(
                 {

@@ -2,6 +2,8 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { getActiveBusinessId, getGoogleQaUnavailableForActiveBusiness } from "@/lib/auth/business-context";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
+import type { BusinessContextReviewPlatform } from "@/types/business-context";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import {
     fetchVisibleReviewRollupsByBusinessIds,
@@ -69,7 +71,9 @@ export async function loadDashboardAuth(): Promise<DashboardAuthContext> {
     const googlePlatform = business.review_platforms?.find(
         (p: ReviewPlatformRow) => p.platform === "google",
     );
-    const isGoogleConnected = !!googlePlatform;
+    const isGoogleConnected = isGoogleBusinessConnected(
+        business.review_platforms as BusinessContextReviewPlatform[] | undefined
+    );
     const googleQaUnavailable = business.id
         ? await getGoogleQaUnavailableForActiveBusiness(business.id)
         : false;

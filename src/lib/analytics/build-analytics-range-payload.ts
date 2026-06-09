@@ -13,6 +13,8 @@ import {
     getGooglePerformanceTotals,
     getGoogleSearchKeywords,
 } from "@/services/google/performance-queries";
+import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
+import type { BusinessContextReviewPlatform } from "@/types/business-context";
 
 export type AnalyticsFullRangePayload = {
     range: AnalyticsRange;
@@ -122,7 +124,10 @@ export async function buildAnalyticsRangePayload(
     const [reviewsPaged, requestsRes, platformsRes, privateFeedbackResult] = await Promise.all([
         fetchAllReviewRowsPaginated(1000, fetchReviewsPage),
         requestsQuery,
-        supabase.from("review_platforms").select("platform").eq("business_id", businessId),
+        supabase
+            .from("review_platforms")
+            .select("platform, google_location_id, sync_status")
+            .eq("business_id", businessId),
         privateFeedbackQuery ?? Promise.resolve({ data: null, error: null }),
     ]);
 
@@ -142,7 +147,14 @@ export async function buildAnalyticsRangePayload(
         [key: string]: unknown;
     }>;
     const allRequests = (requestsRes.data || []) as Array<{ created_at: string; [key: string]: unknown }>;
-    const connectedPlatforms = (platformsRes.data || []).map((p: { platform: string }) => p.platform);
+    const connectedPlatforms = (platformsRes.data || [])
+        .filter((p: BusinessContextReviewPlatform) => {
+            if (p.platform === "google") {
+                return isGoogleBusinessConnected([p]);
+            }
+            return true;
+        })
+        .map((p: { platform: string }) => p.platform);
     const privateFeedback = Array.isArray(privateRes.data) ? privateRes.data : [];
 
     const currentReviews = allReviews.filter((r) => effectiveReviewAt(r) >= currentStart);
