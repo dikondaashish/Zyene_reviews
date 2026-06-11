@@ -3,14 +3,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { plgEmailFooterHtml as buildPlgEmailFooterHtml } from "@/lib/email/transactional-email-styles";
+import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
 export type PlgRefSource = "review-page" | "widget" | "review-request";
 
-const MARKETING_ORIGIN = "https://zyenereviews.com";
-
 /** Signup URL with PLG UTM + ref for measuring widget / review-page / SMS-email loops. */
 export function buildPlgMarketingUrl(source: PlgRefSource): string {
-    const url = new URL(MARKETING_ORIGIN);
+    const url = new URL(MARKETING_SITE_ORIGIN);
     url.searchParams.set("utm_source", "plg");
     url.searchParams.set("utm_medium", source);
     url.searchParams.set("utm_campaign", "product_loop");

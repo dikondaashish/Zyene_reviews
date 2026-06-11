@@ -6,7 +6,7 @@ import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
-    title: "Free Tools, Review Links, Reputation Score & Response Templates",
+    title: "Free Review Tools for Local Businesses",
     description:
         "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
     alternates: { canonical: "https://www.zyenereviews.com/tools" },

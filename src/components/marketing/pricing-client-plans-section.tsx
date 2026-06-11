@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Plan } from "@/services/stripe/plans";
 import { PricingClientPlanCard } from "./pricing-client-plan-card";
 
@@ -21,9 +22,9 @@ export function PricingClientPlansSection({ starter, pro, enterprise, signupUrl 
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-8">
                     All prices in USD. Taxes may apply. By starting a trial you agree to our{" "}
-                    <a href="/terms" className="underline hover:text-foreground">
+                    <Link href="/terms" className="underline hover:text-foreground">
                         Terms of Service
-                    </a>
+                    </Link>
                     .
                 </p>
             </div>

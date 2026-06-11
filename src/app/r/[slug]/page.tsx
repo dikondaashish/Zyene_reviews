@@ -12,6 +12,7 @@ export async function generateMetadata({
     return {
         title: "Share Your Experience",
         description: "We'd love to hear about your experience. Your feedback helps us improve.",
+        robots: { index: false, follow: false },
         alternates: {
             canonical: `https://collectratings.com/${slug}`,
         },

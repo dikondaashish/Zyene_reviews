@@ -1,16 +1,19 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+import {
+    AI_CRAWLER_ALLOW,
+    AI_CRAWLER_DISALLOW,
+    MARKETING_ROBOTS_DISALLOW,
+} from "@/lib/seo/robots-disallow-paths";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
 const AUTH_DISALLOW = ["/", "/login", "/signup", "/forgot-password", "/reset-password"];
 
 /**
- * Next.js robots.txt generation.
- * Automatically served at /robots.txt per host.
+ * Next.js robots.txt generation — served at /robots.txt per host.
  *
- * - Marketing (www): crawlable public content; auth paths on apex/www disallowed
- * - auth.*: block all crawlers (login should not be indexed)
- * - app.*: separate host — disallow dashboard (marketing robots not used for app UX)
+ * Marketing (www): allow public content; block app, auth, ops, and embed/capture routes.
+ * auth.*: block all crawlers. app.*: block dashboard host.
  */
 export default async function robots(): Promise<MetadataRoute.Robots> {
     const host = (await headers()).get("host")?.toLowerCase() ?? "";
@@ -31,71 +34,13 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         rules: [
             {
                 userAgent: "*",
-                allow: [
-                    "/",
-                    "/about",
-                    "/contact",
-                    "/help",
-                    "/docs",
-                    "/docs/",
-                    "/privacy",
-                    "/terms",
-                    "/data-retention",
-                    "/pricing",
-                    "/features",
-                    "/how-it-works",
-                    "/integrations",
-                    "/industries",
-                    "/industries/",
-                    "/compare",
-                    "/compare/",
-                    "/blog",
-                    "/blog/",
-                    "/resources",
-                    "/resources/",
-                    "/customers",
-                    "/customers/",
-                    "/security",
-                    "/case-studies",
-                    "/case-studies/",
-                    "/partners",
-                    "/tools",
-                    "/agencies",
-                    "/demo",
-                    "/enterprise",
-                    "/es",
-                    "/es/",
-                ],
-                disallow: [
-                    "/api/",
-                    "/growth",
-                    "/onboarding",
-                    "/dashboard",
-                    "/settings",
-                    "/businesses",
-                    "/reviews",
-                    "/campaigns",
-                    "/analytics",
-                    "/competitors",
-                    "/customers/import",
-                    "/review-requests",
-                    "/requests",
-                    "/questions",
-                    "/google-seo-aeo",
-                    "/settings/integrations",
-                    "/settings/integrations/zapier",
-                    "/login",
-                    "/signup",
-                    "/forgot-password",
-                    "/reset-password",
-                    "/_next/",
-                    "/favicon_io/",
-                ],
+                allow: ["/"],
+                disallow: [...MARKETING_ROBOTS_DISALLOW],
             },
             {
                 userAgent: "GPTBot",
-                allow: ["/", "/about", "/docs", "/privacy", "/terms"],
-                disallow: ["/api/", "/onboarding", "/dashboard", "/login", "/signup"],
+                allow: [...AI_CRAWLER_ALLOW],
+                disallow: [...AI_CRAWLER_DISALLOW],
             },
             {
                 userAgent: "CCBot",
@@ -103,8 +48,18 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
             },
             {
                 userAgent: "anthropic-ai",
-                allow: ["/", "/about", "/docs", "/privacy", "/terms"],
-                disallow: ["/api/", "/onboarding", "/dashboard", "/login", "/signup"],
+                allow: [...AI_CRAWLER_ALLOW],
+                disallow: [...AI_CRAWLER_DISALLOW],
+            },
+            {
+                userAgent: "ClaudeBot",
+                allow: [...AI_CRAWLER_ALLOW],
+                disallow: [...AI_CRAWLER_DISALLOW],
+            },
+            {
+                userAgent: "PerplexityBot",
+                allow: [...AI_CRAWLER_ALLOW],
+                disallow: [...AI_CRAWLER_DISALLOW],
             },
         ],
         sitemap: `${MARKETING_SITE_ORIGIN}/sitemap.xml`,

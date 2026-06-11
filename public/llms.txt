@@ -1,0 +1,38 @@
+# Zyene Reviews
+
+> AI-powered review management for local businesses — monitor Google reviews, automate requests, route negative feedback privately, and reply with AI.
+
+## Canonical site
+
+- https://www.zyenereviews.com/
+
+## Sitemap
+
+- https://www.zyenereviews.com/sitemap.xml
+
+## Key pages
+
+- https://www.zyenereviews.com/pricing
+- https://www.zyenereviews.com/features
+- https://www.zyenereviews.com/how-it-works
+- https://www.zyenereviews.com/integrations
+- https://www.zyenereviews.com/industries
+- https://www.zyenereviews.com/compare
+- https://www.zyenereviews.com/blog
+- https://www.zyenereviews.com/resources
+- https://www.zyenereviews.com/docs
+- https://www.zyenereviews.com/help
+- https://www.zyenereviews.com/tools
+- https://www.zyenereviews.com/case-studies
+- https://www.zyenereviews.com/about
+- https://www.zyenereviews.com/contact
+- https://www.zyenereviews.com/privacy
+- https://www.zyenereviews.com/terms
+
+## Spanish (es)
+
+- https://www.zyenereviews.com/es/industries
+
+## Review capture (separate domain)
+
+Public review collection flows are hosted at https://collectratings.com/ — not on the marketing site.

@@ -11,6 +11,7 @@ import {
 import { TEMPLATE_PACK_PAGE_PATH, TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
 import { isTemplatePackQaSubscriber } from "@/lib/marketing/template-pack-qa-filters";
 import { scheduleMarketingNurture } from "@/lib/growth/schedule-growth-emails";
+import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -132,8 +133,8 @@ export async function processNewsletterSubscribe(
 
         try {
             const unsubscribeUrl = subscriber?.id
-                ? `https://zyenereviews.com/newsletter/unsubscribe?id=${subscriber.id}`
-                : "https://zyenereviews.com/newsletter/unsubscribe";
+                ? `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${subscriber.id}`
+                : marketingCanonicalUrl("/newsletter/unsubscribe");
             const mail =
                 source === TEMPLATE_PACK_SOURCE
                     ? reviewRequestTemplatePackEmail({ unsubscribeUrl })

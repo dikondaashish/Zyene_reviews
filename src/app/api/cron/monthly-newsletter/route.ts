@@ -7,8 +7,7 @@ import { sendEmail } from "@/services/resend/send-email";
 import { monthlyNewsletterEmail } from "@/services/resend/templates/growth-emails";
 import { getMonthlyNewsletterEdition } from "@/lib/phase6/monthly-newsletter-content";
 import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
-
-const SITE_ORIGIN = "https://zyenereviews.com";
+import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 
 /**
  * Monthly marketing newsletter to blog/partners subscribers.
@@ -37,11 +36,11 @@ export async function GET(request: Request) {
 
     const edition = getMonthlyNewsletterEdition();
     const monthLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
-    const caseStudyLink = `${SITE_ORIGIN}/case-studies/${edition.caseStudySlug}`;
+    const caseStudyLink = marketingCanonicalUrl(`/case-studies/${edition.caseStudySlug}`);
 
     const sendResults = await Promise.all(
         subscribers.map(async (sub) => {
-            const unsubscribeUrl = `${SITE_ORIGIN}/newsletter/unsubscribe?id=${sub.id}`;
+            const unsubscribeUrl = `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${sub.id}`;
             const { subject, html } = monthlyNewsletterEmail({
                 monthLabel,
                 productUpdate: edition.productUpdate,

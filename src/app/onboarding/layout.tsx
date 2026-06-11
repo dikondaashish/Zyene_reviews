@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/db/supabase/server";
+import { NOINDEX_ROBOTS } from "@/lib/seo/noindex-metadata";
+
+export const metadata: Metadata = {
+    robots: NOINDEX_ROBOTS,
+};
+
 import { redirect } from "next/navigation";
 import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
 
