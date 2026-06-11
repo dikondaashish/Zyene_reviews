@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Customer Case Studies, Real Results for Local Businesses",
     description:
         "See how dental practices, restaurants, salons, HVAC companies, and auto shops grew Google reviews and ratings with Zyene Reviews, with before/after metrics.",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
         title: "Customer Case Studies",
         description: "Real outcomes: more Google reviews, higher ratings, faster response times.",
     },
-};
+});
 
 import PageView from "./page-view";
 

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
 import { ArrowRight, Link2, BarChart3, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Review Tools for Local Businesses",
     description:
         "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
         title: "Free Review Tools",
         description: "Generate a Google review link, check your reputation score, and draft review responses, free.",
     },
-};
+});
 
 const ICONS = {
     link: Link2,

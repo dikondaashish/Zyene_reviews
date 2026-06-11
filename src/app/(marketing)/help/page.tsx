@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Help Center",
     description: "Find guides and answers to common questions about Zyene Reviews. Getting started, reviews, campaigns, analytics, billing, and integrations.",
     alternates: { canonical: "https://www.zyenereviews.com/help" },
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
         title: "Help Center",
         description: "Guides and answers for Getting Started, Reviews, Campaigns, Analytics, Billing, and Integrations.",
     },
-};
+});
 
 import PageView from "./page-view";
 

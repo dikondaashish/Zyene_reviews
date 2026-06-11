@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Book a Demo, Enterprise & Multi-Location",
     description:
         "Schedule a live walkthrough with our sales team. See review automation, AI replies, white-label widgets, and enterprise SLAs for your brand or agency.",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         title: "Book a Demo",
         description: "Enterprise demo for multi-location brands, franchises, and agencies.",
     },
-};
+});
 
 import PageView from "./page-view";
 

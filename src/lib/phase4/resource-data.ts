@@ -38,7 +38,7 @@ const guide1: ResourceGuide = {
     purpose: "Rank for 'google reviews' cluster keywords",
     lastUpdated: "2026-05-25",
     readMinutes: 18,
-    metaTitle: "The Complete Guide to Google Reviews for Local Businesses (2026)",
+    metaTitle: "Google Reviews Guide for Local Businesses (2026)",
     metaDescription:
         "The Google Reviews guide for local businesses: collection strategy, response best practices, ranking impact, and reputation protection in one place.",
     keywords: ["google reviews guide", "google reviews for businesses", "how google reviews work", "complete guide to google reviews", "google reviews local business"],

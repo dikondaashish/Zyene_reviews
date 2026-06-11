@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/phase4/blog-data";
 
 export function generateStaticParams() {
@@ -11,7 +12,7 @@ export async function generateMetadata(
     const { slug } = await params;
     const post = BLOG_POST_MAP[slug];
     if (!post) return {};
-    return {
+    return mergeMarketingSocial({
         title: post.metaTitle,
         description: post.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/blog/${slug}` },
@@ -29,7 +30,7 @@ export async function generateMetadata(
             title: post.metaTitle,
             description: post.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

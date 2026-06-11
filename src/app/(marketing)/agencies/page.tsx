@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Agencies, White-Label Review Management",
     description:
         "Manage client reputations under your brand. Agency pricing tiers, white-label widgets, referral commissions, and multi-client dashboard roadmap.",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         title: "Agencies",
         description: "White-label review management for marketing and web agencies.",
     },
-};
+});
 
 import PageView from "./page-view";
 

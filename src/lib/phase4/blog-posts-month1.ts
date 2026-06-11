@@ -250,7 +250,8 @@ export const post3: BlogPost = {
     readMinutes: 14,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "Birdeye vs Zyene Reviews Pricing 2026",
-    metaDescription: "Honest Birdeye vs Zyene Reviews comparison: published pricing, contracts, strengths, and tables for local businesses. Birdeye pricing may vary—confirm with vendor.",
+    metaDescription:
+        "Honest Birdeye vs Zyene Reviews: pricing, contracts, strengths, and comparison tables for local businesses. Confirm Birdeye pricing with the vendor.",
     keywords: ["birdeye pricing", "birdeye vs zyene reviews", "birdeye cost", "birdeye pricing 2026", "birdeye alternative"],
     relatedSlugs: [
         "birdeye-alternatives-for-local-businesses",

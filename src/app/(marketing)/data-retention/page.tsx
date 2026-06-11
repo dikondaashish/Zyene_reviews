@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Data Retention Policy",
     description:
         "Zyene Reviews data retention policy. How long we store your data, when it is deleted, and how to request deletion. GDPR and CCPA compliant.",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         title: "Data Retention Policy",
         description: "How long Zyene Reviews stores your data, when it is deleted, and your GDPR/CCPA rights.",
     },
-};
+});
 
 import PageView from "./page-view";
 

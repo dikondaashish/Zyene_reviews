@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Security & Trust",
     description:
         "Zyene Reviews protects your data with multi-tenant RLS, 256-bit encryption, GDPR compliance, ethical review collection, and Google OAuth Limited Use.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         title: "Security & Trust",
         description: "Enterprise-grade security practices built for local business data, RLS, encryption, GDPR, no review gating.",
     },
-};
+});
 
 import PageView from "./page-view";
 

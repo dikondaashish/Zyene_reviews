@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
 import { ArrowRight, Globe } from "lucide-react";
 import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Industrias, Gestión de reseñas en español",
     description:
         "Páginas en español para restaurantes, clínicas, talleres, salones y más. Automatiza reseñas de Google con Zyene Reviews.",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
         title: "Industrias",
         description: "Gestión de reseñas para restaurantes, clínicas, talleres y más, en español.",
     },
-};
+});
 
 export default function EsIndustriesHubPage() {
     const pages = LOCALIZED_INDUSTRY_PAGES.filter((p) => p.locale === "es");

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
     getLocalizedIndustry,
@@ -17,7 +18,7 @@ export async function generateMetadata({
     const data = getLocalizedIndustry("es", industry);
     if (!data) return {};
     const canonicalUrl = `https://www.zyenereviews.com/es/industries/${industry}`;
-    return {
+    return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: {
@@ -37,7 +38,7 @@ export async function generateMetadata({
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

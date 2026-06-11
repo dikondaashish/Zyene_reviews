@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
     HELP_ARTICLE_MAP,
@@ -25,7 +26,7 @@ export async function generateMetadata(
     if (isHelpCategory(slug)) {
         const cat = HELP_CATEGORIES[slug];
         const catTitle = `${cat.label} — Help Center`;
-        return {
+        return mergeMarketingSocial({
             title: catTitle,
             description: cat.description,
             alternates: { canonical: `https://www.zyenereviews.com/help/${slug}` },
@@ -39,7 +40,7 @@ export async function generateMetadata(
                 title: catTitle,
                 description: cat.description,
             },
-        };
+        });
     }
 
     return {};

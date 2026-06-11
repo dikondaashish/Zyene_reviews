@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { notFound, permanentRedirect } from "next/navigation";
 import { FeaturePillarPageView } from "@/components/marketing/feature-pillar-page";
 import {
@@ -25,7 +26,7 @@ export async function generateMetadata({
     if (!slug) return {};
     const data = FEATURE_PILLAR_MAP[slug];
     const path = `/features/${slug}`;
-    return {
+    return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com${path}` },
@@ -39,7 +40,7 @@ export async function generateMetadata({
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    };
+    });
 }
 
 export default async function FeaturePillarRoutePage({

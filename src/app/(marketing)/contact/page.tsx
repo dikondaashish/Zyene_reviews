@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Contact Us",
     description:
         "Reach out to the Zyene Reviews team for support, sales, or general inquiries. We typically respond within 24 hours, Monday through Friday.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         description:
             "Reach us at support@zyenereviews.com. Mon–Fri, 9am–6pm EST. We typically respond within 24 hours.",
     },
-};
+});
 
 import PageView from "./page-view";
 

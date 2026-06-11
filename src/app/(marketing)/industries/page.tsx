@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Industries",
     description:
         "See how Zyene Reviews helps restaurants, dental, auto, salons, and more get more Google reviews with AI replies and the Negative Feedback Shield.",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
         title: "Review Management for Every Industry",
         description: "From restaurants to gyms, Zyene Reviews helps local businesses in every industry grow their reviews.",
     },
-};
+});
 
 import PageView from "./page-view";
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Enterprise, Custom Pricing, SLA, SSO & White-Label",
     description:
         "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, and white-label widgets.",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         title: "Zyene Reviews Enterprise",
         description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
     },
-};
+});
 
 import PageView from "./page-view";
 

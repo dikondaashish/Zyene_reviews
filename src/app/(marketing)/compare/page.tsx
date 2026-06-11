@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Compare Zyene Reviews vs Competitors, 2026",
     description:
-        "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, and GatherUp in one matrix: review alerts, AI replies, Shield, messaging depth, and honest strengths by buyer type.",
+        "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, and GatherUp: review alerts, AI replies, Shield, messaging, and honest strengths by buyer type.",
     alternates: { canonical: "https://www.zyenereviews.com/compare" },
     openGraph: {
         title: "See How Zyene Reviews Compares, 2026",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         title: "See How Zyene Reviews Compares, 2026",
         description: "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp.",
     },
-};
+});
 
 import PageView from "./page-view";
 

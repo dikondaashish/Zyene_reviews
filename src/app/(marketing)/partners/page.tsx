@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Partners, Agencies, POS, Zapier & More",
     description:
         "Partner with Zyene Reviews: agency referral program, POS marketplace integrations, Zapier automation, and local business association co-marketing.",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
         title: "Partners",
         description: "Agency referral program, POS integrations, and strategic partnerships.",
     },
-};
+});
 
 import PageView from "./page-view";
 

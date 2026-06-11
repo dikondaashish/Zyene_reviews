@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Features",
     description:
         "AI review replies, review collection with Negative Feedback Shield, competitor tracking, and local SEO — own your online reputation in one platform.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         title: "Features",
         description: "AI replies, Negative Feedback Shield, competitor tracking, local SEO, starting at $29.99/mo.",
     },
-};
+});
 
 import PageView from "./page-view";
 

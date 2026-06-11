@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
 
 export function generateStaticParams() {
@@ -11,7 +12,7 @@ export async function generateMetadata(
     const { competitor: slug } = await params;
     const data = COMPETITOR_MAP[slug];
     if (!data) return {};
-    return {
+    return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/compare/${slug}` },
@@ -27,7 +28,7 @@ export async function generateMetadata(
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

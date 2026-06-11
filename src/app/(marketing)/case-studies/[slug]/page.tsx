@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
 
 export function generateStaticParams() {
@@ -11,7 +12,7 @@ export async function generateMetadata(
     const { slug } = await params;
     const study = CASE_STUDY_MAP[slug];
     if (!study) return {};
-    return {
+    return mergeMarketingSocial({
         title: study.metaTitle,
         description: study.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/case-studies/${slug}` },
@@ -27,7 +28,7 @@ export async function generateMetadata(
             title: study.metaTitle,
             description: study.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

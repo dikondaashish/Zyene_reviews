@@ -22,7 +22,7 @@ export function IndustriesIndustryGridSection() {
                             <div className="relative w-full h-64 sm:h-60">
                                 <Image
                                     src={industry.imagePath}
-                                    alt={industry.name}
+                                    alt={`${industry.name} review management with Zyene Reviews`}
                                     fill
                                     className="object-cover transition-transform group-hover:scale-105"
                                 />

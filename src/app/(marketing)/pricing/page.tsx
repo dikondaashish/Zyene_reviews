@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { PLANS } from "@/services/stripe/plans";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Pricing",
     description:
         "Zyene Reviews plans starting at $29.99/mo. No annual contracts. No hidden fees. 7-day free trial on every plan. Compare Starter, Professional, and Enterprise.",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
         title: "Pricing",
         description: "Plans starting at $29.99/mo. No annual contracts. 7-day free trial.",
     },
-};
+});
 
 import PricingPageView from "./page-view";
 

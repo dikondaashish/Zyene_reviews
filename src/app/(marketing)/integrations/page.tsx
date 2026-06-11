@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Integrations",
     description:
         "Zyene Reviews connects with Google Business Profile, Facebook, Yelp, Zapier, Square, Clover, and more. Build custom integrations with our REST API.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         title: "Integrations",
         description: "Connect Zyene to Google, Facebook, Yelp, Zapier, Square, and 5,000+ apps.",
     },
-};
+});
 
 import PageView from "./page-view";
 

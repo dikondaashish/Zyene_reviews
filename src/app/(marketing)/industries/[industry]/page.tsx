@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { INDUSTRY_MAP, INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
 
 export function generateStaticParams() {
@@ -11,7 +12,7 @@ export async function generateMetadata(
     const { industry: slug } = await params;
     const data = INDUSTRY_MAP[slug];
     if (!data) return {};
-    return {
+    return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/industries/${slug}` },
@@ -27,7 +28,7 @@ export async function generateMetadata(
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

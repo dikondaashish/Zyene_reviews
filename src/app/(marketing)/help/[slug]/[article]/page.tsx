@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { notFound } from "next/navigation";
 import {
     HELP_ARTICLE_MAP,
@@ -32,7 +33,7 @@ export async function generateMetadata(
     const path = helpArticleNestedPath(article);
     const pageTitle = `${article.title} — ${catInfo.label}`;
     const canonicalUrl = `https://www.zyenereviews.com${path}`;
-    return {
+    return mergeMarketingSocial({
         title: pageTitle,
         description: article.excerpt,
         alternates: { canonical: canonicalUrl },
@@ -46,7 +47,7 @@ export async function generateMetadata(
             title: pageTitle,
             description: article.excerpt,
         },
-    };
+    });
 }
 
 export default async function HelpNestedArticlePage({

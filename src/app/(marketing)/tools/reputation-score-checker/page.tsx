@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { ReputationScoreCheckerClient } from "./reputation-score-checker-client";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Reputation Score Checker",
     description:
         "Check your Google rating, review count, and estimated response rate in one free snapshot. See how your local reputation stacks up before you improve it.",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
         title: "Free Reputation Score Checker",
         description: "Check your Google rating, review count, and response rate, free reputation snapshot.",
     },
-};
+});
 
 export default function ReputationScoreCheckerPage() {
     return <ReputationScoreCheckerClient />;

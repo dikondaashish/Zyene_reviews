@@ -17,7 +17,7 @@ export const post13: BlogPost = {
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "Negative Feedback Shield Explained",
     metaDescription:
-        "Negative Feedback Shield on Zyene Reviews: capture private feedback early, respond quickly, and keep review requests compliant. Not review suppression or Google-endorsed gating.",
+        "Negative Feedback Shield: capture private feedback early, respond fast, and keep review requests compliant—not review suppression or Google-endorsed gating.",
     keywords: [
         "negative feedback shield",
         "private customer feedback",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "About Us",
     description:
         "Zyene Reviews helps local businesses monitor reviews, reply with AI, and grow reputation ethically. Built by Zyene, Inc. for affordable review management.",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
         description:
             "Built by Zyene, Inc., making review management accessible and ethical for every local business. Starting at $29.99/mo.",
     },
-};
+});
 
 import PageView from "./page-view";
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { RESOURCE_MAP, RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
 
 export function generateStaticParams() {
@@ -11,7 +12,7 @@ export async function generateMetadata(
     const { guide } = await params;
     const resource = RESOURCE_MAP[guide];
     if (!resource) return {};
-    return {
+    return mergeMarketingSocial({
         title: resource.metaTitle,
         description: resource.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/resources/${guide}` },
@@ -27,7 +28,7 @@ export async function generateMetadata(
             title: resource.metaTitle,
             description: resource.metaDescription,
         },
-    };
+    });
 }
 
 import PageView from "./page-view";

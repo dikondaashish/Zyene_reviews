@@ -15,7 +15,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     readMinutes: 14,
     metaTitle: "20 Review Request Templates (SMS & Email)",
     metaDescription:
-        "Free review request templates for local businesses: SMS, email, restaurant, dental, HVAC, reminders, and compliant outreach—plus how Zyene Reviews automates campaigns.",
+        "Free review request templates: SMS, email, restaurant, dental, HVAC, reminders, and compliant outreach—plus how Zyene Reviews automates campaigns.",
     keywords: [
         "review request templates",
         "review request email template",

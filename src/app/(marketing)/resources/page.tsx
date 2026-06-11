@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Resources, Free Guides for Local Business Owners",
     description: "Free, in-depth guides on Google reviews, local SEO, review request templates, and reputation management. Everything a local business owner needs in one place.",
     alternates: { canonical: "https://www.zyenereviews.com/resources" },
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
         title: "Resources, Free Guides for Local Businesses",
         description: "Free in-depth guides on Google reviews, local SEO, and reputation management for local business owners.",
     },
-};
+});
 
 import PageView from "./page-view";
 
