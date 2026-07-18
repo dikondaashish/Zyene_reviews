@@ -1,6 +1,7 @@
 import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
+import { primaryChannelFromMethods, type DripChannel } from "@/lib/campaigns/drip-phase1";
 
 export const processCampaignContact = inngest.createFunction(
     {
@@ -117,7 +118,7 @@ export const processCampaignContact = inngest.createFunction(
 
         // 5. Send Initial Message
         const sendResult = await step.run("send-message", async () => {
-            const contactMethods: ("email" | "sms")[] = [];
+            const contactMethods: DripChannel[] = [];
             if (campaign.channel === "email" || campaign.channel === "both") {
                 if (contact.email) contactMethods.push("email");
             }
@@ -126,7 +127,11 @@ export const processCampaignContact = inngest.createFunction(
             }
 
             if (contactMethods.length === 0) {
-                return { sendStatus: "failed", errorMessage: "Missing contact info for campaign type" };
+                return {
+                    sendStatus: "failed" as const,
+                    errorMessage: "Missing contact info for campaign type",
+                    contactMethods,
+                };
             }
 
             const result = await sendReviewRequest({
@@ -141,19 +146,32 @@ export const processCampaignContact = inngest.createFunction(
             });
 
             return {
-                sendStatus: (result.emailSent || result.smsSent) ? "sent" : "failed",
-                errorMessage: result.error
+                sendStatus: (result.emailSent || result.smsSent) ? ("sent" as const) : ("failed" as const),
+                errorMessage: result.error,
+                contactMethods,
             };
         });
 
-        // 6. Update Database for Initial Send
+        // 6. Update Database for Initial Send (+ activate Phase 1 drip when follow-ups enabled)
         await step.run("update-initial-database", async () => {
+            const dripOn = Boolean(campaign.follow_up_enabled);
+            const lastChannel =
+                sendResult.sendStatus === "sent"
+                    ? primaryChannelFromMethods(sendResult.contactMethods ?? [])
+                    : null;
             await supabase
                 .from("review_requests")
                 .update({
                     status: sendResult.sendStatus,
                     error_message: sendResult.errorMessage,
                     sent_at: sendResult.sendStatus === "sent" ? new Date().toISOString() : null,
+                    ...(sendResult.sendStatus === "sent" && dripOn
+                        ? {
+                              drip_status: "active" as const,
+                              drip_steps_sent: 1,
+                              last_drip_channel: lastChannel,
+                          }
+                        : {}),
                 })
                 .eq("id", requestRecord.id);
 

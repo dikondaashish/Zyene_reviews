@@ -12,6 +12,7 @@ export const patchCampaignSchema = z.object({
     follow_up_enabled: z.boolean().optional(),
     follow_up_delay_hours: z.number().int().min(0).max(30 * 24).optional(),
     follow_up_template: z.string().max(5000).optional(),
+    drip_step3_template: z.string().max(5000).optional().nullable(),
 }).superRefine((value, ctx) => {
     if (Object.keys(value).length === 0) {
         ctx.addIssue({

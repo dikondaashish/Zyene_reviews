@@ -262,6 +262,8 @@ export type Database = {
           channel: string
           created_at: string
           delay_minutes: number
+          drip_channel_alternate: boolean
+          drip_step3_template: string | null
           email_subject: string | null
           email_template: string | null
           follow_up_delay_hours: number
@@ -284,6 +286,8 @@ export type Database = {
           channel?: string
           created_at?: string
           delay_minutes?: number
+          drip_channel_alternate?: boolean
+          drip_step3_template?: string | null
           email_subject?: string | null
           email_template?: string | null
           follow_up_delay_hours?: number
@@ -306,6 +310,8 @@ export type Database = {
           channel?: string
           created_at?: string
           delay_minutes?: number
+          drip_channel_alternate?: boolean
+          drip_step3_template?: string | null
           email_subject?: string | null
           email_template?: string | null
           follow_up_delay_hours?: number
@@ -1374,11 +1380,15 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           delivered_at: string | null
+          drip_status: string
+          drip_steps_sent: number
+          drip_terminated_reason: string | null
           email_status: string | null
           error_message: string | null
           follow_up_sent_at: string | null
           id: string
           is_follow_up_sent: boolean | null
+          last_drip_channel: string | null
           opened_at: string | null
           rating_given: number | null
           review_left: boolean
@@ -1387,6 +1397,8 @@ export type Database = {
           sent_at: string | null
           sms_status: string | null
           status: string
+          step2_sent_at: string | null
+          step3_sent_at: string | null
           tags_selected: string[] | null
           selected_staff: string[] | null
           trigger_source: string
@@ -1403,11 +1415,15 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivered_at?: string | null
+          drip_status?: string
+          drip_steps_sent?: number
+          drip_terminated_reason?: string | null
           email_status?: string | null
           error_message?: string | null
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
+          last_drip_channel?: string | null
           opened_at?: string | null
           rating_given?: number | null
           review_left?: boolean
@@ -1416,6 +1432,8 @@ export type Database = {
           sent_at?: string | null
           sms_status?: string | null
           status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
           tags_selected?: string[] | null
           selected_staff?: string[] | null
           trigger_source?: string
@@ -1432,11 +1450,15 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           delivered_at?: string | null
+          drip_status?: string
+          drip_steps_sent?: number
+          drip_terminated_reason?: string | null
           email_status?: string | null
           error_message?: string | null
           follow_up_sent_at?: string | null
           id?: string
           is_follow_up_sent?: boolean | null
+          last_drip_channel?: string | null
           opened_at?: string | null
           rating_given?: number | null
           review_left?: boolean
@@ -1445,6 +1467,8 @@ export type Database = {
           sent_at?: string | null
           sms_status?: string | null
           status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
           tags_selected?: string[] | null
           selected_staff?: string[] | null
           trigger_source?: string

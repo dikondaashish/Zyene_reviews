@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { terminateReviewRequestDrip } from "@/lib/campaigns/terminate-drip";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -48,6 +49,10 @@ export async function POST(request: Request) {
 
         if (error) {
             throw error;
+        }
+
+        if (trackData.review_left === true) {
+            await terminateReviewRequestDrip(supabase, requestId, "review_left");
         }
 
         return NextResponse.json({ success: true });

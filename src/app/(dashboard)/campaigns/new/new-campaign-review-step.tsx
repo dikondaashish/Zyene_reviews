@@ -55,11 +55,26 @@ export function NewCampaignReviewStep({ form }: NewCampaignReviewStepProps) {
 
                 {form.follow_up_enabled && (
                     <div className="rounded-lg border border-primary/20 p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Follow-up</p>
+                        <p className="text-xs text-muted-foreground mb-1">Reminder drip</p>
                         <p className="text-sm">
-                            After <strong>{form.follow_up_delay_hours} hours</strong>, send:
+                            Day 0 → Day 7 → Day 14. Stops if they click or leave a review.
                         </p>
-                        <p className="text-sm font-mono bg-muted/50 rounded p-3 mt-2 whitespace-pre-wrap">{form.follow_up_template}</p>
+                        <p className="text-xs text-muted-foreground mt-3 mb-1">Step 2 (Day 7)</p>
+                        <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
+                            {form.follow_up_template}
+                        </p>
+                        {form.drip_step3_template.trim() ? (
+                            <>
+                                <p className="text-xs text-muted-foreground mt-3 mb-1">Step 3 (Day 14)</p>
+                                <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
+                                    {form.drip_step3_template}
+                                </p>
+                            </>
+                        ) : (
+                            <p className="text-xs text-muted-foreground mt-3">
+                                Step 3 uses the Step 2 message (optional template left blank).
+                            </p>
+                        )}
                     </div>
                 )}
             </div>

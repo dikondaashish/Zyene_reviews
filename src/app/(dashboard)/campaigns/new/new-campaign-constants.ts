@@ -8,12 +8,6 @@ export const DELAY_OPTIONS = [
     { value: 1440, label: "1 day" },
 ];
 
-export const FOLLOW_UP_OPTIONS = [
-    { value: 24, label: "24 hours" },
-    { value: 48, label: "48 hours" },
-    { value: 72, label: "72 hours" },
-];
-
 export const DEFAULT_SMS =
     "Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback — takes 30 seconds: {review_link}";
 export const DEFAULT_EMAIL_SUBJECT = "How was your visit to {business_name}?";

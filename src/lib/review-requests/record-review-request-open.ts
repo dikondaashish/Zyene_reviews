@@ -1,9 +1,11 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { terminateReviewRequestDrip } from "@/lib/campaigns/terminate-drip";
 
 /**
  * Marks a review request as opened/clicked (same rules as POST /api/track/review-open).
  * Safe to call from RSC (GET) so tracking does not depend on client JS or prefetch quirks.
+ * Terminates Phase 1 drip so Steps 2/3 are not sent.
  */
 export async function recordReviewRequestOpenForRef(args: {
     businessId: string;
@@ -53,6 +55,8 @@ export async function recordReviewRequestOpenForRef(args: {
         } }, "[record-review-open] update failed");
         return { ok: false, reason: "update_failed" };
     }
+
+    await terminateReviewRequestDrip(supabase, requestId, "clicked");
 
     logger.info(
         { requestId, businessId, priorStatus: existing.status, nextStatus },

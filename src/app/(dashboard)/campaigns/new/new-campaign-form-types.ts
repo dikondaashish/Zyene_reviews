@@ -9,4 +9,5 @@ export interface CampaignForm {
     follow_up_enabled: boolean;
     follow_up_delay_hours: number;
     follow_up_template: string;
+    drip_step3_template: string;
 }

@@ -69,6 +69,7 @@ export async function handleCampaignPatch(request: Request, campaignId: string) 
         "name", "status", "trigger_type", "channel",
         "sms_template", "email_subject", "email_template",
         "delay_minutes", "follow_up_enabled", "follow_up_delay_hours", "follow_up_template",
+        "drip_step3_template",
     ];
 
     const updates: Record<string, string | number | boolean | null> = {};

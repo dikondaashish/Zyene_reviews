@@ -10,8 +10,9 @@ export const createCampaignSchema = z.object({
     email_template: z.string().optional(),
     delay_minutes: z.number().int().min(0).default(0),
     follow_up_enabled: z.boolean().default(false),
-    follow_up_delay_hours: z.number().int().min(1).default(48),
+    follow_up_delay_hours: z.number().int().min(1).default(168),
     follow_up_template: z.string().optional(),
+    drip_step3_template: z.string().max(5000).optional(),
 });
 
 export const campaignSendSchema = z.object({

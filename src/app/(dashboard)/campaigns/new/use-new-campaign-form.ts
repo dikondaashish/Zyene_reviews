@@ -32,8 +32,9 @@ export function useNewCampaignForm() {
         email_template: DEFAULT_EMAIL_BODY,
         delay_minutes: 0,
         follow_up_enabled: false,
-        follow_up_delay_hours: 48,
+        follow_up_delay_hours: 168,
         follow_up_template: DEFAULT_FOLLOW_UP,
+        drip_step3_template: "",
     });
 
     useEffect(() => {
