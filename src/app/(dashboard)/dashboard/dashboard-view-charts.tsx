@@ -56,7 +56,7 @@ export function DashboardViewCharts({
                         </div>
                     )}
                 </CardHeader>
-                <CardContent className="flex-1 pt-6 pb-2 px-0 pl-1">
+                <CardContent className="min-w-0 flex-1 pt-6 pb-2 px-0 pl-1">
                     <DashboardReviewTrendChartLazy data={trendData} />
                 </CardContent>
             </Card>
