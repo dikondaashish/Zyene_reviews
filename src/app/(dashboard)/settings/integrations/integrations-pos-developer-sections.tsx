@@ -1,6 +1,7 @@
-import { Store, Utensils, CreditCard, Zap, Code2, MonitorPlay } from "lucide-react";
+import { Store, Utensils, Zap, Code2, MonitorPlay } from "lucide-react";
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
+import { CloverCard, type CloverConnectionSummary } from "@/components/integrations/clover-card";
 import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
 import { WidgetCard } from "@/components/integrations/widget-card";
 import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card";
@@ -9,7 +10,17 @@ import type { IntegrationsPageData } from "./load-integrations-page-data";
 
 type OkData = Extract<IntegrationsPageData, { kind: "ok" }>;
 
-export function IntegrationsPosAutomationSection({ apiKey }: { apiKey: string | null }) {
+export function IntegrationsPosAutomationSection({
+    apiKey,
+    businessId,
+    cloverConnection,
+    cloverConfigured,
+}: {
+    apiKey: string | null;
+    businessId: string;
+    cloverConnection: CloverConnectionSummary;
+    cloverConfigured: boolean;
+}) {
     return (
         <section className="space-y-5">
             <IntegrationsSectionHeader
@@ -24,11 +35,10 @@ export function IntegrationsPosAutomationSection({ apiKey }: { apiKey: string | 
                     icon={<Store className="text-foreground/70 size-5" />}
                     accentColor="bg-foreground/70"
                 />
-                <PlaceholderCard
-                    name="Clover"
-                    description="Trigger review requests from Clover transactions"
-                    icon={<CreditCard className="text-chart-2 size-5" />}
-                    accentColor="bg-chart-2/90"
+                <CloverCard
+                    businessId={businessId}
+                    connection={cloverConnection}
+                    configured={cloverConfigured}
                 />
                 <PlaceholderCard
                     name="Toast"

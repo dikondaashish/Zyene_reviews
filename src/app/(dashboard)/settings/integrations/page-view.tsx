@@ -41,7 +41,12 @@ export default async function IntegrationsPage() {
             />
             <IntegrationsReviewPlatformsSection data={data} />
             <hr className="border-border/50" />
-            <IntegrationsPosAutomationSection apiKey={data.apiKey} />
+            <IntegrationsPosAutomationSection
+                apiKey={data.apiKey}
+                businessId={data.business.id}
+                cloverConnection={data.cloverConnection}
+                cloverConfigured={data.cloverConfigured}
+            />
             <hr className="border-border/50" />
             <IntegrationsDeveloperApiSection data={data} />
             <hr className="border-border/50" />

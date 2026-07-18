@@ -2,6 +2,8 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
+import { isCloverConfigured } from "@/services/clover/config";
+import type { CloverConnectionSummary } from "@/components/integrations/clover-card";
 
 export type VisibleReviewRollup = {
     totalVisible?: number;
@@ -33,6 +35,8 @@ export type IntegrationsPageData =
           canUsePublicWidget: boolean;
           totalReviews: number;
           visibleRollup: VisibleReviewRollup | undefined;
+          cloverConnection: CloverConnectionSummary;
+          cloverConfigured: boolean;
       };
 
 export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> {
@@ -58,9 +62,25 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const connectedCount = connectedPlatforms.length;
 
     const supabase = await createClient();
-    const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
+    const [visibleRollupMap, cloverResult] = await Promise.all([
+        fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
+        supabase
+            .from("clover_connections")
+            .select("merchant_id, environment, connected_at")
+            .eq("business_id", business.id)
+            .maybeSingle(),
+    ]);
     const visibleRollup = visibleRollupMap.get(business.id);
     const totalReviews = visibleRollup?.totalVisible ?? 0;
+
+    const cloverRow = cloverResult.data;
+    const cloverConnection: CloverConnectionSummary = cloverRow
+        ? {
+              merchantId: cloverRow.merchant_id,
+              environment: cloverRow.environment,
+              connectedAt: cloverRow.connected_at,
+          }
+        : null;
 
     return {
         kind: "ok",
@@ -78,5 +98,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         canUsePublicWidget,
         totalReviews,
         visibleRollup,
+        cloverConnection,
+        cloverConfigured: isCloverConfigured(),
     };
 }
