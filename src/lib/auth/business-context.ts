@@ -60,28 +60,45 @@ export async function getGoogleQaSidebarNavVisible(businessId: string | null): P
  * Validates that the business belongs to the current user's organization.
  * Falls back to the first business if no valid cookie is set.
  */
+function businessOrgId(business: BusinessContextBusiness): string | null {
+    const id = String(
+        (business as BusinessContextBusiness & { organization_id?: string }).organization_id ?? ""
+    ).trim();
+    return id || null;
+}
+
 export async function getActiveBusinessId(options?: {
     skipCache?: boolean;
 }): Promise<{
     businessId: string | null;
     business: BusinessContextBusiness | null;
     organization: BusinessContextOrganization | null;
+    organizations: BusinessContextOrganization[];
     businesses: BusinessContextBusiness[];
+    allBusinesses: BusinessContextBusiness[];
 }> {
     const supabase = await createClient();
     const skipCache = options?.skipCache === true;
+    const empty = {
+        businessId: null,
+        business: null,
+        organization: null,
+        organizations: [] as BusinessContextOrganization[],
+        businesses: [] as BusinessContextBusiness[],
+        allBusinesses: [] as BusinessContextBusiness[],
+    };
 
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return { businessId: null, business: null, organization: null, businesses: [] };
+        return empty;
     }
 
     // ── Redis Caching for Business Context ──
     const cacheKey = `user_businesses:${user.id}`;
-    let organization: BusinessContextOrganization | null = null;
+    let organizations: BusinessContextOrganization[] = [];
     let businesses: BusinessContextBusiness[] = [];
 
     if (!skipCache) {
@@ -90,15 +107,19 @@ export async function getActiveBusinessId(options?: {
             const cached = await redis.get(cacheKey);
             if (cached) {
                 const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-                organization = (parsed.organization as BusinessContextOrganization | null) ?? null;
                 businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
+                organizations = (parsed.organizations as BusinessContextOrganization[]) ?? [];
+                // Legacy cache stored a single `organization` — ignore so multi-org users refresh
+                if (organizations.length === 0) {
+                    businesses = [];
+                }
             }
         } catch (e) {
             logger.error({ err: e }, "Redis cache error:");
         }
     }
 
-    if (!organization || businesses.length === 0) {
+    if (organizations.length === 0 || businesses.length === 0) {
         // Business-scoped memberships (source of truth for which org the user is working in)
         const { data: memberBusinesses } = await supabase
             .from("business_members")
@@ -119,14 +140,6 @@ export async function getActiveBusinessId(options?: {
             },
             []
         );
-
-        const primaryBusinessOrgId =
-            businesses.length > 0
-                ? String(
-                      (businesses[0] as BusinessContextBusiness & { organization_id?: string })
-                          .organization_id ?? ""
-                  ).trim() || null
-                : null;
 
         // All org memberships (invited teammates have organization_members + business_members; RLS requires org row)
         const { data: orgMemberRows } = await supabase
@@ -149,24 +162,21 @@ export async function getActiveBusinessId(options?: {
             organizations: BusinessContextOrganization | null;
         };
         const rows = (orgMemberRows ?? []) as OrgMemberRow[];
-
-        if (primaryBusinessOrgId) {
-            const match = rows.find((r) => r.organization_id === primaryBusinessOrgId);
-            organization = match?.organizations ?? null;
-        }
-        if (!organization && rows.length > 0) {
-            organization = rows[0].organizations ?? null;
-        }
+        organizations = rows
+            .map((r) => r.organizations)
+            .filter((org): org is BusinessContextOrganization => Boolean(org?.id));
 
         // Backward-compat: org-only members until all users have business_members
-        if (businesses.length === 0 && organization?.businesses?.length) {
-            businesses = organization.businesses.filter((business) => business.status !== "archived");
+        if (businesses.length === 0 && organizations[0]?.businesses?.length) {
+            businesses = organizations[0].businesses.filter(
+                (business) => business.status !== "archived"
+            );
         }
 
-        if (organization && !skipCache) {
+        if (organizations.length > 0 && !skipCache) {
             try {
                 const { redis } = await import("@/lib/db/redis");
-                await redis.set(cacheKey, JSON.stringify({ organization, businesses }), { ex: 300 }); // 5 min TTL
+                await redis.set(cacheKey, JSON.stringify({ organizations, businesses }), { ex: 300 });
             } catch (e) {
                 logger.error({ err: e }, "Redis cache set error:");
             }
@@ -174,14 +184,18 @@ export async function getActiveBusinessId(options?: {
     }
 
     if (businesses.length === 0) {
-        return { businessId: null, business: null, organization, businesses: [] };
+        return {
+            ...empty,
+            organization: organizations[0] ?? null,
+            organizations,
+        };
     }
 
     // Read cookie
     const cookieStore = await cookies();
     const savedId = cookieStore.get(COOKIE_NAME)?.value;
 
-    // Validate that saved ID belongs to this user's org
+    // Validate that saved ID belongs to this user
     let activeBusiness: BusinessContextBusiness | null = savedId
         ? businesses.find((business) => business.id === savedId) || null
         : null;
@@ -191,11 +205,26 @@ export async function getActiveBusinessId(options?: {
         activeBusiness = businesses[0];
     }
 
+    const activeOrgId = businessOrgId(activeBusiness);
+    const organization =
+        (activeOrgId
+            ? organizations.find((org) => org.id === activeOrgId)
+            : null) ??
+        organizations[0] ??
+        null;
+
+    // Scope switcher list to the active organization (cross-org via org switcher)
+    const scopedBusinesses = activeOrgId
+        ? businesses.filter((b) => businessOrgId(b) === activeOrgId)
+        : businesses;
+
     return {
         businessId: activeBusiness.id,
         business: activeBusiness,
         organization,
-        businesses,
+        organizations,
+        businesses: scopedBusinesses.length > 0 ? scopedBusinesses : businesses,
+        allBusinesses: businesses,
     };
 }
 
@@ -232,6 +261,13 @@ export async function setActiveBusiness(businessId: string) {
         httpOnly: true,
         sameSite: "lax",
     });
+
+    try {
+        const { redis } = await import("@/lib/db/redis");
+        await redis.del(`user_businesses:${user.id}`);
+    } catch (e) {
+        logger.error({ err: e }, "Redis cache clear error on business switch:");
+    }
 
     // Purge the entire router cache to ensure all pages immediately reflect the new active business
     revalidatePath("/", "layout");
