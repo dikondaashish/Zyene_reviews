@@ -4,18 +4,17 @@ export type CloverResolvedContact = {
     name: string | null;
 };
 
-type CloverEmail = { emailAddress?: string };
-type CloverPhone = { phoneNumber?: string };
 type CloverCustomer = {
     firstName?: string;
     lastName?: string;
-    emailAddresses?: CloverEmail[];
-    phoneNumbers?: CloverPhone[];
+    emailAddresses?: unknown;
+    phoneNumbers?: unknown;
 };
 
 /**
  * Pull email/phone/name from Clover payment/order/customer JSON shapes.
  * Tolerant of expand variants used by `/payments/{id}?expand=...`.
+ * Clover often nests emails/phones as `{ elements: [...] }` (not a bare array).
  */
 export function resolveContactFromCloverPayment(payment: unknown): CloverResolvedContact {
     const root = asRecord(payment);
@@ -34,12 +33,24 @@ export function resolveContactFromCloverPayment(payment: unknown): CloverResolve
 
     for (const c of customers) {
         if (!email) {
-            const e = c.emailAddresses?.find((x) => x.emailAddress?.trim())?.emailAddress?.trim();
-            if (e) email = e;
+            for (const item of listFromElementsOrArray(c.emailAddresses)) {
+                const e =
+                    typeof item.emailAddress === "string" ? item.emailAddress.trim() : "";
+                if (e) {
+                    email = e;
+                    break;
+                }
+            }
         }
         if (!phone) {
-            const p = c.phoneNumbers?.find((x) => x.phoneNumber?.trim())?.phoneNumber?.trim();
-            if (p) phone = p;
+            for (const item of listFromElementsOrArray(c.phoneNumbers)) {
+                const p =
+                    typeof item.phoneNumber === "string" ? item.phoneNumber.trim() : "";
+                if (p) {
+                    phone = p;
+                    break;
+                }
+            }
         }
         if (!name) {
             const n = [c.firstName, c.lastName].filter(Boolean).join(" ").trim();
@@ -65,6 +76,19 @@ export function extractCloverCustomerIds(payment: unknown): string[] {
 function asRecord(value: unknown): Record<string, unknown> | null {
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     return value as Record<string, unknown>;
+}
+
+/** Clover list fields are either `T[]` or `{ elements: T[] }`. */
+function listFromElementsOrArray(value: unknown): Record<string, unknown>[] {
+    if (Array.isArray(value)) {
+        return value.flatMap((item) => {
+            const rec = asRecord(item);
+            return rec ? [rec] : [];
+        });
+    }
+    const elements = asRecord(value)?.elements;
+    if (Array.isArray(elements)) return listFromElementsOrArray(elements);
+    return [];
 }
 
 function pushCustomers(target: CloverCustomer[], value: unknown): void {

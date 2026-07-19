@@ -66,6 +66,23 @@ describe("resolveContactFromCloverPayment", () => {
         expect(contact.phone).toBeNull();
     });
 
+    it("unwraps emailAddresses.elements / phoneNumbers.elements from customer API", () => {
+        const contact = resolveContactFromCloverPayment({
+            customer: {
+                firstName: "Karthik",
+                emailAddresses: {
+                    elements: [{ emailAddress: "dikondaashish7@gmail.com" }],
+                },
+                phoneNumbers: {
+                    elements: [{ phoneNumber: "(774) 525-9109" }],
+                },
+            },
+        });
+        expect(contact.email).toBe("dikondaashish7@gmail.com");
+        expect(contact.phone).toBe("(774) 525-9109");
+        expect(contact.name).toBe("Karthik");
+    });
+
     it("extracts stub customer ids from payment order", () => {
         expect(
             extractCloverCustomerIds({
