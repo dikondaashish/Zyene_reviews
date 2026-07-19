@@ -50,6 +50,18 @@ export function resolveContactFromCloverPayment(payment: unknown): CloverResolve
     return { email, phone, name };
 }
 
+/** Customer IDs present on payment/order when expand only returns stubs. */
+export function extractCloverCustomerIds(payment: unknown): string[] {
+    const ids = new Set<string>();
+    const root = asRecord(payment);
+    collectCustomerIds(ids, root?.customer);
+    collectCustomerIds(ids, root?.customers);
+    const order = asRecord(root?.order);
+    collectCustomerIds(ids, order?.customer);
+    collectCustomerIds(ids, order?.customers);
+    return [...ids];
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     return value as Record<string, unknown>;
@@ -71,4 +83,16 @@ function pushCustomers(target: CloverCustomer[], value: unknown): void {
     }
     const rec = asRecord(value);
     if (rec) target.push(rec as CloverCustomer);
+}
+
+function collectCustomerIds(ids: Set<string>, value: unknown): void {
+    if (!value) return;
+    if (Array.isArray(value)) {
+        for (const item of value) collectCustomerIds(ids, item);
+        return;
+    }
+    const rec = asRecord(value);
+    if (!rec) return;
+    if (typeof rec.id === "string" && rec.id.length > 0) ids.add(rec.id);
+    if (Array.isArray(rec.elements)) collectCustomerIds(ids, rec.elements);
 }

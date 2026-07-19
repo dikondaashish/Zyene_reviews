@@ -3,7 +3,10 @@ import {
     isCloverVerificationPayload,
     parseCloverPaymentEvents,
 } from "@/services/clover/webhook-parse";
-import { resolveContactFromCloverPayment } from "@/services/clover/resolve-contact";
+import {
+    extractCloverCustomerIds,
+    resolveContactFromCloverPayment,
+} from "@/services/clover/resolve-contact";
 import { cloverUnixSecondsToIso } from "@/services/clover/config";
 
 describe("parseCloverPaymentEvents", () => {
@@ -61,6 +64,14 @@ describe("resolveContactFromCloverPayment", () => {
         });
         expect(contact.email).toBe("b@ex.com");
         expect(contact.phone).toBeNull();
+    });
+
+    it("extracts stub customer ids from payment order", () => {
+        expect(
+            extractCloverCustomerIds({
+                order: { customers: { elements: [{ id: "HY2XZS8Z7WQGG" }] } },
+            }),
+        ).toEqual(["HY2XZS8Z7WQGG"]);
     });
 });
 

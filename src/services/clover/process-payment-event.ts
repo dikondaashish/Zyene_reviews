@@ -1,12 +1,16 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
-    fetchCloverOrderCustomers,
+    fetchCloverCustomer,
     fetchCloverPayment,
     refreshCloverAccessToken,
 } from "@/services/clover/api-client";
 import { getCloverEnvironment } from "@/services/clover/config";
-import { resolveContactFromCloverPayment } from "@/services/clover/resolve-contact";
+import {
+    extractCloverCustomerIds,
+    resolveContactFromCloverPayment,
+    type CloverResolvedContact,
+} from "@/services/clover/resolve-contact";
 import type { ParsedPaymentEvent } from "@/services/clover/webhook-parse";
 
 type Admin = ReturnType<typeof createAdminClient>;
@@ -51,7 +55,7 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
 
     try {
         const accessToken = await decryptAccessToken(admin, connection);
-        let payment = await fetchCloverPayment({
+        const payment = await fetchCloverPayment({
             merchantId: event.merchantId,
             paymentId: event.paymentId,
             accessToken,
@@ -59,18 +63,11 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
 
         let contact = resolveContactFromCloverPayment(payment);
         if (!contact.email && !contact.phone) {
-            const orderId = extractOrderId(payment);
-            if (orderId) {
-                const order = await fetchCloverOrderCustomers({
-                    merchantId: event.merchantId,
-                    orderId,
-                    accessToken,
-                });
-                if (order) {
-                    contact = resolveContactFromCloverPayment({ order });
-                    payment = { ...(payment as object), order };
-                }
-            }
+            contact = await resolveViaCustomerIds({
+                merchantId: event.merchantId,
+                payment,
+                accessToken,
+            });
         }
 
         const status = contact.email || contact.phone ? "resolved" : "skipped_no_contact";
@@ -95,7 +92,6 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
                 hasEmail: Boolean(contact.email),
                 hasPhone: Boolean(contact.phone),
                 customerName: contact.name,
-                // Intentional for sandbox spike verification only:
                 customerEmail: contact.email,
                 customerPhone: contact.phone,
             },
@@ -114,6 +110,26 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
             "[clover] payment processing failed",
         );
     }
+}
+
+async function resolveViaCustomerIds(args: {
+    merchantId: string;
+    payment: unknown;
+    accessToken: string;
+}): Promise<CloverResolvedContact> {
+    const empty: CloverResolvedContact = { email: null, phone: null, name: null };
+    const ids = extractCloverCustomerIds(args.payment);
+    for (const customerId of ids) {
+        const customer = await fetchCloverCustomer({
+            merchantId: args.merchantId,
+            customerId,
+            accessToken: args.accessToken,
+        });
+        if (!customer) continue;
+        const contact = resolveContactFromCloverPayment({ customer });
+        if (contact.email || contact.phone) return contact;
+    }
+    return empty;
 }
 
 async function insertEventIfNew(
@@ -161,15 +177,4 @@ async function decryptAccessToken(
     });
     if (error || !accessPlain) throw error ?? new Error("decrypt access failed");
     return accessPlain;
-}
-
-function extractOrderId(payment: unknown): string | null {
-    if (!payment || typeof payment !== "object") return null;
-    const order = (payment as { order?: unknown }).order;
-    if (typeof order === "string") return order;
-    if (order && typeof order === "object" && "id" in order) {
-        const id = (order as { id?: unknown }).id;
-        return typeof id === "string" ? id : null;
-    }
-    return null;
 }

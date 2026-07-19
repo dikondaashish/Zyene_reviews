@@ -34,15 +34,16 @@ export async function fetchCloverPayment(args: {
     return res.json();
 }
 
-/** Expand order customers when payment payload lacks contact. */
-export async function fetchCloverOrderCustomers(args: {
+/** Fetch a single customer with email/phone expands (needs Customers Read permission). */
+export async function fetchCloverCustomer(args: {
     merchantId: string;
-    orderId: string;
+    customerId: string;
     accessToken: string;
-}): Promise<unknown> {
+}): Promise<unknown | null> {
     const url =
         `${getCloverApiBaseUrl()}/v3/merchants/${encodeURIComponent(args.merchantId)}` +
-        `/orders/${encodeURIComponent(args.orderId)}?expand=customers`;
+        `/customers/${encodeURIComponent(args.customerId)}` +
+        `?expand=emailAddresses,phoneNumbers`;
 
     const res = await fetch(url, {
         headers: {
@@ -53,8 +54,8 @@ export async function fetchCloverOrderCustomers(args: {
     if (!res.ok) {
         const text = await res.text();
         logger.warn(
-            { status: res.status, body: text.slice(0, 200) },
-            "[clover] order customers fetch failed",
+            { status: res.status, customerId: args.customerId, body: text.slice(0, 200) },
+            "[clover] customer fetch failed",
         );
         return null;
     }
