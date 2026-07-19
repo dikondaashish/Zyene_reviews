@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { bumpCustomerAfterSend } from "./bump-after-send";
 import { dispatchDashboardReviewChannels } from "./review-request-dashboard-dispatch";
 import { patchRequest } from "./scheduled-queue-patch";
+import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import type { PreparedScheduledSend } from "./scheduled-queue-types";
 
 export async function sendPreparedScheduledRow(
@@ -14,7 +15,7 @@ export async function sendPreparedScheduledRow(
     const senderName = (b.sender_name || "").trim() || undefined;
     const businessEmail =
         typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim()) ? b.email.trim() : undefined;
-    const subject = `Quick question about your visit to ${businessName}`;
+    const subject = reviewRequestSubject(businessName);
 
     const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } =
         await dispatchDashboardReviewChannels({

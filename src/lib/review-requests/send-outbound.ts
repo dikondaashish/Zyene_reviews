@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { bumpCustomerAfterSend } from "./bump-after-send";
 import { dispatchOutboundReviewChannels } from "./send-outbound-dispatch";
 import { prepareOutboundReviewRequest } from "./send-outbound-validate";
+import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import {
     fail,
     isValidEmail,
@@ -71,7 +72,7 @@ export async function sendOutboundReviewRequest(
     const senderName = (b.sender_name || "").trim() || undefined;
     const businessEmail =
         typeof b.email === "string" && isValidEmail(b.email.trim()) ? b.email.trim() : undefined;
-    const subject = `Quick question about your visit to ${businessName}`;
+    const subject = reviewRequestSubject(businessName);
 
     const {
         sendStatus,

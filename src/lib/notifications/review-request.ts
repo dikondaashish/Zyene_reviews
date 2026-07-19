@@ -6,6 +6,7 @@ import {
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
+import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 
 interface SendReviewRequestOptions {
     businessId: string;
@@ -80,9 +81,7 @@ export async function sendReviewRequest({
                 senderName: sender,
             });
 
-            const subject = isFollowUp
-                ? `Following up on your visit to ${businessName}`
-                : `Quick question about your visit to ${businessName}`;
+            const subject = reviewRequestSubject(businessName, isFollowUp);
 
             const emailResult = await sendEmail({
                 to: customerEmail,

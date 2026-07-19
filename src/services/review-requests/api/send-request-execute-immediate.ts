@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
 import { dispatchDashboardReviewChannels } from "@/lib/review-requests/review-request-dashboard-dispatch";
+import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import type { SendRequestPrepared } from "./send-request-execute-prepare";
 
 export async function executeImmediateSendReviewRequest(prepared: SendRequestPrepared) {
@@ -45,7 +46,7 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
         typeof bizRow.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bizRow.email.trim())
             ? bizRow.email.trim()
             : undefined;
-    const subject = `Quick question about your visit to ${businessName}`;
+    const subject = reviewRequestSubject(businessName);
 
     const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } =
         await dispatchDashboardReviewChannels({

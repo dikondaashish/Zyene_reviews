@@ -1,5 +1,3 @@
-import { plgEmailFooterHtml, plgEmailFooterPlain } from "@/lib/growth/plg-attribution";
-
 interface ReviewRequestEmailProps {
     customerName: string;
     businessName: string;
@@ -53,28 +51,26 @@ export function reviewRequestEmailPlainText({
 
     const intro = sender
         ? `This is ${sender} from ${businessName}.`
-        : `Quick note from ${businessName}.`;
+        : `Hope you had a good visit to ${businessName}.`;
 
     return [
         `Hi ${greeting},`,
         "",
-        `${intro} Thanks again for stopping by — hope you enjoyed it.`,
+        intro,
         "",
-        "Could you share a quick word about your visit? It really helps us out and only takes a minute.",
-        "",
+        "If you have a minute, we'd love to hear how it went:",
         reviewLink,
         "",
-        "If it's easier, just reply to this email and let me know how it went — I read every response.",
+        "Or just reply to this email — I read every response.",
         "",
-        "Thank you,",
+        "Thanks,",
         signoff,
-        plgEmailFooterPlain(),
     ].join("\n");
 }
 
 /**
  * Minimal HTML for one-to-one review requests. Plain-text vibe, single link,
- * asks for a reply, no "newsletter" chrome. Tab placement is still heuristic.
+ * asks for a reply, no marketing chrome or UTM footers.
  */
 export function reviewRequestEmail({
     customerName,
@@ -96,36 +92,34 @@ export function reviewRequestEmail({
     const sender = (senderName || "").trim();
     const senderEsc = escapeHtml(sender);
     const signoff = escapeHtml(sender || businessName);
+    const href = escapeAttr(reviewLink);
+    const linkText = escapeHtml(reviewLink);
 
     const intro = sender
         ? `This is ${senderEsc} from ${biz}.`
-        : `Quick note from ${biz}.`;
-
-    const href = escapeAttr(reviewLink);
+        : `Hope you had a good visit to ${biz}.`;
 
     const font =
         "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif";
     const text = "#202124";
     const muted = "#5f6368";
 
-    // Plain-as-possible HTML: no header bar, no buttons, no images, single inline
-    // anchor with neutral link color. Mirrors what a person might type by hand.
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quick question about your visit</title>
+  <title>Thanks for stopping by</title>
 </head>
 <body style="margin:0;padding:0;background-color:#ffffff;">
   <div style="max-width:560px;margin:0 auto;padding:24px 20px 32px;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
     <p style="margin:0 0 16px;">Hi ${greeting},</p>
-    <p style="margin:0 0 16px;">${intro} Thanks again for stopping by &mdash; hope you enjoyed it.</p>
-    <p style="margin:0 0 16px;">Could you <a href="${href}" style="color:#1a0dab;text-decoration:underline;">share a quick word about your visit</a>? It really helps us out and only takes a minute.</p>
-    <p style="margin:0 0 16px;color:${muted};">If it&rsquo;s easier, just reply to this email and let me know how it went &mdash; I read every response.</p>
-    <p style="margin:0 0 4px;">Thank you,</p>
+    <p style="margin:0 0 16px;">${intro}</p>
+    <p style="margin:0 0 16px;">If you have a minute, we&rsquo;d love to hear how it went:</p>
+    <p style="margin:0 0 16px;"><a href="${href}" style="color:#1a0dab;text-decoration:underline;word-break:break-all;">${linkText}</a></p>
+    <p style="margin:0 0 16px;color:${muted};">Or just reply to this email &mdash; I read every response.</p>
+    <p style="margin:0 0 4px;">Thanks,</p>
     <p style="margin:0;">${signoff}</p>
-    ${plgEmailFooterHtml()}
   </div>
 </body>
 </html>`;
