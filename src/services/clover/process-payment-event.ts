@@ -11,6 +11,7 @@ import {
     resolveContactFromCloverPayment,
     type CloverResolvedContact,
 } from "@/services/clover/resolve-contact";
+import { shouldProcessCloverPaymentEvent } from "@/services/clover/payment-event-guard";
 import {
     cloverStatusFromSendOutcome,
     sendCloverReviewRequest,
@@ -19,10 +20,24 @@ import type { ParsedPaymentEvent } from "@/services/clover/webhook-parse";
 
 type Admin = ReturnType<typeof createAdminClient>;
 
-/** Phase 2: resolve contact, then send when sandbox + auto_send_enabled. */
+/** Phase 2: resolve contact, then send when auto_send_enabled (sandbox or production). */
 export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Promise<void> {
     const admin = createAdminClient();
     const env = getCloverEnvironment();
+
+    // Only the first CREATE for a payment may trigger a review request.
+    // Later UPDATE (refund / tip adjust / void) must not send again.
+    if (!shouldProcessCloverPaymentEvent(event.eventType)) {
+        logger.info(
+            {
+                paymentId: event.paymentId,
+                merchantId: event.merchantId,
+                eventType: event.eventType,
+            },
+            "[clover] non-CREATE payment event ignored",
+        );
+        return;
+    }
 
     const { data: connection, error: connError } = await admin
         .from("clover_connections")
@@ -146,6 +161,15 @@ async function insertEventIfNew(
     admin: Admin,
     args: { businessId: string; merchantId: string; paymentId: string; eventType: string },
 ): Promise<boolean> {
+    // If we already recorded this payment (any event type), do not process again.
+    const { data: existing } = await admin
+        .from("clover_payment_events")
+        .select("id")
+        .eq("merchant_id", args.merchantId)
+        .eq("payment_id", args.paymentId)
+        .maybeSingle();
+    if (existing) return false;
+
     const { error } = await admin.from("clover_payment_events").insert({
         business_id: args.businessId,
         merchant_id: args.merchantId,

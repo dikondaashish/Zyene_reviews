@@ -10,7 +10,8 @@ export type CloverSendOutcome =
     | { kind: "send_failed"; message: string };
 
 /**
- * Phase 2: send via shared outbound path when sandbox + auto_send_enabled.
+ * Phase 2: send when auto_send_enabled (sandbox or production).
+ * New connections default auto_send_enabled=false — flip per business to enable.
  * Opt-out / frequency caps live inside sendOutboundReviewRequest.
  */
 export async function sendCloverReviewRequest(args: {
@@ -25,7 +26,8 @@ export async function sendCloverReviewRequest(args: {
         return { kind: "skipped_no_contact" };
     }
 
-    if (!args.autoSendEnabled || args.environment !== "sandbox") {
+    const envOk = args.environment === "sandbox" || args.environment === "production";
+    if (!args.autoSendEnabled || !envOk) {
         return { kind: "skipped_disabled" };
     }
 
