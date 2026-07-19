@@ -1,11 +1,10 @@
 import { logger } from "@/lib/logger";
 import { sendSMS } from "@/services/twilio/send-sms";
-import { sendEmail, buildFromLine } from "@/services/resend/send-email";
+import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
-import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 
 interface SendReviewRequestOptions {
@@ -83,7 +82,7 @@ export async function sendReviewRequest({
 
             const subject = reviewRequestSubject(businessName, isFollowUp);
 
-            const emailResult = await sendEmail({
+            const emailResult = await sendReviewRequestEmail({
                 to: customerEmail,
                 subject,
                 html,
@@ -94,8 +93,8 @@ export async function sendReviewRequest({
                     template,
                     senderName: sender,
                 }),
-                from: buildFromLine({ senderName: sender, businessName }),
-                headers: REVIEW_REQUEST_EMAIL_HEADERS,
+                fallbackSenderName: sender,
+                fallbackBusinessName: businessName,
             });
 
             results.emailSent = emailResult.sent;

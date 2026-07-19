@@ -1,10 +1,9 @@
 import { sendSMS } from "@/services/twilio/send-sms";
-import { sendEmail, buildFromLine } from "@/services/resend/send-email";
+import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
-import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import type { BumpAfterSendLegs } from "./bump-after-send";
 
 export type DashboardChannelSendResult = {
@@ -63,7 +62,7 @@ export async function dispatchDashboardReviewChannels(args: {
             reviewLink,
             senderName,
         });
-        const r = await sendEmail({
+        const r = await sendReviewRequestEmail({
             to: emailNorm,
             subject,
             html,
@@ -73,9 +72,9 @@ export async function dispatchDashboardReviewChannels(args: {
                 reviewLink,
                 senderName,
             }),
-            from: buildFromLine({ senderName, businessName }),
             replyTo: businessEmail,
-            headers: REVIEW_REQUEST_EMAIL_HEADERS,
+            fallbackSenderName: senderName,
+            fallbackBusinessName: businessName,
         });
         if (!r.sent) {
             sendStatus = "failed";
@@ -95,7 +94,7 @@ export async function dispatchDashboardReviewChannels(args: {
             reviewLink,
             senderName,
         });
-        const emailR = await sendEmail({
+        const emailR = await sendReviewRequestEmail({
             to: emailNorm,
             subject,
             html,
@@ -105,9 +104,9 @@ export async function dispatchDashboardReviewChannels(args: {
                 reviewLink,
                 senderName,
             }),
-            from: buildFromLine({ senderName, businessName }),
             replyTo: businessEmail,
-            headers: REVIEW_REQUEST_EMAIL_HEADERS,
+            fallbackSenderName: senderName,
+            fallbackBusinessName: businessName,
         });
 
         const smsOk = smsR.sent;
