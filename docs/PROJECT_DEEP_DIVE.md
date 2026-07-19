@@ -1,107 +1,120 @@
-# Zyene Reviews - Comprehensive Project Deep Dive & Technical Architecture
+# Zyene Reviews — project deep dive and architecture
 
-> Doc classification: core architecture reference. See `docs/INDEX.md` for full documentation map.
+> Doc classification: core architecture reference. See `docs/INDEX.md` for full documentation map.  
+> Unbuilt items: `docs/ROADMAP.md`.
 
-## 1. System Architecture Overview
-Zyene Reviews is built using a modern, high-performance tech stack designed for scalability, multi-tenancy, and extreme reliability.
+## 1. System architecture
 
-### Core Stack
-*   **Framework**: [Next.js 16](https://nextjs.org/) (App Router) utilizing TypeScript for end-to-end type safety.
-*   **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL) with Row Level Security (RLS) for multi-tenant isolation.
-*   **Background Jobs**: [Inngest](https://www.inngest.com/) for reliable, event-driven asynchronous workflows (review syncing, message scheduling).
-*   **Caching & Rate Limiting**: [Upstash Redis](https://upstash.com/) for low-latency middleware checks and metadata caching.
-*   **Observability**: [Sentry](https://sentry.io/) for full-stack error tracking and performance monitoring.
-*   **Styling**: Tailwind CSS + Shadcn UI for a premium, custom-branded design system.
+Zyene Reviews is a multi-tenant Next.js app with Supabase RLS, event-driven background jobs, and Redis-backed rate limits.
 
----
-
-## 2. Domain Data Model & Database Schema
-The database is structured to support complex multi-location businesses and marketing agencies.
-
-### 🏛️ Core Identity Hierarchy
-*   **Organizations (`organizations`)**: The primary tenant. Owns billing (Stripe), white-label settings, and limits.
-*   **Businesses (`businesses`)**: Individual locations. Owns reviews, integration connections, and business-specific settings.
-*   **Users (`users`) & Members (`organization_members`)**: Cross-linked to Supabase Auth. Supports roles: `owner`, `admin`, `manager`, `member`, `viewer`.
-
-### 🛡️ Reputation & Logic Tables
-*   **Reviews (`reviews`)**: Unified storage for reviews from Google, Meta, and Yelp. Includes AI-enriched fields like `sentiment`, `urgency_score`, and `themes`.
-*   **Private Feedback (`private_feedback`)**: Part of the **Negative Feedback Shield**. Stores low-rated feedback internally to prevent it from reaching public platforms.
-*   **Review Platforms (`review_platforms`)**: Connectivity state for API platforms (tokens, sync status, location IDs).
-
-### 📨 Campaign & CRM Tables
-*   **Campaigns (`campaigns`)**: Automated "always-on" or "one-time" request engines. Supports SMS, Email, or both.
-*   **Review Requests (`review_requests`)**: Individual message logs tracking the lifecycle: `queued` -> `sent` -> `delivered` -> `opened` -> `clicked` -> `review_left`.
-*   **Customers (`customers`)**: Centralized CRM for contact management and opt-out (`opt_outs`) tracking.
-
-### 📈 Analytics & Local SEO
-*   **Google Performance (`google_performance_metrics`)**: Daily time-series data for GBP actions:
-    *   Business Calls
-    *   Website Clicks
-    *   Direction Requests
-    *   Booking Actions
-*   **Search Keywords (`google_search_keyword_monthly`)**: Monthly tracking of high-impression search terms that led to the business listing.
+### Core stack
+* **Framework**: [Next.js 16](https://nextjs.org/) (App Router) with TypeScript.
+* **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL) with Row Level Security (RLS) for tenant isolation.
+* **Background Jobs**: [Inngest](https://www.inngest.com/) for event-driven workflows (review sync, message scheduling).
+* **Caching & Rate Limiting**: [Upstash Redis](https://upstash.com/) for middleware checks and metadata caching.
+* **Observability**: [Sentry](https://sentry.io/) for error tracking and performance monitoring.
+* **AI**: Google GenAI (`@google/genai`) via `src/domains/ai/`.
+* **Styling**: Tailwind CSS + Shadcn UI. Design tokens: `docs/DESIGN.md` / `src/app/globals.css`.
 
 ---
 
-## 3. The Reputation Intelligence Engine
-Zyene doesn't just "show" reviews; it analyzes them to provide actionable business intelligence.
+## 2. Domain model and schema
 
-### AI-Powered Review Analysis
-Every incoming review is processed through an AI pipeline that extracts:
-1.  **Sentiment Analysis**: Categorization as Positive, Neutral, Negative, or Mixed.
-2.  **Urgency Scoring**: 1-10 scale based on customer frustration or high-value feedback.
-3.  **Theme Extraction**: Automatic tagging of topics like "Customer Service", "Pricing", or "Cleanliness".
-4.  **Smart Drafts**: Context-aware response drafts tailored to the specific text of the review.
+Supports multi-location businesses and agencies. Primary location model is **`businesses`** (one row per location).
+
+### Core identity hierarchy
+* **Organizations (`organizations`)**: Primary tenant. Owns billing (Stripe), white-label settings, and limits.
+* **Businesses (`businesses`)**: Individual locations. Owns reviews, integrations, and business settings.
+* **Users (`users`) & Members (`organization_members`)**: Linked to Supabase Auth. Roles: `owner`, `admin`, `manager`, `member`, `viewer`.
+
+### Reputation and logic tables
+* **Reviews (`reviews`)**: Unified storage for Google, Meta, and Yelp. Includes AI fields: `sentiment`, `urgency_score`, `themes`.
+* **Private Feedback (`private_feedback`)**: Negative Feedback Shield storage for low-rated feedback kept off public platforms.
+* **Review Platforms (`review_platforms`)**: Connection state (tokens, sync status, location IDs).
+
+### Campaign and CRM tables
+* **Campaigns (`campaigns`)**: Always-on or one-time request engines. SMS, email, or both.
+* **Review Requests (`review_requests`)**: Message logs: `queued` -> `sent` -> `delivered` -> `opened` -> `clicked` -> `review_left`.
+* **Customers (`customers`)**: CRM contacts and `opt_outs`.
+
+### Analytics and local SEO
+* **Google Performance (`google_performance_metrics`)**: Daily GBP actions (calls, website clicks, directions, bookings).
+* **Search Keywords (`google_search_keyword_monthly`)**: Monthly high-impression search terms for the listing.
+
+---
+
+## 3. Reputation intelligence
+
+### AI review analysis
+
+Incoming reviews run through a pipeline that extracts:
+1. **Sentiment**: Positive, Neutral, Negative, or Mixed.
+2. **Urgency score**: 1–10 from frustration or high-value feedback signals.
+3. **Themes**: Tags such as Customer Service, Pricing, Cleanliness.
+4. **Draft replies**: Context-aware response drafts from review text.
 
 ### Negative Feedback Shield
-A critical feature for reputation protection:
-*   Users are sent to a "Selection Page" first.
-*   **High ratings (4-5 stars)**: Directed to public platforms like Google or Yelp.
-*   **Low ratings (1-3 stars)**: Directed to an internal private feedback form.
-*   **Internal Resolution**: Managers are alerted via the **Notification System** to resolve the issue privately.
+
+* Customers land on a selection page first (`/r/[slug]`).
+* **High ratings (4–5 stars)**: Routed to public platforms (Google, Yelp).
+* **Low ratings (1–3 stars)**: Routed to an internal private feedback form.
+* Managers are alerted via the notification system to resolve privately.
 
 ---
 
-## 4. Multi-Channel Campaign Infrastructure
-Proactive review generation is handled through a robust, multi-channel messaging system.
+## 4. Multi-channel campaigns
 
-### Delivery Channels
-*   **SMS**: Powered by **Twilio** for high-priority, high-conversion mobile alerts.
-*   **Email**: Powered by **Resend** for professional, HTML-templated feedback requests.
-*   **QR Codes**: Dynamic QR generators for in-store physical placement.
+### Delivery channels
+* **SMS**: Twilio.
+* **Email**: Resend (HTML templates).
+* **QR codes**: Dynamic QR generation for in-store placement (physical order fulfillment is Coming Soon).
 
-### Automation Triggers
-*   **Manual Batch**: CSV/Excel uploads for past customers.
-*   **Point-of-Sale (POS) Integrations**: Automatic triggers via Webhooks for Square, Clover, Toast, and Stripe.
-*   **API / Zapier**: External triggers for custom CRM workflows.
+### Automation triggers (shipped)
+* **Manual batch**: CSV/Excel uploads (`manual_batch`).
+* **Scheduled**: Time-based sends (`scheduled`).
+* **Follow-up**: Optional single follow-up worker (not multi-step drip).
+
+### Automation triggers (Coming Soon / Planned)
+* **POS payment**: Square, Clover, Toast — placeholder UI; `pos_payment` locked in campaign builder.
+* **Multi-step drip**: See `docs/ROADMAP.md`.
+
+### Developer automation (shipped, limited)
+* **REST API** (`api/v1/*`) and **generic webhooks** for external CRM/automation tools.
+* **Zapier**: Compatible via API key + webhooks today. Marketplace app listing is Planned.
 
 ---
 
-## 5. Integration Ecosystem
-Zyene serves as the central hub for local business digital management.
+## 5. Integrations
 
-| Platform | Type | Purpose |
+| Platform | Status | Purpose |
 | :--- | :--- | :--- |
-| **Google GBP** | Direct API | Review syncing, Performance metrics, Q&A management. |
-| **Meta (FB)** | Graph API | Review importing and automated responding. |
-| **Yelp** | Fusion API | Reputation monitoring and rating aggregation. |
-| **Stripe** | Connect | Subscription lifecycle, billing, and feature entitlements. |
-| **Inngest** | Event Bus | Background sync loops every 6-24 hours. |
-| **Upstash** | Redis | Global rate limiting and session metadata. |
+| **Google GBP** | Live | Review sync, performance metrics, Q&A, listing helpers. |
+| **Meta (FB)** | Live | Review import and replies. |
+| **Yelp** | Live (API-capped) | Sync/monitoring; recent-review depth limited by Yelp API. |
+| **Stripe** | Live | Subscriptions, billing, entitlements. **Not** Stripe Connect marketplace. |
+| **Twilio / Resend** | Live | SMS and email. |
+| **Inngest** | Live | Background sync, campaigns, digests, growth mail. |
+| **Upstash** | Live | Rate limiting and session metadata. |
+| **Developer API / webhooks** | Live | `api/v1/*`, generic inbound webhooks. |
+| **Zapier marketplace app** | Planned | Listing not shipped. |
+| **POS (Square / Clover / Toast)** | Coming Soon | Placeholder cards only. |
+| **TripAdvisor** | Coming Soon | Placeholder card only. |
 
 ---
 
-## 6. Security, Multi-Tenancy & Performance
-*   **RLS (Row Level Security)**: Every query is scoped to `get_user_org_ids()`, ensuring one customer can never see another's data.
-*   **Edge Runtime**: High-traffic API routes (like tracking pixels and review links) run on the Next.js Edge for sub-50ms latency globally.
-*   **Atomic Counter RPCs**: High-concurrency stats (like `total_sent`) are handled via PostgreSQL functions to prevent race conditions.
+## 6. Security, multi-tenancy, performance
+
+* **RLS**: Queries scoped via `get_user_org_ids()` so tenants cannot read each other's data.
+* **Runtime**: App routes use the default Node/Fluid Compute runtime. There is no `runtime = 'edge'` on tracking/review routes today.
+* **Atomic counter RPCs**: High-concurrency stats (e.g. `total_sent`) use Postgres functions to avoid race conditions.
 
 ---
 
-## 7. Strategic Value Propositions
-1.  **Local SEO Dominance**: By tracking daily Google metrics and keywords, we help businesses rank higher in the "Local Map Pack".
-2.  **Reputation Guardrail**: The private feedback shield significantly mitigates 1-star review impacts.
-3.  **Operational Efficiency**: Automated review responses and POS triggers save the business owner hours of manual work every week.
+## 7. Product outcomes
+
+1. **Local SEO**: Daily Google metrics and keywords support Map Pack ranking work.
+2. **Reputation guardrail**: Private feedback reduces public 1-star impact.
+3. **Ops efficiency**: Automated replies and scheduled/manual campaigns reduce manual review-request work. POS auto-triggers are Planned.
 
 ---
-*This document is the technical "Source of Truth" for the Zyene Reviews Platform.*
+Technical source of truth for the Zyene Reviews platform (implementation). For unbuilt work, see `docs/ROADMAP.md`.

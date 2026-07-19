@@ -1,200 +1,62 @@
-# Design System Master File
+# Design System Master File — DEPRECATED
 
-> **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.
-> If that file exists, its rules **override** this Master file.
-> If not, strictly follow the rules below.
-
----
-
-**Project:** Zyene Reviews
-**Generated:** 2026-04-02 16:00:40
-**Category:** Micro SaaS
+> **Deprecated.** Do not use this file for UI work.  
+> **Source of truth:** [`docs/DESIGN.md`](../../docs/DESIGN.md) and live tokens in [`src/app/globals.css`](../../src/app/globals.css).  
+> This file was an early generator output (purple theme). Tokens below are aligned to the live warm system for archaeology only.
 
 ---
 
-## Global Rules
+**Project:** Zyene Reviews  
+**Status:** Deprecated (2026-07-18)  
+**Category:** Micro SaaS  
+
+---
+
+## Global Rules (live-aligned tokens)
 
 ### Color Palette
 
-| Role | Hex | CSS Variable |
-|------|-----|--------------|
-| Primary | `#7C3AED` | `--color-primary` |
-| Secondary | `#A78BFA` | `--color-secondary` |
-| CTA/Accent | `#F97316` | `--color-cta` |
-| Background | `#FAF5FF` | `--color-background` |
-| Text | `#4C1D95` | `--color-text` |
+| Role | Hex | CSS Variable (conceptual) | Live CSS |
+|------|-----|---------------------------|----------|
+| Primary / CTA | `#ff4f00` | `--color-primary` / `--cta` | `--primary`, `--cta` in `globals.css` |
+| Background | `#fffefb` | `--color-background` | `--background` |
+| Text / foreground | follow `docs/DESIGN.md` | `--foreground` | theme tokens in `globals.css` |
+| Secondary | muted neutrals | `--secondary` / `--muted` | `globals.css` |
 
-**Color Notes:** Excitement purple + action orange
+**Color notes:** Warm orange primary (`#ff4f00`) on warm off-white (`#fffefb`). Not purple.
 
 ### Typography
 
-- **Heading Font:** Plus Jakarta Sans
-- **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional
-- **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+- Prefer fonts defined in the app layout / `docs/DESIGN.md` (Syne + Inter in product; not Plus Jakarta Sans from this obsolete generator).
+- Do not import Plus Jakarta Sans for new work based on this file.
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-```
+### Spacing / shadows / components
 
-### Spacing Variables
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
-
-### Shadow Depths
-
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
+Legacy spacing and component CSS samples below are **not** authoritative. Use Tailwind + shadcn primitives under `src/components/ui/` and `docs/DESIGN.md`.
 
 ---
 
-## Component Specs
+## Anti-patterns (still valid)
 
-### Buttons
-
-```css
-/* Primary Button */
-.btn-primary {
-  background: #F97316;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Secondary Button */
-.btn-secondary {
-  background: transparent;
-  color: #7C3AED;
-  border: 2px solid #7C3AED;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-```
-
-### Cards
-
-```css
-.card {
-  background: #FAF5FF;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-```
-
-### Inputs
-
-```css
-.input {
-  padding: 12px 16px;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 200ms ease;
-}
-
-.input:focus {
-  border-color: #7C3AED;
-  outline: none;
-  box-shadow: 0 0 0 3px #7C3AED20;
-}
-```
-
-### Modals
-
-```css
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: var(--shadow-xl);
-  max-width: 500px;
-  width: 90%;
-}
-```
+- Complex onboarding flow
+- Cluttered layout
+- **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
+- **Missing cursor:pointer** — All clickable elements must have cursor:pointer
+- **Layout-shifting hovers** — Avoid scale transforms that shift layout
+- **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
+- **Instant state changes** — Always use transitions (150–300ms)
+- **Invisible focus states** — Focus states must be visible for a11y
 
 ---
 
-## Style Guidelines
+## Pre-delivery checklist
 
-**Style:** Vibrant & Block-based
-
-**Keywords:** Bold, energetic, playful, block layout, geometric shapes, high color contrast, duotone, modern, energetic
-
-**Best For:** Startups, creative agencies, gaming, social media, youth-focused, entertainment, consumer
-
-**Key Effects:** Large sections (48px+ gaps), animated patterns, bold hover (color shift), scroll-snap, large type (32px+), 200-300ms
-
-### Page Pattern
-
-**Pattern Name:** Enterprise Gateway
-
-- **Conversion Strategy:**  logo carousel,  tab switching for industries, Path selection (I am a...). Mega menu navigation. Trust signals prominent.
-- **CTA Placement:** Contact Sales (Primary) + Login (Secondary)
-- **Section Order:** 1. Hero (Video/Mission), 2. Solutions by Industry, 3. Solutions by Role, 4. Client Logos, 5. Contact Sales
-
----
-
-## Anti-Patterns (Do NOT Use)
-
-- ❌ Complex onboarding flow
-- ❌ Cluttered layout
-
-### Additional Forbidden Patterns
-
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
-
----
-
-## Pre-Delivery Checklist
-
-Before delivering any UI code, verify:
+Before delivering any UI code, verify against `docs/DESIGN.md`:
 
 - [ ] No emojis used as icons (use SVG instead)
 - [ ] All icons from consistent icon set (Heroicons/Lucide)
 - [ ] `cursor-pointer` on all clickable elements
-- [ ] Hover states with smooth transitions (150-300ms)
+- [ ] Hover states with smooth transitions (150–300ms)
 - [ ] Light mode: text contrast 4.5:1 minimum
 - [ ] Focus states visible for keyboard navigation
 - [ ] `prefers-reduced-motion` respected

@@ -1,3 +1,37 @@
+# Zyene Reviews — Roadmap (unbuilt / planned)
+
+> Source: moved from Needs Attention docs during the 2026-07-18 documentation reconciliation.
+> Live architecture: `docs/PROJECT_DEEP_DIVE.md`. Live features: `docs/PLATFORM_FEATURES.md`.
+
+## Status legend
+
+| Label | Meaning |
+|-------|---------|
+| **Planned** | Approved direction or sales commitment; not in `src/` yet |
+| **Coming Soon** | UI placeholder or locked control; no production path |
+| **Proposal** | Written plan; not approved or not built |
+
+---
+
+## Planned / Coming Soon (short list)
+
+| Item | Status | Notes |
+|------|--------|-------|
+| POS Square / Clover / Toast | Coming Soon | Placeholder cards; `pos_payment` campaign trigger locked |
+| TripAdvisor | Coming Soon | Placeholder card |
+| Zapier marketplace app | Planned | API key + generic webhooks work today |
+| SSO SAML/OIDC | Planned | Enterprise sales language; no app implementation |
+| Stripe Connect marketplace | Not planned as Connect | Billing uses Stripe Subscriptions only |
+| Multi-step drip campaigns | Proposal | Full plan below |
+| Collapsed 2-step onboarding | Proposal (abandoned) | Live flow is 5 steps — see summary below |
+| Physical QR order fulfillment | Coming Soon | QR generate API exists |
+
+---
+
+## Multi-step drip campaigns (proposal)
+
+> Originally `docs/DRIP_CAMPAIGNS_PLAN.md` (file removed after consolidation).
+
 # Drip Campaigns (Multi-Step Review Request Sequences)
 
 > **Document type:** Product + Engineering plan, written like a PM hand-off
@@ -36,7 +70,7 @@ Ship in **4 phases** so business value lands as early as Phase 1.
 | **Podium** | Linear, no visual flow | Partial | Partial | Conversation-centric, weak step view |
 | **NiceJob** | Drip ladder | Yes | No | Per-step open/click, no conversion attribution |
 | **Reputation.com** | Enterprise rule builder, heavy | Yes | Partial | Strong, but not actionable for SMB |
-| **Zyene (this plan)** | **Visual + JSON-as-source-of-truth, smart-skip default-on, AI copy + AI send-time, attribution to converting step** | ✅ | ✅ | ✅ |
+| **Zyene (this plan)** | **Visual + JSON-as-source-of-truth, smart-skip default-on, AI copy + AI send-time, attribution to converting step** | Pass | Pass | Pass |
 
 ### 1.3 Our wedges (do not skip these)
 
@@ -525,3 +559,58 @@ Use this as the literal PR list.
 | **Total** | **32** | **~8** with 1 backend + 1 frontend dev |
 
 If only one engineer, plan **~10–12 weeks** with Phase 1 shipping in 3 weeks.
+
+
+---
+
+## Abandoned proposal: 2-step onboarding
+
+> Originally `.agent/docs/ONBOARDING_2STEP_IMPLEMENTATION.md` (file removed after consolidation).
+> **Current shipped flow:** Organization → Business → Category → Plan → All Set (`src/app/onboarding/onboarding-types.ts`).
+> The 2-step design was never shipped. Excerpt retained below:
+
+# 2-Step Simplified Onboarding Implementation Guide
+
+**Current Status:** 4-step onboarding implemented
+**Target:** Simplify to 2-step flow with improvements
+**Effort:** Low (reuse existing components)
+
+---
+
+## CURRENT vs PROPOSED ARCHITECTURE
+
+### Current Flow (4 Steps)
+```
+Step 1: Business Name
+  ↓
+Step 2: Google Connection
+  ↓
+Step 3: Category Selection
+  ↓
+Step 4: Notifications → Confetti → Dashboard
+```
+
+### Proposed Flow (2 Steps)
+```
+Step 1: Business Name
+  ↓
+Step 2: First Location (Name, Address, City, State, Phone)
+  ↓
+Toast: "Location added!"
+  ↓
+Dashboard (Google/Category/Notifications optional later)
+```
+
+**Benefit:** Faster onboarding, lower friction, user gets to dashboard faster
+
+---
+
+## IMPLEMENTATION PLAN
+
+### PHASE 1: Database Schema Updates
+
+**Current:**
+
+---
+
+*End of roadmap.*

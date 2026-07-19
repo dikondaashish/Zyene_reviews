@@ -2,7 +2,7 @@
 
 **Read this file first.** It is the single source of truth for every AI agent (Cursor, Claude Code, Copilot, Windsurf, Antigravity, etc.) and for engineers onboarding to this repository.
 
-For human onboarding detail, see [README.md](./README.md). For Next.js version-specific docs, see [.agent/docs/AGENTS.md](./.agent/docs/AGENTS.md).
+For human onboarding detail, see [README.md](./README.md). For Next.js docs, use https://nextjs.org/docs (optional local mirror notes: [.agent/docs/AGENTS.md](./.agent/docs/AGENTS.md)).
 
 ### Where each IDE reads configuration
 

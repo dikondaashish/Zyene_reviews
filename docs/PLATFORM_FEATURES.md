@@ -1,51 +1,73 @@
-# Zyene Reviews - Platform Features & Capabilities
+# Zyene Reviews — platform features
 
-> Doc classification: product capability summary (external-facing narrative). See `docs/INDEX.md` for full documentation map.
+> Doc classification: lightweight product index. Shipped features point at code; unbuilt work is detailed under Planned. Full map: `docs/INDEX.md`. Unbuilt specs: `docs/ROADMAP.md`.
 
-Welcome to **Zyene Reviews**, a premium reputation management platform designed to help local businesses grow their online presence, build trust, and manage customer feedback efficiently.
+Reputation management SaaS for local businesses (multi-tenant Next.js + Supabase).
 
-## 🚀 1. Seamless Onboarding
-Get your business up and running in minutes with our guided onboarding flow:
-- **Organization Setup**: Define your primary business entity and structure.
-- **Business Profile Integration**: Connect directly to **Google Business Profile**, Yelp, and Facebook.
-- **Category Selection**: Tailor the platform to your specific industry for personalized insights.
-- **Subscription Management**: Securely handle payments and plan selection via **Stripe**.
-- **Notification Routing**: Configure how and where your team receives alerts about new reviews.
+## Shipped
 
-## 📊 2. Unified Review Management
-Stop jumping between different platforms. Manage every customer interaction from one dashboard:
-- **Centralized Syncing**: Real-time synchronization with Google, Yelp, and Facebook.
-- **Review Dashboard**: View, filter (by rating/status/platform), and sort all public reviews.
-- **Smart Response Tracking**: Mark reviews as *Pending*, *Responded*, or *Ignored* to ensure no customer is left unheard.
-- **Data Export**: One-click **CSV export** for all your review data for offline analysis.
-- **Interactive Demo Mode**: Explore the platform's capabilities with pre-loaded demo data if you haven't connected a profile yet.
+One line per capability. Code is the source of truth — do not expand here.
 
-## 📨 3. Automated Review Campaigns
-Proactively grow your online reputation by requesting feedback from your customers:
-- **Multi-Channel Distribution**: Send requests via **SMS, Email, or both**.
-- **Template Library**: Choose from high-converting, industry-specific templates to get started quickly.
-- **Automated Workflows**: Set up "Launch and Leave" campaigns that trigger automatically.
-- **Performance Tracking**: Monitor every campaign's success with real-time stats (Sent, Opened, Clicked, Completed).
-- **Smart Triggers**: Reach out to customers at the perfect moment in their journey.
+| Area | Pointer |
+|------|---------|
+| Onboarding (Org → Business → Category → Plan → All Set) | `src/app/onboarding/` |
+| Google / Yelp / Facebook review sync | `src/services/{google,yelp,facebook}/` |
+| Review inbox, reply, export, status | `src/app/(dashboard)/reviews/`, `src/services/reviews/` |
+| AI analysis & draft replies (Google GenAI) | `src/domains/ai/` |
+| Negative Feedback Shield + private feedback | `src/app/r/[slug]/`, `src/services/reviews/private-feedback-api.ts` |
+| Campaigns: `manual_batch` / `scheduled` + SMS/email | `src/services/campaigns/`, `src/app/(dashboard)/campaigns/` |
+| Optional single follow-up | `src/services/inngest/` (`follow-up-worker`) |
+| Stripe subscriptions & plan limits | `src/services/stripe/` |
+| Team roles & invites | `src/services/team/`, `src/app/(dashboard)/settings/team/` |
+| Competitors + watch cron | `src/services/competitors/`, `src/app/api/cron/competitor-watch/` |
+| Local SEO / GBP performance & AEO | `src/app/(dashboard)/google-seo-aeo/`, Google performance workers |
+| Public review page & embed widget | `src/app/r/[slug]/`, `src/app/w/[slug]/` |
+| Developer API + generic webhooks | `src/app/api/v1/`, `src/app/api/webhooks/generic/` |
+| Background jobs (Inngest) + Redis rate limits | `src/app/api/inngest/`, `src/lib/db/redis.ts` |
+| Demo overlays when Google not connected | dashboard/reviews loaders under `src/app/(dashboard)/` |
 
-## 🛡️ 4. Negative Feedback Shield (Private Feedback)
-Protect your public rating while still getting valuable customer insights:
-- **Private Feedback Loop**: Direct unhappy customers to a private feedback form instead of public review sites.
-- **Internal Resolution**: Handle sensitive issues privately before they become public-facing problems.
-- **Sentiment Segregation**: Public reviews for the world to see, private insights for your team to improve.
+## Planned / Not Implemented
 
-## 🔌 5. Enterprise-Grade Integrations
-Connect Zyene to the tools you already use:
-- **Google Business Profile**: Verified sync for reviews and business information.
-- **Stripe Integration**: Automated billing and subscription lifecycle management.
-- **Inngest Background Jobs**: Reliable, asynchronous processing for big data syncs and campaign triggers.
-- **Upstash Redis**: High-performance caching and rate-limiting for a smooth UI experience.
+Status tags: **Planned** | **Coming Soon** | **Partially Implemented**.
 
-## 📈 6. Insights & Analytics
-Understand your business performance at a glance:
-- **Reputation Trends**: High-level overview of your rating growth over time.
-- **Response Efficiency**: Track how quickly and often your team responds to customers.
-- **Campaign ROI**: See exactly how many 5-star reviews were generated by each campaign.
+### Campaign `pos_payment` trigger — Coming Soon
+
+- **Intent:** Auto-send a review request after a POS payment (Square / Clover / Toast).
+- **Today:** Trigger enum exists; campaign builder locks the option (`available: false` in `new-campaign-basics-step.tsx`). Integrations UI shows `PlaceholderCard` only (`integrations-pos-developer-sections.tsx`).
+- **Missing:** Live POS OAuth/webhooks, payment→request pipeline, production send path.
+- **Spec detail:** `docs/ROADMAP.md` (POS row + related drip/POS phases).
+
+### Multi-step drip campaigns — Planned (proposal)
+
+- **Intent:** Visual multi-step SMS/email sequences with smart-skip and per-step attribution.
+- **Today:** Single-step campaigns + optional one follow-up only.
+- **Missing:** Drip builder UI, step schema/tables, `dripStepWorker` (or equivalent).
+- **Full design:** `docs/ROADMAP.md` § Multi-step drip campaigns.
+
+### Zapier marketplace app — Planned
+
+- **Intent:** Public Zapier app listing (triggers/actions in Zapier directory).
+- **Today:** REST `api/v1/*` + generic inbound webhooks (Zapier-compatible DIY wiring).
+- **Missing:** Official Zapier app submission, maintained Zapier integration package.
+
+### TripAdvisor sync — Coming Soon
+
+- **Intent:** Sync TripAdvisor reviews like other platforms.
+- **Today:** Placeholder card on integrations UI only.
+- **Missing:** Adapter, OAuth/API client, sync worker, inbox mapping.
+
+### Physical QR order fulfillment — Coming Soon
+
+- **Intent:** Customers order printed QR materials from the product.
+- **Today:** QR **generate** API exists (`src/app/api/businesses/[id]/qr-code/`); UI still toasts order-as-coming-soon.
+- **Missing:** Order/checkout/fulfillment flow.
+
+### SSO (SAML/OIDC) — Planned
+
+- **Intent:** Enterprise IdP login.
+- **Today:** Sales/enterprise page copy only; no SAML/OIDC implementation in `src/`.
+- **Missing:** IdP config, auth callbacks, org SSO enforcement. Pricing/SLA TBD (sales).
 
 ---
-*Zyene Reviews is built with Next.js, Supabase, and Stripe to provide a secure, fast, and scalable experience for businesses of all sizes.*
+
+Stack (shipped): Next.js, Supabase, Stripe Subscriptions, Inngest, Twilio, Resend, Upstash, Google GenAI. Design tokens: `docs/DESIGN.md`.

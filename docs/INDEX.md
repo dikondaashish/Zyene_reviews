@@ -8,6 +8,7 @@ Central index for project documentation and where each file belongs.
 - `docs/DESIGN.md` - design system source of truth.
 - `docs/PLATFORM_FEATURES.md` - customer-facing platform capability summary.
 - `docs/PROJECT_DEEP_DIVE.md` - deep technical architecture and domain model reference.
+- `docs/ROADMAP.md` - unbuilt / planned work (drip campaigns, SSO, POS, etc.).
 - `docs/CODEBASE_STRUCTURE.md` - repo structure and placement rules.
 - `docs/PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
 
@@ -44,18 +45,21 @@ Central index for project documentation and where each file belongs.
 
 ## AI / Agent Runtime Docs (KEEP in `.agent/`)
 
-These are internal working docs for agent-assisted development and should stay under `.agent`.
+Live agent playbooks under `.agent/docs/`. Canonical skills: `.agents/skills/` (synced to `.claude` / `.windsurf`). Cursor UI skill: `.cursor/skills/ui-ux-pro-max/`.
 
-- `.agent/docs/AGENTS.md`
-- `.agent/docs/TECHNICAL_OVERVIEW.md`
-- `.agent/docs/ONBOARDING_FLOW.md`
-- `.agent/docs/ONBOARDING_2STEP_IMPLEMENTATION.md`
-- `.agent/docs/FLOWY_STEP_ONBOARDING_IMPLEMENTATION.md`
-- `.agent/docs/INTEGRATION_VERIFICATION.md`
+- `.agent/docs/AGENTS.md` — optional Next.js docs-mirror notes
+- `.agent/docs/ONBOARDING_FLOW.md` — current 5-step onboarding
 - `.agent/docs/GOOGLE_SYNC_TROUBLESHOOTING.md`
-- `.agent/docs/TEST_FLOWS.md`
-- `.agent/docs/DATABASE_VALIDATION_REPORT.md`
-- `.agent/skills/ui-ux-pro-max/SKILL.md`
+
+## Archived docs (`docs/archive/`)
+
+Point-in-time snapshots — not live SoT:
+
+- `docs/archive/TECHNICAL_OVERVIEW.md`
+- `docs/archive/INTEGRATION_VERIFICATION.md`
+- `docs/archive/DATABASE_VALIDATION_REPORT.md`
+- `docs/archive/TEST_FLOWS.md`
+- `docs/archive/README.md`
 
 ## Tooling Instruction Docs (KEEP in place)
 
@@ -66,4 +70,5 @@ These are internal working docs for agent-assisted development and should stay u
 - Keep `README.md` at repo root for discovery and onboarding.
 - Keep all remaining project documentation under `docs/`.
 - Keep operational and feature-specific docs inside `docs/`.
-- Keep all agent-specific operational docs in `.agent/` to avoid mixing runtime project docs with automation docs.
+- Keep live agent playbooks in `.agent/docs/`; historical snapshots under `docs/archive/`.
+- Planned / unbuilt work: `docs/ROADMAP.md`.

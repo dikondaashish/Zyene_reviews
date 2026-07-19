@@ -125,7 +125,7 @@
 | 0.3 | Run **seo** / **on-page-seo-auditor** on: `/`, `/pricing`, `/compare/birdeye`, top blog, top case study | Eng | Fix list |
 | 0.4 | Run **content-quality-auditor** (CORE-EEAT) on 3 blog posts | Content | Score + veto items |
 | 0.5 | Manual AI citation test: ask ChatGPT/Perplexity “best Birdeye alternative for restaurants” — note if Zyene appears | Ops | Baseline screenshot |
-| 0.6 | Confirm newsletter API + `marketing_subscribers` receiving `source` UTM | Eng | ✅ or bug ticket |
+| 0.6 | Confirm newsletter API + `marketing_subscribers` receiving `source` UTM | Eng | Pass or bug ticket |
 
 ### Engineering
 
@@ -307,7 +307,7 @@ dateModified?: string; // ISO date for Article JSON-LD
 <a id="geo-phase-5"></a>
 ## Phase 5 — Own Your Traffic (Weeks 8–11)
 
-> **Goal:** **Email list** as primary owned channel; reduce platform risk.
+> **Goal:Email list** as primary owned channel; reduce platform risk.
 
 ### 5.1 Newsletter productization
 

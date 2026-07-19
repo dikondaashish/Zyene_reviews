@@ -1,5 +1,7 @@
 # Deep Codebase Audit Report
 
+> **Archive / historical snapshot.** File counts and removed paths reflect the audit date, not necessarily the current tree. For live structure, use `docs/CODEBASE_STRUCTURE.md` and the repo. For product architecture, use `docs/PROJECT_DEEP_DIVE.md`.
+
 This report records a full-repo automated + manual audit pass across all tracked files.
 
 ## Phase 1 - File Usage Audit
@@ -117,7 +119,7 @@ These have no internal app references but may be externally linked or manually u
 
 ## Verification
 
-- `pnpm typecheck` ✅
-- `pnpm test` ✅
-- `pnpm build` ✅
+- `pnpm typecheck` — Pass
+- `pnpm test` — Pass
+- `pnpm build` — Pass
 

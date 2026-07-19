@@ -1,28 +1,30 @@
-# Phase 1: Database Validation Report ✅
+# Phase 1: Database Validation Report
 
-**Date:** March 13, 2026  
-**Project:** Zyene Reviews  
-**Status:** ALL SYSTEMS READY FOR ONBOARDING IMPLEMENTATION
+> **Archive / historical snapshot (2026-03-13).** Not a live schema guide. Product location model is primarily `businesses`. Prefer [`PROJECT_DEEP_DIVE.md`](../PROJECT_DEEP_DIVE.md) and generated `database.types.ts` for current schema.
+
+**Date:** March 13, 2026
+**Project:** Zyene Reviews
+**Status:** Historical — schema was ready for onboarding implementation as of that date
 
 ---
 
 ## Executive Summary
 
-✅ **All required tables exist and are properly configured**
+**All required tables exist and are properly configured**
 
 | Table | Status | Details |
 |-------|--------|---------|
-| `organizations` | ✅ Exists | 10 rows, 8+ columns for plan management |
-| `businesses` | ✅ Exists | 48 columns with comprehensive data model |
-| `locations` | ✅ Created | **NEW** - 12 columns with full RLS policies |
-| `notification_preferences` | ✅ Exists | 12 columns for notification settings |
-| `review_platforms` | ✅ Exists | 16 columns for Google, Yelp, Facebook integration |
+| `organizations` | Exists | 10 rows, 8+ columns for plan management |
+| `businesses` | Exists | 48 columns with comprehensive data model |
+| `locations` | Created | **NEW** - 12 columns with full RLS policies |
+| `notification_preferences` | Exists | 12 columns for notification settings |
+| `review_platforms` | Exists | 16 columns for Google, Yelp, Facebook integration |
 
 ---
 
 ## Detailed Schema Report
 
-### 1. Organizations Table ✅
+### 1. Organizations Table
 
 **Purpose:** Store company/organization data with billing info
 
@@ -38,11 +40,11 @@
 - `trial_ends_at` (timestamptz) - Trial expiration
 - `max_businesses` (integer) - Plan limit (1, 3, or unlimited)
 
-**Status:** ✅ Production ready, no changes needed
+**Status:** Production ready, no changes needed
 
 ---
 
-### 2. Businesses Table ✅
+### 2. Businesses Table
 
 **Purpose:** Individual business/location listing
 
@@ -67,13 +69,11 @@
 - `google_review_url` (text) - Direct Google review link
 - Plus 30+ customization columns for review flows, branding, etc.
 
-**Status:** ✅ Production ready, perfectly structured for onboarding
+**Status:** Production ready, perfectly structured for onboarding
 
 ---
 
-### 3. Locations Table ✅ **NEW - JUST CREATED**
-
-**Purpose:** Multi-location support for businesses
+### 3. Locations Table **NEW - JUST CREATEDPurpose:** Multi-location support for businesses
 
 **Columns:**
 ```
@@ -98,7 +98,7 @@ updated_at      → timestamptz             (auto timestamp)
 - `locations_slug_key` - Unique constraint
 - `locations_is_primary_idx` - Primary flag queries
 
-**RLS Policies (4 Policies):** ✅
+**RLS Policies (4 Policies):**
 ```
 1. locations_read_policy    → SELECT: Users can read locations of their businesses
 2. locations_insert_policy  → INSERT: Users can add locations to their businesses  
@@ -115,11 +115,11 @@ business_id IN (
 )
 ```
 
-**Status:** ✅ Successfully created with all security policies
+**Status:** Successfully created with all security policies
 
 ---
 
-### 4. Notification Preferences Table ✅
+### 4. Notification Preferences Table
 
 **Purpose:** User notification settings per business
 
@@ -137,11 +137,11 @@ business_id IN (
 - `min_urgency_for_sms` (integer) - Urgency threshold
 - `min_rating_threshold` (integer) - Rating filter
 
-**Status:** ✅ Ready to use - matches Step 4 data model
+**Status:** Ready to use - matches Step 4 data model
 
 ---
 
-### 5. Review Platforms Table ✅
+### 5. Review Platforms Table
 
 **Purpose:** OAuth tokens & sync status for review sources
 
@@ -154,7 +154,7 @@ business_id IN (
 - `last_synced_at` (timestamptz) - Last sync time
 - Plus status and configuration columns
 
-**Status:** ✅ Ready for Google OAuth integration in Step 2
+**Status:** Ready for Google OAuth integration in Step 2
 
 ---
 
@@ -204,14 +204,14 @@ RETURNING id;
 
 ---
 
-## Security Baseline ✅
+## Security Baseline
 
 **RLS Status:**
-- ✅ Organizations: RLS enabled
-- ✅ Businesses: RLS enabled
-- ✅ Locations: RLS enabled (4 policies)
-- ✅ Notification Preferences: RLS enabled
-- ✅ Review Platforms: RLS enabled
+- Organizations: RLS enabled
+- Businesses: RLS enabled
+- Locations: RLS enabled (4 policies)
+- Notification Preferences: RLS enabled
+- Review Platforms: RLS enabled
 
 **All RLS policies enforce:**
 - User can only see/modify data for businesses in their organization
@@ -223,9 +223,9 @@ RETURNING id;
 ## Performance Optimization Summary
 
 **Indexes Created:**
-- Business lookups: ✅ Indexed
-- Location lookups: ✅ Indexed (4 indexes: business_id, slug, is_primary)
-- Organization slugs: ✅ Unique constraint
+- Business lookups: Indexed
+- Location lookups: Indexed (4 indexes: business_id, slug, is_primary)
+- Organization slugs: Unique constraint
 
 **Query Performance:**
 ```
@@ -270,12 +270,12 @@ INSERT INTO locations (
 
 | Feature | Required By | Status | Notes |
 |---------|------------|--------|-------|
-| Organizations | Step 1 | ✅ Exists | Handles multi-tenant setup |
-| Businesses | Step 2 | ✅ Exists | Stores business details |
-| Locations | Step 2 | ✅ Created | NOW handles location details |
-| Categories | Step 3 | ✅ Column exists | In businesses table |
-| Notifications | Step 4 | ✅ Exists | Comprehensive pref system |
-| Google OAuth | Step 2 (optional) | ✅ Exists | review_platforms table ready |
+| Organizations | Step 1 | Exists | Handles multi-tenant setup |
+| Businesses | Step 2 | Exists | Stores business details |
+| Locations | Step 2 | Created | NOW handles location details |
+| Categories | Step 3 | Column exists | In businesses table |
+| Notifications | Step 4 | Exists | Comprehensive pref system |
+| Google OAuth | Step 2 (optional) | Exists | review_platforms table ready |
 
 ---
 
@@ -293,7 +293,7 @@ Timestamp: 2026-03-13
 
 ---
 
-## Pre-Implementation Checklist ✅
+## Pre-Implementation Checklist
 
 ```
 Database Schema:
@@ -328,12 +328,10 @@ Audit Trail:
 
 ---
 
-## Ready for Next Phase ✅
+## Ready for Next Phase
 
-**All database requirements met!**
-
-**Next Steps:**
-1. ✅ Phase 1: Database ← YOU ARE HERE
+**All database requirements met!Next Steps:**
+1. Phase 1: Database ← YOU ARE HERE
 2. → Phase 2: Server Actions (create queries)
 3. → Phase 3: React Components (UI)
 4. → Phase 4: Onboarding Page Integration
@@ -362,14 +360,14 @@ SELECT * FROM locations WHERE business_id = (SELECT id FROM businesses LIMIT 1);
 
 ---
 
-## Database Config Verified ✅
+## Database Config Verified
 
 | Setting | Value |
 |---------|-------|
 | **PostgreSQL Version** | 14+ (Supabase) |
-| **Extensions Required** | uuid-ossp (✅ enabled) |
-| **RLS Enforcement** | ✅ Enabled globally |
-| **Auth Integration** | ✅ auth.uid() available |
+| **Extensions Required** | uuid-ossp (enabled) |
+| **RLS Enforcement** | Enabled globally |
+| **Auth Integration** | auth.uid() available |
 | **Row Count Limit** | Unlimited |
 | **Storage Available** | Unlimited (Supabase tier) |
 
@@ -377,17 +375,17 @@ SELECT * FROM locations WHERE business_id = (SELECT id FROM businesses LIMIT 1);
 
 ## Summary
 
-**✅ STATUS: READY FOR PHASE 2**
+**Status: READY FOR PHASE 2**
 
 Database schema is **production-ready** for 4-step onboarding implementation:
 
-- ✅ Organizations table exists (Step 1 data)
-- ✅ Businesses table exists (Step 2 business data)
-- ✅ **Locations table NEWLY CREATED** (Step 2 location data)
-- ✅ Notification preferences ready (Step 4 data)
-- ✅ Review platforms ready (Google OAuth in Step 2)
-- ✅ All RLS policies enforced
-- ✅ All indexes optimized
-- ✅ Security baseline met
+- Organizations table exists (Step 1 data)
+- Businesses table exists (Step 2 business data)
+- **Locations table NEWLY CREATED** (Step 2 location data)
+- Notification preferences ready (Step 4 data)
+- Review platforms ready (Google OAuth in Step 2)
+- All RLS policies enforced
+- All indexes optimized
+- Security baseline met
 
-**You are cleared to proceed to Phase 2: Server Actions** 🚀
+**You are cleared to proceed to Phase 2: Server Actions**

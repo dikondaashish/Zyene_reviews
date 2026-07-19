@@ -30,7 +30,7 @@ Copy what you need on the page. No PDF—just the live template pack.
 
 **Compliance note:** No incentives for reviews. Ask every customer the same way—don’t route only happy customers to Google.
 
-👉 Open the template pack: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
+ Open the template pack: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 #LocalBusiness #GoogleReviews #ReputationManagement
 
@@ -63,7 +63,7 @@ Start with our **free template pack** (web swipe file) to standardize outreach t
 
 When copy-paste doesn’t scale, Zyene Reviews runs SMS/email campaigns, tracks opens, and keeps requests fair—with Negative Feedback Shield for private issues before they hit Google.
 
-Grab the scripts: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch  
+Grab the scripts: https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 Explore product: https://www.zyenereviews.com/features/review-collection?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
@@ -84,9 +84,9 @@ https://www.zyenereviews.com/resources/review-request-templates?utm_source=threa
 
 “Leave us a review?” templates that don’t sound desperate:
 
-→ Short SMS  
-→ Email bodies  
-→ Thank-you + reminder lines  
+→ Short SMS
+→ Email bodies
+→ Thank-you + reminder lines
 
 Template pack (web): https://www.zyenereviews.com/resources/review-request-templates?utm_source=threads&utm_medium=social&utm_campaign=template-pack-launch
 
@@ -130,8 +130,8 @@ We put together a **free web swipe file** on Zyene Reviews:
 
 **Please follow the same rules we recommend:**
 
-- **No incentives** for leaving a review  
-- **No happy-customer-only** routing—ask customers the same way; handle issues in private feedback, not by hiding them from Google  
+- **No incentives** for leaving a review
+- **No happy-customer-only** routing—ask customers the same way; handle issues in private feedback, not by hiding them from Google
 
 **Open the template pack →** https://www.zyenereviews.com/resources/review-request-templates?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch
 
@@ -139,7 +139,7 @@ When manual copy-paste stops scaling, Zyene Reviews can run the same outreach as
 
 **Start a 7-day trial →** https://www.zyenereviews.com/signup?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch
 
-— {sender_name}  
+— {sender_name}
 Zyene Reviews
 
 ---

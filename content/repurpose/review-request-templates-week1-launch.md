@@ -6,7 +6,7 @@ campaign: template-pack-launch
 
 # Template pack — Week 1 launch (publish-ready)
 
-**Playbook:** [docs/PHASE3_DISTRIBUTION_PACKAGE.md](../../docs/PHASE3_DISTRIBUTION_PACKAGE.md)  
+**Playbook:** [docs/PHASE3_DISTRIBUTION_PACKAGE.md](../../docs/PHASE3_DISTRIBUTION_PACKAGE.md)
 **Source copy:** [review-request-templates.md](./review-request-templates.md)
 
 ## UTM destination URLs
@@ -17,7 +17,7 @@ campaign: template-pack-launch
 | **Email** | https://www.zyenereviews.com/resources/review-request-templates?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch |
 | **Threads / X** | https://www.zyenereviews.com/resources/review-request-templates?utm_source=threads&utm_medium=social&utm_campaign=template-pack-launch |
 
-**Trial CTA (email):** https://www.zyenereviews.com/signup?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch  
+**Trial CTA (email):** https://www.zyenereviews.com/signup?utm_source=email&utm_medium=email&utm_campaign=template-pack-launch
 **Product CTA (LinkedIn day 7 optional):** https://www.zyenereviews.com/features/review-collection?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 ---
@@ -177,7 +177,7 @@ Copy what you need on the page. No PDF—just the live template pack.
 
 **Compliance note:** No incentives for reviews. Ask every customer the same way—don’t route only happy customers to Google.
 
-👉 https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
+ https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 #LocalBusiness #GoogleReviews #ReputationManagement
 
@@ -231,7 +231,7 @@ Copy what you need on the page. No PDF—just the live template pack.
 
 **Compliance note:** No incentives for reviews. Ask every customer the same way—don’t route only happy customers to Google.
 
-👉 https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
+ https://www.zyenereviews.com/resources/review-request-templates?utm_source=linkedin&utm_medium=social&utm_campaign=template-pack-launch
 
 #LocalBusiness #GoogleReviews #ReputationManagement
 

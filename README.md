@@ -308,7 +308,7 @@ Open [http://localhost:3000](http://localhost:3000). Marketing home is `/`; dash
 | Inngest jobs not running locally | Inngest dev server / `INNGEST_*` keys; see `.env.example` comments |
 | Email rate limits | Configure custom SMTP in Supabase Auth or use Resend for app email |
 
-Troubleshooting guides: `.agent/docs/GOOGLE_SYNC_TROUBLESHOOTING.md`, `.agent/docs/INTEGRATION_VERIFICATION.md`.
+Troubleshooting guides: `.agent/docs/GOOGLE_SYNC_TROUBLESHOOTING.md`. Historical integration checklist: `docs/archive/INTEGRATION_VERIFICATION.md`.
 
 ---
 
@@ -354,7 +354,7 @@ For production, secrets live in the hosting provider (e.g. Vercel) environment s
 - `pnpm run verify:critical-flows` — critical path smoke checks
 - `pnpm email:test` — send test emails via Resend (needs `.env.local`)
 
-**Agent / internal docs** live under `.agent/docs/` (onboarding flows, test flows, DB validation)—not mixed into customer-facing `docs/`.
+**Agent / internal docs** live under `.agent/docs/` (live onboarding + troubleshooting). Historical snapshots live under `docs/archive/`. Planned work: `docs/ROADMAP.md`.
 
 ---
 
@@ -635,7 +635,8 @@ Critical flows: [`docs/CRITICAL_FLOW_VERIFICATION.md`](docs/CRITICAL_FLOW_VERIFI
 | [`docs/CRITICAL_FLOW_VERIFICATION.md`](docs/CRITICAL_FLOW_VERIFICATION.md) | QA + eng | Manual verification |
 | [`supabase/migrations/README.md`](supabase/migrations/README.md) | Backend | Migration rules |
 | [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Eng + AI tools | Canonical coding rules |
-| `.agent/docs/*` | Internal | Agent-assisted dev playbooks |
+| `.agent/docs/*` | Internal | Live agent playbooks (onboarding, Google sync) |
+| `docs/archive/*` | Internal | Historical architecture / verification snapshots |
 
 ---
 
@@ -661,4 +662,4 @@ How we aim to work—similar to mature SaaS engineering teams:
 - **Supabase / RLS:** Backend owner for the area you are changing.
 - **Billing:** Owner of `src/services/stripe/` + webhook routes.
 
-Welcome to the team—ship safely, scope by `business_id`, and when in doubt, read `docs/PROJECT_DEEP_DIVE.md` before touching auth, billing, or sync.
+Ship safely, scope by `business_id`, and read `docs/PROJECT_DEEP_DIVE.md` before changing auth, billing, or sync.

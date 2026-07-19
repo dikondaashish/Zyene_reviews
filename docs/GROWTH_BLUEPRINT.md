@@ -2,7 +2,9 @@
 
 > **Purpose:** A step-by-step phased plan to transform Zyene Reviews from a strong *inside* product into a customer-acquisition machine on the *outside*. Every phase builds on the last. Every action ties back to what the product actually delivers today.
 >
-> **Last updated:** May 2026
+> **Last updated:** May 2026 (claims reconciled Jul 2026 against `src/`)
+>
+> **Accuracy note (2026-07):** Marketing phase pages are largely live. Not shipped: POS (Square/Clover/Toast), TripAdvisor, Zapier marketplace listing, SSO, multi-step drip, physical QR order. Pro AI quota is **flat 2,000/mo** (not × locations). See `docs/ROADMAP.md` and `docs/PLATFORM_FEATURES.md`.
 
 ---
 
@@ -45,8 +47,8 @@ Before building any growth engine, we must be crystal clear about what we delive
 | 5 | **Local SEO & GBP Optimization** | Google Business Profile performance dashboard (views, calls, directions, clicks). Search keyword tracking. SEO audit score with actionable fixes. AI business description optimizer. AI visibility audit (beta). | Rank higher in Google Maps. Get found in AI search results. |
 | 6 | **Analytics & Reporting** | Review volume, rating trends, sentiment breakdown, theme analysis. Engagement funnel (sent → opened → clicked → review). Multi-platform comparison. PDF report generator. CSV exports. | Prove ROI. Show your team what's working. |
 | 7 | **Customer CRM** | Centralized customer list with tags, segments, and review history. CSV import/export. Customer timeline (requests sent, feedback received, reviews matched). Opt-out management. | Know which customers reviewed and which haven't. Target the right people. |
-| 8 | **Multi-Location Management** | Switch between locations. Per-location limits and analytics. Location-scoped team permissions. | Manage 1–3+ locations from one login without switching tools. |
-| 9 | **Integrations & API** | Google, Facebook, Yelp sync. Zapier (5,000+ apps). Developer REST API. Embeddable website widgets (carousel + badge). POS triggers (coming: Square, Clover, Toast). | Connect to your existing workflow. Automate everything. |
+| 8 | **Multi-Location Management** | Switch between businesses/locations. Per-location limits and analytics. Team roles (org/business-scoped), not fine-grained per-location ACLs. | Manage 1–3+ locations from one login without switching tools. |
+| 9 | **Integrations & API** | Google, Facebook, Yelp sync. Developer REST API + webhooks (Zapier marketplace listing: Planned). Embeddable website widgets (carousel + badge). POS triggers (coming: Square, Clover, Toast). | Connect to your existing workflow. Automate everything. |
 | 10 | **Team Collaboration** | 5–15+ seats with roles (owner, admin, manager, member, viewer). Email/SMS notification preferences per member. | Delegate review management without losing control. |
 
 ### 1.2 The Negative Feedback Shield (Our Unique Differentiator)
@@ -71,7 +73,7 @@ This is **not just a feature — it's a selling point competitors charge $300/mo
 | Email requests/mo | 10 | 500 | 700 × locations | Unlimited |
 | SMS requests/mo | 0 | 500 | 700 × locations | Unlimited |
 | Link requests/mo | 25 | 1,500 | 2,000 × locations | Unlimited |
-| AI replies/mo | 0 | 1,500 | 2,000 × locations | Unlimited |
+| AI quota/mo (suggestions + auto-commenter + link drafts) | 0 | 1,500 | 2,000 (flat, not × locations) | Unlimited (contract) |
 | Team seats | 1 | 5 | 15 | Unlimited |
 | Public review pages | No | Yes | Yes | Yes + white-label |
 | Competitor tracking | No | Yes | Yes | Yes |
@@ -137,20 +139,20 @@ Price ($/mo per location)
 
 | Capability | Zyene ($30–60) | Birdeye ($299+) | Podium ($399+) | NiceJob ($75–125) |
 |-----------|---------------|----------------|----------------|-------------------|
-| Google/Yelp/FB sync | ✓ | ✓ | ✓ | ✓ |
-| AI reply suggestions | ✓ (included) | ✓ (Starter+) | ✓ (add-on) | ✓ (Pro only) |
-| Auto-reply bot | ✓ | ✓ | Limited | ✗ |
-| SMS review requests | ✓ | ✓ | ✓ (core) | ✓ |
-| Negative Feedback Shield | ✓ (unique flow) | Surveys only | ✗ | ✗ |
-| Competitor tracking | ✓ | Dominate tier | ✗ | Pro only |
-| GBP SEO dashboard | ✓ (keywords, perf) | ✓ | Limited | ✗ |
-| AI visibility audit | ✓ (beta) | ✗ | ✗ | ✗ |
-| Multi-location dashboard | ✓ (up to 3 / unlimited) | ✓ (deep) | ✓ | Limited |
-| Developer API | ✓ (included) | Enterprise only | Enterprise | ✗ |
-| Embeddable widgets | ✓ | ✓ | ✗ | ✓ |
-| Website chat | ✗ | ✓ | ✓ (core) | ✗ |
-| Listings management | ✗ | ✓ (200+ dirs) | Limited | ✗ |
-| Payments / text-to-pay | ✗ | Limited | ✓ (core) | ✗ |
+| Google/Yelp/FB sync | | | | |
+| AI reply suggestions | (included) | (Starter+) | (add-on) | (Pro only) |
+| Auto-reply bot | | | Limited | |
+| SMS review requests | | | (core) | |
+| Negative Feedback Shield | (unique flow) | Surveys only | | |
+| Competitor tracking | | Dominate tier | | Pro only |
+| GBP SEO dashboard | (keywords, perf) | | Limited | |
+| AI visibility audit | (beta) | | | |
+| Multi-location dashboard | (up to 3 / unlimited) | (deep) | | Limited |
+| Developer API | (included) | Enterprise only | Enterprise | |
+| Embeddable widgets | | | | |
+| Website chat | | | (core) | |
+| Listings management | | (200+ dirs) | Limited | |
+| Payments / text-to-pay | | Limited | (core) | |
 | Annual contract required | **No** | Yes | Yes | No |
 | Transparent pricing | **Yes** | Partial | Yes | Yes |
 
@@ -168,26 +170,26 @@ Price ($/mo per location)
 <a id="3-current-state-audit"></a>
 ## 3. Current State Audit — Where We Are Today
 
-> **Status: Updated May 2026** — Section 3.2 gaps below were **resolved in Phases 0–8**. See §3.3 for what remains operational (outside the codebase).
+> **Status: Updated Jul 2026** — Section 3.2 marketing/SEO gaps were largely closed in Phases 0–8. Product gaps that remain: POS, Zapier marketplace listing, SSO, multi-step drip (see §3.3 and `docs/ROADMAP.md`).
 
 ### 3.1 What's Working (Inside)
 
-- ✅ Full review inbox with Google/Facebook/Yelp sync
-- ✅ AI replies with tone selection and auto-commenter
-- ✅ Branded review collection pages with Negative Feedback Shield
-- ✅ SMS/email/link campaign engine with follow-ups
-- ✅ Competitor tracking with AI market briefs
-- ✅ GBP SEO dashboard with keyword tracking
-- ✅ Analytics with PDF reports and CSV exports
-- ✅ Developer API and Zapier integration
-- ✅ Multi-location management (up to 3 / unlimited)
-- ✅ 5-step onboarding with Google OAuth
-- ✅ Stripe billing with trial support
-- ✅ Mobile-responsive dashboard
-- ✅ Dark/light theme
-- ✅ Role-based team management
-- ✅ Product tour and getting-started checklist
-- ✅ Developer docs with API reference
+- Full review inbox with Google/Facebook/Yelp sync
+- AI replies with tone selection and auto-commenter
+- Branded review collection pages with Negative Feedback Shield
+- SMS/email/link campaign engine with follow-ups
+- Competitor tracking with AI market briefs
+- GBP SEO dashboard with keyword tracking
+- Analytics with PDF reports and CSV exports
+- Developer API and webhooks (Zapier marketplace listing: Planned)
+- Multi-location management (up to 3 / unlimited)
+- 5-step onboarding with Google OAuth
+- Stripe billing with trial support
+- Mobile-responsive dashboard
+- Dark/light theme
+- Role-based team management
+- Product tour and getting-started checklist
+- Developer docs with API reference
 
 ### 3.2 Resolved — Former Critical Gaps (Phases 0–8)
 
@@ -202,7 +204,7 @@ Price ($/mo per location)
 | No blog / resources | `/blog`, `/resources` |
 | Domain confusion | `metadataBase` → `https://zyenereviews.com` in root layout |
 | No case studies / security / integrations | `/case-studies`, `/security`, `/integrations` |
-| No demo / enterprise | `/demo`, `/enterprise`, Cal.com |
+| No demo / enterprise | `/demo`, `/enterprise`, Cal.com (SSO still Planned — page may list it as sales scope) |
 | reset-password missing | `/reset-password` |
 | Homepage SEO | Server `metadata` + `MarketingHomeClient` (not full-page client SEO) |
 | Annual pricing | Toggle on `/pricing` via `PricingPageClient` |
@@ -286,7 +288,7 @@ zyenereviews.com (marketing)
 │   └── /features/analytics              ← live
 ├── /pricing                    ← Plans, limits, FAQ, calculator
 ├── /how-it-works               ← Visual 3-step flow
-├── /integrations               ← Google, Yelp, FB, Zapier, API, POS
+├── /integrations               ← Google, Yelp, FB, API, Widgets; Zapier/POS Coming Soon or Planned
 ├── /industries                 ← Vertical index
 │   ├── /industries/restaurants
 │   ├── /industries/dental
@@ -545,7 +547,7 @@ Help articles → Related features, Getting started
 > - `/pricing` page with plan cards, monthly/annual toggle (`BillingToggle`), FAQ accordion, comparison mini-table, and `ProductJsonLd` + `FAQPageJsonLd` structured data — `src/app/(marketing)/pricing/page.tsx`
 > - `/features` page with 6 feature pillars, 4 platform pillars, integrations bar, CTA — `src/app/(marketing)/features/page.tsx`
 > - `/how-it-works` page with visual 4-step flow — `src/app/(marketing)/how-it-works/page.tsx`
-> - `/integrations` page with platform cards (Google, Facebook, Yelp, Zapier, REST API, Widgets, POS) and developer section — `src/app/(marketing)/integrations/page.tsx`
+> - `/integrations` page with platform cards (Google, Facebook, Yelp live; Zapier/POS Coming Soon or Planned; REST API, Widgets) — `src/app/(marketing)/integrations/page.tsx`. Note: some marketing item statuses may still say "live" for Square/Zapier in `integrations-items-a.ts` — treat product truth as Coming Soon/Planned.
 > - Signup flow: `src/app/(auth)/signup/page.tsx` with aligned trial messaging ("7-day free trial. No credit card lock-in.")
 > - Feature sub-pages: `/features/[pillar]` for all 6 deep-dive feature pages — `src/app/(marketing)/features/[pillar]/page.tsx`
 
@@ -575,17 +577,15 @@ Help articles → Related features, Getting started
 **Sections:**
 1. **Hero:** "Everything you need to own your online reputation"
 2. **Feature grid** (6 pillars with icons, each linking to detail section or sub-page):
-   - Review Monitoring & Inbox
-   - AI-Powered Replies
-   - Review Collection & Shield
-   - Competitor Intelligence
-   - Local SEO Dashboard
-   - Analytics & Reporting
+ - Review Monitoring & Inbox
+ - AI-Powered Replies
+ - Review Collection & Shield
+ - Competitor Intelligence
+ - Local SEO Dashboard
+ - Analytics & Reporting
 3. **Each pillar** gets a visual block: screenshot/mockup + 3–4 bullet points + CTA
-4. **Integrations bar:** Google, Facebook, Yelp, Zapier, API logos
-5. **"See pricing" CTA**
-
-**Sub-pages (Phase 3+):**
+4. **Integrations bar:** Google, Facebook, Yelp, API logos (Zapier = Planned listing)
+5. **"See pricing" CTASub-pages (Phase 3+):**
 - `/features/review-monitoring`
 - `/features/ai-replies`
 - `/features/review-collection`
@@ -611,13 +611,13 @@ Business Profile in      when new reviews           requests via SMS,       beat
 **Sections:**
 1. **Hero:** "Connects with the tools you already use"
 2. **Platform cards:**
-   - Google Business Profile (sync, reply, performance, Q&A)
-   - Facebook Reviews (sync, reply)
-   - Yelp Reviews (sync, monitor)
-   - Zapier (trigger requests from 5,000+ apps)
-   - REST API (build custom integrations)
-   - Website Widgets (embed social proof)
-   - POS: Square, Clover, Toast (coming soon badges)
+ - Google Business Profile (sync, reply, performance, Q&A)
+ - Facebook Reviews (sync, reply)
+ - Yelp Reviews (sync, monitor)
+ - Zapier: Planned marketplace listing; today use API key + webhooks
+ - REST API (build custom integrations)
+ - Website Widgets (embed social proof)
+ - POS: Square, Clover, Toast (coming soon badges)
 3. **Developer section:** Link to `/docs/api`
 4. **CTA:** "Start free trial"
 
@@ -662,17 +662,17 @@ Create 6–8 industry pages under `/industries/[industry]`.
 **Template structure (reusable for all verticals):**
 
 1. **Hero:** "Review Management Built for [Industry]"
-   - Sub: "[Industry] owners use Zyene to get more 5-star reviews and protect their reputation"
-   - CTA: "Start your 7-day free trial"
+ - Sub: "[Industry] owners use Zyene to get more 5-star reviews and protect their reputation"
+ - CTA: "Start your 7-day free trial"
 2. **Industry-specific pain points** (3 cards):
-   - "One bad Yelp review can cost a [restaurant] $X in lost revenue"
-   - "[Dental patients] check Google reviews before booking 93% of the time"
-   - "You're losing [customers] to competitors with more reviews"
+ - "One bad Yelp review can cost a [restaurant] $X in lost revenue"
+ - "[Dental patients] check Google reviews before booking 93% of the time"
+ - "You're losing [customers] to competitors with more reviews"
 3. **How Zyene solves it** (mapped to product features):
-   - Monitor all reviews in one place
-   - AI replies that sound like a [restaurant owner / dentist / mechanic]
-   - Negative Feedback Shield catches bad experiences before they go public
-   - Competitor tracking shows how you compare to nearby [restaurants / practices / shops]
+ - Monitor all reviews in one place
+ - AI replies that sound like a [restaurant owner / dentist / mechanic]
+ - Negative Feedback Shield catches bad experiences before they go public
+ - Competitor tracking shows how you compare to nearby [restaurants / practices / shops]
 4. **Industry-specific use case** (mini case study or scenario)
 5. **Pricing reminder** (starting at $29.99/mo)
 6. **CTA:** "Join [hundreds of / other] [industry] owners on Zyene"
@@ -701,12 +701,10 @@ Create comparison hub `/compare` + individual pages.
 - Grid of competitor cards with "vs Zyene" links
 - Summary comparison table (all competitors side by side)
 
-**Individual comparison pages (`/compare/[competitor]`):**
-
-**Template structure:**
+**Individual comparison pages (`/compare/[competitor]`):Template structure:**
 
 1. **Hero:** "Zyene Reviews vs [Competitor]"
-   - Sub: "See why [X] businesses switched from [Competitor] to Zyene"
+ - Sub: "See why [X] businesses switched from [Competitor] to Zyene"
 2. **Quick comparison table** (price, contract, features)
 3. **Where [Competitor] wins** (be honest — builds trust)
 4. **Where Zyene wins** (price, shield, SEO, no contract)
@@ -785,7 +783,7 @@ Replace dead `#` links with actual help content:
 | **Campaigns** | "Creating a review request campaign", "SMS vs email campaigns", "Campaign templates", "Follow-up messages" |
 | **Analytics** | "Understanding your analytics dashboard", "Reading the engagement funnel", "Generating PDF reports" |
 | **Billing** | "Plans and pricing", "Upgrading your plan", "Understanding usage limits", "Canceling your subscription" |
-| **Integrations** | "Connecting Google", "Setting up Zapier", "Using the API", "Embedding review widgets" |
+| **Integrations** | "Connecting Google", "Using the API / webhooks", "Embedding review widgets" (Zapier marketplace: Planned) |
 
 ---
 
@@ -889,7 +887,7 @@ Create `/security`:
 | **POS providers** (Square, Clover, Toast) | Integration listing in their marketplace | Build integrations (already planned), apply to marketplaces |
 | **Local business associations** | Discount for members, co-marketing | Outreach to local chambers of commerce |
 | **Web agencies / marketing agencies** | Referral commission or white-label | Create `/partners` or `/agencies` page |
-| **Zapier** | App listing in Zapier marketplace | Submit Zapier integration for public listing |
+| **Zapier** | App listing in Zapier marketplace (Planned) | API/webhooks work today; submit marketplace listing when ready |
 | **Google Workspace Marketplace** | Distribution to GBP users | Investigate listing requirements |
 
 ### 6.4 Email Marketing (Newsletter)
@@ -970,7 +968,7 @@ The product already has upgrade modals at:
 > **Status: Complete (May 2026)**
 > All engineering deliverables verified:
 > - `/demo` page with Cal.com embed and demo request form — `src/app/(marketing)/demo/page.tsx`
-> - `/enterprise` page with custom pricing, SLA bullets, comparison table, sales contact — `src/lib/phase8/enterprise-data.ts`
+> - `/enterprise` page with custom pricing, SLA bullets, comparison table, sales contact — `src/lib/phase8/enterprise-data.ts` (SSO copy on page = Planned, not implemented)
 > - `/agencies` page with white-label features, agency pricing tiers, waitlist form — `src/lib/phase8/agency-pricing-data.ts`
 > - Sales deck: `docs/ENTERPRISE_SALES_DECK.md`
 > - International: Spanish industry pages at `/es/industries/[industry]` — `src/lib/phase8/localized-industries.ts`
@@ -983,7 +981,7 @@ The product already has upgrade modals at:
 | Action | Detail |
 |--------|--------|
 | Create `/demo` page | Cal.com embed or form for sales team |
-| Create `/enterprise` page | Custom pricing, SLA, SSO, dedicated AM, white-label |
+| Create `/enterprise` page | Custom pricing, SLA, dedicated AM, white-label; SSO listed as Planned |
 | Hire/assign sales | Inbound leads from demo page and `sales@` email |
 | Create sales deck | PDF/Notion with product screenshots, case studies, pricing |
 
@@ -1116,7 +1114,7 @@ The product already has upgrade modals at:
 <a id="implementation-priority-matrix"></a>
 ## Implementation Priority Matrix
 
-> **Status: Complete (May 2026)** — All Phase 0–8 engineering deliverables marked **complete** in `src/lib/growth/implementation-matrix.ts`. View timeline and task status on `/growth` → **Priority matrix** tab. Ongoing/external items (GSC, G2, paid ads, agency dashboard) documented in [`docs/GROWTH_OPERATIONS.md`](./GROWTH_OPERATIONS.md).
+> **Status: Mostly complete (Jul 2026)** — Growth-site deliverables tracked in `src/lib/growth/implementation-matrix.ts` (`/growth` → Priority matrix). Treat matrix "complete" as marketing/ops plumbing, not every enterprise feature. Still open in product: POS, Zapier listing, SSO, multi-step drip (`docs/ROADMAP.md`). External ops: [`docs/GROWTH_OPERATIONS.md`](./GROWTH_OPERATIONS.md).
 
 
 ### Must Do First (Phase 0–1) — Foundation
@@ -1190,7 +1188,7 @@ No comparisons           /compare/birdeye         Authority content        Inter
 
 Every phase builds on the previous one. Don't skip phases — the foundation must be solid before content works, and content must exist before paid acquisition is efficient.
 
-**Phases 0–8 are shipped.** Operate growth via `/growth`, this blueprint, and `docs/GROWTH_OPERATIONS.md`.
+**Phases 0–8 marketing/engineering deliverables for the growth site are largely shipped.** Product still Planned/Coming Soon: POS, Zapier marketplace listing, SSO, multi-step drip, physical QR order (`docs/ROADMAP.md`). Operate growth via `/growth`, this blueprint, and `docs/GROWTH_OPERATIONS.md`.
 
 ---
 

@@ -23,12 +23,12 @@ SECURITY CRITICAL. getSession() reads the JWT from cookies WITHOUT verifying it.
 A forged cookie passes silently. ALWAYS use getUser() for server-side auth.
 
 ```typescript
-// ✅ CORRECT — verified with Supabase auth server
+// CORRECT — verified with Supabase auth server
 const supabase = await createClient()
 const { data: { user } } = await supabase.auth.getUser()
 if (!user) redirect('/login')
 
-// ❌ WRONG — reads JWT without verification, session can be forged
+// WRONG — reads JWT without verification, session can be forged
 const { data: { session } } = await supabase.auth.getSession()
 ```
 
@@ -38,12 +38,12 @@ In Next.js 15, params and searchParams are Promises. Synchronous access compiles
 but crashes at runtime.
 
 ```typescript
-// ✅ CORRECT
+// CORRECT
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 }
 
-// ❌ WRONG — runtime crash
+// WRONG — runtime crash
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params // TypeError at runtime
 }
@@ -55,20 +55,20 @@ This package is deprecated. It does NOT work with Next.js 15 App Router cookies.
 ALWAYS use @supabase/ssr with manual cookie handling.
 
 ```typescript
-// ✅ CORRECT
+// CORRECT
 import { createServerClient } from '@supabase/ssr'
 
-// ❌ WRONG — deprecated, broken with App Router
+// WRONG — deprecated, broken with App Router
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 ```
 
 ## RULE 4: All database tables MUST have RLS enabled
 
 Every Supabase table must have Row Level Security enabled. Without RLS, any
-user with the anon key can read ALL data from the table.
+caller with the anon key can read ALL data from the table.
 
 ```sql
--- ✅ Always add after CREATE TABLE:
+-- Always add after CREATE TABLE:
 ALTER TABLE public.my_table ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can only read their own data"

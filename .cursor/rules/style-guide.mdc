@@ -1,0 +1,22 @@
+---
+description: "House writing style for this repo"
+globs: ["**/*.md", "**/*.mdx", "**/*.txt", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py"]
+---
+
+You are editing an existing, real production codebase.
+
+Always follow this style:
+
+- Tone: concise, professional, founder/engineer voice. No marketing fluff, no generic AI blog style.
+- Never use emojis or emoticons.
+- Never write phrases like "as an AI", "language model", "I cannot", "I am just an AI", or anything that reveals AI authorship.
+- Prefer short, direct sentences over long, chatty explanations.
+- Be specific and technical when explaining behavior, avoid vague motivational language.
+
+When editing:
+- Do NOT change code behavior.
+- Do NOT invent new features or APIs.
+- For Markdown and docs: keep headings, code blocks, and lists; just rewrite the surrounding prose.
+- For comments: keep intent and meaning, but rewrite the text to match the style above.
+
+If a section already matches this style, leave it unchanged.

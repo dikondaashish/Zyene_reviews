@@ -1,6 +1,9 @@
-# Zyene Ratings — Complete Project Documentation
+# Zyene Reviews — Complete Project Documentation (ARCHIVE)
 
-> **Version**: 2.0.0  
+> **Deprecated as architecture SoT.** Prefer `README.md`, `../PROJECT_DEEP_DIVE.md`, and `../PLATFORM_FEATURES.md`.  
+> This file is a February 2026 snapshot. Known drift: brand was “Zyene Ratings”; AI is **Google GenAI** (`@google/genai` / `src/domains/ai/`), not Anthropic Claude; onboarding is **5 steps** (Org → Business → Category → Plan → All Set); POS remains Coming Soon.
+
+> **Version**: 2.0.0 (archived)  
 > **Last Updated**: February 17, 2026  
 > **Source**: Private — proprietary codebase; access only via your organization’s version control.  
 > **Default branch**: `main`
@@ -23,7 +26,7 @@
 12. [Reviews Inbox](#12-reviews-inbox)
 13. [Review Requests & Public Review Flow](#13-review-requests--public-review-flow)
 14. [Google Business Profile Integration](#14-google-business-profile-integration)
-15. [AI Features (Anthropic Claude)](#15-ai-features-anthropic-claude)
+15. [AI Features (Google GenAI — was Anthropic in this snapshot)](#15-ai-features-anthropic-claude)
 16. [Stripe Billing & Subscriptions](#16-stripe-billing--subscriptions)
 17. [Team Management](#17-team-management)
 18. [Settings Hub](#18-settings-hub)
@@ -40,25 +43,24 @@
 
 ## 1. Project Overview
 
-**Zyene Ratings** is a SaaS application designed specifically for restaurant owners to **automate customer review management**. It connects to a business's Google Business Profile, syncs all customer reviews, performs AI-powered sentiment analysis, generates smart reply suggestions, sends multi-channel alerts (SMS + Email) for urgent reviews, handles subscription billing via Stripe, and supports team-based access — all from a single unified dashboard.
+**Zyene Reviews** (historically documented here as “Zyene Ratings”) is a SaaS application for local businesses to automate customer review management. It connects to Google Business Profile (plus Yelp/Facebook in the current product), syncs reviews, runs AI-powered analysis, generates reply suggestions, sends multi-channel alerts (SMS + Email), handles subscription billing via Stripe, and supports team-based access from a unified dashboard.
 
 ### Core Features
 
 | Feature | Description |
 |---|---|
-| **Google Business Profile Sync** | Automatically pulls all reviews from Google and keeps them in sync |
-| **AI Sentiment Analysis** | Uses Anthropic Claude to analyze sentiment, urgency, themes, and generate summaries |
-| **AI Smart Replies** | Generates context-aware reply suggestions in two tones (professional & warm/friendly) |
+| **Google Business Profile Sync** | Automatically pulls reviews from Google and keeps them in sync |
+| **AI Sentiment Analysis** | **Current code:** Google GenAI via `src/domains/ai/`. *(This archive incorrectly said Anthropic Claude.)* |
+| **AI Smart Replies** | Context-aware reply suggestions |
 | **Reviews Inbox** | Filterable, sortable, paginated inbox to manage and reply to reviews |
-| **Review Requests** | Send SMS review invitations to customers with smart rating-gated flow (4-5★ → Google, 1-3★ → private feedback) |
-| **Stripe Billing** | Subscription management with Free, Starter ($39/mo), and Growth ($79/mo) plans with usage limits |
-| **Team Management** | Invite/manage team members with role-based access (Owner, Admin, Member) |
-| **SMS & Email Alerts** | Multi-channel notifications: Twilio SMS + Resend email with urgency-tiered routing and quiet hours |
-| **Notification Settings** | User-configurable SMS/email preferences: phone number, urgency threshold, quiet hours, digest toggle |
-| **Analytics Dashboard** | Charts for review volume, sentiment distribution, theme breakdown, and rating trends (Recharts) |
-| **Subdomain Routing** | Separate subdomains for marketing, login, and dashboard |
-| **GBP Onboarding** | Guided flow requiring Google Business Profile connection before dashboard access |
-| **Settings Hub** | General (business info, review settings, profile), Notifications, Team, and Billing pages |
+| **Review Requests** | SMS/email invitations with rating-gated flow (4-5 → Google, 1-3 → private feedback) |
+| **Stripe Billing** | Subscription management with plan limits *(plan names/prices in this archive may be outdated — see `src/services/stripe/plans.ts`)* |
+| **Team Management** | Invite/manage team members with role-based access |
+| **SMS & Email Alerts** | Twilio SMS + Resend email |
+| **Analytics Dashboard** | Review volume, sentiment, themes, rating trends |
+| **Subdomain Routing** | Marketing, auth, and app hosts via `src/proxy.ts` |
+| **Onboarding** | **Current:** 5 steps — Organization → Business → Category → Plan → All Set |
+| **Settings Hub** | General, notifications, team, billing, integrations |
 
 ---
 
@@ -80,7 +82,8 @@
 |---|---|---|
 | **Supabase** (`@supabase/supabase-js`) | ^2.95.3 | Database (PostgreSQL), Auth, Realtime |
 | **Supabase SSR** (`@supabase/ssr`) | ^0.8.0 | Server-side Supabase client for Next.js |
-| **Anthropic SDK** (`@anthropic-ai/sdk`) | ^0.74.0 | AI sentiment analysis & smart replies |
+| **Google GenAI** (`@google/genai`) | (see package.json) | AI sentiment analysis & smart replies — **current**. *(Archive row below was wrong.)* |
+| ~~**Anthropic SDK** (`@anthropic-ai/sdk`)~~ | ~~^0.74.0~~ | ~~Historical — not the current stack~~ |
 | **Twilio** (`twilio`) | ^5.12.1 | SMS notifications & review requests |
 | **Stripe** (`stripe` + `@stripe/stripe-js`) | ^20.3.1 / ^8.7.0 | Subscription billing & payment processing |
 | **Resend** (`resend`) | latest | Transactional email (alerts, digests, invites, welcome) |
@@ -626,13 +629,13 @@ export function createAdminClient() {
 #### Login Page — [src/app/(auth)/login/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28auth%29/login/page.tsx)
 - **Type**: Client Component (`"use client"`)
 - **Features**:
-  - Email + Password form
-  - Error handling with toast notifications
-  - Loading state with spinner
-  - Link to forgot password
-  - Link to signup
-  - Handles `?error=account_not_created` param from onboarding cancel
-  - On success: redirects to `dashboard.{rootDomain}`
+ - Email + Password form
+ - Error handling with toast notifications
+ - Loading state with spinner
+ - Link to forgot password
+ - Link to signup
+ - Handles `?error=account_not_created` param from onboarding cancel
+ - On success: redirects to `dashboard.{rootDomain}`
 
 #### Signup Page — [src/app/(auth)/signup/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28auth%29/signup/page.tsx)
 - **Type**: Client Component
@@ -725,9 +728,9 @@ A 322-line marketing page served at the root domain (`localhost:3000`) with 6 se
 3. **Features Section**: 6-card grid showcasing core features (AI Analysis, Smart Replies, Review Requests, SMS Alerts, Analytics, Team Management) with Lucide icons
 4. **How It Works Section**: 3-step visual flow (Connect Google → AI Analyzes → Stay On Top)
 5. **Pricing Section**: 3 pricing cards:
-   - **Free** ($0/mo) — 1 location, 10 requests/mo, email alerts only
-   - **Starter** ($39/mo) — 1 location, 100 requests/mo, 30 AI replies/mo, SMS + email
-   - **Growth** ($79/mo) — 3 locations, unlimited requests, unlimited AI replies, SMS + email, priority support
+ - **Free** ($0/mo) — 1 location, 10 requests/mo, email alerts only
+ - **Starter** ($39/mo) — 1 location, 100 requests/mo, 30 AI replies/mo, SMS + email
+ - **Growth** ($79/mo) — 3 locations, unlimited requests, unlimited AI replies, SMS + email, priority support
 6. **CTA Footer**: Final call-to-action with signup button
 
 ---
@@ -740,13 +743,13 @@ A 322-line marketing page served at the root domain (`localhost:3000`) with 6 se
 - **Type**: Client Component
 - **UI**: Centered card with icon, title, description
 - **Actions**:
-  - **"Connect Google Business Profile"** button:
-    - Triggers `supabase.auth.signInWithOAuth({ provider: 'google' })`
-    - Requests scope: `https://www.googleapis.com/auth/business.manage`
-    - Redirects to dashboard on success (callback handles GBP linking)
-  - **"Cancel & Sign Out"** button:
-    - Signs user out
-    - Redirects to login with `?error=account_not_created`
+ - **"Connect Google Business Profile"** button:
+ - Triggers `supabase.auth.signInWithOAuth({ provider: 'google' })`
+ - Requests scope: `https://www.googleapis.com/auth/business.manage`
+ - Redirects to dashboard on success (callback handles GBP linking)
+ - **"Cancel & Sign Out"** button:
+ - Signs user out
+ - Redirects to login with `?error=account_not_created`
 
 ### Enforcement
 The dashboard layout ([(dashboard)/layout.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/api/auth/callback/route.ts#7-300)) checks for GBP connection on every dashboard page load:
@@ -777,10 +780,10 @@ if (!hasGoogleBusinessProfile) {
 2. **GBP Guard**: Redirects users without Google Business Profile to onboarding
 3. **Data Fetching**: Loads organizations with nested businesses and review platforms
 4. **Layout Structure**:
-   - `<SidebarProvider>` wrapping everything
-   - `<AppSidebar />` — Left navigation panel
-   - Header with `<BusinessSwitcher>` and `<UserNav>`
-   - `<main>` content area with light gray background
+ - `<SidebarProvider>` wrapping everything
+ - `<AppSidebar />` — Left navigation panel
+ - Header with `<BusinessSwitcher>` and `<UserNav>`
+ - `<main>` content area with light gray background
 
 ### Dashboard Home — [src/app/(dashboard)/dashboard/page.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/app/%28dashboard%29/dashboard/page.tsx)
 
@@ -789,10 +792,10 @@ if (!hasGoogleBusinessProfile) {
 **Sections**:
 1. **Header**: Page title + last synced timestamp + Sync button
 2. **Stats Cards** (4-column grid):
-   - Total Reviews (from `business.total_reviews`)
-   - Average Rating (from `business.average_rating`)
-   - Response Rate (placeholder: 0%)
-   - Pending Reviews (placeholder: 0)
+ - Total Reviews (from `business.total_reviews`)
+ - Average Rating (from `business.average_rating`)
+ - Response Rate (placeholder: 0%)
+ - Pending Reviews (placeholder: 0)
 3. **Recent Reviews Card**: Shows connection status and sync prompts
 4. **Needs Attention Card**: Placeholder for items needing action
 
@@ -844,9 +847,9 @@ if (!hasGoogleBusinessProfile) {
 **Features**:
 1. **Auth & Business Resolution**: Gets user → organization → business chain
 2. **Filtering**: Supports URL-based filters:
-   - `?status=all|needs_response|responded|ignored`
-   - `?rating=all|1|2|3|4|5`
-   - `?sort=newest|oldest|lowest|highest`
+ - `?status=all|needs_response|responded|ignored`
+ - `?rating=all|1|2|3|4|5`
+ - `?sort=newest|oldest|lowest|highest`
 3. **Pagination**: 20 reviews per page, URL-based (`?page=1`)
 4. **Empty State**: Shows contextual message based on filters
 5. **Layout**: Header with review count badge, filter bar, review cards grid, pagination controls
@@ -888,14 +891,14 @@ interface Review {
 4. **Urgency Badge**: Shows urgency score with gradient coloring (red for high)
 5. **Theme Pills**: Small tags showing review topics (food_quality, service_speed, etc.)
 6. **Inline Reply Form**:
-   - Expandable textarea
-   - Submit → `POST /api/reviews/{id}/reply`
-   - Optimistic UI update with `router.refresh()`
-   - Toast notifications
+ - Expandable textarea
+ - Submit → `POST /api/reviews/{id}/reply`
+ - Optimistic UI update with `router.refresh()`
+ - Toast notifications
 7. **AI Suggest Reply Button**:
-   - Calls `POST /api/ai/suggest-reply`
-   - Displays up to 2 reply suggestions (professional + warm)
-   - Click a suggestion → populates reply textarea
+ - Calls `POST /api/ai/suggest-reply`
+ - Displays up to 2 reply suggestions (professional + warm)
+ - Click a suggestion → populates reply textarea
 8. **Existing Reply Display**: Shows the business's reply if already responded
 9. **Dropdown Menu**: Additional actions (future expansion)
 10. **Relative Timestamps**: "2 hours ago" format via `date-fns`
@@ -904,7 +907,7 @@ interface Review {
 
 ## 13. Review Requests & Public Review Flow
 
-This feature enables businesses to proactively request reviews from customers via SMS. The flow implements a **rating-gated strategy**: customers who rate 4-5★ are redirected to Google to leave a public review, while 1-3★ ratings capture private feedback that stays internal.
+This feature enables businesses to proactively request reviews from customers via SMS. The flow implements a **rating-gated strategy**: customers who rate 4-5 are redirected to Google to leave a public review, while 1-3 ratings capture private feedback that stays internal.
 
 ### Send Review Request — `POST /api/requests/send`
 
@@ -929,12 +932,12 @@ This feature enables businesses to proactively request reviews from customers vi
 - **Type**: Client Component
 - **Step 1**: Customer selects a star rating (1-5 interactive stars)
 - **Step 2** (conditional):
-  - **4-5 Stars**: Shows "Thank you!" message and redirects to the business's Google review URL
-  - **1-3 Stars**: Shows a feedback textarea for private feedback
+ - **4-5 Stars**: Shows "Thank you!" message and redirects to the business's Google review URL
+ - **1-3 Stars**: Shows a feedback textarea for private feedback
 - **On Private Feedback Submit**:
-  - Inserts into `private_feedback` table (rating + feedback text)
-  - Updates `review_requests.status` to `"reviewed"` if associated with a request
-  - Shows a thank-you confirmation
+ - Inserts into `private_feedback` table (rating + feedback text)
+ - Updates `review_requests.status` to `"reviewed"` if associated with a request
+ - Shows a thank-you confirmation
 
 ### Requests Dashboard — `src/app/(dashboard)/requests/page.tsx`
 
@@ -942,14 +945,14 @@ This feature enables businesses to proactively request reviews from customers vi
 
 **Sections**:
 1. **Stats Cards** (4-column grid):
-   - Total Sent (count of `review_requests`)
-   - Delivery Rate (`delivered / sent * 100`)
-   - Click Rate (`clicked / delivered * 100`)
-   - Review Rate (`reviewed / clicked * 100`)
+ - Total Sent (count of `review_requests`)
+ - Delivery Rate (`delivered / sent * 100`)
+ - Click Rate (`clicked / delivered * 100`)
+ - Review Rate (`reviewed / clicked * 100`)
 2. **Send Request Button**: Opens `SendRequestDialog`
 3. **Requests Table**: Paginated table showing all sent requests with:
-   - Contact name, phone, status badge, sent date, click tracking
-   - Status color coding: sent=blue, delivered=green, clicked=yellow, reviewed=purple
+ - Contact name, phone, status badge, sent date, click tracking
+ - Status color coding: sent=blue, delivered=green, clicked=yellow, reviewed=purple
 
 ### Send Request Dialog — `src/app/(dashboard)/requests/send-request-dialog.tsx`
 
@@ -957,10 +960,10 @@ This feature enables businesses to proactively request reviews from customers vi
 
 - **Form Library**: React Hook Form + Zod validation
 - **Fields**:
-  - Customer name (optional)
-  - Phone number (required, with country code validation)
-  - Channel selector: SMS (active) | Email (disabled with "Coming soon" tooltip)
-  - Schedule for Later toggle (disabled for MVP — always sends immediately)
+ - Customer name (optional)
+ - Phone number (required, with country code validation)
+ - Channel selector: SMS (active) | Email (disabled with "Coming soon" tooltip)
+ - Schedule for Later toggle (disabled for MVP — always sends immediately)
 - **Submit**: POSTs to `/api/requests/send`
 - **Plan Limit Display**: Shows current usage vs. plan limit
 
@@ -999,13 +1002,13 @@ This feature enables businesses to proactively request reviews from customers vi
 Complete sync pipeline:
 1. **Get Valid Token** → `getValidGoogleToken()`
 2. **Fetch from Google**:
-   - List accounts → get first account
-   - List locations (or use saved `external_id`) → get location ID
-   - List reviews for that location
+ - List accounts → get first account
+ - List locations (or use saved `external_id`) → get location ID
+ - List reviews for that location
 3. **Upsert to DB**: For each review:
-   - Map star rating string → number (FIVE→5, FOUR→4, etc.)
-   - Upsert using `(business_id, platform, external_id)` conflict key
-   - Track response status from Google reply data
+ - Map star rating string → number (FIVE→5, FOUR→4, etc.)
+ - Upsert using `(business_id, platform, external_id)` conflict key
+ - Track response status from Google reply data
 4. **AI Analysis**: For new reviews without sentiment → `analyzeReview()`
 5. **SMS Alert**: For urgent reviews after analysis → `sendReviewAlert()`
 6. **Update Stats**: Recalculate total reviews and average rating for platform and business
@@ -1031,6 +1034,8 @@ Complete sync pipeline:
 ---
 
 ## 15. AI Features (Anthropic Claude)
+
+> **Archive warning:** Section title and code samples below are historical. **Current AI stack is Google GenAI** (`@google/genai`, `src/domains/ai/`). Do not add Anthropic SDK based on this section.
 
 ### Client — [src/lib/ai/client.ts](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/lib/ai/client.ts)
 ```typescript
@@ -1074,10 +1079,10 @@ Rules: genuine (not corporate), reference specifics, apologize for negatives, th
 1. Calls Claude (`claude-3-haiku-20240307`) with the `SENTIMENT_PROMPT`
 2. Extracts JSON from response (handles markdown wrapping)
 3. Parses result and updates the review record in DB with:
-   - `sentiment`
-   - `urgency_score`
-   - `themes`
-   - `ai_summary`
+ - `sentiment`
+ - `urgency_score`
+ - `themes`
+ - `ai_summary`
 4. Returns the parsed result (used for alert triggering)
 
 ### API Endpoints
@@ -1136,10 +1141,10 @@ Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
 #### `POST /api/webhooks/stripe`
 - **Signature Verification**: Uses `stripe.webhooks.constructEvent()` with `STRIPE_WEBHOOK_SECRET`
 - **Handled Events**:
-  - `checkout.session.completed` — Updates `organizations.plan_id`, `stripe_subscription_id`, `stripe_customer_id`
-  - `customer.subscription.updated` — Syncs plan changes (upgrades/downgrades)
-  - `customer.subscription.deleted` — Resets organization to `"free"` plan
-  - `invoice.payment_failed` — Logs payment failure (future: notify user)
+ - `checkout.session.completed` — Updates `organizations.plan_id`, `stripe_subscription_id`, `stripe_customer_id`
+ - `customer.subscription.updated` — Syncs plan changes (upgrades/downgrades)
+ - `customer.subscription.deleted` — Resets organization to `"free"` plan
+ - `invoice.payment_failed` — Logs payment failure (future: notify user)
 
 ### Billing UI — [src/components/settings/billing-client.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/settings/billing-client.tsx)
 
@@ -1148,12 +1153,12 @@ Initializes the Stripe SDK with `STRIPE_SECRET_KEY`.
 **Sections**:
 1. **Current Plan Card**: Displays active plan name, price, and status badge
 2. **Usage Stats**: Progress bars showing current usage vs. plan limits for:
-   - Review Requests (x / limit)
-   - Team Members (x / limit)
-   - AI Replies (x / limit)
+ - Review Requests (x / limit)
+ - Team Members (x / limit)
+ - AI Replies (x / limit)
 3. **Plan Cards Grid**: All three plans displayed with feature checklists, price, and:
-   - Current plan → "Current Plan" badge
-   - Upgrade options → "Upgrade" button → calls `POST /api/billing/checkout`
+ - Current plan → "Current Plan" badge
+ - Upgrade options → "Upgrade" button → calls `POST /api/billing/checkout`
 4. **Manage Subscription Button**: Opens Stripe Customer Portal via `POST /api/billing/portal`
 
 ---
@@ -1176,13 +1181,13 @@ Team management allows organization owners and admins to invite new members and 
 
 **Features**:
 1. **Members Section**: Table showing:
-   - User name, email, role (with badge color), joined date
-   - Role change dropdown (Owner can change Admin/Member roles)
-   - Remove member action (with confirmation)
+ - User name, email, role (with badge color), joined date
+ - Role change dropdown (Owner can change Admin/Member roles)
+ - Remove member action (with confirmation)
 2. **Pending Invites Section**: Table showing:
-   - Email, invited role, sent date, expiry status
-   - Resend invitation action
-   - Cancel invitation action
+ - Email, invited role, sent date, expiry status
+ - Resend invitation action
+ - Cancel invitation action
 3. **Role-Based Actions**: Only owners and admins see management controls
 
 ### Invite Member Dialog — [src/components/settings/invite-member-dialog.tsx](file:///Users/ashishdikonda/Documents/Office/ZYENE/Zyene%20Reviews/src/components/settings/invite-member-dialog.tsx)
@@ -1236,19 +1241,19 @@ The Settings area is organized with a sidebar navigation layout.
 
 **Sub-sections** (3 cards):
 1. **Business Information** (`BusinessInfoForm` — 251 lines):
-   - 9 editable fields: name, phone, email, address_line1, city, state, zip, timezone (Select with 5 US timezones), category (Select: Restaurant/Cafe/Bar/Retail/Service/Other)
-   - PATCHes to `/api/businesses/[id]`
+ - 9 editable fields: name, phone, email, address_line1, city, state, zip, timezone (Select with 5 US timezones), category (Select: Restaurant/Cafe/Bar/Retail/Service/Other)
+ - PATCHes to `/api/businesses/[id]`
 2. **Review Settings** (`ReviewSettingsForm` — 203 lines):
-   - `review_request_delay_minutes` — Minutes after visit before sending request (default: 120)
-   - `review_request_min_amount_cents` — Minimum transaction amount (default: $15.00)
-   - `review_request_frequency_cap_days` — Days between requests to same customer (default: 30)
-   - `review_request_sms_enabled` — Toggle SMS review requests
-   - `review_request_email_enabled` — Toggle email review requests
+ - `review_request_delay_minutes` — Minutes after visit before sending request (default: 120)
+ - `review_request_min_amount_cents` — Minimum transaction amount (default: $15.00)
+ - `review_request_frequency_cap_days` — Days between requests to same customer (default: 30)
+ - `review_request_sms_enabled` — Toggle SMS review requests
+ - `review_request_email_enabled` — Toggle email review requests
 3. **Profile** (`ProfileForm`):
-   - Edit user display name (`full_name`)
-   - Disabled email display (read-only)
-   - **Delete Account** button (stub — shows confirmation but not yet implemented)
-   - PATCHes to `/api/users/me`
+ - Edit user display name (`full_name`)
+ - Disabled email display (read-only)
+ - **Delete Account** button (stub — shows confirmation but not yet implemented)
+ - PATCHes to `/api/users/me`
 
 ### Businesses API — `PATCH /api/businesses/[id]`
 - Updates business record fields (name, slug, category, etc.)
@@ -1273,14 +1278,14 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
 ### Email Integration (Resend)
 - **Library**: `resend` SDK
 - **Templates**: React Email components in `src/lib/resend/templates/`
-  - `ReviewAlertEmail`: Immediate alert for high/medium urgency reviews
-  - `DailyDigestEmail`: Summary of previous day's activity
-  - `WelcomeEmail`: Sent on signup
+ - `ReviewAlertEmail`: Immediate alert for high/medium urgency reviews
+ - `DailyDigestEmail`: Summary of previous day's activity
+ - `WelcomeEmail`: Sent on signup
 - **Daily Digest**: A Vercel Cron job (`/api/cron/daily-digest`) runs daily (13:00 UTC) to aggregate low-urgency reviews.
 - **Urgency Tiers**:
-  - **High (7-10) / 1-2 Stars**: SMS + Email Alert
-  - **Medium (4-6)**: Email Alert
-  - **Low (1-3) / Neutral**: Daily Digest Only
+ - **High (7-10) / 1-2 Stars**: SMS + Email Alert
+ - **Medium (4-6)**: Email Alert
+ - **Low (1-3) / Neutral**: Daily Digest Only
 
 ### Send SMS — `src/lib/twilio/send-sms.ts`
 
@@ -1301,11 +1306,11 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
 2. Get all users in the organization via `organization_members`
 3. Get their `notification_preferences` where `sms_enabled = true`
 4. For each user with preferences:
-   - Check user's custom urgency threshold
-   - Check quiet hours (supports midnight crossover: 22:00 → 07:00)
-   - If not in quiet hours → send SMS
-   - SMS format:
-     ```
+ - Check user's custom urgency threshold
+ - Check quiet hours (supports midnight crossover: 22:00 → 07:00)
+ - If not in quiet hours → send SMS
+ - SMS format:
+ ```
      ⚠️ New 1★ review for Big Mike's BBQ:
      "The food was terrible and the service was slow..."
      — John Smith
@@ -1324,7 +1329,7 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
 - **Type**: Client Component
 - **Form Library**: React Hook Form + Zod validation
 - **Schema**:
-  ```typescript
+ ```typescript
   const formSchema = z.object({
       sms_enabled: z.boolean(),
       phone_number: z.string().optional(),
@@ -1336,12 +1341,12 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
   });
   ```
 - **Fields**:
-  - SMS toggle (Switch component)
-  - Phone number (shown conditionally when SMS enabled)
-  - Minimum urgency score (Select: 5-10 with labels: Moderate/Urgent/Critical)
-  - Quiet hours start/end (time inputs, shown conditionally)
-  - Email alerts toggle (Switch component)
-  - Daily digest toggle (Switch component)
+ - SMS toggle (Switch component)
+ - Phone number (shown conditionally when SMS enabled)
+ - Minimum urgency score (Select: 5-10 with labels: Moderate/Urgent/Critical)
+ - Quiet hours start/end (time inputs, shown conditionally)
+ - Email alerts toggle (Switch component)
+ - Daily digest toggle (Switch component)
 - **On Submit**: Converts `min_urgency_score` to integer, POSTs to `/api/settings/notifications`
 
 #### Save API — `POST /api/settings/notifications`
@@ -1351,8 +1356,8 @@ The system provides multi-channel notifications powered by **Twilio** (SMS) and 
 ### Twilio Webhook — `POST /api/webhooks/twilio`
 - Receives incoming SMS from Twilio
 - Handles opt-out/in commands:
-  - `STOP` → Inserts into `sms_opt_outs`
-  - `START` → Removes from `sms_opt_outs`
+ - `STOP` → Inserts into `sms_opt_outs`
+ - `START` → Removes from `sms_opt_outs`
 
 ---
 
@@ -1472,8 +1477,8 @@ Based on production setup (e.g., EasyCron/Vercel Cron):
 - **Schedule**: `0 */6 * * *` (Every 6 hours)
 - **Timezone**: America/New_York (or UTC)
 - **Auth Header**:
-  - Key: `Authorization`
-  - Value: `Bearer [CRON_SECRET_KEY]`
+ - Key: `Authorization`
+ - Value: `Bearer [CRON_SECRET_KEY]`
 - **Timeout**: 30s+
 
 | `POST` | `/api/reviews/[id]/reply` | User | Submit reply to Google review |
@@ -1501,11 +1506,11 @@ Based on production setup (e.g., EasyCron/Vercel Cron):
 1. **Connect repository**: Link your **private** Git host (for example GitHub) to Vercel with deploy credentials your org controls.
 2. **Environment Variables**: Copy all variables from `.env.local` to Vercel Project Settings.
 3. **Domain Configuration**:
-   - Add `zyene.in` (Production Root)
-   - Add `www.zyene.in` -> Redirect to `zyene.in`
-   - **Critical Subdomains**:
-     - `auth.zyene.in` (CNAME to `cname.vercel-dns.com`)
-     - `dashboard.zyene.in` (CNAME to `cname.vercel-dns.com`)
+ - Add `zyene.in` (Production Root)
+ - Add `www.zyene.in` -> Redirect to `zyene.in`
+ - **Critical Subdomains**:
+ - `auth.zyene.in` (CNAME to `cname.vercel-dns.com`)
+ - `dashboard.zyene.in` (CNAME to `cname.vercel-dns.com`)
 4. **Deploy**: Trigger deployment.
 
 ### DNS Verification

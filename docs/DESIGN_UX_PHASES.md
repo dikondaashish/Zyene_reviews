@@ -66,7 +66,7 @@ Roadmap for `app.zyenereviews.com`. Each phase builds on the last. Use `docs/DES
 
 ## How to use `.agent` skills
 
-- **`ui-ux-pro-max`:** Run design-system searches for stack-specific patterns (Next.js, shadcn) when implementing a phase.
+- **`ui-ux-pro-max`:** Cursor skill at `.cursor/skills/ui-ux-pro-max/` — run design-system searches for stack-specific patterns (Next.js, shadcn) when implementing a phase.
 - **`find-skills`:** Add community skills (e.g. a11y audits) if you want automated checklists beyond this doc.
 
 ---

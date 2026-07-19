@@ -65,9 +65,10 @@ Highlight metrics: review count growth, star rating lift, hours saved on manual 
 |------|----------|----------------|
 | Starter | 1 location | $29.99/mo |
 | Professional | 2–3 locations | $59.99/mo |
-| **Enterprise** | 4+ locations, SSO, SLA | Custom — contact sales |
+| **Enterprise** | 4+ locations, SLA; SSO Planned | Custom — contact sales |
 
-**Enterprise includes:** unlimited locations, white-label widgets, dedicated AM, SSO, uptime SLA, managed API.
+**Enterprise includes (shipped / contracted):** unlimited locations, white-label widgets, dedicated AM, uptime SLA, managed API.  
+**Enterprise Planned:** SSO (SAML/OIDC) — not implemented in product yet; scoped during procurement.
 
 **Agency program:** bulk licensing + 20% first-year referral commission — [zyenereviews.com/agencies](https://zyenereviews.com/agencies)
 
@@ -99,7 +100,7 @@ Highlight metrics: review count growth, star rating lift, hours saved on manual 
 ## 9. Next steps
 
 1. **Book demo** — [zyenereviews.com/demo](https://zyenereviews.com/demo)  
-2. **Technical discovery** — locations, SSO, integrations (POS, CRM)  
+2. **Technical discovery** — locations, Planned SSO needs, integrations (live: Google/Yelp/Facebook/API; POS Coming Soon; CRM via API/webhooks)  
 3. **Pilot** — 1–3 locations, 30-day success criteria  
 4. **Enterprise agreement** — SLA, DPA, custom MSA as needed  
 
@@ -111,7 +112,7 @@ Highlight metrics: review count growth, star rating lift, hours saved on manual 
 
 **Do you gate negative reviews?** No. Shield routes to private feedback; public reviews are never blocked by star rating.
 
-**SSO?** SAML/OIDC for Enterprise — scoped during procurement.
+**SSO?** Planned for Enterprise (SAML/OIDC). Not shipped in the app yet — scoped during procurement.
 
 **Uptime SLA?** 99.9% monthly target in enterprise agreements with defined support tiers.
 
