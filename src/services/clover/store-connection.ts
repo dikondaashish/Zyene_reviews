@@ -42,9 +42,10 @@ export async function storeCloverConnection(args: {
         updated_at: new Date().toISOString(),
         last_error: null,
         auto_send_enabled: false,
+        disconnected_at: null,
     };
 
-    const { error } = await admin.from("clover_connections").upsert(row, {
+    const { error } = await admin.from("clover_connections").upsert(row as never, {
         onConflict: "business_id",
     });
     if (error) {

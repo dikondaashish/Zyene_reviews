@@ -4,15 +4,16 @@ import { after } from "next/server";
 import { getCloverWebhookAuth } from "@/services/clover/config";
 import {
     isCloverVerificationPayload,
+    parseCloverAppEvents,
     parseCloverPaymentEvents,
     type CloverWebhookPayload,
 } from "@/services/clover/webhook-parse";
+import { processCloverAppEvent } from "@/services/clover/process-app-event";
 import { processCloverPaymentEvent } from "@/services/clover/process-payment-event";
 
 /**
  * POST /api/webhooks/clover
- * Verifies X-Clover-Auth, handles dashboard verification, processes payment events.
- * Phase 1: resolves contact and logs — does not send review requests.
+ * Verifies X-Clover-Auth, handles dashboard verification, App + payment events.
  */
 export async function POST(request: Request) {
     const expectedAuth = getCloverWebhookAuth();
@@ -25,7 +26,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    // Dashboard verification (no auth header yet)
     if (isCloverVerificationPayload(payload)) {
         logger.info(
             { verificationCode: payload.verificationCode },
@@ -39,15 +39,26 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const events = parseCloverPaymentEvents(payload);
+    const paymentEvents = parseCloverPaymentEvents(payload);
+    const appEvents = parseCloverAppEvents(payload);
     logger.info(
-        { merchantCount: Object.keys(payload.merchants ?? {}).length, paymentEvents: events.length },
+        {
+            merchantCount: Object.keys(payload.merchants ?? {}).length,
+            paymentEvents: paymentEvents.length,
+            appEvents: appEvents.length,
+        },
         "[clover] webhook received",
     );
 
-    // Process after response so Clover gets 200 quickly
     after(async () => {
-        for (const event of events) {
+        for (const event of appEvents) {
+            try {
+                await processCloverAppEvent(event);
+            } catch (err: unknown) {
+                logger.error({ err, event }, "[clover] after() app event failed");
+            }
+        }
+        for (const event of paymentEvents) {
             try {
                 await processCloverPaymentEvent(event);
             } catch (err: unknown) {
@@ -56,5 +67,8 @@ export async function POST(request: Request) {
         }
     });
 
-    return NextResponse.json({ ok: true, accepted: events.length });
+    return NextResponse.json({
+        ok: true,
+        accepted: paymentEvents.length + appEvents.length,
+    });
 }

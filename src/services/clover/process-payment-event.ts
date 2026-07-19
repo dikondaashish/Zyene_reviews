@@ -46,12 +46,13 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
         )
         .eq("merchant_id", event.merchantId)
         .eq("environment", env)
+        .is("disconnected_at", null)
         .maybeSingle();
 
     if (connError || !connection) {
         logger.warn(
             { merchantId: event.merchantId, paymentId: event.paymentId },
-            "[clover] payment event for unknown merchant — ignore",
+            "[clover] payment event for unknown or disconnected merchant — ignore",
         );
         return;
     }
