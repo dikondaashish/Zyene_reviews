@@ -11,13 +11,15 @@ import {
     resolveContactFromCloverPayment,
     type CloverResolvedContact,
 } from "@/services/clover/resolve-contact";
+import {
+    cloverStatusFromSendOutcome,
+    sendCloverReviewRequest,
+} from "@/services/clover/send-from-payment";
 import type { ParsedPaymentEvent } from "@/services/clover/webhook-parse";
 
 type Admin = ReturnType<typeof createAdminClient>;
 
-/**
- * Phase 1: fetch payment, resolve contact, persist audit row, log — never send.
- */
+/** Phase 2: resolve contact, then send when sandbox + auto_send_enabled. */
 export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Promise<void> {
     const admin = createAdminClient();
     const env = getCloverEnvironment();
@@ -25,7 +27,7 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
     const { data: connection, error: connError } = await admin
         .from("clover_connections")
         .select(
-            "id, business_id, merchant_id, access_token_encrypted, refresh_token_encrypted, access_token_expires_at",
+            "id, business_id, merchant_id, environment, auto_send_enabled, access_token_encrypted, refresh_token_encrypted, access_token_expires_at",
         )
         .eq("merchant_id", event.merchantId)
         .eq("environment", env)
@@ -70,15 +72,28 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
             });
         }
 
-        const status = contact.email || contact.phone ? "resolved" : "skipped_no_contact";
+        const sendOutcome = await sendCloverReviewRequest({
+            businessId: connection.business_id,
+            autoSendEnabled: connection.auto_send_enabled,
+            environment: connection.environment,
+            contact,
+        });
+
+        const status = cloverStatusFromSendOutcome(sendOutcome);
+        const patch: Record<string, unknown> = {
+            status,
+            customer_email: contact.email,
+            customer_phone: contact.phone,
+            customer_name: contact.name,
+        };
+        if (sendOutcome.kind === "sent") patch.review_request_id = sendOutcome.requestId;
+        if (sendOutcome.kind === "skipped_guard" || sendOutcome.kind === "send_failed") {
+            patch.error_message = sendOutcome.message.slice(0, 500);
+        }
+
         await admin
             .from("clover_payment_events")
-            .update({
-                status,
-                customer_email: contact.email,
-                customer_phone: contact.phone,
-                customer_name: contact.name,
-            })
+            .update(patch)
             .eq("merchant_id", event.merchantId)
             .eq("payment_id", event.paymentId)
             .eq("event_type", event.eventType);
@@ -89,13 +104,9 @@ export async function processCloverPaymentEvent(event: ParsedPaymentEvent): Prom
                 merchantId: event.merchantId,
                 paymentId: event.paymentId,
                 status,
-                hasEmail: Boolean(contact.email),
-                hasPhone: Boolean(contact.phone),
-                customerName: contact.name,
-                customerEmail: contact.email,
-                customerPhone: contact.phone,
+                requestId: sendOutcome.kind === "sent" ? sendOutcome.requestId : null,
             },
-            "[clover] Phase1 contact resolution (no send)",
+            "[clover] Phase2 payment processed",
         );
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "unknown error";
@@ -118,8 +129,7 @@ async function resolveViaCustomerIds(args: {
     accessToken: string;
 }): Promise<CloverResolvedContact> {
     const empty: CloverResolvedContact = { email: null, phone: null, name: null };
-    const ids = extractCloverCustomerIds(args.payment);
-    for (const customerId of ids) {
+    for (const customerId of extractCloverCustomerIds(args.payment)) {
         const customer = await fetchCloverCustomer({
             merchantId: args.merchantId,
             customerId,

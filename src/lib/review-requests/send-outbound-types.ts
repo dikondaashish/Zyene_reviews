@@ -6,6 +6,7 @@ export type OutboundTriggerSource =
     | "manual"
     | "campaign"
     | "pos_square"
+    | "pos_clover"
     | "zapier"
     | "public_link";
 

@@ -8,6 +8,7 @@ import {
     resolveContactFromCloverPayment,
 } from "@/services/clover/resolve-contact";
 import { cloverUnixSecondsToIso } from "@/services/clover/config";
+import { pickCloverOutboundChannel } from "@/services/clover/pick-channel";
 
 describe("parseCloverPaymentEvents", () => {
     it("extracts payment IDs from P: objectIds", () => {
@@ -89,6 +90,48 @@ describe("resolveContactFromCloverPayment", () => {
                 order: { customers: { elements: [{ id: "HY2XZS8Z7WQGG" }] } },
             }),
         ).toEqual(["HY2XZS8Z7WQGG"]);
+    });
+});
+
+describe("pickCloverOutboundChannel", () => {
+    it("prefers email when both email and phone are present", () => {
+        expect(
+            pickCloverOutboundChannel({
+                email: "a@b.com",
+                phone: "+15551212",
+                name: null,
+            }),
+        ).toBe("email");
+    });
+
+    it("returns email when only email", () => {
+        expect(
+            pickCloverOutboundChannel({
+                email: "a@b.com",
+                phone: null,
+                name: null,
+            }),
+        ).toBe("email");
+    });
+
+    it("returns sms when only phone", () => {
+        expect(
+            pickCloverOutboundChannel({
+                email: null,
+                phone: "+15551212",
+                name: null,
+            }),
+        ).toBe("sms");
+    });
+
+    it("returns null when neither", () => {
+        expect(
+            pickCloverOutboundChannel({
+                email: null,
+                phone: null,
+                name: null,
+            }),
+        ).toBeNull();
     });
 });
 
