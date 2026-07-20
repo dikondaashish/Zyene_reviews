@@ -75,7 +75,7 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
                         <div>
                             <p className="text-base font-semibold">Square</p>
                             <p className="text-sm text-muted-foreground">
-                                Auto-detect payments and resolve customer contact (sandbox spike)
+                                Auto-send review requests after Square payments
                             </p>
                         </div>
                     </div>
@@ -96,13 +96,13 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
                         Merchant <span className="font-mono">{connection.merchantId}</span>
                         {" · "}
                         {connection.environment}
+                        {" · "}
+                        Sends only when auto-send is enabled for this connection
                     </p>
                 ) : (
                     <p className="text-xs text-muted-foreground">
-                        Phase 1 logs resolved email/phone from payments — does not send review
-                        requests yet. For sandbox: open your Sandbox Seller Dashboard in another
-                        tab first, then click Connect (otherwise Square returns a blank page /
-                        400).
+                        Connect Square to resolve payment contacts and auto-send review requests
+                        when enabled.
                     </p>
                 )}
                 <Button

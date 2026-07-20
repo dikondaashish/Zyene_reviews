@@ -9,36 +9,30 @@ import {
     resolveContactFromSquarePayment,
     type SquareResolvedContact,
 } from "@/services/square/resolve-contact";
+import {
+    sendSquareReviewRequest,
+    squareStatusFromSendOutcome,
+} from "@/services/square/send-from-payment";
 import type { ParsedSquarePaymentEvent } from "@/services/square/webhook-parse";
 
 type Admin = ReturnType<typeof createAdminClient>;
 
 type ExistingEvent = {
     id: string;
-    event_type: string;
     status: string;
     customer_email: string | null;
     customer_phone: string | null;
+    review_request_id: string | null;
 };
 
-/**
- * Phase 1: resolve contact and log only — never sends review requests.
- * payment.created inserts the audit row; payment.updated may enrich contact
- * when Square attaches customer_id asynchronously (common for payment links).
- */
+/** Phase 2: resolve contact, then send when auto_send_enabled. */
 export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent): Promise<void> {
     const admin = createAdminClient();
     const env = getSquareEnvironment();
     const isCreate = event.eventType === "payment.created";
     const isUpdate = event.eventType === "payment.updated";
 
-    if (!isCreate && !isUpdate) {
-        logger.info(
-            { paymentId: event.paymentId, eventType: event.eventType },
-            "[square] unsupported payment event ignored",
-        );
-        return;
-    }
+    if (!isCreate && !isUpdate) return;
 
     const { data: connection, error: connError } = await admin
         .from("square_connections")
@@ -62,30 +56,26 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
 
     if (isCreate) {
         if (existing) {
-            logger.info(
-                { paymentId: event.paymentId },
-                "[square] duplicate payment.created skipped",
-            );
+            logger.info({ paymentId: event.paymentId }, "[square] duplicate payment.created skipped");
             return;
         }
-        const inserted = await insertEvent(admin, {
+        if (!(await insertEvent(admin, {
             businessId: connection.business_id,
             merchantId: event.merchantId,
             paymentId: event.paymentId,
             eventType: event.eventType,
-        });
-        if (!inserted) return;
+        }))) {
+            return;
+        }
     } else if (!existing) {
-        logger.info(
-            { paymentId: event.paymentId },
-            "[square] payment.updated with no prior row — ignore",
-        );
+        logger.info({ paymentId: event.paymentId }, "[square] payment.updated with no prior row — ignore");
+        return;
+    } else if (existing.review_request_id || existing.status === "sent") {
+        logger.info({ paymentId: event.paymentId }, "[square] payment already sent — ignore update");
         return;
     } else if (existing.customer_email || existing.customer_phone) {
-        logger.info(
-            { paymentId: event.paymentId },
-            "[square] payment.updated contact already resolved — ignore",
-        );
+        // Contact already known; do not re-send on tip/status updates.
+        logger.info({ paymentId: event.paymentId }, "[square] payment.updated contact already set — ignore");
         return;
     }
 
@@ -101,17 +91,28 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             contact = await resolveViaCustomerId({ payment, accessToken });
         }
 
-        const status = contact.email || contact.phone ? "resolved" : "skipped_no_contact";
+        const sendOutcome = await sendSquareReviewRequest({
+            businessId: connection.business_id,
+            autoSendEnabled: connection.auto_send_enabled,
+            environment: connection.environment,
+            contact,
+        });
+
+        const status = squareStatusFromSendOutcome(sendOutcome);
+        const patch: Record<string, unknown> = {
+            status,
+            customer_email: contact.email,
+            customer_phone: contact.phone,
+            customer_name: contact.name,
+        };
+        if (sendOutcome.kind === "sent") patch.review_request_id = sendOutcome.requestId;
+        if (sendOutcome.kind === "skipped_guard" || sendOutcome.kind === "send_failed") {
+            patch.error_message = sendOutcome.message.slice(0, 500);
+        }
 
         await admin
             .from("square_payment_events")
-            .update({
-                status,
-                customer_email: contact.email,
-                customer_phone: contact.phone,
-                customer_name: contact.name,
-                error_message: null,
-            })
+            .update(patch)
             .eq("merchant_id", event.merchantId)
             .eq("payment_id", event.paymentId);
 
@@ -122,10 +123,9 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
                 paymentId: event.paymentId,
                 eventType: event.eventType,
                 status,
-                hasEmail: Boolean(contact.email),
-                hasPhone: Boolean(contact.phone),
+                requestId: sendOutcome.kind === "sent" ? sendOutcome.requestId : null,
             },
-            "[square] Phase1 payment processed (log only)",
+            "[square] Phase2 payment processed",
         );
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "unknown error";
@@ -148,7 +148,7 @@ async function findExistingEvent(
 ): Promise<ExistingEvent | null> {
     const { data } = await admin
         .from("square_payment_events")
-        .select("id, event_type, status, customer_email, customer_phone")
+        .select("id, status, customer_email, customer_phone, review_request_id")
         .eq("merchant_id", merchantId)
         .eq("payment_id", paymentId)
         .maybeSingle();
@@ -162,7 +162,6 @@ async function resolveViaCustomerId(args: {
     const empty: SquareResolvedContact = { email: null, phone: null, name: null };
     const customerId = extractSquareCustomerId(args.payment);
     if (!customerId) return empty;
-
     const customer = await fetchSquareCustomer({
         customerId,
         accessToken: args.accessToken,

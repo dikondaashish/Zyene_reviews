@@ -513,6 +513,7 @@ export type Database = {
           id: string
           merchant_id: string
           payment_id: string
+          review_request_id: string | null
           status: string
         }
         Insert: {
@@ -526,6 +527,7 @@ export type Database = {
           id?: string
           merchant_id: string
           payment_id: string
+          review_request_id?: string | null
           status: string
         }
         Update: {
@@ -539,6 +541,7 @@ export type Database = {
           id?: string
           merchant_id?: string
           payment_id?: string
+          review_request_id?: string | null
           status?: string
         }
         Relationships: [
@@ -547,6 +550,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "square_payment_events_review_request_id_fkey"
+            columns: ["review_request_id"]
+            isOneToOne: false
+            referencedRelation: "review_requests"
             referencedColumns: ["id"]
           },
         ]
