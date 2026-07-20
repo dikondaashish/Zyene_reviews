@@ -12,6 +12,7 @@ export async function storeSquareConnection(args: {
     tokens: SquareTokenResponse;
 }): Promise<void> {
     const { admin, businessId, merchantId, tokens } = args;
+    const environment = getSquareEnvironment();
 
     const { data: encAccess, error: encAccessError } = await admin.rpc("encrypt_token", {
         plaintext: tokens.access_token,
@@ -29,13 +30,28 @@ export async function storeSquareConnection(args: {
         encRefresh = data;
     }
 
+    // One merchant ↔ one business. Clear prior link for this business or this merchant+env
+    // so reconnect / switch-business does not hit unique (merchant_id, environment).
+    const { error: delBizErr } = await admin
+        .from("square_connections")
+        .delete()
+        .eq("business_id", businessId);
+    if (delBizErr) throw delBizErr;
+
+    const { error: delMerchErr } = await admin
+        .from("square_connections")
+        .delete()
+        .eq("merchant_id", merchantId)
+        .eq("environment", environment);
+    if (delMerchErr) throw delMerchErr;
+
     const row = {
         business_id: businessId,
         merchant_id: merchantId,
         access_token_encrypted: encAccess as string,
         refresh_token_encrypted: encRefresh,
         access_token_expires_at: tokens.expires_at ?? null,
-        environment: getSquareEnvironment(),
+        environment,
         connected_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         last_error: null,
@@ -43,9 +59,7 @@ export async function storeSquareConnection(args: {
         disconnected_at: null,
     };
 
-    const { error } = await admin.from("square_connections").upsert(row as never, {
-        onConflict: "business_id",
-    });
+    const { error } = await admin.from("square_connections").insert(row);
     if (error) {
         logger.error({ err: error, businessId, merchantId }, "[square] store connection failed");
         throw error;
