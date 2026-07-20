@@ -1,11 +1,8 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import {
-    fetchSquareCustomer,
-    fetchSquarePayment,
-    refreshSquareAccessToken,
-} from "@/services/square/api-client";
+import { fetchSquareCustomer, fetchSquarePayment } from "@/services/square/api-client";
 import { getSquareEnvironment } from "@/services/square/config";
+import { decryptSquareAccessToken } from "@/services/square/decrypt-access-token";
 import {
     extractSquareCustomerId,
     resolveContactFromSquareCustomer,
@@ -78,26 +75,22 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             eventType: event.eventType,
         });
         if (!inserted) return;
-    } else {
-        // payment.updated — only enrich rows that still lack contact
-        if (!existing) {
-            logger.info(
-                { paymentId: event.paymentId },
-                "[square] payment.updated with no prior row — ignore",
-            );
-            return;
-        }
-        if (existing.customer_email || existing.customer_phone) {
-            logger.info(
-                { paymentId: event.paymentId },
-                "[square] payment.updated contact already resolved — ignore",
-            );
-            return;
-        }
+    } else if (!existing) {
+        logger.info(
+            { paymentId: event.paymentId },
+            "[square] payment.updated with no prior row — ignore",
+        );
+        return;
+    } else if (existing.customer_email || existing.customer_phone) {
+        logger.info(
+            { paymentId: event.paymentId },
+            "[square] payment.updated contact already resolved — ignore",
+        );
+        return;
     }
 
     try {
-        const accessToken = await decryptAccessToken(admin, connection);
+        const accessToken = await decryptSquareAccessToken(admin, connection);
         const payment = await fetchSquarePayment({
             paymentId: event.paymentId,
             accessToken,
@@ -194,33 +187,4 @@ async function insertEvent(
         throw error;
     }
     return true;
-}
-
-async function decryptAccessToken(
-    admin: Admin,
-    connection: {
-        id: string;
-        access_token_encrypted: string;
-        refresh_token_encrypted: string | null;
-        access_token_expires_at: string | null;
-    },
-): Promise<string> {
-    const expiresAt = connection.access_token_expires_at
-        ? new Date(connection.access_token_expires_at).getTime()
-        : null;
-    const expired = expiresAt != null && expiresAt < Date.now() + 60_000;
-
-    if (expired && connection.refresh_token_encrypted) {
-        const { data: refreshPlain, error } = await admin.rpc("decrypt_token", {
-            ciphertext: connection.refresh_token_encrypted,
-        });
-        if (error || !refreshPlain) throw error ?? new Error("decrypt refresh failed");
-        return refreshSquareAccessToken(admin, connection.id, refreshPlain);
-    }
-
-    const { data: accessPlain, error } = await admin.rpc("decrypt_token", {
-        ciphertext: connection.access_token_encrypted,
-    });
-    if (error || !accessPlain) throw error ?? new Error("decrypt access failed");
-    return accessPlain;
 }
