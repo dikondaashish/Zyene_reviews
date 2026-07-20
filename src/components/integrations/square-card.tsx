@@ -15,7 +15,8 @@ const SQUARE_ERROR_MESSAGES: Record<string, string> = {
     auth: "You must be signed in to connect Square.",
     forbidden: "You do not have access to connect Square for this business.",
     no_merchant: "Square did not return a merchant ID.",
-    token_failed: "Could not exchange the Square authorization code. Check Application ID/Secret.",
+    token_failed:
+        "Could not exchange the Square authorization code. In Vercel, SQUARE_APPLICATION_SECRET must be the OAuth Application Secret (sandbox-sq0csb-…), not an EAAA access token.",
 };
 
 export type SquareConnectionSummary = {

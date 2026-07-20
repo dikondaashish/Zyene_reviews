@@ -42,8 +42,23 @@ export function getSquareWebhookNotificationUrl(): string {
     );
 }
 
+/**
+ * Application Secret looks like `sandbox-sq0csb-…` / `sq0csp-…`.
+ * Values starting with `EAAA` are access tokens — a common mix-up that breaks ObtainToken.
+ */
+export function squareApplicationSecretLooksValid(
+    secret = getSquareApplicationSecret(),
+): boolean {
+    if (!secret) return false;
+    if (secret.startsWith("EAAA")) return false;
+    return /^(sandbox-)?sq0cs[pb]-/.test(secret);
+}
+
 export function isSquareConfigured(): boolean {
-    return Boolean(getSquareApplicationId() && getSquareApplicationSecret());
+    const secret = getSquareApplicationSecret();
+    return Boolean(
+        getSquareApplicationId() && secret && squareApplicationSecretLooksValid(secret),
+    );
 }
 
 /** Scopes requested at authorize time (not dashboard checkboxes). */
