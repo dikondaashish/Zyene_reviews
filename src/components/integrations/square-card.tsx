@@ -97,7 +97,9 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
                 ) : (
                     <p className="text-xs text-muted-foreground">
                         Phase 1 logs resolved email/phone from payments — does not send review
-                        requests yet.
+                        requests yet. For sandbox: open your Sandbox Seller Dashboard in another
+                        tab first, then click Connect (otherwise Square returns a blank page /
+                        400).
                     </p>
                 )}
                 <Button

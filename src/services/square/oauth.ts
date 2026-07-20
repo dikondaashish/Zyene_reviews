@@ -37,15 +37,15 @@ export function buildSquareAuthorizeUrl(state: SquareOAuthState): string {
     const appId = getSquareApplicationId();
     if (!appId) throw new Error("SQUARE_APPLICATION_ID is not configured");
 
+    // Code-flow authorize: client_id + scope + state only.
+    // Do not pass redirect_uri here (PKCE-only); a mismatch with Developer Console → 400.
+    // Do not pass session=false in sandbox (unsupported → blank page / 400).
     const params = new URLSearchParams({
         client_id: appId,
         scope: SQUARE_OAUTH_SCOPES.join(" "),
         state: encodeSquareOAuthState(state),
-        redirect_uri: getSquareOAuthRedirectUri(),
     });
 
-    // session=false is production-only. Sandbox only supports the default (session=true);
-    // passing false often yields a blank authorize page.
     if (getSquareEnvironment() === "production") {
         params.set("session", "false");
     }
