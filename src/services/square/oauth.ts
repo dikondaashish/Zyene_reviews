@@ -40,9 +40,15 @@ export function buildSquareAuthorizeUrl(state: SquareOAuthState): string {
     const params = new URLSearchParams({
         client_id: appId,
         scope: SQUARE_OAUTH_SCOPES.join(" "),
-        session: "false",
         state: encodeSquareOAuthState(state),
+        redirect_uri: getSquareOAuthRedirectUri(),
     });
+
+    // session=false is production-only. Sandbox only supports the default (session=true);
+    // passing false often yields a blank authorize page.
+    if (getSquareEnvironment() === "production") {
+        params.set("session", "false");
+    }
 
     return `${getSquareConnectBaseUrl()}/oauth2/authorize?${params.toString()}`;
 }
