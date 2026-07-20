@@ -98,17 +98,11 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             contact,
         });
 
-        // Race: payment.updated can run while payment.created is still sending.
-        // Do not overwrite a successful send with skipped_guard from the frequency cap.
+        // Race: payment.updated may finish after payment.created already sent.
         const latest = await findExistingEvent(admin, event.merchantId, event.paymentId);
-        if (latest?.review_request_id || latest?.status === "sent") {
-            if (sendOutcome.kind !== "sent") {
-                logger.info(
-                    { paymentId: event.paymentId, existingStatus: latest.status },
-                    "[square] preserving prior sent row after concurrent webhook",
-                );
-                return;
-            }
+        if ((latest?.review_request_id || latest?.status === "sent") && sendOutcome.kind !== "sent") {
+            logger.info({ paymentId: event.paymentId }, "[square] preserving prior sent row");
+            return;
         }
 
         const status = squareStatusFromSendOutcome(sendOutcome);
