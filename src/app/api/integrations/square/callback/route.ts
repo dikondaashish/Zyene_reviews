@@ -60,17 +60,22 @@ export async function GET(request: Request) {
         }
 
         const admin = createAdminClient();
-        await storeSquareConnection({
-            admin,
-            businessId: state.businessId,
-            merchantId,
-            tokens,
-        });
+        try {
+            await storeSquareConnection({
+                admin,
+                businessId: state.businessId,
+                merchantId,
+                tokens,
+            });
+        } catch (storeErr: unknown) {
+            logger.error({ err: storeErr, businessId: state.businessId, merchantId }, "[square] OAuth store failed");
+            return redirect("?square_error=store_failed");
+        }
 
         logger.info({ businessId: state.businessId, merchantId }, "[square] OAuth connected");
         return redirect("?square_connected=1");
     } catch (err: unknown) {
-        logger.error({ err }, "[square] OAuth callback failed");
+        logger.error({ err }, "[square] OAuth token exchange failed");
         return redirect("?square_error=token_failed");
     }
 }
