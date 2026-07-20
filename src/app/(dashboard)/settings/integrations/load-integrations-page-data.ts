@@ -66,20 +66,28 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const connectedCount = connectedPlatforms.length;
 
     const supabase = await createClient();
-    const [visibleRollupMap, cloverResult, squareResult] = await Promise.all([
-        fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
-        supabase
-            .from("clover_connections")
-            .select("merchant_id, environment, connected_at")
-            .eq("business_id", business.id)
-            .maybeSingle(),
-        supabase
-            .from("square_connections")
-            .select("merchant_id, environment, connected_at")
-            .eq("business_id", business.id)
-            .is("disconnected_at", null)
-            .maybeSingle(),
-    ]);
+    const [visibleRollupMap, cloverResult, squareResult, squareLastEventResult] =
+        await Promise.all([
+            fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
+            supabase
+                .from("clover_connections")
+                .select("merchant_id, environment, connected_at")
+                .eq("business_id", business.id)
+                .maybeSingle(),
+            supabase
+                .from("square_connections")
+                .select("merchant_id, environment, connected_at, auto_send_enabled")
+                .eq("business_id", business.id)
+                .is("disconnected_at", null)
+                .maybeSingle(),
+            supabase
+                .from("square_payment_events")
+                .select("status, customer_email, created_at")
+                .eq("business_id", business.id)
+                .order("created_at", { ascending: false })
+                .limit(1)
+                .maybeSingle(),
+        ]);
     const visibleRollup = visibleRollupMap.get(business.id);
     const totalReviews = visibleRollup?.totalVisible ?? 0;
 
@@ -93,11 +101,20 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         : null;
 
     const squareRow = squareResult.data;
+    const lastEventRow = squareLastEventResult.data;
     const squareConnection: SquareConnectionSummary = squareRow
         ? {
               merchantId: squareRow.merchant_id,
               environment: squareRow.environment,
               connectedAt: squareRow.connected_at,
+              autoSendEnabled: squareRow.auto_send_enabled,
+              lastEvent: lastEventRow
+                  ? {
+                        status: lastEventRow.status,
+                        customerEmail: lastEventRow.customer_email,
+                        createdAt: lastEventRow.created_at,
+                    }
+                  : null,
           }
         : null;
 

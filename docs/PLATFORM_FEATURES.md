@@ -30,11 +30,11 @@ One line per capability. Code is the source of truth — do not expand here.
 
 Status tags: **Planned** | **Coming Soon** | **Partially Implemented**.
 
-### Campaign `pos_payment` trigger — Coming Soon
+### Campaign `pos_payment` trigger — Coming Soon / Partially Implemented
 
 - **Intent:** Auto-send a review request after a POS payment (Square / Clover / Toast).
-- **Today:** Trigger enum exists; campaign builder locks the option (`available: false` in `new-campaign-basics-step.tsx`). Integrations UI shows `PlaceholderCard` only (`integrations-pos-developer-sections.tsx`).
-- **Missing:** Live POS OAuth/webhooks, payment→request pipeline, production send path.
+- **Today:** Square OAuth + webhooks + auto-send (Integrations UI toggle) are live in sandbox; Clover has OAuth/webhook spike; Toast is placeholder. Campaign builder still locks `pos_payment` (`available: false`).
+- **Missing:** Square production App Marketplace polish, Clover/Toast parity, unlock campaign `pos_payment` trigger.
 - **Spec detail:** `docs/ROADMAP.md` (POS row + related drip/POS phases).
 
 ### Multi-step drip campaigns — Planned (proposal)

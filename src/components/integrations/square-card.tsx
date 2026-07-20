@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Store, Link2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { SquareCardConnected } from "@/components/integrations/square-card-connected";
 
 const SQUARE_ERROR_MESSAGES: Record<string, string> = {
     denied: "Square authorization was denied.",
@@ -21,10 +22,18 @@ const SQUARE_ERROR_MESSAGES: Record<string, string> = {
         "Square authorized, but saving the connection failed. Apply the square_connections migration in Supabase, then Connect again.",
 };
 
+export type SquareLastEventSummary = {
+    status: string;
+    customerEmail: string | null;
+    createdAt: string;
+};
+
 export type SquareConnectionSummary = {
     merchantId: string;
     environment: string;
     connectedAt: string;
+    autoSendEnabled: boolean;
+    lastEvent: SquareLastEventSummary | null;
 } | null;
 
 type SquareCardProps = {
@@ -40,7 +49,7 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
 
     useEffect(() => {
         if (searchParams.get("square_connected") === "1") {
-            toast.success("Square connected (sandbox).");
+            toast.success("Square connected.");
             router.replace("/settings/integrations");
         }
         const err = searchParams.get("square_error");
@@ -92,37 +101,40 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
             </CardHeader>
             <CardContent className="space-y-3 pb-4">
                 {isConnected && connection ? (
-                    <p className="text-xs text-muted-foreground">
-                        Merchant <span className="font-mono">{connection.merchantId}</span>
-                        {" · "}
-                        {connection.environment}
-                        {" · "}
-                        Sends only when auto-send is enabled for this connection
-                    </p>
+                    <SquareCardConnected
+                        businessId={businessId}
+                        connection={connection}
+                        configured={configured}
+                        connecting={connecting}
+                        onReconnect={handleConnect}
+                    />
                 ) : (
-                    <p className="text-xs text-muted-foreground">
-                        Connect Square to resolve payment contacts and auto-send review requests
-                        when enabled.
-                    </p>
+                    <>
+                        <p className="text-xs text-muted-foreground">
+                            Connect Square to auto-send review requests after payments when
+                            enabled.
+                        </p>
+                        <Button
+                            size="sm"
+                            className="h-8 w-full text-xs"
+                            onClick={handleConnect}
+                            disabled={connecting || !configured}
+                        >
+                            {connecting ? (
+                                <Loader2 className="mr-1.5 size-3.5 animate-spin" />
+                            ) : (
+                                <Link2 className="mr-1.5 size-3.5" />
+                            )}
+                            Connect Square
+                        </Button>
+                        {!configured ? (
+                            <p className="text-[11px] text-muted-foreground">
+                                Set SQUARE_APPLICATION_ID / SQUARE_APPLICATION_SECRET to enable
+                                Connect.
+                            </p>
+                        ) : null}
+                    </>
                 )}
-                <Button
-                    size="sm"
-                    className="h-8 w-full text-xs"
-                    onClick={handleConnect}
-                    disabled={connecting || !configured}
-                >
-                    {connecting ? (
-                        <Loader2 className="mr-1.5 size-3.5 animate-spin" />
-                    ) : (
-                        <Link2 className="mr-1.5 size-3.5" />
-                    )}
-                    {isConnected ? "Reconnect Square" : "Connect Square"}
-                </Button>
-                {!configured ? (
-                    <p className="text-[11px] text-muted-foreground">
-                        Set SQUARE_APPLICATION_ID / SQUARE_APPLICATION_SECRET to enable Connect.
-                    </p>
-                ) : null}
             </CardContent>
         </Card>
     );
