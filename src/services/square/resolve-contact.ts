@@ -6,6 +6,7 @@ export type SquareResolvedContact = {
 
 /**
  * Pull email/phone/name from Square Payment / Customer JSON shapes.
+ * Also reads payment-level buyer_email_address (payment links / checkout).
  */
 export function resolveContactFromSquarePayment(payment: unknown): SquareResolvedContact {
     const root = asRecord(payment);
@@ -17,6 +18,10 @@ export function resolveContactFromSquarePayment(payment: unknown): SquareResolve
     let email: string | null = null;
     let phone: string | null = null;
     let name: string | null = null;
+
+    if (typeof root?.buyer_email_address === "string" && root.buyer_email_address.trim()) {
+        email = root.buyer_email_address.trim();
+    }
 
     for (const c of customers) {
         if (!email && typeof c.email_address === "string" && c.email_address.trim()) {

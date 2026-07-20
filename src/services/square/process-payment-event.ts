@@ -12,24 +12,33 @@ import {
     resolveContactFromSquarePayment,
     type SquareResolvedContact,
 } from "@/services/square/resolve-contact";
-import { shouldProcessSquarePaymentEvent } from "@/services/square/webhook-parse";
 import type { ParsedSquarePaymentEvent } from "@/services/square/webhook-parse";
 
 type Admin = ReturnType<typeof createAdminClient>;
 
-/** Phase 1: resolve contact and log only — never sends review requests. */
+type ExistingEvent = {
+    id: string;
+    event_type: string;
+    status: string;
+    customer_email: string | null;
+    customer_phone: string | null;
+};
+
+/**
+ * Phase 1: resolve contact and log only — never sends review requests.
+ * payment.created inserts the audit row; payment.updated may enrich contact
+ * when Square attaches customer_id asynchronously (common for payment links).
+ */
 export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent): Promise<void> {
     const admin = createAdminClient();
     const env = getSquareEnvironment();
+    const isCreate = event.eventType === "payment.created";
+    const isUpdate = event.eventType === "payment.updated";
 
-    if (!shouldProcessSquarePaymentEvent(event.eventType)) {
+    if (!isCreate && !isUpdate) {
         logger.info(
-            {
-                paymentId: event.paymentId,
-                merchantId: event.merchantId,
-                eventType: event.eventType,
-            },
-            "[square] non-CREATE payment event ignored",
+            { paymentId: event.paymentId, eventType: event.eventType },
+            "[square] unsupported payment event ignored",
         );
         return;
     }
@@ -52,18 +61,39 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
         return;
     }
 
-    const inserted = await insertEventIfNew(admin, {
-        businessId: connection.business_id,
-        merchantId: event.merchantId,
-        paymentId: event.paymentId,
-        eventType: event.eventType,
-    });
-    if (!inserted) {
-        logger.info(
-            { paymentId: event.paymentId, merchantId: event.merchantId },
-            "[square] duplicate payment event skipped",
-        );
-        return;
+    const existing = await findExistingEvent(admin, event.merchantId, event.paymentId);
+
+    if (isCreate) {
+        if (existing) {
+            logger.info(
+                { paymentId: event.paymentId },
+                "[square] duplicate payment.created skipped",
+            );
+            return;
+        }
+        const inserted = await insertEvent(admin, {
+            businessId: connection.business_id,
+            merchantId: event.merchantId,
+            paymentId: event.paymentId,
+            eventType: event.eventType,
+        });
+        if (!inserted) return;
+    } else {
+        // payment.updated — only enrich rows that still lack contact
+        if (!existing) {
+            logger.info(
+                { paymentId: event.paymentId },
+                "[square] payment.updated with no prior row — ignore",
+            );
+            return;
+        }
+        if (existing.customer_email || existing.customer_phone) {
+            logger.info(
+                { paymentId: event.paymentId },
+                "[square] payment.updated contact already resolved — ignore",
+            );
+            return;
+        }
     }
 
     try {
@@ -87,16 +117,17 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
                 customer_email: contact.email,
                 customer_phone: contact.phone,
                 customer_name: contact.name,
+                error_message: null,
             })
             .eq("merchant_id", event.merchantId)
-            .eq("payment_id", event.paymentId)
-            .eq("event_type", event.eventType);
+            .eq("payment_id", event.paymentId);
 
         logger.info(
             {
                 businessId: connection.business_id,
                 merchantId: event.merchantId,
                 paymentId: event.paymentId,
+                eventType: event.eventType,
                 status,
                 hasEmail: Boolean(contact.email),
                 hasPhone: Boolean(contact.phone),
@@ -109,13 +140,26 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             .from("square_payment_events")
             .update({ status: "error", error_message: message.slice(0, 500) })
             .eq("merchant_id", event.merchantId)
-            .eq("payment_id", event.paymentId)
-            .eq("event_type", event.eventType);
+            .eq("payment_id", event.paymentId);
         logger.error(
             { err, paymentId: event.paymentId, merchantId: event.merchantId },
             "[square] payment processing failed",
         );
     }
+}
+
+async function findExistingEvent(
+    admin: Admin,
+    merchantId: string,
+    paymentId: string,
+): Promise<ExistingEvent | null> {
+    const { data } = await admin
+        .from("square_payment_events")
+        .select("id, event_type, status, customer_email, customer_phone")
+        .eq("merchant_id", merchantId)
+        .eq("payment_id", paymentId)
+        .maybeSingle();
+    return data ?? null;
 }
 
 async function resolveViaCustomerId(args: {
@@ -134,18 +178,10 @@ async function resolveViaCustomerId(args: {
     return resolveContactFromSquareCustomer(customer);
 }
 
-async function insertEventIfNew(
+async function insertEvent(
     admin: Admin,
     args: { businessId: string; merchantId: string; paymentId: string; eventType: string },
 ): Promise<boolean> {
-    const { data: existing } = await admin
-        .from("square_payment_events")
-        .select("id")
-        .eq("merchant_id", args.merchantId)
-        .eq("payment_id", args.paymentId)
-        .maybeSingle();
-    if (existing) return false;
-
     const { error } = await admin.from("square_payment_events").insert({
         business_id: args.businessId,
         merchant_id: args.merchantId,

@@ -40,9 +40,9 @@ describe("parseSquareWebhook", () => {
 });
 
 describe("shouldProcessSquarePaymentEvent", () => {
-    it("allows created only", () => {
+    it("allows created and updated", () => {
         expect(shouldProcessSquarePaymentEvent("payment.created")).toBe(true);
-        expect(shouldProcessSquarePaymentEvent("payment.updated")).toBe(false);
+        expect(shouldProcessSquarePaymentEvent("payment.updated")).toBe(true);
     });
 });
 
@@ -61,6 +61,13 @@ describe("resolveContactFromSquarePayment", () => {
             phone: "+15551212",
             name: "Ada Lovelace",
         });
+    });
+
+    it("reads buyer_email_address on payment", () => {
+        const contact = resolveContactFromSquarePayment({
+            buyer_email_address: "buyer@link.test",
+        });
+        expect(contact.email).toBe("buyer@link.test");
     });
 
     it("extracts customer_id and resolves from Customers API shape", () => {

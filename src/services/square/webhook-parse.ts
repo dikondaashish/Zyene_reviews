@@ -21,9 +21,13 @@ export type SquareWebhookPayload = {
     };
 };
 
-/** Only payment.created may trigger Phase 1 resolve (and later sends). */
+/** payment.created starts the audit row; payment.updated may enrich contact later. */
 export function shouldProcessSquarePaymentEvent(eventType: string): boolean {
-    return eventType === "payment.created" || eventType === "CREATE";
+    return (
+        eventType === "payment.created" ||
+        eventType === "payment.updated" ||
+        eventType === "CREATE"
+    );
 }
 
 export function parseSquareWebhook(payload: SquareWebhookPayload): {
