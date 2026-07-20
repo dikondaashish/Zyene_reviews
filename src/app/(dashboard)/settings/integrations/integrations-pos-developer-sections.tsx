@@ -1,7 +1,8 @@
-import { Store, Utensils, Zap, Code2, MonitorPlay } from "lucide-react";
+import { Utensils, Zap, Code2, MonitorPlay } from "lucide-react";
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
 import { CloverCard, type CloverConnectionSummary } from "@/components/integrations/clover-card";
+import { SquareCard, type SquareConnectionSummary } from "@/components/integrations/square-card";
 import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
 import { WidgetCard } from "@/components/integrations/widget-card";
 import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card";
@@ -15,11 +16,15 @@ export function IntegrationsPosAutomationSection({
     businessId,
     cloverConnection,
     cloverConfigured,
+    squareConnection,
+    squareConfigured,
 }: {
     apiKey: string | null;
     businessId: string;
     cloverConnection: CloverConnectionSummary;
     cloverConfigured: boolean;
+    squareConnection: SquareConnectionSummary;
+    squareConfigured: boolean;
 }) {
     return (
         <section className="space-y-5">
@@ -29,11 +34,10 @@ export function IntegrationsPosAutomationSection({
                 icon={Zap}
             />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-                <PlaceholderCard
-                    name="Square"
-                    description="Auto-send review requests after Square payments"
-                    icon={<Store className="text-foreground/70 size-5" />}
-                    accentColor="bg-foreground/70"
+                <SquareCard
+                    businessId={businessId}
+                    connection={squareConnection}
+                    configured={squareConfigured}
                 />
                 <CloverCard
                     businessId={businessId}

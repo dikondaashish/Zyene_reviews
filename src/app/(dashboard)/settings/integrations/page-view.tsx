@@ -46,6 +46,8 @@ export default async function IntegrationsPage() {
                 businessId={data.business.id}
                 cloverConnection={data.cloverConnection}
                 cloverConfigured={data.cloverConfigured}
+                squareConnection={data.squareConnection}
+                squareConfigured={data.squareConfigured}
             />
             <hr className="border-border/50" />
             <IntegrationsDeveloperApiSection data={data} />

@@ -445,6 +445,112 @@ export type Database = {
           },
         ]
       }
+      square_connections: {
+        Row: {
+          access_token_encrypted: string
+          access_token_expires_at: string | null
+          auto_send_enabled: boolean
+          business_id: string
+          connected_at: string
+          created_at: string
+          disconnected_at: string | null
+          environment: string
+          id: string
+          last_error: string | null
+          merchant_id: string
+          refresh_token_encrypted: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_encrypted: string
+          access_token_expires_at?: string | null
+          auto_send_enabled?: boolean
+          business_id: string
+          connected_at?: string
+          created_at?: string
+          disconnected_at?: string | null
+          environment?: string
+          id?: string
+          last_error?: string | null
+          merchant_id: string
+          refresh_token_encrypted?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_encrypted?: string
+          access_token_expires_at?: string | null
+          auto_send_enabled?: boolean
+          business_id?: string
+          connected_at?: string
+          created_at?: string
+          disconnected_at?: string | null
+          environment?: string
+          id?: string
+          last_error?: string | null
+          merchant_id?: string
+          refresh_token_encrypted?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "square_connections_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      square_payment_events: {
+        Row: {
+          business_id: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          merchant_id: string
+          payment_id: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          merchant_id: string
+          payment_id: string
+          status: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          merchant_id?: string
+          payment_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "square_payment_events_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competitor_market_briefs: {
         Row: {
           business_id: string

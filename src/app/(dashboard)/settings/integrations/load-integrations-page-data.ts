@@ -3,7 +3,9 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 import { isCloverConfigured } from "@/services/clover/config";
+import { isSquareConfigured } from "@/services/square/config";
 import type { CloverConnectionSummary } from "@/components/integrations/clover-card";
+import type { SquareConnectionSummary } from "@/components/integrations/square-card";
 
 export type VisibleReviewRollup = {
     totalVisible?: number;
@@ -37,6 +39,8 @@ export type IntegrationsPageData =
           visibleRollup: VisibleReviewRollup | undefined;
           cloverConnection: CloverConnectionSummary;
           cloverConfigured: boolean;
+          squareConnection: SquareConnectionSummary;
+          squareConfigured: boolean;
       };
 
 export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> {
@@ -62,12 +66,18 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const connectedCount = connectedPlatforms.length;
 
     const supabase = await createClient();
-    const [visibleRollupMap, cloverResult] = await Promise.all([
+    const [visibleRollupMap, cloverResult, squareResult] = await Promise.all([
         fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
         supabase
             .from("clover_connections")
             .select("merchant_id, environment, connected_at")
             .eq("business_id", business.id)
+            .maybeSingle(),
+        supabase
+            .from("square_connections")
+            .select("merchant_id, environment, connected_at")
+            .eq("business_id", business.id)
+            .is("disconnected_at", null)
             .maybeSingle(),
     ]);
     const visibleRollup = visibleRollupMap.get(business.id);
@@ -79,6 +89,15 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
               merchantId: cloverRow.merchant_id,
               environment: cloverRow.environment,
               connectedAt: cloverRow.connected_at,
+          }
+        : null;
+
+    const squareRow = squareResult.data;
+    const squareConnection: SquareConnectionSummary = squareRow
+        ? {
+              merchantId: squareRow.merchant_id,
+              environment: squareRow.environment,
+              connectedAt: squareRow.connected_at,
           }
         : null;
 
@@ -100,5 +119,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         visibleRollup,
         cloverConnection,
         cloverConfigured: isCloverConfigured(),
+        squareConnection,
+        squareConfigured: isSquareConfigured(),
     };
 }
