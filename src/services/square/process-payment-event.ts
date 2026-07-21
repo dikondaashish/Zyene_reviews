@@ -1,29 +1,21 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { fetchSquareCustomer, fetchSquarePayment } from "@/services/square/api-client";
+import { fetchSquarePayment } from "@/services/square/api-client";
+import { claimSquarePaymentSend } from "@/services/square/claim-send";
 import { getSquareEnvironment } from "@/services/square/config";
 import { decryptSquareAccessToken } from "@/services/square/decrypt-access-token";
 import {
-    extractSquareCustomerId,
-    resolveContactFromSquareCustomer,
-    resolveContactFromSquarePayment,
-    type SquareResolvedContact,
-} from "@/services/square/resolve-contact";
+    findSquarePaymentEvent,
+    insertSquarePaymentEvent,
+    patchSquarePaymentEvent,
+    resolveSquareContactViaCustomerId,
+} from "@/services/square/payment-event-store";
+import { resolveContactFromSquarePayment } from "@/services/square/resolve-contact";
 import {
     sendSquareReviewRequest,
     squareStatusFromSendOutcome,
 } from "@/services/square/send-from-payment";
 import type { ParsedSquarePaymentEvent } from "@/services/square/webhook-parse";
-
-type Admin = ReturnType<typeof createAdminClient>;
-
-type ExistingEvent = {
-    id: string;
-    status: string;
-    customer_email: string | null;
-    customer_phone: string | null;
-    review_request_id: string | null;
-};
 
 /** Phase 2: resolve contact, then send when auto_send_enabled. */
 export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent): Promise<void> {
@@ -31,7 +23,6 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
     const env = getSquareEnvironment();
     const isCreate = event.eventType === "payment.created";
     const isUpdate = event.eventType === "payment.updated";
-
     if (!isCreate && !isUpdate) return;
 
     const { data: connection, error: connError } = await admin
@@ -52,14 +43,14 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
         return;
     }
 
-    const existing = await findExistingEvent(admin, event.merchantId, event.paymentId);
+    const existing = await findSquarePaymentEvent(admin, event.merchantId, event.paymentId);
 
     if (isCreate) {
         if (existing) {
             logger.info({ paymentId: event.paymentId }, "[square] duplicate payment.created skipped");
             return;
         }
-        if (!(await insertEvent(admin, {
+        if (!(await insertSquarePaymentEvent(admin, {
             businessId: connection.business_id,
             merchantId: event.merchantId,
             paymentId: event.paymentId,
@@ -70,11 +61,14 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
     } else if (!existing) {
         logger.info({ paymentId: event.paymentId }, "[square] payment.updated with no prior row — ignore");
         return;
-    } else if (existing.review_request_id || existing.status === "sent") {
-        logger.info({ paymentId: event.paymentId }, "[square] payment already sent — ignore update");
+    } else if (
+        existing.review_request_id ||
+        existing.status === "sent" ||
+        existing.status === "sending"
+    ) {
+        logger.info({ paymentId: event.paymentId }, "[square] payment already claimed/sent — ignore");
         return;
     } else if (existing.customer_email || existing.customer_phone) {
-        // Contact already known; do not re-send on tip/status updates.
         logger.info({ paymentId: event.paymentId }, "[square] payment.updated contact already set — ignore");
         return;
     }
@@ -88,7 +82,29 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
 
         let contact = resolveContactFromSquarePayment(payment);
         if (!contact.email && !contact.phone) {
-            contact = await resolveViaCustomerId({ payment, accessToken });
+            contact = await resolveSquareContactViaCustomerId({ payment, accessToken });
+        }
+
+        if (!contact.email && !contact.phone) {
+            await patchSquarePaymentEvent(admin, event, {
+                status: "skipped_no_contact",
+                customer_email: null,
+                customer_phone: null,
+                customer_name: contact.name,
+            });
+            logger.info({ paymentId: event.paymentId }, "[square] Phase2 skipped — no contact");
+            return;
+        }
+
+        await patchSquarePaymentEvent(admin, event, {
+            customer_email: contact.email,
+            customer_phone: contact.phone,
+            customer_name: contact.name,
+        });
+
+        if (!(await claimSquarePaymentSend(admin, event.merchantId, event.paymentId))) {
+            logger.info({ paymentId: event.paymentId }, "[square] send claim lost — skip duplicate");
+            return;
         }
 
         const sendOutcome = await sendSquareReviewRequest({
@@ -98,30 +114,13 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             contact,
         });
 
-        // Race: payment.updated may finish after payment.created already sent.
-        const latest = await findExistingEvent(admin, event.merchantId, event.paymentId);
-        if ((latest?.review_request_id || latest?.status === "sent") && sendOutcome.kind !== "sent") {
-            logger.info({ paymentId: event.paymentId }, "[square] preserving prior sent row");
-            return;
-        }
-
         const status = squareStatusFromSendOutcome(sendOutcome);
-        const patch: Record<string, unknown> = {
-            status,
-            customer_email: contact.email,
-            customer_phone: contact.phone,
-            customer_name: contact.name,
-        };
+        const patch: Record<string, unknown> = { status };
         if (sendOutcome.kind === "sent") patch.review_request_id = sendOutcome.requestId;
         if (sendOutcome.kind === "skipped_guard" || sendOutcome.kind === "send_failed") {
             patch.error_message = sendOutcome.message.slice(0, 500);
         }
-
-        await admin
-            .from("square_payment_events")
-            .update(patch)
-            .eq("merchant_id", event.merchantId)
-            .eq("payment_id", event.paymentId);
+        await patchSquarePaymentEvent(admin, event, patch);
 
         logger.info(
             {
@@ -136,61 +135,13 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
         );
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "unknown error";
-        await admin
-            .from("square_payment_events")
-            .update({ status: "error", error_message: message.slice(0, 500) })
-            .eq("merchant_id", event.merchantId)
-            .eq("payment_id", event.paymentId);
+        await patchSquarePaymentEvent(admin, event, {
+            status: "error",
+            error_message: message.slice(0, 500),
+        });
         logger.error(
             { err, paymentId: event.paymentId, merchantId: event.merchantId },
             "[square] payment processing failed",
         );
     }
-}
-
-async function findExistingEvent(
-    admin: Admin,
-    merchantId: string,
-    paymentId: string,
-): Promise<ExistingEvent | null> {
-    const { data } = await admin
-        .from("square_payment_events")
-        .select("id, status, customer_email, customer_phone, review_request_id")
-        .eq("merchant_id", merchantId)
-        .eq("payment_id", paymentId)
-        .maybeSingle();
-    return data ?? null;
-}
-
-async function resolveViaCustomerId(args: {
-    payment: unknown;
-    accessToken: string;
-}): Promise<SquareResolvedContact> {
-    const empty: SquareResolvedContact = { email: null, phone: null, name: null };
-    const customerId = extractSquareCustomerId(args.payment);
-    if (!customerId) return empty;
-    const customer = await fetchSquareCustomer({
-        customerId,
-        accessToken: args.accessToken,
-    });
-    if (!customer) return empty;
-    return resolveContactFromSquareCustomer(customer);
-}
-
-async function insertEvent(
-    admin: Admin,
-    args: { businessId: string; merchantId: string; paymentId: string; eventType: string },
-): Promise<boolean> {
-    const { error } = await admin.from("square_payment_events").insert({
-        business_id: args.businessId,
-        merchant_id: args.merchantId,
-        payment_id: args.paymentId,
-        event_type: args.eventType,
-        status: "received",
-    });
-    if (error) {
-        if (error.code === "23505") return false;
-        throw error;
-    }
-    return true;
 }
