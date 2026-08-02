@@ -30,7 +30,7 @@ export function CompetitorsTableBenchmarkCard({
                     snapshot in this period (or current totals if no snapshot yet).{" "}
                     {!activeBenchmarkRange.marketBenchmarkAvailable && competitorsCount > 0 ? (
                         <span className="text-chart-4 dark:text-chart-4">
-                            Competitor ratings are not loaded yet ,  run Sync from Google or wait for the
+                            Competitor ratings are not loaded yet—run Sync from Google or wait for the
                             next sync.
                         </span>
                     ) : activeBenchmarkRange.marketEndUsedFallback ? (

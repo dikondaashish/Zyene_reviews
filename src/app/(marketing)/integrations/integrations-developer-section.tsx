@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, Code2, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IntegrationsDeveloperSection() {
     return (
@@ -35,7 +36,7 @@ export function IntegrationsDeveloperSection() {
                                     <Globe className="size-4" /> Read API Docs
                                 </Button>
                             </Link>
-                            <Link href="/signup">
+                            <Link href={SIGNUP_URL}>
                                 <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10">
                                     <Sparkles className="size-4" /> Get API Key Free
                                 </Button>

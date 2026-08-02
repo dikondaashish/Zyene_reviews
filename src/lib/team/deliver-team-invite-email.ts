@@ -1,9 +1,11 @@
 import { sendEmail } from "@/services/resend/send-email";
 import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
+import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 
 export function buildTeamInviteSignupLink(inviteToken: string): string {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zyenereviews.com";
-    return `${appUrl}/signup?invite=${encodeURIComponent(inviteToken)}`;
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
+    const signupUrl = getAuthSiteUrl(rootDomain, "/signup");
+    return `${signupUrl}?invite=${encodeURIComponent(inviteToken)}`;
 }
 
 export async function deliverTeamInviteEmail(args: {

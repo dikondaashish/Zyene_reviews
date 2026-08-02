@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, RefreshCw } from "lucide-react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function AnalyticsError({
     error,
@@ -12,10 +13,11 @@ export default function AnalyticsError({
     reset: () => void;
 }) {
     useEffect(() => {
+        Sentry.captureException(error, { tags: { page: "analytics" } });
     }, [error]);
 
     return (
-        <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center animate-in fade-in duration-500 bg-card m-6">
+        <div className="flex h-[calc(100vh-8rem)] w-full flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center bg-card m-6">
             <div className="rounded-full bg-destructive/15 p-3">
                 <AlertCircle className="text-destructive size-8" />
             </div>

@@ -1,12 +1,9 @@
-import Script from "next/script";
-
 export function JsonLdScript({ schema }: { schema: Record<string, unknown> }) {
     return (
-        <Script
+        <script
             id={`json-ld-${hashSchema(schema)}`}
             type="application/ld+json"
-            strategy="lazyOnload"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
         />
     );
 }
@@ -16,3 +13,4 @@ function hashSchema(schema: Record<string, unknown>): string {
     const key = String(schema["@type"] ?? schema["@id"] ?? "schema");
     return key.replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 48);
 }
+import { serializeJsonLd } from "@/lib/seo/serialize-json-ld";

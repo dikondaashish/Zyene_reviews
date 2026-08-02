@@ -5,6 +5,7 @@ import {
 } from "@/lib/growth/utm";
 import { isValidReferrerUserId } from "@/lib/growth/referral";
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
+export { safeNextPath } from "@/lib/routing/safe-next-path";
 
 export function parseUtmFromRequest(request: Request): UtmParams | null {
     const cookieHeader = request.headers.get("cookie") ?? "";
@@ -49,14 +50,4 @@ export function smsReviewAlertsConsentFromUserMetadata(user: { user_metadata?: R
     if (v === true) return true;
     if (typeof v === "string") return v.toLowerCase() === "true";
     return false;
-}
-
-export function safeNextPath(raw: string | null): string {
-    const fallback = "/dashboard";
-    if (!raw) return fallback;
-
-    const candidate = raw.startsWith("/") ? raw : `/${raw}`;
-    if (candidate.startsWith("//")) return fallback;
-    if (candidate.includes("\\") || candidate.includes("://")) return fallback;
-    return candidate;
 }

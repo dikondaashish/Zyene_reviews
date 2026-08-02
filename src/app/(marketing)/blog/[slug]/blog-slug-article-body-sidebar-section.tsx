@@ -6,6 +6,7 @@ import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlogSlugFaqSection } from "@/components/marketing/blog-slug-faq-section";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
+import { SIGNUP_URL } from "@/config/env";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
@@ -33,7 +34,11 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                                     <p className="text-sm font-semibold text-foreground mb-4">Related resources:</p>
                                     <div className="space-y-2">
                                         {post.internalLinks.map((link) => (
-                                            <Link key={link.href} href={link.href} className="flex items-center gap-2 text-sm text-primary hover:brightness-90 transition-all group">
+                                            <Link
+                                                key={link.href}
+                                                href={link.href === "/signup" ? SIGNUP_URL : link.href}
+                                                className="flex items-center gap-2 text-sm text-primary hover:brightness-90 transition-colors group"
+                                            >
                                                 <ArrowRight className="shrink-0 group-hover:translate-x-1 transition-transform size-3.5" />
                                                 {link.label}
                                             </Link>
@@ -46,7 +51,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Ready to try Zyene Reviews?</h3>
                                 <p className="text-muted-foreground mb-5">7-day free trial. Full access. No credit card lock-in.</p>
-                                <Link href="/signup">
+                                <Link href={SIGNUP_URL}>
                                     <Button className="gap-2">
                                         Start Free Trial <ArrowRight className="size-4" />
                                     </Button>
@@ -60,7 +65,7 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">7-day trial. AI replies, review requests, Negative Feedback Shield. Starting at $29.99/mo.</p>
-                                <Link href="/signup">
+                                <Link href={SIGNUP_URL}>
                                     <Button size="sm" className="w-full gap-2">
                                         Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>

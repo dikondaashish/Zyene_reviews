@@ -24,75 +24,55 @@ export function useSignupForm() {
     const [isSuccess, setIsSuccess] = useState(false);
     const { checkingExistingSession } = useSignupSession(inviteToken);
 
-    async function handleGoogleSignup() {
-        setIsLoading(true);
-        const supabase = createClient();
-        const callbackUrl = new URL("/api/auth/callback", window.location.origin);
-        if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken);
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: "google",
-            options: {
-                redirectTo: callbackUrl.toString(),
-                queryParams: {
-                    access_type: "offline",
-                    prompt: "consent",
-                },
-                scopes: "https://www.googleapis.com/auth/business.manage",
-            },
-        });
-
-        if (error) {
-            toast.error(error.message);
-            setIsLoading(false);
-        }
-    }
-
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        setIsLoading(true);
 
         if (password.length < 6) {
             toast.error("Password must be at least 6 characters");
-            setIsLoading(false);
             return;
         }
 
         const phoneTrimmed = phone.trim();
         if (phoneTrimmed && !isPlausibleMobileNumber(phoneTrimmed)) {
             toast.error("Enter a valid mobile number with country code (e.g. +1 555 123 4567).");
-            setIsLoading(false);
             return;
         }
 
-        const supabase = createClient();
-        const callbackUrl = new URL("/api/auth/callback", window.location.origin);
-        if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken);
+        setIsLoading(true);
+        try {
+            const supabase = createClient();
+            const callbackUrl = new URL("/api/auth/callback", window.location.origin);
+            if (inviteToken) callbackUrl.searchParams.set("invite", inviteToken);
 
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: fullName,
-                    ...(phoneTrimmed ? { phone: phoneTrimmed } : {}),
-                    sms_review_alerts_consent: smsReviewAlertsConsent,
-                    ...(inviteToken ? { invite_token: inviteToken } : {}),
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                        ...(phoneTrimmed ? { phone: phoneTrimmed } : {}),
+                        sms_review_alerts_consent: smsReviewAlertsConsent,
+                        ...(inviteToken ? { invite_token: inviteToken } : {}),
+                    },
+                    emailRedirectTo: callbackUrl.toString(),
                 },
-                emailRedirectTo: callbackUrl.toString(),
-            },
-        });
+            });
 
-        if (error) {
-            if (isSupabaseEmailSendRateLimited(error)) {
-                toastAuthEmailRateLimit(toast);
-            } else {
-                toast.error(error.message);
+            if (error) {
+                if (isSupabaseEmailSendRateLimited(error)) {
+                    toastAuthEmailRateLimit(toast);
+                } else {
+                    toast.error(error.message);
+                }
+                return;
             }
-            setIsLoading(false);
-            return;
-        }
 
-        setIsSuccess(true);
+            setIsSuccess(true);
+        } catch {
+            toast.error("Sign-up failed", { description: "Please try again." });
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return {
@@ -112,7 +92,6 @@ export function useSignupForm() {
         isLoading,
         isSuccess,
         checkingExistingSession,
-        handleGoogleSignup,
         handleSubmit,
     };
 }

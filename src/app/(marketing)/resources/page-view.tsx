@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
@@ -40,7 +41,7 @@ export default function ResourcesHubPage() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="grid md:grid-cols-2 gap-8">
                         {RESOURCE_GUIDES.map((guide, i) => (
-                            <Link key={guide.slug} href={`/resources/${guide.slug}`} className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-all flex flex-col">
+                            <Link key={guide.slug} href={`/resources/${guide.slug}`} className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-[border-color,box-shadow] flex flex-col">
                                 <div className="text-5xl mb-5">{ICONS[i]}</div>
                                 <h2 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-snug">
                                     {guide.title}
@@ -53,7 +54,7 @@ export default function ResourcesHubPage() {
                                         <Clock className="size-3.5" />
                                         {guide.readMinutes} min read
                                     </div>
-                                    <span className="text-primary text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                    <span className="text-primary text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-[gap]">
                                         Read guide <ArrowRight className="size-3.5" />
                                     </span>
                                 </div>
@@ -85,7 +86,7 @@ export default function ResourcesHubPage() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-3xl font-bold text-foreground mb-3">Ready to put this into practice?</h2>
                     <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, no credit card lock-in.</p>
-                    <Link href="/signup">
+                    <Link href={SIGNUP_URL}>
                         <Button size="lg" className="gap-2 rounded-xl">
                             Start Free Trial <ArrowRight className="size-4" />
                         </Button>

@@ -1,29 +1,34 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
 export async function GET(request: Request) {
     const id = new URL(request.url).searchParams.get("id");
-    if (!id) {
-        return NextResponse.redirect(new URL("/newsletter/unsubscribe?error=missing", request.url));
+    const target = new URL("/newsletter/unsubscribe", request.url);
+    if (id) target.searchParams.set("id", id);
+    else target.searchParams.set("error", "missing");
+    return NextResponse.redirect(target, 303);
+}
+
+export async function POST(request: Request) {
+    const formData = await request.formData();
+    const parsed = z.object({ id: z.uuid() }).safeParse({ id: formData.get("id") });
+    if (!parsed.success) {
+        return NextResponse.redirect(new URL("/newsletter/unsubscribe?error=missing", request.url), 303);
     }
 
     const admin = createAdminClient();
-    const { data, error } = await admin
+    const { error } = await admin
         .from("marketing_subscribers")
         .update({ unsubscribed_at: new Date().toISOString() })
-        .eq("id", id)
-        .is("unsubscribed_at", null)
-        .select("email")
-        .maybeSingle();
+        .eq("id", parsed.data.id)
+        .is("unsubscribed_at", null);
 
     if (error) {
         logger.error({ err: error }, "[newsletter/unsubscribe] failed:");
         return NextResponse.redirect(new URL("/newsletter/unsubscribe?error=server", request.url));
     }
 
-    const emailParam = data?.email ? `&email=${encodeURIComponent(data.email)}` : "";
-    return NextResponse.redirect(
-        new URL(`/newsletter/unsubscribe?success=1${emailParam}`, request.url)
-    );
+    return NextResponse.redirect(new URL("/newsletter/unsubscribe?success=1", request.url), 303);
 }

@@ -4,6 +4,7 @@ import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
 import Link from "next/link";
 import { ArrowRight, Clock, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: { resource: (typeof RESOURCE_MAP)[string]; otherGuides: typeof RESOURCE_GUIDES }) {
     return (
@@ -53,7 +54,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                         {resource.internalLinks.map((link) => (
                                             <li key={link.href}>
                                                 <Link
-                                                    href={link.href}
+                                                    href={link.href === "/signup" ? SIGNUP_URL : link.href}
                                                     className="inline-flex rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
                                                 >
                                                     {link.label}
@@ -77,7 +78,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
                                 <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial, no credit card lock-in.</p>
-                                <Link href="/signup">
+                                <Link href={SIGNUP_URL}>
                                     <Button className="gap-2">
                                         Start Free Trial <ArrowRight className="size-4" />
                                     </Button>
@@ -103,7 +104,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">Everything in this guide, automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
-                                <Link href="/signup">
+                                <Link href={SIGNUP_URL}>
                                     <Button size="sm" className="w-full gap-2">
                                         Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>

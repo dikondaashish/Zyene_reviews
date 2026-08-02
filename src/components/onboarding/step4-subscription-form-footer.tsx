@@ -14,7 +14,7 @@ export function Step4SubscriptionFormFooter({ busy, onSkip }: Step4SubscriptionF
                 disabled={busy}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
             >
-                Explore free for now ,  upgrade anytime from Settings
+                Explore free for now—upgrade anytime from Settings
             </button>
             <p className="text-[11px] text-muted-foreground/50 max-w-xs text-center leading-relaxed">
                 Without a plan: view-only access. AI replies, review requests, and smart insights unlock on any paid

@@ -54,9 +54,14 @@ export function TagsStepCustomInput({
             </button>
 
             {showCustomInput && (
-                <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="space-y-2">
+                    <label htmlFor="custom-review-tag" className="block text-sm font-medium text-foreground">
+                        What stood out?
+                    </label>
                     <div className="flex gap-2">
                         <input
+                            id="custom-review-tag"
+                            name="customReviewTag"
                             type="text"
                             value={customTagInput}
                             onChange={(e) => onCustomTagInputChange(e.target.value)}
@@ -66,7 +71,7 @@ export function TagsStepCustomInput({
                                     onAddCustomTag();
                                 }
                             }}
-                            placeholder="What stood out?"
+                            placeholder="For example: friendly staff"
                             inputMode="text"
                             enterKeyHint="done"
                             maxLength={80}
@@ -88,7 +93,7 @@ export function TagsStepCustomInput({
                     </div>
                     {addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS && (
                         <p className="text-xs text-muted-foreground text-center">
-                            4 max ,  remove one to add another
+                            4 max—remove one to add another
                         </p>
                     )}
                 </div>
@@ -98,7 +103,7 @@ export function TagsStepCustomInput({
                 <div className="flex flex-wrap justify-center gap-2">
                     {addedCustomTags.map((tag, index) => (
                         <span
-                            key={`${tag}-${index}`}
+                            key={tag}
                             className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-sm font-medium border-2 text-primary-foreground dark:text-white"
                             style={{
                                 backgroundColor: resolvedBrandColor,

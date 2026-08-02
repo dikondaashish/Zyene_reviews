@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import type { IndustryData } from "@/lib/phase3/industry-data";
 
 export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData }) {
@@ -12,7 +13,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                     Start your 7-day free trial today.<br />
                     No credit card lock-in. Cancel before day 7 and pay nothing.
                 </p>
-                <Link href="/signup">
+                <Link href={SIGNUP_URL}>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
                         Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                     </Button>

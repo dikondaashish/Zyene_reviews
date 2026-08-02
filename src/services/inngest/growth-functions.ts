@@ -4,8 +4,8 @@ import {
     trialNurtureEmail,
     onboardingDripEmail,
     winbackFollowUpEmail,
-    marketingNurtureEmail,
 } from "@/services/resend/templates/growth-emails";
+import { marketingNurtureEmail } from "@/services/resend/templates/growth-marketing-emails";
 import {
     TRIAL_NURTURE_STEPS,
     ONBOARDING_DRIP_STEPS,
@@ -79,7 +79,7 @@ export const onboardingDripWorker = inngest.createFunction(
             }
 
             await step.run(`send-${dripStep.key}`, async () => {
-                const url = dripStep.key.includes("billing") || dripStep.key.includes("pricing")
+                const url = /billing|pricing/.test(dripStep.key)
                     ? billingUrl
                     : dashboardUrl;
                 const { subject, html } = onboardingDripEmail({

@@ -37,12 +37,13 @@ export function LocalSeoChecklistPageAnalytics() {
             const anchor = (e.target as HTMLElement).closest("a[href]");
             if (!anchor) return;
             const href = anchor.getAttribute("href") ?? "";
-            if (href === "/signup" || href.startsWith("/signup?")) {
+            const path = new URL(href, window.location.origin).pathname;
+            if (path === "/signup") {
                 trackMarketingEventClient("local_seo_checklist_signup_click", {
                     pagePath: LOCAL_SEO_CHECKLIST_PAGE_PATH,
                     source: LOCAL_SEO_CHECKLIST_SOURCE,
                 });
-            } else if (href === "/pricing" || href.startsWith("/pricing?")) {
+            } else if (path === "/pricing") {
                 trackMarketingEventClient("local_seo_checklist_pricing_click", {
                     pagePath: LOCAL_SEO_CHECKLIST_PAGE_PATH,
                     source: LOCAL_SEO_CHECKLIST_SOURCE,

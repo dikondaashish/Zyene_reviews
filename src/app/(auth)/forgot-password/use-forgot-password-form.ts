@@ -15,25 +15,24 @@ export function useForgotPasswordForm() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (isLoading) return;
         setIsLoading(true);
-
-        const supabase = createClient();
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/api/auth/callback?next=/reset-password`,
-        });
-
-        if (error) {
-            if (isSupabaseEmailSendRateLimited(error)) {
-                toastAuthEmailRateLimit(toast);
-            } else {
-                toast.error(error.message);
+        try {
+            const supabase = createClient();
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/api/auth/callback?next=/reset-password`,
+            });
+            if (error) {
+                if (isSupabaseEmailSendRateLimited(error)) toastAuthEmailRateLimit(toast);
+                else toast.error(error.message);
+                return;
             }
+            setIsSuccess(true);
+        } catch {
+            toast.error("Unable to send a password reset email. Please try again.");
+        } finally {
             setIsLoading(false);
-            return;
         }
-
-        setIsSuccess(true);
     }
 
     return {

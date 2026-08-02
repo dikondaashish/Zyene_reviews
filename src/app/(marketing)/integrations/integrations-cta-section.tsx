@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IntegrationsCtaSection() {
     return (
@@ -11,7 +12,7 @@ export function IntegrationsCtaSection() {
                     All integrations are included with every paid plan. Start with Google, add more as you grow.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link href="/signup">
+                    <Link href={SIGNUP_URL}>
                         <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
                             Start Free Trial <ArrowRight className="ml-2 size-5" />
                         </Button>

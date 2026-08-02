@@ -12,12 +12,13 @@ import {
 } from "@/lib/auth/supabase-email-rate-limit";
 
 export function VerificationBanner({ user }: { user: AppUserSummary }) {
-    const [isVisible, setIsVisible] = useState(!user?.email_confirmed_at);
+    const [isDismissed, setIsDismissed] = useState(false);
     const [isResending, setIsResending] = useState(false);
 
-    if (!isVisible || user?.email_confirmed_at) return null;
+    if (isDismissed || user?.email_confirmed_at) return null;
 
     const resendVerification = async () => {
+        if (isResending) return;
         setIsResending(true);
         const supabase = createClient();
         if (!user.email) {
@@ -26,24 +27,23 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
             return;
         }
 
-        const { error } = await supabase.auth.resend({
-            type: "signup",
-            email: user.email,
-            options: {
-                emailRedirectTo: `${window.location.origin}/api/auth/callback`,
-            },
-        });
-
-        if (error) {
-            if (isSupabaseEmailSendRateLimited(error)) {
-                toastAuthEmailRateLimit(toast);
+        try {
+            const { error } = await supabase.auth.resend({
+                type: "signup",
+                email: user.email,
+                options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
+            });
+            if (error) {
+                if (isSupabaseEmailSendRateLimited(error)) toastAuthEmailRateLimit(toast);
+                else toast.error(error.message || "Failed to resend verification email");
             } else {
-                toast.error(error.message || "Failed to resend verification email");
+                toast.success("Verification email sent!");
             }
-        } else {
-            toast.success("Verification email sent!");
+        } catch {
+            toast.error("Failed to resend verification email");
+        } finally {
+            setIsResending(false);
         }
-        setIsResending(false);
     };
 
     return (
@@ -70,8 +70,10 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
                     {isResending ? "Sending..." : "Resend Link"}
                 </Button>
                 <button 
-                    onClick={() => setIsVisible(false)}
+                    type="button"
+                    onClick={() => setIsDismissed(true)}
                     className="p-1 hover:bg-primary/80 rounded-lg transition-colors"
+                    aria-label="Dismiss verification reminder"
                 >
                     <X className="size-4" />
                 </button>

@@ -34,7 +34,12 @@ export async function POST(request: Request) {
         return NextResponse.json({ ok: true, verificationCode: payload.verificationCode });
     }
 
-    if (expectedAuth && headerAuth !== expectedAuth) {
+    if (!expectedAuth) {
+        logger.error({}, "[clover] webhook auth secret is not configured");
+        return NextResponse.json({ error: "Webhook unavailable" }, { status: 503 });
+    }
+
+    if (headerAuth !== expectedAuth) {
         logger.warn({}, "[clover] webhook auth mismatch");
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -51,20 +56,21 @@ export async function POST(request: Request) {
     );
 
     after(async () => {
-        for (const event of appEvents) {
+        const appTasks = appEvents.map(async (event) => {
             try {
                 await processCloverAppEvent(event);
             } catch (err: unknown) {
                 logger.error({ err, event }, "[clover] after() app event failed");
             }
-        }
-        for (const event of paymentEvents) {
+        });
+        const paymentTasks = paymentEvents.map(async (event) => {
             try {
                 await processCloverPaymentEvent(event);
             } catch (err: unknown) {
                 logger.error({ err, event }, "[clover] after() payment failed");
             }
-        }
+        });
+        await Promise.all([...appTasks, ...paymentTasks]);
     });
 
     return NextResponse.json({

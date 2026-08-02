@@ -4,6 +4,7 @@ import { POSITIONING } from "@/lib/growth/product-foundation";
 import Link from "next/link";
 import { ArrowRight, Check, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
 import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
@@ -41,7 +42,7 @@ export function CompareHeroSection() {
                             </Link>
                         </p>
                     </div>
-                    <Link href="/signup">
+                    <Link href={SIGNUP_URL}>
                         <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                             Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
                         </Button>

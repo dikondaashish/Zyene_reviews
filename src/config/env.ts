@@ -3,6 +3,7 @@
  * All environment variables are validated at import time.
  * Import from `@/config/env` instead of using process.env directly.
  */
+import { getAppSiteOrigin, getAuthSiteUrl } from "@/lib/routing/platform-routes";
 
 function required(name: string): string {
     const value = process.env[name];
@@ -19,33 +20,19 @@ function optional(name: string, fallback: string): string {
     return process.env[name] || fallback;
 }
 
-function getDefaultAppUrl(): string {
-    const rootDomain = (process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000")
-        .replace(/^https?:\/\//, "")
-        .replace(/\/$/, "");
-
-    if (rootDomain.includes("localhost")) {
-        return process.env.NODE_ENV === "production"
-            ? "https://app.zyenereviews.com"
-            : "http://localhost:3000";
-    }
-
-    return `https://app.${rootDomain.replace(/^app\./, "")}`;
-}
-
 // --- Public (exposed to browser) ---
 
 export const NEXT_PUBLIC_SUPABASE_URL =
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 export const NEXT_PUBLIC_SUPABASE_ANON_KEY =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-export const NEXT_PUBLIC_APP_URL = optional(
-    "NEXT_PUBLIC_APP_URL",
-    getDefaultAppUrl()
-);
 export const NEXT_PUBLIC_ROOT_DOMAIN = optional(
     "NEXT_PUBLIC_ROOT_DOMAIN",
     "localhost:3000"
+);
+export const NEXT_PUBLIC_APP_URL = getAppSiteOrigin(
+    NEXT_PUBLIC_ROOT_DOMAIN,
+    process.env.NEXT_PUBLIC_APP_URL
 );
 export const NEXT_PUBLIC_APP_NAME = optional(
     "NEXT_PUBLIC_APP_NAME",
@@ -60,7 +47,7 @@ export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
 export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
 
 /** True when marketing auth links should use same-origin /login and /signup. */
-function useLocalMarketingAuthPaths(): boolean {
+function shouldUseLocalMarketingAuthPaths(): boolean {
     return (
         process.env.NODE_ENV === "development" ||
         ROOT_DOMAIN.includes("localhost") ||
@@ -70,11 +57,8 @@ function useLocalMarketingAuthPaths(): boolean {
 
 /** Marketing-site login/signup href (SSR + client must agree to avoid hydration mismatch). */
 export function getMarketingAuthUrl(path: "login" | "signup"): string {
-    if (useLocalMarketingAuthPaths()) return `/${path}`;
-    const domain = ROOT_DOMAIN.replace(/^https?:\/\//, "")
-        .replace(/^app\./, "")
-        .replace(/\/$/, "");
-    return `https://auth.${domain}/${path}`;
+    if (shouldUseLocalMarketingAuthPaths()) return `/${path}`;
+    return getAuthSiteUrl(ROOT_DOMAIN, `/${path}`);
 }
 
 export const LOGIN_URL = getMarketingAuthUrl("login");

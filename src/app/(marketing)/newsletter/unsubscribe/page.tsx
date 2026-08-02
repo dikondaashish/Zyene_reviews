@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 export default async function NewsletterUnsubscribePage({
     searchParams,
 }: {
-    searchParams: Promise<{ success?: string; error?: string; email?: string }>;
+    searchParams: Promise<{ success?: string; error?: string; id?: string }>;
 }) {
     const params = await searchParams;
     const success = params.success === "1";
     const error = params.error;
-    const email = params.email;
+    const canConfirm = Boolean(params.id) && !success && !error;
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center px-4 py-24">
@@ -26,10 +26,20 @@ export default async function NewsletterUnsubscribePage({
                         <CheckCircle2 className="text-primary mx-auto mb-4 size-12" />
                         <h1 className="text-2xl font-bold text-foreground mb-2">You&apos;re unsubscribed</h1>
                         <p className="text-muted-foreground mb-6">
-                            {email
-                                ? `${email} will no longer receive Zyene Reviews Monthly.`
-                                : "You will no longer receive Zyene Reviews Monthly."}
+                            You will no longer receive Zyene Reviews Monthly.
                         </p>
+                    </>
+                ) : canConfirm ? (
+                    <>
+                        <AlertCircle className="text-muted-foreground mx-auto mb-4 size-12" />
+                        <h1 className="text-2xl font-bold text-foreground mb-2">Unsubscribe?</h1>
+                        <p className="text-muted-foreground mb-6">
+                            Confirm that you no longer want to receive Zyene Reviews Monthly.
+                        </p>
+                        <form action="/api/marketing/newsletter/unsubscribe" method="post" className="mb-3">
+                            <input type="hidden" name="id" value={params.id} />
+                            <Button type="submit" className="w-full">Confirm unsubscribe</Button>
+                        </form>
                     </>
                 ) : (
                     <>

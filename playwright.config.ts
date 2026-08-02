@@ -17,6 +17,7 @@ export default defineConfig({
   },
   use: {
     baseURL: BASE_URL,
+    storageState: process.env.PLAYWRIGHT_STORAGE_STATE,
     viewport: { width: 1440, height: 900 },
     trace: "retain-on-failure",
   },

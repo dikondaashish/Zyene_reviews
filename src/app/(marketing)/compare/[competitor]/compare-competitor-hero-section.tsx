@@ -2,6 +2,7 @@ import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summar
 import type { CompetitorData } from "@/lib/phase3/competitor-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { ArrowRight, Check, X, ChevronRight, Sparkles, ShieldCheck } from "lucide-react";
 
 export function CompareCompetitorHeroSection({ data }: { data: CompetitorData }) {
@@ -57,7 +58,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                                 Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
                             </Button>

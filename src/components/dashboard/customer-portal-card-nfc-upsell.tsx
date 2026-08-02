@@ -1,16 +1,22 @@
+import Image from "next/image";
 import { CUSTOMER_PORTAL_GOOGLE_G_SVG } from "@/components/dashboard/customer-portal-card-constants";
 
 export function CustomerPortalCardNfcUpsell() {
     return (
         <div className="relative z-10 w-full mb-4">
-            <div
+            <a
+                href="https://zyenereviews.com/nfc-cards"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-[rgb(0,82,204)] rounded-[22px] px-8 py-5 flex items-center justify-between overflow-hidden relative cursor-pointer group shadow-sm"
-                onClick={() => window.open("https://zyenereviews.com/nfc-cards", "_blank")}
             >
                 <div className="absolute -left-10 -top-10 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-700 size-36">
-                    <img
+                    <Image
                         src={CUSTOMER_PORTAL_GOOGLE_G_SVG}
                         alt=""
+                        width={144}
+                        height={144}
+                        unoptimized
                         className="object-contain filter brightness-0 invert size-full"
                     />
                 </div>
@@ -26,36 +32,42 @@ export function CustomerPortalCardNfcUpsell() {
                         </p>
                     </div>
                     <div className="w-fit">
-                        <button className="bg-white text-[rgb(0,82,204)] text-[13px] font-bold px-5 py-1.5 rounded-[10px] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                        <span className="bg-white text-[rgb(0,82,204)] text-[13px] font-bold px-5 py-1.5 rounded-[10px] transition-[box-shadow,transform] hover:shadow-lg active:scale-95 flex items-center justify-center">
                             Order now
-                        </button>
+                        </span>
                     </div>
                 </div>
 
                 <div className="relative w-40 h-28 shrink-0 pointer-events-none select-none hidden md:flex items-center justify-end pr-1">
                     <div className="absolute right-[76px] top-[28px] w-[62px] h-[90px] rotate-[-28deg] opacity-20 blur-[0.4px] scale-[0.9]">
-                        <img
+                        <Image
                             src="/google-nfc-card-design.png"
                             alt=""
+                            fill
+                            sizes="62px"
                             className="object-contain rounded-lg shadow-2xl size-full"
                         />
                     </div>
                     <div className="absolute right-[4px] top-[36px] w-[62px] h-[90px] rotate-[22deg] opacity-40 blur-[0.2px] scale-[0.95]">
-                        <img
+                        <Image
                             src="/google-nfc-card-design.png"
                             alt=""
+                            fill
+                            sizes="62px"
                             className="object-contain rounded-lg shadow-2xl size-full"
                         />
                     </div>
                     <div className="absolute right-[20px] top-[0px] w-[74px] h-[106px] rotate-[-6deg] z-20 transition-transform duration-500 group-hover:rotate-[-4deg] group-hover:scale-[1.02]">
-                        <img
+                        <Image
                             src="/google-nfc-card-design.png"
                             alt=""
+                            fill
+                            sizes="74px"
                             className="object-contain rounded-[8px] shadow-[0_15px_35px_rgba(0,0,0,0.25)] size-full"
                         />
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     );
 }

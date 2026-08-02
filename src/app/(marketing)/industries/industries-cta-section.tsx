@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IndustriesCtaSection() {
     return (
@@ -19,7 +20,7 @@ export function IndustriesCtaSection() {
                         7-day free trial. Full access. No credit card lock-in.<br />
                         Works for every industry on this page—starting at $29.99/mo.
                     </p>
-                    <Link href="/signup">
+                    <Link href={SIGNUP_URL}>
                         <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Button>

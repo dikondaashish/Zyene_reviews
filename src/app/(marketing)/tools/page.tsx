@@ -5,7 +5,7 @@ import { ArrowRight, Link2, BarChart3, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-
+import { SIGNUP_URL } from "@/config/env";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Review Tools for Local Businesses",
     description:
@@ -22,13 +22,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         description: "Generate a Google review link, check your reputation score, and draft review responses, free.",
     },
 });
-
-const ICONS = {
-    link: Link2,
-    chart: BarChart3,
-    message: MessageSquare,
-};
-
+const ICONS = { link: Link2, chart: BarChart3, message: MessageSquare };
 export default function FreeToolsHubPage() {
     return (
         <>
@@ -73,7 +67,7 @@ export default function FreeToolsHubPage() {
                             <Link
                                 key={tool.slug}
                                 href={`/tools/${tool.slug}`}
-                                className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
+                                className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-[border-color,box-shadow] flex flex-col"
                             >
                                 <Icon className="text-primary mb-4 size-10" />
                                 <h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
@@ -95,7 +89,7 @@ export default function FreeToolsHubPage() {
                         Zyene Reviews sends review requests, drafts AI replies, and tracks competitors—from $29.99/mo with a 7-day free trial.
                     </p>
                     <Button asChild size="lg" className="rounded-full">
-                        <Link href="/signup">Start free trial</Link>
+                        <Link href={SIGNUP_URL}>Start free trial</Link>
                     </Button>
                 </div>
             </section>

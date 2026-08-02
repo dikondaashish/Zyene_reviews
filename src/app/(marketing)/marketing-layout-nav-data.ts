@@ -57,8 +57,6 @@ export const RESOURCES_LINKS: MarketingNavLink[] = [
 
 export const MARKETING_PREFETCH_HREFS = [
     "/docs",
-    "/login",
-    "/signup",
     "/about",
     "/contact",
     "/help",

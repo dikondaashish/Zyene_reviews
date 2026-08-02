@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Clock, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import {
     HELP_BY_CATEGORY,
     HELP_CATEGORIES,
@@ -97,7 +98,7 @@ export function HelpArticleView({
                                 <p className="text-xs text-muted-foreground mb-4">
                                     Start with a 7-day free trial. Full access to all features.
                                 </p>
-                                <Link href="/signup">
+                                <Link href={SIGNUP_URL}>
                                     <Button size="sm" className="w-full gap-2">
                                         Start Free Trial <ArrowRight className="size-3.5" />
                                     </Button>

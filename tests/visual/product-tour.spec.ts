@@ -1,33 +1,17 @@
 import { test, expect } from "@playwright/test";
 
+const HAS_AUTH_STORAGE = Boolean(process.env.PLAYWRIGHT_STORAGE_STATE);
+
 /**
  * Product Tour E2E Tests
  * Verifies navigation, visibility, and completion logic.
  */
 test.describe("Dashboard Product Tour", () => {
-  // NOTE: This test assumes you are logged in or have a storageState.
-  // You can run it with: npx playwright test tests/visual/product-tour.spec.ts --project=chromium
-  
+  test.skip(!HAS_AUTH_STORAGE, "Requires PLAYWRIGHT_STORAGE_STATE for an authenticated user");
+
   test.beforeEach(async ({ page }) => {
-    // Navigate to dashboard
-    await page.goto("/dashboard?tour=true");
-    
-    // Check if we were redirected to login (Auth Block)
-    if (page.url().includes("/login")) {
-      console.log("\n⚠️  Redirected to login. Please log in manually in the headed browser to continue the test...");
-      // You can also automate this if you have credentials:
-      // await page.fill('input[name="email"]', 'your-email@example.com');
-      // await page.fill('input[name="password"]', 'your-password');
-      // await page.click('button[type="submit"]');
-
-      // Wait for navigation back to dashboard (timeout 60s for manual login)
-      await page.waitForURL(/.*dashboard.*/, { timeout: 60000 });
-      
-      // Re-navigate to ensure the tour param is persistent
-      await page.goto("/dashboard?tour=true");
-    }
-
-    await page.waitForLoadState("networkidle");
+    await page.goto("/dashboard?tour=true", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
   });
 
   test("should start the tour and navigate through all steps", async ({ page }) => {
@@ -107,7 +91,7 @@ test.describe("Dashboard Product Tour", () => {
     await expect(page.locator(".tour-tooltip")).not.toBeVisible();
 
     // Restart and click Skip
-    await page.goto("/dashboard?tour=true", { waitUntil: "networkidle" });
+    await page.goto("/dashboard?tour=true", { waitUntil: "domcontentloaded" });
     await page.click(".tour-btn-skip");
     await expect(page.locator(".tour-tooltip")).not.toBeVisible();
   });

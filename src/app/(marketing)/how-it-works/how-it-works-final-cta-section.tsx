@@ -5,6 +5,7 @@ import {
     Star, Sparkles, ShieldCheck, BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function HowItWorksFinalCtaSection() {
     return (
@@ -16,7 +17,7 @@ export function HowItWorksFinalCtaSection() {
                         No credit card lock-in. Cancel anytime before day 7.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
                                 Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                             </Button>

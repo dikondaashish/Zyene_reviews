@@ -33,6 +33,68 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/growth",
 ] as const;
 
+export const AUTH_PAGE_PATHS = [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+] as const;
+
+export function isAuthPageRoute(pathname: string): boolean {
+    return AUTH_PAGE_PATHS.some(
+        (path) => pathname === path || pathname.startsWith(`${path}/`)
+    );
+}
+
+export function getAuthSiteOrigin(rootDomain: string): string {
+    const root = rootDomain
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
+    const isLocal = root.includes("localhost") || root.includes("127.0.0.1");
+    if (isLocal) return `http://${root}`;
+
+    const host = root.replace(/^(?:www\.|app\.|auth\.)/, "");
+    return `https://auth.${host}`;
+}
+
+export function getAuthSiteUrl(rootDomain: string, pathname: `/${string}`): string {
+    const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
+    return `${getAuthSiteOrigin(rootDomain)}${normalizedPath}`;
+}
+
+export function getAppSiteOrigin(
+    rootDomain: string,
+    configuredAppUrl?: string | null
+): string {
+    const root = rootDomain
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
+    const isLocal = root.includes("localhost") || root.includes("127.0.0.1");
+
+    if (configuredAppUrl) {
+        try {
+            const configured = new URL(configuredAppUrl);
+            if (isLocal) return configured.origin;
+
+            const apexHost = root.replace(/^(?:www\.|app\.|auth\.)/, "").split(":")[0];
+            const marketingOrAuthHosts = new Set([
+                apexHost,
+                `www.${apexHost}`,
+                `auth.${apexHost}`,
+            ]);
+            if (!marketingOrAuthHosts.has(configured.hostname)) {
+                return configured.origin;
+            }
+        } catch {
+            // Fall through to the root-domain-derived app origin.
+        }
+    }
+
+    if (isLocal) return `http://${root}`;
+    const apexHost = root.replace(/^(?:www\.|app\.|auth\.)/, "").split(":")[0];
+    return `https://app.${apexHost}`;
+}
+
 /** Auth, app, and infrastructure paths — never business slugs on any host. */
 export const PLATFORM_ROUTE_PREFIXES = [
     "/api",
@@ -40,10 +102,7 @@ export const PLATFORM_ROUTE_PREFIXES = [
     "/static",
     "/favicon.ico",
     "/favicon_io",
-    "/login",
-    "/signup",
-    "/forgot-password",
-    "/reset-password",
+    ...AUTH_PAGE_PATHS,
     "/onboarding",
     "/dashboard",
     "/settings",

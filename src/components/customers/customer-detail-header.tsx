@@ -34,7 +34,7 @@ export function CustomerDetailHeader({
                     </h1>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    Contact profile, outreach, and activity ,  same data as your customer list.
+                    Contact profile, outreach, and activity—the same data as your customer list.
                 </p>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">{actions}</div>

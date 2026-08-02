@@ -21,7 +21,7 @@ export function GoogleIntegrationCardDisconnected({ onConnect }: { onConnect: ()
             </CardHeader>
             <CardContent className="pb-3">
                 <p className="text-sm text-muted-foreground">
-                    Connect your Google Business Profile to automatically import reviews, track ratings, and respond , 
+                    Connect your Google Business Profile to automatically import reviews, track ratings, and respond—
                     all from your Zyene dashboard.
                 </p>
             </CardContent>

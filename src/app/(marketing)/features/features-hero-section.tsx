@@ -5,6 +5,7 @@ import {
     ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Zap, Code2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { POSITIONING } from "@/lib/growth/product-foundation";
 
 export function FeaturesHeroSection() {
@@ -27,7 +28,7 @@ export function FeaturesHeroSection() {
                         {POSITIONING.oneLiner}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                                 Start Free Trial <ArrowRight className="ml-2 size-4" />
                             </Button>

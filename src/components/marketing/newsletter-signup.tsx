@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
@@ -42,10 +42,13 @@ export function NewsletterSignup({
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [message, setMessage] = useState("");
+    const submittingRef = useRef(false);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (submittingRef.current || status === "success") return;
         if (!email.trim()) return;
+        submittingRef.current = true;
         setStatus("loading");
         setMessage("");
 
@@ -55,12 +58,13 @@ export function NewsletterSignup({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: email.trim(), source, ...readUtmCookie() }),
             });
-            const data = await res.json().catch(() => ({}));
             if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
                 setStatus("error");
                 setMessage(data.error ?? "Something went wrong. Please try again.");
                 return;
             }
+            const data = await res.json().catch(() => ({}));
             setStatus("success");
             setMessage(successMessage);
             setEmail("");
@@ -68,6 +72,8 @@ export function NewsletterSignup({
         } catch {
             setStatus("error");
             setMessage("Network error. Please try again.");
+        } finally {
+            submittingRef.current = false;
         }
     }
 
@@ -75,7 +81,10 @@ export function NewsletterSignup({
         <div className={className}>
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input
+                    name="email"
                     type="email"
+                    autoComplete="email"
+                    aria-label="Email address"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

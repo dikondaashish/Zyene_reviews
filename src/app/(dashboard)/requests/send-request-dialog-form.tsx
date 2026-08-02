@@ -49,7 +49,7 @@ export function SendRequestDialogForm({
                             <div className="grid grid-cols-3 gap-2">
                                 <label
                                     className={cn(
-                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-[background-color,border-color,box-shadow]",
                                         field.value === "sms"
                                             ? "border-primary bg-primary/5 ring-1 ring-primary"
                                             : "border-input hover:bg-muted/50",
@@ -57,6 +57,7 @@ export function SendRequestDialogForm({
                                 >
                                     <input
                                         type="radio"
+                                        name="review-request-channel"
                                         className="sr-only"
                                         checked={field.value === "sms"}
                                         onChange={() => field.onChange("sms")}
@@ -65,7 +66,7 @@ export function SendRequestDialogForm({
                                 </label>
                                 <label
                                     className={cn(
-                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-[background-color,border-color,box-shadow]",
                                         field.value === "email"
                                             ? "border-primary bg-primary/5 ring-1 ring-primary"
                                             : "border-input hover:bg-muted/50",
@@ -73,6 +74,7 @@ export function SendRequestDialogForm({
                                 >
                                     <input
                                         type="radio"
+                                        name="review-request-channel"
                                         className="sr-only"
                                         checked={field.value === "email"}
                                         onChange={() => field.onChange("email")}
@@ -81,7 +83,7 @@ export function SendRequestDialogForm({
                                 </label>
                                 <label
                                     className={cn(
-                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-all",
+                                        "flex cursor-pointer items-center justify-center rounded-lg border p-3 transition-[background-color,border-color,box-shadow]",
                                         field.value === "both"
                                             ? "border-primary bg-primary/5 ring-1 ring-primary"
                                             : "border-input hover:bg-muted/50",
@@ -89,6 +91,7 @@ export function SendRequestDialogForm({
                                 >
                                     <input
                                         type="radio"
+                                        name="review-request-channel"
                                         className="sr-only"
                                         checked={field.value === "both"}
                                         onChange={() => field.onChange("both")}

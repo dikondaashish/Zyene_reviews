@@ -18,18 +18,25 @@ export function useResetPasswordForm() {
     const [sessionError, setSessionError] = useState(false);
 
     useEffect(() => {
+        let cancelled = false;
         const supabase = createClient();
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                setSessionReady(true);
-            } else {
-                setSessionError(true);
-            }
-        });
+        void supabase.auth.getUser()
+            .then(({ data: { user } }) => {
+                if (cancelled) return;
+                if (user) setSessionReady(true);
+                else setSessionError(true);
+            })
+            .catch(() => {
+                if (!cancelled) setSessionError(true);
+            });
+        return () => {
+            cancelled = true;
+        };
     }, [searchParams]);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (isLoading) return;
 
         if (password.length < 6) {
             toast.error("Password must be at least 6 characters.");
@@ -41,18 +48,20 @@ export function useResetPasswordForm() {
         }
 
         setIsLoading(true);
-        const supabase = createClient();
-
-        const { error } = await supabase.auth.updateUser({ password });
-
-        if (error) {
-            toast.error(error.message);
+        try {
+            const supabase = createClient();
+            const { error } = await supabase.auth.updateUser({ password });
+            if (error) {
+                toast.error(error.message);
+                return;
+            }
+            setIsSuccess(true);
+            setTimeout(() => router.push("/dashboard"), 2500);
+        } catch {
+            toast.error("Unable to update your password. Please try again.");
+        } finally {
             setIsLoading(false);
-            return;
         }
-
-        setIsSuccess(true);
-        setTimeout(() => router.push("/dashboard"), 2500);
     }
 
     return {

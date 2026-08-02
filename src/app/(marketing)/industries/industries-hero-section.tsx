@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IndustriesHeroSection() {
     return (
@@ -24,7 +25,7 @@ export function IndustriesHeroSection() {
                         </Link>
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                                 Start Free Trial <ArrowRight className="ml-2 size-4" />
                             </Button>

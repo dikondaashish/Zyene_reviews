@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 
 export async function restoreOriginalUserAfterAddBusiness(params: {
     admin: SupabaseClient;
@@ -41,5 +42,9 @@ export async function restoreOriginalUserAfterAddBusiness(params: {
         }
     }
 
-    return NextResponse.redirect(`${appUrl}/login?message=business_added`);
+    const loginUrl = getAuthSiteUrl(
+        process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com",
+        "/login"
+    );
+    return NextResponse.redirect(`${loginUrl}?message=business_added`);
 }

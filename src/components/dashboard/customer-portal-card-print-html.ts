@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { CUSTOMER_PORTAL_GOOGLE_G_SVG } from "@/components/dashboard/customer-portal-card-constants";
+import { escapeHtml } from "@/lib/security/html-escape";
 
 export function openCustomerPortalPrintWindow(params: {
     qrDataUrl: string;
@@ -11,6 +12,11 @@ export function openCustomerPortalPrintWindow(params: {
     domain: string;
 }): void {
     const { qrDataUrl, businessSlug, businessName, businessLogoUrl, posterBg, posterFg, domain } = params;
+    const safeBusinessName = escapeHtml(businessName || "Business");
+    const safeBusinessSlug = escapeHtml(businessSlug);
+    const safeBusinessLogoUrl = businessLogoUrl ? escapeHtml(businessLogoUrl) : null;
+    const safeQrDataUrl = escapeHtml(qrDataUrl);
+    const safeDomain = escapeHtml(domain);
 
     const printWindow = window.open("", "_blank", "width=600,height=800");
     if (!printWindow) {
@@ -18,8 +24,8 @@ export function openCustomerPortalPrintWindow(params: {
         return;
     }
 
-    const logoHtml = businessLogoUrl
-        ? `<img src="${businessLogoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />`
+    const logoHtml = safeBusinessLogoUrl
+        ? `<img src="${safeBusinessLogoUrl}" alt="${safeBusinessName}" class="logo" crossorigin="anonymous" />`
         : "";
 
     printWindow.document.write(`
@@ -72,7 +78,7 @@ export function openCustomerPortalPrintWindow(params: {
                 <body>
                     <div class="card">
                         ${logoHtml}
-                        <div class="biz-name">${businessName || "Business"}</div>
+                        <div class="biz-name">${safeBusinessName}</div>
                         <div class="divider"></div>
                         <div class="cta-pill">
                             <img src="${CUSTOMER_PORTAL_GOOGLE_G_SVG}" alt="Google" />
@@ -85,8 +91,8 @@ export function openCustomerPortalPrintWindow(params: {
                                 )
                                 .join("")}
                         </div>
-                        <div class="qr-frame"><img src="${qrDataUrl}" alt="QR" /></div>
-                        <div class="url">${domain}/${businessSlug}</div>
+                        <div class="qr-frame"><img src="${safeQrDataUrl}" alt="QR" /></div>
+                        <div class="url">${safeDomain}/${safeBusinessSlug}</div>
                         <div class="powered">Powered by Zyene Reviews</div>
                     </div>
                     <script>

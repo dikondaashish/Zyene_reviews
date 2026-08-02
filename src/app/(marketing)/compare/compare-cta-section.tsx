@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
 import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
@@ -16,7 +17,7 @@ export function CompareCtaSection() {
                         Cancel before day 7 and pay nothing.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
                                 Start Free Trial <ArrowRight className="ml-2 size-5" />
                             </Button>

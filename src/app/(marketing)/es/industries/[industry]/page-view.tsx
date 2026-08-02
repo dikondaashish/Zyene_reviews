@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
     getLocalizedIndustry,
@@ -51,7 +52,7 @@ export default async function EsIndustryPage({
                     </ul>
 
                     <div className="flex flex-wrap gap-4">
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="rounded-xl">
                                 Prueba gratis <ArrowRight className="ml-2 size-4" />
                             </Button>
@@ -93,7 +94,7 @@ export default async function EsIndustryPage({
                             Prueba Zyene Reviews gratis durante 7 días. Sin contrato anual — planes desde $29.99/mes
                             con escudo de feedback negativo y respuestas con IA incluidas.
                         </p>
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" className="rounded-xl">
                                 Crear cuenta gratis <ArrowRight className="ml-2 size-4" />
                             </Button>

@@ -1,6 +1,11 @@
 /** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
 export function resolveBrandColor(color?: string | null): string {
-    return color && /^#([0-9a-fA-F]{3}){1,2}$/.test(color) ? color : "#0f172a";
+    if (!color || !/^#([0-9a-fA-F]{3}){1,2}$/.test(color)) return "#0f172a";
+    if (color.length === 4) {
+        const [r, g, b] = color.slice(1);
+        return `#${r}${r}${g}${g}${b}${b}`;
+    }
+    return color;
 }
 
 /** Compute a readable text color (white or dark) for a hex background. */

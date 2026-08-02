@@ -43,7 +43,7 @@ export function Step4SubscriptionForm({
                     <div>
                         <h3 className="text-lg font-semibold text-left">Unlock the full power of Zyene</h3>
                         <p className="text-xs text-muted-foreground text-left mt-1">
-                            Your business is set up ,  choose a plan to start managing reviews with AI.
+                            Your business is set up—choose a plan to start managing reviews with AI.
                         </p>
                     </div>
                     <Step4SubscriptionIntervalToggle

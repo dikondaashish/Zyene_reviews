@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
 import { PlatformPillarsSection } from "@/components/marketing/platform-pillars-section";
+import { SIGNUP_URL } from "@/config/env";
 import { PILLARS } from "./features-data";
 
 export function FeaturesFeaturePillarsSection() {
@@ -45,7 +46,7 @@ export function FeaturesFeaturePillarsSection() {
                                         ))}
                                     </ul>
                                     <div className="flex flex-wrap items-center gap-4">
-                                        <Link href={pillar.cta.href}>
+                                        <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
                                             <Button variant={pillar.highlight ? "default" : "outline"} className="gap-2">
                                                 {pillar.cta.label} <ArrowRight className="size-4" />
                                             </Button>

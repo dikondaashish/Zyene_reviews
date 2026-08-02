@@ -12,6 +12,7 @@ async function forceTheme(page: Page, mode: "light" | "dark") {
   await page.addInitScript((theme) => {
     try {
       localStorage.setItem("theme", theme);
+      localStorage.setItem("cookie-consent", "accepted");
     } catch {
       // Ignore localStorage write failures in strict environments.
     }
@@ -29,7 +30,7 @@ for (const mode of ["light", "dark"] as const) {
     for (const pageMeta of PAGES) {
       test(`visual snapshot: ${pageMeta.name}`, async ({ page }) => {
         await page.goto(pageMeta.path, { waitUntil: "domcontentloaded" });
-        await page.waitForLoadState("networkidle");
+        await page.evaluate(() => document.fonts.ready);
         await page.waitForTimeout(250);
 
         await expect(page).toHaveScreenshot(`${pageMeta.name}-${mode}.png`, {

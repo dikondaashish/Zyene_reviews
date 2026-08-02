@@ -1,0 +1,13 @@
+/** Escape untrusted text before interpolating it into a generated HTML document. */
+export function escapeHtml(value: string): string {
+    return value.replace(/[&<>"']/g, (character) => {
+        const entities: Record<string, string> = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+        };
+        return entities[character] ?? character;
+    });
+}

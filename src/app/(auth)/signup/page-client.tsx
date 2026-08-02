@@ -4,7 +4,11 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { SignupForm } from "./signup-form";
 
-export default function SignupPage() {
+interface SignupPageProps {
+    googleClientId: string;
+}
+
+export default function SignupPage({ googleClientId }: SignupPageProps) {
     return (
         <Suspense
             fallback={
@@ -13,7 +17,7 @@ export default function SignupPage() {
                 </div>
             }
         >
-            <SignupForm />
+            <SignupForm googleClientId={googleClientId} />
         </Suspense>
     );
 }

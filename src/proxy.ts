@@ -9,10 +9,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import { globalApiRateLimit } from "@/lib/auth/rate-limit";
 import {
     getMarketingSiteOrigin,
+    getAuthSiteOrigin,
     isBusinessSlugPath,
+    isAuthPageRoute,
     isPlatformRoute,
     customersToCaseStudiesRedirect,
 } from "@/lib/routing/platform-routes";
+import { safeNextPath } from "@/lib/routing/safe-next-path";
 
 /** True when the browser Origin matches this request's Host (same deployment / custom review domains like collectratings.com). */
 function originMatchesRequestHost(origin: string | null | undefined, hostHeader: string): boolean {
@@ -277,6 +280,9 @@ export async function proxy(request: NextRequest) {
         }
 
         if (!user) {
+            const requestedPath = safeNextPath(`${pathname}${request.nextUrl.search}`);
+            const loginUrl = new URL("/login", getAuthSiteOrigin(rootDomain));
+            loginUrl.searchParams.set("next", requestedPath);
             // For RSC/fetch requests from auth subdomain, don't redirect (causes CORS error)
             const isRSC = request.headers.get("rsc") === "1"
                 || request.headers.get("next-router-state-tree")
@@ -285,7 +291,7 @@ export async function proxy(request: NextRequest) {
 
             if (isRSC && origin === `https://auth.${rootDomain}`) {
                 const res = new NextResponse(
-                    JSON.stringify({ redirect: `https://auth.${rootDomain}` }),
+                    JSON.stringify({ redirect: loginUrl.toString() }),
                     { status: 401 }
                 );
                 addCorsHeaders(res);
@@ -293,9 +299,7 @@ export async function proxy(request: NextRequest) {
             }
 
             return createResponse(
-                NextResponse.redirect(
-                    new URL(`https://auth.${rootDomain}`, request.url)
-                )
+                NextResponse.redirect(loginUrl)
             );
         }
 
@@ -387,6 +391,12 @@ export async function proxy(request: NextRequest) {
     const wwwHost = `www.${apexHost}`;
 
     if (hostname === rootDomain || hostname === wwwHost) {
+        if (!rootDomain.includes("localhost") && isAuthPageRoute(pathname)) {
+            const authUrl = new URL(pathname, getAuthSiteOrigin(rootDomain));
+            authUrl.search = request.nextUrl.search;
+            return createResponse(NextResponse.redirect(authUrl, 308));
+        }
+
         // Permanent canonical host: apex → www (production only)
         if (hostname === apexHost && !rootDomain.includes("localhost")) {
             const canonical = request.nextUrl.clone();

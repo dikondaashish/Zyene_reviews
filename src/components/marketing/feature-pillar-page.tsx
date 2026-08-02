@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { NEGATIVE_FEEDBACK_SHIELD } from "@/lib/growth/product-foundation";
 import type { FeaturePillarPage as Pillar } from "@/lib/growth/feature-pillars";
@@ -94,12 +95,12 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     </div>
 
                     <div className="flex flex-wrap gap-4 pt-4">
-                        <Link href={pillar.cta.href}>
+                        <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
                             <Button size="lg" className="gap-2">
                                 {pillar.cta.label} <ArrowRight className="size-4" />
                             </Button>
                         </Link>
-                        <Link href="/signup">
+                        <Link href={SIGNUP_URL}>
                             <Button size="lg" variant="outline">
                                 Start 7-day free trial
                             </Button>

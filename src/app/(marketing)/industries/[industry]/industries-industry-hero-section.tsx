@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryData; slug: string }) {
     const esIndustryPath = getEsIndustryPathForEnglishSlug(slug);
@@ -49,7 +50,7 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <Link href="/signup">
+                            <Link href={SIGNUP_URL}>
                                 <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
                                     Start Free Trial <ArrowRight className="ml-2 size-4" />
                                 </Button>

@@ -22,7 +22,7 @@ export function NegativeStepContactFields({
         <>
             {privateFeedbackEmailMode !== "hidden" && (
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold text-foreground">
+                    <label htmlFor="private-feedback-email" className="text-sm font-semibold text-foreground">
                         Your email{" "}
                         {privateFeedbackEmailMode === "required" ? (
                             <span className="text-destructive">*</span>
@@ -33,7 +33,10 @@ export function NegativeStepContactFields({
                     <div className="relative">
                         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                         <input
+                            id="private-feedback-email"
+                            name="email"
                             type="email"
+                            autoComplete="email"
                             placeholder="you@example.com"
                             className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
                             value={customerEmail}
@@ -50,7 +53,7 @@ export function NegativeStepContactFields({
 
             {privateFeedbackPhoneMode !== "hidden" && (
                 <div className="space-y-2">
-                    <label className="text-sm font-semibold text-foreground">
+                    <label htmlFor="private-feedback-phone" className="text-sm font-semibold text-foreground">
                         Phone number{" "}
                         {privateFeedbackPhoneMode === "required" ? (
                             <span className="text-destructive">*</span>
@@ -61,6 +64,8 @@ export function NegativeStepContactFields({
                     <div className="relative">
                         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                         <input
+                            id="private-feedback-phone"
+                            name="phone"
                             type="tel"
                             inputMode="tel"
                             autoComplete="tel"

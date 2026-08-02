@@ -18,7 +18,7 @@ export function openBrandedQrPrintWindow(params: {
 
     const accent = resolveBrandColor(params.brandColor);
     const accentFg = contrastText(accent);
-    const resolvedBgColor = params.pageBgColor ?? "#ffffff";
+    const resolvedBgColor = resolveBrandColor(params.pageBgColor ?? "#ffffff");
     const rootDomain = getDisplayDomain();
 
     printWindow.document.write(

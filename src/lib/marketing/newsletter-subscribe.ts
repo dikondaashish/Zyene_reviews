@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
-import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-emails";
+import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-marketing-emails";
 import { reviewRequestTemplatePackEmail } from "@/services/resend/templates/review-request-templates-pack-email";
 import { recordMarketingEvent } from "@/lib/marketing/record-marketing-event";
 import {

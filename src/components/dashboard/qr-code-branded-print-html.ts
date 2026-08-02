@@ -1,4 +1,5 @@
 import { contrastText, QR_CODE_GOOGLE_G_SVG } from "@/components/dashboard/qr-code-helpers";
+import { escapeHtml } from "@/lib/security/html-escape";
 
 export function buildQrCodePrintDocumentHtml(params: {
     businessName: string;
@@ -11,8 +12,13 @@ export function buildQrCodePrintDocumentHtml(params: {
     rootDomain: string;
 }): string {
     const { businessName, businessSlug, accent, accentFg, resolvedBgColor, logoUrl, qrDataUrl, rootDomain } = params;
-    const logoHtml = logoUrl
-        ? `<img src="${logoUrl}" alt="${businessName}" class="logo" crossorigin="anonymous" />`
+    const safeBusinessName = escapeHtml(businessName);
+    const safeBusinessSlug = escapeHtml(businessSlug);
+    const safeLogoUrl = logoUrl ? escapeHtml(logoUrl) : null;
+    const safeQrDataUrl = escapeHtml(qrDataUrl);
+    const safeRootDomain = escapeHtml(rootDomain);
+    const logoHtml = safeLogoUrl
+        ? `<img src="${safeLogoUrl}" alt="${safeBusinessName}" class="logo" crossorigin="anonymous" />`
         : "";
 
     return `
@@ -116,7 +122,7 @@ export function buildQrCodePrintDocumentHtml(params: {
                         <div class="accent-top"></div>
                         <div class="inner">
                             ${logoHtml}
-                            <div class="biz-name">${businessName}</div>
+                            <div class="biz-name">${safeBusinessName}</div>
                             <div class="divider"></div>
                             <div class="cta-pill">
                                 <img src="${QR_CODE_GOOGLE_G_SVG}" alt="Google" />
@@ -130,9 +136,9 @@ export function buildQrCodePrintDocumentHtml(params: {
                                     .join("")}
                             </div>
                             <div class="qr-frame">
-                                <img src="${qrDataUrl}" alt="QR Code" />
+                                <img src="${safeQrDataUrl}" alt="QR Code" />
                             </div>
-                            <div class="url">${rootDomain}/${businessSlug}</div>
+                            <div class="url">${safeRootDomain}/${safeBusinessSlug}</div>
                             <div class="powered">Powered by Zyene Reviews</div>
                         </div>
                         <div class="accent-bottom"></div>

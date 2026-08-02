@@ -31,7 +31,7 @@ export function CustomerDetailProfileTagsSince({
                 </div>
                 {tags.length === 0 ? (
                     <p className="mb-3 text-sm text-muted-foreground">
-                        No tags yet ,  add labels to find this contact in filters.
+                        No tags yet—add labels to find this contact in filters.
                     </p>
                 ) : null}
                 <div className="flex flex-wrap items-center gap-2">

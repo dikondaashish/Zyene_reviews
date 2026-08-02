@@ -37,12 +37,13 @@ export function TemplatePackPageAnalytics() {
             const anchor = (e.target as HTMLElement).closest("a[href]");
             if (!anchor) return;
             const href = anchor.getAttribute("href") ?? "";
-            if (href === "/signup" || href.startsWith("/signup?")) {
+            const path = new URL(href, window.location.origin).pathname;
+            if (path === "/signup") {
                 trackMarketingEventClient("template_pack_signup_click", {
                     pagePath: TEMPLATE_PACK_PAGE_PATH,
                     source: TEMPLATE_PACK_SOURCE,
                 });
-            } else if (href === "/pricing" || href.startsWith("/pricing?")) {
+            } else if (path === "/pricing") {
                 trackMarketingEventClient("template_pack_pricing_click", {
                     pagePath: TEMPLATE_PACK_PAGE_PATH,
                     source: TEMPLATE_PACK_SOURCE,

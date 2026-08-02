@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SIGNUP_URL } from "@/config/env";
 import type { IndustryData } from "@/lib/phase3/industry-data";
 
 const ENTERPRISE_SALES_HREF =
@@ -117,7 +118,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                     </Button>
                                 </a>
                             ) : (
-                                <Link href={plan.highlighted ? "/signup" : "/pricing"}>
+                                <Link href={plan.highlighted ? SIGNUP_URL : "/pricing"}>
                                     <Button
                                         className="w-full gap-2"
                                         variant={plan.highlighted ? "default" : "outline"}

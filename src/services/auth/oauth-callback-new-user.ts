@@ -12,6 +12,7 @@ import {
 } from "./oauth-callback-helpers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
+import { sendOAuthNewUserMessages } from "./oauth-new-user-messaging";
 
 export async function runOAuthNewUserSignup(params: {
     admin: SupabaseClient;
@@ -178,34 +179,12 @@ export async function runOAuthNewUserSignup(params: {
         metadata: signupMetadata,
     });
 
-    const [{ sendEmail }, { welcomeEmail, welcomeEmailText }] = await Promise.all([
-        import("@/services/resend/send-email"),
-        import("@/services/resend/templates/welcome-email"),
-    ]);
-    const loginUrl = `${appUrl}/login`;
-
-    sendEmail({
-        to: email,
-        subject: "Welcome to Zyene Reviews — connect Google to get started",
-        html: welcomeEmail({ userName: fullName || "User", loginUrl }),
-        text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
-    }).catch(err => {
-        logger.error({ err: err }, "Failed to send welcome email:");
-        Sentry.captureException(err, { tags: { route: "auth-callback", step: "send_welcome_email" } });
+    await sendOAuthNewUserMessages({
+        email,
+        fullName,
+        userId: data.user.id,
+        organizationId: org.id,
     });
-
-    try {
-        const { scheduleTrialNurture } = await import("@/lib/growth/schedule-growth-emails");
-        await scheduleTrialNurture({
-            email,
-            userName: fullName || "there",
-            userId: data.user.id,
-            organizationId: org.id,
-        });
-    } catch (nurtureErr) {
-        logger.error({ err: nurtureErr }, "Failed to schedule trial nurture:");
-        Sentry.captureException(nurtureErr, { tags: { route: "auth-callback", step: "schedule_trial_nurture" } });
-    }
 
     // New users go to onboarding on app subdomain
     return NextResponse.redirect(`${appUrl}/onboarding`);

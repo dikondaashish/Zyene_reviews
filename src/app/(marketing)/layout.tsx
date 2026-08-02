@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
-import { CookieBanner } from "@/components/ui/cookie-banner";
 import { UtmCapture } from "@/components/marketing/utm-capture";
 import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
 import { MarketingLayoutAnnouncementBar } from "./marketing-layout-announcement-bar";
@@ -34,7 +33,6 @@ export default function MarketingLayout({
                 </Suspense>
             )}
             <main className="min-w-0 flex-1">{children}</main>
-            {growthDashboard ? null : <CookieBanner />}
             {growthDashboard ? null : <MarketingLayoutFooter />}
         </div>
     );

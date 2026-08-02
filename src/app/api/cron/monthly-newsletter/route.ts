@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendEmail } from "@/services/resend/send-email";
-import { monthlyNewsletterEmail } from "@/services/resend/templates/growth-emails";
+import { monthlyNewsletterEmail } from "@/services/resend/templates/growth-marketing-emails";
 import { getMonthlyNewsletterEdition } from "@/lib/phase6/monthly-newsletter-content";
 import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
