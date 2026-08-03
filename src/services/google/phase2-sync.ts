@@ -1,13 +1,14 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken } from "./sync-service";
-import { listAllQuestions, questionToRow } from "./qanda";
-import {
-    checkUriLikelyBroken,
-    linkToRow,
-    listAllPlaceActionLinks,
-} from "./place-actions";
+import { listAllPlaceActionLinks } from "./place-actions";
+import { checkUriLikelyBroken, linkToRow } from "./place-action-link-utils";
+import { syncGbpQuestionsForPlatform } from "./phase2-questions-sync";
 import * as Sentry from "@sentry/nextjs";
+import {
+    captureGoogleServiceException,
+    isGoogleConfigurationError,
+} from "./api-error";
 
 export interface Phase2SyncResult {
     success: boolean;
@@ -18,102 +19,7 @@ export interface Phase2SyncResult {
 
 const LINK_CHECK_MAX = 12;
 
-/**
- * Syncs all Q&A questions for a Google-connected platform into `gbp_questions`.
- */
-export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
-    success: boolean;
-    count: number;
-    error?: string;
-}> {
-    const admin = createAdminClient();
-
-    const { data: platform, error: pErr } = await admin
-        .from("review_platforms")
-        .select("id, business_id, platform, google_location_id, google_qa_unavailable")
-        .eq("id", platformId)
-        .single();
-
-    if (pErr || !platform || platform.platform !== "google" || !platform.google_location_id) {
-        return { success: false, count: 0, error: "Invalid Google platform" };
-    }
-
-    if (platform.google_qa_unavailable) {
-        return { success: true, count: 0 };
-    }
-
-    try {
-        const { accessToken } = await getValidGoogleToken(platformId);
-        if (!accessToken) {
-            throw new Error("No access token");
-        }
-
-        const questions = await listAllQuestions(accessToken, platform.google_location_id);
-        const rows = questions.map((q) => questionToRow(q, platformId, platform.business_id));
-
-        if (rows.length === 0) {
-            await admin
-                .from("review_platforms")
-                .update({
-                    google_qa_synced_at: new Date().toISOString(),
-                    google_qa_unavailable: true,
-                })
-                .eq("id", platformId);
-            return { success: true, count: 0 };
-        }
-
-        const BATCH = 50;
-        const upsertResults = await Promise.all(
-            Array.from({ length: Math.ceil(rows.length / BATCH) }, (_, index) => {
-                const chunk = rows.slice(index * BATCH, index * BATCH + BATCH);
-                return admin.from("gbp_questions").upsert(chunk, {
-                    onConflict: "review_platform_id,google_question_name",
-                });
-            })
-        );
-        for (const { error } of upsertResults) {
-            if (error) {
-                logger.error({ err: error }, "[Phase2] gbp_questions upsert:");
-                Sentry.captureException(error);
-                throw error;
-            }
-        }
-
-        await admin
-            .from("review_platforms")
-            .update({
-                google_qa_synced_at: new Date().toISOString(),
-                google_qa_unavailable: false,
-            })
-            .eq("id", platformId);
-
-        return { success: true, count: rows.length };
-    } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        const qaUnsupported =
-            /\b501\b/.test(msg) &&
-            (/API_UNSUPPORTED|UNIMPLEMENTED|no longer supported/i.test(msg) ||
-                /mybusinessqanda\.googleapis\.com/i.test(msg));
-        if (qaUnsupported) {
-            try {
-                await admin
-                    .from("review_platforms")
-                    .update({
-                        google_qa_synced_at: new Date().toISOString(),
-                        google_qa_unavailable: true,
-                    })
-                    .eq("id", platformId);
-            } catch (dbErr) {
-                logger.error({ err: dbErr }, "[Phase2] Failed to persist google_qa_unavailable:");
-            }
-            // Q&A API has been sunset by Google; treat as unavailable, not as job failure.
-            return { success: true, count: 0 };
-        }
-        logger.error({ err: msg }, "[Phase2] Q&A sync failed:");
-        Sentry.captureException(e);
-        return { success: false, count: 0, error: msg };
-    }
-}
+export { syncGbpQuestionsForPlatform } from "./phase2-questions-sync";
 
 /**
  * Syncs place action links; optionally HEAD-checks first N URIs for broken flag.
@@ -187,8 +93,20 @@ export async function syncGbpPlaceActionsForPlatform(
         return { success: true, count: rows.length };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
+        if (isGoogleConfigurationError(e)) {
+            logger.warn(
+                {
+                    api: e.apiName,
+                    statusCode: e.statusCode,
+                    googleStatus: e.googleStatus,
+                    googleReason: e.googleReason,
+                },
+                "[Phase2] Google API configuration required"
+            );
+            return { success: false, count: 0, error: msg };
+        }
         logger.error({ err: msg }, "[Phase2] Place actions sync failed:");
-        Sentry.captureException(e);
+        captureGoogleServiceException(e);
         return { success: false, count: 0, error: msg };
     }
 }

@@ -1,4 +1,5 @@
 import { fetchWithRetry } from "./business-profile";
+import { requireGoogleLocationId } from "./location-id";
 
 const BASE = "https://mybusinessbusinessinformation.googleapis.com/v1";
 
@@ -52,7 +53,8 @@ export async function getGoogleLocation(
     accessToken: string,
     locationId: string
 ): Promise<GoogleLocationFull> {
-    const url = `${BASE}/locations/${encodeURIComponent(locationId)}?readMask=${encodeURIComponent(LOCATION_READ_MASK)}`;
+    const normalizedId = requireGoogleLocationId(locationId, "My Business Business Information API");
+    const url = `${BASE}/locations/${encodeURIComponent(normalizedId)}?readMask=${encodeURIComponent(LOCATION_READ_MASK)}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -106,7 +108,8 @@ export async function patchGoogleLocation(
     }
 
     const updateMask = masks.join(",");
-    const url = `${BASE}/locations/${encodeURIComponent(locationId)}?updateMask=${encodeURIComponent(updateMask)}`;
+    const normalizedId = requireGoogleLocationId(locationId, "My Business Business Information API");
+    const url = `${BASE}/locations/${encodeURIComponent(normalizedId)}?updateMask=${encodeURIComponent(updateMask)}`;
 
     const response = await fetchWithRetry(url, {
         method: "PATCH",

@@ -1,0 +1,48 @@
+import type { ErrorEvent } from "@sentry/nextjs";
+import { describe, expect, it } from "vitest";
+
+import {
+    filterClientSentryEvent,
+    isInjectedMetaMaskError,
+} from "../../src/lib/monitoring/sentry-client-filter";
+
+function errorEvent(message: string, filename: string): ErrorEvent {
+    return {
+        type: undefined,
+        exception: {
+            values: [
+                {
+                    value: message,
+                    stacktrace: { frames: [{ filename }] },
+                },
+            ],
+        },
+    };
+}
+
+describe("Sentry client event filtering", () => {
+    it("drops the MetaMask injected error reported on signup", () => {
+        const event = errorEvent("Failed to connect to MetaMask", "app:///scripts/inpage.js");
+
+        expect(isInjectedMetaMaskError(event)).toBe(true);
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("drops the linked MetaMask extension-not-found error", () => {
+        const event = errorEvent("MetaMask extension not found", "chrome-extension://wallet/inpage.js");
+
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("keeps a MetaMask-like application error without an extension frame", () => {
+        const event = errorEvent("Failed to connect to MetaMask", "app:///src/app/signup.tsx");
+
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+
+    it("keeps unrelated errors even when an injected script appears in the stack", () => {
+        const event = errorEvent("Google sign-in failed", "app:///scripts/inpage.js");
+
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+});

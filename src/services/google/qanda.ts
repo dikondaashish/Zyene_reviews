@@ -1,5 +1,6 @@
 import { fetchWithRetry } from "./business-profile";
 import type { Json } from "@/lib/db/supabase/database.types";
+import { requireGoogleLocationId } from "./location-id";
 
 const BASE = "https://mybusinessqanda.googleapis.com/v1";
 
@@ -43,6 +44,7 @@ export async function listQuestionsPage(
     googleLocationId: string,
     pageToken?: string
 ): Promise<ListQuestionsResponse> {
+    const locationId = requireGoogleLocationId(googleLocationId, "My Business Q&A API");
     const params = new URLSearchParams();
     params.set("pageSize", "10");
     params.set("answersPerQuestion", "10");
@@ -51,7 +53,7 @@ export async function listQuestionsPage(
         params.set("pageToken", pageToken);
     }
 
-    const url = `${BASE}/locations/${encodeURIComponent(googleLocationId)}/questions?${params.toString()}`;
+    const url = `${BASE}/locations/${encodeURIComponent(locationId)}/questions?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },

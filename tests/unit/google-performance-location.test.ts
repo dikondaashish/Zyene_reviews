@@ -18,6 +18,11 @@ describe("normalizePerformanceLocationId", () => {
         expect(normalizePerformanceLocationId("")).toBeNull();
         expect(normalizePerformanceLocationId(null)).toBeNull();
     });
+
+    it("rejects malformed multi-segment values without a locations resource", () => {
+        expect(normalizePerformanceLocationId("accounts/123")).toBeNull();
+        expect(normalizePerformanceLocationId("invalid/path/value")).toBeNull();
+    });
 });
 
 describe("flattenDailyMetricsResponse", () => {

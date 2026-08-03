@@ -1,4 +1,6 @@
 import { fetchWithRetry } from "./business-profile";
+import { createGoogleServiceError } from "./api-error";
+import { requireGoogleLocationId } from "./location-id";
 
 const BASE = "https://mybusinessplaceactions.googleapis.com/v1";
 
@@ -29,13 +31,15 @@ export async function listPlaceActionLinksPage(
     googleLocationId: string,
     pageToken?: string
 ): Promise<ListPlaceActionLinksResponse> {
+    const locationId = requireGoogleLocationId(googleLocationId, "My Business Place Actions API");
+
     const params = new URLSearchParams();
     params.set("pageSize", "50");
     if (pageToken) {
         params.set("pageToken", pageToken);
     }
 
-    const url = `${BASE}/locations/${encodeURIComponent(googleLocationId)}/placeActionLinks?${params.toString()}`;
+    const url = `${BASE}/locations/${encodeURIComponent(locationId)}/placeActionLinks?${params.toString()}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -43,7 +47,7 @@ export async function listPlaceActionLinksPage(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`PlaceActions list ${response.status}: ${body}`);
+        throw createGoogleServiceError("My Business Place Actions API", response.status, body);
     }
 
     return response.json() as Promise<ListPlaceActionLinksResponse>;
@@ -71,8 +75,10 @@ export async function listPlaceActionTypeMetadataPage(
     pageToken?: string,
     languageCode = "en"
 ): Promise<ListPlaceActionTypeMetadataResponse> {
+    const locationId = requireGoogleLocationId(googleLocationId, "My Business Place Actions API");
+
     const params = new URLSearchParams();
-    params.set("filter", `location=locations/${googleLocationId}`);
+    params.set("filter", `location=locations/${locationId}`);
     params.set("pageSize", "50");
     params.set("languageCode", languageCode);
     if (pageToken) {
@@ -87,7 +93,7 @@ export async function listPlaceActionTypeMetadataPage(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`PlaceActions metadata ${response.status}: ${body}`);
+        throw createGoogleServiceError("My Business Place Actions API", response.status, body);
     }
 
     return response.json() as Promise<ListPlaceActionTypeMetadataResponse>;
@@ -114,7 +120,8 @@ export async function createPlaceActionLink(
     googleLocationId: string,
     body: { placeActionType: string; uri: string; isPreferred?: boolean }
 ): Promise<PlaceActionLink> {
-    const url = `${BASE}/locations/${encodeURIComponent(googleLocationId)}/placeActionLinks`;
+    const locationId = requireGoogleLocationId(googleLocationId, "My Business Place Actions API");
+    const url = `${BASE}/locations/${encodeURIComponent(locationId)}/placeActionLinks`;
 
     const response = await fetchWithRetry(url, {
         method: "POST",
@@ -131,14 +138,18 @@ export async function createPlaceActionLink(
 
     if (!response.ok) {
         const text = await response.text();
-        throw new Error(`PlaceActions create ${response.status}: ${text}`);
+        throw createGoogleServiceError("My Business Place Actions API", response.status, text);
     }
 
     return response.json() as Promise<PlaceActionLink>;
 }
 
 export async function deletePlaceActionLink(accessToken: string, linkResourceName: string): Promise<void> {
-    const url = `${BASE}/${linkResourceName}`;
+    const resourceName = linkResourceName.trim();
+    if (!/^locations\/[^/?#]+\/placeActionLinks\/[^/?#]+$/.test(resourceName)) {
+        throw new Error("Invalid Place Actions resource name");
+    }
+    const url = `${BASE}/${resourceName}`;
 
     const response = await fetchWithRetry(url, {
         method: "DELETE",
@@ -147,53 +158,6 @@ export async function deletePlaceActionLink(accessToken: string, linkResourceNam
 
     if (!response.ok) {
         const text = await response.text();
-        throw new Error(`PlaceActions delete ${response.status}: ${text}`);
-    }
-}
-
-export function linkToRow(
-    link: PlaceActionLink,
-    reviewPlatformId: string,
-    businessId: string,
-    isBroken: boolean,
-    lastCheck: string | null
-): {
-    review_platform_id: string;
-    business_id: string;
-    google_link_name: string;
-    place_action_type: string;
-    uri: string;
-    is_preferred: boolean;
-    is_broken: boolean;
-    last_link_check_at: string | null;
-    updated_at: string;
-} {
-    return {
-        review_platform_id: reviewPlatformId,
-        business_id: businessId,
-        google_link_name: link.name || "",
-        place_action_type: link.placeActionType || "UNKNOWN",
-        uri: link.uri || "",
-        is_preferred: !!link.isPreferred,
-        is_broken: isBroken,
-        last_link_check_at: lastCheck,
-        updated_at: new Date().toISOString(),
-    };
-}
-
-/** Lightweight HEAD check; returns true if likely broken (4xx/5xx or network). */
-export async function checkUriLikelyBroken(uri: string): Promise<boolean> {
-    try {
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), 8000);
-        const res = await fetch(uri, {
-            method: "HEAD",
-            redirect: "follow",
-            signal: ctrl.signal,
-        });
-        clearTimeout(t);
-        return res.status >= 400;
-    } catch {
-        return true;
+        throw createGoogleServiceError("My Business Place Actions API", response.status, text);
     }
 }

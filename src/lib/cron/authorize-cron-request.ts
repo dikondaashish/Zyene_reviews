@@ -1,11 +1,15 @@
+import { timingSafeEqual } from "node:crypto";
+
 /**
  * Shared auth for GET /api/cron/* routes.
- * Accepts `Authorization: Bearer <CRON_SECRET>` or Vercel Cron (`x-vercel-cron: 1`).
+ * Requires `Authorization: Bearer <CRON_SECRET>` for Vercel and external schedulers.
  */
 export function isAuthorizedCronRequest(request: Request): boolean {
     const authHeader = request.headers.get("authorization");
-    const hasSecret = typeof process.env.CRON_SECRET === "string" && process.env.CRON_SECRET.length > 0;
-    const hasValidBearer = hasSecret && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-    const isVercelCron = request.headers.get("x-vercel-cron") === "1";
-    return Boolean(hasValidBearer || isVercelCron);
+    const secret = process.env.CRON_SECRET;
+    if (!authHeader || typeof secret !== "string" || secret.length === 0) return false;
+
+    const actual = Buffer.from(authHeader);
+    const expected = Buffer.from(`Bearer ${secret}`);
+    return actual.length === expected.length && timingSafeEqual(actual, expected);
 }

@@ -1,4 +1,5 @@
 import { fetchWithRetry } from "./business-profile";
+import { requireGoogleLocationId } from "./location-id";
 
 const BASE = "https://mybusinesslodging.googleapis.com/v1";
 
@@ -37,7 +38,8 @@ export function stripLodgingOutputOnly(lodging: LodgingRecord): LodgingRecord {
 }
 
 export async function getLodging(accessToken: string, locationId: string): Promise<LodgingRecord> {
-    const url = `${BASE}/locations/${encodeURIComponent(locationId)}/lodging?readMask=${encodeURIComponent(LODGING_READ_MASK)}`;
+    const normalizedId = requireGoogleLocationId(locationId, "My Business Lodging API");
+    const url = `${BASE}/locations/${encodeURIComponent(normalizedId)}/lodging?readMask=${encodeURIComponent(LODGING_READ_MASK)}`;
 
     const response = await fetchWithRetry(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -62,7 +64,8 @@ export async function patchLodging(
     body: LodgingRecord,
     updateMask: string
 ): Promise<LodgingRecord> {
-    const resourcePath = `locations/${encodeURIComponent(locationId)}/lodging`;
+    const normalizedId = requireGoogleLocationId(locationId, "My Business Lodging API");
+    const resourcePath = `locations/${encodeURIComponent(normalizedId)}/lodging`;
     const clean = stripLodgingOutputOnly(body);
     clean.name = resourcePath;
 
@@ -97,7 +100,8 @@ export async function getLodgingGoogleUpdated(
     accessToken: string,
     locationId: string
 ): Promise<GoogleUpdatedLodgingResponse> {
-    const path = `locations/${encodeURIComponent(locationId)}/lodging:getGoogleUpdated`;
+    const normalizedId = requireGoogleLocationId(locationId, "My Business Lodging API");
+    const path = `locations/${encodeURIComponent(normalizedId)}/lodging:getGoogleUpdated`;
     const url = `${BASE}/${path}?readMask=${encodeURIComponent("*")}`;
 
     const response = await fetchWithRetry(url, {

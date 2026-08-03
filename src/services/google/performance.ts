@@ -1,23 +1,12 @@
 import { fetchWithRetry } from "./business-profile";
+import { createGoogleServiceError } from "./api-error";
+import { normalizeGoogleLocationId } from "./location-id";
 
 const BASE_PERFORMANCE = "https://businessprofileperformance.googleapis.com/v1";
 
-/**
- * Performance API paths expect `locations/{unobfuscatedId}`. Stored values may be the raw id,
- * a `locations/...` resource name, or a full accounts path — normalize to the listing id segment.
- */
+/** Normalize stored resource names to the unobfuscated location id expected by Performance API. */
 export function normalizePerformanceLocationId(raw: string | null | undefined): string | null {
-    if (raw == null || typeof raw !== "string") return null;
-    let t = raw.trim();
-    if (!t) return null;
-    const locPrefix = "locations/";
-    if (t.startsWith(locPrefix)) {
-        t = t.slice(locPrefix.length);
-    }
-    if (t.includes("/")) {
-        t = t.split("/").pop() || t;
-    }
-    return t || null;
+    return normalizeGoogleLocationId(raw);
 }
 
 /** Daily metrics we sync (aligned with Phase 1 dashboard + analytics). */
@@ -111,7 +100,7 @@ export async function fetchMultiDailyMetricsTimeSeries(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`Performance API fetchMultiDailyMetricsTimeSeries ${response.status}: ${body}`);
+        throw createGoogleServiceError("Business Profile Performance API", response.status, body);
     }
 
     return response.json() as Promise<FetchMultiDailyMetricsResponse>;
@@ -158,7 +147,7 @@ export async function listSearchKeywordImpressionsMonthly(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`Performance API listSearchKeywordImpressionsMonthly ${response.status}: ${body}`);
+        throw createGoogleServiceError("Business Profile Performance API", response.status, body);
     }
 
     return response.json() as Promise<ListSearchKeywordsMonthlyResponse>;

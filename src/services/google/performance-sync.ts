@@ -15,6 +15,7 @@ import {
     PERFORMANCE_METRICS_BATCH_SIZE,
 } from "./constants";
 import * as Sentry from "@sentry/nextjs";
+import { captureGoogleServiceException, isGoogleConfigurationError } from "./api-error";
 
 export interface PerformanceSyncResult {
     success: boolean;
@@ -29,12 +30,7 @@ export interface PerformanceSyncResult {
 function monthStartDate(year: number, month: number): string {
     return `${year}-${String(month).padStart(2, "0")}-01`;
 }
-
-/**
- * Syncs Google Business Profile Performance API data for a single `review_platforms` row (Google).
- * - Daily metrics for the last `dailyDays` days (default 30)
- * - Monthly search keywords for the last `keywordMonths` months (default 3), all pages
- */
+/** Sync daily metrics and monthly keywords for one Google-connected platform. */
 export async function syncGooglePerformanceForPlatform(
     platformId: string,
     options?: { dailyDays?: number; keywordMonths?: number }
@@ -190,8 +186,15 @@ export async function syncGooglePerformanceForPlatform(
         };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
+        if (isGoogleConfigurationError(e)) {
+            logger.warn(
+                { api: e.apiName, statusCode: e.statusCode, googleStatus: e.googleStatus },
+                "[PerformanceSync] Google API configuration required"
+            );
+            return { success: false, dailyRowsUpserted: 0, keywordRowsUpserted: 0, error: msg };
+        }
         logger.error({ err: msg }, "[PerformanceSync] failed:");
-        Sentry.captureException(e);
+        captureGoogleServiceException(e);
         return { success: false, dailyRowsUpserted: 0, keywordRowsUpserted: 0, error: msg };
     }
 }

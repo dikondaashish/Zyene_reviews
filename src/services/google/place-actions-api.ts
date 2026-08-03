@@ -11,8 +11,15 @@ import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { createPlaceActionSchema, deletePlaceActionSchema } from "./place-actions-route-schema";
+import { isGoogleServiceError } from "./api-error";
 
 function mapPlaceActionsError(e: unknown) {
+    if (isGoogleServiceError(e)) {
+        return apiError(e.message, {
+            status: e.statusCode,
+            code: `GOOGLE_${e.kind.toUpperCase()}`,
+        });
+    }
     const normalized = toApiError(e);
     return apiError(normalized.message, {
         status: normalized.status || 400,
