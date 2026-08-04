@@ -81,7 +81,8 @@ if (!existsSync(path.join(APP_ROOT, "help/[slug]/[article]/page.tsx"))) {
     });
 }
 
-const customersRedirect = path.join(process.cwd(), "src/proxy.ts");
+// The apex-domain branch of the proxy owns this redirect.
+const customersRedirect = path.join(process.cwd(), "src/lib/routing/proxy-root-domain.ts");
 if (existsSync(customersRedirect)) {
     const proxySrc = readFileSync(customersRedirect, "utf8");
     if (!proxySrc.includes("customersToCaseStudiesRedirect")) {

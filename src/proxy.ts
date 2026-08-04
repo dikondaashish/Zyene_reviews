@@ -1,88 +1,49 @@
 /**
  * Next.js middleware proxy — handles subdomain routing, auth session refresh,
  * API rate limiting, and CORS headers for the multi-tenant app.
+ *
+ * Order matters: early exits (embeds, webhooks, preflight) run before the
+ * Supabase client is built, then API guards, then one host-specific branch.
  */
-import { isStaleRefreshTokenError, signOutStaleSession } from "@/lib/auth/stale-session";
-import { logger } from "@/lib/logger";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { globalApiRateLimit } from "@/lib/auth/rate-limit";
-import {
-    getMarketingSiteOrigin,
-    getAuthSiteOrigin,
-    isBusinessSlugPath,
-    isAuthPageRoute,
-    isPlatformRoute,
-    customersToCaseStudiesRedirect,
-} from "@/lib/routing/platform-routes";
-import { safeNextPath } from "@/lib/routing/safe-next-path";
 
-/** True when the browser Origin matches this request's Host (same deployment / custom review domains like collectratings.com). */
-function originMatchesRequestHost(origin: string | null | undefined, hostHeader: string): boolean {
-    if (!origin || !hostHeader) return false;
-    try {
-        const url = new URL(origin);
-        const requestHost = hostHeader.split(":")[0]?.toLowerCase() ?? "";
-        return url.hostname.toLowerCase() === requestHost;
-    } catch {
-        return false;
-    }
-}
+import { isStaleRefreshTokenError, signOutStaleSession } from "@/lib/auth/stale-session";
+import type { Database } from "@/lib/db/supabase/database.types";
+import { handleApiGuards } from "@/lib/routing/proxy-api-guards";
+import { handleAppSubdomain } from "@/lib/routing/proxy-app-subdomain";
+import { handleAuthSubdomain } from "@/lib/routing/proxy-auth-subdomain";
+import type { ProxyContext } from "@/lib/routing/proxy-context";
+import { handleCorsPreflight, responseAllowedOrigins } from "@/lib/routing/proxy-cors";
+import {
+    handleReviewCaptureDomain,
+    isReviewCaptureDomain,
+} from "@/lib/routing/proxy-review-domains";
+import { handleRootDomain } from "@/lib/routing/proxy-root-domain";
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const isEmbedWidgetPath = pathname.startsWith("/w/");
-
-    let supabaseResponse = NextResponse.next({
-        request: { headers: request.headers },
-    });
 
     const hostHeader = request.headers.get("host") || "";
     const hostname = hostHeader.split(":")[0]?.toLowerCase() || "";
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
 
+    let supabaseResponse = NextResponse.next({
+        request: { headers: request.headers },
+    });
+
     // Public embed widgets: skip auth, subdomain routing, and rate limits.
-    if (isEmbedWidgetPath) {
+    if (pathname.startsWith("/w/")) {
         return supabaseResponse;
     }
 
-    // --- WEBHOOK EXEMPTION ---
-    // Ensure all webhook endpoints are served immediately and never redirected.
+    // Webhook endpoints must be served immediately and never redirected.
     if (pathname.startsWith("/api/webhooks") || pathname.startsWith("/api/inngest")) {
-        return NextResponse.next({
-            request: { headers: request.headers },
-        });
+        return NextResponse.next({ request: { headers: request.headers } });
     }
 
-    // --- CORS PREFLIGHT HANDLER ---
-    // OPTIONS preflight requests must NEVER be redirected.
-    // Return 204 with proper CORS headers for cross-subdomain requests.
     if (request.method === "OPTIONS") {
-        const origin = request.headers.get("origin") || "";
-        const allowedOrigins = [
-            `https://auth.${rootDomain}`,
-            `https://app.${rootDomain}`,
-            `https://${rootDomain}`,
-            `https://www.${rootDomain}`,
-        ];
-
-        if (allowedOrigins.includes(origin)) {
-            return new NextResponse(null, {
-                status: 204,
-                headers: {
-                    "Access-Control-Allow-Origin": origin,
-                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-                    // Next.js can send multiple internal prefetch/RSC headers across subdomains.
-                    // Include all that we may see in preflight requests.
-                    "Access-Control-Allow-Headers":
-                        "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, next-router-segment-prefetch",
-                    "Access-Control-Allow-Credentials": "true",
-                    "Access-Control-Max-Age": "86400",
-                },
-            });
-        }
-
-        return new NextResponse(null, { status: 204 });
+        return handleCorsPreflight(request, rootDomain);
     }
 
     const cookieOptions = {
@@ -92,7 +53,7 @@ export async function proxy(request: NextRequest) {
         secure: process.env.NODE_ENV === "production",
     };
 
-    const supabase = createServerClient(
+    const supabase = createServerClient<Database>(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
@@ -101,21 +62,17 @@ export async function proxy(request: NextRequest) {
                     return request.cookies.getAll();
                 },
                 setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value }) =>
-                        request.cookies.set(name, value)
-                    );
-                    supabaseResponse = NextResponse.next({
-                        request,
-                    });
+                    cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+                    supabaseResponse = NextResponse.next({ request });
                     cookiesToSet.forEach(({ name, value, options }) =>
                         supabaseResponse.cookies.set(name, value, {
                             ...options,
                             ...cookieOptions,
-                        })
+                        }),
                     );
                 },
             },
-        }
+        },
     );
 
     const {
@@ -127,363 +84,61 @@ export async function proxy(request: NextRequest) {
         await signOutStaleSession(supabase);
     }
 
-    const user = authError ? null : authUser;
-
-    const addAuthNoIndex = (response: NextResponse) => {
-        response.headers.set("X-Robots-Tag", "noindex, nofollow");
-        return response;
+    const ctx: ProxyContext = {
+        request,
+        pathname,
+        hostname,
+        hostHeader,
+        rootDomain,
+        user: authError ? null : authUser,
+        supabase,
+        response: () => supabaseResponse,
+        withSessionCookies: (response) => {
+            supabaseResponse.cookies.getAll().forEach((cookie) => {
+                response.cookies.set(cookie);
+            });
+            return response;
+        },
+        withCorsHeaders: (response) => {
+            const origin = request.headers.get("origin") || "";
+            if (responseAllowedOrigins(rootDomain).includes(origin)) {
+                response.headers.set("Access-Control-Allow-Origin", origin);
+                response.headers.set("Access-Control-Allow-Credentials", "true");
+            }
+            return response;
+        },
+        withNoIndex: (response) => {
+            response.headers.set("X-Robots-Tag", "noindex, nofollow");
+            return response;
+        },
     };
 
-    // Helper to add CORS headers to cross-subdomain responses
-    const addCorsHeaders = (response: NextResponse) => {
-        const origin = request.headers.get("origin") || "";
-        const allowedOrigins = [
-            `https://auth.${rootDomain}`,
-            `https://app.${rootDomain}`,
-            `https://${rootDomain}`,
-        ];
-        if (allowedOrigins.includes(origin)) {
-            response.headers.set("Access-Control-Allow-Origin", origin);
-            response.headers.set("Access-Control-Allow-Credentials", "true");
-        }
-        return response;
-    };
-
-    const createResponse = (response: NextResponse) => {
-        supabaseResponse.cookies.getAll().forEach((cookie) => {
-            response.cookies.set(cookie);
-        });
-        return response;
-    };
-
-    // --- GLOBAL API RATE LIMITING (DDoS Protection) ---
     if (pathname.startsWith("/api")) {
-        // Whitelist webhook/background jobs and auth callbacks from global rate limiting.
-        // Login flows (OAuth redirect to /api/auth/callback) and immediate post-login API bursts
-        // share one IP; counting auth against the global bucket caused false 429s for real users.
-        const whitelistedPaths = [
-            "/api/webhooks",
-            "/api/inngest",
-            "/api/cron",
-            "/api/auth",
-        ];
-        const isWhitelisted = whitelistedPaths.some(p => pathname.startsWith(p));
-
-        if (!isWhitelisted) {
-            const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-                || request.headers.get("x-real-ip")
-                || "anonymous";
-
-            try {
-                const { success } = await globalApiRateLimit.limit(ip);
-                if (!success) {
-                    return NextResponse.json(
-                        { error: "Too many requests. Please slow down." },
-                        { status: 429 }
-                    );
-                }
-            } catch (e) {
-                // If Redis is down, fail open (don't block legitimate traffic)
-                logger.error({ err: e }, "Global rate limit check failed:");
-            }
-        }
-
-        // CSRF Protection: Validate Origin on mutating requests.
-        // Developer API (v1) uses X-API-Key / Bearer — Postman and servers often omit Origin; exempt this prefix.
-        const csrfWhitelisted = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/v1"];
-        const isCsrfWhitelisted = csrfWhitelisted.some(p => pathname.startsWith(p));
-
-        if (!isCsrfWhitelisted) {
-            const origin = request.headers.get("origin");
-            const allowedOrigins = [
-                `https://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                `https://auth.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                `https://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-            ];
-
-            const csrfAllowed =
-                allowedOrigins.includes(origin ?? "") || originMatchesRequestHost(origin, hostHeader);
-
-            if (["POST", "PUT", "DELETE", "PATCH"].includes(request.method) && !csrfAllowed) {
-                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-            }
-        }
-
-        return supabaseResponse;
+        const rejection = await handleApiGuards(request, pathname, hostHeader);
+        return rejection ?? supabaseResponse;
     }
 
     if (pathname.includes(".")) {
         return supabaseResponse;
     }
 
-    // --- AUTH SUBDOMAIN (auth.domain) ---
     if (hostname === `auth.${rootDomain}`) {
-        if (user && pathname === "/") {
-            const targetUrl = `https://app.${rootDomain}`;
-
-            // RSC client-side navigations use fetch requests.
-            // A cross-origin redirect in response to a fetch triggers a CORS error.
-            // Detect RSC requests and respond with a full-page redirect via
-            // x-middleware-redirect header so the Next.js client router navigates properly.
-            const isRSC = request.headers.get("rsc") === "1"
-                || request.headers.get("next-router-state-tree")
-                || request.nextUrl.searchParams.has("_rsc");
-
-            if (isRSC) {
-                const res = new NextResponse(null, {
-                    status: 200,
-                    headers: {
-                        "x-middleware-redirect": targetUrl,
-                        "Location": targetUrl,
-                    },
-                });
-                addCorsHeaders(res);
-                supabaseResponse.cookies.getAll().forEach((cookie) => {
-                    res.cookies.set(cookie);
-                });
-                return addAuthNoIndex(res);
-            }
-
-            // Non-RSC navigations are allowed to redirect, but we must still attach
-            // CORS headers so the browser doesn't block the redirected fetch.
-            const redirectRes = createResponse(
-                NextResponse.redirect(new URL(targetUrl, request.url))
-            );
-            addCorsHeaders(redirectRes);
-            return addAuthNoIndex(redirectRes);
-        }
-        // Rewrite root to /login
-        if (pathname === "/") {
-            return addAuthNoIndex(
-                createResponse(NextResponse.rewrite(new URL("/login", request.url))),
-            );
-        }
-        // Pass other paths (e.g. /signup, /forgot-password)
-        return addAuthNoIndex(addCorsHeaders(supabaseResponse));
+        return handleAuthSubdomain(ctx);
     }
 
-    // --- APP SUBDOMAIN (app.domain) ---
     if (hostname === `app.${rootDomain}`) {
-        // Docs should live on apex domain, not app subdomain.
-        if (pathname.startsWith("/docs")) {
-            return createResponse(
-                NextResponse.redirect(
-                    new URL(`${getMarketingSiteOrigin(rootDomain)}${pathname}`, request.url),
-                ),
-            );
-        }
-
-        // Public review carousel embed — no login; must not redirect to auth (iframes break).
-        if (pathname.startsWith("/w/")) {
-            return createResponse(supabaseResponse);
-        }
-
-        if (!user) {
-            const requestedPath = safeNextPath(`${pathname}${request.nextUrl.search}`);
-            const loginUrl = new URL("/login", getAuthSiteOrigin(rootDomain));
-            loginUrl.searchParams.set("next", requestedPath);
-            // For RSC/fetch requests from auth subdomain, don't redirect (causes CORS error)
-            const isRSC = request.headers.get("rsc") === "1"
-                || request.headers.get("next-router-state-tree")
-                || request.nextUrl.searchParams.has("_rsc");
-            const origin = request.headers.get("origin") || "";
-
-            if (isRSC && origin === `https://auth.${rootDomain}`) {
-                const res = new NextResponse(
-                    JSON.stringify({ redirect: loginUrl.toString() }),
-                    { status: 401 }
-                );
-                addCorsHeaders(res);
-                return res;
-            }
-
-            return createResponse(
-                NextResponse.redirect(loginUrl)
-            );
-        }
-
-        try {
-            const { data } = await supabase
-                .from("users")
-                .select("onboarding_completed")
-                .eq("id", user.id)
-                .single();
-
-            // First-time users must complete onboarding before visiting app pages.
-            if (!pathname.startsWith("/onboarding") && data && !data.onboarding_completed) {
-                return createResponse(
-                    NextResponse.redirect(new URL("/onboarding", request.url))
-                );
-            }
-
-            // Returning users should never revisit onboarding.
-            if (pathname.startsWith("/onboarding") && data?.onboarding_completed) {
-                return createResponse(
-                    NextResponse.redirect(new URL("/", request.url))
-                );
-            }
-        } catch (error) {
-            // If check fails, allow the request to proceed
-            logger.error({ err: error }, "Onboarding status check failed:");
-        }
-
-        // `/` rewrites to dashboard content; keep `/dashboard` as a first-class URL (no redirect) so
-        // client navigations from other app pages avoid an extra round trip and full reload.
-
-        // Rewrite root to /dashboard
-        if (pathname === "/") {
-            return createResponse(
-                NextResponse.rewrite(new URL("/dashboard", request.url))
-            );
-        }
-
-        // Legacy integrations URLs (pre–marketing /integrations page)
-        if (pathname === "/integrations" || pathname.startsWith("/integrations/")) {
-            const target = pathname.replace(/^\/integrations/, "/settings/integrations");
-            return createResponse(
-                NextResponse.redirect(new URL(target, request.url))
-            );
-        }
-
-        // Pass strictly dashboard paths? Or allow all?
-        // For now allow all, but redirect logic handles unauth.
-        return supabaseResponse;
+        return handleAppSubdomain(ctx);
     }
 
-    // --- REVIEW CAPTURE DOMAINS ---
-    const reviewDomains = [
-        "collectratings.com",
-        "www.collectratings.com",
-        "ratingcollect.com",
-        "www.ratingcollect.com"
-    ];
-
-    if (reviewDomains.includes(hostname)) {
-        // Root has no marketing site — review capture only.
-        if (pathname === "/") {
-            return new NextResponse("", { status: 404 });
-        }
-
-        // Platform/marketing paths belong on zyenereviews.com, not collectratings.com.
-        if (isPlatformRoute(pathname)) {
-            const marketingOrigin = getMarketingSiteOrigin(rootDomain);
-            const target = new URL(pathname, marketingOrigin);
-            target.search = request.nextUrl.search;
-            return createResponse(NextResponse.redirect(target, 301));
-        }
-
-        // Only single-segment business slugs rewrite to /r/[slug].
-        if (!isBusinessSlugPath(pathname)) {
-            const marketingOrigin = getMarketingSiteOrigin(rootDomain);
-            const target = new URL(pathname, marketingOrigin);
-            target.search = request.nextUrl.search;
-            return createResponse(NextResponse.redirect(target, 301));
-        }
-
-        const rewriteUrl = request.nextUrl.clone();
-        rewriteUrl.pathname = `/r${pathname.endsWith("/") ? pathname.slice(0, -1) : pathname}`;
-        return createResponse(NextResponse.rewrite(rewriteUrl));
+    if (isReviewCaptureDomain(hostname)) {
+        return handleReviewCaptureDomain(ctx);
     }
 
-    // --- ROOT DOMAIN (domain) ---
     const apexHost = rootDomain.split(":")[0]?.replace(/^www\./, "") ?? rootDomain;
     const wwwHost = `www.${apexHost}`;
 
     if (hostname === rootDomain || hostname === wwwHost) {
-        if (!rootDomain.includes("localhost") && isAuthPageRoute(pathname)) {
-            const authUrl = new URL(pathname, getAuthSiteOrigin(rootDomain));
-            authUrl.search = request.nextUrl.search;
-            return createResponse(NextResponse.redirect(authUrl, 308));
-        }
-
-        // Permanent canonical host: apex → www (production only)
-        if (hostname === apexHost && !rootDomain.includes("localhost")) {
-            const canonical = request.nextUrl.clone();
-            canonical.protocol = "https:";
-            canonical.hostname = wwwHost;
-            return createResponse(NextResponse.redirect(canonical, 308));
-        }
-
-        // Localhost Dev Support: Handle routing via paths since subdomains are problematic locally
-        if (rootDomain.includes("localhost")) {
-            // Allow public review requests route
-            if (pathname.startsWith("/r/")) {
-                return supabaseResponse;
-            }
-
-            // Allow onboarding path only for first-time users.
-            if (pathname.startsWith("/onboarding")) {
-                if (!user) {
-                    return createResponse(NextResponse.redirect(new URL("/login", request.url)));
-                }
-
-                try {
-                    const { data } = await supabase
-                        .from("users")
-                        .select("onboarding_completed")
-                        .eq("id", user.id)
-                        .single();
-
-                    if (data?.onboarding_completed) {
-                        return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
-                    }
-                } catch (error) {
-                    logger.error({ err: error }, "Onboarding status check failed:");
-                }
-
-                return supabaseResponse;
-            }
-
-            // If accessing /dashboard and not logged in -> redirect /login
-            if (pathname.startsWith("/dashboard") && !user) {
-                return createResponse(NextResponse.redirect(new URL("/login", request.url)));
-            }
-
-            // Check onboarding status for dashboard access
-            if (pathname.startsWith("/dashboard") && user) {
-                try {
-                    const { data } = await supabase
-                        .from("users")
-                        .select("onboarding_completed")
-                        .eq("id", user.id)
-                        .single();
-
-                    if (data && !data.onboarding_completed) {
-                        return createResponse(
-                            NextResponse.redirect(new URL("/onboarding", request.url))
-                        );
-                    }
-                } catch (error) {
-                    // If check fails, allow the request to proceed
-                    logger.error({ err: error }, "Onboarding status check failed:");
-                }
-            }
-
-            // If accessing /login and logged in -> redirect /dashboard
-            if (pathname === "/login" && user) {
-                return createResponse(NextResponse.redirect(new URL("/dashboard", request.url)));
-            }
-            return supabaseResponse;
-        }
-
-        // Production Root Domain Logic
-
-        // 1. Landing page -> pass
-        if (pathname === "/") return supabaseResponse;
-
-        // Legacy blueprint alias: /customers → /case-studies (app subdomain serves CRM at /customers).
-        const caseStudiesRedirect = customersToCaseStudiesRedirect(pathname);
-        if (caseStudiesRedirect) {
-            return createResponse(
-                NextResponse.redirect(new URL(caseStudiesRedirect, request.url), 308)
-            );
-        }
-
-        // 2. Platform + marketing routes stay on zyenereviews.com (never → collectratings).
-        // Unknown paths (including invalid single-segment URLs) fall through to Next.js not-found.
-
-        return supabaseResponse;
+        return handleRootDomain(ctx, apexHost, wwwHost);
     }
 
     return supabaseResponse;
