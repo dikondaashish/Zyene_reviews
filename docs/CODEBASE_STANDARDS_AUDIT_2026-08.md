@@ -192,16 +192,71 @@ The team clearly knows this pattern: `encrypt_token`, `decrypt_token` and
 `acquire_platform_lock` are all correctly closed to `anon`. These are oversights,
 not a missing convention.
 
-**`supabase/migrations/20260804120000_harden_security_definer_functions.sql`**
-scopes each function to the caller's own tenant, pins `search_path`, revokes
-`anon` EXECUTE, restricts the locks to `service_role`, and brings the two
-undeclared functions under version control. **It has not been applied** —
-applying it changes a production database and is the owner's call.
+### Applied — 2026-08-04
+
+Two migrations, both applied and verified against the live schema:
+
+| Version | Migration |
+|---|---|
+| `20260804162256` | `harden_security_definer_functions` |
+| `20260804162339` | `revoke_public_execute_on_security_definer_functions` |
+
+The first tenant-scopes each function (`auth.role() = 'service_role'` OR the
+caller's own `get_user_business_ids()` / `get_user_org_ids()`), pins
+`search_path`, restricts the locks to `service_role`, and brings the two
+undeclared functions under version control.
+
+**The second exists because the first one's REVOKE silently did nothing.** It
+revoked EXECUTE from `anon` by name, but Postgres grants EXECUTE to `PUBLIC` on
+every new function and `anon` inherits that. Post-apply verification showed the
+ACL still carrying a leading `=X/postgres` entry and
+`has_function_privilege('anon', …, 'EXECUTE')` still returning **true**.
+Revoking from `PUBLIC` is what actually closes it.
+
+Final state, confirmed by querying `pg_proc.proacl` directly:
+
+| Function | anon | authenticated | service_role |
+|---|---|---|---|
+| `bulk_add_customer_tags` | ✗ | ✓ | ✓ |
+| `bulk_remove_customer_tags` | ✗ | ✓ | ✓ |
+| `increment_ai_replies_used` | ✗ | ✓ | ✓ |
+| `acquire_competitor_watch_lock` | ✗ | ✗ | ✓ |
+| `release_competitor_watch_lock` | ✗ | ✗ | ✓ |
+
+No ACL retains a PUBLIC entry — matching `encrypt_token`/`decrypt_token`. Re-running
+the linter confirms all five are gone from the anon-executable list and all four
+`function_search_path_mutable` warnings have cleared.
+
+Before applying, two assumptions were verified rather than assumed: `auth.role()`
+reads `request.jwt.claim.role` (not `current_user`), so it returns the *caller's*
+role inside a SECURITY DEFINER function — meaning the `service_role` bypass works
+without silently granting everyone one; and both `get_user_*_ids()` helpers
+return `SETOF uuid`.
+
+**Deliberately not revoked:** `get_user_business_ids`, `get_user_org_ids` and
+`get_user_store_role` stay executable by `anon`/`authenticated`. 29 RLS policies
+across 16 tables call them, so revoking would break RLS evaluation app-wide.
+They are read-only and key off `auth.uid()`, which is NULL for `anon`.
 
 Two lower-priority linter items left alone: leaked-password protection is
 disabled in Supabase Auth (a dashboard toggle), and `opt_outs`, `sms_opt_outs`
 and `stripe_webhook_events` have RLS on with no policies — which is the correct
 deny-all posture for service-role-only tables, not a gap.
+
+---
+
+## 5c. Migration drift — four repo migrations never applied
+
+Comparing `supabase/migrations/` against the remote migration history, these
+exist in the repo but have **not** been applied to the production database:
+
+- `20260720120000_square_sandbox_spike.sql`
+- `20260720163000_square_phase2_send.sql`
+- `20260721160000_square_sending_claim.sql`
+- `20260801190000_remove_public_review_write_policies.sql`
+
+The last one looks security-relevant by name. Not applied here — that is a
+separate decision from the SECURITY DEFINER hardening and needs its own review.
 
 ## 6. Remaining over-limit files
 
