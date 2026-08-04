@@ -69,6 +69,17 @@ Split files before exceeding limits. `page.tsx` / route files should only export
 | Components (`src/components/**`) | **150** |
 | Services / lib (`src/services/**`, `src/lib/**`) | **200** |
 
+Enforced in CI by **`pnpm check:sizes`** ([scripts/check-file-sizes.mjs](./scripts/check-file-sizes.mjs)).
+It works as a ratchet: a new file must be under its limit, and the files
+grandfathered in `BASELINE` may shrink but never grow. If a split puts a file
+back under its limit, the guard tells you to drop it from `BASELINE`, so the
+list only gets shorter. Exempt: generated `database.types.ts` and vendored
+`src/components/ui/`.
+
+Cohesive static datasets (blog posts, industry copy) are legitimately
+grandfathered — splitting one array across files buys nothing. Add a `why` when
+you add an entry.
+
 ### Imports & types
 
 - Use **`@/`** path aliases only (no deep relative `../../../`).
@@ -133,7 +144,8 @@ Additional gates:
 | Check | How |
 |-------|-----|
 | React quality | `npx react-doctor@latest --verbose --diff` on changed files (see **react-doctor** skill) |
-| File sizes | No file over limits in §2 |
+| File sizes | `pnpm check:sizes` (also runs in CI) |
+| Sitemap coverage | New marketing page? `pnpm test` fails if it is indexable and missing from `sitemap.ts` |
 | Client logging | No new `console.log` in `"use client"` files |
 | Secrets | No API keys, tokens, or passwords in code, migrations, or commits |
 | Marketing SEO | Run **seo** or **on-page-seo-auditor** when touching `(marketing)/` |
