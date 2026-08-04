@@ -43,7 +43,7 @@ export async function finalizeCompetitorWatchRun(params: {
     } = params;
 
     if (snapshotsToInsert.length > 0) {
-        const { error: insertSnapshotsErr } = await (admin.from("competitor_snapshots" as never) as any).insert(
+        const { error: insertSnapshotsErr } = await admin.from("competitor_snapshots").insert(
             snapshotsToInsert,
         );
         if (insertSnapshotsErr) {
@@ -54,7 +54,7 @@ export async function finalizeCompetitorWatchRun(params: {
     }
 
     if (eventsToInsert.length > 0) {
-        const { error: insertEventsErr } = await (admin.from("competitor_events" as never) as any).insert(
+        const { error: insertEventsErr } = await admin.from("competitor_events").insert(
             eventsToInsert,
         );
         if (insertEventsErr) {
@@ -128,7 +128,7 @@ export async function finalizeCompetitorWatchRun(params: {
     );
 
     if (insightRowsToInsert.length > 0) {
-        const { error: insertInsightsErr } = await (admin.from("competitor_insights" as never) as any).insert(
+        const { error: insertInsightsErr } = await admin.from("competitor_insights").insert(
             insightRowsToInsert,
         );
         if (insertInsightsErr) {
@@ -172,7 +172,7 @@ export async function finalizeCompetitorWatchRun(params: {
     }));
 
     if (runRows.length > 0) {
-        const { error: insertRunsErr } = await (admin.from("competitor_watch_runs" as never) as any).insert(runRows);
+        const { error: insertRunsErr } = await admin.from("competitor_watch_runs").insert(runRows);
         if (insertRunsErr) {
             logger.error({ err: insertRunsErr }, "[cron/competitor-watch] run log insert failed:");
         }

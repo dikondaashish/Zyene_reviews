@@ -9,22 +9,20 @@ export async function fetchGoogleSeoAeoSecondaryData(
 
     const [aiResultsRes, heatmapCellsRes, competitorsRes] = await Promise.all([
         latestAiRun
-            ? ((supabase.from("google_seo_ai_visibility_results" as never) as any)
+            ? supabase
+                  .from("google_seo_ai_visibility_results")
                   .select("model, found, position, snippet")
                   .eq("run_id", latestAiRun.id)
                   .order("model", { ascending: true })
-                  .limit(20) as Promise<{
-                  data: Array<{ model: string; found: boolean; position: number | null; snippet: string | null }> | null;
-              }>)
+                  .limit(20)
             : Promise.resolve({ data: null }),
         latestHeatmapRun
-            ? ((supabase.from("google_seo_heatmap_cells" as never) as any)
+            ? supabase
+                  .from("google_seo_heatmap_cells")
                   .select("cell_label, rank_position, visibility_score")
                   .eq("run_id", latestHeatmapRun.id)
                   .order("visibility_score", { ascending: false })
-                  .limit(30) as Promise<{
-                  data: Array<{ cell_label: string; rank_position: number | null; visibility_score: number }> | null;
-              }>)
+                  .limit(30)
             : Promise.resolve({ data: null }),
         supabase
             .from("competitors")

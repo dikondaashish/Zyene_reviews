@@ -202,8 +202,7 @@ export async function acceptBusinessInvitationAdmin(params: {
 
     await ensureOrganizationMembershipForInvite(admin, invite.organization_id, userId, invite.role);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- invitationsTable schema may not include accepted_at
-    await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
+    await invitationsTable.update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
 
     try {
         await admin.from("events").insert({

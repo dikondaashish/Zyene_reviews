@@ -15,7 +15,7 @@ export async function executeCompetitorWatchCron(_request: Request) {
     let processedBusinessIds: string[] = [];
 
     try {
-        const { data: lockResult, error: lockErr } = await (admin as any).rpc("acquire_competitor_watch_lock");
+        const { data: lockResult, error: lockErr } = await admin.rpc("acquire_competitor_watch_lock");
         if (lockErr) {
             logger.error({ err: lockErr }, "[cron/competitor-watch] lock acquire failed:");
             await pingCompetitorWatchHeartbeat(false);
@@ -73,7 +73,7 @@ export async function executeCompetitorWatchCron(_request: Request) {
                 started_at: runStartedAt,
                 finished_at: new Date().toISOString(),
             }));
-            const { error: failInsertErr } = await (admin.from("competitor_watch_runs" as never) as any).insert(
+            const { error: failInsertErr } = await admin.from("competitor_watch_runs").insert(
                 failureRows,
             );
             if (failInsertErr) {
@@ -84,7 +84,7 @@ export async function executeCompetitorWatchCron(_request: Request) {
         return NextResponse.json({ error: message }, { status: 500 });
     } finally {
         if (lockAcquired) {
-            const { error: unlockErr } = await (admin as any).rpc("release_competitor_watch_lock");
+            const { error: unlockErr } = await admin.rpc("release_competitor_watch_lock");
             if (unlockErr) {
                 logger.error({ err: unlockErr }, "[cron/competitor-watch] lock release failed:");
             }

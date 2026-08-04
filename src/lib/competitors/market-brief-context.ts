@@ -40,7 +40,7 @@ export async function loadMarketPositioningBriefContext(
 
     const [keywords, snapshotsRes] = await Promise.all([
         getGoogleSearchKeywords(supabase, businessId, 15),
-        (supabase.from("competitor_snapshots" as never) as any)
+        supabase.from("competitor_snapshots")
             .select("competitor_id, captured_at, metadata")
             .eq("business_id", businessId)
             .order("captured_at", { ascending: false })

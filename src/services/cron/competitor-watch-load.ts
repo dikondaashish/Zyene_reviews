@@ -98,8 +98,8 @@ export async function loadCompetitorWatchScanContext(
     }
 
     const competitorIds = competitors.map((c) => c.id);
-    const { data: existingSnapshots, error: snapshotsErr } = await (admin
-        .from("competitor_snapshots" as never) as any)
+    const { data: existingSnapshots, error: snapshotsErr } = await admin
+        .from("competitor_snapshots")
         .select("id, competitor_id, captured_at, average_rating, total_reviews")
         .in("competitor_id", competitorIds)
         .order("captured_at", { ascending: false });
