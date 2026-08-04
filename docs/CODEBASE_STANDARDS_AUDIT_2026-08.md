@@ -1,6 +1,6 @@
 # Codebase Standards Audit — August 2026
 
-**Branch:** `chore/codebase-standards-audit` · 11 commits
+**Branch:** `chore/codebase-standards-audit` · 15 commits
 **Standard applied:** repo-native rules in [AGENTS.md §2](../AGENTS.md#2-code-standards-non-negotiable)
 
 ## Verification
@@ -258,24 +258,62 @@ exist in the repo but have **not** been applied to the production database:
 The last one looks security-relevant by name. Not applied here — that is a
 separate decision from the SECURITY DEFINER hardening and needs its own review.
 
-## 6. Remaining over-limit files
+## 6. File sizes — enforced, then paid down selectively
 
-39 files still exceed their `AGENTS.md` limit (down from 49, excluding the
-never-edit `database.types.ts` and `components/ui/`).
+The root cause was not the 39 oversized files. It was that **`AGENTS.md` called
+the §2 limits "non-negotiable" while nothing enforced them** — CI ran typecheck,
+colors, test and build only. Splitting every file without a guard would just let
+them regrow.
 
-**~6 are static content data and were left deliberately** — `blog-posts-month1.ts`
-(639), `resource-data.ts` (505), `competitor-data.ts` (455), `industry-data.ts`
-(454) and similar are single cohesive datasets. Splitting a 639-line array of blog
-post objects buys nothing; the limits exist to enforce single responsibility, and
-these already have one.
+### The guard
 
-**The rest are logic files outside this pass's approved scope.** The largest are
-`lib/growth/kpi-metrics.ts` (397), `services/google/business-profile.ts` (391),
-`lib/analytics/build-analytics-range-payload.ts` (351),
-`competitors/add-competitor-dialog.tsx` (326), `actions/onboarding/flow.ts` (317),
-`app/sitemap.ts` (311). Each is a reasonable candidate for the same treatment.
+`pnpm check:sizes` ([scripts/check-file-sizes.mjs](../scripts/check-file-sizes.mjs)),
+wired into CI, works as a **ratchet**:
 
-## 7. Other flags, not acted on
+- a file not in `BASELINE` must be under its category limit;
+- a grandfathered file may shrink but never grow;
+- one that drops under its limit must leave `BASELINE` — the guard says so.
+
+Existing debt is frozen and can only pay down; no new oversized file can land.
+34 entries are grandfathered, each with a stated reason.
+
+### What was split, and why those five
+
+Chosen by churn × size × blast radius from git history, not by line count:
+
+| File | Before → after | Commits | Why it earned a split |
+|---|---|---|---|
+| `services/review-flow/generate-review-api.ts` | 270 → 152 | 32 | Highest-churn file in the repo; AI draft quota gate was buried in a 70-line try block |
+| `services/google/business-profile.ts` | 391 → 137 | 25 | Most-edited service; five API surfaces in one file |
+| `services/businesses/business-by-id-api.ts` | 306 → 166 | 22 | 67-line Zod schema + auth/plan/slug guards inline |
+| `lib/auth/business-context.ts` | 274 → 153 | 19 | Tenancy resolution — highest incident blast radius |
+| `services/stripe/plans.ts` | 303 → 187 | 18 | Pricing catalog and entitlement rules change for different reasons |
+
+### What was deliberately left
+
+Ten cohesive static datasets (`blog-posts-month1.ts` 639, `resource-data.ts` 505,
+`industry-data.ts` 454, …). These are marketing copy, not logic; splitting one
+array across files makes edits harder and buys nothing. The remaining entries are
+marked `TODO: split` and can be worked top-down.
+
+## 7. Sitemap coverage test
+
+`sitemap.ts` is a hand-maintained 311-line route manifest on a product whose GTM
+is SEO/GEO. Adding a marketing page without adding it there is silent — the page
+simply never gets submitted for indexing, and nothing fails.
+
+Splitting the file would not have helped; the risk is a *missing route*, not
+length. [tests/unit/sitemap-coverage.test.ts](../tests/unit/sitemap-coverage.test.ts)
+walks the marketing route tree and fails when an indexable page is absent from the
+sitemap, or when a page that sets `robots: { index: false }` is listed anyway
+(a contradictory crawler signal). It also catches duplicate URLs.
+
+Coverage is currently complete — 115 URLs, no gaps. The two pages absent from the
+sitemap (`/growth`, `/newsletter/unsubscribe`) both correctly set
+`robots: { index: false }`. The test was verified to actually fail by removing
+`/partners` from the sitemap.
+
+## 8. Other flags, not acted on
 
 - **`docs/FULL_FILE_USAGE_AUDIT.json` should not be trusted.** It marks all nine
   files deleted above as "✅ ACTIVELY USED — Referenced in repository"; its
