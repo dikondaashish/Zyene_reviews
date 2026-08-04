@@ -186,6 +186,7 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 |-------|-------------|
 | **security-audit** | Broader penetration / app security review |
 | **tdd-workflow** | Test-driven feature development |
+| **codebase-standards-auditor** | Full-repo audit: naming, structure, file size, dead code |
 | **memory-management** | Persist SEO/campaign context across sessions |
 
 ### Vercel (official)

@@ -6,6 +6,7 @@ const METAMASK_ERROR_MESSAGES = new Set([
 ]);
 
 const EXTENSION_FRAME_PATTERN = /^(?:app:\/\/\/scripts\/inpage\.js|chrome-extension:\/\/|moz-extension:\/\/|safari(?:-web)?-extension:\/\/)/i;
+const CEFSHARP_CRAWLER_ERROR_PATTERN = /^(?:Non-Error promise rejection captured with value: )?Object Not Found Matching Id:\d+, MethodName:update, ParamCount:\d+$/;
 
 function isMetaMaskMessage(message: string | undefined): boolean {
     if (!message) return false;
@@ -31,6 +32,16 @@ export function isInjectedMetaMaskError(event: ErrorEvent): boolean {
     );
 }
 
+/** Detects the unactionable rejection emitted by CefSharp-based link scanners. */
+export function isCefSharpCrawlerError(event: ErrorEvent): boolean {
+    if (event.message && CEFSHARP_CRAWLER_ERROR_PATTERN.test(event.message)) return true;
+
+    return (event.exception?.values ?? []).some(
+        (exception) =>
+            typeof exception.value === "string" && CEFSHARP_CRAWLER_ERROR_PATTERN.test(exception.value)
+    );
+}
+
 export function filterClientSentryEvent(event: ErrorEvent): ErrorEvent | null {
-    return isInjectedMetaMaskError(event) ? null : event;
+    return isInjectedMetaMaskError(event) || isCefSharpCrawlerError(event) ? null : event;
 }
