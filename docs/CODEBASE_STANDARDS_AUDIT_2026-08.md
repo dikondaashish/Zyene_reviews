@@ -10,8 +10,9 @@ Every batch was verified independently before the next began.
 | Gate | Before | After |
 |------|--------|-------|
 | `pnpm typecheck` | pass | pass |
-| `pnpm test` | 56 files / 210 tests pass | 56 files / 210 tests pass |
+| `pnpm test` | 56 files / 210 tests pass | 57 files / **214** tests pass |
 | `pnpm build` | pass | pass (245 pages) |
+| `pnpm check:sizes` | *did not exist* | pass — 0 over limit, 34 ratcheted |
 | `pnpm lint` | 0 errors, 860 warnings | 0 errors, **853** warnings |
 
 The proxy refactor was additionally A/B tested against the original on a live dev
