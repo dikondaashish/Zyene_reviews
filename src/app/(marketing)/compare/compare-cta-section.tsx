@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Check, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
-import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
+import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
 import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
 export function CompareCtaSection() {

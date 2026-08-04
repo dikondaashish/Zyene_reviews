@@ -1,10 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { HELP_ARTICLE_MAP, HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/phase4/help-data";
-import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
-import { COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
-import { INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
+import { BLOG_SLUGS } from "@/lib/content/blog-data";
+import { HELP_ARTICLE_MAP, HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/content/help-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
+import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
+import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 import { GROWTH_IMPLEMENTATION_MATRIX } from "@/lib/growth/implementation-matrix";
 import { buildGrowthPageInventory } from "@/lib/growth/page-inventory";
 import type { BlueprintAuditItem } from "./growth-blueprint-audit-types";

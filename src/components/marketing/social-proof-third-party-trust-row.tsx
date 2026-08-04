@@ -1,4 +1,4 @@
-import { THIRD_PARTY_TRUST } from "@/lib/phase5/social-proof-data";
+import { THIRD_PARTY_TRUST } from "@/lib/social-proof/social-proof-data";
 
 export function ThirdPartyTrustRow() {
     return (

@@ -1,8 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/phase4/help-data";
-import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { BLOG_SLUGS } from "@/lib/content/blog-data";
+import { HELP_CATEGORY_SLUGS, type HelpCategory } from "@/lib/content/help-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 import type { BlueprintAuditItem } from "./growth-blueprint-audit-types";
 import { APP_ROOT, readAppPageSource } from "./growth-blueprint-audit-read";
 
@@ -152,7 +152,7 @@ if (!existsSync(newsletterApiPath)) {
     items.push({ id: "p6-newsletter-api", severity: "error", area: "architecture", message: "Newsletter subscribe API missing (§6.4)" });
 }
 
-const emailSeqPath = path.join(process.cwd(), "src/lib/phase6/email-sequences-data.ts");
+const emailSeqPath = path.join(process.cwd(), "src/lib/campaign-content/email-sequences-data.ts");
 if (!existsSync(emailSeqPath)) {
     items.push({ id: "p6-email-sequences", severity: "error", area: "content", message: "Trial nurture email sequences missing (§6.4)" });
 }
@@ -175,7 +175,7 @@ if (!existsSync(referralPath)) {
     items.push({ id: "p7-referral", severity: "error", area: "architecture", message: "Referral program module missing (§7.2)" });
 }
 
-const upgradeModalCopyPath = path.join(process.cwd(), "src/lib/phase7/upgrade-modal-copy.ts");
+const upgradeModalCopyPath = path.join(process.cwd(), "src/lib/billing/upgrade-modal-copy.ts");
 if (!existsSync(upgradeModalCopyPath)) {
     items.push({ id: "p7-upgrade-copy", severity: "error", area: "content", message: "Upgrade modal copy data missing (§7.4)" });
 }

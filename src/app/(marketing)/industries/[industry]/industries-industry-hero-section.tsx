@@ -1,7 +1,7 @@
 import { IndustryTrustBadge } from "@/components/marketing/social-proof";
-import { getIndustryTrustLabel } from "@/lib/phase5/social-proof-data";
-import type { IndustryData } from "@/lib/phase3/industry-data";
-import { getEsIndustryPathForEnglishSlug } from "@/lib/phase8/localized-industries";
+import { getIndustryTrustLabel } from "@/lib/social-proof/social-proof-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
+import { getEsIndustryPathForEnglishSlug } from "@/lib/industries/localized-industries";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ChevronRight } from "lucide-react";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
-import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 
 export function generateStaticParams() {
     return CASE_STUDY_SLUGS.map((slug) => ({ slug }));

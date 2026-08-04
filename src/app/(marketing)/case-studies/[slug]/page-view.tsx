@@ -1,6 +1,6 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
-import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 import { CaseStudiesSlugHeaderSection } from "./case-studies-slug-header-section";
 import { CaseStudiesSlugChallengeSection } from "./case-studies-slug-challenge-section";
 import { CaseStudiesSlugApproachSection } from "./case-studies-slug-approach-section";

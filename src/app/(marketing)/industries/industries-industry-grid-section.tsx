@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { INDUSTRIES } from "@/lib/phase3/industry-data";
-import { IndustryIcon } from "@/lib/phase3/industry-icons";
+import { INDUSTRIES } from "@/lib/industries/industry-data";
+import { IndustryIcon } from "@/lib/industries/industry-icons";
 
 export function IndustriesIndustryGridSection() {
     return (

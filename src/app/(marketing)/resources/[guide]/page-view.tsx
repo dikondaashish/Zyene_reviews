@@ -1,6 +1,6 @@
 import { BreadcrumbJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { ResourcesGuideGuideHeaderSection } from "./resources-guide-guide-header-section";
 import { ResourcesGuideContentSidebarSection } from "./resources-guide-content-sidebar-section";
 import { ResourcesGuideOtherGuidesSection } from "./resources-guide-other-guides-section";

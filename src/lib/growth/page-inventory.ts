@@ -3,15 +3,15 @@
 // Single source of truth for marketing + product URLs and sitemap coverage.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { HELP_CATEGORY_SLUGS, HELP_SLUGS, helpArticleNestedPath, HELP_ARTICLE_MAP } from "@/lib/phase4/help-data";
-import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
-import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
-import { COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
-import { INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
-import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
+import { BLOG_SLUGS } from "@/lib/content/blog-data";
+import { HELP_CATEGORY_SLUGS, HELP_SLUGS, helpArticleNestedPath, HELP_ARTICLE_MAP } from "@/lib/content/help-data";
+import { RESOURCE_SLUGS } from "@/lib/content/resource-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
+import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
+import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
+import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
-import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
+import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 
 export type PageStatus = "live" | "planned" | "redirect" | "app-only";
 export type PagePriority = "P0" | "P1" | "P2" | "—";

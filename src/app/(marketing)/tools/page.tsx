@@ -3,7 +3,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
 import { ArrowRight, Link2, BarChart3, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
+import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { SIGNUP_URL } from "@/config/env";
 export const metadata: Metadata = mergeMarketingSocial({

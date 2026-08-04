@@ -1,5 +1,5 @@
-import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/phase4/blog-data";
-import type { BlogPost } from "@/lib/phase4/blog-data";
+import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/content/blog-data";
+import type { BlogPost } from "@/lib/content/blog-data";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Building2, ShieldCheck, Star } from "lucide-react";
-import { getPlatformStats } from "@/lib/phase5/social-proof-data";
+import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
 
 export function FooterTrustStrip() {
     const stats = getPlatformStats();

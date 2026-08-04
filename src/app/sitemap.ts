@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next";
-import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
+import { BLOG_SLUGS } from "@/lib/content/blog-data";
+import { RESOURCE_SLUGS } from "@/lib/content/resource-data";
 import {
     HELP_ARTICLE_MAP,
     HELP_CATEGORY_SLUGS,
     helpArticleNestedPath,
-} from "@/lib/phase4/help-data";
-import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
-import { FREE_TOOLS } from "@/lib/phase7/free-tools-data";
+} from "@/lib/content/help-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
+import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
-import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
+import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
 const BASE_URL = MARKETING_SITE_ORIGIN;

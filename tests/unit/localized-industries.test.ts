@@ -3,7 +3,7 @@ import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
     getLocalizedIndustry,
     LOCALIZED_INDUSTRY_PAGES,
-} from "../../src/lib/phase8/localized-industries";
+} from "../../src/lib/industries/localized-industries";
 
 describe("localized industry pages", () => {
     it("maps Spanish restaurantes slug to English restaurants", () => {

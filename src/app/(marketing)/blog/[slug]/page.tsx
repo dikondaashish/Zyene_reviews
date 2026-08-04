@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
-import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/phase4/blog-data";
+import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/content/blog-data";
 
 export function generateStaticParams() {
     return BLOG_SLUGS.map((slug) => ({ slug }));

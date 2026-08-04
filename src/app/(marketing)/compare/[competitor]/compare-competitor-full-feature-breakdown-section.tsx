@@ -1,4 +1,4 @@
-import type { CompetitorData } from "@/lib/phase3/competitor-data";
+import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 import { FeatureCellValue } from "./compare-competitor-feature-cell";
 import Link from "next/link";
 

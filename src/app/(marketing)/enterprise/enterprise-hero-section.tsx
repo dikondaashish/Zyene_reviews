@@ -16,8 +16,8 @@ import {
     ENTERPRISE_SLA_BULLETS,
     ENTERPRISE_VALUE_PROPS,
     ENTERPRISE_SALES_EMAIL,
-} from "@/lib/phase8/enterprise-data";
-import { DEFAULT_CAL_COM_BOOKING_URL } from "@/lib/phase8/cal-com-embed";
+} from "@/lib/enterprise/enterprise-data";
+import { DEFAULT_CAL_COM_BOOKING_URL } from "@/lib/enterprise/cal-com-embed";
 
 export function EnterpriseHeroSection() {
     return (

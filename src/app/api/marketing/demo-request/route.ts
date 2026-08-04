@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { captureMarketingLead } from "@/lib/phase8/capture-marketing-lead";
-import { ENTERPRISE_SALES_EMAIL } from "@/lib/phase8/enterprise-data";
+import { captureMarketingLead } from "@/lib/enterprise/capture-marketing-lead";
+import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
 import { sendEmail } from "@/services/resend/send-email";
 import { emailMutedFooter } from "@/lib/email/transactional-email-styles";
 

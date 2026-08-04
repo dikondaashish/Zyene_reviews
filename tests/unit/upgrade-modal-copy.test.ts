@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getUpgradeModalCopy } from "../../src/lib/phase7/upgrade-modal-copy";
+import { getUpgradeModalCopy } from "../../src/lib/billing/upgrade-modal-copy";
 
 describe("upgrade modal copy", () => {
     it("includes blueprint-specific unlock messaging", () => {

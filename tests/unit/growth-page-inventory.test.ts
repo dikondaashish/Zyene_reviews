@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildGrowthPageInventory, summarizePageInventory } from "../../src/lib/growth/page-inventory";
-import { BLOG_SLUGS } from "../../src/lib/phase4/blog-data";
-import { INDUSTRY_SLUGS } from "../../src/lib/phase3/industry-data";
+import { BLOG_SLUGS } from "../../src/lib/content/blog-data";
+import { INDUSTRY_SLUGS } from "../../src/lib/industries/industry-data";
 
 describe("growth page inventory", () => {
     const pages = buildGrowthPageInventory();

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
-import { RESOURCE_MAP, RESOURCE_SLUGS } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP, RESOURCE_SLUGS } from "@/lib/content/resource-data";
 
 export function generateStaticParams() {
     return RESOURCE_SLUGS.map((guide) => ({ guide }));

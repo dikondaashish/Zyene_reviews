@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import {
     generatePrimaryReviewResponse,
     renderBonusTemplates,
-} from "@/lib/phase7/review-response-templates";
-import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
+} from "@/lib/free-tools/review-response-templates";
+import { captureToolLead } from "@/lib/free-tools/capture-tool-lead";
 import { sendEmail } from "@/services/resend/send-email";
 import {
     reviewResponseBonusEmailHtml,

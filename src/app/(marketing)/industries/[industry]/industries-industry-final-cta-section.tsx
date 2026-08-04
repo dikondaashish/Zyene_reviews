@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
-import type { IndustryData } from "@/lib/phase3/industry-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
 
 export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData }) {
     return (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
-import { INDUSTRY_MAP, INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
+import { INDUSTRY_MAP, INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 
 export function generateStaticParams() {
     return INDUSTRY_SLUGS.map((slug) => ({ industry: slug }));

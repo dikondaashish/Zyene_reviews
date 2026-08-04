@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { searchPublicPlaces } from "@/lib/phase7/places-public";
+import { searchPublicPlaces } from "@/lib/free-tools/places-public";
 
 export async function GET(request: Request) {
     const q = new URL(request.url).searchParams.get("q")?.trim() ?? "";

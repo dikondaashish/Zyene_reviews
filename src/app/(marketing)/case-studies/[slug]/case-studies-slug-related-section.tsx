@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, ChevronRight, Check, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
+import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 import { SIGNUP_URL } from "@/config/env";
 
 export function CaseStudiesSlugRelatedSection({ study, slug, related }: { study: (typeof CASE_STUDY_MAP)[string]; slug: string; related: (typeof CASE_STUDY_MAP)[string][] }) {

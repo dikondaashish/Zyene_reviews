@@ -9,7 +9,7 @@ import {
     Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PARTNER_CONTACT_EMAIL } from "@/lib/phase6/partnerships-data";
+import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 
 export function AgenciesHeroSection() {
     return (

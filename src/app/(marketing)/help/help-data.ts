@@ -5,7 +5,7 @@ import {
     HELP_CATEGORIES,
     helpArticleNestedPath,
     type HelpCategory,
-} from "@/lib/phase4/help-data";
+} from "@/lib/content/help-data";
 
 export const CATEGORY_ORDER: HelpCategory[] = [
     "getting-started",

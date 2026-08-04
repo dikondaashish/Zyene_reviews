@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { COMPETITOR_MAP } from "@/lib/phase3/competitor-data";
+import { COMPETITOR_MAP } from "@/lib/comparisons/competitor-data";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

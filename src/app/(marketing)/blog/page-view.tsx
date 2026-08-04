@@ -1,5 +1,5 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { BLOG_POSTS } from "@/lib/phase4/blog-data";
+import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { BlogHeroSection } from "./blog-hero-section";
 import { BlogPillarFiltersSection } from "./blog-pillar-filters-section";
 import { BlogFeaturedPostSection } from "./blog-featured-post-section";

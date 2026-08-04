@@ -1,4 +1,4 @@
-import type { IndustryData } from "@/lib/phase3/industry-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
 
 export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryData }) {
     // Use the first pain point as the featured stat (left), remaining as supporting (right)

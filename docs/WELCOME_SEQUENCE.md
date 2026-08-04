@@ -14,7 +14,7 @@ Three-email Inngest sequence for **new marketing leads** (newsletter, local SEO 
 | `marketing_nurture_day2_shield` | +48 hours | Negative Feedback Shield explainer | `/blog/negative-feedback-shield` |
 | `marketing_nurture_day5_trial` | +120 hours | Trial + pricing | `/signup` |
 
-Definitions: `src/lib/phase6/email-sequences-data.ts` (`MARKETING_NURTURE_STEPS`).  
+Definitions: `src/lib/campaign-content/email-sequences-data.ts` (`MARKETING_NURTURE_STEPS`).  
 Templates: `marketingNurtureEmail()` in `src/services/resend/templates/growth-emails.ts`.
 
 ---

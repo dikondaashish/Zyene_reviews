@@ -7,7 +7,7 @@ import { SIGNUP_URL } from "@/config/env";
 import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
     getLocalizedIndustry,
-} from "@/lib/phase8/localized-industries";
+} from "@/lib/industries/localized-industries";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 

@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { INDUSTRY_MAP } from "@/lib/phase3/industry-data";
+import { INDUSTRY_MAP } from "@/lib/industries/industry-data";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

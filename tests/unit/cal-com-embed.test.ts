@@ -3,7 +3,7 @@ import {
     DEFAULT_CAL_COM_BOOKING_URL,
     getCalComEmbedUrlFromEnv,
     normalizeCalComEmbedUrl,
-} from "../../src/lib/phase8/cal-com-embed";
+} from "../../src/lib/enterprise/cal-com-embed";
 
 describe("Cal.com embed URL", () => {
     it("appends embed=true when missing", () => {

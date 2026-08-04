@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Handshake, Store, Users, Zap, Globe } from "lucide-react";
-import { PARTNERSHIP_CHANNELS } from "@/lib/phase6/partnerships-data";
+import { PARTNERSHIP_CHANNELS } from "@/lib/campaign-content/partnerships-data";
 const CHANNEL_ICONS = { pos: Store, association: Users, agency: Handshake, zapier: Zap, google: Globe } as const;
 
 export function PartnersChannelsSection() {

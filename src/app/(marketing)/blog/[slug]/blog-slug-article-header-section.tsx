@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Clock, ChevronRight } from "lucide-react";
-import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
-import type { BlogPost } from "@/lib/phase4/blog-types";
+import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
+import type { BlogPost } from "@/lib/content/blog-types";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
 // ─── Static Generation ────────────────────────────────────────────────────────

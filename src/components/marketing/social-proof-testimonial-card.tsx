@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
-import type { TestimonialCard } from "@/lib/phase5/social-proof-data";
+import type { TestimonialCard } from "@/lib/social-proof/social-proof-data";
 
 export function SocialProofTestimonialCard({ t }: { t: TestimonialCard }) {
     return (

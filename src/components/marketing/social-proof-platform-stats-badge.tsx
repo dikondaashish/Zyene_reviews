@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { getPlatformStats } from "@/lib/phase5/social-proof-data";
+import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
 
 export function PlatformStatsBadge({ className = "" }: { className?: string }) {
     const stats = getPlatformStats();

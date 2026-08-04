@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { FEATURED_TESTIMONIALS } from "@/lib/phase5/social-proof-data";
+import { FEATURED_TESTIMONIALS } from "@/lib/social-proof/social-proof-data";
 import { SocialProofTestimonialCard } from "./social-proof-testimonial-card";
 
 export function TestimonialGrid({

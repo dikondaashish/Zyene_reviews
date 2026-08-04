@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AGENCY_PRICING_TIERS, WHITE_LABEL_FEATURES } from "../../src/lib/phase8/agency-pricing-data";
+import { AGENCY_PRICING_TIERS, WHITE_LABEL_FEATURES } from "../../src/lib/enterprise/agency-pricing-data";
 
 describe("agency pricing", () => {
     it("defines three agency tiers", () => {

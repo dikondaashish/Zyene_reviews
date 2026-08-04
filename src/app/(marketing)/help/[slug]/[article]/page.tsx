@@ -9,7 +9,7 @@ import {
     isHelpCategory,
     helpArticleNestedPath,
     type HelpArticle,
-} from "@/lib/phase4/help-data";
+} from "@/lib/content/help-data";
 import { HelpArticleView } from "@/components/marketing/help-article-view";
 
 export function generateStaticParams() {

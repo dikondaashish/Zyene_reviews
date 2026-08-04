@@ -4,8 +4,8 @@ import { Calendar, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DemoRequestForm } from "@/components/marketing/demo-request-form";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { ENTERPRISE_SALES_EMAIL } from "@/lib/phase8/enterprise-data";
-import { getCalComEmbedUrlFromEnv } from "@/lib/phase8/cal-com-embed";
+import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
+import { getCalComEmbedUrlFromEnv } from "@/lib/enterprise/cal-com-embed";
 
 
 export default function DemoPage() {

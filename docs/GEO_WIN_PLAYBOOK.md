@@ -55,11 +55,11 @@
 
 | Asset | Status | Code / URL |
 |-------|--------|------------|
-| Blog (12 posts, 6 pillars) | Shipped | `src/lib/phase4/blog-data.ts`, `/blog` |
-| Resource guides (4) | Shipped | `src/lib/phase4/resource-data.ts`, `/resources/*` |
-| Compare pages | Shipped | `src/lib/phase3/competitor-data.ts`, `/compare/*` |
-| Case studies (5) | Shipped | `src/lib/phase5/case-study-data.ts`, `/case-studies/*` |
-| Help center (23 articles) | Shipped | `src/lib/phase4/help-data.ts`, `/help/*` |
+| Blog (12 posts, 6 pillars) | Shipped | `src/lib/content/blog-data.ts`, `/blog` |
+| Resource guides (4) | Shipped | `src/lib/content/resource-data.ts`, `/resources/*` |
+| Compare pages | Shipped | `src/lib/comparisons/competitor-data.ts`, `/compare/*` |
+| Case studies (5) | Shipped | `src/lib/social-proof/case-study-data.ts`, `/case-studies/*` |
+| Help center (23 articles) | Shipped | `src/lib/content/help-data.ts`, `/help/*` |
 | Article + FAQ JSON-LD | Partial | Home + pricing + help; **blog posts lack FAQ schema** |
 | Newsletter signup | Shipped | `NewsletterSignup`, `/api/marketing/newsletter/subscribe` |
 | Inverted pyramid summaries | **Complete (12/12 posts)** | `summary` blocks after every major `h2` in `blog-posts-month*.ts` |
@@ -146,7 +146,7 @@
 
 ### 1.1 Schema: summary section type
 
-**Add to** `src/lib/phase4/blog-types.ts`:
+**Add to** `src/lib/content/blog-types.ts`:
 
 ```ts
 // New section type
@@ -529,7 +529,7 @@ email_exclusive: ...
 
 | Phase | File / area | Change |
 |-------|-------------|--------|
-| 1 | `src/lib/phase4/blog-types.ts` | `summary` type, `faqs`, `dateModified` |
+| 1 | `src/lib/content/blog-types.ts` | `summary` type, `faqs`, `dateModified` |
 | 1 | `src/components/marketing/content-renderer.tsx` | Render `summary` |
 | 1 | `src/app/(marketing)/blog/[slug]/page-view.tsx` | `FAQPageJsonLd` |
 | 1 | `src/components/seo/json-ld-article.tsx` | `dateModified` |

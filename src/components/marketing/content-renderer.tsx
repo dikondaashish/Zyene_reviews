@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Lightbulb, AlertTriangle, ArrowRight } from "lucide-react";
-import type { ContentSection } from "@/lib/phase4/blog-data";
+import type { ContentSection } from "@/lib/content/blog-data";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 // Renders the structured content section array used by blog posts, resource guides, and help articles.

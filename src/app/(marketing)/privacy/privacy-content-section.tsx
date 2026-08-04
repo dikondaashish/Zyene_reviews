@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { REGIONAL_COMPLIANCE_SECTIONS } from "@/lib/phase8/compliance-data";
+import { REGIONAL_COMPLIANCE_SECTIONS } from "@/lib/enterprise/compliance-data";
 
 export function PrivacyContentSection() {
     return (

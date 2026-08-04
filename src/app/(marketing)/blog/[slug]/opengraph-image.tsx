@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/phase4/blog-data";
+import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/content/blog-data";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

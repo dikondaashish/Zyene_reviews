@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
-import { RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
+import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 

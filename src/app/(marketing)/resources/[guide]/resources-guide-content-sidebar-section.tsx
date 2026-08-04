@@ -1,6 +1,6 @@
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 import { MarketingFaqSection } from "@/components/marketing/marketing-faq-section";
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import Link from "next/link";
 import { ArrowRight, Clock, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
