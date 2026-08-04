@@ -75,7 +75,7 @@ export async function finalizeCompetitorWatchRun(params: {
     );
 
     if (appEventsToInsert.length > 0) {
-        const { error: insertAppEventsErr } = await (admin.from("events" as never) as any).insert(appEventsToInsert);
+        const { error: insertAppEventsErr } = await admin.from("events").insert(appEventsToInsert);
         if (insertAppEventsErr) {
             logger.error({ err: insertAppEventsErr }, "[cron/competitor-watch] app events insert failed:");
         }

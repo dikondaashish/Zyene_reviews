@@ -61,7 +61,8 @@ export async function loadCompetitorWatchScanContext(
 
     const processedBusinessIds = Array.from(new Set(competitors.map((c) => c.business_id)));
 
-    const { data: watchSettingsRows } = await (admin.from("competitor_watch_settings" as never) as any)
+    const { data: watchSettingsRows } = await admin
+        .from("competitor_watch_settings")
         .select("business_id, rating_alert_delta, review_spike_threshold, email_alerts_enabled")
         .in("business_id", processedBusinessIds);
     const settingsByBusiness = new Map<
