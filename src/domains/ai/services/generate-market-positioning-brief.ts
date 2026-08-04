@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { Schema, Type as SchemaType } from "@google/genai";
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import {
     parseMarketPositioningBriefPayload,
     type MarketPositioningBriefResult,

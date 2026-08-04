@@ -1,10 +1,10 @@
 import { logger } from "@/lib/logger";
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import {
     normalizeSentimentForDb,
     normalizeThemesForDb,
     normalizeUrgencyForDb,
-} from "@/domains/ai/normalizeAnalysisForDb";
+} from "@/domains/ai/normalize-analysis-for-db";
 import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { Schema, Type as SchemaType } from "@google/genai";

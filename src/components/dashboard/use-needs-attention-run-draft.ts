@@ -1,6 +1,6 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import { toast } from "sonner";
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { NEEDS_ATTENTION_UUID_RE } from "@/components/dashboard/needs-attention-constants";
 import { buildDemoDraft } from "@/components/dashboard/needs-attention-build-demo-draft";
 import { fetchSuggestReply } from "@/components/dashboard/needs-attention-fetch-suggest-reply";

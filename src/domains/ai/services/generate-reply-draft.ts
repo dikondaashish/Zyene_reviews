@@ -1,6 +1,6 @@
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import { SUGGEST_REPLY_PROMPT_COMPACT } from "@/domains/ai/prompts";
-import { singleReplySchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { singleReplySchema } from "@/domains/ai/schemas/response-schemas";
 import { pickSparseTemplateIndex } from "@/services/reviews/sparse-reply-rotation";
 import {
     humanizeCategory,

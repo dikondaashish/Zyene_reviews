@@ -1,5 +1,5 @@
 import { logger } from "@/lib/logger";
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { aiRateLimit } from "@/lib/auth/rate-limit";

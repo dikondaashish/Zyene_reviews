@@ -2,7 +2,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
-import { categorizePrivateFeedback } from "@/domains/ai/services/AiAnalysisService";
+import { categorizePrivateFeedback } from "@/domains/ai/services/ai-analysis-service";
 import { sendEmail } from "@/services/resend/send-email";
 import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";

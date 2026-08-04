@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/vertex-adapter";
 import { QA_ANSWER_PROMPT } from "@/domains/ai/prompts";
-import { qaSchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { qaSchema } from "@/domains/ai/schemas/response-schemas";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { z } from "zod";

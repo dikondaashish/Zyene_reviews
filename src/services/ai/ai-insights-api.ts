@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";

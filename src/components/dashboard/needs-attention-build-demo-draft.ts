@@ -1,4 +1,4 @@
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import type { NeedsAttentionReview } from "@/components/dashboard/needs-attention-types";
 import { formatThemeTag } from "@/components/dashboard/needs-attention-format-helpers";
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { DashboardTourProvider } from "@/components/tours/DashboardTourProvider";
+import { DashboardTourProvider } from "@/components/tours/dashboard-tour-provider";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;

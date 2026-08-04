@@ -1,4 +1,4 @@
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import type { NeedsAttentionCopy, NeedsAttentionReview } from "@/components/dashboard/needs-attention-types";

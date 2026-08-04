@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
-import type { MarketPositioningBriefInput } from "@/domains/ai/services/generateMarketPositioningBrief";
+import type { MarketPositioningBriefInput } from "@/domains/ai/services/generate-market-positioning-brief";
 import { parsePlacesMetaFromSnapshot } from "@/lib/competitors/places-snapshot-meta";
 import { estimateDiscoverySplit, getGoogleSearchKeywords } from "@/services/google/performance-queries";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";

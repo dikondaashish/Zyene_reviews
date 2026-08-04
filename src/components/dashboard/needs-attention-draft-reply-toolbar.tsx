@@ -1,5 +1,5 @@
 import { Check, Loader2, RefreshCw, Send } from "lucide-react";
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,

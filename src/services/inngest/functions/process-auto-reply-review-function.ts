@@ -2,10 +2,10 @@ import { logger } from "@/lib/logger";
 import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
-import { generateContentWithFallback } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
-import { batchAnalysisSchema } from "@/domains/ai/schemas/ResponseSchemas";
+import { batchAnalysisSchema } from "@/domains/ai/schemas/response-schemas";
 import {
     syncGoogleReviewsForPlatform,
     prepareGoogleSync,
@@ -21,11 +21,11 @@ import {
     normalizeSentimentForDb,
     normalizeThemesForDb,
     normalizeUrgencyForDb,
-} from "@/domains/ai/normalizeAnalysisForDb";
+} from "@/domains/ai/normalize-analysis-for-db";
 import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
-import { generateReplyDraftText, type ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import { generateReplyDraftText, type ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { postGoogleReplySystem } from "@/services/reviews/post-google-reply-system";
 import {
     AUTO_REPLY_ENABLED_AT_SKEW_MS,

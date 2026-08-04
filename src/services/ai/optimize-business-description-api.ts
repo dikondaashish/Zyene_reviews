@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
-import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback, nextResponseForVertexAiError } from "@/domains/ai/adapters/vertex-adapter";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";

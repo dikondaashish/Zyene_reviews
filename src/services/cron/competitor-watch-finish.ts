@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
-import { generateCompetitorInsight } from "@/domains/ai/services/generateCompetitorInsight";
+import { generateCompetitorInsight } from "@/domains/ai/services/generate-competitor-insight";
 import { sendCompetitorAlertEmail } from "@/lib/notifications/send-competitor-alert-email";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
