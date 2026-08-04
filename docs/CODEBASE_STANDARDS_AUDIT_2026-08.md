@@ -1,6 +1,6 @@
 # Codebase Standards Audit — August 2026
 
-**Branch:** `chore/codebase-standards-audit` · 9 commits · 249 files changed
+**Branch:** `chore/codebase-standards-audit` · 11 commits
 **Standard applied:** repo-native rules in [AGENTS.md §2](../AGENTS.md#2-code-standards-non-negotiable)
 
 ## Verification
@@ -12,7 +12,7 @@ Every batch was verified independently before the next began.
 | `pnpm typecheck` | pass | pass |
 | `pnpm test` | 56 files / 210 tests pass | 56 files / 210 tests pass |
 | `pnpm build` | pass | pass (245 pages) |
-| `pnpm lint` | 0 errors, 860 warnings | 0 errors, **854** warnings |
+| `pnpm lint` | 0 errors, 860 warnings | 0 errors, **853** warnings |
 
 The proxy refactor was additionally A/B tested against the original on a live dev
 server: 13 path probes and 16 `Host`-header probes covering the auth, app,
@@ -124,34 +124,84 @@ three sibling cards dropped `"use client"` and now render as Server Components.
 
 ---
 
-## 5. Open item — stale generated Supabase types
+## 5. Supabase types regenerated — resolved
 
-**This is the highest-value remaining fix and it needs schema access.**
+`database.types.ts` had drifted: eight tables existed in `supabase/migrations/`
+but were missing from the generated types, so every competitor-watch and Google
+SEO/AEO query ran with type checking switched off behind
+`from("table" as never) as any`.
 
-`src/lib/db/supabase/database.types.ts` is out of date. Eight tables exist in
-`supabase/migrations/` but are absent from the generated types:
+Regenerated from the live schema. The diff is purely additive — 41 → 49 tables,
+none removed. Removed in consequence:
 
-`competitor_events` · `competitor_insights` · `competitor_snapshots` ·
-`competitor_watch_runs` · `google_seo_ai_visibility_results` ·
-`google_seo_ai_visibility_runs` · `google_seo_heatmap_cells` ·
-`google_seo_heatmap_runs`
+| Escape hatch | Count |
+|---|---|
+| `from("table" as never) as any` across 14 files | 34 |
+| leftover `as any` wrappers | 4 |
+| `(admin as any).rpc(...)` — both lock functions are in the generated `Functions` type | 2 |
+| hand-written `as Promise<{…}>` annotations standing in for missing types | 2 |
+| stale casts on tables already typed | 4 |
 
-The code works around this with `supabase.from("table" as never) as any`, so
-**every query against the competitor-watch and Google SEO/AEO features runs with
-type checking switched off** — 43 casts across ~15 files. RLS *is* correctly
-enabled on all eight tables, so this is a typing gap, not a security gap.
+**`any` went 47 → 8; `as never` 56 → 22.** The 8 remaining are Inngest's own
+`step` typing, a recharts formatter, and one comment — none Supabase-related.
 
-This audit removed the 4 casts that were simply stale (`competitor_market_briefs`,
-`competitor_watch_settings`, `events`, `invitations` — already in the types).
-The other 43 cannot go until the types are regenerated:
+### Latent bug the stale types were hiding
 
-```bash
-npx supabase gen types typescript --project-id snielpllhrppdqzkzjwf > src/lib/db/supabase/database.types.ts
-```
+`businesses.rating_style` is `TEXT DEFAULT 'emoji' NOT NULL` (migration
+`20260407160000`), but the PATCH schema in `business-by-id-api.ts` accepted
+`null`. A request sending `rating_style: null` would have hit a NOT NULL
+violation at update time. Dropped `.nullable()`, matching the sibling enum fields
+in the same schema.
 
-Regenerating is the sanctioned way to change that file — the "never edit" rule
-means never hand-edit it. Then delete the `as never` / `as any` pairs and let
-typecheck confirm the column shapes.
+---
+
+## 5b. Security — anonymous access to RLS-bypassing functions
+
+**Found via Supabase's database linter, then confirmed directly against the
+schema. A migration is written but NOT applied — see below.**
+
+Three `SECURITY DEFINER` functions (owner `postgres`, so they bypass RLS) carried
+no authorization check, no pinned `search_path`, and were `EXECUTE`-able by the
+`anon` role:
+
+| Function | Exposure |
+|---|---|
+| `bulk_add_customer_tags(uuid[], text[])` | Rewrites `customers.tags` for any UUID, any tenant |
+| `bulk_remove_customer_tags(uuid[], text[])` | Same |
+| `increment_ai_replies_used(uuid)` | Inflates any organization's AI reply counter |
+
+Verified: `customers` and `organizations` both have RLS enabled with 2 policies
+each; `has_function_privilege('anon', …, 'EXECUTE')` returns **true** for all
+three; none of the function bodies reference `auth.uid()`.
+
+The application route `src/services/customers/bulk-api.ts` *does* call
+`userCanAccessBusiness()` before invoking the RPC — but PostgREST exposes the
+functions directly at `/rest/v1/rpc/<name>`, so that check is bypassable with the
+public anon key. The sibling `delete` branch in the same file scopes correctly
+with `.eq("business_id", businessId)`; the tag branch delegates to a privileged
+function that does neither.
+
+Also: `acquire_competitor_watch_lock` / `release_competitor_watch_lock` are
+granted to `authenticated`, so any signed-in user can hold the competitor-watch
+cron's advisory lock. Their only caller is the service-role client.
+
+**Schema drift:** `bulk_add_customer_tags` and `bulk_remove_customer_tags` appear
+in no migration at all — they were created directly against the database.
+
+The team clearly knows this pattern: `encrypt_token`, `decrypt_token` and
+`acquire_platform_lock` are all correctly closed to `anon`. These are oversights,
+not a missing convention.
+
+**`supabase/migrations/20260804120000_harden_security_definer_functions.sql`**
+scopes each function to the caller's own tenant, pins `search_path`, revokes
+`anon` EXECUTE, restricts the locks to `service_role`, and brings the two
+undeclared functions under version control. **It has not been applied** —
+applying it changes a production database and is the owner's call.
+
+Two lower-priority linter items left alone: leaked-password protection is
+disabled in Supabase Auth (a dashboard toggle), and `opt_outs`, `sms_opt_outs`
+and `stripe_webhook_events` have RLS on with no policies — which is the correct
+deny-all posture for service-role-only tables, not a gap.
 
 ## 6. Remaining over-limit files
 
