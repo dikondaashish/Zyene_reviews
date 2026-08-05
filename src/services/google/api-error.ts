@@ -1,9 +1,9 @@
-import * as Sentry from "@sentry/nextjs";
 
 export type GoogleServiceErrorKind =
     | "api_disabled"
     | "access_pending"
     | "permission_denied"
+    | "unverified_location"
     | "invalid_argument"
     | "rate_limited"
     | "server_error"
@@ -61,6 +61,14 @@ function classifyGoogleServiceError(
             ));
     if (accessPending) return "access_pending";
     if (statusCode === 403 || googleStatus === "PERMISSION_DENIED") return "permission_denied";
+
+    // Google returns 400 INVALID_ARGUMENT for a location the merchant has not
+    // verified yet. That is a customer state, not a malformed request, so it is
+    // classified separately from genuine argument errors.
+    const unverifiedLocation =
+        googleReason === "UNVERIFIED_LOCATION" || /unverified location/i.test(googleMessage);
+    if (unverifiedLocation) return "unverified_location";
+
     if (statusCode === 400 || googleStatus === "INVALID_ARGUMENT") return "invalid_argument";
     if (statusCode === 429 || googleStatus === "RESOURCE_EXHAUSTED") return "rate_limited";
     if (statusCode >= 500) return "server_error";
@@ -91,6 +99,10 @@ export function createGoogleServiceError(
         message =
             `${apiName} denied access to this location. Confirm the Google account still manages it ` +
             "and reconnect Google if permissions changed.";
+    } else if (kind === "unverified_location") {
+        message =
+            `${apiName} requires a verified Google Business Profile location. Complete Google's ` +
+            "verification for this listing, then retry the sync.";
     }
 
     const error = new Error(message) as GoogleServiceError;
@@ -116,17 +128,22 @@ export function isGoogleConfigurationError(error: unknown): error is GoogleServi
     return isGoogleServiceError(error) && ["api_disabled", "access_pending"].includes(error.kind);
 }
 
-export function captureGoogleServiceException(error: unknown): void {
-    if (!isGoogleServiceError(error)) {
-        Sentry.captureException(error);
-        return;
-    }
-    Sentry.withScope((scope) => {
-        scope.setTag("google.api", error.apiName);
-        scope.setTag("google.error_kind", error.kind);
-        scope.setTag("google.http_status", String(error.statusCode));
-        if (error.googleStatus) scope.setTag("google.rpc_status", error.googleStatus);
-        if (error.googleReason) scope.setTag("google.error_reason", error.googleReason);
-        Sentry.captureException(error);
-    });
+/**
+ * Conditions owned by the customer's Google account, not by our code: the
+ * listing is unverified, or the connected account no longer manages it.
+ *
+ * These recur on every sync cycle until the merchant acts, so paging on them
+ * buries real faults. Callers log them and surface the message to the customer
+ * instead of reporting to Sentry.
+ */
+export function isGoogleAccountStateError(error: unknown): error is GoogleServiceError {
+    return (
+        isGoogleServiceError(error) &&
+        ["permission_denied", "unverified_location"].includes(error.kind)
+    );
+}
+
+/** True when the failure is ours to fix or investigate — i.e. worth an alert. */
+export function isGoogleActionableFault(error: unknown): boolean {
+    return !isGoogleConfigurationError(error) && !isGoogleAccountStateError(error);
 }

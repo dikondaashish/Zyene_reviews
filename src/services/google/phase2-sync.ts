@@ -5,10 +5,7 @@ import { listAllPlaceActionLinks } from "./place-actions";
 import { checkUriLikelyBroken, linkToRow } from "./place-action-link-utils";
 import { syncGbpQuestionsForPlatform } from "./phase2-questions-sync";
 import * as Sentry from "@sentry/nextjs";
-import {
-    captureGoogleServiceException,
-    isGoogleConfigurationError,
-} from "./api-error";
+import { reportGoogleSyncFailure } from "./sync-failure-report";
 
 export interface Phase2SyncResult {
     success: boolean;
@@ -92,21 +89,7 @@ export async function syncGbpPlaceActionsForPlatform(
 
         return { success: true, count: rows.length };
     } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        if (isGoogleConfigurationError(e)) {
-            logger.warn(
-                {
-                    api: e.apiName,
-                    statusCode: e.statusCode,
-                    googleStatus: e.googleStatus,
-                    googleReason: e.googleReason,
-                },
-                "[Phase2] Google API configuration required"
-            );
-            return { success: false, count: 0, error: msg };
-        }
-        logger.error({ err: msg }, "[Phase2] Place actions sync failed:");
-        captureGoogleServiceException(e);
+        const msg = reportGoogleSyncFailure("[Phase2] Place actions", e);
         return { success: false, count: 0, error: msg };
     }
 }
