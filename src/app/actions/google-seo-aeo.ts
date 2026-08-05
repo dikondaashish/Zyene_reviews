@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/db/supabase/server";
 import { inngest } from "@/services/inngest/client";
+import { areEstimatedAeoSurfacesEnabled, DISABLED_RUN_MESSAGE } from "@/lib/features/aeo-surfaces";
 
 async function canManageBusiness(businessId: string): Promise<boolean> {
     const supabase = await createClient();
@@ -29,6 +30,9 @@ export async function runAiVisibilityAuditNow(
     if (!(await canManageBusiness(businessId))) {
         return { success: false, error: "You do not have permission to run this audit." };
     }
+    if (!areEstimatedAeoSurfacesEnabled()) {
+        return { success: false, error: DISABLED_RUN_MESSAGE };
+    }
     try {
         const evt = await inngest.send({
             name: "google-seo-aeo/ai-visibility.run",
@@ -47,6 +51,9 @@ export async function runHeatmapAuditNow(
 ): Promise<{ success: boolean; error?: string; eventId?: string }> {
     if (!(await canManageBusiness(businessId))) {
         return { success: false, error: "You do not have permission to run this audit." };
+    }
+    if (!areEstimatedAeoSurfacesEnabled()) {
+        return { success: false, error: DISABLED_RUN_MESSAGE };
     }
     try {
         const evt = await inngest.send({

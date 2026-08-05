@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
 
 export async function fetchGoogleSeoAeoSecondaryData(
     businessId: string,
@@ -6,9 +7,11 @@ export async function fetchGoogleSeoAeoSecondaryData(
     latestHeatmapRun: { id: string; keyword: string; status: string; created_at: string } | null
 ) {
     const supabase = await createClient();
+    // Estimated surfaces are hidden by default, so skip the reads that feed them.
+    const wantsEstimated = areEstimatedAeoSurfacesEnabled();
 
     const [aiResultsRes, heatmapCellsRes, competitorsRes] = await Promise.all([
-        latestAiRun
+        wantsEstimated && latestAiRun
             ? supabase
                   .from("google_seo_ai_visibility_results")
                   .select("model, found, position, snippet")
@@ -16,7 +19,7 @@ export async function fetchGoogleSeoAeoSecondaryData(
                   .order("model", { ascending: true })
                   .limit(20)
             : Promise.resolve({ data: null }),
-        latestHeatmapRun
+        wantsEstimated && latestHeatmapRun
             ? supabase
                   .from("google_seo_heatmap_cells")
                   .select("cell_label, rank_position, visibility_score")

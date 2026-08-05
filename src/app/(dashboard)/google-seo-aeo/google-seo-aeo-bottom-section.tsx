@@ -2,6 +2,8 @@ import { ExternalLink } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DescriptionOptimizerCard } from "@/components/google-seo-aeo/description-optimizer-card";
+import { EstimatedAeoSurfaces } from "@/components/google-seo-aeo/estimated-aeo-surfaces";
+import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 
 export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoContentProps }) {
@@ -51,71 +53,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>AI Visibility</CardTitle>
-                    <CardDescription>
-                        Beta estimate from internal scoring heuristics (real provider checks coming next).
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {content.latestAiRun ? (
-                        <div className="space-y-3">
-                            <p className="text-xs text-muted-foreground">
-                                Latest run:{" "}
-                                <span className="font-medium text-foreground">{content.latestAiRun.query}</span> ·{" "}
-                                {content.latestAiRun.status}
-                            </p>
-                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {content.aiResults.map((m) => (
-                                    <div key={m.model} className="rounded-lg border p-3">
-                                        <p className="text-sm font-medium">{m.model}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                            {m.found
-                                                ? `Result: ${m.position ? `${m.position}${m.position === 1 ? "st" : m.position === 2 ? "nd" : m.position === 3 ? "rd" : "th"} position` : "Found"}`
-                                                : "Result: Not found"}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-sm text-muted-foreground">No AI visibility audits yet. Run one above.</p>
-                    )}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Heatmap audits</CardTitle>
-                    <CardDescription>
-                        Beta estimated geo-grid (real rank-tracking integration coming next).
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground space-y-2">
-                    {content.latestHeatmapRun ? (
-                        <>
-                            <p>
-                                Keyword:{" "}
-                                <span className="font-medium text-foreground">{content.latestHeatmapRun.keyword}</span>{" "}
-                                · {content.latestHeatmapRun.status}
-                            </p>
-                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {content.heatmapCells.slice(0, 9).map((cell) => (
-                                    <div key={cell.cell_label} className="rounded-lg border p-3">
-                                        <p className="text-sm font-medium">{cell.cell_label}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                            Rank #{cell.rank_position ?? "-"} · Visibility {cell.visibility_score}%
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    ) : (
-                        <p>No heatmap audits yet. Run one above.</p>
-                    )}
-                </CardContent>
-            </Card>
+            {areEstimatedAeoSurfacesEnabled() ? <EstimatedAeoSurfaces content={content} /> : null}
         </>
     );
 }
