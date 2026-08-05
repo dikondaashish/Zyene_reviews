@@ -151,7 +151,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 | F5.7 | GSC indexation status join (indexed / discovered-not-indexed / excluded per URL) | P2 | M | Semrush; needs GSC OAuth (E-2) |
 | F5.8 | **Answerability audit**: question-form headings, direct-answer paragraph within N words, extractable lists/tables, chunk length, entity clarity, publish/update dates, author markup | P1 | M | Scrunch audits AI-readiness; this is the AEO analogue of an on-page audit and maps to our existing CORE-EEAT skill rubric |
 | F5.9 | `llms.txt` / AI-content-endpoint presence and validity | P3 | XS | Scrunch; low cost, emerging standard, good marketing |
-| F5.10 | GBP completeness audit — implement the 6 stubbed checks with real Google data: photo count/recency, post frequency, post keyword coverage, services list, service descriptions, service-area radius | P1 | M | Local-tool parity (BrightLocal/Semrush Local); removes six `pending` rows that currently make our own score look broken |
+| F5.10 | **GBP completeness audit — 5 stubs + 1 proxy replacement.** (a) Implement the 5 stubbed checks with real Google data: photo count/recency, post frequency, post keyword coverage, service descriptions, service-area radius. (b) **Replace the `services-list` proxy**, which today scores `actionLinkCount >= 25` — place action links standing in for a services list — with a real Google services check. (b) is not optional: it is already scored, so it will not surface as a `pending` row and cannot be found by "finish the stubs". Acceptance criterion #29 is not met while any proxy remains. | P1 | M | Local-tool parity (BrightLocal/Semrush Local); removes 5 `pending` rows and the one measured-but-indirect signal that inflates confidence in the score |
 | F5.11 | NAP consistency across major directories | P3 | L | Local-tool parity; large third-party data dependency |
 | F5.12 | Blocker severity triage: critical/high/medium with "this is why you are not being cited" linkage to affected prompts | P1 | S | Semrush and Ahrefs prioritize by severity; the linkage to prompts is ours |
 
@@ -600,6 +600,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 27. **PASS** if the crawler respects robots.txt `Disallow` for our own agent and never exceeds 1 req/s per host (verified in access logs).
 28. **PASS** if a crawl hitting the plan page cap reports `coverage: X of Y pages` in the UI rather than presenting partial results as complete.
 29. **PASS** if all 11 audit items return a real measured status — **zero** items with `status: "pending"` remain in the shipped UI.
+29a. **PASS** only if every scored item measures the thing its label names. Specifically, `services-list` must read the business's actual Google services, not `actionLinkCount`. **FAIL** while any audit is scored from a stand-in signal, even though such an item is not `pending` and so passes #29. This criterion exists because #29 alone cannot detect a proxy: the item is already scored, so finishing the stubs would leave it in place indefinitely.
 30. **PASS** if an SPA serving an empty `<body>` in raw HTML is flagged critical for AEO.
 
 ### F6.1, F6.2, F6.4–F6.6 — Content engine
@@ -825,4 +826,8 @@ The plan stated throughout that the module had **5 measured and 6 pending** audi
 
 The incorrect figure also appears in the merged commit message for `4fb1ab37` and in the body of PR #4. Both are immutable; this entry is the correction of record.
 
-**Standing caveat this surfaces:** `services-list` is scored but is not a real services audit. F5.10 replaces it with a genuine Google services check. Until then the Optimization Score includes one proxy signal, and the six "measured" checks are not all equally direct.
+**What this surfaced, and what was done about it.** `services-list` is scored but is not a real services audit — it counts place action links. That is a smaller instance of the problem Phase 0 addressed: a number that looks measured and is not quite.
+
+It was nearly left as a caveat with no owner. F5.10 was tagged P1 but scoped as *"implement the 6 stubbed checks"* — wrong count, and wrong in a way that mattered: `services-list` is **not** stubbed, so a task defined as "finish the stubs" would have shipped complete with the proxy untouched. QA criterion #29 ("zero `pending` items") had the same blind spot and would have passed.
+
+Both are fixed. F5.10 now explicitly carries "(b) replace the `services-list` proxy" as non-optional scope, and criterion **#29a** fails the audit while any item is scored from a stand-in signal. The proxy now has an owner and a test that can detect it, rather than a note in a document.
