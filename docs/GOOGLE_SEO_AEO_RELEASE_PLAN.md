@@ -385,7 +385,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 
 **Do not mistake `REQUEST_SMOOTHING_DELAY_MS` for this.** `src/services/google/constants.ts` defines a 700 ms pause between paginated Google API calls inside a single sync (`sync-service/pagination.ts`). That is intra-request pacing against a per-minute rate limit. It has no effect on a per-*day* quota bucket and does not spread load across accounts or days. The retry jitter in `business-profile-core.ts` is likewise unrelated.
 
-**Why it is a billing control.** Gemini's grounding allowance is 10,000 prompts/day (§6.4). Spread across a week that covers ~4,600 Professional businesses at zero cost. Fire every account on the same day and the ceiling collapses by 7× to ~660, and everything past it bills at $35/1,000 — roughly **$3.50/business/month created purely by scheduling shape**, with no change in what the customer receives.
+**Why it is a billing control.** Gemini's grounding allowance is 10,000 prompts/day (§6.4). Spread across a week that covers **4,667** Professional businesses at zero cost (measured, §14.1). Fire every account on the same day and the ceiling collapses by 7× to 666. The cost is real well before that ceiling: at just **700 businesses**, smoothed sampling is **$0.00/day** and bursting the same work onto one day is **$17.50/day (~$525/month)** — identical output, purely a function of scheduling shape.
 
 **Requirements:**
 
@@ -524,7 +524,7 @@ Free-tier ceiling = `free_per_day × 7 ÷ prompts_per_business`, assuming weekly
 
 | Tier | Prompts/business | Businesses covered free (2.5 Pro) |
 |---|---|---|
-| Professional | 15 | **~4,600** |
+| Professional | 15 | **4,667** (measured) |
 | Modeled scenario | 25 | **~2,800** |
 | Starter | 5 | — (Gemini not included) |
 
@@ -537,7 +537,7 @@ Bursting every account into one day collapses that ceiling by 7×. This is now t
 | Professional (15 prompts × 3 engines weekly) | Yes | **~$2.82** | ~$4.92 | $59.99 |
 | Starter (5 prompts × Perplexity + AI Overview monthly) | **No** | ~$0.35 | ~$0.35 | $29.99 |
 
-**The §6.3 allowances hold unchanged.** Gemini does not need to come out of Professional — at 5–8% of plan revenue it is comfortable, and below ~4,600 Professional businesses the grounding line is $0.00. Gemini was never in Starter, and that call now has a sharper justification: at the $0.035 overage rate Gemini is **58× the DataForSEO AI Overview rate** ($0.0006/keyword), and for local intent AI Overview is the higher-traffic Google surface anyway. Starter gets the cheap Google surface; Professional gets both.
+**The §6.3 allowances hold unchanged.** Gemini does not need to come out of Professional — at 5–8% of plan revenue it is comfortable, and below 4,667 Professional businesses the grounding line is $0.00. Gemini was never in Starter, and that call now has a sharper justification: at the $0.035 overage rate Gemini is **58× the DataForSEO AI Overview rate** ($0.0006/keyword), and for local intent AI Overview is the higher-traffic Google surface anyway. Starter gets the cheap Google surface; Professional gets both.
 
 **Modelling requirement this creates:** a flat per-sample cost cannot express "free to N/day, then $X per 1,000" — assuming worst case would overstate Gemini COGS by 100% at current scale and wrongly argue for cutting it from Professional. `engine-catalog.ts` therefore carries `{ overageMicroUsd, freePerDay, confidence }` per engine, with `estimateDailyCostMicroUsd()` honouring the allowance.
 
@@ -625,7 +625,8 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 
 ### E-10 — Sampling scheduler (§4.5)
 
-49. **PASS** if, with 700 businesses enrolled at 15 prompts each, no single day's projected grounding prompts exceeds `ceil(total ÷ 7) × 1.15`. **FAIL** on any day carrying more than 15% above an even share.
+49. **PASS** if, with 700 businesses enrolled at 15 prompts each, (a) the busiest day's projected demand stays **inside the engine's free daily allowance**, and (b) no weekday's business count exceeds `mean + 3σ`.
+    *Revised 2026-08-05.* The original criterion demanded every day stay within 15% of an even share. For 700 ids across 7 days the per-day standard deviation is ~9.26, so a 15% bound sits at **1.62σ** and fails roughly one run in three however good the hash is — it specified tighter uniformity than hash-based assignment can deliver, and the only ways to meet it are a flaky suite or an assignment scheme where adding one business reshuffles everyone else. It also measured the wrong thing: at 1.30× the busiest day is 1,950 prompts against a 10,000/day allowance, so uniformity at that scale was never the cost risk. (a) is the assertion that protects money; (b) keeps the hash honest.
 50. **PASS** if a given business resolves to the identical `(day_of_week, hour)` slot across 10 consecutive scheduling runs. **FAIL** if slots reshuffle, since irregular sampling intervals corrupt every trend line.
 51. **PASS** if a projected day that would breach an engine's `freePerDay` allowance defers the excess runs and fires **zero** billable requests for that engine, unless an explicit per-org overage override is set.
 52. **PASS** if that override, when set, is recorded in the E-5 ledger with the org, engine, and unit count before the first billable call is made.
@@ -669,6 +670,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 | **Q2** | Pricing & gating | **Credit-metered add-on**, base allowance on Professional | E-5 + F4.9 locked into Phase 1. Meter by (prompt × engine × run) with **per-engine weighting**, not prompt count (§6.2 finding 3). Stripe metered-billing SKUs are a new Phase 1 dependency — not in the current `STRIPE_*` env set. |
 | **Q3** | Paid data budget & vendors | **Approved; vendors recommended in §6.1** | Primary: **DataForSEO** (standard queue, `load_async_ai_overview`, Maps `location_coordinate` for the grid). Secondary qualified behind E-1: **SerpApi**. Engines: Perplexity Sonar + OpenAI Responses/web_search + Vertex Gemini in Phase 1; Anthropic in Phase 2. **Vertex grounding quote received 2026-08-05** — 10,000 prompts/day free on 2.5 Pro, then $35/1,000; Gemini pinned to `gemini-2.5-pro` and unblocked (§6.4). DataForSEO, OpenAI and Perplexity rates remain list-price estimates pending contracts. |
 | **Q4** | Team & deadline | **2 senior fullstack + 0.5 design + 0.5 PM; Phase 1 in 12 weeks after Phase 0** | Roadmap in §5 stands unchanged. |
+| **Q6** | Customer notification for the simulated data | **No separate written notice** | The 5 affected accounts were contacted by phone and updated on 2026-08-05, the same day the gate shipped. Recorded as reported by the product owner; not independently verified from this side. Closes the last Phase 0 open item. See §9.1 for what this unblocks. |
 
 ### 9.2 Still open
 
@@ -677,7 +679,7 @@ Each of these changes the plan materially. Working assumptions are stated so the
 | # | Question | Working assumption | What changes if the answer differs |
 |---|---|---|---|
 | **Q5** | **AI crawler log analytics (F2.7) — how do we get customer server logs?** Cloudflare/Vercel log drain integration, a JS pixel, or a DNS/proxy product? | Deferred to Phase 2, integration route undecided | This is one of Profound's strongest differentiators; if it is a priority, it is a Phase 1 item and needs its own integration design (+L) |
-| **Q6** | **Do we proactively notify customers who saw the simulated AI-visibility/heatmap data?** | Silent remediation + relabel, no outbound notice | A proactive notice is the higher-trust path and I would recommend it if any customer has used those numbers in their own reporting — your call, and it affects Phase 0 comms |
+| ~~**Q6**~~ | ~~Do we proactively notify customers who saw the simulated AI-visibility/heatmap data?~~ | **DECIDED 2026-08-05** — see §9.1 | No separate written notice. The affected accounts were contacted by phone and updated the same day. |
 | **Q7** | **Does "Claude answers" in the brief mean the Claude consumer product, or Claude via API with web search?** Only the API path is compliant. | API with web search, clearly labeled | If the expectation is consumer-product parity, we must set expectations now — no vendor can legitimately deliver that |
 | **Q8** | **Is white-label (F7.5) needed for an agency motion at launch?** | No — Phase 3 | If agencies are a launch channel, F7.5 + F7.9 + F7.6 move to Phase 1 (+8 EW) |
 | **Q9** | **How much of this must work for multi-location orgs at launch?** Zyene supports multiple businesses per org. | Phase 1 is per-location; org rollup in Phase 2 | Org-level rollup at launch adds identity disambiguation and aggregation work (+M to L) |
@@ -883,3 +885,65 @@ That check needs database access and stays manual. **Before and after any releas
 A scripted version of step 2 is not currently buildable: it needs a direct Postgres connection, and no `DATABASE_URL` exists in `src/config/env.ts` — the app reaches Supabase over PostgREST, which does not expose the `supabase_migrations` schema. Worth revisiting if a connection string is ever added to CI secrets.
 
 **For E-4 specifically:** `20260805230000` declares `apply-plan: deferred`. Merging PR #5 must not apply it. It goes out with E-5/E-7.
+
+---
+
+## 9.1 Q6 closed — customer notification (2026-08-05)
+
+**Decision: no separate written notice.** The 5 affected accounts were contacted by phone and updated the same day the gate shipped. Recorded as reported by the product owner; not independently verified from the engineering side.
+
+This closes the last open Phase 0 item. Phase 0 is complete: gate shipped and verified in production, provenance columns applied, 112 rows marked, affected customers spoken to.
+
+### What this unblocks, and a recommendation against doing it
+
+§10 held the estimated rows as "marked, not deleted, pending the Q6 decision on customer notification. Purge is a one-line follow-up once that is settled." It is now settled, so the purge is actionable.
+
+**Recommendation: do not purge.** Keep the 112 rows.
+
+- They are the only record of what those 5 customers were shown. Now that a conversation has happened, that record is more useful, not less — if any question about it resurfaces, the underlying data should still exist.
+- They are already inert: `is_estimated = true`, excluded from every score, and the surfaces that rendered them are gated off.
+- Deleting them removes evidence to solve a problem that the gate already solved. The risk they posed was being *displayed as measurement*, and that risk is closed.
+
+Retention should instead be handled by the normal policy in Q10 (90 days Starter / 13 months Professional), which ages them out on the same schedule as everything else rather than as a special case.
+
+Reversing this later is trivial — a `DELETE ... WHERE is_estimated` is available whenever wanted. Reversing a purge is not.
+
+**Status: not purged, and no purge planned.** Flag it if you want them gone and it is a one-liner.
+
+---
+
+## 14.1 E-10 verification — 2026-08-05
+
+Both E-10 claims were verified against real numbers rather than asserted, and each verification is now backed by a regression test so it is enforced rather than documented.
+
+### Deterministic slots: same business, same weekly slot, every week
+
+| Check | Method | Result |
+|---|---|---|
+| No non-deterministic inputs | Audited `sampling-slot.ts` for `Math.random`, clock reads, `process.env`, crypto, process state | None present |
+| Stable across processes | Ran assignment for 5 fixed ids in **3 separate Node processes** | **1 distinct output** — identical every time |
+| Stable across restarts/deploys | Pinned golden value in the suite | Enforced |
+| **Recurs exactly weekly** | Walked **52 consecutive weeks × 3 businesses = 156 transitions**, spanning US spring-forward and fall-back | **0 violations** — every gap exactly 604,800,000 ms, same UTC weekday and hour |
+
+The weekly-cadence property was the gap: `assignSlot` being deterministic does not by itself guarantee it, because `nextRunAt` could drift an hour across a DST boundary and still return the "right" slot. Using `Date.UTC` and `getUTCDay` throughout makes it immune, and a 52-week test now covers it.
+
+### Budget guard vs. the written quote
+
+Ten scenarios computed by hand from the quote (10,000/day free, $35 per 1,000) and compared against the guard. **Zero mismatches.**
+
+| Scenario | Requested/day | Authorised | Guard | Hand |
+|---|---|---|---|---|
+| 700 businesses, smoothed | 1,500 | no | $0.00 | $0.00 |
+| 4,000 businesses, smoothed | 8,571 | no | $0.00 | $0.00 |
+| 4,667 businesses (at ceiling) | 10,000 | no | $0.00 | $0.00 |
+| 4,700 businesses (over) | 10,071 | no | $0.00 (71 deferred) | $0.00 |
+| 4,700 businesses (over), authorised | 10,071 | yes | $2.48 | $2.48 |
+| 700 businesses **all on one day** | 10,500 | no | $0.00 (500 deferred) | $0.00 |
+| 700 businesses all on one day, authorised | 10,500 | yes | **$17.50** | $17.50 |
+| 12,000 (2,000 over) | 12,000 | yes | $70.00 | $70.00 |
+
+**Free-tier ceiling measured at 4,667 businesses** (15 prompts, smoothed) → exactly 10,000/day; 4,668 breaches. The earlier "~4,600" was an estimate; this is computed.
+
+**The scheduling lever, priced at a scale we will actually reach:** at 700 businesses, smoothed costs **$0.00/day** and bursting costs **$17.50/day, ~$525/month** — for identical output. E-10 pays for itself long before the 4,667 ceiling.
+
+The regression tests declare `FREE_PER_DAY` and `USD_PER_1000` locally rather than importing them from `engine-catalog.ts`. A test that read the catalog would pass even if the catalog were edited to a wrong rate; these fail.
