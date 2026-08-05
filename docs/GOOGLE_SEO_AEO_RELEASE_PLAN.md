@@ -768,3 +768,41 @@ Deliberate sequencing, not an omission. The Vertex grounding fee is still unquot
 ### Next
 
 E-4 (schema for `aeo_prompts` / `aeo_runs` / `aeo_samples` / `aeo_citations`) and E-7 (Inngest fan-out) are both unblocked and can proceed in parallel against the fixture adapter.
+
+---
+
+## 12. Phase 1 log — E-4 sampling schema (2026-08-05)
+
+Migration written: `supabase/migrations/20260805230000_aeo_phase1_sampling_schema.sql`. Ten tables covering the prompt library, runs and samples, citations, brand mentions, competitor aliases, the real geo-grid, and the quota ledger.
+
+**Deliberately NOT applied to production.** The tables are empty and nothing reads them yet. Applying now would recreate exactly the gap we spent Phase 0 closing — schema live in production while the code that gives it meaning sits unmerged. It should be applied when E-5/E-7 are ready to ship, in the same release.
+
+Consequence: `database.types.ts` cannot be regenerated until the migration lands. It is on the never-hand-edit list, so any service touching these tables before then must not assume generated types exist.
+
+### Schema encodes the E-1 contract as database constraints
+
+Where `engine-types.ts` makes an error impossible in TypeScript, the schema makes the same error impossible in Postgres — so a bad write cannot enter through the service-role admin client or a manual query, neither of which passes through the TS contract.
+
+| Invariant | Constraint |
+|---|---|
+| Anything reaching a model records which one | `aeo_samples_model_id_required_unless_failed` |
+| A failure carries no answer payload | `aeo_samples_payload_only_when_ok` |
+| An answered sample declares citation availability | `aeo_samples_ok_declares_citations` |
+| Error detail belongs only to failures | `aeo_samples_error_kind_only_when_failed` / `_failed_requires_error_kind` |
+| A competitor mention resolves to a competitor | `aeo_brand_mentions_competitor_id_matches_kind` |
+| Billable never exceeds sampled | `aeo_quota_ledger_billable_within_sampled` |
+
+**`aeo_samples` has no brand-presence column at all.** Presence is extracted separately into `aeo_brand_mentions`, which carries its own `extraction_model_id` for provenance. This is the schema-level form of the rule that produced the pre-Phase-1 incident: nothing that writes raw engine output may also assert visibility.
+
+**Geo-grid ranks are nullable with `CHECK (rank_position >= 1)`.** NULL means "not found in the local pack" and must render as a distinct state; a sentinel of 0 or 20 would silently average into ATRP (QA criterion #9).
+
+### Validation method
+
+Executed the full DDL plus nine negative-path inserts inside a transaction rolled back against the production database — real FK targets, real `get_user_org_ids()`, real `businesses`/`competitors`/`organizations` tables. All nine constraint tests passed and zero `aeo_*` tables persisted, confirmed by a follow-up count.
+
+This is worth reusing: it validates a migration against production's actual schema without a branch, a local stack, or any write. Verify rollback works first with a throwaway probe table, since the technique is only safe if the transaction is genuinely honoured.
+
+### Not in this migration
+
+- `crawl_runs` / `crawl_pages` / `crawl_findings` — deferred to E-3, whose crawler defines their shape.
+- `aeo_alerts` — deferred to the P8 alerting build; its shape depends on the significance gate in F8.8.
