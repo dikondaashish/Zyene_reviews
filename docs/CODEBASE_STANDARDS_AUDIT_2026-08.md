@@ -246,18 +246,75 @@ deny-all posture for service-role-only tables, not a gap.
 
 ---
 
-## 5c. Migration drift — four repo migrations never applied
+## 5c. The four "unapplied" migrations — resolved
 
-Comparing `supabase/migrations/` against the remote migration history, these
-exist in the repo but have **not** been applied to the production database:
+Each was assessed on its own merits rather than applied as a batch. They split
+cleanly into two different situations.
 
-- `20260720120000_square_sandbox_spike.sql`
-- `20260720163000_square_phase2_send.sql`
-- `20260721160000_square_sending_claim.sql`
-- `20260801190000_remove_public_review_write_policies.sql`
+### Square (3 migrations) — already live, do NOT apply
 
-The last one looks security-relevant by name. Not applied here — that is a
-separate decision from the SECURITY DEFINER hardening and needs its own review.
+`square_sandbox_spike`, `square_phase2_send`, `square_sending_claim` are
+**already in the production schema in full**, verified object by object:
+
+| Migration | Verified in production |
+|---|---|
+| sandbox_spike | `square_connections` + `square_payment_events` exist, RLS on, `*_select_member` policies present, 3 + 4 indexes |
+| phase2_send | `square_payment_events.review_request_id uuid NULL` present |
+| sending_claim | CHECK constraint contains `'sending'` plus every phase-2 status |
+
+They were applied outside the migration history — the same drift as the
+bulk-tag functions. **Re-running them would fail**: `CREATE POLICY` is not
+idempotent, and phase2 would briefly drop `'sending'` from the CHECK constraint,
+rejecting in-flight webhook writes. Recorded as applied in
+`supabase_migrations.schema_migrations` instead.
+
+Notable: Clover, the sibling POS integration, shipped through the normal
+migration flow. Square's spike bypassed it.
+
+### `remove_public_review_write_policies` — a real open hole, applied
+
+Of the three policies it drops, two (`review_requests_anon_insert` / `_update`)
+did not exist. The third did:
+
+```
+private_feedback | "Anyone can insert feedback" | INSERT | {public} | with_check: true
+```
+
+`with_check: true` is an unconditional allow. Any anonymous caller holding the
+public anon key — which ships in the client bundle by design — could insert
+arbitrary rows into any business's private feedback inbox through
+`/rest/v1/private_feedback`, with no validation, no `business_id` check, and no
+rate limit.
+
+PostgREST is served from the Supabase domain and never passes through the Next.js
+proxy, so it bypasses **both** the Zod validation in `private-feedback-api.ts`
+and the global API rate limit in `proxy-api-guards.ts`.
+
+Verified safe before applying: the only INSERT path in the codebase is
+`services/reviews/private-feedback-api.ts`, which uses `createAdminClient()`;
+`service_role` has `rolbypassrls = true`, so it is unaffected by the policy. No
+browser-side Supabase client touches the table.
+
+Verified after applying, with a rolled-back probe against production: an `anon`
+insert is now rejected, a `service_role` insert still succeeds, probe row removed.
+
+**Sweep:** no other unconditionally-permissive (`with_check: true`) write policy
+exists anywhere in the `public` schema. This was the last one.
+
+### Migration-history drift is systemic, and left alone
+
+Only **12 of 90** repo migration filenames match their applied version — for
+example `20260407160000_add_rating_style.sql` is recorded as
+`20260407195828 add_rating_style`. Names match, timestamps do not.
+
+This repo does not drive schema through `supabase db push`; migrations are
+authored as files and applied separately, with the server assigning the version.
+Filenames are documentation, not keys.
+
+Renaming files to match was tried and reverted — aligning 5 files to a convention
+the other 78 do not follow makes the tree less consistent, not more. Worth a
+deliberate team decision (adopt `db push`, or accept filenames as documentation);
+not worth 78 speculative renames.
 
 ## 6. File sizes — enforced, then paid down selectively
 
