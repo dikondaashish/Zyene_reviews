@@ -10,7 +10,7 @@ import {
 import {
     getUpgradeModalCopy,
     type UpgradeModalContext,
-} from "@/lib/phase7/upgrade-modal-copy";
+} from "@/lib/billing/upgrade-modal-copy";
 import { UpgradeModalIntervalToggle } from "./upgrade-modal-interval-toggle";
 import { UpgradeModalPlanCards } from "./upgrade-modal-plan-cards";
 import { useUpgradeModal } from "./use-upgrade-modal";

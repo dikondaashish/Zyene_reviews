@@ -1,65 +1,38 @@
 "use server";
 /** Resolves the current user's active business from the session cookie. */
 
-import { logger } from "@/lib/logger";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+
 import { createClient } from "@/lib/db/supabase/server";
 import type {
     BusinessContextBusiness,
     BusinessContextOrganization,
 } from "@/types/business-context";
 
+import { clearBusinessContextCache, loadUserBusinessContext } from "./business-context-load";
+import {
+    readGoogleQaSidebarNavVisible,
+    readGoogleQaUnavailable,
+} from "./business-context-google-qa";
+
 const COOKIE_NAME = "active_business_id";
 
 /**
- * Live read of `review_platforms.google_qa_unavailable` for the Google row.
- * Prefer this over `business.review_platforms` from {@link getActiveBusinessId} because that payload can be Redis-cached for several minutes.
+ * Re-exported from business-context-google-qa for import stability. Written as
+ * wrappers rather than `export … from` because a "use server" module may only
+ * export functions the compiler can verify are async.
  */
-export async function getGoogleQaUnavailableForActiveBusiness(businessId: string | null): Promise<boolean> {
-    if (!businessId) return false;
-    const supabase = await createClient();
-    const { data } = await supabase
-        .from("review_platforms")
-        .select("google_qa_unavailable")
-        .eq("business_id", businessId)
-        .eq("platform", "google")
-        .maybeSingle();
-    return data?.google_qa_unavailable === true;
+export async function getGoogleQaUnavailableForActiveBusiness(
+    businessId: string | null,
+): Promise<boolean> {
+    return readGoogleQaUnavailable(businessId);
 }
 
-/**
- * Whether the dashboard sidebar should show the Google Q&A (/questions) nav item.
- * Visible only when the business has at least one `gbp_questions` row and the Google platform
- * has a Q&A sync watermark (`google_qa_synced_at`), so first visit / in-flight phase2 stays hidden
- * without a "Syncing…" placeholder in the nav.
- */
 export async function getGoogleQaSidebarNavVisible(businessId: string | null): Promise<boolean> {
-    if (!businessId) return false;
-    const supabase = await createClient();
-    const { data: platform, error: platformError } = await supabase
-        .from("review_platforms")
-        .select("google_qa_synced_at")
-        .eq("business_id", businessId)
-        .eq("platform", "google")
-        .maybeSingle();
-    if (platformError || !platform) return false;
-
-    const { count, error: countError } = await supabase
-        .from("gbp_questions")
-        .select("id", { count: "exact", head: true })
-        .eq("business_id", businessId);
-    if (countError) return false;
-    const n = count ?? 0;
-    if (n < 1) return false;
-
-    return platform.google_qa_synced_at != null;
+    return readGoogleQaSidebarNavVisible(businessId);
 }
 
-/**
- * Get the active business ID from cookie.
- * Validates that the business belongs to the current user's organization.
- * Falls back to the first business if no valid cookie is set.
- */
 function businessOrgId(business: BusinessContextBusiness): string | null {
     const id = String(
         (business as BusinessContextBusiness & { organization_id?: string }).organization_id ?? ""
@@ -67,6 +40,11 @@ function businessOrgId(business: BusinessContextBusiness): string | null {
     return id || null;
 }
 
+/**
+ * Get the active business ID from cookie.
+ * Validates that the business belongs to the current user's organization.
+ * Falls back to the first business if no valid cookie is set.
+ */
 export async function getActiveBusinessId(options?: {
     skipCache?: boolean;
 }): Promise<{
@@ -78,7 +56,6 @@ export async function getActiveBusinessId(options?: {
     allBusinesses: BusinessContextBusiness[];
 }> {
     const supabase = await createClient();
-    const skipCache = options?.skipCache === true;
     const empty = {
         businessId: null,
         business: null,
@@ -92,96 +69,13 @@ export async function getActiveBusinessId(options?: {
         data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-        return empty;
-    }
+    if (!user) return empty;
 
-    // ── Redis Caching for Business Context ──
-    const cacheKey = `user_businesses:${user.id}`;
-    let organizations: BusinessContextOrganization[] = [];
-    let businesses: BusinessContextBusiness[] = [];
-
-    if (!skipCache) {
-        try {
-            const { redis } = await import("@/lib/db/redis");
-            const cached = await redis.get(cacheKey);
-            if (cached) {
-                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-                businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
-                organizations = (parsed.organizations as BusinessContextOrganization[]) ?? [];
-                // Legacy cache stored a single `organization` — ignore so multi-org users refresh
-                if (organizations.length === 0) {
-                    businesses = [];
-                }
-            }
-        } catch (e) {
-            logger.error({ err: e }, "Redis cache error:");
-        }
-    }
-
-    if (organizations.length === 0 || businesses.length === 0) {
-        // Business-scoped memberships (source of truth for which org the user is working in)
-        const { data: memberBusinesses } = await supabase
-            .from("business_members")
-            .select(`
-                business_id,
-                businesses (
-                    *,
-                    review_platforms (*)
-                )
-            `)
-            .eq("user_id", user.id);
-
-        businesses = (memberBusinesses ?? []).reduce<BusinessContextBusiness[]>(
-            (acc, entry: { businesses?: BusinessContextBusiness | null }) => {
-                const business = entry.businesses;
-                if (business && business.status !== "archived") acc.push(business);
-                return acc;
-            },
-            []
-        );
-
-        // All org memberships (invited teammates have organization_members + business_members; RLS requires org row)
-        const { data: orgMemberRows } = await supabase
-            .from("organization_members")
-            .select(`
-                organization_id,
-                organizations (
-                    *,
-                    businesses (
-                        *,
-                        review_platforms (*)
-                    )
-                )
-            `)
-            .eq("user_id", user.id)
-            .eq("status", "active");
-
-        type OrgMemberRow = {
-            organization_id: string;
-            organizations: BusinessContextOrganization | null;
-        };
-        const rows = (orgMemberRows ?? []) as OrgMemberRow[];
-        organizations = rows
-            .map((r) => r.organizations)
-            .filter((org): org is BusinessContextOrganization => Boolean(org?.id));
-
-        // Backward-compat: org-only members until all users have business_members
-        if (businesses.length === 0 && organizations[0]?.businesses?.length) {
-            businesses = organizations[0].businesses.filter(
-                (business) => business.status !== "archived"
-            );
-        }
-
-        if (organizations.length > 0 && !skipCache) {
-            try {
-                const { redis } = await import("@/lib/db/redis");
-                await redis.set(cacheKey, JSON.stringify({ organizations, businesses }), { ex: 300 });
-            } catch (e) {
-                logger.error({ err: e }, "Redis cache set error:");
-            }
-        }
-    }
+    const { organizations, businesses } = await loadUserBusinessContext(
+        supabase,
+        user.id,
+        options?.skipCache === true,
+    );
 
     if (businesses.length === 0) {
         return {
@@ -191,25 +85,16 @@ export async function getActiveBusinessId(options?: {
         };
     }
 
-    // Read cookie
     const cookieStore = await cookies();
     const savedId = cookieStore.get(COOKIE_NAME)?.value;
 
-    // Validate that saved ID belongs to this user
-    let activeBusiness: BusinessContextBusiness | null = savedId
-        ? businesses.find((business) => business.id === savedId) || null
-        : null;
-
-    // Fallback to first business
-    if (!activeBusiness) {
-        activeBusiness = businesses[0];
-    }
+    // Validate that saved ID belongs to this user, else fall back to the first.
+    const activeBusiness =
+        (savedId ? businesses.find((business) => business.id === savedId) : null) ?? businesses[0];
 
     const activeOrgId = businessOrgId(activeBusiness);
     const organization =
-        (activeOrgId
-            ? organizations.find((org) => org.id === activeOrgId)
-            : null) ??
+        (activeOrgId ? organizations.find((org) => org.id === activeOrgId) : null) ??
         organizations[0] ??
         null;
 
@@ -227,8 +112,6 @@ export async function getActiveBusinessId(options?: {
         allBusinesses: businesses,
     };
 }
-
-import { revalidatePath } from "next/cache";
 
 /**
  * Set the active business ID cookie.
@@ -262,12 +145,7 @@ export async function setActiveBusiness(businessId: string) {
         sameSite: "lax",
     });
 
-    try {
-        const { redis } = await import("@/lib/db/redis");
-        await redis.del(`user_businesses:${user.id}`);
-    } catch (e) {
-        logger.error({ err: e }, "Redis cache clear error on business switch:");
-    }
+    await clearBusinessContextCache(user.id);
 
     // Purge the entire router cache to ensure all pages immediately reflect the new active business
     revalidatePath("/", "layout");

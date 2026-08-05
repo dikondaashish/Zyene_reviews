@@ -5,7 +5,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { canManageCompetitors } from "@/lib/competitors/watch-access";
 import { loadMarketPositioningBriefContext } from "@/lib/competitors/market-brief-context";
-import { generateMarketPositioningBrief } from "@/domains/ai/services/generateMarketPositioningBrief";
+import { generateMarketPositioningBrief } from "@/domains/ai/services/generate-market-positioning-brief";
 
 const MODEL_LABEL =
     process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview";
@@ -48,8 +48,8 @@ export async function generateCompetitorMarketBriefNow(businessId: string): Prom
         return { success: false, error: "Could not generate a brief (no competitors)." };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-    const { data: inserted, error: insErr } = await (supabase.from("competitor_market_briefs" as never) as any)
+    const { data: inserted, error: insErr } = await supabase
+        .from("competitor_market_briefs")
         .insert({
             business_id: businessId,
             headline: brief.headline,

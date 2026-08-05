@@ -70,7 +70,7 @@ export async function acceptBusinessInvitationAdmin(params: {
     if (!raw || !userEmail) return { accepted: false };
 
     const emailNorm = userEmail.trim().toLowerCase();
-    const invitationsTable = admin.from("invitations" as never);
+    const invitationsTable = admin.from("invitations");
 
     const inviteResult = await invitationsTable
         .select("id, email, role, business_id, organization_id, expires_at, accepted_at")
@@ -202,8 +202,7 @@ export async function acceptBusinessInvitationAdmin(params: {
 
     await ensureOrganizationMembershipForInvite(admin, invite.organization_id, userId, invite.role);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- invitationsTable schema may not include accepted_at
-    await (invitationsTable as any).update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
+    await invitationsTable.update({ accepted_at: new Date().toISOString() }).eq("id", invite.id);
 
     try {
         await admin.from("events").insert({

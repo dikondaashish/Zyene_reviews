@@ -13,7 +13,6 @@ export default function NotFound() {
                     We couldn't find the business you're looking for. The link might be incorrect or the business may have been removed.
                 </p>
                 <div className="text-xs text-muted-foreground border-t border-border pt-4 mt-4">
-                    <p>Debug Info: Review Flow 404</p>
                     <p>If you are the owner, please check your business slug in the dashboard.</p>
                 </div>
                 <div className="mt-6">

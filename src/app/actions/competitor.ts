@@ -179,7 +179,7 @@ export async function addCompetitor(
             });
 
             if (!applied.metrics) {
-                await supabase.from("competitor_snapshots" as never).insert({
+                await supabase.from("competitor_snapshots").insert({
                     competitor_id: row.id,
                     business_id: businessId,
                     average_rating: 0,
@@ -189,7 +189,7 @@ export async function addCompetitor(
                 } as never);
             }
 
-            await supabase.from("competitor_events" as never).insert({
+            await supabase.from("competitor_events").insert({
                 competitor_id: row.id,
                 business_id: businessId,
                 event_type: "competitor.added",

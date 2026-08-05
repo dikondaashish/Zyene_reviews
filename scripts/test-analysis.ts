@@ -8,9 +8,9 @@
  * Run with: npx tsx scripts/test-analysis.ts
  */
 
-import { generateContentWithFallback } from "../src/domains/ai/adapters/VertexAdapter";
+import { generateContentWithFallback } from "../src/domains/ai/adapters/vertex-adapter";
 import { BATCH_REVIEWS_PROMPT } from "../src/domains/ai/prompts";
-import { batchAnalysisSchema } from "../src/domains/ai/schemas/ResponseSchemas";
+import { batchAnalysisSchema } from "../src/domains/ai/schemas/response-schemas";
 // Note: Environment variables are expected to be pre-loaded via Node.js native --env-file flag.
 
 

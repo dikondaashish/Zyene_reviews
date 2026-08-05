@@ -1,6 +1,6 @@
 import { BreadcrumbJsonLd, IndustryLocalBusinessJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
-import { INDUSTRY_MAP } from "@/lib/phase3/industry-data";
+import { INDUSTRY_MAP } from "@/lib/industries/industry-data";
 import { IndustriesIndustryHeroSection } from "./industries-industry-hero-section";
 import { IndustriesIndustryPainPointsSection } from "./industries-industry-pain-points-section";
 import { IndustriesIndustryHowZyeneSolvesItSection } from "./industries-industry-how-zyene-solves-it-section";

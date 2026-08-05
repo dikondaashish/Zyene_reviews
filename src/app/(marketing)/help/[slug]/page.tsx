@@ -8,7 +8,7 @@ import {
     HELP_SLUGS,
     isHelpCategory,
     helpArticleNestedPath,
-} from "@/lib/phase4/help-data";
+} from "@/lib/content/help-data";
 import { HelpCategoryView } from "@/components/marketing/help-category-view";
 
 export function generateStaticParams() {

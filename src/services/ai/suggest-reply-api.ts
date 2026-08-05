@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { nextResponseForVertexAiError } from "@/domains/ai/adapters/VertexAdapter";
-import { generateReplyDraftText } from "@/domains/ai/services/generateReplyDraft";
+import { nextResponseForVertexAiError } from "@/domains/ai/adapters/vertex-adapter";
+import { generateReplyDraftText } from "@/domains/ai/services/generate-reply-draft";
 import { aiRateLimit } from "@/lib/auth/rate-limit";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { z } from "zod";

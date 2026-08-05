@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { BLOG_SLUGS } from "@/lib/phase4/blog-data";
-import { CASE_STUDY_SLUGS } from "@/lib/phase5/case-study-data";
-import { COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
-import { INDUSTRY_SLUGS } from "@/lib/phase3/industry-data";
+import { BLOG_SLUGS } from "@/lib/content/blog-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
+import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
+import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
 
 export const APP_ROOT = path.join(process.cwd(), "src/app/(marketing)");

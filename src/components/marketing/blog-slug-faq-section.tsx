@@ -1,5 +1,5 @@
 import { PricingClientFaqItem } from "@/components/marketing/pricing-client-faq-item";
-import type { BlogFaq } from "@/lib/phase4/blog-types";
+import type { BlogFaq } from "@/lib/content/blog-types";
 
 export function BlogSlugFaqSection({ faqs }: { faqs: BlogFaq[] }) {
     if (faqs.length === 0) return null;

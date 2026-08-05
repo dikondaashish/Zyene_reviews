@@ -6,7 +6,7 @@ import {
     ENTERPRISE_SLA_BULLETS,
     ENTERPRISE_VALUE_PROPS,
     ENTERPRISE_SALES_EMAIL,
-} from "@/lib/phase8/enterprise-data";
+} from "@/lib/enterprise/enterprise-data";
 
 export function EnterpriseSection6Section() {
     return (

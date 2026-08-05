@@ -6,7 +6,7 @@ import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
-import { getUpgradeModalCopy } from "@/lib/phase7/upgrade-modal-copy";
+import { getUpgradeModalCopy } from "@/lib/billing/upgrade-modal-copy";
 import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
 
 /** Plan limit UI for /businesses/add ,  Phase 7.4 business location hook */

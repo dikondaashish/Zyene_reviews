@@ -156,7 +156,7 @@ for (const file of pageFiles) {
 }
 
 // Resolve dynamic descriptions from data files
-const blogPosts = readFileSync(join(LIB, "phase4/blog-posts-month1.ts"), "utf8");
+const blogPosts = readFileSync(join(LIB, "content/blog-posts-month1.ts"), "utf8");
 // ... simplified - grep metaDescription from all data
 
 const h1ByPageView = {};

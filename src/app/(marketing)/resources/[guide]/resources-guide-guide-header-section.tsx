@@ -1,5 +1,5 @@
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import Link from "next/link";
 import { Clock, ChevronRight } from "lucide-react";
 

@@ -27,7 +27,7 @@ const FILES = [
   "src/app/actions/competitor-watch-settings.ts",
   "src/app/(dashboard)/settings/competitor-alerts/page.tsx",
   "src/app/(dashboard)/competitors/loading.tsx",
-  "src/domains/ai/services/generateMarketPositioningBrief.ts",
+  "src/domains/ai/services/generate-market-positioning-brief.ts",
   "src/app/actions/competitor-market-brief.ts",
 ];
 

@@ -1,4 +1,4 @@
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import type { Dispatch, SetStateAction } from "react";
 import type { NeedsAttentionCopy, NeedsAttentionReview } from "@/components/dashboard/needs-attention-types";
 import { NeedsAttentionReviewExpanded } from "@/components/dashboard/needs-attention-review-expanded";

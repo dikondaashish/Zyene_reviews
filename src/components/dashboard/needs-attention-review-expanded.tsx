@@ -1,6 +1,6 @@
 import { Check, Reply } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import type { NeedsAttentionCopy, NeedsAttentionReview } from "@/components/dashboard/needs-attention-types";

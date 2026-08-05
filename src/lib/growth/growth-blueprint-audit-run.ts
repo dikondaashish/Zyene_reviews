@@ -1,6 +1,6 @@
 import { buildGrowthPageInventory } from "@/lib/growth/page-inventory";
 import { PRODUCT_PILLARS, POSITIONING } from "@/lib/growth/product-foundation";
-import { COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
+import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
 import { KPI_DEFINITIONS } from "@/lib/growth/kpi-definitions";
 import { existsSync } from "node:fs";
 import path from "node:path";

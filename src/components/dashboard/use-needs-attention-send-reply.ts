@@ -2,7 +2,7 @@ import { useCallback, type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { NEEDS_ATTENTION_UUID_RE } from "@/components/dashboard/needs-attention-constants";
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import type { NeedsAttentionReview } from "@/components/dashboard/needs-attention-types";
 
 type ToneCache = Record<string, Partial<Record<ReplyTone, string>>>;

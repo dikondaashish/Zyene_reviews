@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import {
     filterClientSentryEvent,
+    isCefSharpCrawlerError,
     isInjectedMetaMaskError,
 } from "../../src/lib/monitoring/sentry-client-filter";
 
@@ -21,6 +22,31 @@ function errorEvent(message: string, filename: string): ErrorEvent {
 }
 
 describe("Sentry client event filtering", () => {
+    it("drops the CefSharp crawler rejection reported on an expired auth link", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            exception: {
+                values: [
+                    {
+                        value: "Non-Error promise rejection captured with value: Object Not Found Matching Id:1, MethodName:update, ParamCount:4",
+                    },
+                ],
+            },
+        };
+
+        expect(isCefSharpCrawlerError(event)).toBe(true);
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("keeps application errors that only resemble the CefSharp signature", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            message: "Object Not Found Matching Id:1, MethodName:updateProfile, ParamCount:4",
+        };
+
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+
     it("drops the MetaMask injected error reported on signup", () => {
         const event = errorEvent("Failed to connect to MetaMask", "app:///scripts/inpage.js");
 

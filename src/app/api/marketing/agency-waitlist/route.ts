@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { captureMarketingLead } from "@/lib/phase8/capture-marketing-lead";
-import { PARTNER_CONTACT_EMAIL } from "@/lib/phase6/partnerships-data";
+import { captureMarketingLead } from "@/lib/enterprise/capture-marketing-lead";
+import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 import { sendEmail } from "@/services/resend/send-email";
 
 export async function POST(request: Request) {

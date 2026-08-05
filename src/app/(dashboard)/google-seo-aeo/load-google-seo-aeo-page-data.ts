@@ -63,13 +63,13 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
                 .from("gbp_place_action_links")
                 .select("id", { count: "exact", head: true })
                 .eq("business_id", businessId),
-            (supabase.from("google_seo_ai_visibility_runs" as never) as any)
+            supabase.from("google_seo_ai_visibility_runs")
                 .select("id, query, status, created_at")
                 .eq("business_id", businessId)
                 .order("created_at", { ascending: false })
                 .limit(1)
                 .maybeSingle(),
-            (supabase.from("google_seo_heatmap_runs" as never) as any)
+            supabase.from("google_seo_heatmap_runs")
                 .select("id, keyword, status, created_at")
                 .eq("business_id", businessId)
                 .order("created_at", { ascending: false })

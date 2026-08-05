@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
-import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/phase4/blog-data";
+import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
 // ─── Static Generation ────────────────────────────────────────────────────────

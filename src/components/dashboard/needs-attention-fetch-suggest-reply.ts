@@ -1,4 +1,4 @@
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 
 export async function fetchSuggestReply(reviewId: string, tone: ReplyTone): Promise<string> {
     const res = await fetch("/api/ai/suggest-reply", {

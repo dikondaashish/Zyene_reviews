@@ -3,7 +3,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
     getLocalizedIndustry,
-} from "@/lib/phase8/localized-industries";
+} from "@/lib/industries/localized-industries";
 
 export function generateStaticParams() {
     return ES_INDUSTRY_LOCALIZED_SLUGS.map((industry) => ({ industry }));

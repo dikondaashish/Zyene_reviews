@@ -1,7 +1,7 @@
-import type { CompetitorData } from "@/lib/phase3/competitor-data";
+import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/phase3/competitor-data";
+import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
 
 export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data: CompetitorData; slug: string }) {
     return (

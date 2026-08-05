@@ -1,4 +1,4 @@
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";

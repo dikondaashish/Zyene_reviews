@@ -1,7 +1,7 @@
 import { MarketingFaqSection } from "@/components/marketing/marketing-faq-section";
 import { BreadcrumbJsonLd, FAQPageJsonLd, WebPageJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
-import { COMPETITOR_MAP } from "@/lib/phase3/competitor-data";
+import { COMPETITOR_MAP } from "@/lib/comparisons/competitor-data";
 import { CompareCompetitorHeroSection } from "./compare-competitor-hero-section";
 import { CompareCompetitorQuickComparisonTableSection } from "./compare-competitor-quick-comparison-table-section";
 import { CompareCompetitorWhereEachWinsSection } from "./compare-competitor-where-each-wins-section";

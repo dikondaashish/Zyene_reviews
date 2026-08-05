@@ -4,7 +4,7 @@
  * Run: pnpm exec tsx --env-file=.env.local scripts/test-private-feedback-category.ts
  */
 
-import { categorizePrivateFeedback } from "../src/domains/ai/services/AiAnalysisService";
+import { categorizePrivateFeedback } from "../src/domains/ai/services/ai-analysis-service";
 
 const SAMPLES = [
     "The cashier was rude and ignored us for ten minutes.",

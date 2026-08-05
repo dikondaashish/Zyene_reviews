@@ -1,4 +1,4 @@
-import type { ContentSection } from "@/lib/phase4/blog-types";
+import type { ContentSection } from "@/lib/content/blog-types";
 import type { FaqItem } from "@/components/seo/json-ld-types";
 
 function isQuestionHeading(text: string): boolean {

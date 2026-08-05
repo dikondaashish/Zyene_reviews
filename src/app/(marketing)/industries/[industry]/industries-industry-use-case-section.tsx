@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import type { IndustryData } from "@/lib/phase3/industry-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
 
 export function IndustriesIndustryUseCaseSection({ data }: { data: IndustryData }) {
     const initial = data.useCase.ownerName.charAt(0).toUpperCase();

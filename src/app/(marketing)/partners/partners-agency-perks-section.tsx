@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AGENCY_PARTNER_PERKS, PARTNER_CONTACT_EMAIL } from "@/lib/phase6/partnerships-data";
+import { AGENCY_PARTNER_PERKS, PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 
 export function PartnersAgencyPerksSection() {
     return (

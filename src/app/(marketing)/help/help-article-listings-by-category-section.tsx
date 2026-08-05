@@ -6,7 +6,7 @@ import {
     HELP_CATEGORIES,
     helpArticleNestedPath,
     type HelpCategory,
-} from "@/lib/phase4/help-data";
+} from "@/lib/content/help-data";
 import { CATEGORY_ORDER } from "./help-data";
 
 export function HelpArticleListingsByCategorySection() {

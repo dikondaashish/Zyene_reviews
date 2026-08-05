@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Mail, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GOOGLE_ADS_CAMPAIGNS } from "@/lib/phase6/google-ads-data";
-import { META_ADS_CAMPAIGNS } from "@/lib/phase6/meta-ads-data";
-import { PARTNER_CONTACT_EMAIL } from "@/lib/phase6/partnerships-data";
+import { GOOGLE_ADS_CAMPAIGNS } from "@/lib/campaign-content/google-ads-data";
+import { META_ADS_CAMPAIGNS } from "@/lib/campaign-content/meta-ads-data";
+import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 
 export function PartnersOutreachSection() {
     return (

@@ -1,4 +1,4 @@
-import type { CompetitorData } from "@/lib/phase3/competitor-data";
+import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 import { ArrowRight, Check, X, ChevronRight, Sparkles, ShieldCheck } from "lucide-react";
 
 export function CompareCompetitorWhereEachWinsSection({ data }: { data: CompetitorData }) {

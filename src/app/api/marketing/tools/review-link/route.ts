@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { fetchPublicPlaceMetrics } from "@/lib/phase7/places-public";
-import { captureToolLead } from "@/lib/phase7/capture-tool-lead";
+import { fetchPublicPlaceMetrics } from "@/lib/free-tools/places-public";
+import { captureToolLead } from "@/lib/free-tools/capture-tool-lead";
 import { sendEmail } from "@/services/resend/send-email";
 import { reviewLinkEmailHtml } from "@/lib/email/transactional-email-styles";
 

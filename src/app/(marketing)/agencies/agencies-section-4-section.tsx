@@ -13,7 +13,7 @@ import {
     AGENCY_DASHBOARD_ROADMAP,
     AGENCY_PRICING_TIERS,
     WHITE_LABEL_FEATURES,
-} from "@/lib/phase8/agency-pricing-data";
+} from "@/lib/enterprise/agency-pricing-data";
 
 export function AgenciesSection4Section() {
     return (

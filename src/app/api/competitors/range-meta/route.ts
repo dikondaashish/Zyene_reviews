@@ -47,22 +47,22 @@ export async function GET(request: Request) {
       .select("id", { count: "exact", head: true })
       .eq("business_id", businessId),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-    (supabase.from("competitor_snapshots" as never) as any)
+    supabase.from("competitor_snapshots")
       .select("id", { count: "exact", head: true })
       .eq("business_id", businessId)
       .gte("captured_at", rangeStart.toISOString()),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-    (supabase.from("competitor_events" as never) as any)
+    supabase.from("competitor_events")
       .select("id", { count: "exact", head: true })
       .eq("business_id", businessId)
       .gte("created_at", rangeStart.toISOString()),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-    (supabase.from("competitor_insights" as never) as any)
+    supabase.from("competitor_insights")
       .select("id", { count: "exact", head: true })
       .eq("business_id", businessId)
       .gte("created_at", rangeStart.toISOString()),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-    (supabase.from("competitor_events" as never) as any)
+    supabase.from("competitor_events")
       .select("id", { count: "exact", head: true })
       .eq("business_id", businessId)
       .gte("created_at", rangeStart.toISOString())

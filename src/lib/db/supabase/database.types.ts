@@ -66,14 +66,13 @@ export type Database = {
           auto_reply_tone: string
           average_rating: number
           brand_color: string | null
-          review_page_background_color: string
           category: string
           city: string | null
           country: string
           created_at: string
           custom_tags: string[] | null
-          enable_staff_selection: boolean
           email: string | null
+          enable_staff_selection: boolean
           footer_company_name: string | null
           footer_link: string | null
           footer_logo_url: string | null
@@ -90,14 +89,15 @@ export type Database = {
           negative_button_text: string | null
           negative_subheading: string | null
           negative_textarea_placeholder: string | null
+          organization_id: string
+          phone: string | null
           private_feedback_email_mode: string
           private_feedback_offer_message: string | null
           private_feedback_offer_mode: string
           private_feedback_phone_mode: string
-          organization_id: string
-          phone: string | null
+          rating_style: string
           rating_subtitle: string | null
-          rating_style: string | null
+          review_page_background_color: string
           review_request_delay_minutes: number
           review_request_email_enabled: boolean
           review_request_frequency_cap_days: number
@@ -129,14 +129,13 @@ export type Database = {
           auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
-          review_page_background_color?: string
           category?: string
           city?: string | null
           country?: string
           created_at?: string
           custom_tags?: string[] | null
-          enable_staff_selection?: boolean
           email?: string | null
+          enable_staff_selection?: boolean
           footer_company_name?: string | null
           footer_link?: string | null
           footer_logo_url?: string | null
@@ -153,14 +152,15 @@ export type Database = {
           negative_button_text?: string | null
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
+          organization_id: string
+          phone?: string | null
           private_feedback_email_mode?: string
           private_feedback_offer_message?: string | null
           private_feedback_offer_mode?: string
           private_feedback_phone_mode?: string
-          organization_id: string
-          phone?: string | null
+          rating_style?: string
           rating_subtitle?: string | null
-          rating_style?: string | null
+          review_page_background_color?: string
           review_request_delay_minutes?: number
           review_request_email_enabled?: boolean
           review_request_frequency_cap_days?: number
@@ -192,14 +192,13 @@ export type Database = {
           auto_reply_tone?: string
           average_rating?: number
           brand_color?: string | null
-          review_page_background_color?: string
           category?: string
           city?: string | null
           country?: string
           created_at?: string
           custom_tags?: string[] | null
-          enable_staff_selection?: boolean
           email?: string | null
+          enable_staff_selection?: boolean
           footer_company_name?: string | null
           footer_link?: string | null
           footer_logo_url?: string | null
@@ -216,14 +215,15 @@ export type Database = {
           negative_button_text?: string | null
           negative_subheading?: string | null
           negative_textarea_placeholder?: string | null
+          organization_id?: string
+          phone?: string | null
           private_feedback_email_mode?: string
           private_feedback_offer_message?: string | null
           private_feedback_offer_mode?: string
           private_feedback_phone_mode?: string
-          organization_id?: string
-          phone?: string | null
+          rating_style?: string
           rating_subtitle?: string | null
-          rating_style?: string | null
+          review_page_background_color?: string
           review_request_delay_minutes?: number
           review_request_email_enabled?: boolean
           review_request_frequency_cap_days?: number
@@ -347,6 +347,7 @@ export type Database = {
           business_id: string
           connected_at: string
           created_at: string
+          disconnected_at: string | null
           environment: string
           id: string
           last_error: string | null
@@ -362,6 +363,7 @@ export type Database = {
           business_id: string
           connected_at?: string
           created_at?: string
+          disconnected_at?: string | null
           environment?: string
           id?: string
           last_error?: string | null
@@ -377,6 +379,7 @@ export type Database = {
           business_id?: string
           connected_at?: string
           created_at?: string
+          disconnected_at?: string | null
           environment?: string
           id?: string
           last_error?: string | null
@@ -396,112 +399,6 @@ export type Database = {
         ]
       }
       clover_payment_events: {
-        Row: {
-          business_id: string
-          created_at: string
-          customer_email: string | null
-          customer_name: string | null
-          customer_phone: string | null
-          error_message: string | null
-          event_type: string
-          id: string
-          merchant_id: string
-          payment_id: string
-          status: string
-        }
-        Insert: {
-          business_id: string
-          created_at?: string
-          customer_email?: string | null
-          customer_name?: string | null
-          customer_phone?: string | null
-          error_message?: string | null
-          event_type: string
-          id?: string
-          merchant_id: string
-          payment_id: string
-          status: string
-        }
-        Update: {
-          business_id?: string
-          created_at?: string
-          customer_email?: string | null
-          customer_name?: string | null
-          customer_phone?: string | null
-          error_message?: string | null
-          event_type?: string
-          id?: string
-          merchant_id?: string
-          payment_id?: string
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clover_payment_events_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      square_connections: {
-        Row: {
-          access_token_encrypted: string
-          access_token_expires_at: string | null
-          auto_send_enabled: boolean
-          business_id: string
-          connected_at: string
-          created_at: string
-          disconnected_at: string | null
-          environment: string
-          id: string
-          last_error: string | null
-          merchant_id: string
-          refresh_token_encrypted: string | null
-          updated_at: string
-        }
-        Insert: {
-          access_token_encrypted: string
-          access_token_expires_at?: string | null
-          auto_send_enabled?: boolean
-          business_id: string
-          connected_at?: string
-          created_at?: string
-          disconnected_at?: string | null
-          environment?: string
-          id?: string
-          last_error?: string | null
-          merchant_id: string
-          refresh_token_encrypted?: string | null
-          updated_at?: string
-        }
-        Update: {
-          access_token_encrypted?: string
-          access_token_expires_at?: string | null
-          auto_send_enabled?: boolean
-          business_id?: string
-          connected_at?: string
-          created_at?: string
-          disconnected_at?: string | null
-          environment?: string
-          id?: string
-          last_error?: string | null
-          merchant_id?: string
-          refresh_token_encrypted?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "square_connections_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: true
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      square_payment_events: {
         Row: {
           business_id: string
           created_at: string
@@ -546,17 +443,134 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "square_payment_events_business_id_fkey"
+            foreignKeyName: "clover_payment_events_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "square_payment_events_review_request_id_fkey"
+            foreignKeyName: "clover_payment_events_review_request_id_fkey"
             columns: ["review_request_id"]
             isOneToOne: false
             referencedRelation: "review_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitor_events: {
+        Row: {
+          business_id: string
+          competitor_id: string
+          created_at: string
+          event_delta: number | null
+          event_type: string
+          event_value: number | null
+          id: string
+          metadata: Json
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          business_id: string
+          competitor_id: string
+          created_at?: string
+          event_delta?: number | null
+          event_type: string
+          event_value?: number | null
+          id?: string
+          metadata?: Json
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          business_id?: string
+          competitor_id?: string
+          created_at?: string
+          event_delta?: number | null
+          event_type?: string
+          event_value?: number | null
+          id?: string
+          metadata?: Json
+          summary?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_events_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competitor_events_competitor_id_fkey"
+            columns: ["competitor_id"]
+            isOneToOne: false
+            referencedRelation: "competitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitor_insights: {
+        Row: {
+          actions: Json
+          business_id: string
+          competitor_id: string
+          confidence: number | null
+          created_at: string
+          id: string
+          model: string | null
+          owner_suggestion: string | null
+          priority: string
+          range_key: string
+          recommendations: Json
+          summary: string
+          why_it_matters: string | null
+        }
+        Insert: {
+          actions?: Json
+          business_id: string
+          competitor_id: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          model?: string | null
+          owner_suggestion?: string | null
+          priority?: string
+          range_key?: string
+          recommendations?: Json
+          summary: string
+          why_it_matters?: string | null
+        }
+        Update: {
+          actions?: Json
+          business_id?: string
+          competitor_id?: string
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          model?: string | null
+          owner_suggestion?: string | null
+          priority?: string
+          range_key?: string
+          recommendations?: Json
+          summary?: string
+          why_it_matters?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_insights_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competitor_insights_competitor_id_fkey"
+            columns: ["competitor_id"]
+            isOneToOne: false
+            referencedRelation: "competitors"
             referencedColumns: ["id"]
           },
         ]
@@ -569,9 +583,9 @@ export type Database = {
           headline: string
           id: string
           model: string | null
-          opportunity_actions: unknown
+          opportunity_actions: Json
           overview: string
-          positioning_bullets: unknown
+          positioning_bullets: Json
         }
         Insert: {
           business_id: string
@@ -580,9 +594,9 @@ export type Database = {
           headline: string
           id?: string
           model?: string | null
-          opportunity_actions?: unknown
+          opportunity_actions?: Json
           overview: string
-          positioning_bullets?: unknown
+          positioning_bullets?: Json
         }
         Update: {
           business_id?: string
@@ -591,15 +605,157 @@ export type Database = {
           headline?: string
           id?: string
           model?: string | null
-          opportunity_actions?: unknown
+          opportunity_actions?: Json
           overview?: string
-          positioning_bullets?: unknown
+          positioning_bullets?: Json
         }
         Relationships: [
           {
             foreignKeyName: "competitor_market_briefs_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitor_snapshots: {
+        Row: {
+          average_rating: number
+          business_id: string
+          captured_at: string
+          competitor_id: string
+          id: string
+          metadata: Json
+          source: string
+          total_reviews: number
+        }
+        Insert: {
+          average_rating?: number
+          business_id: string
+          captured_at?: string
+          competitor_id: string
+          id?: string
+          metadata?: Json
+          source?: string
+          total_reviews?: number
+        }
+        Update: {
+          average_rating?: number
+          business_id?: string
+          captured_at?: string
+          competitor_id?: string
+          id?: string
+          metadata?: Json
+          source?: string
+          total_reviews?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_snapshots_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competitor_snapshots_competitor_id_fkey"
+            columns: ["competitor_id"]
+            isOneToOne: false
+            referencedRelation: "competitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitor_watch_runs: {
+        Row: {
+          business_id: string
+          created_at: string
+          error_message: string | null
+          events_created: number
+          external_updates: number
+          finished_at: string
+          id: string
+          insights_created: number
+          run_id: string
+          scanned: number
+          snapshots_created: number
+          started_at: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          error_message?: string | null
+          events_created?: number
+          external_updates?: number
+          finished_at: string
+          id?: string
+          insights_created?: number
+          run_id: string
+          scanned?: number
+          snapshots_created?: number
+          started_at: string
+          status: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          error_message?: string | null
+          events_created?: number
+          external_updates?: number
+          finished_at?: string
+          id?: string
+          insights_created?: number
+          run_id?: string
+          scanned?: number
+          snapshots_created?: number
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_watch_runs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competitor_watch_settings: {
+        Row: {
+          business_id: string
+          created_at: string
+          email_alerts_enabled: boolean
+          id: string
+          rating_alert_delta: number
+          review_spike_threshold: number
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          email_alerts_enabled?: boolean
+          id?: string
+          rating_alert_delta?: number
+          review_spike_threshold?: number
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          email_alerts_enabled?: boolean
+          id?: string
+          rating_alert_delta?: number
+          review_spike_threshold?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitor_watch_settings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
@@ -641,44 +797,6 @@ export type Database = {
             foreignKeyName: "competitors_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      competitor_watch_settings: {
-        Row: {
-          business_id: string
-          created_at: string
-          email_alerts_enabled: boolean
-          id: string
-          rating_alert_delta: number
-          review_spike_threshold: number
-          updated_at: string
-        }
-        Insert: {
-          business_id: string
-          created_at?: string
-          email_alerts_enabled?: boolean
-          id?: string
-          rating_alert_delta?: number
-          review_spike_threshold?: number
-          updated_at?: string
-        }
-        Update: {
-          business_id?: string
-          created_at?: string
-          email_alerts_enabled?: boolean
-          id?: string
-          rating_alert_delta?: number
-          review_spike_threshold?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "competitor_watch_settings_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: true
             referencedRelation: "businesses"
             referencedColumns: ["id"]
           },
@@ -1073,6 +1191,216 @@ export type Database = {
           },
         ]
       }
+      google_seo_ai_visibility_results: {
+        Row: {
+          business_id: string
+          created_at: string
+          found: boolean
+          id: string
+          model: string
+          position: number | null
+          run_id: string
+          snippet: string | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          found?: boolean
+          id?: string
+          model: string
+          position?: number | null
+          run_id: string
+          snippet?: string | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          found?: boolean
+          id?: string
+          model?: string
+          position?: number | null
+          run_id?: string
+          snippet?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_seo_ai_visibility_results_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_seo_ai_visibility_results_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "google_seo_ai_visibility_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_seo_ai_visibility_runs: {
+        Row: {
+          business_id: string
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          query: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          query: string
+          status?: string
+        }
+        Update: {
+          business_id?: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          query?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_seo_ai_visibility_runs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_seo_heatmap_cells: {
+        Row: {
+          business_id: string
+          cell_label: string
+          created_at: string
+          id: string
+          rank_position: number | null
+          run_id: string
+          visibility_score: number
+        }
+        Insert: {
+          business_id: string
+          cell_label: string
+          created_at?: string
+          id?: string
+          rank_position?: number | null
+          run_id: string
+          visibility_score?: number
+        }
+        Update: {
+          business_id?: string
+          cell_label?: string
+          created_at?: string
+          id?: string
+          rank_position?: number | null
+          run_id?: string
+          visibility_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_seo_heatmap_cells_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "google_seo_heatmap_cells_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "google_seo_heatmap_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_seo_heatmap_runs: {
+        Row: {
+          business_id: string
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          keyword: string
+          status: string
+        }
+        Insert: {
+          business_id: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          keyword: string
+          status?: string
+        }
+        Update: {
+          business_id?: string
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          keyword?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_seo_heatmap_runs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      growth_email_runs: {
+        Row: {
+          completed_at: string | null
+          id: string
+          organization_id: string | null
+          recipient_email: string
+          sequence_key: string
+          started_at: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          organization_id?: string | null
+          recipient_email: string
+          sequence_key: string
+          started_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          organization_id?: string | null
+          recipient_email?: string
+          sequence_key?: string
+          started_at?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "growth_email_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       integrations: {
         Row: {
           access_token: string | null
@@ -1226,6 +1554,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      marketing_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: string
+          metadata: Json
+          page_path: string | null
+          source: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: string
+          metadata?: Json
+          page_path?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: string
+          metadata?: Json
+          page_path?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
+      marketing_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string
+          subscribed_at: string
+          unsubscribed_at: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
       }
       notification_preferences: {
         Row: {
@@ -1432,7 +1832,15 @@ export type Database = {
           type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_referred_by_user_id_fkey"
+            columns: ["referred_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       private_feedback: {
         Row: {
@@ -1487,394 +1895,6 @@ export type Database = {
             columns: ["review_request_id"]
             isOneToOne: false
             referencedRelation: "review_requests"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      review_platforms: {
-        Row: {
-          access_token: string | null
-          average_rating: number
-          business_id: string
-          created_at: string
-          external_id: string | null
-          external_url: string | null
-          google_account_id: string | null
-          google_listing_synced_at: string | null
-          google_location_id: string | null
-          google_lodging_available: boolean | null
-          google_lodging_health_score: number | null
-          google_lodging_synced_at: string | null
-          google_performance_synced_at: string | null
-          google_place_actions_synced_at: string | null
-          google_profile_health_score: number | null
-          google_qa_synced_at: string | null
-          google_qa_unavailable: boolean
-          id: string
-          last_review_update_time: string | null
-          last_synced_at: string | null
-          platform: string
-          refresh_token: string | null
-          sync_state: Json | null
-          sync_status: string
-          token_expires_at: string | null
-          total_reviews: number
-          updated_at: string | null
-        }
-        Insert: {
-          access_token?: string | null
-          average_rating?: number
-          business_id: string
-          created_at?: string
-          external_id?: string | null
-          external_url?: string | null
-          google_account_id?: string | null
-          google_listing_synced_at?: string | null
-          google_location_id?: string | null
-          google_lodging_available?: boolean | null
-          google_lodging_health_score?: number | null
-          google_lodging_synced_at?: string | null
-          google_performance_synced_at?: string | null
-          google_place_actions_synced_at?: string | null
-          google_profile_health_score?: number | null
-          google_qa_synced_at?: string | null
-          google_qa_unavailable?: boolean
-          id?: string
-          last_review_update_time?: string | null
-          last_synced_at?: string | null
-          platform: string
-          refresh_token?: string | null
-          sync_state?: Json | null
-          sync_status?: string
-          token_expires_at?: string | null
-          total_reviews?: number
-          updated_at?: string | null
-        }
-        Update: {
-          access_token?: string | null
-          average_rating?: number
-          business_id?: string
-          created_at?: string
-          external_id?: string | null
-          external_url?: string | null
-          google_account_id?: string | null
-          google_listing_synced_at?: string | null
-          google_location_id?: string | null
-          google_lodging_available?: boolean | null
-          google_lodging_health_score?: number | null
-          google_lodging_synced_at?: string | null
-          google_performance_synced_at?: string | null
-          google_place_actions_synced_at?: string | null
-          google_profile_health_score?: number | null
-          google_qa_synced_at?: string | null
-          google_qa_unavailable?: boolean
-          id?: string
-          last_review_update_time?: string | null
-          last_synced_at?: string | null
-          platform?: string
-          refresh_token?: string | null
-          sync_state?: Json | null
-          sync_status?: string
-          token_expires_at?: string | null
-          total_reviews?: number
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "review_platforms_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      review_requests: {
-        Row: {
-          ai_review_text: string | null
-          business_id: string
-          campaign_id: string | null
-          channel: string
-          clicked_at: string | null
-          completed_at: string | null
-          created_at: string
-          customer_email: string | null
-          customer_name: string | null
-          customer_phone: string | null
-          delivered_at: string | null
-          drip_status: string
-          drip_steps_sent: number
-          drip_terminated_reason: string | null
-          email_status: string | null
-          error_message: string | null
-          follow_up_sent_at: string | null
-          id: string
-          is_follow_up_sent: boolean | null
-          last_drip_channel: string | null
-          opened_at: string | null
-          rating_given: number | null
-          review_left: boolean
-          review_link: string | null
-          scheduled_for: string | null
-          sent_at: string | null
-          sms_status: string | null
-          status: string
-          step2_sent_at: string | null
-          step3_sent_at: string | null
-          tags_selected: string[] | null
-          selected_staff: string[] | null
-          trigger_source: string
-        }
-        Insert: {
-          ai_review_text?: string | null
-          business_id: string
-          campaign_id?: string | null
-          channel?: string
-          clicked_at?: string | null
-          completed_at?: string | null
-          created_at?: string
-          customer_email?: string | null
-          customer_name?: string | null
-          customer_phone?: string | null
-          delivered_at?: string | null
-          drip_status?: string
-          drip_steps_sent?: number
-          drip_terminated_reason?: string | null
-          email_status?: string | null
-          error_message?: string | null
-          follow_up_sent_at?: string | null
-          id?: string
-          is_follow_up_sent?: boolean | null
-          last_drip_channel?: string | null
-          opened_at?: string | null
-          rating_given?: number | null
-          review_left?: boolean
-          review_link?: string | null
-          scheduled_for?: string | null
-          sent_at?: string | null
-          sms_status?: string | null
-          status?: string
-          step2_sent_at?: string | null
-          step3_sent_at?: string | null
-          tags_selected?: string[] | null
-          selected_staff?: string[] | null
-          trigger_source?: string
-        }
-        Update: {
-          ai_review_text?: string | null
-          business_id?: string
-          campaign_id?: string | null
-          channel?: string
-          clicked_at?: string | null
-          completed_at?: string | null
-          created_at?: string
-          customer_email?: string | null
-          customer_name?: string | null
-          customer_phone?: string | null
-          delivered_at?: string | null
-          drip_status?: string
-          drip_steps_sent?: number
-          drip_terminated_reason?: string | null
-          email_status?: string | null
-          error_message?: string | null
-          follow_up_sent_at?: string | null
-          id?: string
-          is_follow_up_sent?: boolean | null
-          last_drip_channel?: string | null
-          opened_at?: string | null
-          rating_given?: number | null
-          review_left?: boolean
-          review_link?: string | null
-          scheduled_for?: string | null
-          sent_at?: string | null
-          sms_status?: string | null
-          status?: string
-          step2_sent_at?: string | null
-          step3_sent_at?: string | null
-          tags_selected?: string[] | null
-          selected_staff?: string[] | null
-          trigger_source?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "review_requests_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "review_requests_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      reviews: {
-        Row: {
-          ai_summary: string | null
-          alert_sent: boolean
-          alert_sent_at: string | null
-          author_avatar_url: string | null
-          author_name: string | null
-          business_id: string
-          content_hash: string | null
-          created_at: string
-          external_id: string | null
-          external_url: string | null
-          google_attribute_chips: string[] | null
-          google_place_context: string[] | null
-          google_update_time: string | null
-          id: string
-          is_visible: boolean | null
-          platform: string
-          platform_id: string | null
-          rating: number
-          responded_at: string | null
-          response_source: string | null
-          response_status: string
-          response_text: string | null
-          review_photo_urls: string[] | null
-          review_date: string
-          sentiment: string | null
-          text: string | null
-          themes: string[] | null
-          selected_staff: string[] | null
-          urgency_score: number | null
-        }
-        Insert: {
-          ai_summary?: string | null
-          alert_sent?: boolean
-          alert_sent_at?: string | null
-          author_avatar_url?: string | null
-          author_name?: string | null
-          business_id: string
-          content_hash?: string | null
-          created_at?: string
-          external_id?: string | null
-          external_url?: string | null
-          google_attribute_chips?: string[] | null
-          google_place_context?: string[] | null
-          google_update_time?: string | null
-          id?: string
-          is_visible?: boolean | null
-          platform: string
-          platform_id?: string | null
-          rating: number
-          responded_at?: string | null
-          response_source?: string | null
-          response_status?: string
-          response_text?: string | null
-          review_photo_urls?: string[] | null
-          review_date: string
-          sentiment?: string | null
-          text?: string | null
-          themes?: string[] | null
-          selected_staff?: string[] | null
-          urgency_score?: number | null
-        }
-        Update: {
-          ai_summary?: string | null
-          alert_sent?: boolean
-          alert_sent_at?: string | null
-          author_avatar_url?: string | null
-          author_name?: string | null
-          business_id?: string
-          content_hash?: string | null
-          created_at?: string
-          external_id?: string | null
-          external_url?: string | null
-          google_attribute_chips?: string[] | null
-          google_place_context?: string[] | null
-          google_update_time?: string | null
-          id?: string
-          is_visible?: boolean | null
-          platform?: string
-          platform_id?: string | null
-          rating?: number
-          responded_at?: string | null
-          response_source?: string | null
-          response_status?: string
-          response_text?: string | null
-          review_photo_urls?: string[] | null
-          review_date?: string
-          sentiment?: string | null
-          text?: string | null
-          themes?: string[] | null
-          selected_staff?: string[] | null
-          urgency_score?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reviews_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "reviews_platform_id_fkey"
-            columns: ["platform_id"]
-            isOneToOne: false
-            referencedRelation: "review_platforms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sms_opt_outs: {
-        Row: {
-          opted_out_at: string | null
-          phone_number: string
-        }
-        Insert: {
-          opted_out_at?: string | null
-          phone_number: string
-        }
-        Update: {
-          opted_out_at?: string | null
-          phone_number?: string
-        }
-        Relationships: []
-      }
-      growth_email_runs: {
-        Row: {
-          completed_at: string | null
-          id: string
-          organization_id: string | null
-          recipient_email: string
-          sequence_key: string
-          started_at: string
-          status: string
-          user_id: string | null
-        }
-        Insert: {
-          completed_at?: string | null
-          id?: string
-          organization_id?: string | null
-          recipient_email: string
-          sequence_key: string
-          started_at?: string
-          status?: string
-          user_id?: string | null
-        }
-        Update: {
-          completed_at?: string | null
-          id?: string
-          organization_id?: string | null
-          recipient_email?: string
-          sequence_key?: string
-          started_at?: string
-          status?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "growth_email_runs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1934,77 +1954,474 @@ export type Database = {
           },
         ]
       }
-      marketing_events: {
+      review_platforms: {
         Row: {
+          access_token: string | null
+          average_rating: number
+          business_id: string
           created_at: string
-          event_name: string
+          external_id: string | null
+          external_url: string | null
+          google_account_id: string | null
+          google_listing_synced_at: string | null
+          google_location_id: string | null
+          google_lodging_available: boolean | null
+          google_lodging_health_score: number | null
+          google_lodging_synced_at: string | null
+          google_performance_synced_at: string | null
+          google_place_actions_synced_at: string | null
+          google_profile_health_score: number | null
+          google_qa_synced_at: string | null
+          google_qa_unavailable: boolean
           id: string
-          metadata: Json
-          page_path: string | null
-          source: string | null
-          utm_campaign: string | null
-          utm_medium: string | null
-          utm_source: string | null
+          last_review_update_time: string | null
+          last_synced_at: string | null
+          locked_until: string | null
+          platform: string
+          refresh_token: string | null
+          sync_state: Json | null
+          sync_status: string
+          token_expires_at: string | null
+          total_reviews: number
+          updated_at: string | null
         }
         Insert: {
+          access_token?: string | null
+          average_rating?: number
+          business_id: string
           created_at?: string
-          event_name: string
+          external_id?: string | null
+          external_url?: string | null
+          google_account_id?: string | null
+          google_listing_synced_at?: string | null
+          google_location_id?: string | null
+          google_lodging_available?: boolean | null
+          google_lodging_health_score?: number | null
+          google_lodging_synced_at?: string | null
+          google_performance_synced_at?: string | null
+          google_place_actions_synced_at?: string | null
+          google_profile_health_score?: number | null
+          google_qa_synced_at?: string | null
+          google_qa_unavailable?: boolean
           id?: string
-          metadata?: Json
-          page_path?: string | null
-          source?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
+          last_review_update_time?: string | null
+          last_synced_at?: string | null
+          locked_until?: string | null
+          platform: string
+          refresh_token?: string | null
+          sync_state?: Json | null
+          sync_status?: string
+          token_expires_at?: string | null
+          total_reviews?: number
+          updated_at?: string | null
         }
         Update: {
+          access_token?: string | null
+          average_rating?: number
+          business_id?: string
           created_at?: string
-          event_name?: string
+          external_id?: string | null
+          external_url?: string | null
+          google_account_id?: string | null
+          google_listing_synced_at?: string | null
+          google_location_id?: string | null
+          google_lodging_available?: boolean | null
+          google_lodging_health_score?: number | null
+          google_lodging_synced_at?: string | null
+          google_performance_synced_at?: string | null
+          google_place_actions_synced_at?: string | null
+          google_profile_health_score?: number | null
+          google_qa_synced_at?: string | null
+          google_qa_unavailable?: boolean
           id?: string
-          metadata?: Json
-          page_path?: string | null
-          source?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
+          last_review_update_time?: string | null
+          last_synced_at?: string | null
+          locked_until?: string | null
+          platform?: string
+          refresh_token?: string | null
+          sync_state?: Json | null
+          sync_status?: string
+          token_expires_at?: string | null
+          total_reviews?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_platforms_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      review_requests: {
+        Row: {
+          ai_review_text: string | null
+          business_id: string
+          campaign_id: string | null
+          channel: string
+          clicked_at: string | null
+          completed_at: string | null
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivered_at: string | null
+          drip_status: string
+          drip_steps_sent: number
+          drip_terminated_reason: string | null
+          email_status: string | null
+          error_message: string | null
+          follow_up_sent_at: string | null
+          id: string
+          is_follow_up_sent: boolean | null
+          last_drip_channel: string | null
+          opened_at: string | null
+          rating_given: number | null
+          resend_email_id: string | null
+          review_left: boolean
+          review_link: string | null
+          scheduled_for: string | null
+          selected_staff: string[] | null
+          sent_at: string | null
+          sms_status: string | null
+          status: string
+          step2_sent_at: string | null
+          step3_sent_at: string | null
+          tags_selected: string[] | null
+          trigger_source: string
+        }
+        Insert: {
+          ai_review_text?: string | null
+          business_id: string
+          campaign_id?: string | null
+          channel?: string
+          clicked_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          drip_status?: string
+          drip_steps_sent?: number
+          drip_terminated_reason?: string | null
+          email_status?: string | null
+          error_message?: string | null
+          follow_up_sent_at?: string | null
+          id?: string
+          is_follow_up_sent?: boolean | null
+          last_drip_channel?: string | null
+          opened_at?: string | null
+          rating_given?: number | null
+          resend_email_id?: string | null
+          review_left?: boolean
+          review_link?: string | null
+          scheduled_for?: string | null
+          selected_staff?: string[] | null
+          sent_at?: string | null
+          sms_status?: string | null
+          status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
+          tags_selected?: string[] | null
+          trigger_source?: string
+        }
+        Update: {
+          ai_review_text?: string | null
+          business_id?: string
+          campaign_id?: string | null
+          channel?: string
+          clicked_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          drip_status?: string
+          drip_steps_sent?: number
+          drip_terminated_reason?: string | null
+          email_status?: string | null
+          error_message?: string | null
+          follow_up_sent_at?: string | null
+          id?: string
+          is_follow_up_sent?: boolean | null
+          last_drip_channel?: string | null
+          opened_at?: string | null
+          rating_given?: number | null
+          resend_email_id?: string | null
+          review_left?: boolean
+          review_link?: string | null
+          scheduled_for?: string | null
+          selected_staff?: string[] | null
+          sent_at?: string | null
+          sms_status?: string | null
+          status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
+          tags_selected?: string[] | null
+          trigger_source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_requests_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_requests_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          ai_summary: string | null
+          alert_sent: boolean
+          alert_sent_at: string | null
+          author_avatar_url: string | null
+          author_name: string | null
+          business_id: string
+          content_hash: string | null
+          created_at: string
+          external_id: string | null
+          external_url: string | null
+          google_attribute_chips: string[] | null
+          google_place_context: string[] | null
+          google_update_time: string | null
+          id: string
+          is_visible: boolean | null
+          platform: string
+          platform_id: string | null
+          rating: number
+          responded_at: string | null
+          response_source: string | null
+          response_status: string
+          response_text: string | null
+          review_date: string
+          review_photo_urls: string[] | null
+          selected_staff: string[] | null
+          sentiment: string | null
+          text: string | null
+          themes: string[] | null
+          urgency_score: number | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          alert_sent?: boolean
+          alert_sent_at?: string | null
+          author_avatar_url?: string | null
+          author_name?: string | null
+          business_id: string
+          content_hash?: string | null
+          created_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          google_attribute_chips?: string[] | null
+          google_place_context?: string[] | null
+          google_update_time?: string | null
+          id?: string
+          is_visible?: boolean | null
+          platform: string
+          platform_id?: string | null
+          rating: number
+          responded_at?: string | null
+          response_source?: string | null
+          response_status?: string
+          response_text?: string | null
+          review_date: string
+          review_photo_urls?: string[] | null
+          selected_staff?: string[] | null
+          sentiment?: string | null
+          text?: string | null
+          themes?: string[] | null
+          urgency_score?: number | null
+        }
+        Update: {
+          ai_summary?: string | null
+          alert_sent?: boolean
+          alert_sent_at?: string | null
+          author_avatar_url?: string | null
+          author_name?: string | null
+          business_id?: string
+          content_hash?: string | null
+          created_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          google_attribute_chips?: string[] | null
+          google_place_context?: string[] | null
+          google_update_time?: string | null
+          id?: string
+          is_visible?: boolean | null
+          platform?: string
+          platform_id?: string | null
+          rating?: number
+          responded_at?: string | null
+          response_source?: string | null
+          response_status?: string
+          response_text?: string | null
+          review_date?: string
+          review_photo_urls?: string[] | null
+          selected_staff?: string[] | null
+          sentiment?: string | null
+          text?: string | null
+          themes?: string[] | null
+          urgency_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "review_platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sms_opt_outs: {
+        Row: {
+          opted_out_at: string | null
+          phone_number: string
+        }
+        Insert: {
+          opted_out_at?: string | null
+          phone_number: string
+        }
+        Update: {
+          opted_out_at?: string | null
+          phone_number?: string
         }
         Relationships: []
       }
-      marketing_subscribers: {
+      square_connections: {
         Row: {
+          access_token_encrypted: string
+          access_token_expires_at: string | null
+          auto_send_enabled: boolean
+          business_id: string
+          connected_at: string
           created_at: string
-          email: string
+          disconnected_at: string | null
+          environment: string
           id: string
-          source: string
-          subscribed_at: string
-          unsubscribed_at: string | null
-          utm_campaign: string | null
-          utm_medium: string | null
-          utm_source: string | null
+          last_error: string | null
+          merchant_id: string
+          refresh_token_encrypted: string | null
+          updated_at: string
         }
         Insert: {
+          access_token_encrypted: string
+          access_token_expires_at?: string | null
+          auto_send_enabled?: boolean
+          business_id: string
+          connected_at?: string
           created_at?: string
-          email: string
+          disconnected_at?: string | null
+          environment?: string
           id?: string
-          source?: string
-          subscribed_at?: string
-          unsubscribed_at?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
+          last_error?: string | null
+          merchant_id: string
+          refresh_token_encrypted?: string | null
+          updated_at?: string
         }
         Update: {
+          access_token_encrypted?: string
+          access_token_expires_at?: string | null
+          auto_send_enabled?: boolean
+          business_id?: string
+          connected_at?: string
           created_at?: string
-          email?: string
+          disconnected_at?: string | null
+          environment?: string
           id?: string
-          source?: string
-          subscribed_at?: string
-          unsubscribed_at?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
+          last_error?: string | null
+          merchant_id?: string
+          refresh_token_encrypted?: string | null
+          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "square_connections_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: true
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      square_payment_events: {
+        Row: {
+          business_id: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          merchant_id: string
+          payment_id: string
+          review_request_id: string | null
+          status: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          merchant_id: string
+          payment_id: string
+          review_request_id?: string | null
+          status: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          merchant_id?: string
+          payment_id?: string
+          review_request_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "square_payment_events_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "square_payment_events_review_request_id_fkey"
+            columns: ["review_request_id"]
+            isOneToOne: false
+            referencedRelation: "review_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stripe_webhook_events: {
         Row: {
@@ -2051,7 +2468,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
-          email?: string | null
+          email?: string
           full_name?: string | null
           has_completed_tour?: boolean
           id?: string
@@ -2068,6 +2485,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acquire_competitor_watch_lock: { Args: never; Returns: boolean }
       acquire_platform_lock: {
         Args: { p_id: string; p_lock_duration?: string }
         Returns: boolean
@@ -2101,6 +2519,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      release_competitor_watch_lock: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
@@ -2110,3 +2529,126 @@ export type Database = {
     }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const

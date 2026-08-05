@@ -1,5 +1,5 @@
 import { Bell, Sparkles, ShieldCheck, BarChart2 } from "lucide-react";
-import type { IndustryData } from "@/lib/phase3/industry-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
 
 const SOLUTION_ICONS = [Bell, Sparkles, ShieldCheck, BarChart2];
 

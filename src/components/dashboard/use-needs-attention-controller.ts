@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { ReplyTone } from "@/domains/ai/services/generateReplyDraft";
+import type { ReplyTone } from "@/domains/ai/services/generate-reply-draft";
 import { DEFAULT_NEEDS_ATTENTION_COPY } from "@/components/dashboard/needs-attention-default-copy";
 import type { NeedsAttentionCopy } from "@/components/dashboard/needs-attention-types";
 import { useNeedsAttentionAiStream } from "@/components/dashboard/use-needs-attention-ai-stream";

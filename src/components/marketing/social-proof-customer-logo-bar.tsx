@@ -1,4 +1,4 @@
-import { CUSTOMER_LOGOS } from "@/lib/phase5/social-proof-data";
+import { CUSTOMER_LOGOS } from "@/lib/social-proof/social-proof-data";
 
 export function CustomerLogoBar({ title = "Trusted by local businesses nationwide" }: { title?: string }) {
     return (

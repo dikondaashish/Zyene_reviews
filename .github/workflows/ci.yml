@@ -30,6 +30,9 @@ jobs:
       - name: Color Guard
         run: pnpm run check:colors
 
+      - name: File Size Guard
+        run: pnpm run check:sizes
+
       - name: Test
         run: pnpm run test
 

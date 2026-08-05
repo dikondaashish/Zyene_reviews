@@ -1,4 +1,4 @@
-import type { BlogPost } from "@/lib/phase4/blog-types";
+import type { BlogPost } from "@/lib/content/blog-types";
 import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JSON_LD_BASE_URL, JSON_LD_DEFAULT_OG_IMAGE } from "./json-ld-constants";
 import { JsonLdScript } from "./json-ld-script";

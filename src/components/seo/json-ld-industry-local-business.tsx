@@ -1,4 +1,4 @@
-import type { IndustryData } from "@/lib/phase3/industry-data";
+import type { IndustryData } from "@/lib/industries/industry-data";
 import { ZYENE_REVIEWS_LOGO_SRC } from "@/lib/brand/logo";
 import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JSON_LD_BASE_URL } from "./json-ld-constants";

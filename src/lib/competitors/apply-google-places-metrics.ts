@@ -64,7 +64,7 @@ export async function applyGooglePlacesMetricsToCompetitor(
         return { metrics: live, updated: false, snapshotInserted: false };
     }
 
-    const { data: latestRows } = await (supabase.from("competitor_snapshots" as never) as any)
+    const { data: latestRows } = await supabase.from("competitor_snapshots")
         .select("id, captured_at, average_rating, total_reviews")
         .eq("competitor_id", competitor.id)
         .order("captured_at", { ascending: false })
@@ -90,7 +90,7 @@ export async function applyGooglePlacesMetricsToCompetitor(
         : null;
     const placesExtra = enrichment ? competitorEnrichmentToSnapshotMetadata(enrichment) : {};
 
-    const { error: snapErr } = await (supabase.from("competitor_snapshots" as never) as any).insert({
+    const { error: snapErr } = await supabase.from("competitor_snapshots").insert({
         competitor_id: competitor.id,
         business_id: competitor.business_id,
         captured_at: now.toISOString(),

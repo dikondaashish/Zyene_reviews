@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
 import { ArrowRight, Globe } from "lucide-react";
-import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/phase8/localized-industries";
+import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = mergeMarketingSocial({

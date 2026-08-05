@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { RESOURCE_MAP } from "@/lib/phase4/resource-data";
+import { RESOURCE_MAP } from "@/lib/content/resource-data";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

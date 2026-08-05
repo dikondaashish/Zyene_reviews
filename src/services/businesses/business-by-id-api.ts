@@ -1,81 +1,26 @@
-
 import { logger } from "@/lib/logger";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import type { Database } from "@/lib/db/supabase/database.types";
-import { planAllowsAutoCommenter } from "@/services/stripe/plans";
-import { sanitizeSlug } from "@/lib/utils";
-import { DEFAULT_REVIEW_PAGE_BACKGROUND_HEX } from "@/lib/utils/review-page-background";
-import { z } from "zod";
 
-const DEFAULT_REVIEW_PAGE_BG = DEFAULT_REVIEW_PAGE_BACKGROUND_HEX;
+import { businessPatchSchema } from "./business-patch-schema";
+import {
+    assertAutoReplyAllowed,
+    assertBusinessMembership,
+    buildBusinessUpdatePayload,
+    loadCurrentBusiness,
+    resolveUniqueSlug,
+} from "./business-patch-guards";
 
-const businessPatchSchema = z
-    .object({
-        name: z.string().min(1).max(255).optional(),
-        /** Public review page path segment; validated and uniqueness-checked on update */
-        slug: z
-            .string()
-            .min(3, "Slug must be at least 3 characters.")
-            .max(120)
-            .regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers, and hyphens.")
-            .optional(),
-        category: z.string().min(1).max(100).optional(),
-        timezone: z.string().min(1).max(80).optional(),
-        country: z.string().min(2).max(2).optional(),
-        phone: z.string().max(30).optional().nullable(),
-        email: z.string().email().max(255).optional().nullable().or(z.literal("")),
-        /** Optional human-friendly first name used as From display + email signoff. */
-        sender_name: z.string().max(80).optional().nullable().or(z.literal("")),
-        website: z.string().url().max(500).optional().nullable(),
-        logo_url: z.string().url().max(1000).optional().nullable(),
-        address: z.string().max(1000).optional().nullable(),
-        address_line1: z.string().max(1000).optional().nullable(),
-        city: z.string().max(120).optional().nullable(),
-        state: z.string().max(120).optional().nullable(),
-        postal_code: z.string().max(20).optional().nullable(),
-        zip: z.string().max(20).optional().nullable(),
-        brand_color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i).optional().nullable(),
-        review_page_background_color: z
-            .string()
-            .regex(/^#([0-9A-F]{3}){1,2}$/i)
-            .optional()
-            .nullable(),
-        rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional().nullable(),
-        enable_staff_selection: z.boolean().optional(),
-        staff_names: z.array(z.string().max(120)).max(100).optional(),
-        /** Review flow copy & settings (public profile) */
-        welcome_message: z.string().max(500).optional().nullable(),
-        rating_subtitle: z.string().max(500).optional().nullable(),
-        tags_heading: z.string().max(500).optional().nullable(),
-        tags_subheading: z.string().max(500).optional().nullable(),
-        custom_tags: z.array(z.string().max(80)).max(80).optional().nullable(),
-        google_heading: z.string().max(500).optional().nullable(),
-        google_subheading: z.string().max(500).optional().nullable(),
-        google_button_text: z.string().max(200).optional().nullable(),
-        google_review_url: z.string().max(2048).optional().nullable(),
-        min_stars_for_google: z.number().int().min(1).max(5).optional().nullable(),
-        apology_message: z.string().max(500).optional().nullable(),
-        negative_subheading: z.string().max(500).optional().nullable(),
-        negative_textarea_placeholder: z.string().max(500).optional().nullable(),
-        negative_button_text: z.string().max(200).optional().nullable(),
-        private_feedback_email_mode: z.enum(["hidden", "optional", "required"]).optional(),
-        private_feedback_phone_mode: z.enum(["hidden", "optional", "required"]).optional(),
-        private_feedback_offer_mode: z.enum(["hidden", "visible"]).optional(),
-        private_feedback_offer_message: z.string().max(500).optional().nullable(),
-        thank_you_heading: z.string().max(200).optional().nullable(),
-        thank_you_message: z.string().max(5000).optional().nullable(),
-        footer_text: z.string().max(200).optional().nullable(),
-        footer_company_name: z.string().max(200).optional().nullable(),
-        footer_link: z.string().max(2048).optional().nullable(),
-        footer_logo_url: z.string().max(1000).optional().nullable(),
-        hide_branding: z.boolean().optional().nullable(),
-        auto_reply_enabled: z.boolean().optional(),
-        auto_reply_min_rating: z.union([z.literal(3), z.literal(4), z.literal(5)]).optional(),
-        auto_reply_tone: z.enum(["professional", "friendly", "concise"]).optional(),
-    })
-    .strict();
+/** The business list is cached per user in Redis; drop it after any mutation. */
+async function invalidateBusinessCache(userId: string): Promise<void> {
+    try {
+        const { redis } = await import("@/lib/db/redis");
+        await redis.del(`user_businesses:${userId}`);
+    } catch (e) {
+        logger.error({ err: e }, "Failed to delete business cache:");
+    }
+}
 
 export async function patchBusiness(
     request: Request,
@@ -84,14 +29,15 @@ export async function patchBusiness(
     try {
         const { supabase, user } = await requireUser();
         const { id } = await params;
-        const raw = await request.json();
-        const parsed = businessPatchSchema.safeParse(raw);
+
+        const parsed = businessPatchSchema.safeParse(await request.json());
         if (!parsed.success) {
             throw new ApiRouteError("Invalid business update payload", {
                 status: 400,
                 code: "INVALID_BUSINESS_UPDATE",
             });
         }
+
         const body = parsed.data;
         if (Object.keys(body).length === 0) {
             throw new ApiRouteError("No valid fields to update", {
@@ -100,111 +46,16 @@ export async function patchBusiness(
             });
         }
 
-        // Verify ownership via organization_members
-        const { data: membership, error: membError } = await supabase
-            .from("organization_members")
-            .select("role, organizations!inner(businesses!inner(id))")
-            .eq("user_id", user.id)
-            .eq("organizations.businesses.id", id)
-            .single();
+        await assertBusinessMembership(supabase, user.id, id);
+        const current = await loadCurrentBusiness(supabase, id);
+        assertAutoReplyAllowed(body, current);
 
-        if (membError || !membership) {
-            throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
-        }
+        const resolvedSlug =
+            body.slug !== undefined ? await resolveUniqueSlug(supabase, id, body.slug) : undefined;
 
-        const { data: currentBiz, error: curErr } = await supabase
-            .from("businesses")
-            .select(`
-                auto_reply_enabled,
-                organizations ( plan, plan_status )
-            `)
-            .eq("id", id)
-            .single();
-
-        if (curErr || !currentBiz) {
-            throw new ApiRouteError("Business not found", {
-                status: 404,
-                code: "BUSINESS_NOT_FOUND",
-                details: curErr?.message,
-            });
-        }
-
-        const orgPlan =
-            (currentBiz.organizations as { plan?: string | null } | null)?.plan ?? null;
-        const orgPlanStatus =
-            (currentBiz.organizations as { plan_status?: string | null } | null)
-                ?.plan_status ?? null;
-        const nextAutoReplyEnabled =
-            body.auto_reply_enabled !== undefined
-                ? body.auto_reply_enabled
-                : currentBiz.auto_reply_enabled;
-        const touchesAutoReply =
-            body.auto_reply_enabled !== undefined ||
-            body.auto_reply_min_rating !== undefined ||
-            body.auto_reply_tone !== undefined;
-
-        if (
-            touchesAutoReply &&
-            nextAutoReplyEnabled &&
-            !planAllowsAutoCommenter(orgPlan, orgPlanStatus)
-        ) {
-            throw new ApiRouteError(
-                "Auto commenter requires a Starter, Professional, or Enterprise plan.",
-                {
-                    status: 403,
-                    code: "AUTO_REPLY_PLAN_REQUIRED",
-                }
-            );
-        }
-
-        const patch: typeof body & { auto_reply_enabled_at?: string | null } = { ...body };
-
-        if (body.slug !== undefined) {
-            const sanitized = sanitizeSlug(body.slug);
-            if (sanitized.length < 3) {
-                throw new ApiRouteError("Slug must be at least 3 characters.", {
-                    status: 400,
-                    code: "INVALID_SLUG",
-                });
-            }
-            const { data: slugConflict } = await supabase
-                .from("businesses")
-                .select("id")
-                .eq("slug", sanitized)
-                .neq("id", id)
-                .maybeSingle();
-            if (slugConflict) {
-                throw new ApiRouteError("This link is already taken.", {
-                    status: 409,
-                    code: "SLUG_TAKEN",
-                });
-            }
-            patch.slug = sanitized;
-        }
-        if (body.auto_reply_enabled === true && !currentBiz.auto_reply_enabled) {
-            patch.auto_reply_enabled_at = new Date().toISOString();
-        }
-        if (body.auto_reply_enabled === false) {
-            patch.auto_reply_enabled_at = null;
-        }
-
-        const { review_page_background_color, ...patchRest } = patch;
-        const updatePayload: Database["public"]["Tables"]["businesses"]["Update"] = {
-            ...patchRest,
-            ...(review_page_background_color !== undefined
-                ? {
-                      review_page_background_color:
-                          review_page_background_color === null
-                              ? DEFAULT_REVIEW_PAGE_BG
-                              : review_page_background_color,
-                  }
-                : {}),
-        };
-
-        // Update business
         const { data, error } = await supabase
             .from("businesses")
-            .update(updatePayload)
+            .update(buildBusinessUpdatePayload(body, current, resolvedSlug))
             .eq("id", id)
             .select()
             .single();
@@ -217,14 +68,7 @@ export async function patchBusiness(
             });
         }
 
-        // Invalidate Redis cache for this user
-        try {
-            const { redis } = await import("@/lib/db/redis");
-            const cacheKey = `user_businesses:${user.id}`;
-            await redis.del(cacheKey);
-        } catch (e) {
-            logger.error({ err: e }, "Failed to delete business cache:");
-        }
+        await invalidateBusinessCache(user.id);
 
         return apiOk(data);
     } catch (err) {
@@ -287,14 +131,7 @@ export async function deleteBusiness(
             });
         }
 
-        // Invalidate Redis cache for this user
-        try {
-            const { redis } = await import("@/lib/db/redis");
-            const cacheKey = `user_businesses:${user.id}`;
-            await redis.del(cacheKey);
-        } catch (e) {
-            logger.error({ err: e }, "Failed to delete business cache:");
-        }
+        await invalidateBusinessCache(user.id);
 
         return apiOk({ success: true });
     } catch (err) {

@@ -5,8 +5,8 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMarketingSignupUrl } from "@/lib/growth/marketing-signup-url";
-import { getGoogleAdsBanner } from "@/lib/phase6/google-ads-data";
-import { getMetaAdsBanner } from "@/lib/phase6/meta-ads-data";
+import { getGoogleAdsBanner } from "@/lib/campaign-content/google-ads-data";
+import { getMetaAdsBanner } from "@/lib/campaign-content/meta-ads-data";
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
 
 function readUtmCookie(): ReturnType<typeof deserializeUtm> {

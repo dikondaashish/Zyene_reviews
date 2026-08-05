@@ -1,5 +1,5 @@
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
-import type { ResourceGuide } from "@/lib/phase4/resource-data";
+import type { ResourceGuide } from "@/lib/content/resource-data";
 import { Download, ListChecks } from "lucide-react";
 
 const REVIEW_COMPLIANCE_ITEMS = [

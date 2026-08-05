@@ -1,6 +1,6 @@
 import Image from "next/image";
-import type { BlogAuthor } from "@/lib/phase4/blog-types";
-import { resolveBlogAuthor, blogAuthorInitials } from "@/lib/phase4/blog-authors";
+import type { BlogAuthor } from "@/lib/content/blog-types";
+import { resolveBlogAuthor, blogAuthorInitials } from "@/lib/content/blog-authors";
 import { cn } from "@/lib/utils";
 
 export function BlogAuthorByline({

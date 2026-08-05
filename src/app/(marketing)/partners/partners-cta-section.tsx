@@ -1,5 +1,5 @@
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
-import { NEWSLETTER_DESCRIPTION } from "@/lib/phase6/email-sequences-data";
+import { NEWSLETTER_DESCRIPTION } from "@/lib/campaign-content/email-sequences-data";
 
 export function PartnersCtaSection() {
     return (

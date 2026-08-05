@@ -11,7 +11,7 @@ import {
     ONBOARDING_DRIP_STEPS,
     WINBACK_STEPS,
     MARKETING_NURTURE_STEPS,
-} from "@/lib/phase6/email-sequences-data";
+} from "@/lib/campaign-content/email-sequences-data";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
 async function markSequenceCompleted(sequenceKey: string, email: string, organizationId?: string) {

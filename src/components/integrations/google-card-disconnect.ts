@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { disconnectGoogle } from "@/app/(dashboard)/settings/integrations/_actions";
+import { disconnectGoogle } from "@/app/(dashboard)/settings/integrations/actions";
 
 export async function runGoogleCardDisconnect(platformId: string): Promise<void> {
     try {

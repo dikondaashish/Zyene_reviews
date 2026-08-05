@@ -1,6 +1,6 @@
 import { ArticleJsonLd, BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
-import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/phase4/blog-data";
+import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/content/blog-data";
 import { BlogSlugArticleHeaderSection } from "./blog-slug-article-header-section";
 import { BlogSlugArticleBodySidebarSection } from "./blog-slug-article-body-sidebar-section";
 import { BlogSlugMorePostsSection } from "./blog-slug-more-posts-section";

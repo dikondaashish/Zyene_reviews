@@ -1,4 +1,4 @@
-import type { ContentPillar } from "@/lib/phase4/blog-data";
+import type { ContentPillar } from "@/lib/content/blog-data";
 
 export const BLOG_PILLARS: Array<{ id: ContentPillar | "all"; label: string }> = [
     { id: "all", label: "All Posts" },

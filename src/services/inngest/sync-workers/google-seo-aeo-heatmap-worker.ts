@@ -38,7 +38,7 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
     try {
       const run = await step.run("create-heatmap-run", async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-      const { data, error } = await (admin.from("google_seo_heatmap_runs" as never) as any)
+      const { data, error } = await admin.from("google_seo_heatmap_runs")
         .insert({
           business_id: businessId,
           keyword,
@@ -84,13 +84,13 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
           };
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-        const { error } = await (admin.from("google_seo_heatmap_cells" as never) as any).insert(rows);
+        const { error } = await admin.from("google_seo_heatmap_cells").insert(rows);
         if (error) throw new Error(error.message);
       });
 
       await step.run("complete-heatmap-run", async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-        await (admin.from("google_seo_heatmap_runs" as never) as any)
+        await admin.from("google_seo_heatmap_runs")
           .update({ status: "success", completed_at: new Date().toISOString(), error_message: null })
           .eq("id", run.id);
       });
@@ -101,7 +101,7 @@ export const googleSeoAeoHeatmapWorker = inngest.createFunction(
       if (runId) {
         await step.run("fail-heatmap-run", async () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- table not in generated Supabase types
-          await (admin.from("google_seo_heatmap_runs" as never) as any)
+          await admin.from("google_seo_heatmap_runs")
             .update({ status: "failed", error_message: msg, completed_at: new Date().toISOString() })
             .eq("id", runId as string);
         });

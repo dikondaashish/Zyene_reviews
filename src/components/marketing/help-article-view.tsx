@@ -7,7 +7,7 @@ import {
     HELP_CATEGORIES,
     helpArticleNestedPath,
     type HelpArticle,
-} from "@/lib/phase4/help-data";
+} from "@/lib/content/help-data";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
 import { extractFaqItemsFromHelpBody } from "@/lib/seo/help-faq-from-body";

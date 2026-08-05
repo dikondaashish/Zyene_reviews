@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { COMPETITORS } from "@/lib/phase3/competitor-data";
+import { COMPETITORS } from "@/lib/comparisons/competitor-data";
 import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
 export function CompareCardsSection() {

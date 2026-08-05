@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { analyzeReview } from "@/domains/ai/services/AiAnalysisService";
+import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";

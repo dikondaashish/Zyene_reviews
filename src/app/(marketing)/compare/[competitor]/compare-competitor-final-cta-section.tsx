@@ -1,4 +1,4 @@
-import type { CompetitorData } from "@/lib/phase3/competitor-data";
+import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
