@@ -456,7 +456,7 @@ F1.9 Copilot · F1.14 volatility index · F2.6 citation→traffic correlation ·
 |---|---|---|---|
 | Perplexity | Sonar API | P1 | Bills tokens **plus** a per-request search fee (~$5–14/1K by search-context depth). Native citations make it the best signal-per-dollar source — use low search-context tier. |
 | ChatGPT | OpenAI Responses API + `web_search` tool | P1 | **Dominant variable cost** (~60% of module spend). Token-billed with a metered search tool. |
-| Gemini | Vertex, already integrated, Google Search grounding | P1 | **Verify grounding request fees before committing** — Google has historically billed grounded requests per-request well above token cost, with a daily free allowance. This is the single largest unknown in the model below. |
+| Gemini | Vertex, Google Search grounding, **pinned to `gemini-2.5-pro`** | P1 | **Confirmed 2026-08-05:** 10,000 grounding prompts/day free on 2.5 Pro (1,500/day on 2.0/2.5 Flash tiers), then **$35 per 1,000**. One grounding prompt may fan out to several search queries but is billed once. See §6.4. |
 | Claude | Anthropic Messages API + web search tool | P2 | Token-billed |
 | Copilot | No clean API | P3 | Deferred for this reason |
 | Extraction/classification | Vertex Gemini Flash-Lite (already in `vertex-adapter.ts`) | P1 | Cheap, JSON-schema mode already supported |
@@ -471,11 +471,11 @@ F1.9 Copilot · F1.14 volatility index · F2.6 citation→traffic correlation ·
 | Geo-grid (Maps, `location_coordinate`) | 3 kw × 49 pts × 2 runs × $0.0006 | **$0.18** |
 | Perplexity Sonar | 100 requests × ~$0.0067 (search fee + tokens) | **$0.67** |
 | ChatGPT (Responses + web_search) | 100 requests × ~$0.025 | **$2.50** |
-| Gemini (grounded) | 100 requests — **$0.05–$3.50 depending on grounding fees (unverified)** | **$0.50–3.50** |
+| Gemini (grounded, 2.5 Pro) | 100 requests — **$0 inside the free daily bucket, $3.50 beyond it** | **$0.00 – 3.50** |
 | Gemini extraction pass | ~500 extractions × ~$0.0006 | $0.30 |
 | Crawl + audit | 200 pages/mo, bandwidth + compute | $0.15 |
 | Storage + overhead | | $0.20 |
-| **Total** | | **$4.12 – $7.12/mo** |
+| **Total** | | **$4.12 – $7.62/mo** |
 
 **Three findings that change the plan:**
 
@@ -483,7 +483,44 @@ F1.9 Copilot · F1.14 volatility index · F2.6 citation→traffic correlation ·
 2. **SERP + AI Overview data is ~$0.12/month, not $0.60.** The classic-SEO half of this module is nearly costless. There is no economic reason to skimp on keyword coverage.
 3. **LLM sampling is ~85% of variable cost, and ChatGPT alone is ~60%.** This means **the engine count is the correct metered dimension**, not the prompt count. A user tracking 50 prompts on Perplexity + Gemini costs less than one tracking 15 on ChatGPT. Meter credits by (prompt × engine × run), weighted per engine — not by prompt count, which is what most competitors do and would misprice us badly.
 
-**Open cost risk:** Gemini grounding fees are the one line I could not verify and they swing the total by 70%. **Get a written Vertex quote before Phase 1 build starts.** If grounded Gemini is expensive, substitute the DataForSEO AI Overview endpoint as the Google surface (already budgeted at $0.0006) and drop direct Gemini sampling to Phase 2.
+**Cost risk closed 2026-08-05.** The Gemini grounding rate is confirmed and, at our scale, is the *cheapest* line in the table rather than the largest — see §6.4. ChatGPT is now unambiguously the dominant variable cost at ~60% of module spend.
+
+### 6.4 Gemini grounding economics — confirmed 2026-08-05
+
+Quoted rate: **free daily allowance, then $35 per 1,000 grounding prompts.** The allowance depends on model generation:
+
+| Model tier | Free grounding prompts/day |
+|---|---|
+| Gemini 2.0 Flash / 2.5 Flash / 2.5 Flash-Lite (combined) | 1,500 |
+| **Gemini 2.5 Pro** | **10,000** |
+
+**We pin to `gemini-2.5-pro`.** Two reasons, both load-bearing:
+
+1. **The quote covers 2.0/2.5 only.** The rest of this codebase runs Gemini 3.x (`vertex-adapter.ts` defaults to `gemini-3.1-flash-lite`, with `gemini-3.1-flash-lite-preview` used across the competitor-insight services). Letting the AEO adapter inherit that default would price us against a rate that does not cover the model we actually call. The adapter therefore pins its model explicitly rather than inheriting. Accepted cost: two Gemini generations coexist in the codebase until a Gemini 3 grounding rate is confirmed.
+2. **Grounding fees dominate token fees in this workload.** Pro's token rate is roughly $0.0065/sample higher than Flash's, but its free bucket is 6.7× larger. Avoiding a single $0.035 grounding charge more than pays for the token difference, so Pro is cheaper than Flash anywhere between roughly 420 and 2,800 tracked businesses — our entire realistic growth range. *(Token rates behind that figure are list-price estimates, not part of the written quote; confirm before contracting.)*
+
+**The allowance is a daily bucket, which makes scheduling a cost lever.**
+
+Free-tier ceiling = `free_per_day × 7 ÷ prompts_per_business`, assuming weekly sampling smoothed across the week:
+
+| Tier | Prompts/business | Businesses covered free (2.5 Pro) |
+|---|---|---|
+| Professional | 15 | **~4,600** |
+| Modeled scenario | 25 | **~2,800** |
+| Starter | 5 | — (Gemini not included) |
+
+Bursting every account into one day collapses that ceiling by 7×. E-7's run smoothing was already required for vendor rate limits; it is now worth ~$3.50/business/month at scale and should be treated as a billing control, not just a politeness measure.
+
+**Effect on the tier allowances in §6.3:**
+
+| Tier | Gemini included? | COGS below ceiling | COGS above ceiling | Revenue |
+|---|---|---|---|---|
+| Professional (15 prompts × 3 engines weekly) | Yes | **~$2.82** | ~$4.92 | $59.99 |
+| Starter (5 prompts × Perplexity + AI Overview monthly) | **No** | ~$0.35 | ~$0.35 | $29.99 |
+
+**The §6.3 allowances hold unchanged.** Gemini does not need to come out of Professional — at 5–8% of plan revenue it is comfortable, and below ~4,600 Professional businesses the grounding line is $0.00. Gemini was never in Starter, and that call now has a sharper justification: at the $0.035 overage rate Gemini is **58× the DataForSEO AI Overview rate** ($0.0006/keyword), and for local intent AI Overview is the higher-traffic Google surface anyway. Starter gets the cheap Google surface; Professional gets both.
+
+**Modelling requirement this creates:** a flat per-sample cost cannot express "free to N/day, then $X per 1,000" — assuming worst case would overstate Gemini COGS by 100% at current scale and wrongly argue for cutting it from Professional. `engine-catalog.ts` therefore carries `{ overageMicroUsd, freePerDay, confidence }` per engine, with `estimateDailyCostMicroUsd()` honouring the allowance.
 
 ### 6.3 Pricing structure (Q2 — decided: metered add-on)
 
@@ -494,7 +531,7 @@ Credit-metered add-on, base allowance included on Professional, overage in credi
 - Pre-flight hard stop: a run that would exceed the org's remaining credits is rejected **before** any paid API call (acceptance criterion #5).
 - Stripe metered billing / credit-pack SKUs are a Phase 1 dependency — flag to whoever owns billing now, as it is not in the current `STRIPE_*` env set.
 
-Suggested starting allowances (to be validated against the margin model): **Professional** — 15 prompts × 3 engines weekly + 3 geo-grid keywords biweekly + 500-page monthly crawl ≈ $3.50/mo COGS on ~$60 revenue. **Starter** — 5 prompts × 2 cheap engines (Perplexity + AIO) monthly + 1 geo-grid keyword ≈ $0.35/mo COGS, positioned as a taste that drives the upgrade.
+Suggested starting allowances, **re-validated 2026-08-05 against the confirmed Gemini rate (§6.4) and unchanged**: **Professional** — 15 prompts × 3 engines weekly + 3 geo-grid keywords biweekly + 500-page monthly crawl ≈ **$2.82/mo COGS below the Gemini free-tier ceiling, $4.92 above it**, on ~$60 revenue. **Starter** — 5 prompts × 2 cheap engines (Perplexity + AI Overview) monthly + 1 geo-grid keyword ≈ $0.35/mo COGS, positioned as a taste that drives the upgrade. Starter deliberately excludes Gemini: at the $0.035 overage rate it is 58× the AI Overview rate for the same Google-shaped question.
 
 ---
 
@@ -579,7 +616,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 | # | Risk | Severity | Mitigation |
 |---|---|---|---|
 | R1 | **Existing fabricated data has already been shown to paying customers** and possibly cited in our own marketing | Critical | Phase 0 remediation; audit collateral; decide on customer notification (Q6) |
-| R2 | **Unit economics** (§6) — resolved to metered add-on, but Gemini grounding fees are unverified and swing COGS by 70% | High | Metered add-on decided (Q2); E-5 + E-9 are Phase 1 gates. **Get a written Vertex grounding quote before build starts**; fallback is DataForSEO's AI Overview endpoint as the Google surface |
+| R2 | **Unit economics** (§6) — resolved to metered add-on; Gemini grounding rate now confirmed | Medium | Metered add-on decided (Q2); E-5 + E-9 remain Phase 1 gates. Gemini priced and unblocked (§6.4). **Residual risk moved to scheduling**: the free grounding allowance is a daily bucket, so bursty run scheduling silently converts a $0 line into ~$3.50/business/month. E-7 smoothing is now a billing control. |
 | R3 | LLM API answers ≠ what consumers see in ChatGPT/Gemini apps (no memory, no personalization, different retrieval) | High | Disclose in F7.10; market as "engine sampling", never "what your customer saw"; never automate consumer UIs (ToS) |
 | R4 | Sampling noise generates false alerts and destroys trust a second time | High | F1.13 repeat sampling + F8.8 significance gating, both required before alerts go live |
 | R5 | SERP/AIO vendor concentration (price hike, shutdown, blocking) | High | E-1 adapter abstraction; qualify a second vendor pre-GA |
@@ -601,7 +638,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 |---|---|---|---|
 | **Q1** | Target user & scope | **Local + multi-location owners; local-first AEO** | Plan stands as written. Geo-grid (F1.12), GBP audit (F5.10), and review-corpus features (F2.8, F6.7) are the moat. Reinforced by §6.2: the geo-grid costs $0.18/business/month, so our differentiator is also our cheapest feature. |
 | **Q2** | Pricing & gating | **Credit-metered add-on**, base allowance on Professional | E-5 + F4.9 locked into Phase 1. Meter by (prompt × engine × run) with **per-engine weighting**, not prompt count (§6.2 finding 3). Stripe metered-billing SKUs are a new Phase 1 dependency — not in the current `STRIPE_*` env set. |
-| **Q3** | Paid data budget & vendors | **Approved; vendors recommended in §6.1** | Primary: **DataForSEO** (standard queue, `load_async_ai_overview`, Maps `location_coordinate` for the grid). Secondary qualified behind E-1: **SerpApi**. Engines: Perplexity Sonar + OpenAI Responses/web_search + Vertex Gemini in Phase 1; Anthropic in Phase 2. **Action: get a written Vertex grounding quote before build starts** — it is the one unverified line and swings total COGS by 70%. |
+| **Q3** | Paid data budget & vendors | **Approved; vendors recommended in §6.1** | Primary: **DataForSEO** (standard queue, `load_async_ai_overview`, Maps `location_coordinate` for the grid). Secondary qualified behind E-1: **SerpApi**. Engines: Perplexity Sonar + OpenAI Responses/web_search + Vertex Gemini in Phase 1; Anthropic in Phase 2. **Vertex grounding quote received 2026-08-05** — 10,000 prompts/day free on 2.5 Pro, then $35/1,000; Gemini pinned to `gemini-2.5-pro` and unblocked (§6.4). DataForSEO, OpenAI and Perplexity rates remain list-price estimates pending contracts. |
 | **Q4** | Team & deadline | **2 senior fullstack + 0.5 design + 0.5 PM; Phase 1 in 12 weeks after Phase 0** | Roadmap in §5 stands unchanged. |
 
 ### 9.2 Still open
@@ -690,7 +727,9 @@ E-1 complete. `pnpm typecheck` clean, **260/260 tests pass** (27 new), `pnpm bui
 
 ### The cost guard
 
-`engine-catalog.ts` carries `costConfidence: "verified" | "estimated" | "unverified"` per engine, and `resolveRunnable()` **withholds any engine whose pricing is unverified even when its adapter is fully wired and configured**. Gemini is currently `unverified` pending the Vertex grounding quote, so it resolves to `pricing_unconfirmed` and cannot enter a paid run. An unquoted vendor cannot start billing customers by accident; clearing the block is a one-line catalog edit once the quote lands.
+`engine-catalog.ts` carries `cost: { overageMicroUsd, freePerDay, confidence }` per engine, and `resolveRunnable()` **withholds any engine whose pricing is unverified even when its adapter is fully wired and configured**. An unquoted vendor cannot start billing customers by accident.
+
+**Updated 2026-08-05:** Gemini's grounding rate is confirmed, so it is now `verified` and resolves to `available` (§6.4). Claude and Copilot remain `unverified` and stay withheld. The guard did its job — it blocked Gemini for exactly as long as we could not state its price, and clearing it was the one-line edit the design promised.
 
 ### Why no live paid adapter yet
 

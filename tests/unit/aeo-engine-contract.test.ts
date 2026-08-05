@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import { EngineRegistry } from "../../src/services/aeo/engines/engine-registry";
 import { FixtureEngineAdapter } from "../../src/services/aeo/engines/adapters/fixture-engine-adapter";
-import { getEngineDescriptor, isMeterable } from "../../src/services/aeo/engines/engine-catalog";
+import {
+    estimateDailyCostMicroUsd,
+    getEngineDescriptor,
+    isMeterable,
+} from "../../src/services/aeo/engines/engine-catalog";
 import {
     citationsPresent,
     citationsUnavailable,
@@ -33,10 +37,17 @@ describe("EngineRegistry availability", () => {
 
     it("withholds a fully wired engine whose pricing is unconfirmed", () => {
         const registry = new EngineRegistry();
+        registry.register(adapter("claude"));
+        // Anthropic rates are not contracted yet; being wired is not enough.
+        expect(isMeterable("claude")).toBe(false);
+        expect(registry.describe("claude").state).toBe("pricing_unconfirmed");
+    });
+
+    it("allows Gemini now that its grounding rate is confirmed", () => {
+        const registry = new EngineRegistry();
         registry.register(adapter("gemini"));
-        // Gemini grounding fees are still unquoted; being wired is not enough.
-        expect(isMeterable("gemini")).toBe(false);
-        expect(registry.describe("gemini").state).toBe("pricing_unconfirmed");
+        expect(isMeterable("gemini")).toBe(true);
+        expect(registry.describe("gemini").state).toBe("available");
     });
 
     it("reports a configured, priced engine as available", () => {
@@ -55,9 +66,9 @@ describe("EngineRegistry.resolveRunnable", () => {
     it("keeps priced engines and withholds unpriced ones from the same request", () => {
         const registry = new EngineRegistry();
         registry.register(adapter("google_serp"));
-        registry.register(adapter("gemini"));
+        registry.register(adapter("claude"));
 
-        const { runnable, withheld } = registry.resolveRunnable(["google_serp", "gemini"]);
+        const { runnable, withheld } = registry.resolveRunnable(["google_serp", "claude"]);
 
         expect(runnable.map((a) => a.id)).toEqual(["google_serp"]);
         expect(withheld.map((w) => w.state)).toEqual(["pricing_unconfirmed"]);
@@ -75,6 +86,30 @@ describe("EngineRegistry.resolveRunnable", () => {
         registry.register(adapter("google_serp"));
         const { runnable } = registry.resolveRunnable(["google_serp", "google_serp", "google_serp"]);
         expect(runnable).toHaveLength(1);
+    });
+});
+
+describe("engine cost model", () => {
+    it("pins Gemini to the model its grounding quote covers, not the app-wide default", () => {
+        // The rest of the app runs Gemini 3.x; the quote covers 2.0/2.5 only.
+        expect(getEngineDescriptor("gemini").pinnedModelId).toBe("gemini-2.5-pro");
+    });
+
+    it("charges nothing inside the free daily grounding allowance", () => {
+        expect(estimateDailyCostMicroUsd("gemini", 10_000)).toBe(0);
+    });
+
+    it("charges $35 per 1,000 only on grounding prompts past the allowance", () => {
+        // 11,000 samples => 1,000 billable => $35.00 => 35,000,000 micro-USD.
+        expect(estimateDailyCostMicroUsd("gemini", 11_000)).toBe(35_000_000);
+    });
+
+    it("bills engines with no free allowance from the first sample", () => {
+        expect(estimateDailyCostMicroUsd("chatgpt", 1)).toBe(25_000);
+    });
+
+    it("never returns a negative cost for an idle day", () => {
+        expect(estimateDailyCostMicroUsd("gemini", 0)).toBe(0);
     });
 });
 
