@@ -16,7 +16,7 @@
 |---|---|---|---|
 | AI Visibility (ChatGPT, Claude, Gemini, Grok, Llama, Perplexity) | We queried 6 AI engines and report whether you were found, and at what position | Calls **zero** AI engines. Compares your `average_rating` to the max competitor rating; if yours is higher, writes `found=true, position=2` for ChatGPT and `found=false` for the other five. Every run. | `google-seo-aeo-ai-visibility-worker.ts:56-80` |
 | Local Heatmap | Geo-grid rank tracking across your service area | Calls **zero** SERP or Maps APIs. Generates six labels by string-concatenating `city` (`North {city}`, `Downtown {city}`…) and derives rank from `21 - average_rating`, visibility from `100 - rank*4`. | `google-seo-aeo-heatmap-worker.ts:63-88` |
-| SEO/AEO Score | 11-point audit | Real, but 6 of 11 items are hard-coded `status: "pending"` and excluded from the score. Score is computed over 5 measured items only, and `services-list` is an admitted proxy (place action links standing in for services). | `google-seo-aeo-build-audits.ts:60-90` |
+| SEO/AEO Score | 11-point audit | Real, but **5 of 11** items are hard-coded `status: "pending"` and excluded from the score. Score is computed over **6 measured** items, one of which (`services-list`) is an admitted proxy — place action links standing in for a services list. | `google-seo-aeo-build-audits.ts:60-90` |
 
 Both cards do carry a "Beta estimate" line in the UI ("Beta estimate from internal scoring heuristics", "Beta estimated geo-grid"). That is weaker than it needs to be but it is not nothing. The real problem is that "beta" reads as *early*, not as *not measured*: nothing discloses that the figures are derived from the customer's own review rating, so when a rating moves and "AI visibility" moves with it, the user reads causation. Selling this as AI visibility tracking is a trust exposure, not just tech debt.
 
@@ -697,7 +697,7 @@ Integrity remediation is complete. `pnpm typecheck` clean, 233/233 tests pass, `
 | Worker gating | `google-seo-aeo-ai-visibility-worker.ts`, `google-seo-aeo-heatmap-worker.ts` | When disabled, record the run as `disabled` with a reason and write **zero** result rows. When enabled, rows persist as `is_estimated = true` with no fabricated position or visibility score. |
 | Fan-out gating | `google-seo-aeo-sync-worker.ts` | Returns early when disabled rather than queueing two no-op runs. |
 | Server-action gating | `src/app/actions/google-seo-aeo.ts` | `runAiVisibilityAuditNow` / `runHeatmapAuditNow` were exported server actions with **no UI callers** — reachable endpoints that wrote fabricated rows. Now refused when disabled. |
-| Audit honesty | `google-seo-aeo-score-audit-section.tsx` | The 6 unimplemented checks no longer render beside real pass/fail rows with a "Fix" button (which implied we had measured them). They move to a "Not yet measured" section, and the score card reads "Scored on 5 of 11 checks · 6 not yet measured". |
+| Audit honesty | `google-seo-aeo-score-audit-section.tsx` | The **5** unimplemented checks no longer render beside real pass/fail rows with a "Fix" button (which implied we had measured them). They move to a "Not yet measured" section, and the score card reads **"Scored on 6 of 11 checks · 5 not yet measured"**. |
 | Sync button | `google-seo-aeo-score-audit-section.tsx` | Hidden when disabled — it only ever drove the estimated surfaces; the page audit recomputes on load. |
 | Dead code | all three workers, `google-seo-aeo-build-audits.ts` | Removed ~13 unused imports per worker plus 3 unused constants/helpers copied from the review sync worker. |
 | Regression test | `tests/unit/aeo-surfaces.test.ts` (new) | 11 cases pinning default-off, explicit-opt-in-only, and that the disclosure states its method rather than saying "beta". |
@@ -806,3 +806,23 @@ This is worth reusing: it validates a migration against production's actual sche
 
 - `crawl_runs` / `crawl_pages` / `crawl_findings` — deferred to E-3, whose crawler defines their shape.
 - `aeo_alerts` — deferred to the P8 alerting build; its shape depends on the significance gate in F8.8.
+
+---
+
+## 13. Correction — audit check counts (2026-08-05)
+
+The plan stated throughout that the module had **5 measured and 6 pending** audit checks. It is **6 measured and 5 pending**. Verified against `origin/main`:
+
+| | Count | IDs |
+|---|---|---|
+| Total | 11 | — |
+| Hard-coded `status: "pending"` | **5** | `images`, `post-frequency`, `post-keywords`, `service-descriptions`, `service-area` |
+| Computed pass/fail | **6** | `business-description`, `review-frequency`, `google-rating`, `review-replies`, `profile-performance`, `services-list` |
+
+**Cause:** `services-list` computes a real pass/fail from `actionLinkCount >= 25`, but does so through an admitted proxy — Google place-action links standing in for a services list. The original §0.1 assessment recorded that caveat *and* counted the item as pending, so one check was represented twice.
+
+**Blast radius: prose only.** `buildGoogleSeoAeoAudits` derives `measuredCount` from `status !== "pending"` at runtime, and the UI partitions the same way, so the shipped score has always read "Scored on 6 of 11 checks · 5 not yet measured" — which is what production shows. No code, score, or customer-facing value was ever affected.
+
+The incorrect figure also appears in the merged commit message for `4fb1ab37` and in the body of PR #4. Both are immutable; this entry is the correction of record.
+
+**Standing caveat this surfaces:** `services-list` is scored but is not a real services audit. F5.10 replaces it with a genuine Google services check. Until then the Optimization Score includes one proxy signal, and the six "measured" checks are not all equally direct.
