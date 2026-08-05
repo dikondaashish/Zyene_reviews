@@ -1,5 +1,4 @@
 import type { AuditItem } from "./google-seo-aeo-audit-utils";
-import { calcKeywordCoverage } from "./google-seo-aeo-audit-utils";
 
 export function buildGoogleSeoAeoAudits(input: {
     listingDescription: string;

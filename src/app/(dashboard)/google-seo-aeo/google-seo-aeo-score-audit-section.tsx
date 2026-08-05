@@ -4,10 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RunAuditControls } from "@/components/google-seo-aeo/run-audit-controls";
+import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
 import { getAuditFixAction } from "./google-seo-aeo-audit-utils";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 
 export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoAeoContentProps }) {
+    // Unmeasured checks are listed separately: showing them beside real pass/fail
+    // rows with a Fix button implies we audited something we never looked at.
+    const measured = content.audits.filter((a) => a.status !== "pending");
+    const unmeasured = content.audits.filter((a) => a.status === "pending");
+
     return (
         <>
             <div className="flex min-w-0 flex-col gap-2">
@@ -17,7 +23,8 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                 </p>
             </div>
 
-            <RunAuditControls businessId={content.businessId} />
+            {/* Sync only drives the estimated surfaces; the audit below refreshes on load. */}
+            {areEstimatedAeoSurfacesEnabled() ? <RunAuditControls businessId={content.businessId} /> : null}
 
             <Card>
                 <CardHeader>
@@ -29,7 +36,8 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                         {content.businessName} · {content.businessAddress} · {content.googleAvgLive.toFixed(1)}/5 ·{" "}
                         {content.googleCountLive.toLocaleString()} reviews (visible in Zyene)
                         {" · "}
-                        Based on {content.measuredCount} measured checks.
+                        Scored on {content.measuredCount} of {content.audits.length} checks
+                        {unmeasured.length > 0 ? ` · ${unmeasured.length} not yet measured` : ""}.
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -42,7 +50,7 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                    {content.audits.map((a) => {
+                    {measured.map((a) => {
                         const fixAction = getAuditFixAction(a.id);
                         return (
                             <div
@@ -53,26 +61,12 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                                     <div className="flex flex-wrap items-center gap-2">
                                         {a.status === "pass" ? (
                                             <CheckCircle2 className="text-chart-2 size-4" />
-                                        ) : a.status === "fail" ? (
-                                            <XCircle className="text-sync-action size-4" />
                                         ) : (
-                                            <span className="inline-flex rounded-full border border-muted-foreground/40 size-4" />
+                                            <XCircle className="text-sync-action size-4" />
                                         )}
                                         <p className="font-medium">{a.label}</p>
-                                        <Badge
-                                            variant={
-                                                a.status === "pass"
-                                                    ? "secondary"
-                                                    : a.status === "fail"
-                                                      ? "destructive"
-                                                      : "outline"
-                                            }
-                                        >
-                                            {a.status === "pass"
-                                                ? "Pass"
-                                                : a.status === "fail"
-                                                  ? "Fail"
-                                                  : "Pending"}
+                                        <Badge variant={a.status === "pass" ? "secondary" : "destructive"}>
+                                            {a.status === "pass" ? "Pass" : "Fail"}
                                         </Badge>
                                     </div>
                                     <p className="text-xs text-muted-foreground mt-1">{a.detail}</p>
@@ -85,6 +79,26 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                     })}
                 </CardContent>
             </Card>
+
+            {unmeasured.length > 0 ? (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Not yet measured</CardTitle>
+                        <CardDescription>
+                            These checks are not implemented yet, so they are excluded from your score. They are
+                            listed here so the audit is not mistaken for full coverage.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        {unmeasured.map((a) => (
+                            <div key={a.id} className="flex items-center gap-2 rounded-lg border border-dashed p-3">
+                                <span className="border-muted-foreground/40 inline-flex size-4 shrink-0 rounded-full border" />
+                                <p className="text-muted-foreground text-sm">{a.label}</p>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            ) : null}
         </>
     );
 }
