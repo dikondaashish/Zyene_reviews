@@ -16,7 +16,7 @@
 |---|---|---|---|
 | AI Visibility (ChatGPT, Claude, Gemini, Grok, Llama, Perplexity) | We queried 6 AI engines and report whether you were found, and at what position | Calls **zero** AI engines. Compares your `average_rating` to the max competitor rating; if yours is higher, writes `found=true, position=2` for ChatGPT and `found=false` for the other five. Every run. | `google-seo-aeo-ai-visibility-worker.ts:56-80` |
 | Local Heatmap | Geo-grid rank tracking across your service area | Calls **zero** SERP or Maps APIs. Generates six labels by string-concatenating `city` (`North {city}`, `Downtown {city}`…) and derives rank from `21 - average_rating`, visibility from `100 - rank*4`. | `google-seo-aeo-heatmap-worker.ts:63-88` |
-| SEO/AEO Score | 11-point audit | Real, but 6 of 11 items are hard-coded `status: "pending"` and excluded from the score. Score is computed over 5 measured items only, and `services-list` is an admitted proxy (place action links standing in for services). | `google-seo-aeo-build-audits.ts:60-90` |
+| SEO/AEO Score | 11-point audit | Real, but **5 of 11** items are hard-coded `status: "pending"` and excluded from the score. Score is computed over **6 measured** items, one of which (`services-list`) is an admitted proxy — place action links standing in for a services list. | `google-seo-aeo-build-audits.ts:60-90` |
 
 Both cards do carry a "Beta estimate" line in the UI ("Beta estimate from internal scoring heuristics", "Beta estimated geo-grid"). That is weaker than it needs to be but it is not nothing. The real problem is that "beta" reads as *early*, not as *not measured*: nothing discloses that the figures are derived from the customer's own review rating, so when a rating moves and "AI visibility" moves with it, the user reads causation. Selling this as AI visibility tracking is a trust exposure, not just tech debt.
 
@@ -151,7 +151,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 | F5.7 | GSC indexation status join (indexed / discovered-not-indexed / excluded per URL) | P2 | M | Semrush; needs GSC OAuth (E-2) |
 | F5.8 | **Answerability audit**: question-form headings, direct-answer paragraph within N words, extractable lists/tables, chunk length, entity clarity, publish/update dates, author markup | P1 | M | Scrunch audits AI-readiness; this is the AEO analogue of an on-page audit and maps to our existing CORE-EEAT skill rubric |
 | F5.9 | `llms.txt` / AI-content-endpoint presence and validity | P3 | XS | Scrunch; low cost, emerging standard, good marketing |
-| F5.10 | GBP completeness audit — implement the 6 stubbed checks with real Google data: photo count/recency, post frequency, post keyword coverage, services list, service descriptions, service-area radius | P1 | M | Local-tool parity (BrightLocal/Semrush Local); removes six `pending` rows that currently make our own score look broken |
+| F5.10 | **GBP completeness audit — 5 stubs + 1 proxy replacement.** (a) Implement the 5 stubbed checks with real Google data: photo count/recency, post frequency, post keyword coverage, service descriptions, service-area radius. (b) **Replace the `services-list` proxy**, which today scores `actionLinkCount >= 25` — place action links standing in for a services list — with a real Google services check. (b) is not optional: it is already scored, so it will not surface as a `pending` row and cannot be found by "finish the stubs". Acceptance criterion #29 is not met while any proxy remains. | P1 | M | Local-tool parity (BrightLocal/Semrush Local); removes 5 `pending` rows and the one measured-but-indirect signal that inflates confidence in the score |
 | F5.11 | NAP consistency across major directories | P3 | L | Local-tool parity; large third-party data dependency |
 | F5.12 | Blocker severity triage: critical/high/medium with "this is why you are not being cited" linkage to affected prompts | P1 | S | Semrush and Ahrefs prioritize by severity; the linkage to prompts is ours |
 
@@ -600,6 +600,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 27. **PASS** if the crawler respects robots.txt `Disallow` for our own agent and never exceeds 1 req/s per host (verified in access logs).
 28. **PASS** if a crawl hitting the plan page cap reports `coverage: X of Y pages` in the UI rather than presenting partial results as complete.
 29. **PASS** if all 11 audit items return a real measured status — **zero** items with `status: "pending"` remain in the shipped UI.
+29a. **PASS** only if every scored item measures the thing its label names. Specifically, `services-list` must read the business's actual Google services, not `actionLinkCount`. **FAIL** while any audit is scored from a stand-in signal, even though such an item is not `pending` and so passes #29. This criterion exists because #29 alone cannot detect a proxy: the item is already scored, so finishing the stubs would leave it in place indefinitely.
 30. **PASS** if an SPA serving an empty `<body>` in raw HTML is flagged critical for AEO.
 
 ### F6.1, F6.2, F6.4–F6.6 — Content engine
@@ -697,7 +698,7 @@ Integrity remediation is complete. `pnpm typecheck` clean, 233/233 tests pass, `
 | Worker gating | `google-seo-aeo-ai-visibility-worker.ts`, `google-seo-aeo-heatmap-worker.ts` | When disabled, record the run as `disabled` with a reason and write **zero** result rows. When enabled, rows persist as `is_estimated = true` with no fabricated position or visibility score. |
 | Fan-out gating | `google-seo-aeo-sync-worker.ts` | Returns early when disabled rather than queueing two no-op runs. |
 | Server-action gating | `src/app/actions/google-seo-aeo.ts` | `runAiVisibilityAuditNow` / `runHeatmapAuditNow` were exported server actions with **no UI callers** — reachable endpoints that wrote fabricated rows. Now refused when disabled. |
-| Audit honesty | `google-seo-aeo-score-audit-section.tsx` | The 6 unimplemented checks no longer render beside real pass/fail rows with a "Fix" button (which implied we had measured them). They move to a "Not yet measured" section, and the score card reads "Scored on 5 of 11 checks · 6 not yet measured". |
+| Audit honesty | `google-seo-aeo-score-audit-section.tsx` | The **5** unimplemented checks no longer render beside real pass/fail rows with a "Fix" button (which implied we had measured them). They move to a "Not yet measured" section, and the score card reads **"Scored on 6 of 11 checks · 5 not yet measured"**. |
 | Sync button | `google-seo-aeo-score-audit-section.tsx` | Hidden when disabled — it only ever drove the estimated surfaces; the page audit recomputes on load. |
 | Dead code | all three workers, `google-seo-aeo-build-audits.ts` | Removed ~13 unused imports per worker plus 3 unused constants/helpers copied from the review sync worker. |
 | Regression test | `tests/unit/aeo-surfaces.test.ts` (new) | 11 cases pinning default-off, explicit-opt-in-only, and that the disclosure states its method rather than saying "beta". |
@@ -768,3 +769,117 @@ Deliberate sequencing, not an omission. The Vertex grounding fee is still unquot
 ### Next
 
 E-4 (schema for `aeo_prompts` / `aeo_runs` / `aeo_samples` / `aeo_citations`) and E-7 (Inngest fan-out) are both unblocked and can proceed in parallel against the fixture adapter.
+
+---
+
+## 12. Phase 1 log — E-4 sampling schema (2026-08-05)
+
+Migration written: `supabase/migrations/20260805230000_aeo_phase1_sampling_schema.sql`. Ten tables covering the prompt library, runs and samples, citations, brand mentions, competitor aliases, the real geo-grid, and the quota ledger.
+
+**Deliberately NOT applied to production.** The tables are empty and nothing reads them yet. Applying now would recreate exactly the gap we spent Phase 0 closing — schema live in production while the code that gives it meaning sits unmerged. It should be applied when E-5/E-7 are ready to ship, in the same release.
+
+Consequence: `database.types.ts` cannot be regenerated until the migration lands. It is on the never-hand-edit list, so any service touching these tables before then must not assume generated types exist.
+
+### Schema encodes the E-1 contract as database constraints
+
+Where `engine-types.ts` makes an error impossible in TypeScript, the schema makes the same error impossible in Postgres — so a bad write cannot enter through the service-role admin client or a manual query, neither of which passes through the TS contract.
+
+| Invariant | Constraint |
+|---|---|
+| Anything reaching a model records which one | `aeo_samples_model_id_required_unless_failed` |
+| A failure carries no answer payload | `aeo_samples_payload_only_when_ok` |
+| An answered sample declares citation availability | `aeo_samples_ok_declares_citations` |
+| Error detail belongs only to failures | `aeo_samples_error_kind_only_when_failed` / `_failed_requires_error_kind` |
+| A competitor mention resolves to a competitor | `aeo_brand_mentions_competitor_id_matches_kind` |
+| Billable never exceeds sampled | `aeo_quota_ledger_billable_within_sampled` |
+
+**`aeo_samples` has no brand-presence column at all.** Presence is extracted separately into `aeo_brand_mentions`, which carries its own `extraction_model_id` for provenance. This is the schema-level form of the rule that produced the pre-Phase-1 incident: nothing that writes raw engine output may also assert visibility.
+
+**Geo-grid ranks are nullable with `CHECK (rank_position >= 1)`.** NULL means "not found in the local pack" and must render as a distinct state; a sentinel of 0 or 20 would silently average into ATRP (QA criterion #9).
+
+### Validation method
+
+Executed the full DDL plus nine negative-path inserts inside a transaction rolled back against the production database — real FK targets, real `get_user_org_ids()`, real `businesses`/`competitors`/`organizations` tables. All nine constraint tests passed and zero `aeo_*` tables persisted, confirmed by a follow-up count.
+
+This is worth reusing: it validates a migration against production's actual schema without a branch, a local stack, or any write. Verify rollback works first with a throwaway probe table, since the technique is only safe if the transaction is genuinely honoured.
+
+### Not in this migration
+
+- `crawl_runs` / `crawl_pages` / `crawl_findings` — deferred to E-3, whose crawler defines their shape.
+- `aeo_alerts` — deferred to the P8 alerting build; its shape depends on the significance gate in F8.8.
+
+---
+
+## 13. Correction — audit check counts (2026-08-05)
+
+The plan stated throughout that the module had **5 measured and 6 pending** audit checks. It is **6 measured and 5 pending**. Verified against `origin/main`:
+
+| | Count | IDs |
+|---|---|---|
+| Total | 11 | — |
+| Hard-coded `status: "pending"` | **5** | `images`, `post-frequency`, `post-keywords`, `service-descriptions`, `service-area` |
+| Computed pass/fail | **6** | `business-description`, `review-frequency`, `google-rating`, `review-replies`, `profile-performance`, `services-list` |
+
+**Cause:** `services-list` computes a real pass/fail from `actionLinkCount >= 25`, but does so through an admitted proxy — Google place-action links standing in for a services list. The original §0.1 assessment recorded that caveat *and* counted the item as pending, so one check was represented twice.
+
+**Blast radius: prose only.** `buildGoogleSeoAeoAudits` derives `measuredCount` from `status !== "pending"` at runtime, and the UI partitions the same way, so the shipped score has always read "Scored on 6 of 11 checks · 5 not yet measured" — which is what production shows. No code, score, or customer-facing value was ever affected.
+
+The incorrect figure also appears in the merged commit message for `4fb1ab37` and in the body of PR #4. Both are immutable; this entry is the correction of record.
+
+**What this surfaced, and what was done about it.** `services-list` is scored but is not a real services audit — it counts place action links. That is a smaller instance of the problem Phase 0 addressed: a number that looks measured and is not quite.
+
+It was nearly left as a caveat with no owner. F5.10 was tagged P1 but scoped as *"implement the 6 stubbed checks"* — wrong count, and wrong in a way that mattered: `services-list` is **not** stubbed, so a task defined as "finish the stubs" would have shipped complete with the proxy untouched. QA criterion #29 ("zero `pending` items") had the same blind spot and would have passed.
+
+Both are fixed. F5.10 now explicitly carries "(b) replace the `services-list` proxy" as non-optional scope, and criterion **#29a** fails the audit while any item is scored from a stand-in signal. The proxy now has an owner and a test that can detect it, rather than a note in a document.
+
+---
+
+## 14. Migration/deploy ordering guard (2026-08-05)
+
+### The gap
+
+Applying a migration and deploying the code that needs it are **two separate manual acts** on this project, with nothing linking them. Verified, not assumed:
+
+| Path | Finding |
+|---|---|
+| `.github/workflows/ci.yml` | Only workflow. Steps are checkout → install → typecheck → colors → sizes → test → build. No database step. |
+| `package.json` lifecycle hooks | No `postinstall`, `prebuild`, `postbuild`, `prepare`. `build` is `next build --webpack`. |
+| Supabase CLI | **Not a dependency.** Only `@supabase/ssr` and `@supabase/supabase-js` client libraries — `supabase db push` cannot run in CI or on Vercel. |
+| `vercel.json` | No `buildCommand`/`installCommand`; only redirects and crons. |
+| `supabase/` | Contains `migrations/` only — no `config.toml`. |
+| Supabase GitHub integration | Not installed. Check-runs on the Phase 0 merge show only `github-actions :: validate` and a `Vercel` status; no Supabase app. |
+| Migration history after the Phase 0 merge | Unchanged — still tops out at `20260805200155`, which was applied by hand. A merge containing a migration produced no new rows. |
+
+Good property: nothing applies migrations behind our backs. Bad consequence: ordering is held together by whoever ships, and it already slipped once — `20260805200155` was live in production for hours before the code gating its columns reached `main`.
+
+### The guard — `scripts/check-migrations.mjs`
+
+Runs in CI on every PR as **Migration Guard**. Touches no database and runs no SQL. Two rules:
+
+1. **An already-applied migration may not be edited.** Its version is recorded in `supabase_migrations.schema_migrations` and will never replay, so an edit silently applies to fresh databases only. AGENTS.md has forbidden this since the repo started; nothing enforced it until now.
+2. **Every new migration must declare when it gets applied**, via a header line the file carries itself, so it survives a squash merge and sits where the next reader will find it:
+
+```sql
+-- apply-plan: with-code        -- same release as the code in this PR
+-- apply-plan: deferred         -- schema lands later, name the follow-up
+-- apply-plan: already-applied  -- applied out of band; say when and by what
+```
+
+This is a **declaration, not a restriction**. Migration-only PRs are legitimate — E-4 is one — but they have to say so out loud. The guard also prints an advisory when a migration claims `with-code` in a diff that changes nothing under `src/`, which is usually a mistake but is the reviewer's call, not the guard's.
+
+Verified against all three cases: passes on the E-4 migration with its plan, exits 1 on a new migration with no plan, exits 1 on an edit to `20260805200155`. `fetch-depth: 0` added to the CI checkout so the guard can diff against the base branch.
+
+### What the guard cannot catch — release checklist
+
+The guard sees a PR diff. It cannot see production. The actual Phase 0 drift — schema applied, code unmerged — is invisible to it, because at that moment the repo and the migration file agreed with each other.
+
+That check needs database access and stays manual. **Before and after any release containing a migration:**
+
+1. Read `supabase_migrations.schema_migrations` (Supabase MCP or dashboard).
+2. For every applied version, confirm its file exists on `origin/main`. **A version applied in production whose file is not yet on `main` is the drift condition** — schema is live, code is not.
+3. Apply migrations in the same window as the deploy that needs them, not ahead of it.
+4. Rename the local migration file to match the version the platform records if they differ. This repo already has drift of that kind: `20260421120000_google_seo_aeo_tables.sql` is registered remotely as `20260416033426`.
+
+A scripted version of step 2 is not currently buildable: it needs a direct Postgres connection, and no `DATABASE_URL` exists in `src/config/env.ts` — the app reaches Supabase over PostgREST, which does not expose the `supabase_migrations` schema. Worth revisiting if a connection string is ever added to CI secrets.
+
+**For E-4 specifically:** `20260805230000` declares `apply-plan: deferred`. Merging PR #5 must not apply it. It goes out with E-5/E-7.

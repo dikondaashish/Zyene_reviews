@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        # Full history so the migration guard can diff against the base branch.
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -32,6 +35,12 @@ jobs:
 
       - name: File Size Guard
         run: pnpm run check:sizes
+
+      # Does not run migrations and never touches a database. Blocks edits to
+      # already-applied migrations, and requires new ones to state when they
+      # get applied relative to the code that needs them.
+      - name: Migration Guard
+        run: pnpm run check:migrations
 
       - name: Test
         run: pnpm run test

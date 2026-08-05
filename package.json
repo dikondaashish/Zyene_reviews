@@ -9,6 +9,7 @@
     "lint": "eslint",
     "check:colors": "node scripts/check-color-guards.mjs",
     "check:sizes": "node scripts/check-file-sizes.mjs",
+    "check:migrations": "node scripts/check-migrations.mjs",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "typecheck": "tsc --noEmit",
