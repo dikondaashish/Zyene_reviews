@@ -625,7 +625,8 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 
 ### E-10 — Sampling scheduler (§4.5)
 
-49. **PASS** if, with 700 businesses enrolled at 15 prompts each, no single day's projected grounding prompts exceeds `ceil(total ÷ 7) × 1.15`. **FAIL** on any day carrying more than 15% above an even share.
+49. **PASS** if, with 700 businesses enrolled at 15 prompts each, (a) the busiest day's projected demand stays **inside the engine's free daily allowance**, and (b) no weekday's business count exceeds `mean + 3σ`.
+    *Revised 2026-08-05.* The original criterion demanded every day stay within 15% of an even share. For 700 ids across 7 days the per-day standard deviation is ~9.26, so a 15% bound sits at **1.62σ** and fails roughly one run in three however good the hash is — it specified tighter uniformity than hash-based assignment can deliver, and the only ways to meet it are a flaky suite or an assignment scheme where adding one business reshuffles everyone else. It also measured the wrong thing: at 1.30× the busiest day is 1,950 prompts against a 10,000/day allowance, so uniformity at that scale was never the cost risk. (a) is the assertion that protects money; (b) keeps the hash honest.
 50. **PASS** if a given business resolves to the identical `(day_of_week, hour)` slot across 10 consecutive scheduling runs. **FAIL** if slots reshuffle, since irregular sampling intervals corrupt every trend line.
 51. **PASS** if a projected day that would breach an engine's `freePerDay` allowance defers the excess runs and fires **zero** billable requests for that engine, unless an explicit per-org overage override is set.
 52. **PASS** if that override, when set, is recorded in the E-5 ledger with the org, engine, and unit count before the first billable call is made.
@@ -669,6 +670,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 | **Q2** | Pricing & gating | **Credit-metered add-on**, base allowance on Professional | E-5 + F4.9 locked into Phase 1. Meter by (prompt × engine × run) with **per-engine weighting**, not prompt count (§6.2 finding 3). Stripe metered-billing SKUs are a new Phase 1 dependency — not in the current `STRIPE_*` env set. |
 | **Q3** | Paid data budget & vendors | **Approved; vendors recommended in §6.1** | Primary: **DataForSEO** (standard queue, `load_async_ai_overview`, Maps `location_coordinate` for the grid). Secondary qualified behind E-1: **SerpApi**. Engines: Perplexity Sonar + OpenAI Responses/web_search + Vertex Gemini in Phase 1; Anthropic in Phase 2. **Vertex grounding quote received 2026-08-05** — 10,000 prompts/day free on 2.5 Pro, then $35/1,000; Gemini pinned to `gemini-2.5-pro` and unblocked (§6.4). DataForSEO, OpenAI and Perplexity rates remain list-price estimates pending contracts. |
 | **Q4** | Team & deadline | **2 senior fullstack + 0.5 design + 0.5 PM; Phase 1 in 12 weeks after Phase 0** | Roadmap in §5 stands unchanged. |
+| **Q6** | Customer notification for the simulated data | **No separate written notice** | The 5 affected accounts were contacted by phone and updated on 2026-08-05, the same day the gate shipped. Recorded as reported by the product owner; not independently verified from this side. Closes the last Phase 0 open item. See §9.1 for what this unblocks. |
 
 ### 9.2 Still open
 
@@ -677,7 +679,7 @@ Each of these changes the plan materially. Working assumptions are stated so the
 | # | Question | Working assumption | What changes if the answer differs |
 |---|---|---|---|
 | **Q5** | **AI crawler log analytics (F2.7) — how do we get customer server logs?** Cloudflare/Vercel log drain integration, a JS pixel, or a DNS/proxy product? | Deferred to Phase 2, integration route undecided | This is one of Profound's strongest differentiators; if it is a priority, it is a Phase 1 item and needs its own integration design (+L) |
-| **Q6** | **Do we proactively notify customers who saw the simulated AI-visibility/heatmap data?** | Silent remediation + relabel, no outbound notice | A proactive notice is the higher-trust path and I would recommend it if any customer has used those numbers in their own reporting — your call, and it affects Phase 0 comms |
+| ~~**Q6**~~ | ~~Do we proactively notify customers who saw the simulated AI-visibility/heatmap data?~~ | **DECIDED 2026-08-05** — see §9.1 | No separate written notice. The affected accounts were contacted by phone and updated the same day. |
 | **Q7** | **Does "Claude answers" in the brief mean the Claude consumer product, or Claude via API with web search?** Only the API path is compliant. | API with web search, clearly labeled | If the expectation is consumer-product parity, we must set expectations now — no vendor can legitimately deliver that |
 | **Q8** | **Is white-label (F7.5) needed for an agency motion at launch?** | No — Phase 3 | If agencies are a launch channel, F7.5 + F7.9 + F7.6 move to Phase 1 (+8 EW) |
 | **Q9** | **How much of this must work for multi-location orgs at launch?** Zyene supports multiple businesses per org. | Phase 1 is per-location; org rollup in Phase 2 | Org-level rollup at launch adds identity disambiguation and aggregation work (+M to L) |
@@ -883,3 +885,27 @@ That check needs database access and stays manual. **Before and after any releas
 A scripted version of step 2 is not currently buildable: it needs a direct Postgres connection, and no `DATABASE_URL` exists in `src/config/env.ts` — the app reaches Supabase over PostgREST, which does not expose the `supabase_migrations` schema. Worth revisiting if a connection string is ever added to CI secrets.
 
 **For E-4 specifically:** `20260805230000` declares `apply-plan: deferred`. Merging PR #5 must not apply it. It goes out with E-5/E-7.
+
+---
+
+## 9.1 Q6 closed — customer notification (2026-08-05)
+
+**Decision: no separate written notice.** The 5 affected accounts were contacted by phone and updated the same day the gate shipped. Recorded as reported by the product owner; not independently verified from the engineering side.
+
+This closes the last open Phase 0 item. Phase 0 is complete: gate shipped and verified in production, provenance columns applied, 112 rows marked, affected customers spoken to.
+
+### What this unblocks, and a recommendation against doing it
+
+§10 held the estimated rows as "marked, not deleted, pending the Q6 decision on customer notification. Purge is a one-line follow-up once that is settled." It is now settled, so the purge is actionable.
+
+**Recommendation: do not purge.** Keep the 112 rows.
+
+- They are the only record of what those 5 customers were shown. Now that a conversation has happened, that record is more useful, not less — if any question about it resurfaces, the underlying data should still exist.
+- They are already inert: `is_estimated = true`, excluded from every score, and the surfaces that rendered them are gated off.
+- Deleting them removes evidence to solve a problem that the gate already solved. The risk they posed was being *displayed as measurement*, and that risk is closed.
+
+Retention should instead be handled by the normal policy in Q10 (90 days Starter / 13 months Professional), which ages them out on the same schedule as everything else rather than as a special case.
+
+Reversing this later is trivial — a `DELETE ... WHERE is_estimated` is available whenever wanted. Reversing a purge is not.
+
+**Status: not purged, and no purge planned.** Flag it if you want them gone and it is a one-liner.
