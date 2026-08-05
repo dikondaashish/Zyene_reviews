@@ -831,3 +831,55 @@ The incorrect figure also appears in the merged commit message for `4fb1ab37` an
 It was nearly left as a caveat with no owner. F5.10 was tagged P1 but scoped as *"implement the 6 stubbed checks"* — wrong count, and wrong in a way that mattered: `services-list` is **not** stubbed, so a task defined as "finish the stubs" would have shipped complete with the proxy untouched. QA criterion #29 ("zero `pending` items") had the same blind spot and would have passed.
 
 Both are fixed. F5.10 now explicitly carries "(b) replace the `services-list` proxy" as non-optional scope, and criterion **#29a** fails the audit while any item is scored from a stand-in signal. The proxy now has an owner and a test that can detect it, rather than a note in a document.
+
+---
+
+## 14. Migration/deploy ordering guard (2026-08-05)
+
+### The gap
+
+Applying a migration and deploying the code that needs it are **two separate manual acts** on this project, with nothing linking them. Verified, not assumed:
+
+| Path | Finding |
+|---|---|
+| `.github/workflows/ci.yml` | Only workflow. Steps are checkout → install → typecheck → colors → sizes → test → build. No database step. |
+| `package.json` lifecycle hooks | No `postinstall`, `prebuild`, `postbuild`, `prepare`. `build` is `next build --webpack`. |
+| Supabase CLI | **Not a dependency.** Only `@supabase/ssr` and `@supabase/supabase-js` client libraries — `supabase db push` cannot run in CI or on Vercel. |
+| `vercel.json` | No `buildCommand`/`installCommand`; only redirects and crons. |
+| `supabase/` | Contains `migrations/` only — no `config.toml`. |
+| Supabase GitHub integration | Not installed. Check-runs on the Phase 0 merge show only `github-actions :: validate` and a `Vercel` status; no Supabase app. |
+| Migration history after the Phase 0 merge | Unchanged — still tops out at `20260805200155`, which was applied by hand. A merge containing a migration produced no new rows. |
+
+Good property: nothing applies migrations behind our backs. Bad consequence: ordering is held together by whoever ships, and it already slipped once — `20260805200155` was live in production for hours before the code gating its columns reached `main`.
+
+### The guard — `scripts/check-migrations.mjs`
+
+Runs in CI on every PR as **Migration Guard**. Touches no database and runs no SQL. Two rules:
+
+1. **An already-applied migration may not be edited.** Its version is recorded in `supabase_migrations.schema_migrations` and will never replay, so an edit silently applies to fresh databases only. AGENTS.md has forbidden this since the repo started; nothing enforced it until now.
+2. **Every new migration must declare when it gets applied**, via a header line the file carries itself, so it survives a squash merge and sits where the next reader will find it:
+
+```sql
+-- apply-plan: with-code        -- same release as the code in this PR
+-- apply-plan: deferred         -- schema lands later, name the follow-up
+-- apply-plan: already-applied  -- applied out of band; say when and by what
+```
+
+This is a **declaration, not a restriction**. Migration-only PRs are legitimate — E-4 is one — but they have to say so out loud. The guard also prints an advisory when a migration claims `with-code` in a diff that changes nothing under `src/`, which is usually a mistake but is the reviewer's call, not the guard's.
+
+Verified against all three cases: passes on the E-4 migration with its plan, exits 1 on a new migration with no plan, exits 1 on an edit to `20260805200155`. `fetch-depth: 0` added to the CI checkout so the guard can diff against the base branch.
+
+### What the guard cannot catch — release checklist
+
+The guard sees a PR diff. It cannot see production. The actual Phase 0 drift — schema applied, code unmerged — is invisible to it, because at that moment the repo and the migration file agreed with each other.
+
+That check needs database access and stays manual. **Before and after any release containing a migration:**
+
+1. Read `supabase_migrations.schema_migrations` (Supabase MCP or dashboard).
+2. For every applied version, confirm its file exists on `origin/main`. **A version applied in production whose file is not yet on `main` is the drift condition** — schema is live, code is not.
+3. Apply migrations in the same window as the deploy that needs them, not ahead of it.
+4. Rename the local migration file to match the version the platform records if they differ. This repo already has drift of that kind: `20260421120000_google_seo_aeo_tables.sql` is registered remotely as `20260416033426`.
+
+A scripted version of step 2 is not currently buildable: it needs a direct Postgres connection, and no `DATABASE_URL` exists in `src/config/env.ts` — the app reaches Supabase over PostgREST, which does not expose the `supabase_migrations` schema. Worth revisiting if a connection string is ever added to CI secrets.
+
+**For E-4 specifically:** `20260805230000` declares `apply-plan: deferred`. Merging PR #5 must not apply it. It goes out with E-5/E-7.

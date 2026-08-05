@@ -1,3 +1,8 @@
+-- apply-plan: deferred - applied alongside E-5/E-7, NOT on merge of this PR.
+--   The tables are empty and no code reads them. Applying on merge would put
+--   schema in production ahead of the code that gives it meaning, which is the
+--   drift this module already hit once with 20260805200155.
+--
 -- E-4: Phase 1 AEO sampling schema.
 --
 -- Mirrors the engine contract in src/services/aeo/engines/engine-types.ts. Where
