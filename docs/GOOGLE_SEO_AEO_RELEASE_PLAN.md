@@ -385,7 +385,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 
 **Do not mistake `REQUEST_SMOOTHING_DELAY_MS` for this.** `src/services/google/constants.ts` defines a 700 ms pause between paginated Google API calls inside a single sync (`sync-service/pagination.ts`). That is intra-request pacing against a per-minute rate limit. It has no effect on a per-*day* quota bucket and does not spread load across accounts or days. The retry jitter in `business-profile-core.ts` is likewise unrelated.
 
-**Why it is a billing control.** Gemini's grounding allowance is 10,000 prompts/day (§6.4). Spread across a week that covers ~4,600 Professional businesses at zero cost. Fire every account on the same day and the ceiling collapses by 7× to ~660, and everything past it bills at $35/1,000 — roughly **$3.50/business/month created purely by scheduling shape**, with no change in what the customer receives.
+**Why it is a billing control.** Gemini's grounding allowance is 10,000 prompts/day (§6.4). Spread across a week that covers **4,667** Professional businesses at zero cost (measured, §14.1). Fire every account on the same day and the ceiling collapses by 7× to 666. The cost is real well before that ceiling: at just **700 businesses**, smoothed sampling is **$0.00/day** and bursting the same work onto one day is **$17.50/day (~$525/month)** — identical output, purely a function of scheduling shape.
 
 **Requirements:**
 
@@ -524,7 +524,7 @@ Free-tier ceiling = `free_per_day × 7 ÷ prompts_per_business`, assuming weekly
 
 | Tier | Prompts/business | Businesses covered free (2.5 Pro) |
 |---|---|---|
-| Professional | 15 | **~4,600** |
+| Professional | 15 | **4,667** (measured) |
 | Modeled scenario | 25 | **~2,800** |
 | Starter | 5 | — (Gemini not included) |
 
@@ -537,7 +537,7 @@ Bursting every account into one day collapses that ceiling by 7×. This is now t
 | Professional (15 prompts × 3 engines weekly) | Yes | **~$2.82** | ~$4.92 | $59.99 |
 | Starter (5 prompts × Perplexity + AI Overview monthly) | **No** | ~$0.35 | ~$0.35 | $29.99 |
 
-**The §6.3 allowances hold unchanged.** Gemini does not need to come out of Professional — at 5–8% of plan revenue it is comfortable, and below ~4,600 Professional businesses the grounding line is $0.00. Gemini was never in Starter, and that call now has a sharper justification: at the $0.035 overage rate Gemini is **58× the DataForSEO AI Overview rate** ($0.0006/keyword), and for local intent AI Overview is the higher-traffic Google surface anyway. Starter gets the cheap Google surface; Professional gets both.
+**The §6.3 allowances hold unchanged.** Gemini does not need to come out of Professional — at 5–8% of plan revenue it is comfortable, and below 4,667 Professional businesses the grounding line is $0.00. Gemini was never in Starter, and that call now has a sharper justification: at the $0.035 overage rate Gemini is **58× the DataForSEO AI Overview rate** ($0.0006/keyword), and for local intent AI Overview is the higher-traffic Google surface anyway. Starter gets the cheap Google surface; Professional gets both.
 
 **Modelling requirement this creates:** a flat per-sample cost cannot express "free to N/day, then $X per 1,000" — assuming worst case would overstate Gemini COGS by 100% at current scale and wrongly argue for cutting it from Professional. `engine-catalog.ts` therefore carries `{ overageMicroUsd, freePerDay, confidence }` per engine, with `estimateDailyCostMicroUsd()` honouring the allowance.
 
@@ -909,3 +909,41 @@ Retention should instead be handled by the normal policy in Q10 (90 days Starter
 Reversing this later is trivial — a `DELETE ... WHERE is_estimated` is available whenever wanted. Reversing a purge is not.
 
 **Status: not purged, and no purge planned.** Flag it if you want them gone and it is a one-liner.
+
+---
+
+## 14.1 E-10 verification — 2026-08-05
+
+Both E-10 claims were verified against real numbers rather than asserted, and each verification is now backed by a regression test so it is enforced rather than documented.
+
+### Deterministic slots: same business, same weekly slot, every week
+
+| Check | Method | Result |
+|---|---|---|
+| No non-deterministic inputs | Audited `sampling-slot.ts` for `Math.random`, clock reads, `process.env`, crypto, process state | None present |
+| Stable across processes | Ran assignment for 5 fixed ids in **3 separate Node processes** | **1 distinct output** — identical every time |
+| Stable across restarts/deploys | Pinned golden value in the suite | Enforced |
+| **Recurs exactly weekly** | Walked **52 consecutive weeks × 3 businesses = 156 transitions**, spanning US spring-forward and fall-back | **0 violations** — every gap exactly 604,800,000 ms, same UTC weekday and hour |
+
+The weekly-cadence property was the gap: `assignSlot` being deterministic does not by itself guarantee it, because `nextRunAt` could drift an hour across a DST boundary and still return the "right" slot. Using `Date.UTC` and `getUTCDay` throughout makes it immune, and a 52-week test now covers it.
+
+### Budget guard vs. the written quote
+
+Ten scenarios computed by hand from the quote (10,000/day free, $35 per 1,000) and compared against the guard. **Zero mismatches.**
+
+| Scenario | Requested/day | Authorised | Guard | Hand |
+|---|---|---|---|---|
+| 700 businesses, smoothed | 1,500 | no | $0.00 | $0.00 |
+| 4,000 businesses, smoothed | 8,571 | no | $0.00 | $0.00 |
+| 4,667 businesses (at ceiling) | 10,000 | no | $0.00 | $0.00 |
+| 4,700 businesses (over) | 10,071 | no | $0.00 (71 deferred) | $0.00 |
+| 4,700 businesses (over), authorised | 10,071 | yes | $2.48 | $2.48 |
+| 700 businesses **all on one day** | 10,500 | no | $0.00 (500 deferred) | $0.00 |
+| 700 businesses all on one day, authorised | 10,500 | yes | **$17.50** | $17.50 |
+| 12,000 (2,000 over) | 12,000 | yes | $70.00 | $70.00 |
+
+**Free-tier ceiling measured at 4,667 businesses** (15 prompts, smoothed) → exactly 10,000/day; 4,668 breaches. The earlier "~4,600" was an estimate; this is computed.
+
+**The scheduling lever, priced at a scale we will actually reach:** at 700 businesses, smoothed costs **$0.00/day** and bursting costs **$17.50/day, ~$525/month** — for identical output. E-10 pays for itself long before the 4,667 ceiling.
+
+The regression tests declare `FREE_PER_DAY` and `USD_PER_1000` locally rather than importing them from `engine-catalog.ts`. A test that read the catalog would pass even if the catalog were edited to a wrong rate; these fail.

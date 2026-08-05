@@ -16,6 +16,20 @@ import {
 
 const ids = (n: number) => Array.from({ length: n }, () => randomUUID());
 
+/**
+ * Deterministic id fixtures. Slot assignment is deterministic, so any assertion
+ * about its distribution or cadence must be too — a randomUUID-driven spreading
+ * check is a coin toss, not a test.
+ */
+function seededIds(n: number, seed = 0x9e3779b9): string[] {
+    let s = seed >>> 0;
+    const hex = () => {
+        s = (Math.imul(s ^ (s >>> 15), 1 | s) + 0x6d2b79f5) >>> 0;
+        return (s >>> 0).toString(16).padStart(8, "0");
+    };
+    return Array.from({ length: n }, () => `${hex()}-${hex()}-${hex()}-${hex()}`);
+}
+
 describe("assignSlot — determinism (QA #50)", () => {
     it("returns the identical slot across repeated calls", () => {
         const id = randomUUID();
@@ -49,17 +63,6 @@ describe("assignSlot — determinism (QA #50)", () => {
 });
 
 describe("slot spreading (QA #49)", () => {
-    // Deterministic ids: a spreading assertion driven by randomUUID is a coin
-    // toss, not a test. Slot assignment is deterministic, so the fixture must be.
-    function seededIds(n: number, seed = 0x9e3779b9): string[] {
-        let s = seed >>> 0;
-        const hex = () => {
-            s = (Math.imul(s ^ (s >>> 15), 1 | s) + 0x6d2b79f5) >>> 0;
-            return (s >>> 0).toString(16).padStart(8, "0");
-        };
-        return Array.from({ length: n }, () => `${hex()}-${hex()}-${hex()}-${hex()}`);
-    }
-
     /**
      * Bound is 3σ, not an arbitrary "within 15%". For 700 ids across 7 days the
      * per-day standard deviation is ~9.26, so a 15% bound sits at 1.62σ and fails
@@ -129,6 +132,27 @@ describe("nextRunAt — enrolment without a thundering herd (QA #53)", () => {
         expect(withinTheMinute).toHaveLength(0);
     });
 
+    /**
+     * The literal requirement: same business, same weekly slot, EVERY week.
+     * Determinism of assignSlot alone does not give this — nextRunAt could drift
+     * by an hour across a DST boundary and still return the "right" slot. Walks a
+     * full year from before US spring-forward to past fall-back.
+     */
+    it("recurs exactly one week apart for a year, across DST boundaries", () => {
+        const WEEK_MS = 7 * 24 * 3600 * 1000;
+        for (const id of seededIds(5, 0x51071)) {
+            const slot = assignSlot(id);
+            let t = nextRunAt(slot, new Date("2026-03-01T00:00:00Z"));
+            for (let week = 0; week < 52; week += 1) {
+                const next = nextRunAt(slot, t);
+                expect(next.getTime() - t.getTime()).toBe(WEEK_MS);
+                expect(next.getUTCDay()).toBe(slot.dayOfWeek);
+                expect(next.getUTCHours()).toBe(slot.hour);
+                t = next;
+            }
+        }
+    });
+
     it("rolls to next week when the slot has already passed today", () => {
         const slot = { dayOfWeek: 3, hour: 2 };
         const justAfter = new Date("2026-08-05T02:00:01Z"); // a Wednesday
@@ -187,6 +211,59 @@ describe("daily budget guard", () => {
     it("clamps negative and fractional demand", () => {
         expect(planEngineBudget({ engineId: "gemini", requestedSamples: -5 }).requested).toBe(0);
         expect(planEngineBudget({ engineId: "gemini", requestedSamples: 3.7 }).requested).toBe(3);
+    });
+});
+
+/**
+ * Cross-checks the guard against the written Vertex quote using constants
+ * declared here, independently of engine-catalog.ts. If the catalog is ever
+ * edited to a wrong rate, these fail — a test that read the catalog would not.
+ */
+describe("budget guard vs. the quote (real numbers)", () => {
+    const FREE_PER_DAY = 10_000;
+    const USD_PER_1000 = 35;
+    const PROMPTS = 15; // Professional tier
+    const perDay = (businesses: number) => Math.floor((businesses * PROMPTS) / 7);
+
+    function usd(requested: number, authorised: boolean): number {
+        const o = planEngineBudget(
+            { engineId: "gemini", requestedSamples: requested },
+            { overageAuthorised: authorised }
+        );
+        return o.costMicroUsd / 1_000_000;
+    }
+
+    it.each([
+        [700, false, 0],
+        [4_000, false, 0],
+        [4_667, false, 0],
+        [4_700, false, 0], // excess deferred, nothing billed
+    ])("smoothed %i businesses, authorised=%s costs $%d", (businesses, auth, expected) => {
+        expect(usd(perDay(businesses), auth)).toBeCloseTo(expected, 9);
+    });
+
+    it("bills the authorised excess at exactly $35 per 1,000", () => {
+        for (const requested of [10_001, 10_500, 12_000, 20_000]) {
+            const hand = ((requested - FREE_PER_DAY) / 1000) * USD_PER_1000;
+            expect(usd(requested, true)).toBeCloseTo(hand, 9);
+        }
+    });
+
+    it("puts the free-tier ceiling at 4,667 businesses", () => {
+        expect(perDay(4_667)).toBe(FREE_PER_DAY);
+        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(4_667) }).reason).toBe(
+            "within_free_allowance"
+        );
+        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(4_668) }).reason).toBe(
+            "deferred_to_protect_allowance"
+        );
+    });
+
+    it("prices the cost of bursting 700 businesses onto one day", () => {
+        // Smoothed this is free; bunched it is $17.50/day, ~$525/month, for
+        // identical work. This is the number E-10 exists to avoid paying.
+        expect(usd(perDay(700), false)).toBe(0);
+        expect(usd(700 * PROMPTS, true)).toBeCloseTo(17.5, 9);
     });
 });
 
