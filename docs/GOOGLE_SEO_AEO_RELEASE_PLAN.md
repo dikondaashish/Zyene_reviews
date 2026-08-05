@@ -359,6 +359,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 | E-7 | Inngest fan-out orchestration (run → per-engine → per-prompt steps with independent retry, concurrency limits, partial-failure semantics) | P1 | M |
 | E-8 | Raw-answer object storage (Supabase Storage) — answers are large; store payloads out-of-row with DB pointers | P1 | S |
 | E-9 | Stripe metered billing + credit-pack SKUs for the add-on (Q2 decision); no metered price ids exist in the current `STRIPE_*` env set | P1 | M |
+| E-10 | **Sampling scheduler — weekly smoothing + daily budget guard.** Assigns each business a deterministic sampling slot and refuses to exceed a vendor's free daily allowance without an explicit override. Split out of E-7 on 2026-08-05: it is a billing control, not an orchestration detail. See §4.5. | **P1** | **M** |
 
 ### 4.3 Scalability
 
@@ -378,6 +379,23 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 | Google OAuth scope expansion (GSC) | Verification delay blocks Phase 1 | Submit scope change in week 1, before the code is ready |
 | Gemini extraction drift | Silent accuracy regression | E-6 eval harness gates every prompt/model change in CI |
 
+### 4.5 E-10 — Sampling scheduler (weekly smoothing + daily budget guard)
+
+**Status as of 2026-08-05: unbuilt, and nothing in the repo approximates it.** `src/services/aeo/` contains only `engines/`. There are no cron-scheduled Inngest functions anywhere in the codebase; scheduling today is two Vercel crons hitting digest endpoints. Promoted here from "documented risk" to a Phase 1 build item.
+
+**Do not mistake `REQUEST_SMOOTHING_DELAY_MS` for this.** `src/services/google/constants.ts` defines a 700 ms pause between paginated Google API calls inside a single sync (`sync-service/pagination.ts`). That is intra-request pacing against a per-minute rate limit. It has no effect on a per-*day* quota bucket and does not spread load across accounts or days. The retry jitter in `business-profile-core.ts` is likewise unrelated.
+
+**Why it is a billing control.** Gemini's grounding allowance is 10,000 prompts/day (§6.4). Spread across a week that covers ~4,600 Professional businesses at zero cost. Fire every account on the same day and the ceiling collapses by 7× to ~660, and everything past it bills at $35/1,000 — roughly **$3.50/business/month created purely by scheduling shape**, with no change in what the customer receives.
+
+**Requirements:**
+
+1. **Deterministic slot assignment.** Each business gets a stable `(day_of_week, hour)` slot derived from a hash of `business_id`. Stability matters beyond load spreading: a business that drifts between slots is sampled at irregular intervals (6 days one week, 8 the next), which injects noise into every trend line and into the F8.8 significance gate. Same business, same slot, every week.
+2. **Daily budget guard.** Before dispatch, project the day's billable units per engine via `estimateDailyCostMicroUsd()`. If a free allowance would be breached, defer the lowest-priority runs to the next slot rather than silently paying overage. Paying is allowed, but only behind an explicit per-org override that the E-5 ledger records.
+3. **Enrolment without a thundering herd.** A newly connected business must be assigned a slot and wait for it, not run immediately and then drift. Backfill/first-run is a separate, rate-limited path.
+4. **Rebalancing.** Slot distribution must be re-checkable as the account base grows, with a migration path that does not reshuffle every existing business at once.
+
+**Interaction with E-5 and E-7.** E-7 owns fan-out, retry and partial-failure semantics *within* a run. E-10 owns *when* a run fires and whether it may fire at all today. E-5 is the ledger both write to. Keeping them separate is deliberate — folding the budget guard into orchestration is what would let a scheduling change quietly become a billing change.
+
 ---
 
 ## 5. Prioritized roadmap
@@ -394,7 +412,7 @@ Assumes **2 senior fullstack engineers + 1 designer (0.5) + 1 PM (0.5)**. Effort
 | Audit marketing/sales collateral for claims this page cannot back | XS |
 | Kick off Google OAuth scope change for GSC (long lead time) | XS |
 
-### Phase 1 — Usable at launch (Week 3–14 · ~44 EW)
+### Phase 1 — Usable at launch (Week 3–14 · ~46 EW)
 
 | Item | Effort | Notes |
 |---|---|---|
@@ -404,6 +422,7 @@ Assumes **2 senior fullstack engineers + 1 designer (0.5) + 1 PM (0.5)**. Effort
 | E-8 raw answer storage | S | |
 | E-5 quota & cost ledger (per-engine weighted) | M | Must land before any paid engine goes live |
 | E-9 Stripe metered billing + credit packs | M | Q2 decision; new SKUs required |
+| **E-10 sampling scheduler (weekly smoothing + daily budget guard)** | **M** | **Critical path — gates any paid engine going live (§4.5)** |
 | E-6 extraction eval harness | M | |
 | F1.1 run orchestrator | L | |
 | F1.5–F1.7 ChatGPT / Perplexity / Gemini sampling | M+S+S | |
@@ -509,7 +528,7 @@ Free-tier ceiling = `free_per_day × 7 ÷ prompts_per_business`, assuming weekly
 | Modeled scenario | 25 | **~2,800** |
 | Starter | 5 | — (Gemini not included) |
 
-Bursting every account into one day collapses that ceiling by 7×. E-7's run smoothing was already required for vendor rate limits; it is now worth ~$3.50/business/month at scale and should be treated as a billing control, not just a politeness measure.
+Bursting every account into one day collapses that ceiling by 7×. This is now tracked as **E-10** (§4.5), a Phase 1 critical-path item with its own acceptance criteria, rather than an assumed property of E-7. Nothing in the repo currently implements it.
 
 **Effect on the tier allowances in §6.3:**
 
@@ -603,6 +622,15 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 43. **PASS** if the same alert type for the same entity does not fire twice within its cooldown window.
 44. **PASS** if every alert email contains a deep link to the evidence (the specific prompt/engine/answer that changed).
 
+### E-10 — Sampling scheduler (§4.5)
+
+49. **PASS** if, with 700 businesses enrolled at 15 prompts each, no single day's projected grounding prompts exceeds `ceil(total ÷ 7) × 1.15`. **FAIL** on any day carrying more than 15% above an even share.
+50. **PASS** if a given business resolves to the identical `(day_of_week, hour)` slot across 10 consecutive scheduling runs. **FAIL** if slots reshuffle, since irregular sampling intervals corrupt every trend line.
+51. **PASS** if a projected day that would breach an engine's `freePerDay` allowance defers the excess runs and fires **zero** billable requests for that engine, unless an explicit per-org overage override is set.
+52. **PASS** if that override, when set, is recorded in the E-5 ledger with the org, engine, and unit count before the first billable call is made.
+53. **PASS** if a newly connected business is assigned a slot and waits for it, rather than dispatching immediately — verified by enrolling 50 businesses in one minute and observing zero same-minute sampling runs.
+54. **PASS** if `estimateDailyCostMicroUsd()` projections match actual ledger-recorded consumption for a full simulated week within ±5%.
+
 ### Cross-cutting
 45. **PASS** if `pnpm typecheck && pnpm test && pnpm build` succeed with zero `any` and zero new ESLint suppressions in module code.
 46. **PASS** if all new tables have RLS enabled with org-scoped policies, verified by a cross-org access test that must return zero rows.
@@ -616,7 +644,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 | # | Risk | Severity | Mitigation |
 |---|---|---|---|
 | R1 | **Existing fabricated data has already been shown to paying customers** and possibly cited in our own marketing | Critical | Phase 0 remediation; audit collateral; decide on customer notification (Q6) |
-| R2 | **Unit economics** (§6) — resolved to metered add-on; Gemini grounding rate now confirmed | Medium | Metered add-on decided (Q2); E-5 + E-9 remain Phase 1 gates. Gemini priced and unblocked (§6.4). **Residual risk moved to scheduling**: the free grounding allowance is a daily bucket, so bursty run scheduling silently converts a $0 line into ~$3.50/business/month. E-7 smoothing is now a billing control. |
+| R2 | **Unit economics** (§6) — resolved to metered add-on; Gemini grounding rate now confirmed | Medium | Metered add-on decided (Q2); E-5 + E-9 remain Phase 1 gates. Gemini priced and unblocked (§6.4). Scheduling exposure **promoted out of this row into E-10** (§4.5) on 2026-08-05 — it is now a tracked build item on the Phase 1 critical path with its own acceptance criteria (#49–54), not a risk we are carrying. |
 | R3 | LLM API answers ≠ what consumers see in ChatGPT/Gemini apps (no memory, no personalization, different retrieval) | High | Disclose in F7.10; market as "engine sampling", never "what your customer saw"; never automate consumer UIs (ToS) |
 | R4 | Sampling noise generates false alerts and destroys trust a second time | High | F1.13 repeat sampling + F8.8 significance gating, both required before alerts go live |
 | R5 | SERP/AIO vendor concentration (price hike, shutdown, blocking) | High | E-1 adapter abstraction; qualify a second vendor pre-GA |
