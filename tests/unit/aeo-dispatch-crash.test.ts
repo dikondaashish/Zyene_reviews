@@ -79,7 +79,13 @@ class MemoryReservations implements ReservationStore {
     async reserve(req: ReserveRequest): Promise<ReserveOutcome> {
         const existing = [...this.rows.values()].find((r) => r.key === req.idempotencyKey);
         if (existing) {
-            return { kind: "existing", reservationId: existing.id, grantedUnits: existing.units, dispatchedAt: null };
+            return {
+                kind: "existing",
+                reservationId: existing.id,
+                grantedUnits: existing.units,
+                dispatchedAt: existing.dispatchAttempts > 0 ? "recorded" : null,
+                alreadySettled: existing.state !== "reserved",
+            };
         }
         const consumed = [...this.rows.values()].reduce(
             (s, r) => s + (r.state === "reserved" ? r.units : r.settledUnits + r.overrunUnits),
@@ -294,6 +300,61 @@ describe("permanent failure leaves a recoverable state", () => {
         // nothing can have been billed, and the sweeper simply returns the units.
         expect([...h.reservations.rows.values()][0].dispatchAttempts).toBe(0);
         expect(h.adapter.calls).toHaveLength(0);
+    });
+});
+
+describe("a re-delivered event for finished work", () => {
+    /**
+     * Found by the end-to-end smoke test against the real schema, not by
+     * reasoning: an Inngest event can be re-delivered or replayed by hand after
+     * its function already completed. The reservation then comes back
+     * `existing` AND terminal.
+     *
+     * Treating that like a fresh grant calls the vendor a SECOND time for an
+     * answer already stored, and then throws settling a closed reservation —
+     * money spent plus a failure. The unit is finished; the only correct action
+     * is to do nothing.
+     *
+     * Distinct from a mid-flight retry, where the reservation is still open and
+     * the work does need finishing. The state, not the mere existence of the
+     * row, is what separates them.
+     */
+    async function runTwice() {
+        const adapter = new FixtureEngineAdapter({ id: "gemini", modelId: "gemini-2.5-pro" });
+        const reservations = new MemoryReservations();
+        const samples = new MemorySamples();
+        const once = () =>
+            new FakeInngest().run((step) =>
+                dispatchUnit(INPUT, { step, adapter, reservations, samples })
+            );
+        const first = await once();
+        const second = await once();
+        return { first, second, adapter, reservations, samples };
+    }
+
+    it("does not call the engine again", async () => {
+        const { adapter } = await runTwice();
+        expect(adapter.calls).toHaveLength(1);
+    });
+
+    it("reports the unit as already settled rather than throwing", async () => {
+        const { first, second } = await runTwice();
+        expect(first.kind).toBe("sampled");
+        expect(second).toEqual({ kind: "skipped", reason: "already_settled" });
+    });
+
+    it("leaves exactly one reservation and one sample", async () => {
+        const { reservations, samples } = await runTwice();
+        expect(reservations.rows.size).toBe(1);
+        expect(samples.persisted).toHaveLength(1);
+    });
+
+    it("does not settle the reservation twice", async () => {
+        const { reservations } = await runTwice();
+        const row = [...reservations.rows.values()][0];
+        expect(row.state).toBe("settled");
+        expect(row.settledUnits).toBe(0); // fixture consumes nothing
+        expect(row.costMicroUsd).toBe(0);
     });
 });
 

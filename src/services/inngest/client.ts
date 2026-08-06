@@ -130,6 +130,45 @@ type MarketingNurtureStartEvent = {
     };
 };
 
+/**
+ * E-7 sampling. The parent plans and fans out; one child runs each unit.
+ *
+ * Per-unit children rather than one function looping every prompt x engine:
+ * retry isolation is then per dispatch, and the granularity matches the
+ * idempotency key exactly, so one poisoned engine cannot force a whole run to
+ * be re-attempted — which for a paid engine would mean re-paying for the units
+ * that already succeeded.
+ */
+type AeoRunRequestedEvent = {
+    data: {
+        businessId: string;
+        organizationId: string;
+        trigger: "scheduled" | "manual" | "backfill";
+        /** The E-10 slot this run came from, for smoothing audits. */
+        scheduledFor?: string;
+        engineIds?: string[];
+        attemptsPerPrompt?: number;
+        /** Recorded before the first billable call, never inferred after. */
+        overageAuthorised?: boolean;
+    };
+};
+
+type AeoDispatchRequestedEvent = {
+    data: {
+        runId: string;
+        businessId: string;
+        organizationId: string;
+        promptId: string;
+        promptText: string;
+        engineId: string;
+        attempt: number;
+        locale: { country: string; language: string; city?: string };
+        usageDate: string;
+        overageAuthorised: boolean;
+        requestedUnits: number;
+    };
+};
+
 type Events = {
     "campaign/send.contact": CampaignSendEvent;
     "review/analyze.batch": AnalysisBatchEvent;
@@ -147,6 +186,8 @@ type Events = {
     "growth/onboarding-drip.start": OnboardingDripStartEvent;
     "growth/winback.start": WinbackStartEvent;
     "growth/marketing-nurture.start": MarketingNurtureStartEvent;
+    "aeo/run.requested": AeoRunRequestedEvent;
+    "aeo/dispatch.requested": AeoDispatchRequestedEvent;
 };
 
 // Create a client to send and receive events

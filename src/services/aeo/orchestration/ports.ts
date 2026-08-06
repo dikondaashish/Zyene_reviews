@@ -1,4 +1,4 @@
-import type { AnswerEngineId, EngineSampleResult } from "../engines/engine-types";
+import type { AnswerEngineId, EngineLocale, EngineSampleResult } from "../engines/engine-types";
 
 /**
  * E-7 ports. Orchestration talks to these, never to Supabase directly, so the
@@ -19,7 +19,21 @@ export type ReserveOutcome =
      * This idempotency key already has a reservation. Returned on an Inngest step
      * retry — the decisive signal that we must not open a second one.
      */
-    | { kind: "existing"; reservationId: string; grantedUnits: number; dispatchedAt: string | null };
+    | {
+          kind: "existing";
+          reservationId: string;
+          grantedUnits: number;
+          dispatchedAt: string | null;
+          /**
+           * The reservation already reached a terminal state, so this unit is
+           * finished. The caller MUST NOT call the engine again: a re-delivered
+           * event would otherwise pay the vendor a second time for work whose
+           * result is already stored, and then fail trying to settle a closed
+           * reservation. Distinct from a mid-flight retry, where the reservation
+           * is still open and the work genuinely does need finishing.
+           */
+          alreadySettled: boolean;
+      };
 
 export type ReserveRequest = {
     idempotencyKey: string;
@@ -69,6 +83,36 @@ export interface ReservationStore {
     ): Promise<void>;
 
     release(reservationId: string, at: string): Promise<void>;
+}
+
+export type RunStatus = "running" | "success" | "partial" | "failed" | "deferred";
+
+export interface RunStore {
+    /** Active prompts only. A `suggested` prompt is inert until a human enables it. */
+    loadActivePrompts(businessId: string): Promise<
+        { promptId: string; promptText: string; locale: EngineLocale }[]
+    >;
+
+    /**
+     * Units already consumed today per engine, read from settled + in-flight
+     * reservations. Feeds the planner's projection only — the binding decision
+     * is made per unit inside aeo_reserve_quota.
+     */
+    consumedTodayByEngine(
+        organizationId: string,
+        usageDate: string
+    ): Promise<Partial<Record<AnswerEngineId, number>>>;
+
+    createRun(input: {
+        businessId: string;
+        trigger: "scheduled" | "manual" | "backfill";
+        scheduledFor: string | null;
+    }): Promise<{ runId: string }>;
+
+    completeRun(
+        runId: string,
+        outcome: { status: RunStatus; errorMessage: string | null; at: string }
+    ): Promise<void>;
 }
 
 export interface SampleStore {

@@ -84,6 +84,17 @@ export async function dispatchUnit(
         return { kind: "deferred", deferredUnits: reservation.deferredUnits };
     }
 
+    // A closed reservation means this exact unit already ran to completion. Its
+    // sample is stored and its units are accounted for, so there is nothing left
+    // to do — and calling the engine again would pay the vendor a second time
+    // for an answer we already have, then fail trying to settle a closed row.
+    //
+    // This is NOT the mid-flight retry case: there the reservation is still
+    // `reserved`, and the work genuinely does need finishing.
+    if (reservation.kind === "existing" && reservation.alreadySettled) {
+        return { kind: "skipped", reason: "already_settled" };
+    }
+
     const reservationId = reservation.reservationId;
 
     // STEP 2 — mark intent, then call, INSIDE ONE STEP.
