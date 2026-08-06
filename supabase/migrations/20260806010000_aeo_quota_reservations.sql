@@ -62,6 +62,21 @@ CREATE TABLE IF NOT EXISTS public.aeo_quota_reservations (
   overage_authorised BOOLEAN NOT NULL DEFAULT FALSE,
 
   /*
+   * Set immediately before the engine is called, and incremented on every
+   * attempt. A crash inside the call step re-runs that step, and we cannot know
+   * whether the first request was billed — ordering cannot close that window.
+   * This makes the retry VISIBLE instead of silent: dispatch_attempts > 1 means
+   * a duplicate charge is possible for this reservation.
+   *
+   * The increment deliberately lives inside the call step rather than a step of
+   * its own. A completed Inngest step is memoized and replayed, so a separate
+   * marker step would report 1 attempt forever and hide the very duplicate it
+   * exists to expose.
+   */
+  dispatched_at TIMESTAMPTZ,
+  dispatch_attempts INTEGER NOT NULL DEFAULT 0 CHECK (dispatch_attempts >= 0),
+
+  /*
    * Two different quantities, deliberately not one column.
    *
    * settled_units is what the engine actually consumed against the vendor's
@@ -110,7 +125,11 @@ CREATE TABLE IF NOT EXISTS public.aeo_quota_reservations (
   /* Money and billable units agree. Note this is deliberately NOT tied to
    * settled_units: consumption inside a free allowance is units without cost. */
   CONSTRAINT aeo_quota_reservations_cost_requires_billable_units
-    CHECK ((billable_units = 0) = (cost_micro_usd = 0))
+    CHECK ((billable_units = 0) = (cost_micro_usd = 0)),
+
+  /* A counted attempt must have a timestamp, and vice versa. */
+  CONSTRAINT aeo_quota_reservations_dispatch_fields_agree
+    CHECK ((dispatch_attempts = 0) = (dispatched_at IS NULL))
 );
 
 /* The guard's hot read: what has this org consumed for this engine today. */
@@ -141,3 +160,163 @@ COMMENT ON COLUMN public.aeo_quota_reservations.idempotency_key IS
  */
 COMMENT ON TABLE public.aeo_quota_ledger IS
   'Derived daily rollup of aeo_quota_reservations, for fast reads and billing export. Not the source of truth — must be rebuildable from reservations, never written independently.';
+
+-- ---------------------------------------------------------------------------
+-- Atomic reservation. This is the only sanctioned way to claim quota.
+-- ---------------------------------------------------------------------------
+--
+-- The in-process budget guard (E-10, planEngineBudget) is ADVISORY. It cannot
+-- serialize anything: two dispatch workers both read the same remaining balance
+-- and both proceed, and the allowance is silently overspent. The insert has to
+-- be the serialization point, so the allowance decision and the row are written
+-- together under one lock.
+--
+-- The lock is keyed on (organization, engine, day), which is exactly the grain
+-- of a free daily bucket. Two different engines, or two different orgs, do not
+-- block each other.
+
+CREATE OR REPLACE FUNCTION public.aeo_reserve_quota(
+  p_idempotency_key TEXT,
+  p_organization_id UUID,
+  p_engine_id TEXT,
+  p_usage_date DATE,
+  p_requested_units INTEGER,
+  p_free_per_day INTEGER,
+  p_overage_authorised BOOLEAN,
+  p_run_id UUID DEFAULT NULL
+)
+RETURNS TABLE (
+  outcome TEXT,
+  reservation_id UUID,
+  granted_units INTEGER,
+  deferred_units INTEGER,
+  billable_units INTEGER,
+  dispatch_attempts INTEGER
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $fn$
+DECLARE
+  v_existing public.aeo_quota_reservations%ROWTYPE;
+  v_consumed INTEGER;
+  v_remaining INTEGER;
+  v_grant INTEGER;
+  v_billable INTEGER;
+  v_id UUID;
+BEGIN
+  -- Transaction-scoped: held until this statement's transaction commits, so the
+  -- read of current consumption and the insert cannot be interleaved.
+  PERFORM pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended(
+      p_organization_id::text || ':' || p_engine_id || ':' || p_usage_date::text, 0
+    )
+  );
+
+  -- An Inngest step retry must resolve to the reservation it already made,
+  -- never open a second one.
+  SELECT * INTO v_existing
+  FROM public.aeo_quota_reservations
+  WHERE idempotency_key = p_idempotency_key;
+
+  IF FOUND THEN
+    RETURN QUERY SELECT 'existing'::TEXT, v_existing.id, v_existing.reserved_units,
+                        0, 0, v_existing.dispatch_attempts;
+    RETURN;
+  END IF;
+
+  -- No free bucket to protect: the engine bills from the first request by
+  -- design. Affordability is the ledger's concern, not this guard's — blocking
+  -- here would stop the product rather than protect it.
+  IF p_free_per_day <= 0 THEN
+    INSERT INTO public.aeo_quota_reservations
+      (idempotency_key, organization_id, run_id, engine_id, usage_date, reserved_units, overage_authorised)
+    VALUES
+      (p_idempotency_key, p_organization_id, p_run_id, p_engine_id, p_usage_date, p_requested_units, p_overage_authorised)
+    RETURNING id INTO v_id;
+    RETURN QUERY SELECT 'granted'::TEXT, v_id, p_requested_units, 0, p_requested_units, 0;
+    RETURN;
+  END IF;
+
+  -- Open claims count at full value; settled ones at what they actually used.
+  -- Released and expired contribute nothing, which is how swept work returns.
+  SELECT COALESCE(SUM(
+    CASE WHEN state = 'reserved' THEN reserved_units
+         WHEN state = 'settled'  THEN settled_units
+         ELSE 0 END
+  ), 0)
+  INTO v_consumed
+  FROM public.aeo_quota_reservations
+  WHERE organization_id = p_organization_id
+    AND engine_id = p_engine_id
+    AND usage_date = p_usage_date;
+
+  v_remaining := GREATEST(0, p_free_per_day - v_consumed);
+
+  IF p_requested_units <= v_remaining THEN
+    v_grant := p_requested_units; v_billable := 0;
+  ELSIF p_overage_authorised THEN
+    v_grant := p_requested_units; v_billable := p_requested_units - v_remaining;
+  ELSE
+    -- Clip to the allowance and bill nothing. Never "run it and record the
+    -- cost": an unauthorised charge cannot be undone once the request is sent.
+    v_grant := v_remaining; v_billable := 0;
+  END IF;
+
+  IF v_grant <= 0 THEN
+    RETURN QUERY SELECT 'deferred'::TEXT, NULL::UUID, 0, p_requested_units, 0, 0;
+    RETURN;
+  END IF;
+
+  INSERT INTO public.aeo_quota_reservations
+    (idempotency_key, organization_id, run_id, engine_id, usage_date, reserved_units, overage_authorised)
+  VALUES
+    (p_idempotency_key, p_organization_id, p_run_id, p_engine_id, p_usage_date, v_grant, p_overage_authorised)
+  RETURNING id INTO v_id;
+
+  RETURN QUERY SELECT
+    (CASE WHEN v_grant < p_requested_units THEN 'partial' ELSE 'granted' END)::TEXT,
+    v_id, v_grant, p_requested_units - v_grant, v_billable, 0;
+END;
+$fn$;
+
+-- ---------------------------------------------------------------------------
+-- Atomic dispatch marker.
+-- ---------------------------------------------------------------------------
+-- A read-then-write from the application would lose increments under retry.
+-- UPDATE ... RETURNING is atomic on its own and needs no lock.
+
+CREATE OR REPLACE FUNCTION public.aeo_mark_dispatched(
+  p_reservation_id UUID,
+  p_at TIMESTAMPTZ
+)
+RETURNS INTEGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $fn$
+DECLARE v_attempts INTEGER;
+BEGIN
+  UPDATE public.aeo_quota_reservations
+  SET dispatch_attempts = dispatch_attempts + 1,
+      dispatched_at = COALESCE(dispatched_at, p_at)
+  WHERE id = p_reservation_id
+  RETURNING dispatch_attempts INTO v_attempts;
+
+  IF v_attempts IS NULL THEN
+    RAISE EXCEPTION 'No reservation % to dispatch', p_reservation_id;
+  END IF;
+  RETURN v_attempts;
+END;
+$fn$;
+
+-- Service role only. These move money; nothing reachable from a browser session
+-- should be able to call them. Matches the hardening in 20260804162339.
+REVOKE EXECUTE ON FUNCTION public.aeo_reserve_quota(TEXT, UUID, TEXT, DATE, INTEGER, INTEGER, BOOLEAN, UUID)
+  FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.aeo_mark_dispatched(UUID, TIMESTAMPTZ)
+  FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.aeo_reserve_quota(TEXT, UUID, TEXT, DATE, INTEGER, INTEGER, BOOLEAN, UUID)
+  TO service_role;
+GRANT EXECUTE ON FUNCTION public.aeo_mark_dispatched(UUID, TIMESTAMPTZ)
+  TO service_role;
