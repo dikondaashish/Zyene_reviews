@@ -16,6 +16,9 @@ import { dispatchUnit } from "../src/services/aeo/orchestration/dispatch-unit";
 import { SupabaseReservationStore } from "../src/services/aeo/orchestration/supabase-reservation-store";
 import { SupabaseRunStore } from "../src/services/aeo/orchestration/supabase-run-store";
 import { SupabaseSampleStore } from "../src/services/aeo/orchestration/supabase-sample-store";
+import { extractSample } from "../src/services/aeo/extraction/extract-sample";
+import { SupabaseExtractionStore } from "../src/services/aeo/extraction/supabase-extraction-store";
+import { citationsPresent, okSample } from "../src/services/aeo/engines/engine-result";
 
 const USAGE_DATE = "2098-06-15"; // far future, so it cannot collide with real usage
 const results: { name: string; pass: boolean; detail: string }[] = [];
@@ -159,17 +162,75 @@ async function main() {
     const after = await runs.consumedTodayByEngine(organizationId, USAGE_DATE);
     check("consumption is now visible to the planner", (after.gemini ?? 0) >= 0, JSON.stringify(after));
 
+    // ---- E-6 extraction against the real tables ----
+    const extraction = new SupabaseExtractionStore(db);
+    const context = await extraction.loadBrandContext(businessId);
+    check("brand context loads our own brand", context.brands.some((b) => b.kind === "own"), `${context.brands.length} brands`);
+
+    // A synthetic answer that names our business, so the assertion is about the
+    // pipeline rather than about what an engine happened to say today.
+    const ownLabel = context.brands.find((b) => b.kind === "own")!.label;
+    const synthetic = okSample({
+        modelId: "smoke-fixture",
+        answerText: `For plumbing in Austin, **${ownLabel}** is frequently recommended, ahead of others.`,
+        citations: citationsPresent([
+            { url: "https://www.yelp.com/biz/example?utm_source=chatgpt", title: "Yelp listing" },
+            { url: "https://vertexaisearch.cloud.google.com/grounding-api-redirect/XYZ", title: "forbes.com" },
+        ]),
+        latencyMs: 10,
+        costUnits: 0,
+    });
+
+    const found = extractSample(synthetic, context);
+    check("own brand detected when actually named", found.ownBrandNamed === true, `${found.ownBrandNamed}`);
+    check("extraction records a method, not a guess", found.extractionModelId === "deterministic-alias-v1", found.extractionModelId);
+
+    const yelp = found.citations.find((c) => c.domain === "yelp.com");
+    check("directory citation classified", yelp?.classification === "directory", yelp?.classification ?? "missing");
+    check("tracking params stripped", !yelp?.normalizedUrl.includes("utm_source"), yelp?.normalizedUrl ?? "");
+
+    const redirected = found.citations.find((c) => c.viaRedirect);
+    check(
+        "gemini redirect resolved to the real domain, not google",
+        redirected?.domain === "forbes.com",
+        `${redirected?.domain}`
+    );
+
+    const sampleForExtraction = sampleRows![0].id;
+    const written = await extraction.persist(sampleForExtraction, businessId, found);
+    check("mentions written to aeo_brand_mentions", written.mentions >= 1, `${written.mentions}`);
+    check("citations written to aeo_citations", written.citations === 2, `${written.citations}`);
+
+    const { data: mentionRows } = await db
+        .from("aeo_brand_mentions")
+        .select("brand_kind, cited_only, mention_ordinal, extraction_model_id, sentiment")
+        .eq("sample_id", sampleForExtraction);
+    check("own mention stored with a method id", (mentionRows ?? []).some((m) => m.brand_kind === "own" && m.extraction_model_id === "deterministic-alias-v1"), `${mentionRows?.length} rows`);
+    check("sentiment left NULL, not assumed neutral", (mentionRows ?? []).every((m) => m.sentiment === null), "");
+
+    // Re-extraction must replace, not double.
+    await extraction.persist(sampleForExtraction, businessId, found);
+    const { count: afterRerun } = await db
+        .from("aeo_brand_mentions")
+        .select("*", { count: "exact", head: true })
+        .eq("sample_id", sampleForExtraction);
+    check("re-extraction replaces rather than duplicates", afterRerun === written.mentions, `${afterRerun} vs ${written.mentions}`);
+
     await runs.completeRun(runId, { status: "success", errorMessage: null, at: new Date().toISOString() });
     const { data: finished } = await db.from("aeo_runs").select("status").eq("id", runId).single();
     check("run closes as success", finished?.status === "success", finished?.status ?? "?");
 
     // ---- cleanup ----
+    await db.from("aeo_brand_mentions").delete().eq("business_id", businessId).eq("extraction_model_id", "deterministic-alias-v1");
+    await db.from("aeo_citations").delete().in("sample_id", (sampleRows ?? []).map((s) => s.id));
     await db.from("aeo_samples").delete().eq("run_id", runId);
     await db.from("aeo_quota_reservations").delete().eq("run_id", runId);
     await db.from("aeo_runs").delete().eq("id", runId);
     await db.from("aeo_prompts").delete().in("id", (prompts ?? []).map((p) => p.id));
 
     const leftovers = await Promise.all([
+        db.from("aeo_brand_mentions").select("*", { count: "exact", head: true }),
+        db.from("aeo_citations").select("*", { count: "exact", head: true }),
         db.from("aeo_runs").select("*", { count: "exact", head: true }),
         db.from("aeo_samples").select("*", { count: "exact", head: true }),
         db.from("aeo_quota_reservations").select("*", { count: "exact", head: true }),

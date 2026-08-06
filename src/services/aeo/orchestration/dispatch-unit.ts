@@ -1,4 +1,9 @@
-import type { AnswerEngineAdapter, AnswerEngineId, EngineLocale } from "../engines/engine-types";
+import type {
+    AnswerEngineAdapter,
+    AnswerEngineId,
+    EngineLocale,
+    EngineSampleResult,
+} from "../engines/engine-types";
 import { billableUnits } from "../engines/engine-types";
 import { getEngineDescriptor } from "../engines/engine-catalog";
 import type { ReservationStore, SampleStore, StepRunner } from "./ports";
@@ -43,6 +48,13 @@ export type DispatchOutcome =
           duplicateRisk: boolean;
           /** Consumption beyond the claim. Non-zero means costMicroUsd is a floor. */
           overrunUnits: number;
+          /**
+           * The engine response, passed back so extraction can run downstream
+           * without re-reading it. Deliberately NOT interpreted here: this
+           * module handles money and crash safety, and nothing in it may decide
+           * whether a brand was visible.
+           */
+          result: EngineSampleResult;
       }
     | { kind: "deferred"; deferredUnits: number }
     | { kind: "skipped"; reason: string };
@@ -176,5 +188,6 @@ export async function dispatchUnit(
         costMicroUsd,
         duplicateRisk,
         overrunUnits,
+        result,
     };
 }
