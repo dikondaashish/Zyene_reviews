@@ -20,11 +20,15 @@ import type { Reservation } from "./quota-reservation";
  * In-flight reservations count at their full claim: assuming they will be used
  * is the conservative direction, and the alternative is authorising spend
  * against capacity that is already committed.
+ *
+ * A settled row counts `settledUnits + overrunUnits`. The overrun is consumption
+ * the vendor reported beyond what we claimed — real drain on the bucket, and
+ * leaving it out here would be the same undercount the column exists to stop.
  */
 export function consumedUnits(reservations: readonly Reservation[]): number {
     return reservations.reduce((sum, r) => {
         if (r.state === "reserved") return sum + r.reservedUnits;
-        if (r.state === "settled") return sum + r.settledUnits;
+        if (r.state === "settled") return sum + r.settledUnits + r.overrunUnits;
         return sum;
     }, 0);
 }

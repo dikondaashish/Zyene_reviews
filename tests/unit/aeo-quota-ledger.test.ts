@@ -1,15 +1,17 @@
 import { describe, expect, it } from "vitest";
 
 import {
-    expireReservation,
-    isExpired,
     openReservation,
-    releaseReservation,
-    RESERVATION_TTL_MS,
     reservationKey,
     settleReservation,
     type Reservation,
 } from "../../src/services/aeo/ledger/quota-reservation";
+import {
+    expireReservation,
+    isExpired,
+    releaseReservation,
+    RESERVATION_TTL_MS,
+} from "../../src/services/aeo/ledger/quota-sweep";
 import {
     billedUnits,
     consumedUnits,
@@ -264,5 +266,45 @@ describe("consumedUnits feeds the budget guard", () => {
 
     it("totals settled cost across a day", () => {
         expect(settledCostMicroUsd(mixed)).toBe(0);
+    });
+});
+
+describe("the engine consumes more than was reserved", () => {
+    /**
+     * costUnits is adapter-reported and only floored at zero, so a vendor can
+     * report more than we pessimistically claimed. The claim is a ceiling on
+     * what we AUTHORISED, not on what the vendor did.
+     */
+    const over = settleReservation(
+        openReservation({ ...base, units: 100 }),
+        [ok(140)],
+        { billableUnits: 0, costMicroUsd: 0 },
+        AT
+    );
+
+    it("splits the excess off instead of exceeding the claim", () => {
+        // settled_units <= reserved_units is enforced in the database too; a
+        // row folding all 140 into settledUnits would simply be rejected.
+        expect(over.settledUnits).toBe(100);
+        expect(over.overrunUnits).toBe(40);
+    });
+
+    it("still counts every consumed unit against the day", () => {
+        // The whole point. Reporting 100 would tell the guard 40 units of the
+        // bucket are still available when they are already gone — the
+        // self-amplifying undercount the ledger exists to prevent.
+        expect(consumedUnits([over])).toBe(140);
+    });
+
+    it("records nothing beyond the claim when the engine stays inside it", () => {
+        const within = settleReservation(
+            openReservation({ ...base, units: 100 }),
+            [ok(60)],
+            { billableUnits: 0, costMicroUsd: 0 },
+            AT
+        );
+        expect(within.settledUnits).toBe(60);
+        expect(within.overrunUnits).toBe(0);
+        expect(consumedUnits([within])).toBe(60);
     });
 });

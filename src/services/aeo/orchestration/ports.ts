@@ -51,9 +51,21 @@ export interface ReservationStore {
      */
     markDispatched(reservationId: string, at: string): Promise<{ dispatchAttempts: number }>;
 
+    /**
+     * `overrunUnits` is consumption the engine reported beyond the claim. It is
+     * carried separately rather than folded into `settledUnits` so the database
+     * can keep enforcing settled <= reserved, and so a row whose cost figure is
+     * only a floor is identifiable later.
+     */
     settle(
         reservationId: string,
-        settlement: { settledUnits: number; billableUnits: number; costMicroUsd: number; at: string }
+        settlement: {
+            settledUnits: number;
+            overrunUnits: number;
+            billableUnits: number;
+            costMicroUsd: number;
+            at: string;
+        }
     ): Promise<void>;
 
     release(reservationId: string, at: string): Promise<void>;

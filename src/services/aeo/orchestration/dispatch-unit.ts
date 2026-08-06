@@ -35,7 +35,15 @@ export type DispatchInput = {
 };
 
 export type DispatchOutcome =
-    | { kind: "sampled"; sampleId: string; billableUnits: number; costMicroUsd: number; duplicateRisk: boolean }
+    | {
+          kind: "sampled";
+          sampleId: string;
+          billableUnits: number;
+          costMicroUsd: number;
+          duplicateRisk: boolean;
+          /** Consumption beyond the claim. Non-zero means costMicroUsd is a floor. */
+          overrunUnits: number;
+      }
     | { kind: "deferred"; deferredUnits: number }
     | { kind: "skipped"; reason: string };
 
@@ -105,7 +113,14 @@ export async function dispatchUnit(
 
     // STEP 3 — reconcile. Consumption and cost are different quantities: a call
     // inside a free allowance consumes a unit and costs nothing.
+    //
+    // costUnits is adapter-reported and unbounded above, so it can exceed what
+    // we pessimistically claimed. The excess is split off rather than dropped:
+    // discarding it would tell the guard the bucket is less drained than it is,
+    // which is the self-amplifying undercount this ledger exists to prevent.
     const consumed = billableUnits(result);
+    const settledUnits = Math.min(consumed, reservation.grantedUnits);
+    const overrunUnits = consumed - settledUnits;
     const billed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
 
     const persisted = await step("persist-sample", async () =>
@@ -121,7 +136,8 @@ export async function dispatchUnit(
 
     await step("settle", async () =>
         reservations.settle(reservationId, {
-            settledUnits: consumed,
+            settledUnits,
+            overrunUnits,
             billableUnits: billed,
             costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
             at: now().toISOString(),
@@ -134,5 +150,6 @@ export async function dispatchUnit(
         billableUnits: billed,
         costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
         duplicateRisk,
+        overrunUnits,
     };
 }

@@ -9,6 +9,8 @@ import type {
     StepRunner,
 } from "../../src/services/aeo/orchestration/ports";
 import { FixtureEngineAdapter } from "../../src/services/aeo/engines/adapters/fixture-engine-adapter";
+import type { AnswerEngineAdapter } from "../../src/services/aeo/engines/engine-types";
+import { citationsUnavailable, okSample } from "../../src/services/aeo/engines/engine-result";
 
 /**
  * Reproduces Inngest's `step.run` contract so crash behaviour can be asserted
@@ -69,7 +71,8 @@ class FakeInngest {
 class MemoryReservations implements ReservationStore {
     rows = new Map<string, {
         id: string; key: string; units: number; state: string;
-        dispatchAttempts: number; settledUnits: number; billableUnits: number; costMicroUsd: number;
+        dispatchAttempts: number; settledUnits: number; overrunUnits: number;
+        billableUnits: number; costMicroUsd: number;
     }>();
     private seq = 0;
 
@@ -79,7 +82,7 @@ class MemoryReservations implements ReservationStore {
             return { kind: "existing", reservationId: existing.id, grantedUnits: existing.units, dispatchedAt: null };
         }
         const consumed = [...this.rows.values()].reduce(
-            (s, r) => s + (r.state === "reserved" ? r.units : r.settledUnits),
+            (s, r) => s + (r.state === "reserved" ? r.units : r.settledUnits + r.overrunUnits),
             0
         );
         const remaining = req.freePerDay <= 0 ? req.requestedUnits : Math.max(0, req.freePerDay - consumed);
@@ -89,7 +92,7 @@ class MemoryReservations implements ReservationStore {
         const id = `res-${++this.seq}`;
         this.rows.set(id, {
             id, key: req.idempotencyKey, units: grant, state: "reserved",
-            dispatchAttempts: 0, settledUnits: 0, billableUnits: 0, costMicroUsd: 0,
+            dispatchAttempts: 0, settledUnits: 0, overrunUnits: 0, billableUnits: 0, costMicroUsd: 0,
         });
         return grant < req.requestedUnits
             ? { kind: "partial", reservationId: id, grantedUnits: grant, deferredUnits: req.requestedUnits - grant }
@@ -102,10 +105,24 @@ class MemoryReservations implements ReservationStore {
         return { dispatchAttempts: row.dispatchAttempts };
     }
 
-    async settle(id: string, s: { settledUnits: number; billableUnits: number; costMicroUsd: number }) {
+    async settle(
+        id: string,
+        s: { settledUnits: number; overrunUnits: number; billableUnits: number; costMicroUsd: number }
+    ) {
         const row = this.rows.get(id)!;
+        // Restates the table's CHECK constraints, so a settlement the database
+        // would reject fails here too rather than passing in memory and blowing
+        // up only once the migration is applied.
+        if (s.settledUnits > row.units) throw new Error("settled_units > reserved_units");
+        if (s.overrunUnits > 0 && s.settledUnits !== row.units) {
+            throw new Error("overrun without a fully consumed claim");
+        }
+        if (s.billableUnits > s.settledUnits + s.overrunUnits) {
+            throw new Error("billable_units > total consumption");
+        }
         row.state = "settled";
         row.settledUnits = s.settledUnits;
+        row.overrunUnits = s.overrunUnits;
         row.billableUnits = s.billableUnits;
         row.costMicroUsd = s.costMicroUsd;
     }
@@ -277,6 +294,83 @@ describe("permanent failure leaves a recoverable state", () => {
         // nothing can have been billed, and the sweeper simply returns the units.
         expect([...h.reservations.rows.values()][0].dispatchAttempts).toBe(0);
         expect(h.adapter.calls).toHaveLength(0);
+    });
+});
+
+describe("the engine reports more units than were reserved", () => {
+    /**
+     * costUnits is adapter-reported and only floored at zero, so a vendor can
+     * charge more than we pessimistically claimed. Folding the excess into
+     * settled_units would violate settled <= reserved: the settle step would
+     * fail, retry forever, and the sweeper would expire the row — recording
+     * ZERO consumption for units that really did drain the bucket. That is the
+     * self-amplifying undercount the ledger exists to prevent, so the excess is
+     * recorded as an overrun instead.
+     */
+    const overReporting = (units: number): AnswerEngineAdapter => ({
+        id: "gemini",
+        modelId: "gemini-2.5-pro",
+        isConfigured: () => true,
+        sample: async () =>
+            okSample({
+                modelId: "gemini-2.5-pro",
+                answerText: "an answer",
+                citations: citationsUnavailable(),
+                latencyMs: 10,
+                costUnits: units,
+            }),
+    });
+
+    function overrunHarness(units: number) {
+        const inngest = new FakeInngest();
+        const reservations = new MemoryReservations();
+        const samples = new MemorySamples();
+        const adapter = overReporting(units);
+        return {
+            reservations,
+            go: () =>
+                inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples })),
+        };
+    }
+
+    it("settles up to the claim and records the excess rather than dropping it", async () => {
+        const h = overrunHarness(3); // claimed 1, vendor reports 3
+        const out = await h.go();
+
+        expect(out.kind).toBe("sampled");
+        if (out.kind === "sampled") expect(out.overrunUnits).toBe(2);
+
+        const row = [...h.reservations.rows.values()][0];
+        expect(row.state).toBe("settled");
+        expect(row.settledUnits).toBe(1);
+        expect(row.overrunUnits).toBe(2);
+    });
+
+    it("counts the overrun against the day, so the next reservation sees it", async () => {
+        const h = overrunHarness(3);
+        await h.go();
+
+        // 3 units really went, not 1. A guard reading only settled_units would
+        // believe 9,999 remain and authorise spend that is already gone.
+        const next = await h.reservations.reserve({
+            idempotencyKey: "next",
+            organizationId: "org-1",
+            engineId: "gemini",
+            usageDate: "2026-08-06",
+            requestedUnits: 9_999,
+            freePerDay: 10_000,
+            overageAuthorised: false,
+            runId: "run-2",
+        });
+        expect(next.kind).toBe("partial");
+        if (next.kind === "partial") expect(next.grantedUnits).toBe(9_997);
+    });
+
+    it("records no overrun when the engine stays within its claim", async () => {
+        const h = overrunHarness(1);
+        const out = await h.go();
+        if (out.kind === "sampled") expect(out.overrunUnits).toBe(0);
+        expect([...h.reservations.rows.values()][0].overrunUnits).toBe(0);
     });
 });
 

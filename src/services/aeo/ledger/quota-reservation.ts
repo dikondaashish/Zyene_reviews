@@ -22,8 +22,9 @@ import { billableUnits } from "../engines/engine-types";
  * variant, including `failed`, precisely so reconciliation can tell the
  * difference between a failure that cost nothing and one that did.
  *
- * Pure functions only. Persistence and sweeping belong to E-7; rollups to
- * quota-rollup.ts.
+ * Pure functions only. Persistence belongs to E-7, rollups to quota-rollup.ts,
+ * and the recovery path (release/expire) to quota-sweep.ts — sweeping asserts
+ * that nothing was consumed, which is the opposite claim to settling.
  */
 
 /**
@@ -55,6 +56,15 @@ export type Reservation = {
      * and costs nothing. Allowance accounting reads this.
      */
     settledUnits: number;
+    /**
+     * Consumption reported ABOVE the claim. costUnits is adapter-reported and
+     * only floored at zero, so a vendor can report more than we pessimistically
+     * claimed; dropping the excess would record less consumption than really
+     * happened and let the guard authorise spend against a bucket that is
+     * already gone. Allowance accounting reads `settledUnits + overrunUnits`.
+     * Non-zero also means `costMicroUsd` is a floor, not an exact figure.
+     */
+    overrunUnits: number;
     /** The subset of `settledUnits` that cost money. Money accounting reads this. */
     billableUnits: number;
     costMicroUsd: number;
@@ -104,13 +114,15 @@ export function openReservation(input: ReservationInput): Reservation {
         reservedAt: (input.now ?? new Date()).toISOString(),
         settledAt: null,
         settledUnits: 0,
+        overrunUnits: 0,
         billableUnits: 0,
         costMicroUsd: 0,
         overageAuthorised: input.overageAuthorised,
     };
 }
 
-function assertOpen(reservation: Reservation, action: string): void {
+/** Exported for quota-sweep.ts, which shares this precondition. */
+export function assertReservationOpen(reservation: Reservation, action: string): void {
     if (reservation.state !== "reserved") {
         // Settling twice would double-count spend; releasing a settled
         // reservation would erase it. Both are silent accounting corruption.
@@ -150,49 +162,20 @@ export function settleReservation(
     settlement: Settlement,
     now?: Date
 ): Reservation {
-    assertOpen(reservation, "settle");
+    assertReservationOpen(reservation, "settle");
     const consumed = results.reduce((sum, r) => sum + billableUnits(r), 0);
+    // Split rather than clamp. The claim is a ceiling on what we authorised, not
+    // on what the vendor did; discarding the excess would under-report the day.
+    const settled = Math.min(consumed, reservation.reservedUnits);
+    const overrun = consumed - settled;
     const billed = Math.max(0, Math.min(Math.floor(settlement.billableUnits), consumed));
     return {
         ...reservation,
         state: "settled",
         settledAt: (now ?? new Date()).toISOString(),
-        settledUnits: consumed,
+        settledUnits: settled,
+        overrunUnits: overrun,
         billableUnits: billed,
         costMicroUsd: billed > 0 ? Math.max(0, Math.round(settlement.costMicroUsd)) : 0,
-    };
-}
-
-/** Abandon before dispatch — deferred by the budget guard, or the run was cancelled. */
-export function releaseReservation(reservation: Reservation, now?: Date): Reservation {
-    assertOpen(reservation, "release");
-    return {
-        ...reservation,
-        state: "released",
-        settledAt: (now ?? new Date()).toISOString(),
-        settledUnits: 0,
-        billableUnits: 0,
-        costMicroUsd: 0,
-    };
-}
-
-/** Default TTL after which an unsettled reservation is assumed to be a crashed run. */
-export const RESERVATION_TTL_MS = 30 * 60 * 1000;
-
-export function isExpired(reservation: Reservation, now: Date, ttlMs = RESERVATION_TTL_MS): boolean {
-    if (reservation.state !== "reserved") return false;
-    return now.getTime() - Date.parse(reservation.reservedAt) > ttlMs;
-}
-
-/** Sweep a crashed reservation so its units return to the day's allowance. */
-export function expireReservation(reservation: Reservation, now?: Date): Reservation {
-    assertOpen(reservation, "expire");
-    return {
-        ...reservation,
-        state: "expired",
-        settledAt: (now ?? new Date()).toISOString(),
-        settledUnits: 0,
-        billableUnits: 0,
-        costMicroUsd: 0,
     };
 }

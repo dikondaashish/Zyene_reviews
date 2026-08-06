@@ -99,20 +99,52 @@ CREATE TABLE IF NOT EXISTS public.aeo_quota_reservations (
   billable_units INTEGER NOT NULL DEFAULT 0 CHECK (billable_units >= 0),
   cost_micro_usd BIGINT NOT NULL DEFAULT 0 CHECK (cost_micro_usd >= 0),
 
+  /*
+   * Consumption the engine reported ABOVE what this reservation claimed.
+   *
+   * costUnits is adapter-reported and only floored at zero, so a vendor can
+   * legitimately report more than we pessimistically claimed. Without somewhere
+   * to put the excess, settled_units <= reserved_units rejects the write, the
+   * settle step retries forever, and the sweeper eventually expires the row —
+   * recording ZERO consumption for units that really did drain the bucket. That
+   * is the self-amplifying undercount this whole table exists to prevent, so the
+   * overflow gets recorded rather than dropped.
+   *
+   * Allowance accounting must read settled_units + overrun_units. An overrun
+   * also means cost_micro_usd is a FLOOR rather than an exact figure: we know
+   * those units were consumed, not what the vendor charged for them. The column
+   * being non-zero is the signal to go and reconcile against the vendor invoice.
+   */
+  overrun_units INTEGER NOT NULL DEFAULT 0 CHECK (overrun_units >= 0),
+
   reserved_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   settled_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-  /* Consumption cannot exceed the pessimistic claim, and money cannot exceed
-   * consumption. billable <= settled <= reserved. */
+  /*
+   * Consumption attributed to the claim cannot exceed it — anything beyond goes
+   * to overrun_units — and money cannot exceed TOTAL consumption. So:
+   *   settled <= reserved,  billable <= settled + overrun.
+   * Note billable is bounded by total consumption rather than by settled_units:
+   * an overrun is real consumption, and it is the part most likely to have cost
+   * money, so excluding it from the bound would make a truthful row illegal.
+   */
   CONSTRAINT aeo_quota_reservations_settled_within_reserved
     CHECK (settled_units <= reserved_units),
-  CONSTRAINT aeo_quota_reservations_billable_within_settled
-    CHECK (billable_units <= settled_units),
+  CONSTRAINT aeo_quota_reservations_billable_within_consumed
+    CHECK (billable_units <= settled_units + overrun_units),
+
+  /*
+   * An overrun is by definition the part that did not fit, so the claim must be
+   * fully consumed before any of it exists. This keeps the column from becoming
+   * a dumping ground that hides an ordinary accounting bug.
+   */
+  CONSTRAINT aeo_quota_reservations_overrun_only_when_full
+    CHECK (overrun_units = 0 OR settled_units = reserved_units),
 
   /* An open reservation has not settled anything yet. */
   CONSTRAINT aeo_quota_reservations_open_has_no_settlement
-    CHECK (state <> 'reserved' OR (settled_at IS NULL AND settled_units = 0 AND billable_units = 0 AND cost_micro_usd = 0)),
+    CHECK (state <> 'reserved' OR (settled_at IS NULL AND settled_units = 0 AND billable_units = 0 AND cost_micro_usd = 0 AND overrun_units = 0)),
 
   /* Every terminal state records when it terminated. */
   CONSTRAINT aeo_quota_reservations_terminal_has_settled_at
@@ -120,7 +152,7 @@ CREATE TABLE IF NOT EXISTS public.aeo_quota_reservations (
 
   /* Released and expired free their units; neither consumed nor spent anything. */
   CONSTRAINT aeo_quota_reservations_abandoned_bills_nothing
-    CHECK (state NOT IN ('released', 'expired') OR (settled_units = 0 AND billable_units = 0 AND cost_micro_usd = 0)),
+    CHECK (state NOT IN ('released', 'expired') OR (settled_units = 0 AND billable_units = 0 AND cost_micro_usd = 0 AND overrun_units = 0)),
 
   /* Money and billable units agree. Note this is deliberately NOT tied to
    * settled_units: consumption inside a free allowance is units without cost. */
@@ -238,11 +270,13 @@ BEGIN
     RETURN;
   END IF;
 
-  -- Open claims count at full value; settled ones at what they actually used.
+  -- Open claims count at full value; settled ones at what they actually used,
+  -- INCLUDING any overrun. Omitting overrun_units here would be the undercount
+  -- the column was added to prevent, just moved one query along.
   -- Released and expired contribute nothing, which is how swept work returns.
   SELECT COALESCE(SUM(
     CASE WHEN state = 'reserved' THEN reserved_units
-         WHEN state = 'settled'  THEN settled_units
+         WHEN state = 'settled'  THEN settled_units + overrun_units
          ELSE 0 END
   ), 0)
   INTO v_consumed
