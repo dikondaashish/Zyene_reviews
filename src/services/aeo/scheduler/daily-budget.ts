@@ -57,6 +57,16 @@ export type BudgetOptions = {
      * the ledger BEFORE the first billable call, not after — see QA criterion #52.
      */
     overageAuthorised?: boolean;
+    /**
+     * Units already consumed today for this engine, from the E-5 ledger:
+     * settled spend plus reservations still in flight.
+     *
+     * Without this the guard treats every call as though the day were empty, so
+     * three dispatches of 4,000 against a 10,000 allowance would each be judged
+     * "within free" and 2,000 units would be charged unnoticed. Free allowances
+     * are per day, not per decision.
+     */
+    alreadyUsedToday?: number;
 };
 
 function outcome(
@@ -95,17 +105,21 @@ export function planEngineBudget(demand: EngineDemand, options: BudgetOptions = 
         return outcome(engineId, requested, requested, requested, "no_free_allowance");
     }
 
-    if (requested <= freePerDay) {
+    // What is left of today's bucket, not the whole bucket.
+    const alreadyUsed = Math.max(0, Math.floor(options.alreadyUsedToday ?? 0));
+    const remainingFree = Math.max(0, freePerDay - alreadyUsed);
+
+    if (requested <= remainingFree) {
         return outcome(engineId, requested, requested, 0, "within_free_allowance");
     }
 
     if (options.overageAuthorised) {
-        return outcome(engineId, requested, requested, requested - freePerDay, "overage_authorised");
+        return outcome(engineId, requested, requested, requested - remainingFree, "overage_authorised");
     }
 
     // Defer the excess and bill nothing. Deliberately not "run it and record the
     // cost": an unauthorised charge cannot be undone once the request is sent.
-    return outcome(engineId, requested, freePerDay, 0, "deferred_to_protect_allowance");
+    return outcome(engineId, requested, remainingFree, 0, "deferred_to_protect_allowance");
 }
 
 export function planDailyBudget(
