@@ -75,8 +75,15 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         surface: "answer_engine",
         vendor: "OpenAI",
         phase: 1,
-        pinnedModelId: null,
-        // Dominant variable cost: ~60% of module spend at planned volumes.
+        /** Responses API + hosted web_search. Pinned; the rate below is for this model. */
+        pinnedModelId: "gpt-4o",
+        /**
+         * Dominant variable cost: ~60% of module spend at planned volumes.
+         * ESTIMATE, and it stays one — OpenAI reports tokens, not money, so
+         * there is no invoice to reconcile against. The adapter deliberately
+         * does not synthesise one: the web_search fee is not itemised, so any
+         * derived figure would undercount.
+         */
         cost: { overageMicroUsd: 25_000, freePerDay: 0, confidence: "estimated" },
         supportsCitations: true,
         supportsCoordinate: false,
@@ -87,8 +94,19 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         surface: "answer_engine",
         vendor: "Perplexity",
         phase: 1,
-        pinnedModelId: null,
-        // Token cost plus a per-request search fee; best signal per dollar.
+        /**
+         * Sonar: the cheapest search-grounded Perplexity model, and the one the
+         * rate below was estimated from. Pinned for the same reason as Gemini —
+         * an adapter that picked its own model would be priced against a rate
+         * that does not cover it.
+         */
+        pinnedModelId: "sonar",
+        /**
+         * Token cost plus a per-request search fee; best signal per dollar.
+         * ESTIMATE, known to run ~24% high (measured $0.00532 against this
+         * $0.0067). Perplexity reports real per-request cost, so the ledger uses
+         * that; this figure is only for planning and the guard's projection.
+         */
         cost: { overageMicroUsd: 6_700, freePerDay: 0, confidence: "estimated" },
         supportsCitations: true,
         supportsCoordinate: false,
@@ -100,34 +118,18 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "Google Vertex",
         phase: 1,
         /**
-         * Pinned to 2.5 Flash, even though the rest of the app runs Gemini 3.x
-         * (see vertex-adapter.ts). Two separate constraints force this exact model:
-         *
-         * 1. The written grounding quote covers the 2.0/2.5 generation only.
-         *    Calling a 3.x model would price us against a rate that does not
-         *    cover it — the mismatch this pinning exists to prevent.
-         * 2. Of the models that quote covers, 2.5 Flash is the only one this
-         *    project can actually call. Verified 2026-08-06 against the live key:
-         *    both `gemini-2.5-pro` and `gemini-2.5-flash-lite` return
-         *    404 "no longer available to new users"; 2.5 Flash returns real
-         *    groundingMetadata with resolvable citation URIs.
-         *
-         * This was originally pinned to 2.5 Pro for its 10,000/day free bucket.
-         * That bucket is unreachable on a new project, so the planning figure it
-         * justified (~4,667 businesses before the first dollar) does not hold —
-         * see the freePerDay note below. Revisit if Pro access is granted, or if
-         * a Gemini 3 grounding rate is ever confirmed in writing.
+         * 2.5 Flash, not 2.5 Pro and not the app-wide 3.x default. Two binding
+         * constraints: the written quote covers 2.0/2.5 only, and of those only
+         * 2.5 Flash is callable here — 2.5 Pro and 2.5 Flash-Lite both 404
+         * "no longer available to new users" despite being listed.
+         * Full account and the revised ceiling: release plan §15.
          */
         pinnedModelId: "gemini-2.5-flash",
         /**
-         * Confirmed: 2.0 Flash, 2.5 Flash and 2.5 Flash-Lite SHARE 1,500 free
-         * grounding prompts/day across the billing account, then $35 per 1,000.
-         * One grounding prompt may fan out to several search queries, billed once.
-         *
-         * Shared, so this number is a ceiling for all of them together, not for
-         * 2.5 Flash alone. At the modelled 15 prompts/week cadence that is
-         * 1,500 x 7 / 15 = 700 businesses before the first dollar — down from the
-         * 4,667 that 2.5 Pro's bucket would have allowed.
+         * 2.0 Flash, 2.5 Flash and 2.5 Flash-Lite SHARE 1,500 free grounding
+         * prompts/day account-wide, then $35 per 1,000. One grounding prompt may
+         * fan out to several searches but bills once. Measured operational
+         * ceiling is 545 businesses, not the 700 an even split suggests — §15.
          */
         cost: { overageMicroUsd: 35_000, freePerDay: 1_500, confidence: "verified" },
         supportsCitations: true,

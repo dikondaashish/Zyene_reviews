@@ -32,6 +32,20 @@ function normalizeCost(costUnits: number): number {
     return Number.isFinite(costUnits) && costUnits > 0 ? costUnits : 0;
 }
 
+/**
+ * Vendor-reported cost, kept distinct from "not reported".
+ *
+ * A non-finite or negative figure is dropped entirely rather than clamped to 0,
+ * because 0 means "the vendor told us this was free" and the ledger treats that
+ * as authoritative. Silently turning a garbled value into a free call would
+ * understate spend — the direction this whole design refuses to fail in.
+ */
+function normalizeReportedCost(value: number | undefined): { reportedCostMicroUsd?: number } {
+    if (value === undefined) return {};
+    if (!Number.isFinite(value) || value < 0) return {};
+    return { reportedCostMicroUsd: Math.round(value) };
+}
+
 /** Ordinals are assigned here so no adapter can emit a 0-based or duplicated list. */
 export function citationsPresent(items: ReadonlyArray<{ url: string; title?: string | null }>): EngineCitations {
     const normalized: EngineCitation[] = items.map((item, index) => ({
@@ -53,6 +67,7 @@ export function okSample(input: {
     citations: EngineCitations;
     latencyMs: number;
     costUnits: number;
+    reportedCostMicroUsd?: number;
 }): EngineSampleOk {
     return {
         status: "ok",
@@ -62,6 +77,7 @@ export function okSample(input: {
         sampledAt: nowIso(),
         latencyMs: Math.max(0, input.latencyMs),
         costUnits: normalizeCost(input.costUnits),
+        ...normalizeReportedCost(input.reportedCostMicroUsd),
     };
 }
 
@@ -70,6 +86,7 @@ export function noAnswerSample(input: {
     reason: string;
     latencyMs: number;
     costUnits: number;
+    reportedCostMicroUsd?: number;
 }): EngineSampleNoAnswer {
     return {
         status: "no_answer",
@@ -78,6 +95,7 @@ export function noAnswerSample(input: {
         sampledAt: nowIso(),
         latencyMs: Math.max(0, input.latencyMs),
         costUnits: normalizeCost(input.costUnits),
+        ...normalizeReportedCost(input.reportedCostMicroUsd),
     };
 }
 
@@ -86,6 +104,8 @@ export function failedSample(input: {
     error: EngineError;
     latencyMs: number;
     costUnits?: number;
+    /** Some vendors charge for a refusal and say so. Recorded when they do. */
+    reportedCostMicroUsd?: number;
 }): EngineSampleFailed {
     return {
         status: "failed",
@@ -94,6 +114,7 @@ export function failedSample(input: {
         sampledAt: nowIso(),
         latencyMs: Math.max(0, input.latencyMs),
         costUnits: normalizeCost(input.costUnits ?? 0),
+        ...normalizeReportedCost(input.reportedCostMicroUsd),
     };
 }
 

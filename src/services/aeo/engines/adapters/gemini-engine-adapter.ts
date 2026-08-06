@@ -16,6 +16,8 @@ import type {
     EngineSampleResult,
 } from "../engine-types";
 
+import { buildLocalePrompt } from "./adapter-support";
+
 /**
  * Gemini via the Generative Language API, with Google Search grounding.
  *
@@ -91,7 +93,7 @@ export class GeminiEngineAdapter implements AnswerEngineAdapter {
         try {
             const response = await this.client.models.generateContent({
                 model: this.modelId,
-                contents: buildPrompt(request),
+                contents: buildLocalePrompt(request),
                 config: {
                     tools: [{ googleSearch: {} }],
                     abortSignal: abort,
@@ -152,19 +154,6 @@ export class GeminiEngineAdapter implements AnswerEngineAdapter {
             });
         }
     }
-}
-
-/**
- * Locale is stated in the prompt rather than through an API parameter: the
- * Generative Language API exposes no locale field, and silently sampling US
- * results for a UK business would be a wrong measurement, not a missing one.
- */
-function buildPrompt(request: EngineSampleRequest): string {
-    const { locale } = request;
-    const where = [locale.city, locale.country].filter(Boolean).join(", ");
-    return where
-        ? `${request.prompt}\n\n(Answer for someone located in ${where}, in ${locale.language}.)`
-        : request.prompt;
 }
 
 function classify(error: unknown): ReturnType<typeof engineError> {

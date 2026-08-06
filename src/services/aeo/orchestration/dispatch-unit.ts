@@ -134,6 +134,20 @@ export async function dispatchUnit(
     const overrunUnits = consumed - settledUnits;
     const billed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
 
+    // Prefer what the vendor said this call cost over `units x catalog rate`.
+    // The catalog rate is a planning figure derived from a quote; a reported
+    // figure is the invoice, and for token-and-search-priced engines the two
+    // genuinely differ per request. Using the estimate when the truth is
+    // available would make the ledger permanently approximate for no reason.
+    //
+    // Only applied to units we are actually billing for: a call inside a free
+    // allowance costs nothing regardless of what the vendor reports it would
+    // have cost, and `billed = 0` must keep cost at 0 or the DB rejects the row.
+    const costMicroUsd =
+        billed > 0
+            ? (result.reportedCostMicroUsd ?? billed * descriptor.cost.overageMicroUsd)
+            : 0;
+
     const persisted = await step("persist-sample", async () =>
         samples.persist({
             runId: input.runId,
@@ -150,7 +164,7 @@ export async function dispatchUnit(
             settledUnits,
             overrunUnits,
             billableUnits: billed,
-            costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
+            costMicroUsd,
             at: now().toISOString(),
         })
     );
@@ -159,7 +173,7 @@ export async function dispatchUnit(
         kind: "sampled",
         sampleId: persisted.sampleId,
         billableUnits: billed,
-        costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
+        costMicroUsd,
         duplicateRisk,
         overrunUnits,
     };

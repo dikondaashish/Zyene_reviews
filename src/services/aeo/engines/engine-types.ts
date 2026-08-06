@@ -89,6 +89,21 @@ type EngineSampleBase = {
     latencyMs: number;
     /** Billable units consumed, in the engine's own credit weight (see catalog). */
     costUnits: number;
+    /**
+     * What the vendor said this call actually cost, in micro-USD. Omitted when
+     * the vendor does not report it, which is most of them.
+     *
+     * Present, this is authoritative and the ledger uses it instead of
+     * `units x catalog rate`. The catalog rate is a planning figure derived from
+     * a quote; this is the invoice. Perplexity returns per-request cost that
+     * varies with tokens and search depth, so the two genuinely differ — the
+     * catalog's 6,700 micro-USD estimate against a measured 5,320 on a real
+     * call, a 26% overstatement that would compound silently across a month.
+     *
+     * Never inferred or defaulted: absent means "unknown", not "free". A zero
+     * here means the vendor explicitly reported no charge.
+     */
+    reportedCostMicroUsd?: number;
 };
 
 /** The engine answered. `answerText` is the verbatim response, stored as evidence. */
