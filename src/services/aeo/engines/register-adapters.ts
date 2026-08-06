@@ -2,6 +2,7 @@ import { engineRegistry } from "./engine-registry";
 import { GeminiEngineAdapter } from "./adapters/gemini-engine-adapter";
 import { PerplexityEngineAdapter } from "./adapters/perplexity-engine-adapter";
 import { ChatGptEngineAdapter } from "./adapters/chatgpt-engine-adapter";
+import { DataForSeoSerpAdapter } from "./adapters/dataforseo-serp-adapter";
 
 /**
  * Registers the real, billable adapters.
@@ -37,6 +38,12 @@ export function registerAeoAdapters(): void {
     // Most expensive engine per sample; deliberately not in DEFAULT_ENGINES, so
     // a run has to ask for it by name.
     engineRegistry.register(new ChatGptEngineAdapter());
+
+    // Google surfaces via DataForSEO. Two registrations, one adapter class:
+    // same transport, different surface, and they must stay separately
+    // meterable because AI Overview costs more than a plain SERP.
+    engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_serp" }));
+    engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_ai_overview" }));
 }
 
 /** Test seam — lets a suite start from a known-empty registry. */
