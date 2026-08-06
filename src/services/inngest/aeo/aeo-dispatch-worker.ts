@@ -1,5 +1,6 @@
 import { inngest } from "@/services/inngest/client";
 import { engineRegistry } from "@/services/aeo/engines/engine-registry";
+import { registerAeoAdapters } from "@/services/aeo/engines/register-adapters";
 import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
 import { dispatchUnit } from "@/services/aeo/orchestration/dispatch-unit";
 import { getAeoStores } from "@/services/aeo/orchestration/store-factory";
@@ -40,6 +41,11 @@ export const aeoDispatchWorker = inngest.createFunction(
         if (!isLiveSamplingEnabled()) {
             return { skipped: "live_sampling_disabled" as const };
         }
+
+        // After the gate, never before: registering an adapter is what makes an
+        // engine reachable, and there is no reason to do it in a process that
+        // has just declined to sample.
+        registerAeoAdapters();
 
         const data = event.data;
         const engineId = data.engineId as AnswerEngineId;

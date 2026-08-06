@@ -1,40 +1,18 @@
 import type { AnswerEngineId } from "./engine-types";
+import type { EngineCost } from "./engine-cost";
+import { dailyCostMicroUsd, isCostMeterable } from "./engine-cost";
 
 /**
  * Static metadata for every engine we intend to sample, including ones not yet
  * implemented. The catalog is deliberately complete so the coverage panel (F1.10)
  * can tell a user "Claude: Phase 2" rather than silently omitting it.
  *
- * `cost.confidence` is not decoration: the credit ledger (E-5) must refuse to meter
- * an engine whose price we have not confirmed, so an unverified vendor cannot
- * quietly start billing. See the release plan §6.
+ * The cost model itself lives in engine-cost.ts; `cost.confidence` is not
+ * decoration, and resolveRunnable refuses to meter an engine whose price we have
+ * not confirmed. See the release plan §6.
  */
 
-export type EngineCostConfidence =
-    /** Contracted or published rate, confirmed in writing for `pinnedModelId`. */
-    | "verified"
-    /** Published list price, not yet contracted. */
-    | "estimated"
-    /** No reliable figure. Must not be enabled for paid runs. */
-    | "unverified";
-
-export type EngineCost = {
-    /**
-     * Cost per sample once the free allowance is exhausted, in micro-USD
-     * (millionths of a dollar) to keep integer math.
-     */
-    overageMicroUsd: number;
-    /**
-     * Samples per day at no charge, across the whole billing account — not per
-     * business. Zero means every sample bills.
-     *
-     * This is a DAILY bucket, which makes run scheduling a cost lever: bursting
-     * every account into one day forfeits the other six days of allowance. E-7
-     * must smooth runs across the week.
-     */
-    freePerDay: number;
-    confidence: EngineCostConfidence;
-};
+export type { EngineCost, EngineCostConfidence } from "./engine-cost";
 
 export type AnswerEngineDescriptor = {
     id: AnswerEngineId;
@@ -122,21 +100,36 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "Google Vertex",
         phase: 1,
         /**
-         * Pinned to 2.5 Pro on purpose, even though the rest of the app runs
-         * Gemini 3.x (see vertex-adapter.ts). Two reasons:
+         * Pinned to 2.5 Flash, even though the rest of the app runs Gemini 3.x
+         * (see vertex-adapter.ts). Two separate constraints force this exact model:
          *
-         * 1. The written grounding quote covers 2.0/2.5 only. Calling a 3.x model
-         *    would price us against a rate that does not cover it.
-         * 2. Grounding fees dominate token fees in this workload. Pro's 10,000/day
-         *    free bucket is 6.7x Flash's 1,500/day, which more than offsets Pro's
-         *    higher token rate anywhere between ~420 and ~2,800 tracked businesses.
+         * 1. The written grounding quote covers the 2.0/2.5 generation only.
+         *    Calling a 3.x model would price us against a rate that does not
+         *    cover it — the mismatch this pinning exists to prevent.
+         * 2. Of the models that quote covers, 2.5 Flash is the only one this
+         *    project can actually call. Verified 2026-08-06 against the live key:
+         *    both `gemini-2.5-pro` and `gemini-2.5-flash-lite` return
+         *    404 "no longer available to new users"; 2.5 Flash returns real
+         *    groundingMetadata with resolvable citation URIs.
          *
-         * Revisit if a Gemini 3 grounding rate is confirmed.
+         * This was originally pinned to 2.5 Pro for its 10,000/day free bucket.
+         * That bucket is unreachable on a new project, so the planning figure it
+         * justified (~4,667 businesses before the first dollar) does not hold —
+         * see the freePerDay note below. Revisit if Pro access is granted, or if
+         * a Gemini 3 grounding rate is ever confirmed in writing.
          */
-        pinnedModelId: "gemini-2.5-pro",
-        // Confirmed: 10,000 grounding prompts/day free, then $35 per 1,000.
-        // One grounding prompt may fan out to several search queries, billed once.
-        cost: { overageMicroUsd: 35_000, freePerDay: 10_000, confidence: "verified" },
+        pinnedModelId: "gemini-2.5-flash",
+        /**
+         * Confirmed: 2.0 Flash, 2.5 Flash and 2.5 Flash-Lite SHARE 1,500 free
+         * grounding prompts/day across the billing account, then $35 per 1,000.
+         * One grounding prompt may fan out to several search queries, billed once.
+         *
+         * Shared, so this number is a ceiling for all of them together, not for
+         * 2.5 Flash alone. At the modelled 15 prompts/week cadence that is
+         * 1,500 x 7 / 15 = 700 businesses before the first dollar — down from the
+         * 4,667 that 2.5 Pro's bucket would have allowed.
+         */
+        cost: { overageMicroUsd: 35_000, freePerDay: 1_500, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: false,
     },
@@ -177,7 +170,7 @@ export function listEngineDescriptors(): AnswerEngineDescriptor[] {
  * a hard block: we will not bill a customer for a vendor whose rate we cannot state.
  */
 export function isMeterable(id: AnswerEngineId): boolean {
-    return CATALOG[id].cost.confidence !== "unverified";
+    return isCostMeterable(CATALOG[id].cost);
 }
 
 /**
@@ -187,7 +180,5 @@ export function isMeterable(id: AnswerEngineId): boolean {
  * so per-business apportionment must be done by the caller after this returns.
  */
 export function estimateDailyCostMicroUsd(id: AnswerEngineId, samplesPerDay: number): number {
-    const { freePerDay, overageMicroUsd } = CATALOG[id].cost;
-    const billable = Math.max(0, Math.floor(samplesPerDay) - freePerDay);
-    return billable * overageMicroUsd;
+    return dailyCostMicroUsd(CATALOG[id].cost, samplesPerDay);
 }

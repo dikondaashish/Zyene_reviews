@@ -947,3 +947,80 @@ Ten scenarios computed by hand from the quote (10,000/day free, $35 per 1,000) a
 **The scheduling lever, priced at a scale we will actually reach:** at 700 businesses, smoothed costs **$0.00/day** and bursting costs **$17.50/day, ~$525/month** — for identical output. E-10 pays for itself long before the 4,667 ceiling.
 
 The regression tests declare `FREE_PER_DAY` and `USD_PER_1000` locally rather than importing them from `engine-catalog.ts`. A test that read the catalog would pass even if the catalog were edited to a wrong rate; these fail.
+
+---
+
+## 15. Correction — Gemini repinned to 2.5 Flash; free-tier ceiling revised (2026-08-06)
+
+**Every "10,000/day", "4,667 businesses" and "$17.50/day" figure earlier in this
+document is superseded by this section.** They are left in place rather than
+edited out, for the same reason as §13: the numbers were used to justify
+decisions, and rewriting them would hide that the justification changed.
+
+### What happened
+
+`gemini-2.5-pro` is **not callable** on this project. Verified against the live
+key on 2026-08-06:
+
+| Model | Result |
+|---|---|
+| `gemini-2.5-pro` | `404 — no longer available to new users` |
+| `gemini-2.5-flash-lite` | `404 — no longer available to new users` |
+| `gemini-2.5-flash` | Works; real `groundingMetadata`, resolvable citations |
+
+Both models 404 while still being *listed* by `ListModels`, so presence in the
+model list is not evidence of access. The engine was repinned to
+`gemini-2.5-flash`, which the same written quote covers.
+
+This was found only because the adapter was tested against the live API before
+being wired in. A `confidence: "verified"` catalog entry had been vouching for a
+model that could not be called — in the exact field `resolveRunnable()` trusts
+when deciding an engine may bill.
+
+### Revised numbers
+
+| | Planned (2.5 Pro) | Actual (2.5 Flash) |
+|---|---|---|
+| Free grounding/day | 10,000 | **1,500** (shared across 2.0/2.5 Flash + Flash-Lite) |
+| Overage | $35 / 1,000 | **unchanged** |
+| Ceiling, perfect smoothing | 4,667 businesses | **700** |
+| Ceiling, **measured** with real slot assignment | — | **545 businesses** |
+| 700 businesses bursting onto one day | $17.50/day | **$315/day (~$9,450/month)** |
+
+**Use 545, not 700.** The 700 figure divides demand evenly by 7; real slot
+assignment is hash-based and puts ~17% more than average on the busiest day, so
+billing would start quietly somewhere below 700. 545 is measured across five
+independent id sets (`tests/unit/aeo-scheduler.test.ts`), and both figures are
+asserted there so neither can drift unnoticed.
+
+### Consequences worth carrying forward
+
+1. **A smaller free bucket makes bad scheduling cost *more*, not less.** The
+   burst penalty rose 18×, from $17.50/day to $315/day, because the same excess
+   is now measured against a bucket 6.7× smaller. E-10 pays for itself far
+   earlier than §7 claimed.
+2. **QA criterion #49's margin is gone.** It was written when the busiest day was
+   1,950 prompts against a 10,000/day allowance — 5× headroom, so the
+   average-vs-busiest distinction did not matter. Against 1,500/day that
+   distinction *is* the answer. The criterion still passes, but it is now load-
+   bearing rather than a formality.
+3. **The Professional-tier margin in §6.3 still holds** — Gemini's line moves
+   from "$0.00 below 4,667 businesses" to "$0.00 below 545 businesses", which is
+   still comfortably above current scale. It should be re-examined before
+   crossing ~500 tracked businesses, not before launch.
+4. **Revisit if 2.5 Pro access is granted**, which would restore the 10,000/day
+   bucket and the original ceiling. Do not repin to Gemini 3.x without a written
+   grounding rate for it: the quote covers 2.0/2.5 only, `confidence` would have
+   to drop to `estimated`, and `resolveRunnable()` would then correctly withhold
+   Gemini from paid runs.
+
+### Also recorded — Gemini citation URLs are redirects
+
+Grounded responses return citation URLs on
+`vertexaisearch.cloud.google.com/grounding-api-redirect/…`, not the source
+domain. The real domain arrives in `web.title` (e.g. `forbes.com`). Naively
+parsing `aeo_citations.domain` from the URL would classify **every** citation as
+Google's redirect host, silently destroying own-vs-competitor citation
+attribution. Whoever builds citation tracking must either read the domain from
+the title or resolve the redirect — the latter costs one extra HTTP request per
+citation. Flagged before that table has any rows in it.
