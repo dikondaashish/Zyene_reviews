@@ -1024,3 +1024,42 @@ Google's redirect host, silently destroying own-vs-competitor citation
 attribution. Whoever builds citation tracking must either read the domain from
 the title or resolve the redirect — the latter costs one extra HTTP request per
 citation. Flagged before that table has any rows in it.
+
+### 15.1 Decision — the 545 ceiling is accepted, not a launch blocker (2026-08-06)
+
+**Accepted by the product owner. Do not treat the reduced ceiling as blocking.**
+
+Measured against production on 2026-08-06:
+
+| | |
+|---|---|
+| Businesses today | **14** |
+| Measured free-tier ceiling | **545** |
+| Headroom | **38.9×** |
+| Daily prompts if all 14 enrolled | **30** against a 1,500/day bucket (**2%**) |
+
+At this scale the repin from 2.5 Pro to 2.5 Flash costs nothing. It becomes a
+real constraint on growth, not now.
+
+**But the failure mode at the boundary is not the obvious one.** Crossing 545
+does not produce a surprise invoice. `overageAuthorised` defaults to `false`, so
+`planEngineBudget` returns `deferred_to_protect_allowance` and the excess simply
+does not run. The bill stays $0 and **sampling coverage silently degrades
+instead** — some businesses get sampled that week and some do not, with nothing
+in the UI saying so.
+
+That is the correct trade (an unauthorised charge cannot be undone; a deferred
+sample can be run later), but it means the growth risk is **missing data that
+looks like complete data**, not overspend. Two things follow:
+
+1. **Do not rely on noticing a cost spike.** There will not be one. The signal is
+   `aeo_runs.status = 'deferred'` and a rising `projectedDeferredUnits` on the
+   planner's return value.
+2. **Revisit at ~400 businesses**, not at 545 — roughly 75% of the ceiling, which
+   leaves room to act before coverage starts dropping. At that point the options
+   are: request 2.5 Pro access (restores 10,000/day), authorise overage at
+   $35/1,000, or move some prompt volume to DataForSEO AI Overview at
+   $0.0006/keyword.
+
+Until then this is a documented non-issue. **Whoever picks this up next: the
+ceiling is fine, the alerting on deferral is what is missing.**
