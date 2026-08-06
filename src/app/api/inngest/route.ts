@@ -22,6 +22,8 @@ import {
     winbackWorker,
     marketingNurtureWorker,
 } from "@/services/inngest/growth-functions";
+import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
+import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -61,6 +63,10 @@ export const { GET, POST, PUT } = serve({
         onboardingDripWorker,
         winbackWorker,
         marketingNurtureWorker,
+        // E-7 sampling. Both refuse to run unless AEO_LIVE_SAMPLING is exactly
+        // "true", so registering them here does not by itself enable spending.
+        aeoRunPlanner,
+        aeoDispatchWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

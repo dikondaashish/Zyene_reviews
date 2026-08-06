@@ -39,3 +39,22 @@ export const DISABLED_RUN_STATUS = "disabled";
 /** Message stored on disabled runs and surfaced in the run history. */
 export const DISABLED_RUN_MESSAGE =
     "Estimated AI-visibility and heatmap runs are disabled pending real provider integration.";
+
+const LIVE_SAMPLING_ENV_KEY = "AEO_LIVE_SAMPLING";
+
+/**
+ * Whether the Phase 1 sampling orchestrator (E-7) may dispatch to real engines.
+ *
+ * Deliberately NOT the flag above. That one asks "may we display estimated
+ * numbers"; this one asks "may we spend money calling engines". Reusing it
+ * would mean live sampling only runs for deployments that opted into seeing
+ * fabricated data — exactly backwards, and it would couple a display choice to
+ * a billing decision.
+ *
+ * Same strict comparison, for the same reason: anything other than the literal
+ * string "true" leaves it off, so a typo, a blank value, or "1" fails closed.
+ * The failure that matters here is money leaving by accident.
+ */
+export function isLiveSamplingEnabled(): boolean {
+    return process.env[LIVE_SAMPLING_ENV_KEY]?.trim().toLowerCase() === "true";
+}

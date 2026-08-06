@@ -1,0 +1,100 @@
+import { inngest } from "@/services/inngest/client";
+import { engineRegistry } from "@/services/aeo/engines/engine-registry";
+import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
+import { dispatchUnit } from "@/services/aeo/orchestration/dispatch-unit";
+import { getAeoStores } from "@/services/aeo/orchestration/store-factory";
+import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
+import { logger } from "@/lib/logger";
+
+/**
+ * E-7 child: one (prompt x engine x attempt).
+ *
+ * One function per unit rather than one function looping the whole run, so a
+ * retry re-runs only the unit that failed. With a paid engine the alternative
+ * means re-paying for every unit that already succeeded.
+ *
+ * The step boundaries that make a crash survivable live in dispatchUnit; this
+ * function only supplies Inngest's real `step.run` in place of the fake one the
+ * crash tests use.
+ */
+export const aeoDispatchWorker = inngest.createFunction(
+    {
+        id: "aeo-dispatch-worker",
+        /**
+         * Serialize per (org, engine): the reservation RPC takes an advisory lock
+         * on exactly that grain, so unbounded parallelism would just queue inside
+         * Postgres while holding connections. This keeps the contention in
+         * Inngest, where waiting is free.
+         */
+        concurrency: {
+            key: "event.data.organizationId + '-' + event.data.engineId",
+            limit: 4,
+        },
+        // Retries are safe by construction: the reservation is idempotent on
+        // (runId, promptId, engineId, attempt) and a completed call step is
+        // memoized rather than re-executed.
+        retries: 3,
+    },
+    { event: "aeo/dispatch.requested" },
+    async ({ event, step }) => {
+        if (!isLiveSamplingEnabled()) {
+            return { skipped: "live_sampling_disabled" as const };
+        }
+
+        const data = event.data;
+        const engineId = data.engineId as AnswerEngineId;
+
+        // Re-checked here, not just in the planner. Events can be replayed by
+        // hand, and an engine can be stood down mid-run; a child must never call
+        // an engine the registry would currently withhold.
+        const { runnable } = engineRegistry.resolveRunnable([engineId]);
+        const adapter = runnable[0];
+        if (!adapter) {
+            logger.warn({ engineId, runId: data.runId }, "AEO dispatch refused: engine not runnable");
+            return { skipped: "engine_not_runnable" as const, engineId };
+        }
+
+        const stores = getAeoStores();
+
+        const outcome = await dispatchUnit(
+            {
+                runId: data.runId,
+                businessId: data.businessId,
+                organizationId: data.organizationId,
+                promptId: data.promptId,
+                promptText: data.promptText,
+                engineId,
+                attempt: data.attempt,
+                locale: data.locale,
+                usageDate: data.usageDate,
+                overageAuthorised: data.overageAuthorised,
+                requestedUnits: data.requestedUnits,
+            },
+            {
+                step: <T,>(id: string, fn: () => Promise<T>) => step.run(id, fn) as Promise<T>,
+                adapter,
+                reservations: stores.reservations,
+                samples: stores.samples,
+            }
+        );
+
+        if (outcome.kind === "sampled" && outcome.duplicateRisk) {
+            // The unavoidable case: a crash inside the call step after the request
+            // went out. Logged loudly because the ledger's cost figure for this
+            // reservation may now understate what the vendor actually charged.
+            logger.error(
+                { runId: data.runId, promptId: data.promptId, engineId, sampleId: outcome.sampleId },
+                "AEO dispatch may have been billed twice — reconcile against the vendor invoice"
+            );
+        }
+
+        if (outcome.kind === "sampled" && outcome.overrunUnits > 0) {
+            logger.warn(
+                { runId: data.runId, engineId, overrunUnits: outcome.overrunUnits },
+                "AEO engine consumed more units than reserved; recorded cost is a floor"
+            );
+        }
+
+        return outcome;
+    }
+);
