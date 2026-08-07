@@ -2607,6 +2607,7 @@ export type Database = {
           google_profile_health_score: number | null
           google_qa_synced_at: string | null
           google_qa_unavailable: boolean
+          granted_scopes: string | null
           id: string
           last_review_update_time: string | null
           last_synced_at: string | null
@@ -2637,6 +2638,7 @@ export type Database = {
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
+          granted_scopes?: string | null
           id?: string
           last_review_update_time?: string | null
           last_synced_at?: string | null
@@ -2667,6 +2669,7 @@ export type Database = {
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
+          granted_scopes?: string | null
           id?: string
           last_review_update_time?: string | null
           last_synced_at?: string | null

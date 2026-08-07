@@ -91,17 +91,15 @@ export async function storeGooglePlatformCredentials(
             average_rating: params.averageRating,
             sync_status: "active",
             /*
-             * granted_scopes is NOT written yet.
+             * Taken verbatim from the token response, never inferred from which
+             * scopes we asked for: Google may grant fewer than requested, and an
+             * incremental Search Console consent widens the grant later.
              *
-             * The column ships in 20260807120000_add_google_granted_scopes.sql,
-             * which is unapplied. Writing it before the column exists would fail
-             * this upsert at runtime and break the entire Google connect flow —
-             * and it would typecheck cleanly, because an object spread defeats
-             * the excess-property check that would otherwise catch it.
-             *
-             * Enable together with that migration; `params.grantedScopes` is
-             * already plumbed through from the token response and ready.
+             * Left untouched when the response carried no `scope` — overwriting a
+             * known grant with NULL would turn "we observed these scopes" back
+             * into "unknown" on any refresh that happens to omit the field.
              */
+            ...(params.grantedScopes ? { granted_scopes: params.grantedScopes } : {}),
             updated_at: new Date().toISOString(),
         },
         { onConflict: "business_id,platform" },

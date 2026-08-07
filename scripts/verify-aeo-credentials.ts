@@ -9,6 +9,7 @@
  * Prints statuses and costs, never key material.
  */
 import { GoogleGenAI } from "@google/genai";
+import { getEngineDescriptor } from "../src/services/aeo/engines/engine-catalog";
 
 type Check = {
     vendor: string;
@@ -120,12 +121,26 @@ async function checkGemini() {
     }
     const ai = new GoogleGenAI({ apiKey: key });
 
+    /*
+     * Read from the catalog rather than hardcoded. What this script verifies is
+     * "the model AEO will actually call is reachable on this key" — pinning a
+     * second copy of the id here let the two drift once already: this called
+     * 2.5 Pro long after §15 repinned the engine to 2.5 Flash, so the check
+     * would have 404'd against a model the product no longer uses.
+     */
+    const gemini = getEngineDescriptor("gemini");
+    const geminiModel = gemini.pinnedModelId;
+    if (!geminiModel) {
+        checks.push({ vendor: "Gemini", ok: false, detail: "catalog pins no model id", cost: "-" });
+        return;
+    }
+
     // 1. Plain call: proves auth and that the PINNED model is reachable on this
     //    key. Token-only, fractions of a cent.
     try {
         const res = await withTimeout(
             ai.models.generateContent({
-                model: "gemini-2.5-pro",
+                model: geminiModel,
                 contents: "Reply with the single word: ready",
                 config: { maxOutputTokens: 2000 },
             }),
@@ -133,7 +148,7 @@ async function checkGemini() {
         );
         const text = res.text?.trim() ?? "";
         checks.push({
-            vendor: "Gemini (gemini-2.5-pro)",
+            vendor: `Gemini (${geminiModel})`,
             ok: text.length > 0,
             detail: text.length > 0 ? `replied: "${text.slice(0, 40)}"` : "empty response",
             cost: "<$0.01 (tokens only, no grounding)",
@@ -141,10 +156,10 @@ async function checkGemini() {
     } catch (e) {
         const msg = String(e);
         checks.push({
-            vendor: "Gemini (gemini-2.5-pro)",
+            vendor: `Gemini (${geminiModel})`,
             ok: false,
-            // A 404 here usually means the key's project lacks 2.5 Pro access,
-            // which matters: the cost model is pinned to that exact model.
+            // A 404 here usually means the key's project lacks access to the
+            // pinned model, which matters: the cost model is quoted for it.
             detail: msg.slice(0, 200),
             cost: "$0.00 (rejected)",
         });
@@ -152,12 +167,12 @@ async function checkGemini() {
     }
 
     // 2. Grounded call: this is what AEO actually issues, and it is the thing
-    //    the 10,000/day free allowance is denominated in. Verifying it now is
+    //    the free grounding allowance is denominated in. Verifying it now is
     //    what makes the ledger's cost model trustworthy rather than assumed.
     try {
         const res = await withTimeout(
             ai.models.generateContent({
-                model: "gemini-2.5-pro",
+                model: geminiModel,
                 contents: "Who is the best rated plumber in Austin, Texas?",
                 config: { tools: [{ googleSearch: {} }], maxOutputTokens: 2000 },
             }),
@@ -171,7 +186,7 @@ async function checkGemini() {
             detail: meta
                 ? `grounded · ${chunks} source chunk(s) — citations available`
                 : "no groundingMetadata returned (search tool may be unavailable on this key)",
-            cost: "1 of 10,000 free grounding prompts today",
+            cost: `1 of ${gemini.cost.freePerDay.toLocaleString()} free grounding prompts today`,
         });
     } catch (e) {
         checks.push({
