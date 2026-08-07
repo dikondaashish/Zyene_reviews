@@ -144,21 +144,28 @@ export async function dispatchUnit(
     const consumed = billableUnits(result);
     const settledUnits = Math.min(consumed, reservation.grantedUnits);
     const overrunUnits = consumed - settledUnits;
-    const billed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
+    const claimed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
 
-    // Prefer what the vendor said this call cost over `units x catalog rate`.
-    // The catalog rate is a planning figure derived from a quote; a reported
-    // figure is the invoice, and for token-and-search-priced engines the two
-    // genuinely differ per request. Using the estimate when the truth is
-    // available would make the ledger permanently approximate for no reason.
-    //
-    // Only applied to units we are actually billing for: a call inside a free
-    // allowance costs nothing regardless of what the vendor reports it would
-    // have cost, and `billed = 0` must keep cost at 0 or the DB rejects the row.
+    /*
+     * Prefer the vendor's reported figure over `units x catalog rate`: the rate
+     * is a planning number from a quote, the report is the invoice, and for
+     * token-priced engines they genuinely differ per request.
+     *
+     * A REPORTED ZERO IS DATA, NOT A MISSING VALUE — `usdToMicroUsd` returns
+     * undefined for an unusable figure precisely so 0 can mean "charged
+     * nothing", which is what DataForSEO says when it rejects a task it still
+     * answered on the wire. Cost and billable units are therefore decided
+     * together: a unit we pay nothing for is not a billable unit, and claiming
+     * one at zero cost breaks the ledger's
+     * `(billable_units = 0) = (cost_micro_usd = 0)` invariant. Reading through
+     * `??` treated that 0 as "no figure", kept the claim, and threw on settle —
+     * aborting the run with the vendor already called. `settledUnits` still
+     * counts the unit: quota was consumed even though money was not.
+     */
+    const reported = result.reportedCostMicroUsd;
+    const billed = reported === 0 ? 0 : claimed;
     const costMicroUsd =
-        billed > 0
-            ? (result.reportedCostMicroUsd ?? billed * descriptor.cost.overageMicroUsd)
-            : 0;
+        billed > 0 ? (reported ?? billed * descriptor.cost.overageMicroUsd) : 0;
 
     const persisted = await step("persist-sample", async () =>
         samples.persist({

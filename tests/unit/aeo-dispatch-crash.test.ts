@@ -10,7 +10,12 @@ import type {
 } from "../../src/services/aeo/orchestration/ports";
 import { FixtureEngineAdapter } from "../../src/services/aeo/engines/adapters/fixture-engine-adapter";
 import type { AnswerEngineAdapter } from "../../src/services/aeo/engines/engine-types";
-import { citationsUnavailable, okSample } from "../../src/services/aeo/engines/engine-result";
+import {
+    citationsUnavailable,
+    engineError,
+    failedSample,
+    okSample,
+} from "../../src/services/aeo/engines/engine-result";
 
 /**
  * Reproduces Inngest's `step.run` contract so crash behaviour can be asserted
@@ -125,6 +130,15 @@ class MemoryReservations implements ReservationStore {
         }
         if (s.billableUnits > s.settledUnits + s.overrunUnits) {
             throw new Error("billable_units > total consumption");
+        }
+        // aeo_quota_reservations_cost_requires_billable_units. Omitting this one
+        // is what let a paid engine settle 1 billable unit at zero cost through
+        // the whole suite and fail only against the real table, mid-run, with
+        // the vendor already called.
+        if ((s.billableUnits === 0) !== (s.costMicroUsd === 0)) {
+            throw new Error(
+                `cost_requires_billable_units: billable=${s.billableUnits} cost=${s.costMicroUsd}`
+            );
         }
         row.state = "settled";
         row.settledUnits = s.settledUnits;
@@ -432,6 +446,82 @@ describe("the engine reports more units than were reserved", () => {
         const out = await h.go();
         if (out.kind === "sampled") expect(out.overrunUnits).toBe(0);
         expect([...h.reservations.rows.values()][0].overrunUnits).toBe(0);
+    });
+});
+
+describe("a vendor that charges nothing for a call it answered", () => {
+    /**
+     * Regression, found by the first real DataForSEO run rather than by this
+     * suite. DataForSEO rejected a malformed task, still replied on the wire —
+     * so the request counted as one consumed unit — and reported `cost: 0`.
+     *
+     * `google_serp` has no free allowance, so the reservation claimed 1 billable
+     * unit. Reading the reported cost through `??` treated the 0 as "no figure
+     * given", left the claim at 1, and produced billable=1 / cost=0: a row the
+     * ledger's CHECK constraint refuses. The settle threw, the run aborted with
+     * 19 of 25 units undispatched, and the reservation stayed `reserved` with
+     * the vendor already called.
+     */
+    class ZeroCostAdapter implements AnswerEngineAdapter {
+        readonly id = "google_serp" as const;
+        readonly modelId = "dataforseo/google-serp";
+        isConfigured() {
+            return true;
+        }
+        async sample() {
+            return failedSample({
+                modelId: this.modelId,
+                error: engineError("invalid_request", "40501: Invalid Field: 'location_name'."),
+                latencyMs: 697,
+                // The request left and came back, so a unit was consumed...
+                costUnits: 1,
+                // ...but DataForSEO billed nothing for rejecting it.
+                reportedCostMicroUsd: 0,
+            });
+        }
+    }
+
+    const PAID: DispatchInput = { ...INPUT, engineId: "google_serp" };
+
+    function paidHarness() {
+        const inngest = new FakeInngest();
+        const adapter = new ZeroCostAdapter();
+        const reservations = new MemoryReservations();
+        const samples = new MemorySamples();
+        return {
+            reservations,
+            go: () =>
+                inngest.run((step) => dispatchUnit(PAID, { step, adapter, reservations, samples })),
+        };
+    }
+
+    it("settles instead of throwing, so the rest of the run still dispatches", async () => {
+        const h = paidHarness();
+        const out = await h.go();
+        expect(out.kind).toBe("sampled");
+    });
+
+    it("bills nothing and leaves no reservation open", async () => {
+        const h = paidHarness();
+        await h.go();
+        const row = [...h.reservations.rows.values()][0];
+        expect(row.state).toBe("settled");
+        expect(row.billableUnits).toBe(0);
+        expect(row.costMicroUsd).toBe(0);
+    });
+
+    it("still counts the unit as consumed — quota was used even though money was not", async () => {
+        const h = paidHarness();
+        await h.go();
+        expect([...h.reservations.rows.values()][0].settledUnits).toBe(1);
+    });
+
+    it("does not silently substitute the catalog rate for a reported zero", async () => {
+        const h = paidHarness();
+        const out = await h.go();
+        // The catalog rate for google_serp is non-zero; charging it here would
+        // invent an invoice the vendor never sent.
+        expect(out.kind === "sampled" && out.costMicroUsd).toBe(0);
     });
 });
 
