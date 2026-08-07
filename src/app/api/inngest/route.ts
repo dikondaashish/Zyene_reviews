@@ -24,6 +24,7 @@ import {
 } from "@/services/inngest/growth-functions";
 import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
 import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
+import { aeoGeoGridWorker } from "@/services/inngest/aeo/aeo-geo-grid-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -67,6 +68,7 @@ export const { GET, POST, PUT } = serve({
         // "true", so registering them here does not by itself enable spending.
         aeoRunPlanner,
         aeoDispatchWorker,
+        aeoGeoGridWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

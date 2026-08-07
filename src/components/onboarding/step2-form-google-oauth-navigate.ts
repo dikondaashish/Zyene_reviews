@@ -1,5 +1,7 @@
 import { toast } from "sonner";
 
+import { GBP_SCOPE } from "@/services/google/oauth-scopes";
+
 export function navigateToGoogleBusinessOAuthOnboarding(): void {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
     if (!clientId) {
@@ -13,7 +15,7 @@ export function navigateToGoogleBusinessOAuthOnboarding(): void {
     oauthUrl.searchParams.set("client_id", clientId);
     oauthUrl.searchParams.set("redirect_uri", redirectUri);
     oauthUrl.searchParams.set("response_type", "code");
-    oauthUrl.searchParams.set("scope", "https://www.googleapis.com/auth/business.manage");
+    oauthUrl.searchParams.set("scope", GBP_SCOPE);
     oauthUrl.searchParams.set("access_type", "offline");
     oauthUrl.searchParams.set("prompt", "consent");
     window.location.href = oauthUrl.toString();

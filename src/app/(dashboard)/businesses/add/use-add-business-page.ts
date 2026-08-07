@@ -5,6 +5,7 @@ import { createClient } from "@/lib/db/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { GOOGLE_CONNECT_SCOPES } from "@/services/google/oauth-scopes";
 
 export function useAddBusinessPage() {
     const supabase = createClient();
@@ -58,7 +59,7 @@ export function useAddBusinessPage() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
                 options: {
-                    scopes: "openid email profile https://www.googleapis.com/auth/business.manage",
+                    scopes: GOOGLE_CONNECT_SCOPES,
                     redirectTo,
                     queryParams: {
                         access_type: "offline",

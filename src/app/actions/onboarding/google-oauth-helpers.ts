@@ -66,6 +66,14 @@ export interface GoogleTokenBundle {
     accessToken: string;
     refreshToken?: string;
     expiresIn: number;
+    /**
+     * Scopes Google actually granted, verbatim from the token response.
+     *
+     * Recorded rather than assumed: Search Console is requested incrementally,
+     * so what we asked for and what a given grant carries can legitimately
+     * differ, and only the response says which.
+     */
+    grantedScopes?: string;
 }
 
 /** Exchanges an OAuth authorization code for tokens. Returns null on failure. */
@@ -97,6 +105,7 @@ export async function exchangeGoogleAuthCode(
         accessToken: tokenData.access_token,
         refreshToken: tokenData.refresh_token as string | undefined,
         expiresIn: tokenData.expires_in,
+        grantedScopes: tokenData.scope as string | undefined,
     };
 }
 

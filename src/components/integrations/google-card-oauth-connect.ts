@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/client";
+import { GOOGLE_CONNECT_SCOPES } from "@/services/google/oauth-scopes";
 import { toast } from "sonner";
 
 export async function startGoogleOAuthConnect(businessId: string): Promise<void> {
@@ -12,7 +13,7 @@ export async function startGoogleOAuthConnect(businessId: string): Promise<void>
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                scopes: "openid email profile https://www.googleapis.com/auth/business.manage",
+                scopes: GOOGLE_CONNECT_SCOPES,
                 redirectTo,
                 queryParams: {
                     access_type: "offline",

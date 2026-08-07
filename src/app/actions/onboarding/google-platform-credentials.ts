@@ -13,6 +13,8 @@ interface StoreCredentialsParams {
     googleReviewUrl: string | null;
     reviewCount: number;
     averageRating: number;
+    /** Verbatim from the token response. Undefined stays NULL — unknown, not "none". */
+    grantedScopes?: string;
 }
 
 type StoreCredentialsResult =
@@ -88,6 +90,18 @@ export async function storeGooglePlatformCredentials(
             total_reviews: params.reviewCount,
             average_rating: params.averageRating,
             sync_status: "active",
+            /*
+             * granted_scopes is NOT written yet.
+             *
+             * The column ships in 20260807120000_add_google_granted_scopes.sql,
+             * which is unapplied. Writing it before the column exists would fail
+             * this upsert at runtime and break the entire Google connect flow —
+             * and it would typecheck cleanly, because an object spread defeats
+             * the excess-property check that would otherwise catch it.
+             *
+             * Enable together with that migration; `params.grantedScopes` is
+             * already plumbed through from the token response and ready.
+             */
             updated_at: new Date().toISOString(),
         },
         { onConflict: "business_id,platform" },
