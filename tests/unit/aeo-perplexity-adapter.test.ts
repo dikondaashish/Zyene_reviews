@@ -72,13 +72,15 @@ describe("endpoint and model", () => {
 });
 
 describe("vendor-reported cost", () => {
-    it("reports the invoice, not the catalog estimate", async () => {
-        // $0.00532 reported vs the catalog's $0.0067 estimate — a 26% gap that
-        // would compound silently across a month if the estimate were used.
+    it("reports the invoice, not the catalog rate", async () => {
+        // Still distinct after the catalog was corrected to the measured $0.0054:
+        // per-call cost varies with tokens, so the reported figure and the
+        // planning rate must never be assumed equal. Asserting the rate here on
+        // purpose — a catalog typo should fail loudly rather than be imported.
         fetchMock.mockResolvedValue(reply(answer("hi")));
         const result = await adapter.sample(REQUEST);
         expect(result.reportedCostMicroUsd).toBe(5_320);
-        expect(getEngineDescriptor("perplexity").cost.overageMicroUsd).toBe(6_700);
+        expect(getEngineDescriptor("perplexity").cost.overageMicroUsd).toBe(5_400);
     });
 
     it("omits the field entirely when the vendor reports nothing", async () => {

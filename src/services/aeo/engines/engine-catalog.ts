@@ -43,7 +43,13 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "DataForSEO",
         phase: 1,
         pinnedModelId: null,
-        cost: { overageMicroUsd: 600, freePerDay: 0, confidence: "estimated" },
+        /**
+         * MEASURED $0.002/call live on 2026-08-07, correcting a $0.0006 estimate
+         * that understated spend 3.3×. DEPTH-COUPLED: the rate is for
+         * `organic/live/advanced` at the adapter's default depth 10, so raising
+         * that depth invalidates this figure and the budget guard with it.
+         */
+        cost: { overageMicroUsd: 2_000, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: true,
     },
@@ -54,7 +60,14 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "DataForSEO",
         phase: 1,
         pinnedModelId: null,
-        cost: { overageMicroUsd: 600, freePerDay: 0, confidence: "estimated" },
+        /**
+         * MEASURED 2026-08-07 and NOT flat: $0.002 when Google returns no AI
+         * Overview, $0.004 when it does — `load_async_ai_overview` bills only
+         * when it yields one. The worst case is quoted deliberately, since a
+         * guard that plans at the cheaper rate would authorise a day it cannot
+         * afford on exactly the prompts that answer.
+         */
+        cost: { overageMicroUsd: 4_000, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: true,
     },
@@ -103,11 +116,12 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         pinnedModelId: "sonar",
         /**
          * Token cost plus a per-request search fee; best signal per dollar.
-         * ESTIMATE, known to run ~24% high (measured $0.00532 against this
-         * $0.0067). Perplexity reports real per-request cost, so the ledger uses
-         * that; this figure is only for planning and the guard's projection.
+         * MEASURED: 5 live sonar calls on 2026-08-07 averaged $0.005396 (range
+         * $0.00530–$0.00553), replacing a $0.0067 estimate that ran ~24% high.
+         * The ledger still prefers Perplexity's per-request reported cost; this
+         * only drives planning and the budget projection the old value inflated.
          */
-        cost: { overageMicroUsd: 6_700, freePerDay: 0, confidence: "estimated" },
+        cost: { overageMicroUsd: 5_400, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: false,
     },
