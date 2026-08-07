@@ -6,6 +6,7 @@ import type {
     EngineSampleRequest,
     EngineSampleResult,
 } from "../engine-types";
+import { resolveCountryName } from "../../locale/region-names";
 import { reportedCost, usdToMicroUsd } from "./adapter-support";
 import {
     callDataForSeo,
@@ -85,6 +86,21 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
             });
         }
 
+        // Refused before the request leaves, so an unplaceable search costs
+        // nothing and is recorded as a refusal rather than as a null result.
+        const location = locationFor(request);
+        if (!location) {
+            return failedSample({
+                modelId: this.modelId,
+                error: engineError(
+                    "invalid_request",
+                    `no DataForSEO location for country "${request.locale.country}"`
+                ),
+                latencyMs: elapsed(),
+                costUnits: 0,
+            });
+        }
+
         const timeout = AbortSignal.timeout(this.timeoutMs);
         const abort = signal ? AbortSignal.any([signal, timeout]) : timeout;
 
@@ -94,7 +110,7 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
                 keyword: request.prompt,
                 language_code: request.locale.language || "en",
                 depth: this.depth,
-                ...locationFor(request),
+                ...location,
                 // Only requested for the AI Overview surface: it costs more and
                 // there is no reason to pay for it on a plain SERP sample.
                 ...(this.id === "google_ai_overview" ? { load_async_ai_overview: true } : {}),
@@ -139,13 +155,32 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
  * what the geo-grid needs. Falls back to a name, then to the country, so a
  * missing city degrades to a wider sample rather than an error.
  */
-function locationFor(request: EngineSampleRequest): Record<string, unknown> {
+/**
+ * DataForSEO takes exactly one location field, and is strict about its shape.
+ *
+ * `location_name` must be fully qualified — "Kansas City,Missouri,United States".
+ * The bare city this used to send is rejected with 40501, so every Google sample
+ * failed as `invalid_request` while still consuming a unit. An abbreviated state
+ * ("Kansas City,MO,United States") is rejected identically.
+ *
+ * A city we cannot qualify falls back to the whole country rather than being
+ * sent alone. That widens the measurement, which is visible in the result, where
+ * silently resolving to the wrong Kansas City would not be.
+ *
+ * Returns null when it cannot place the search at all. The country fallback is
+ * the US location code, so applying it to a country we cannot name would run an
+ * Australian business's search in America and report the miss as absence — a
+ * wrong answer dressed as a measurement. The caller refuses instead.
+ */
+function locationFor(request: EngineSampleRequest): Record<string, unknown> | null {
     const { locale } = request;
     if (locale.coordinate) {
         return { location_coordinate: `${locale.coordinate.lat},${locale.coordinate.lng}` };
     }
-    if (locale.city) {
-        return { location_name: locale.city };
+    const countryName = resolveCountryName(locale.country);
+    if (!countryName) return null;
+    if (locale.city && locale.region) {
+        return { location_name: `${locale.city},${locale.region},${countryName}` };
     }
     return { location_code: 2840 }; // United States
 }

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { AnswerEngineId } from "../engines/engine-types";
+import { resolveRegionName } from "../locale/region-names";
 import type { RunStatus, RunStore } from "./ports";
 
 type Admin = SupabaseClient<Database>;
@@ -19,16 +20,37 @@ export class SupabaseRunStore implements RunStore {
             .order("created_at", { ascending: true });
 
         if (error) throw new Error(`loadActivePrompts failed: ${error.message}`);
+        if ((data ?? []).length === 0) return [];
 
-        return (data ?? []).map((row) => ({
-            promptId: row.id,
-            promptText: row.prompt_text,
-            locale: {
-                country: row.locale_country,
-                language: row.locale_language,
-                ...(row.locale_city ? { city: row.locale_city } : {}),
-            },
-        }));
+        /*
+         * The region comes from the business, not the prompt: a prompt's city is
+         * already the business's city, and storing a second copy of the state
+         * would let the two disagree. Read once for the whole set rather than
+         * per row.
+         *
+         * A prompt whose city cannot be qualified keeps its city but carries no
+         * region, and search adapters widen to the country instead of guessing
+         * which "Kansas City" was meant.
+         */
+        const { data: business } = await this.db
+            .from("businesses")
+            .select("state")
+            .eq("id", businessId)
+            .single();
+
+        return (data ?? []).map((row) => {
+            const region = resolveRegionName(row.locale_country, business?.state);
+            return {
+                promptId: row.id,
+                promptText: row.prompt_text,
+                locale: {
+                    country: row.locale_country,
+                    language: row.locale_language,
+                    ...(row.locale_city ? { city: row.locale_city } : {}),
+                    ...(region ? { region } : {}),
+                },
+            };
+        });
     }
 
     async consumedTodayByEngine(

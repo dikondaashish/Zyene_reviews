@@ -39,6 +39,14 @@ export type EngineLocale = {
     /** ISO 639-1, e.g. "en". */
     language: string;
     city?: string;
+    /**
+     * Full region name, e.g. "Missouri" — never the "MO" abbreviation, which
+     * search vendors reject. Required alongside `city` to identify a metro at
+     * all: "Kansas City" alone is ambiguous between two states. Absent means the
+     * city cannot be qualified, and a consumer must widen to the country rather
+     * than guess. See services/aeo/locale/region-names.ts.
+     */
+    region?: string;
     coordinate?: { lat: number; lng: number };
 };
 
