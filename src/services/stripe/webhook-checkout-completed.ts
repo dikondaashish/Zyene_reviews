@@ -121,6 +121,16 @@ export async function handleCheckoutSessionCompleted(
         })
         .eq("id", organizationId);
 
+    // Isolated on purpose, like the growth steps below: a bug in this newer,
+    // less-proven feature must never block the org record above or the
+    // welcome email that follows, which real customers rely on today.
+    try {
+        const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
+        await resetAeoCreditsForPlan(supabase, { organizationId, planId: plan?.id || "starter_monthly" });
+    } catch (creditErr) {
+        logger.error({ err: creditErr }, "[AEO] E-9 initial credit grant failed on checkout");
+    }
+
     try {
         const customerEmail = session.customer_details?.email;
         if (customerEmail) {

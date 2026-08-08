@@ -17,6 +17,7 @@ import { SupabaseReservationStore } from "../src/services/aeo/orchestration/supa
 import { SupabaseRunStore } from "../src/services/aeo/orchestration/supabase-run-store";
 import { SupabaseSampleStore } from "../src/services/aeo/orchestration/supabase-sample-store";
 import { SupabaseAnswerStore, AEO_ANSWER_BUCKET } from "../src/services/aeo/orchestration/supabase-answer-store";
+import { SupabaseBillingGateway } from "../src/services/aeo/billing/billing-gateway";
 import { extractSample } from "../src/services/aeo/extraction/extract-sample";
 import { SupabaseExtractionStore } from "../src/services/aeo/extraction/supabase-extraction-store";
 import { citationsPresent, okSample } from "../src/services/aeo/engines/engine-result";
@@ -34,6 +35,7 @@ async function main() {
     const runs = new SupabaseRunStore(db);
     const samples = new SupabaseSampleStore(db);
     const answers = new SupabaseAnswerStore(db);
+    const billing = new SupabaseBillingGateway(db);
 
     const { data: biz } = await db
         .from("businesses")
@@ -112,6 +114,7 @@ async function main() {
             reservations,
             samples,
             answers,
+            billing,
         });
         check(`dispatch ${d.promptId.slice(0, 8)} sampled`, outcome.kind === "sampled", outcome.kind);
         if (outcome.kind === "sampled") {
@@ -129,6 +132,7 @@ async function main() {
         reservations,
         samples,
         answers,
+        billing,
     });
     // The bug this smoke test found: a re-delivered event must not re-call the
     // vendor for work already finished, nor throw settling a closed reservation.

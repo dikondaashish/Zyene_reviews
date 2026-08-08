@@ -31,6 +31,7 @@ import { SupabaseReservationStore } from "../src/services/aeo/orchestration/supa
 import { SupabaseRunStore } from "../src/services/aeo/orchestration/supabase-run-store";
 import { SupabaseSampleStore } from "../src/services/aeo/orchestration/supabase-sample-store";
 import { SupabaseAnswerStore } from "../src/services/aeo/orchestration/supabase-answer-store";
+import { SupabaseBillingGateway } from "../src/services/aeo/billing/billing-gateway";
 import { extractSample } from "../src/services/aeo/extraction/extract-sample";
 import { SupabaseExtractionStore } from "../src/services/aeo/extraction/supabase-extraction-store";
 
@@ -91,6 +92,7 @@ async function main() {
     const reservations = new SupabaseReservationStore(db);
     const samples = new SupabaseSampleStore(db);
     const answers = new SupabaseAnswerStore(db);
+    const billing = new SupabaseBillingGateway(db);
     const extraction = new SupabaseExtractionStore(db);
 
     const { data: biz, error: bizErr } = await db
@@ -193,7 +195,7 @@ async function main() {
             break;
         }
 
-        const outcome = await dispatchUnit(d, { step: passthrough, adapter, reservations, samples, answers });
+        const outcome = await dispatchUnit(d, { step: passthrough, adapter, reservations, samples, answers, billing });
 
         if (outcome.kind !== "sampled") {
             console.log(`${d.engineId.padEnd(20)} ${outcome.kind}`);

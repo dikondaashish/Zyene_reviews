@@ -77,7 +77,7 @@ export async function handleStripeWebhook(request: Request) {
                 await handleInvoicePaymentFailed(event, supabase);
                 break;
             case "invoice.payment_succeeded":
-                await handleInvoicePaymentSucceeded(event);
+                await handleInvoicePaymentSucceeded(event, supabase);
                 break;
             default:
                 break;

@@ -151,6 +151,16 @@ export interface AnswerStore {
 }
 
 /**
+ * E-9. Everything a settled test needs to become a customer charge — credit
+ * ledger, Stripe, and the org lookup between them — collapsed into the one
+ * call dispatch-unit.ts makes. See services/aeo/billing/billing-gateway.ts
+ * for what is behind it; dispatch-unit.ts does not need to know.
+ */
+export interface BillingGateway {
+    settleTest(input: { organizationId: string; sampleId: string }): Promise<void>;
+}
+
+/**
  * The subset of Inngest's `step.run` that orchestration depends on.
  *
  * Contract, which the tests reproduce exactly: a step that COMPLETES is

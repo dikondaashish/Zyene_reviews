@@ -4,6 +4,7 @@ import { dispatchUnit, type DispatchInput } from "../../src/services/aeo/orchest
 import type {
     AnswerStore,
     AnswerStorePut,
+    BillingGateway,
     ReservationStore,
     ReserveOutcome,
     ReserveRequest,
@@ -191,6 +192,19 @@ class MemoryAnswers implements AnswerStore {
     }
 }
 
+/**
+ * E-9 double. Records every call rather than deciding anything itself — the
+ * real flag-gating (isMeteredBillingLive) lives in SupabaseBillingGateway and
+ * is tested there; this fake exists so dispatch-unit's crash tests can assert
+ * WHETHER and HOW OFTEN billing was called without needing a live database.
+ */
+class MemoryBilling implements BillingGateway {
+    calls: { organizationId: string; sampleId: string }[] = [];
+    async settleTest(input: { organizationId: string; sampleId: string }): Promise<void> {
+        this.calls.push(input);
+    }
+}
+
 const INPUT: DispatchInput = {
     runId: "run-1",
     businessId: "biz-1",
@@ -211,9 +225,10 @@ function harness() {
     const reservations = new MemoryReservations();
     const samples = new MemorySamples();
     const answers = new MemoryAnswers();
+    const billing = new MemoryBilling();
     const go = () =>
-        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples, answers }));
-    return { inngest, adapter, reservations, samples, answers, go };
+        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing }));
+    return { inngest, adapter, reservations, samples, answers, billing, go };
 }
 
 describe("happy path", () => {
@@ -233,7 +248,16 @@ describe("happy path", () => {
             "call-engine",
             "persist-sample",
             "settle",
+            // E-9: only for a status "ok" sample — vendor cost settles first,
+            // since it is owed regardless of what we bill the customer.
+            "bill-test",
         ]);
+    });
+
+    it("bills the org for a status ok sample, exactly once", async () => {
+        const h = harness();
+        await h.go();
+        expect(h.billing.calls).toEqual([{ organizationId: "org-1", sampleId: expect.any(String) }]);
     });
 });
 
@@ -368,9 +392,10 @@ describe("a re-delivered event for finished work", () => {
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
         const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
         const once = () =>
             new FakeInngest().run((step) =>
-                dispatchUnit(INPUT, { step, adapter, reservations, samples, answers })
+                dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing })
             );
         const first = await once();
         const second = await once();
@@ -432,12 +457,13 @@ describe("the engine reports more units than were reserved", () => {
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
         const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
         const adapter = overReporting(units);
         return {
             reservations,
             go: () =>
                 inngest.run((step) =>
-                    dispatchUnit(INPUT, { step, adapter, reservations, samples, answers })
+                    dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing })
                 ),
         };
     }
@@ -563,11 +589,13 @@ describe("a vendor that charges nothing for a call it answered", () => {
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
         const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
         return {
             reservations,
+            billing,
             go: () =>
                 inngest.run((step) =>
-                    dispatchUnit(PAID, { step, adapter, reservations, samples, answers })
+                    dispatchUnit(PAID, { step, adapter, reservations, samples, answers, billing })
                 ),
         };
     }
@@ -576,6 +604,15 @@ describe("a vendor that charges nothing for a call it answered", () => {
         const h = paidHarness();
         const out = await h.go();
         expect(out.kind).toBe("sampled");
+    });
+
+    it("never bills the customer for a call the vendor billed us for but that answered nothing", async () => {
+        // This IS the confirmed "one test" definition (2026-08-08): only
+        // status "ok" is a billable test. DataForSEO charging us for a
+        // rejected request is our cost to absorb, never passed through.
+        const h = paidHarness();
+        await h.go();
+        expect(h.billing.calls).toEqual([]);
     });
 
     it("bills nothing and leaves no reservation open", async () => {

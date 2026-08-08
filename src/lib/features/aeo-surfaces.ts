@@ -58,3 +58,22 @@ const LIVE_SAMPLING_ENV_KEY = "AEO_LIVE_SAMPLING";
 export function isLiveSamplingEnabled(): boolean {
     return process.env[LIVE_SAMPLING_ENV_KEY]?.trim().toLowerCase() === "true";
 }
+
+const METERED_BILLING_ENV_KEY = "AEO_METERED_BILLING_LIVE";
+
+/**
+ * Whether a settled test may debit an org's AEO credit balance or charge
+ * Stripe overage (E-9).
+ *
+ * A THIRD gate alongside AEO_LIVE_SAMPLING and the Stripe price's own `active`
+ * flag — this one specifically is checked as the FIRST line of the billing
+ * step, before any database or Stripe call, so leaving it unset makes the
+ * step a true no-op rather than a query against tables a not-yet-applied
+ * migration hasn't created. Three independent things must all be true before
+ * a customer's card is ever touched: this flag, the credit-ledger migration
+ * applied, and the AEO Test Overage price active. None of them imply the
+ * others.
+ */
+export function isMeteredBillingLive(): boolean {
+    return process.env[METERED_BILLING_ENV_KEY]?.trim().toLowerCase() === "true";
+}

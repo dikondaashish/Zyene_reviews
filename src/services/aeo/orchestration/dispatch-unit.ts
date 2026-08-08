@@ -6,22 +6,16 @@ import type {
 } from "../engines/engine-types";
 import { getEngineDescriptor } from "../engines/engine-catalog";
 import { reconcileUnit } from "./reconcile-unit";
-import type { AnswerStore, ReservationStore, SampleStore, StepRunner } from "./ports";
+import type { AnswerStore, BillingGateway, ReservationStore, SampleStore, StepRunner } from "./ports";
 
 /**
  * E-7: one unit of sampling work — a single (prompt × engine × attempt).
  *
- * Three separate steps, deliberately. Inngest memoizes a step that COMPLETES
- * and re-runs one that dies mid-flight, so where the boundaries fall decides
- * what a crash costs:
- *
- *   reserve | call | settle   a crash after the call replays only `settle`;
- *                             the engine is not called again.
- *   reserve+call | settle     a crash after the call replays the call too, and
- *                             the vendor charges twice.
- *
- * The second shape is the obvious-looking one — fewer round trips, one step for
- * "do the work" — and it is wrong for exactly this reason.
+ * Separate steps, deliberately: Inngest memoizes a step that COMPLETES and
+ * re-runs one that dies mid-flight, so where the boundaries fall decides what
+ * a crash costs — reserve|call|settle replays only settle after a crash;
+ * reserve+call|settle replays the call too and double-bills the vendor.
+ * bill-test (E-9) is its own step for the same reason, one level up.
  */
 
 export type DispatchInput = {
@@ -66,6 +60,8 @@ export type DispatchDeps = {
     samples: SampleStore;
     /** E-8. Required, not optional: an answer store nobody passes stores nothing. */
     answers: AnswerStore;
+    /** E-9. Gates itself on isMeteredBillingLive(); safe to pass even when billing is off. */
+    billing: BillingGateway;
     now?: () => Date;
 };
 
@@ -73,7 +69,7 @@ export async function dispatchUnit(
     input: DispatchInput,
     deps: DispatchDeps
 ): Promise<DispatchOutcome> {
-    const { step, adapter, reservations, samples, answers } = deps;
+    const { step, adapter, reservations, samples, answers, billing } = deps;
     const now = deps.now ?? (() => new Date());
     const descriptor = getEngineDescriptor(input.engineId);
     const idempotencyKey = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
@@ -182,6 +178,15 @@ export async function dispatchUnit(
             at: now().toISOString(),
         })
     );
+
+    // E-9, separate step: what the vendor charged US just settled above; this
+    // is what WE charge the customer, and a crash here must never replay that
+    // settle. Only "ok" is billable — a vendor-billed failure is our cost.
+    if (result.status === "ok") {
+        await step("bill-test", () =>
+            billing.settleTest({ organizationId: input.organizationId, sampleId: persisted.sampleId })
+        );
+    }
 
     return {
         kind: "sampled",
