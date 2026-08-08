@@ -84,6 +84,7 @@ export const aeoDispatchWorker = inngest.createFunction(
                 adapter,
                 reservations: stores.reservations,
                 samples: stores.samples,
+                answers: stores.answers,
             }
         );
 

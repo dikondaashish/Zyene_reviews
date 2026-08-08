@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { dispatchUnit, type DispatchInput } from "../../src/services/aeo/orchestration/dispatch-unit";
 import type {
+    AnswerStore,
+    AnswerStorePut,
     ReservationStore,
     ReserveOutcome,
     ReserveRequest,
@@ -154,11 +156,38 @@ class MemoryReservations implements ReservationStore {
 
 class MemorySamples implements SampleStore {
     persisted: string[] = [];
-    async persist(input: { runId: string; promptId: string; engineId: string; attempt: number }) {
+    /** What the row recorded as its evidence pointer, keyed by unit. */
+    paths = new Map<string, string | null>();
+    async persist(input: {
+        runId: string;
+        promptId: string;
+        engineId: string;
+        attempt: number;
+        answerStoragePath: string | null;
+    }) {
         const key = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
         const already = this.persisted.includes(key);
-        if (!already) this.persisted.push(key);
+        if (!already) {
+            this.persisted.push(key);
+            this.paths.set(key, input.answerStoragePath);
+        }
         return { sampleId: key, alreadyPersisted: already };
+    }
+}
+
+/** E-8 double. `fail` models object storage being down while the DB is fine. */
+class MemoryAnswers implements AnswerStore {
+    objects = new Map<string, string>();
+    fail = false;
+    async put(input: AnswerStorePut): Promise<string | null> {
+        if (input.result.status !== "ok") return null;
+        if (this.fail) return null;
+        const path = `${input.organizationId}/${input.runId}/${input.promptId}__${input.engineId}__${input.attempt}.json`;
+        this.objects.set(path, JSON.stringify({
+            prompt: input.promptText,
+            answerText: input.result.answerText,
+        }));
+        return path;
     }
 }
 
@@ -181,9 +210,10 @@ function harness() {
     const adapter = new FixtureEngineAdapter({ id: "gemini", modelId: "gemini-2.5-pro" });
     const reservations = new MemoryReservations();
     const samples = new MemorySamples();
+    const answers = new MemoryAnswers();
     const go = () =>
-        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples }));
-    return { inngest, adapter, reservations, samples, go };
+        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples, answers }));
+    return { inngest, adapter, reservations, samples, answers, go };
 }
 
 describe("happy path", () => {
@@ -337,9 +367,10 @@ describe("a re-delivered event for finished work", () => {
         const adapter = new FixtureEngineAdapter({ id: "gemini", modelId: "gemini-2.5-pro" });
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
         const once = () =>
             new FakeInngest().run((step) =>
-                dispatchUnit(INPUT, { step, adapter, reservations, samples })
+                dispatchUnit(INPUT, { step, adapter, reservations, samples, answers })
             );
         const first = await once();
         const second = await once();
@@ -400,11 +431,14 @@ describe("the engine reports more units than were reserved", () => {
         const inngest = new FakeInngest();
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
         const adapter = overReporting(units);
         return {
             reservations,
             go: () =>
-                inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples })),
+                inngest.run((step) =>
+                    dispatchUnit(INPUT, { step, adapter, reservations, samples, answers })
+                ),
         };
     }
 
@@ -449,6 +483,46 @@ describe("the engine reports more units than were reserved", () => {
     });
 });
 
+describe("E-8 — the answer is kept as evidence", () => {
+    it("records where the answer was stored", async () => {
+        const h = harness();
+        await h.go();
+        const [key] = h.samples.persisted;
+        expect(h.samples.paths.get(key)).toMatch(/^org-1\/run-1\/prompt-1__gemini__1\.json$/);
+        expect(h.answers.objects.size).toBe(1);
+    });
+
+    it("stores the prompt with the answer, since half the evidence is the question", async () => {
+        const h = harness();
+        await h.go();
+        const stored = JSON.parse([...h.answers.objects.values()][0]) as { prompt: string };
+        expect(stored.prompt).toBe("best plumber in Austin");
+    });
+
+    it("keeps the sample when storage fails, and records no evidence rather than an empty answer", async () => {
+        // Losing the copy must not lose the observation: the vendor was already
+        // paid for it. NULL then means "no evidence retained" — which readers
+        // must distinguish from "the engine said nothing".
+        const h = harness();
+        h.answers.fail = true;
+        const out = await h.go();
+
+        expect(out.kind).toBe("sampled");
+        expect(h.samples.persisted).toHaveLength(1);
+        expect(h.samples.paths.get(h.samples.persisted[0])).toBeNull();
+    });
+
+    it("writes one object per unit however often the step replays", async () => {
+        // The path is derived from the unit, not from the sample id, so a
+        // re-executed step overwrites its own object instead of orphaning one.
+        const h = harness();
+        h.inngest.crashAfter = { stepId: "persist-sample", onAttempt: 1 };
+        await h.go();
+        expect(h.answers.objects.size).toBe(1);
+        expect(h.samples.persisted).toHaveLength(1);
+    });
+});
+
 describe("a vendor that charges nothing for a call it answered", () => {
     /**
      * Regression, found by the first real DataForSEO run rather than by this
@@ -488,10 +562,13 @@ describe("a vendor that charges nothing for a call it answered", () => {
         const adapter = new ZeroCostAdapter();
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
         return {
             reservations,
             go: () =>
-                inngest.run((step) => dispatchUnit(PAID, { step, adapter, reservations, samples })),
+                inngest.run((step) =>
+                    dispatchUnit(PAID, { step, adapter, reservations, samples, answers })
+                ),
         };
     }
 

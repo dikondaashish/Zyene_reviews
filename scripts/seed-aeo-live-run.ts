@@ -2,6 +2,7 @@
  * Runs ONE real sampling cycle against the live vendors and LEAVES THE DATA.
  *
  *   pnpm exec tsx --env-file=.env.local scripts/seed-aeo-live-run.ts --business <uuid>
+ *   (--engines gemini,perplexity narrows the engine set; default is all five)
  *   (add --confirm to actually spend; without it this prints the plan and exits)
  *
  * This is the deliberate opposite of scripts/smoke-aeo-dispatch.ts, which proves
@@ -29,13 +30,14 @@ import { dispatchUnit } from "../src/services/aeo/orchestration/dispatch-unit";
 import { SupabaseReservationStore } from "../src/services/aeo/orchestration/supabase-reservation-store";
 import { SupabaseRunStore } from "../src/services/aeo/orchestration/supabase-run-store";
 import { SupabaseSampleStore } from "../src/services/aeo/orchestration/supabase-sample-store";
+import { SupabaseAnswerStore } from "../src/services/aeo/orchestration/supabase-answer-store";
 import { extractSample } from "../src/services/aeo/extraction/extract-sample";
 import { SupabaseExtractionStore } from "../src/services/aeo/extraction/supabase-extraction-store";
 
 /** Hard ceiling for one seeding run. Five engines × five prompts sits near $0.17. */
 const MAX_SPEND_MICRO_USD = 500_000; // $0.50
 
-const ENGINES: AnswerEngineId[] = [
+const ALL_ENGINES: AnswerEngineId[] = [
     "gemini",
     "google_serp",
     "google_ai_overview",
@@ -61,15 +63,34 @@ function arg(flag: string): string | null {
     return i >= 0 ? (process.argv[i + 1] ?? null) : null;
 }
 
+/**
+ * `--engines gemini,perplexity` narrows the run. Unknown names are rejected
+ * rather than skipped: a typo that silently sampled nothing would look exactly
+ * like an engine that returned nothing.
+ */
+function requestedEngines(): AnswerEngineId[] {
+    const raw = arg("--engines");
+    if (!raw) return ALL_ENGINES;
+
+    const asked = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    const unknown = asked.filter((s) => !ALL_ENGINES.includes(s as AnswerEngineId));
+    if (unknown.length > 0) {
+        throw new Error(`unknown engine(s): ${unknown.join(", ")} — known: ${ALL_ENGINES.join(", ")}`);
+    }
+    return asked as AnswerEngineId[];
+}
+
 async function main() {
     const businessId = arg("--business");
     const confirmed = process.argv.includes("--confirm");
     if (!businessId) throw new Error("--business <uuid> is required");
+    const engines = requestedEngines();
 
     const db = createAdminClient();
     const runs = new SupabaseRunStore(db);
     const reservations = new SupabaseReservationStore(db);
     const samples = new SupabaseSampleStore(db);
+    const answers = new SupabaseAnswerStore(db);
     const extraction = new SupabaseExtractionStore(db);
 
     const { data: biz, error: bizErr } = await db
@@ -105,6 +126,7 @@ async function main() {
         if (error) throw new Error(`prompt insert failed: ${error.message}`);
     }
     console.log(`Prompts  : ${PROMPTS.length} enrolled (${toInsert.length} new)`);
+    console.log(`Engines  : ${engines.join(", ")}`);
 
     const usageDate = new Date().toISOString().slice(0, 10);
     const prompts = await runs.loadActivePrompts(businessId);
@@ -122,7 +144,7 @@ async function main() {
             organizationId: biz.organization_id,
             usageDate,
             prompts,
-            requestedEngines: ENGINES,
+            requestedEngines: engines,
             consumedByEngine: consumed,
         },
         engineRegistry
@@ -171,7 +193,7 @@ async function main() {
             break;
         }
 
-        const outcome = await dispatchUnit(d, { step: passthrough, adapter, reservations, samples });
+        const outcome = await dispatchUnit(d, { step: passthrough, adapter, reservations, samples, answers });
 
         if (outcome.kind !== "sampled") {
             console.log(`${d.engineId.padEnd(20)} ${outcome.kind}`);

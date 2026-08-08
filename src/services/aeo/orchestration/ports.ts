@@ -124,7 +124,30 @@ export interface SampleStore {
         engineId: AnswerEngineId;
         attempt: number;
         result: EngineSampleResult;
+        /**
+         * Where the verbatim answer was stored, or null when none was — a failed
+         * upload, or a sample with no prose to store. Null must read downstream
+         * as "no evidence retained", never as "the engine said nothing".
+         */
+        answerStoragePath: string | null;
     }): Promise<{ sampleId: string; alreadyPersisted: boolean }>;
+}
+
+export type AnswerStorePut = {
+    organizationId: string;
+    runId: string;
+    promptId: string;
+    engineId: AnswerEngineId;
+    attempt: number;
+    /** Stored with the answer: the question is half of the evidence. */
+    promptText: string;
+    locale: EngineLocale;
+    result: EngineSampleResult;
+};
+
+/** E-8. Separate from SampleStore because object storage fails independently. */
+export interface AnswerStore {
+    put(input: AnswerStorePut): Promise<string | null>;
 }
 
 /**

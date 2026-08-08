@@ -4,9 +4,9 @@ import type {
     EngineLocale,
     EngineSampleResult,
 } from "../engines/engine-types";
-import { billableUnits } from "../engines/engine-types";
 import { getEngineDescriptor } from "../engines/engine-catalog";
-import type { ReservationStore, SampleStore, StepRunner } from "./ports";
+import { reconcileUnit } from "./reconcile-unit";
+import type { AnswerStore, ReservationStore, SampleStore, StepRunner } from "./ports";
 
 /**
  * E-7: one unit of sampling work — a single (prompt × engine × attempt).
@@ -64,6 +64,8 @@ export type DispatchDeps = {
     adapter: AnswerEngineAdapter;
     reservations: ReservationStore;
     samples: SampleStore;
+    /** E-8. Required, not optional: an answer store nobody passes stores nothing. */
+    answers: AnswerStore;
     now?: () => Date;
 };
 
@@ -71,7 +73,7 @@ export async function dispatchUnit(
     input: DispatchInput,
     deps: DispatchDeps
 ): Promise<DispatchOutcome> {
-    const { step, adapter, reservations, samples } = deps;
+    const { step, adapter, reservations, samples, answers } = deps;
     const now = deps.now ?? (() => new Date());
     const descriptor = getEngineDescriptor(input.engineId);
     const idempotencyKey = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
@@ -134,49 +136,42 @@ export async function dispatchUnit(
     const result = called.sample;
     const duplicateRisk = called.dispatchAttempts > 1;
 
-    // STEP 3 — reconcile. Consumption and cost are different quantities: a call
-    // inside a free allowance consumes a unit and costs nothing.
-    //
-    // costUnits is adapter-reported and unbounded above, so it can exceed what
-    // we pessimistically claimed. The excess is split off rather than dropped:
-    // discarding it would tell the guard the bucket is less drained than it is,
-    // which is the self-amplifying undercount this ledger exists to prevent.
-    const consumed = billableUnits(result);
-    const settledUnits = Math.min(consumed, reservation.grantedUnits);
-    const overrunUnits = consumed - settledUnits;
-    const claimed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
+    // STEP 3 — reconcile. The arithmetic lives in reconcileUnit, which is pure
+    // and tested directly: it decides what the customer is charged.
+    const { settledUnits, overrunUnits, billableUnits: billed, costMicroUsd } = reconcileUnit(
+        result,
+        {
+            grantedUnits: reservation.grantedUnits,
+            claimBillableUnits: reservation.kind === "granted" ? reservation.billableUnits : 0,
+        },
+        descriptor.cost.overageMicroUsd
+    );
 
-    /*
-     * Prefer the vendor's reported figure over `units x catalog rate`: the rate
-     * is a planning number from a quote, the report is the invoice, and for
-     * token-priced engines they genuinely differ per request.
-     *
-     * A REPORTED ZERO IS DATA, NOT A MISSING VALUE — `usdToMicroUsd` returns
-     * undefined for an unusable figure precisely so 0 can mean "charged
-     * nothing", which is what DataForSEO says when it rejects a task it still
-     * answered on the wire. Cost and billable units are therefore decided
-     * together: a unit we pay nothing for is not a billable unit, and claiming
-     * one at zero cost breaks the ledger's
-     * `(billable_units = 0) = (cost_micro_usd = 0)` invariant. Reading through
-     * `??` treated that 0 as "no figure", kept the claim, and threw on settle —
-     * aborting the run with the vendor already called. `settledUnits` still
-     * counts the unit: quota was consumed even though money was not.
-     */
-    const reported = result.reportedCostMicroUsd;
-    const billed = reported === 0 ? 0 : claimed;
-    const costMicroUsd =
-        billed > 0 ? (reported ?? billed * descriptor.cost.overageMicroUsd) : 0;
+    // Upload and row insert share one step so the two cannot disagree across a
+    // crash: a completed step means the object and the pointer both exist, and a
+    // re-executed one overwrites the same deterministic path.
+    const persisted = await step("persist-sample", async () => {
+        const answerStoragePath = await answers.put({
+            organizationId: input.organizationId,
+            runId: input.runId,
+            promptId: input.promptId,
+            engineId: input.engineId,
+            attempt: input.attempt,
+            promptText: input.promptText,
+            locale: input.locale,
+            result,
+        });
 
-    const persisted = await step("persist-sample", async () =>
-        samples.persist({
+        return samples.persist({
             runId: input.runId,
             businessId: input.businessId,
             promptId: input.promptId,
             engineId: input.engineId,
             attempt: input.attempt,
             result,
-        })
-    );
+            answerStoragePath,
+        });
+    });
 
     await step("settle", async () =>
         reservations.settle(reservationId, {
