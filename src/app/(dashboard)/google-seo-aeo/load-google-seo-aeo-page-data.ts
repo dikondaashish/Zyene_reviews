@@ -10,6 +10,7 @@ import { calcKeywordCoverage } from "./google-seo-aeo-audit-utils";
 import { buildGoogleSeoAeoAudits } from "./google-seo-aeo-build-audits";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { fetchGoogleSeoAeoSecondaryData } from "./google-seo-aeo-secondary-fetch";
+import { loadAeoVisibility } from "./load-aeo-visibility";
 
 export type GoogleSeoAeoLoadResult =
     | { kind: "no-business" }
@@ -126,6 +127,9 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         | null;
 
     const secondary = await fetchGoogleSeoAeoSecondaryData(businessId, latestAiRun, latestHeatmapRun);
+    // Read through the caller's RLS-scoped client, not the admin one: the
+    // org-scoped policies on aeo_samples are the isolation boundary here.
+    const aeoVisibility = await loadAeoVisibility(supabase, businessId);
 
     return {
         kind: "ok",
@@ -148,6 +152,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
             aiResults: secondary.aiResults,
             latestHeatmapRun,
             heatmapCells: secondary.heatmapCells,
+            aeoVisibility,
         },
     };
 }
