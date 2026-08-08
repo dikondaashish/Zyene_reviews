@@ -46,6 +46,20 @@ export type AeoDispatchRequestedEvent = {
 };
 
 /**
+ * E-9.1. One event per yearly-plan org whose monthly credit-refresh day is
+ * today (yearly-credit-reset-eligibility.ts decides "today"). grantedMicroUsd
+ * is resolved once, at fan-out time, by the cron route — the worker trusts it
+ * rather than re-deriving it, the same way aeo/dispatch.requested carries a
+ * fully-resolved DispatchRequest rather than making the child re-plan.
+ */
+export type AeoCreditResetRequestedEvent = {
+    data: {
+        organizationId: string;
+        grantedMicroUsd: number;
+    };
+};
+
+/**
  * PRD-5 geo-grid. One event per grid run; the worker fans out internally
  * because a grid is size^2 BILLED requests and the concurrency limit has to
  * apply across the whole grid, not per cell.

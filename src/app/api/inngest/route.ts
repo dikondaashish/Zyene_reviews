@@ -25,6 +25,7 @@ import {
 import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
 import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
 import { aeoGeoGridWorker } from "@/services/inngest/aeo/aeo-geo-grid-worker";
+import { aeoYearlyCreditResetWorker } from "@/services/inngest/aeo/aeo-yearly-credit-reset-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -69,6 +70,9 @@ export const { GET, POST, PUT } = serve({
         aeoRunPlanner,
         aeoDispatchWorker,
         aeoGeoGridWorker,
+        // E-9.1: refuses to run unless AEO_METERED_BILLING_LIVE is exactly
+        // "true", so registering it here does not by itself grant credit.
+        aeoYearlyCreditResetWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),

@@ -167,12 +167,17 @@ $fn$;
 
 -- Resets (never adds to) an org's balance to its plan's per-cycle grant.
 --
--- No idempotency parameter of its own: the caller is always a webhook handler,
--- and src/services/stripe/webhook-handler.ts already inserts into
--- stripe_webhook_events (UNIQUE on event_id) before dispatching to any
+-- The webhook path (initial grant, monthly renewal) needs no idempotency
+-- guard of its own: src/services/stripe/webhook-handler.ts already inserts
+-- into stripe_webhook_events (UNIQUE on event_id) before dispatching to any
 -- handler, so a redelivered Stripe event never reaches this function twice.
--- Duplicating that guard here would be a second, redundant source of truth for
--- the same fact.
+--
+-- E-9.1 adds a caller with no Stripe event behind it at all: the yearly-plan
+-- daily cron (aeo-yearly-credit-reset-worker.ts) fans out one event per due
+-- org, and nothing upstream of THIS function dedupes an accidental double
+-- dispatch on the same day. The same-calendar-day guard below closes that
+-- gap for both callers uniformly, rather than forking a second copy of the
+-- reset semantics for the cron path.
 CREATE OR REPLACE FUNCTION public.aeo_reset_credit_grant(
   p_organization_id UUID,
   p_granted_micro_usd BIGINT
@@ -183,6 +188,20 @@ SECURITY DEFINER
 SET search_path = ''
 AS $fn$
 BEGIN
+  -- Overwriting rather than adding already makes a double-call harmless in
+  -- the sense that it cannot create runaway credit — but it WOULD silently
+  -- refill a balance the org had already spent down earlier the same day,
+  -- which is real value nobody granted. A no-op here is the correct behaviour
+  -- for a repeat, not an error: the caller cannot always tell in advance
+  -- whether today's reset already landed.
+  IF EXISTS (
+    SELECT 1 FROM public.aeo_credit_balances
+    WHERE organization_id = p_organization_id
+      AND cycle_reset_at::date = now()::date
+  ) THEN
+    RETURN;
+  END IF;
+
   INSERT INTO public.aeo_credit_balances (organization_id, granted_micro_usd, balance_micro_usd, cycle_reset_at)
   VALUES (p_organization_id, p_granted_micro_usd, p_granted_micro_usd, now())
   ON CONFLICT (organization_id) DO UPDATE

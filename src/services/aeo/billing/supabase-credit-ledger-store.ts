@@ -1,59 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { ConsumeCreditResult, CreditLedgerStore } from "./ports";
+import type { ExtendedDatabase } from "./pending-schema";
 
 type Admin = SupabaseClient<Database>;
-
-type ConsumeCreditRow = {
-    debited_micro_usd: number;
-    overage_micro_usd: number;
-    remaining_balance_micro_usd: number;
-    already_consumed: boolean;
-};
-
-type CreditLedgerEntryInsert = {
-    organization_id: string;
-    sample_id?: string | null;
-    kind: "grant_reset" | "credit_consumed" | "overage_charged";
-    amount_micro_usd: number;
-    stripe_invoice_item_id?: string | null;
-};
-
-/**
- * `20260808200000_aeo_credit_ledger.sql` is designed and dry-run verified
- * against production (all constraints, replay-idempotency, and the privilege
- * lockdown confirmed with real queries) but NOT YET APPLIED, so the generated
- * `Database` type does not know aeo_consume_credit, aeo_reset_credit_grant, or
- * aeo_credit_ledger_entries. This describes exactly what
- * `pnpm supabase gen types` will produce once the migration is applied.
- *
- * Delete this type and the casts below together the moment that happens —
- * they exist only to keep the rest of this file checked against an accurate
- * shape instead of reaching for `any`. Mirrors the same situation and the
- * same fix already used in google-platform-credentials.ts for granted_scopes.
- */
-type ExtendedDatabase = Database & {
-    public: {
-        Functions: {
-            aeo_consume_credit: {
-                Args: { p_organization_id: string; p_sample_id: string; p_test_cost_micro_usd: number };
-                Returns: ConsumeCreditRow[];
-            };
-            aeo_reset_credit_grant: {
-                Args: { p_organization_id: string; p_granted_micro_usd: number };
-                Returns: undefined;
-            };
-        };
-        Tables: {
-            aeo_credit_ledger_entries: {
-                Row: CreditLedgerEntryInsert & { id: string; created_at: string };
-                Insert: CreditLedgerEntryInsert;
-                Update: Partial<CreditLedgerEntryInsert>;
-                Relationships: [];
-            };
-        };
-    };
-};
 
 /**
  * Thin wrapper over aeo_consume_credit / aeo_reset_credit_grant.

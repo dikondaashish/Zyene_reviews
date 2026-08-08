@@ -2,6 +2,7 @@
 import { Inngest, EventSchemas } from "inngest";
 
 import type {
+    AeoCreditResetRequestedEvent,
     AeoDispatchRequestedEvent,
     AeoGeoGridRequestedEvent,
     AeoRunRequestedEvent,
@@ -156,6 +157,7 @@ type Events = {
     "aeo/run.requested": AeoRunRequestedEvent;
     "aeo/dispatch.requested": AeoDispatchRequestedEvent;
     "aeo/geo-grid.requested": AeoGeoGridRequestedEvent;
+    "aeo/credit-reset.requested": AeoCreditResetRequestedEvent;
 };
 
 // Create a client to send and receive events
