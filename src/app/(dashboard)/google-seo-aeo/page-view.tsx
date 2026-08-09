@@ -10,6 +10,7 @@ import { AeoVisibilitySection } from "./aeo-visibility-section";
 import { SearchConsoleSection } from "./search-console-section";
 import { ShareOfVoiceSection } from "./share-of-voice-section";
 import { DataExportsSection } from "./data-exports-section";
+import { GbpCompletenessSection } from "./gbp-completeness-section";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -56,6 +57,7 @@ export default async function GoogleSeoAeoPage() {
             {data.content.shareOfVoice ? (
                 <ShareOfVoiceSection result={data.content.shareOfVoice} />
             ) : null}
+            <GbpCompletenessSection result={data.content.gbpCompleteness} />
             {data.content.searchConsole ? (
                 <SearchConsoleSection content={data.content.searchConsole} />
             ) : null}
