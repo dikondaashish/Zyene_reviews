@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { loadPromptsPageData } from "./load-prompts-page-data";
 import { PromptCreateForm } from "./prompt-create-form";
 import { PromptList } from "./prompt-list";
-import { EngineCoveragePanel } from "./engine-coverage-panel";
+import { PromptsSidebar } from "./prompts-sidebar";
 
 export default async function AeoPromptsPage() {
     const data = await loadPromptsPageData();
@@ -74,17 +74,7 @@ export default async function AeoPromptsPage() {
                     </Card>
                 </div>
 
-                <Card className="lg:col-span-1">
-                    <CardHeader>
-                        <CardTitle>Engine coverage</CardTitle>
-                        <CardDescription>
-                            Every engine we track, including those we cannot sample yet and why.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <EngineCoveragePanel engines={data.engines} />
-                    </CardContent>
-                </Card>
+                <PromptsSidebar engines={data.engines} quotaMeter={data.quotaMeter} />
             </div>
         </div>
     );
