@@ -60,6 +60,22 @@ export type AeoCreditResetRequestedEvent = {
 };
 
 /**
+ * E-3 automation. One event per business whose weekly crawl slot
+ * (crawl-slot.ts) is now. Carries a fully-resolved origin and plan-derived
+ * page cap, the same "fan-out resolves, worker trusts" split as
+ * AeoDispatchRequestedEvent — the worker never has to re-derive eligibility.
+ */
+export type AeoCrawlRequestedEvent = {
+    data: {
+        businessId: string;
+        organizationId: string;
+        origin: string;
+        planId: string;
+        trigger: "scheduled" | "manual";
+    };
+};
+
+/**
  * PRD-5 geo-grid. One event per grid run; the worker fans out internally
  * because a grid is size^2 BILLED requests and the concurrency limit has to
  * apply across the whole grid, not per cell.

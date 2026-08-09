@@ -77,3 +77,17 @@ const METERED_BILLING_ENV_KEY = "AEO_METERED_BILLING_LIVE";
 export function isMeteredBillingLive(): boolean {
     return process.env[METERED_BILLING_ENV_KEY]?.trim().toLowerCase() === "true";
 }
+
+const LIVE_CRAWLING_ENV_KEY = "AEO_LIVE_CRAWLING";
+
+/**
+ * Whether the E-3 scheduled crawler may fetch a real customer's site.
+ *
+ * Same fail-closed posture as isLiveSamplingEnabled(), for the equivalent
+ * reason on this surface: an unset or malformed value must never result in
+ * this app's crawler making real HTTP requests against a business's real
+ * domain. Checked first in the worker, before any robots.txt fetch.
+ */
+export function isLiveCrawlingEnabled(): boolean {
+    return process.env[LIVE_CRAWLING_ENV_KEY]?.trim().toLowerCase() === "true";
+}

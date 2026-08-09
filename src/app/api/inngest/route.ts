@@ -26,6 +26,7 @@ import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
 import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
 import { aeoGeoGridWorker } from "@/services/inngest/aeo/aeo-geo-grid-worker";
 import { aeoYearlyCreditResetWorker } from "@/services/inngest/aeo/aeo-yearly-credit-reset-worker";
+import { aeoCrawlWorker } from "@/services/inngest/aeo/aeo-crawl-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -73,6 +74,10 @@ export const { GET, POST, PUT } = serve({
         // E-9.1: refuses to run unless AEO_METERED_BILLING_LIVE is exactly
         // "true", so registering it here does not by itself grant credit.
         aeoYearlyCreditResetWorker,
+        // E-3: refuses to run unless AEO_LIVE_CRAWLING is exactly "true", so
+        // registering it here does not by itself crawl anyone's site. Nothing
+        // sends aeo/crawl.requested yet either — see aeo-crawl-scheduler/route.ts.
+        aeoCrawlWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),
