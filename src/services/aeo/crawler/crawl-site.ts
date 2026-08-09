@@ -1,7 +1,8 @@
 import { parseRobotsTxt, findBlockedAiCrawlers, isPathAllowed } from "./robots-parser";
 import { discoverUrlsViaSitemap, discoverUrlsViaLinks, type FetchText } from "./discover-urls";
 import { extractPageSignals, type PageSignals } from "./extract-page-signals";
-import { aiBotBlockedFindings, robotsUnreachableFinding, pageLevelFindings, type CrawlFinding } from "./crawl-findings";
+import { aiBotBlockedFindings, robotsUnreachableFinding, pageLevelFindings, schemaFindings, type CrawlFinding } from "./crawl-findings";
+import { validateSchemaBlocks } from "./schema-validator";
 import { pageCapForPlan, applyPageCap, type CrawlCoverage } from "./crawl-plan-budget";
 import type { PolitenessQueue } from "./politeness-queue";
 
@@ -102,6 +103,13 @@ export async function crawlSite(
             html: response.ok ? response.text : null,
         });
         findings.push(...pageLevelFindings(url, response.status, signals));
+
+        // F5.4, alongside F5.2's page-level checks — same page, same fetch,
+        // no second pass over stored content.
+        if (response.ok) {
+            const isHomepage = new URL(url).pathname === "/";
+            findings.push(...schemaFindings(url, validateSchemaBlocks(response.text), isHomepage));
+        }
     }
 
     return { pages, findings, coverage };
