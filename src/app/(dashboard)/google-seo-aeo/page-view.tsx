@@ -9,6 +9,7 @@ import { GoogleSeoAeoBottomSection } from "./google-seo-aeo-bottom-section";
 import { AeoVisibilitySection } from "./aeo-visibility-section";
 import { SearchConsoleSection } from "./search-console-section";
 import { ShareOfVoiceSection } from "./share-of-voice-section";
+import { DataExportsSection } from "./data-exports-section";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -59,6 +60,7 @@ export default async function GoogleSeoAeoPage() {
                 <SearchConsoleSection content={data.content.searchConsole} />
             ) : null}
             <GoogleSeoAeoBottomSection content={data.content} />
+            <DataExportsSection />
         </div>
     );
 }

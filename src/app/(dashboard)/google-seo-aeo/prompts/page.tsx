@@ -1,7 +1,8 @@
-import { Building2 } from "lucide-react";
+import { Building2, Download } from "lucide-react";
 
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadPromptsPageData } from "./load-prompts-page-data";
 import { PromptCreateForm } from "./prompt-create-form";
@@ -57,13 +58,18 @@ export default async function AeoPromptsPage() {
                     </Card>
 
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="flex flex-row items-start justify-between gap-2">
                             <CardTitle>
                                 Prompts
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                                     {data.activeCount} of {data.prompts.length} active
                                 </span>
                             </CardTitle>
+                            <Button variant="outline" size="sm" asChild>
+                                <a href="/api/aeo/prompts/export" target="_blank" rel="noopener noreferrer">
+                                    <Download className="mr-2 size-4" /> CSV
+                                </a>
+                            </Button>
                         </CardHeader>
                         <CardContent>
                             <PromptList
