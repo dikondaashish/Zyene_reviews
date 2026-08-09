@@ -1489,6 +1489,180 @@ export type Database = {
           },
         ]
       }
+      crawl_findings: {
+        Row: {
+          business_id: string
+          crawl_page_id: string | null
+          crawl_run_id: string
+          created_at: string
+          evidence: string
+          fix_instruction: string
+          id: string
+          page_url: string | null
+          rule: string
+          severity: string
+        }
+        Insert: {
+          business_id: string
+          crawl_page_id?: string | null
+          crawl_run_id: string
+          created_at?: string
+          evidence: string
+          fix_instruction: string
+          id?: string
+          page_url?: string | null
+          rule: string
+          severity: string
+        }
+        Update: {
+          business_id?: string
+          crawl_page_id?: string | null
+          crawl_run_id?: string
+          created_at?: string
+          evidence?: string
+          fix_instruction?: string
+          id?: string
+          page_url?: string | null
+          rule?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_findings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_findings_crawl_page_id_fkey"
+            columns: ["crawl_page_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_findings_crawl_run_id_fkey"
+            columns: ["crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crawl_pages: {
+        Row: {
+          business_id: string
+          canonical_url: string | null
+          content_storage_path: string | null
+          crawl_run_id: string
+          fetch_error: string | null
+          fetched_at: string
+          h1_count: number | null
+          http_status: number | null
+          id: string
+          meta_robots: string | null
+          title: string | null
+          url: string
+          word_count: number | null
+        }
+        Insert: {
+          business_id: string
+          canonical_url?: string | null
+          content_storage_path?: string | null
+          crawl_run_id: string
+          fetch_error?: string | null
+          fetched_at?: string
+          h1_count?: number | null
+          http_status?: number | null
+          id?: string
+          meta_robots?: string | null
+          title?: string | null
+          url: string
+          word_count?: number | null
+        }
+        Update: {
+          business_id?: string
+          canonical_url?: string | null
+          content_storage_path?: string | null
+          crawl_run_id?: string
+          fetch_error?: string | null
+          fetched_at?: string
+          h1_count?: number | null
+          http_status?: number | null
+          id?: string
+          meta_robots?: string | null
+          title?: string | null
+          url?: string
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_pages_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_pages_crawl_run_id_fkey"
+            columns: ["crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crawl_runs: {
+        Row: {
+          business_id: string
+          completed_at: string | null
+          error_message: string | null
+          id: string
+          origin: string
+          page_cap: number
+          pages_crawled: number
+          pages_discovered: number
+          started_at: string
+          status: string
+          trigger: string
+        }
+        Insert: {
+          business_id: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          origin: string
+          page_cap: number
+          pages_crawled?: number
+          pages_discovered?: number
+          started_at?: string
+          status: string
+          trigger: string
+        }
+        Update: {
+          business_id?: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          origin?: string
+          page_cap?: number
+          pages_crawled?: number
+          pages_discovered?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_runs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_contacts: {
         Row: {
           business_id: string

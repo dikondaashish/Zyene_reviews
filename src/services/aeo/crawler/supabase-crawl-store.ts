@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { logger } from "@/lib/logger";
-import type { ExtendedDatabase } from "./pending-crawler-schema";
 import type { CrawlSiteResult } from "./crawl-site";
 import type { CrawlFinding } from "./crawl-findings";
 
@@ -15,10 +14,10 @@ export const AEO_CRAWL_PAGES_BUCKET = "aeo-crawl-pages";
  * goes in the row, and a storage failure never loses the observation itself.
  */
 export class SupabaseCrawlStore {
-    private readonly db: SupabaseClient<ExtendedDatabase>;
+    private readonly db: Admin;
 
     constructor(db: Admin) {
-        this.db = db as unknown as SupabaseClient<ExtendedDatabase>;
+        this.db = db;
     }
 
     async createRun(input: {
