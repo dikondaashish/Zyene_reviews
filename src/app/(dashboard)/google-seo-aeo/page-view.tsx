@@ -8,6 +8,7 @@ import { GoogleSeoAeoScoreAuditSection } from "./google-seo-aeo-score-audit-sect
 import { GoogleSeoAeoBottomSection } from "./google-seo-aeo-bottom-section";
 import { AeoVisibilitySection } from "./aeo-visibility-section";
 import { SearchConsoleSection } from "./search-console-section";
+import { ShareOfVoiceSection } from "./share-of-voice-section";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -50,6 +51,9 @@ export default async function GoogleSeoAeoPage() {
              */}
             {data.content.aeoVisibility ? (
                 <AeoVisibilitySection content={data.content.aeoVisibility} />
+            ) : null}
+            {data.content.shareOfVoice ? (
+                <ShareOfVoiceSection result={data.content.shareOfVoice} />
             ) : null}
             {data.content.searchConsole ? (
                 <SearchConsoleSection content={data.content.searchConsole} />

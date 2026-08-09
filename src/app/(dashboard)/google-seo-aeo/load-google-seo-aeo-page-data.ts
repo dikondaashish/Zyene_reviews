@@ -12,6 +12,7 @@ import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { fetchGoogleSeoAeoSecondaryData } from "./google-seo-aeo-secondary-fetch";
 import { loadAeoVisibility } from "./load-aeo-visibility";
 import { loadSearchConsoleSection } from "./load-search-console-section";
+import { loadShareOfVoice } from "./load-share-of-voice";
 
 export type GoogleSeoAeoLoadResult =
     | { kind: "no-business" }
@@ -132,6 +133,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
     // org-scoped policies on aeo_samples are the isolation boundary here.
     const aeoVisibility = await loadAeoVisibility(supabase, businessId);
     const searchConsole = await loadSearchConsoleSection(businessId, platform.id, platform.granted_scopes);
+    const shareOfVoice = await loadShareOfVoice(supabase, businessId);
 
     return {
         kind: "ok",
@@ -156,6 +158,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
             heatmapCells: secondary.heatmapCells,
             aeoVisibility,
             searchConsole,
+            shareOfVoice,
         },
     };
 }
