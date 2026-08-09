@@ -2,7 +2,6 @@ import type { AuditItem } from "./google-seo-aeo-audit-utils";
 import type { AeoVisibilityContent } from "./aeo-visibility-section";
 import type { SearchConsoleSectionContent } from "./load-search-console-section";
 import type { ShareOfVoiceResult } from "@/services/aeo/reporting/share-of-voice";
-import type { GbpCompletenessResult } from "@/services/aeo/technical-audit/gbp-completeness";
 
 export type GoogleSeoAeoContentProps = {
     businessId: string;
@@ -32,6 +31,4 @@ export type GoogleSeoAeoContentProps = {
     searchConsole: SearchConsoleSectionContent | null;
     /** Null when this business has never been sampled — see load-share-of-voice.ts. */
     shareOfVoice: ShareOfVoiceResult | null;
-    /** F5.10 — see gbp-completeness.ts. */
-    gbpCompleteness: GbpCompletenessResult;
 };

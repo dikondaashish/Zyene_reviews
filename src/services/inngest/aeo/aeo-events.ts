@@ -70,7 +70,8 @@ export type AeoCrawlRequestedEvent = {
         businessId: string;
         organizationId: string;
         origin: string;
-        planId: string;
+        /** Null for a real org with no plan set (e.g. mid-signup) — pageCapForPlan() treats that the same as an unrecognized plan: the safer Starter cap. */
+        planId: string | null;
         trigger: "scheduled" | "manual";
     };
 };

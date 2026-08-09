@@ -55,7 +55,8 @@ export async function loadDueCrawlBusinesses(db: Admin, now: Date): Promise<DueC
     return due;
 }
 
-function parseOrigin(website: string | null): string | null {
+/** Shared with the manual-trigger action (audit/run-audit-action.ts) — one definition of "a real, crawlable website". */
+export function parseOrigin(website: string | null): string | null {
     if (!website?.trim()) return null;
     try {
         const url = new URL(website.trim());

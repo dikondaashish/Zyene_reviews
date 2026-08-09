@@ -10,7 +10,7 @@ import { AeoVisibilitySection } from "./aeo-visibility-section";
 import { SearchConsoleSection } from "./search-console-section";
 import { ShareOfVoiceSection } from "./share-of-voice-section";
 import { DataExportsSection } from "./data-exports-section";
-import { GbpCompletenessSection } from "./gbp-completeness-section";
+import { GoogleSeoAeoSubnav } from "./google-seo-aeo-subnav";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -45,6 +45,7 @@ export default async function GoogleSeoAeoPage() {
 
     return (
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
+            <GoogleSeoAeoSubnav active="/google-seo-aeo" />
             <GoogleSeoAeoScoreAuditSection content={data.content} />
             {/*
              * Omitted entirely when the business has never been sampled. An empty
@@ -57,7 +58,6 @@ export default async function GoogleSeoAeoPage() {
             {data.content.shareOfVoice ? (
                 <ShareOfVoiceSection result={data.content.shareOfVoice} />
             ) : null}
-            <GbpCompletenessSection result={data.content.gbpCompleteness} />
             {data.content.searchConsole ? (
                 <SearchConsoleSection content={data.content.searchConsole} />
             ) : null}

@@ -8,6 +8,7 @@ import { loadPromptsPageData } from "./load-prompts-page-data";
 import { PromptCreateForm } from "./prompt-create-form";
 import { PromptList } from "./prompt-list";
 import { PromptsSidebar } from "./prompts-sidebar";
+import { GoogleSeoAeoSubnav } from "../google-seo-aeo-subnav";
 
 export default async function AeoPromptsPage() {
     const data = await loadPromptsPageData();
@@ -24,6 +25,7 @@ export default async function AeoPromptsPage() {
 
     return (
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
+            <GoogleSeoAeoSubnav active="/google-seo-aeo/prompts" />
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Prompt library</h2>
                 <p className="mt-1 text-sm text-muted-foreground">

@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { getGoogleSearchKeywords, getGooglePerformanceTotals } from "@/services/google/performance-queries";
 import { getValidGoogleToken } from "@/services/google/sync-service";
-import { getGoogleLocation, type GoogleLocationFull } from "@/services/google/listing-information";
+import { getGoogleLocation } from "@/services/google/listing-information";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
-import { computeGbpCompleteness } from "@/services/aeo/technical-audit/gbp-completeness";
 import { calcKeywordCoverage } from "./google-seo-aeo-audit-utils";
 import { buildGoogleSeoAeoAudits } from "./google-seo-aeo-build-audits";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
@@ -96,19 +95,15 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
     }
 
     let listingDescription = "";
-    let gbpLocation: GoogleLocationFull | null = null;
     try {
         const { accessToken } = await getValidGoogleToken(platform.id);
         if (accessToken && platform.google_location_id) {
-            gbpLocation = await getGoogleLocation(accessToken, platform.google_location_id);
-            listingDescription = gbpLocation.profile?.description?.trim() || "";
+            const loc = await getGoogleLocation(accessToken, platform.google_location_id);
+            listingDescription = loc.profile?.description?.trim() || "";
         }
     } catch {
         // Non-fatal for MVP: keep description empty and fail this check.
-        // gbpLocation stays null — computeGbpCompleteness reports
-        // unable_to_verify rather than a fabricated score.
     }
-    const gbpCompleteness = computeGbpCompleteness(gbpLocation);
 
     const topKeywordList = keywords.slice(0, 12).reduce<string[]>((acc, k) => {
         if (k.keyword) acc.push(k.keyword);
@@ -164,7 +159,6 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
             aeoVisibility,
             searchConsole,
             shareOfVoice,
-            gbpCompleteness,
         },
     };
 }
