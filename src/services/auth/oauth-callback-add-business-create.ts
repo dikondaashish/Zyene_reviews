@@ -5,6 +5,7 @@ import { inngest } from "@/services/inngest/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
 import type { OAuthAddBusinessGbpDetails } from "./oauth-callback-add-business-gbp";
+import { fetchGoogleGrantedScopes } from "@/services/google/verify-granted-scopes";
 
 export async function createOAuthAddBusinessRecord(params: {
     admin: SupabaseClient;
@@ -50,9 +51,10 @@ export async function createOAuthAddBusinessRecord(params: {
 
     if (!newBusiness) return;
 
-    const [{ data: encAccess }, { data: encRefresh }] = await Promise.all([
+    const [{ data: encAccess }, { data: encRefresh }, grantedScopes] = await Promise.all([
         admin.rpc("encrypt_token", { plaintext: finalAccessToken || "" }),
         admin.rpc("encrypt_token", { plaintext: finalRefreshToken || "" }),
+        finalAccessToken ? fetchGoogleGrantedScopes(finalAccessToken) : Promise.resolve(null),
     ]);
 
     await admin.from("review_platforms").insert({
@@ -67,6 +69,7 @@ export async function createOAuthAddBusinessRecord(params: {
         external_url: gbp.googleReviewUrl,
         total_reviews: 0,
         average_rating: 0,
+        ...(grantedScopes ? { granted_scopes: grantedScopes } : {}),
     });
 
     await admin.from("business_members").upsert(

@@ -9,6 +9,7 @@ import { GoogleIntegrationCardSyncStatsRow } from "@/components/integrations/goo
 import { GoogleIntegrationCardForceSyncCallout } from "@/components/integrations/google-integration-card-force-sync-callout";
 import { GoogleIntegrationCardSyncFooter } from "@/components/integrations/google-integration-card-sync-footer";
 import { GoogleIntegrationCardLocationDialog } from "@/components/integrations/google-integration-card-location-dialog";
+import { GoogleIntegrationCardSearchConsoleRow } from "@/components/integrations/google-integration-card-search-console-row";
 import type { GoogleLocationAccount } from "@/components/integrations/google-card-location-api";
 
 export function GoogleIntegrationCardConnected({
@@ -35,6 +36,8 @@ export function GoogleIntegrationCardConnected({
     handleConnect,
     handleSync,
     handleDisconnect,
+    grantedScopes,
+    handleConnectSearchConsole,
 }: {
     businessName?: string | null;
     mounted: boolean;
@@ -59,6 +62,8 @@ export function GoogleIntegrationCardConnected({
     handleConnect: () => void;
     handleSync: (force?: boolean) => void | Promise<void>;
     handleDisconnect: () => void | Promise<void>;
+    grantedScopes?: string | null;
+    handleConnectSearchConsole: () => void;
 }) {
     return (
         <Card className="border-chart-2/30/70 dark:border-chart-2/30 overflow-hidden">
@@ -102,6 +107,10 @@ export function GoogleIntegrationCardConnected({
                         onForceSync={() => handleSync(true)}
                     />
                 )}
+                <GoogleIntegrationCardSearchConsoleRow
+                    grantedScopes={grantedScopes}
+                    onConnect={handleConnectSearchConsole}
+                />
             </CardContent>
             <CardFooter className="flex justify-between gap-2 pt-0">
                 <GoogleIntegrationCardSyncFooter

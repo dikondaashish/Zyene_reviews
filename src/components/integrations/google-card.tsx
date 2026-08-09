@@ -39,6 +39,8 @@ export function GoogleIntegrationCard(props: GoogleCardProps) {
                 handleConnect={s.handleConnect}
                 handleSync={s.handleSync}
                 handleDisconnect={s.handleDisconnect}
+                grantedScopes={s.platform?.granted_scopes}
+                handleConnectSearchConsole={s.handleConnectSearchConsole}
             />
         );
     }

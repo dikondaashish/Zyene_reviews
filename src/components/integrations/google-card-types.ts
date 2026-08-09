@@ -9,6 +9,7 @@ export interface GoogleCardProps {
         sync_status: string | null;
         total_reviews: number;
         average_rating?: number | null;
+        granted_scopes?: string | null;
     } | null;
     businessId: string;
     businessName?: string | null;

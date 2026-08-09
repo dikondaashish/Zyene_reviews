@@ -7,6 +7,7 @@ import { loadGoogleSeoAeoPageData } from "./load-google-seo-aeo-page-data";
 import { GoogleSeoAeoScoreAuditSection } from "./google-seo-aeo-score-audit-section";
 import { GoogleSeoAeoBottomSection } from "./google-seo-aeo-bottom-section";
 import { AeoVisibilitySection } from "./aeo-visibility-section";
+import { SearchConsoleSection } from "./search-console-section";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -49,6 +50,9 @@ export default async function GoogleSeoAeoPage() {
              */}
             {data.content.aeoVisibility ? (
                 <AeoVisibilitySection content={data.content.aeoVisibility} />
+            ) : null}
+            {data.content.searchConsole ? (
+                <SearchConsoleSection content={data.content.searchConsole} />
             ) : null}
             <GoogleSeoAeoBottomSection content={data.content} />
         </div>
