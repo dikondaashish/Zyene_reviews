@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { ConsumeCreditResult, CreditLedgerStore } from "./ports";
-import type { ExtendedDatabase } from "./pending-schema";
 
 type Admin = SupabaseClient<Database>;
 
@@ -16,11 +15,7 @@ type Admin = SupabaseClient<Database>;
  * copy is what keeps the two impossible to drift apart.
  */
 export class SupabaseCreditLedgerStore implements CreditLedgerStore {
-    private readonly db: SupabaseClient<ExtendedDatabase>;
-
-    constructor(db: Admin) {
-        this.db = db as unknown as SupabaseClient<ExtendedDatabase>;
-    }
+    constructor(private readonly db: Admin) {}
 
     async consumeCredit(input: {
         organizationId: string;

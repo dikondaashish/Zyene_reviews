@@ -2,7 +2,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { PLAN_CREDIT_GRANTS_MICRO_USD } from "./billing-constants";
 import { isDueForMonthlyReset } from "./yearly-credit-reset-eligibility";
-import type { ExtendedDatabase } from "./pending-schema";
 
 type Admin = SupabaseClient<Database>;
 
@@ -35,10 +34,7 @@ export async function loadYearlyResetCandidates(
     if (orgsError) throw new Error(`loadYearlyResetCandidates orgs query failed: ${orgsError.message}`);
     if (!orgs || orgs.length === 0) return [];
 
-    // See pending-schema.ts: aeo_credit_balances is not in the generated
-    // Database type until the E-9 migration is applied.
-    const extendedDb = db as unknown as SupabaseClient<ExtendedDatabase>;
-    const { data: balances, error: balancesError } = await extendedDb
+    const { data: balances, error: balancesError } = await db
         .from("aeo_credit_balances")
         .select("organization_id, cycle_reset_at")
         .in("organization_id", orgs.map((o) => o.id));

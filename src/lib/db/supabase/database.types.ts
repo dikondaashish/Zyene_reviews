@@ -174,6 +174,83 @@ export type Database = {
           },
         ]
       }
+      aeo_credit_balances: {
+        Row: {
+          balance_micro_usd: number
+          cycle_reset_at: string
+          granted_micro_usd: number
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          balance_micro_usd: number
+          cycle_reset_at: string
+          granted_micro_usd: number
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          balance_micro_usd?: number
+          cycle_reset_at?: string
+          granted_micro_usd?: number
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_credit_balances_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aeo_credit_ledger_entries: {
+        Row: {
+          amount_micro_usd: number
+          created_at: string
+          id: string
+          kind: string
+          organization_id: string
+          sample_id: string | null
+          stripe_invoice_item_id: string | null
+        }
+        Insert: {
+          amount_micro_usd: number
+          created_at?: string
+          id?: string
+          kind: string
+          organization_id: string
+          sample_id?: string | null
+          stripe_invoice_item_id?: string | null
+        }
+        Update: {
+          amount_micro_usd?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          organization_id?: string
+          sample_id?: string | null
+          stripe_invoice_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_credit_ledger_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_credit_ledger_entries_sample_id_fkey"
+            columns: ["sample_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_samples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aeo_geo_grid_points: {
         Row: {
           business_id: string
@@ -3127,6 +3204,19 @@ export type Database = {
         Args: { p_id: string; p_lock_duration?: string }
         Returns: boolean
       }
+      aeo_consume_credit: {
+        Args: {
+          p_organization_id: string
+          p_sample_id: string
+          p_test_cost_micro_usd: number
+        }
+        Returns: {
+          already_consumed: boolean
+          debited_micro_usd: number
+          overage_micro_usd: number
+          remaining_balance_micro_usd: number
+        }[]
+      }
       aeo_mark_dispatched: {
         Args: { p_at: string; p_reservation_id: string }
         Returns: number
@@ -3150,6 +3240,10 @@ export type Database = {
           outcome: string
           reservation_id: string
         }[]
+      }
+      aeo_reset_credit_grant: {
+        Args: { p_granted_micro_usd: number; p_organization_id: string }
+        Returns: undefined
       }
       bulk_add_customer_tags: {
         Args: { customer_ids: string[]; new_tags: string[] }
