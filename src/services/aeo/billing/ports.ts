@@ -47,6 +47,20 @@ export interface CreditLedgerStore {
         amountMicroUsd: number;
         stripeInvoiceItemId: string;
     }): Promise<void>;
+
+    /**
+     * Whether this org has EVER been granted AEO credit — an aeo_credit_balances
+     * row exists at all, regardless of what its current balance is.
+     *
+     * Deliberately not the same question as "is the balance nonzero". Wolfpack
+     * BBQ (a real Starter customer, real card on file) had active prompts and
+     * NO row at all — their subscription predated the grant wiring, so nothing
+     * had ever run aeo_reset_credit_grant for them. A naive zero-balance check
+     * cannot tell that apart from an org that legitimately spent a real $5
+     * grant down to nothing this cycle, which is normal and MUST still bill.
+     * Only "no row exists" means "never onboarded into billing".
+     */
+    hasGrantHistory(organizationId: string): Promise<boolean>;
 }
 
 export type OverageChargeResult =

@@ -71,4 +71,15 @@ export class SupabaseCreditLedgerStore implements CreditLedgerStore {
             throw new Error(`recordOverageCharge failed: ${error.message}`);
         }
     }
+
+    async hasGrantHistory(organizationId: string): Promise<boolean> {
+        const { data, error } = await this.db
+            .from("aeo_credit_balances")
+            .select("organization_id")
+            .eq("organization_id", organizationId)
+            .maybeSingle();
+
+        if (error) throw new Error(`hasGrantHistory failed: ${error.message}`);
+        return data !== null;
+    }
 }

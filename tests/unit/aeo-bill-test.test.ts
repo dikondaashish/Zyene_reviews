@@ -55,6 +55,9 @@ class ThrowingLedger implements CreditLedgerStore {
     recordOverageCharge(): Promise<void> {
         throw new Error("recordOverageCharge must not run here");
     }
+    hasGrantHistory(): Promise<boolean> {
+        throw new Error("hasGrantHistory must not run while the flag is off");
+    }
 }
 class ThrowingCharges implements OverageChargeGateway {
     chargeOverage(): Promise<OverageChargeResult> {
@@ -70,6 +73,9 @@ class FakeLedger implements CreditLedgerStore {
         amountMicroUsd: number;
         stripeInvoiceItemId: string;
     }[] = [];
+    hasGrantHistoryCalls: string[] = [];
+    /** True by default so every EXISTING test below exercises the normal path unchanged. */
+    grantHistory = true;
     result: ConsumeCreditResult = {
         debitedMicroUsd: 2_500_000,
         overageMicroUsd: 0,
@@ -89,6 +95,10 @@ class FakeLedger implements CreditLedgerStore {
     }) {
         this.recordCalls.push(input);
     }
+    async hasGrantHistory(organizationId: string) {
+        this.hasGrantHistoryCalls.push(organizationId);
+        return this.grantHistory;
+    }
 }
 
 class FakeCharges implements OverageChargeGateway {
@@ -107,6 +117,57 @@ describe("billTest — the flag is the first line, before any I/O", () => {
         await billTest(INPUT, { ledger: new ThrowingLedger(), charges: new ThrowingCharges() });
         // No assertion needed beyond "did not throw" — the fakes throw if
         // reached, so completing at all IS the proof.
+    });
+});
+
+describe("billTest — an org with no grant history at all (the Wolfpack BBQ case, 2026-08-09)", () => {
+    it("skips billing entirely rather than charging from an ungranted zero", async () => {
+        // A real Starter customer, real card on file, active prompts, and NO
+        // aeo_credit_balances row — their subscription predated the grant
+        // wiring. Charging this org would bill 100% overage for a balance
+        // nobody ever granted.
+        process.env[FLAG_KEY] = "true";
+        const ledger = new FakeLedger();
+        ledger.grantHistory = false;
+        const charges = new FakeCharges();
+        await billTest(INPUT, { ledger, charges });
+
+        expect(ledger.hasGrantHistoryCalls).toEqual(["org-1"]);
+        expect(ledger.consumeCalls).toEqual([]);
+        expect(charges.calls).toEqual([]);
+        expect(ledger.recordCalls).toEqual([]);
+    });
+
+    it("is a different question from a real grant spent down to zero, which must still bill", async () => {
+        // The distinction this whole check exists to preserve: grantHistory
+        // true + balance 0 is normal, expected, and must charge overage.
+        process.env[FLAG_KEY] = "true";
+        const ledger = new FakeLedger();
+        ledger.grantHistory = true;
+        ledger.result = {
+            debitedMicroUsd: 0,
+            overageMicroUsd: 2_500_000,
+            remainingBalanceMicroUsd: 0,
+            alreadyConsumed: false,
+        };
+        const charges = new FakeCharges();
+        await billTest(INPUT, { ledger, charges });
+
+        expect(charges.calls).toEqual([
+            { sampleId: "sample-1", stripeCustomerId: "cus_1", amountMicroUsd: 2_500_000 },
+        ]);
+    });
+
+    it("checks grant history before ever touching the credit-consumption RPC", async () => {
+        process.env[FLAG_KEY] = "true";
+        const ledger = new FakeLedger();
+        ledger.grantHistory = false;
+        await billTest(INPUT, { ledger, charges: new FakeCharges() });
+
+        // If this were checked after (or not at all), consumeCredit would have
+        // run and left a row behind — nothing to reconcile against here, since
+        // it never should have been called in the first place.
+        expect(ledger.consumeCalls).toHaveLength(0);
     });
 });
 

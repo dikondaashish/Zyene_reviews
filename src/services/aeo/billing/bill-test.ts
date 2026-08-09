@@ -31,6 +31,28 @@ export type BillTestDeps = {
 export async function billTest(input: BillTestInput, deps: BillTestDeps): Promise<void> {
     if (!isMeteredBillingLive()) return;
 
+    // Found 2026-08-09: Wolfpack BBQ, a real Starter customer with a real card
+    // on file, had active prompts and NO aeo_credit_balances row at all — their
+    // subscription predated the grant wiring, so nothing had ever run
+    // aeo_reset_credit_grant for them. Left unchecked, their first successful
+    // test would have been billed as 100% overage from a balance that was
+    // never granted, not one that was legitimately spent down.
+    //
+    // This is NOT the same question as "is the balance currently zero" — an
+    // org that spent a real $5 grant down to nothing this cycle has a row, and
+    // MUST still bill; hasGrantHistory only refuses an org with no row at all.
+    // Skipping the charge, not the whole function: the test still happened and
+    // is worth recording as a real measurement, and there is nothing to
+    // reconcile against — no debit, no overage, no ledger entry.
+    const hasGrantHistory = await deps.ledger.hasGrantHistory(input.organizationId);
+    if (!hasGrantHistory) {
+        logger.warn(
+            { organizationId: input.organizationId, sampleId: input.sampleId },
+            "[AEO] test settled for an org with no credit grant history — skipping billing, not charging from zero"
+        );
+        return;
+    }
+
     const { debitedMicroUsd, overageMicroUsd, alreadyConsumed } = await deps.ledger.consumeCredit({
         organizationId: input.organizationId,
         sampleId: input.sampleId,
