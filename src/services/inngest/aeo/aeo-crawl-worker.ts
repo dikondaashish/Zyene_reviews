@@ -6,6 +6,7 @@ import { crawlSite, CRAWLER_USER_AGENT } from "@/services/aeo/crawler/crawl-site
 import { PolitenessQueue } from "@/services/aeo/crawler/politeness-queue";
 import { pageCapForPlan } from "@/services/aeo/crawler/crawl-plan-budget";
 import { SupabaseCrawlStore } from "@/services/aeo/crawler/supabase-crawl-store";
+import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
 import type { FetchText } from "@/services/aeo/crawler/discover-urls";
 
 const fetchText: FetchText = async (url) => {
@@ -49,6 +50,17 @@ export const aeoCrawlWorker = inngest.createFunction(
         const { runId } = await step.run("create-run", () =>
             store.createRun({ businessId, origin, trigger, pageCap: pageCapForPlan(planId) })
         );
+
+        // `origin` is businesses.website — tenant-controlled data, not a value
+        // this app chose. Checked here, the one place every trigger path
+        // (manual and scheduled) is guaranteed to pass through, rather than
+        // relying on every future caller to remember to check it themselves.
+        const safety = await step.run("check-origin-safety", () => checkOriginIsPublic(origin));
+        if (!safety.safe) {
+            logger.warn({ businessId, runId, origin, reason: safety.reason }, "[AEO crawler] refused unsafe origin");
+            await step.run("fail-run-unsafe-origin", () => store.failRun(runId, `Refused: ${safety.reason}`));
+            return { runId, skipped: "unsafe_origin" as const, reason: safety.reason };
+        }
 
         try {
             const result = await crawlSite(
