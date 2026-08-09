@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, LineChart } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -98,6 +99,13 @@ export function PromptList({
                         </div>
                     </div>
 
+                    {prompt.sampleCount > 0 ? (
+                        <Button variant="ghost" size="sm" asChild aria-label="View trend and head-to-head">
+                            <Link href={`/google-seo-aeo/prompts/${prompt.id}`}>
+                                <LineChart className="h-4 w-4" />
+                            </Link>
+                        </Button>
+                    ) : null}
                     <Button
                         variant="ghost"
                         size="sm"
