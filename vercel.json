@@ -19,6 +19,10 @@
     {
       "path": "/api/cron/aeo-yearly-credit-reset",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/aeo-run-scheduler",
+      "schedule": "0 1-8 * * *"
     }
   ]
 }
