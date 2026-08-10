@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
-import { registerNotificationsWithRetry } from "@/services/google/notifications";
 import { parseGoogleLocationResourceIds } from "@/services/google/business-profile";
 
 import { enqueueGooglePostConnectSync } from "./types";
@@ -137,23 +136,15 @@ export async function finalizeGoogleConnection(
                     "Google is connected, but starting the review import failed. Use Sync on Integrations or Reviews in a few minutes.";
             }
 
-            // Register notifications (non-fatal; logs WARNING after retry if still failing)
-            const topicName = process.env.GOOGLE_PUBSUB_TOPIC_NAME;
-            if (topicName) {
-                const accountName = loc.name?.split("/locations")[0];
-                if (accountName) {
-                    const notificationAccountId =
-                        accountName.replace(/^accounts\//, "") || accountName;
-                    await registerNotificationsWithRetry({
-                        accessToken,
-                        accountName,
-                        topic: topicName,
-                        platformId: stored.platformId,
-                        googleAccountId: notificationAccountId,
-                        logPrefix: "[Onboarding]",
-                    });
-                }
-            }
+            // Pub/Sub registration deliberately NOT awaited here. `enqueueGooglePostConnectSync`
+            // above already runs prepareGoogleSync, which registers the same account for the same
+            // topic — so this call was duplicate work that ran twice per connect. Worse, it was
+            // awaited inside the server action the user is waiting on: 2 attempts, a 2s sleep
+            // between them, each wrapping fetchWithRetry(retries=3, backoff 2s→4s→8s) — up to
+            // ~30s of spinner for a background concern the user never sees.
+            //
+            // Coverage without it: every subsequent sync re-registers via prepareGoogleSync, and
+            // /api/cron/register-google-pubsub-notifications exists as the standing backstop.
         }
 
         revalidatePath("/onboarding");
