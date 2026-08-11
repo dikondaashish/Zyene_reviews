@@ -8,6 +8,7 @@ import {
     type WeeklyTrendPoint,
 } from "@/services/aeo/reporting/prompt-trend";
 import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
+import { loadLatestBrief, type LatestBrief } from "./load-latest-brief";
 
 const TREND_WEEKS = 12;
 
@@ -33,6 +34,7 @@ export type PromptDetailData =
           trend: EngineTrend[];
           weeks: string[];
           headToHead: HeadToHeadRow[];
+          latestBrief: LatestBrief | null;
       };
 
 /**
@@ -121,6 +123,8 @@ export async function loadPromptDetail(promptId: string): Promise<PromptDetailDa
         }))
         .sort((a, b) => a.engineId.localeCompare(b.engineId));
 
+    const latestBrief = await loadLatestBrief(supabase, prompt.business_id, promptId);
+
     return {
         kind: "ok",
         promptId: prompt.id,
@@ -129,5 +133,6 @@ export async function loadPromptDetail(promptId: string): Promise<PromptDetailDa
         trend,
         weeks,
         headToHead,
+        latestBrief,
     };
 }

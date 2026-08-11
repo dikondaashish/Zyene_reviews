@@ -105,3 +105,16 @@ const LIVE_ALERTING_ENV_KEY = "AEO_LIVE_ALERTING";
 export function isLiveAlertingEnabled(): boolean {
     return process.env[LIVE_ALERTING_ENV_KEY]?.trim().toLowerCase() === "true";
 }
+
+const LIVE_CONTENT_BRIEFS_ENV_KEY = "AEO_LIVE_CONTENT_BRIEFS";
+
+/**
+ * Whether F6 may spend a real Gemini call generating a content brief.
+ *
+ * Same fail-closed posture as the other AEO live flags — this one guards
+ * real per-call cost (a Gemini generation, plus outbound fetches to
+ * whatever a citation points at), not just a display choice.
+ */
+export function isLiveContentBriefsEnabled(): boolean {
+    return process.env[LIVE_CONTENT_BRIEFS_ENV_KEY]?.trim().toLowerCase() === "true";
+}

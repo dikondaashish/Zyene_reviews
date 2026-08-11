@@ -1,0 +1,42 @@
+export type ContentBriefResult = {
+    editItems: Array<{ category: string; description: string }>;
+    faqItems: Array<{ question: string; answer: string }>;
+};
+
+/** Same defensive-parse shape as market-positioning-brief-result.ts — never trust the model's JSON to match the schema exactly. */
+export function parseContentBriefPayload(parsed: unknown): ContentBriefResult {
+    if (parsed === null || typeof parsed !== "object") {
+        throw new Error("Invalid model output: expected object");
+    }
+    const o = parsed as Record<string, unknown>;
+
+    const editItems = Array.isArray(o.edit_items)
+        ? o.edit_items
+              .reduce<Array<{ category: string; description: string }>>((acc, item) => {
+                  const row = item as Record<string, unknown>;
+                  const category = String(row?.category ?? "").trim();
+                  const description = String(row?.description ?? "").trim();
+                  if (category && description) acc.push({ category, description });
+                  return acc;
+              }, [])
+              .slice(0, 10)
+        : [];
+
+    const faqItems = Array.isArray(o.faq_items)
+        ? o.faq_items
+              .reduce<Array<{ question: string; answer: string }>>((acc, item) => {
+                  const row = item as Record<string, unknown>;
+                  const question = String(row?.question ?? "").trim();
+                  const answer = String(row?.answer ?? "").trim();
+                  if (question && answer) acc.push({ question, answer });
+                  return acc;
+              }, [])
+              .slice(0, 8)
+        : [];
+
+    if (editItems.length === 0 && faqItems.length === 0) {
+        throw new Error("Model returned no usable edit items or FAQ items");
+    }
+
+    return { editItems, faqItems };
+}

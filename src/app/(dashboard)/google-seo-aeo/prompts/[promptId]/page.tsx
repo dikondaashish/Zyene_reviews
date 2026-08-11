@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { loadPromptDetail } from "./load-prompt-detail";
 import { PromptTrendChart } from "./prompt-trend-chart";
 import { PromptHeadToHead } from "./prompt-head-to-head";
+import { ContentBriefSection } from "./content-brief-section";
 
 export default async function PromptDetailPage({ params }: { params: Promise<{ promptId: string }> }) {
     const { promptId } = await params;
@@ -44,6 +45,23 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
                 </CardHeader>
                 <CardContent>
                     <PromptHeadToHead rows={data.headToHead} />
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Content brief</CardTitle>
+                    <CardDescription>
+                        A concrete edit checklist for this exact prompt — never auto-published, always
+                        copy-paste.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ContentBriefSection
+                        businessId={data.businessId}
+                        promptId={data.promptId}
+                        brief={data.latestBrief}
+                    />
                 </CardContent>
             </Card>
         </div>

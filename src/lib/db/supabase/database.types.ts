@@ -244,6 +244,72 @@ export type Database = {
           },
         ]
       }
+      aeo_content_briefs: {
+        Row: {
+          business_id: string
+          cited_source_count: number
+          confidence: string
+          created_at: string
+          edit_items: Json
+          faq_html: string
+          faq_items: Json
+          faq_json_ld: string
+          has_owning_page: boolean
+          id: string
+          prompt_id: string | null
+          schema_patch_has_placeholders: boolean
+          schema_patch_json_ld: string
+          target_page_url: string | null
+        }
+        Insert: {
+          business_id: string
+          cited_source_count?: number
+          confidence: string
+          created_at?: string
+          edit_items?: Json
+          faq_html: string
+          faq_items?: Json
+          faq_json_ld: string
+          has_owning_page: boolean
+          id?: string
+          prompt_id?: string | null
+          schema_patch_has_placeholders: boolean
+          schema_patch_json_ld: string
+          target_page_url?: string | null
+        }
+        Update: {
+          business_id?: string
+          cited_source_count?: number
+          confidence?: string
+          created_at?: string
+          edit_items?: Json
+          faq_html?: string
+          faq_items?: Json
+          faq_json_ld?: string
+          has_owning_page?: boolean
+          id?: string
+          prompt_id?: string | null
+          schema_patch_has_placeholders?: boolean
+          schema_patch_json_ld?: string
+          target_page_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_content_briefs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_content_briefs_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aeo_credit_balances: {
         Row: {
           balance_micro_usd: number
