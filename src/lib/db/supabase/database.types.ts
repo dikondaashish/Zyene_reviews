@@ -14,6 +14,76 @@ export type Database = {
   }
   public: {
     Tables: {
+      aeo_alerts: {
+        Row: {
+          alert_type: string
+          business_id: string
+          created_at: string
+          detail: string
+          digest_sent_at: string | null
+          engine_id: string | null
+          evidence: Json
+          id: string
+          muted_at: string | null
+          organization_id: string
+          prompt_id: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          alert_type: string
+          business_id: string
+          created_at?: string
+          detail: string
+          digest_sent_at?: string | null
+          engine_id?: string | null
+          evidence?: Json
+          id?: string
+          muted_at?: string | null
+          organization_id: string
+          prompt_id?: string | null
+          severity: string
+          title: string
+        }
+        Update: {
+          alert_type?: string
+          business_id?: string
+          created_at?: string
+          detail?: string
+          digest_sent_at?: string | null
+          engine_id?: string | null
+          evidence?: Json
+          id?: string
+          muted_at?: string | null
+          organization_id?: string
+          prompt_id?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_alerts_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_alerts_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aeo_brand_mentions: {
         Row: {
           brand_kind: string
@@ -3448,6 +3518,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mute_aeo_alert: { Args: { p_alert_id: string }; Returns: undefined }
       release_competitor_watch_lock: { Args: never; Returns: undefined }
     }
     Enums: {

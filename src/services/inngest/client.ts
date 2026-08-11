@@ -2,6 +2,7 @@
 import { Inngest, EventSchemas } from "inngest";
 
 import type {
+    AeoAlertCheckRequestedEvent,
     AeoCreditResetRequestedEvent,
     AeoCrawlRequestedEvent,
     AeoDispatchRequestedEvent,
@@ -45,6 +46,12 @@ type SyncPlatformEvent = {
          * Omitted for cron/manual fan-out (unchanged behavior).
          */
         triggerSource?: "pubsub";
+    };
+};
+
+type AeoAlertDigestEvent = {
+    data: {
+        businessId: string;
     };
 };
 
@@ -160,6 +167,8 @@ type Events = {
     "aeo/geo-grid.requested": AeoGeoGridRequestedEvent;
     "aeo/credit-reset.requested": AeoCreditResetRequestedEvent;
     "aeo/crawl.requested": AeoCrawlRequestedEvent;
+    "aeo/alert-check.requested": AeoAlertCheckRequestedEvent;
+    "cron/aeo-alert-digest.business": AeoAlertDigestEvent;
 };
 
 // Create a client to send and receive events

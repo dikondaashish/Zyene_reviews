@@ -91,3 +91,17 @@ const LIVE_CRAWLING_ENV_KEY = "AEO_LIVE_CRAWLING";
 export function isLiveCrawlingEnabled(): boolean {
     return process.env[LIVE_CRAWLING_ENV_KEY]?.trim().toLowerCase() === "true";
 }
+
+const LIVE_ALERTING_ENV_KEY = "AEO_LIVE_ALERTING";
+
+/**
+ * Whether F8 may create real aeo_alerts rows and send real digest emails.
+ *
+ * Same fail-closed posture as the other AEO live flags. An unset or
+ * malformed value must never result in a customer receiving an email about
+ * their AEO data — checked first in the alert worker, before any detection
+ * runs.
+ */
+export function isLiveAlertingEnabled(): boolean {
+    return process.env[LIVE_ALERTING_ENV_KEY]?.trim().toLowerCase() === "true";
+}

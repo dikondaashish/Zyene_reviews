@@ -77,6 +77,19 @@ export type AeoCrawlRequestedEvent = {
 };
 
 /**
+ * F8: one event per business to check for new alerts. Detection itself is
+ * pure reads (no vendor calls, no crawling), so unlike E-3/E-7 this needs no
+ * per-business slot — every AEO-eligible business is checked on the same
+ * daily fan-out.
+ */
+export type AeoAlertCheckRequestedEvent = {
+    data: {
+        businessId: string;
+        organizationId: string;
+    };
+};
+
+/**
  * PRD-5 geo-grid. One event per grid run; the worker fans out internally
  * because a grid is size^2 BILLED requests and the concurrency limit has to
  * apply across the whole grid, not per cell.

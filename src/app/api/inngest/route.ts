@@ -27,6 +27,8 @@ import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
 import { aeoGeoGridWorker } from "@/services/inngest/aeo/aeo-geo-grid-worker";
 import { aeoYearlyCreditResetWorker } from "@/services/inngest/aeo/aeo-yearly-credit-reset-worker";
 import { aeoCrawlWorker } from "@/services/inngest/aeo/aeo-crawl-worker";
+import { aeoAlertWorker } from "@/services/inngest/aeo/aeo-alert-worker";
+import { aeoAlertDigestWorker } from "@/services/inngest/aeo/aeo-alert-digest-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -78,6 +80,12 @@ export const { GET, POST, PUT } = serve({
         // registering it here does not by itself crawl anyone's site. Nothing
         // sends aeo/crawl.requested yet either — see aeo-crawl-scheduler/route.ts.
         aeoCrawlWorker,
+        // F8: both refuse to run unless AEO_LIVE_ALERTING is exactly "true", so
+        // registering them here does not by itself alert or email anyone.
+        // Nothing sends either event yet — see aeo-alert-scheduler/route.ts and
+        // aeo-alert-digest/route.ts.
+        aeoAlertWorker,
+        aeoAlertDigestWorker,
     ],
     servePath: "/api/inngest",
     ...(serveHost ? { serveHost } : {}),
