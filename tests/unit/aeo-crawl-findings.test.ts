@@ -6,8 +6,10 @@ import {
     robotsUnreachableFinding,
     schemaFindings,
 } from "../../src/services/aeo/crawler/crawl-findings";
+import { answerabilityFindings } from "../../src/services/aeo/crawler/answerability-findings";
 import type { PageSignals } from "../../src/services/aeo/crawler/extract-page-signals";
 import { validateSchemaBlocks } from "../../src/services/aeo/crawler/schema-validator";
+import type { AnswerabilitySignals } from "../../src/services/aeo/crawler/answerability";
 
 const FULL_SIGNALS: PageSignals = {
     title: "A Page",
@@ -165,5 +167,78 @@ describe("schemaFindings", () => {
             htmlFor(JSON.stringify({ "@type": "LocalBusiness", name: "Acme", address: "123 Main St" }))
         );
         expect(schemaFindings("https://x.com/", validation, true)).toEqual([]);
+    });
+});
+
+describe("answerabilityFindings", () => {
+    const GOOD_SIGNALS: AnswerabilitySignals = {
+        questionHeadingCount: 1,
+        hasDirectAnswerParagraph: true,
+        hasExtractableStructure: true,
+        averageParagraphWords: 50,
+        hasDateMarkup: true,
+        hasAuthorMarkup: true,
+    };
+
+    it("a fully answerable, non-article page produces zero findings", () => {
+        expect(answerabilityFindings("https://x.com/a", GOOD_SIGNALS, 500, false)).toEqual([]);
+    });
+
+    it("flags no_direct_answer on a substantial page, medium severity", () => {
+        const findings = answerabilityFindings(
+            "https://x.com/a",
+            { ...GOOD_SIGNALS, hasDirectAnswerParagraph: false },
+            200,
+            false
+        );
+        expect(findings).toEqual([expect.objectContaining({ rule: "no_direct_answer", severity: "medium" })]);
+    });
+
+    it("does not flag no_direct_answer on a short page — nothing to answer yet", () => {
+        const findings = answerabilityFindings(
+            "https://x.com/a",
+            { ...GOOD_SIGNALS, hasDirectAnswerParagraph: false },
+            30,
+            false
+        );
+        expect(findings.some((f) => f.rule === "no_direct_answer")).toBe(false);
+    });
+
+    it("flags no_extractable_structure only on a long page (300+ words)", () => {
+        const short = answerabilityFindings("https://x.com/a", { ...GOOD_SIGNALS, hasExtractableStructure: false }, 150, false);
+        expect(short.some((f) => f.rule === "no_extractable_structure")).toBe(false);
+
+        const long = answerabilityFindings("https://x.com/a", { ...GOOD_SIGNALS, hasExtractableStructure: false }, 400, false);
+        expect(long.some((f) => f.rule === "no_extractable_structure")).toBe(true);
+    });
+
+    it("flags long_paragraphs at or above the 200-word average threshold", () => {
+        const findings = answerabilityFindings("https://x.com/a", { ...GOOD_SIGNALS, averageParagraphWords: 250 }, 500, false);
+        expect(findings.some((f) => f.rule === "long_paragraphs")).toBe(true);
+    });
+
+    it("does not flag missing date/author markup on a non-article page", () => {
+        const findings = answerabilityFindings(
+            "https://x.com/menu",
+            { ...GOOD_SIGNALS, hasDateMarkup: false, hasAuthorMarkup: false },
+            500,
+            false
+        );
+        expect(findings.some((f) => f.rule === "missing_date_markup" || f.rule === "missing_author_markup")).toBe(false);
+    });
+
+    it("flags missing date AND author markup on an article-type page", () => {
+        const findings = answerabilityFindings(
+            "https://x.com/blog/post",
+            { ...GOOD_SIGNALS, hasDateMarkup: false, hasAuthorMarkup: false },
+            500,
+            true
+        );
+        expect(findings.filter((f) => f.rule === "missing_date_markup" || f.rule === "missing_author_markup")).toHaveLength(2);
+    });
+
+    it("does not flag date/author markup on an article page that already has both", () => {
+        const findings = answerabilityFindings("https://x.com/blog/post", GOOD_SIGNALS, 500, true);
+        expect(findings).toEqual([]);
     });
 });

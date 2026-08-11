@@ -3,12 +3,11 @@ import type { PageSignals } from "./extract-page-signals";
 import { isIdentityType, type SchemaValidationResult } from "./schema-validator";
 
 /**
- * E-3 findings. F5.2 (crawlability), F5.3 (AI-bot access), and F5.4
- * (schema/JSON-LD) are observed directly by the crawl itself. F5.8
- * (answerability) and F5.12's full severity-plus-affected-prompts model are
- * separate, larger analysis passes — F5.12's linkage lives in
- * finding-prompt-linkage.ts, computed from these findings plus citation data
- * the crawl itself never sees.
+ * E-3 findings. F5.2 (crawlability), F5.3 (AI-bot access), F5.4
+ * (schema/JSON-LD), and F5.8 (answerability) are all observed directly by
+ * the crawl itself. F5.12's full severity-plus-affected-prompts model is a
+ * separate pass — its linkage lives in finding-prompt-linkage.ts, computed
+ * from these findings plus citation data the crawl itself never sees.
  */
 export type CrawlFindingSeverity = "critical" | "high" | "medium" | "low";
 
@@ -21,7 +20,12 @@ export type CrawlFindingRule =
     | "invalid_json_ld"
     | "missing_structured_data"
     | "incomplete_schema"
-    | "duplicate_conflicting_schema";
+    | "duplicate_conflicting_schema"
+    | "no_direct_answer"
+    | "no_extractable_structure"
+    | "long_paragraphs"
+    | "missing_date_markup"
+    | "missing_author_markup";
 
 export type CrawlFinding = {
     rule: CrawlFindingRule;

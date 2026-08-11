@@ -2,7 +2,9 @@ import { parseRobotsTxt, findBlockedAiCrawlers, isPathAllowed } from "./robots-p
 import { discoverUrlsViaSitemap, discoverUrlsViaLinks, type FetchText } from "./discover-urls";
 import { extractPageSignals, type PageSignals } from "./extract-page-signals";
 import { aiBotBlockedFindings, robotsUnreachableFinding, pageLevelFindings, schemaFindings, type CrawlFinding } from "./crawl-findings";
+import { answerabilityFindings } from "./answerability-findings";
 import { validateSchemaBlocks } from "./schema-validator";
+import { computeAnswerabilitySignals } from "./answerability";
 import { pageCapForPlan, applyPageCap, type CrawlCoverage } from "./crawl-plan-budget";
 import type { PolitenessQueue } from "./politeness-queue";
 
@@ -104,11 +106,19 @@ export async function crawlSite(
         });
         findings.push(...pageLevelFindings(url, response.status, signals));
 
-        // F5.4, alongside F5.2's page-level checks — same page, same fetch,
-        // no second pass over stored content.
-        if (response.ok) {
+        // F5.4 and F5.8, alongside F5.2's page-level checks — same page, same
+        // fetch, no second pass over stored content.
+        if (response.ok && signals) {
             const isHomepage = new URL(url).pathname === "/";
-            findings.push(...schemaFindings(url, validateSchemaBlocks(response.text), isHomepage));
+            const validation = validateSchemaBlocks(response.text);
+            findings.push(...schemaFindings(url, validation, isHomepage));
+
+            const isArticleType = validation.entitiesFound.some(
+                (e) => e.type === "Article" || e.type === "BlogPosting"
+            );
+            findings.push(
+                ...answerabilityFindings(url, computeAnswerabilitySignals(response.text), signals.wordCount, isArticleType)
+            );
         }
     }
 
